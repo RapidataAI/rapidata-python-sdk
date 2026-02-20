@@ -124,6 +124,11 @@ class JsonWebKey(BaseModel):
         if self.k is None and "k" in self.model_fields_set:
             _dict['k'] = None
 
+        # set to None if key_ops (nullable) is None
+        # and model_fields_set contains the field
+        if self.key_ops is None and "key_ops" in self.model_fields_set:
+            _dict['key_ops'] = None
+
         # set to None if kid (nullable) is None
         # and model_fields_set contains the field
         if self.kid is None and "kid" in self.model_fields_set:
@@ -138,6 +143,11 @@ class JsonWebKey(BaseModel):
         # and model_fields_set contains the field
         if self.n is None and "n" in self.model_fields_set:
             _dict['n'] = None
+
+        # set to None if oth (nullable) is None
+        # and model_fields_set contains the field
+        if self.oth is None and "oth" in self.model_fields_set:
+            _dict['oth'] = None
 
         # set to None if p (nullable) is None
         # and model_fields_set contains the field
@@ -163,6 +173,11 @@ class JsonWebKey(BaseModel):
         # and model_fields_set contains the field
         if self.x is None and "x" in self.model_fields_set:
             _dict['x'] = None
+
+        # set to None if x5c (nullable) is None
+        # and model_fields_set contains the field
+        if self.x5c is None and "x5c" in self.model_fields_set:
+            _dict['x5c'] = None
 
         # set to None if x5t (nullable) is None
         # and model_fields_set contains the field

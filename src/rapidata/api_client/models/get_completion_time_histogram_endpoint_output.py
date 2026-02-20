@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.output_bucket import OutputBucket
+from rapidata.api_client.models.get_completion_time_histogram_endpoint_output_bucket import GetCompletionTimeHistogramEndpointOutputBucket
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class GetCompletionTimeHistogramEndpointOutput(BaseModel):
     """
     GetCompletionTimeHistogramEndpointOutput
     """ # noqa: E501
-    buckets: List[OutputBucket] = Field(description="The histogram buckets.")
+    buckets: List[GetCompletionTimeHistogramEndpointOutputBucket]
     __properties: ClassVar[List[str]] = ["buckets"]
 
     model_config = ConfigDict(
@@ -88,7 +88,7 @@ class GetCompletionTimeHistogramEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "buckets": [OutputBucket.from_dict(_item) for _item in obj["buckets"]] if obj.get("buckets") is not None else None
+            "buckets": [GetCompletionTimeHistogramEndpointOutputBucket.from_dict(_item) for _item in obj["buckets"]] if obj.get("buckets") is not None else None
         })
         return _obj
 

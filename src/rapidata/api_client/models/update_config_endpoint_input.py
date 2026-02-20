@@ -33,6 +33,8 @@ class UpdateConfigEndpointInput(BaseModel):
     scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation.", alias="scalingFactor")
     min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison.", alias="minResponses")
     max_responses: Optional[StrictInt] = Field(default=None, description="Maximum number of responses per comparison.", alias="maxResponses")
+    serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to max responses. Set to null to remove the limit.", alias="serveToResponseRatio")
+    serve_timeout_seconds: Optional[StrictInt] = Field(default=None, description="Time in seconds a user has to submit an answer after loading the task. Set to null to use the global default.", alias="serveTimeoutSeconds")
     responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Set to null to disable PID control.", alias="targetResponseCount")
@@ -42,7 +44,7 @@ class UpdateConfigEndpointInput(BaseModel):
     pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[StrictStr] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
-    __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
+    __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
 
     @field_validator('pid_batch_mode')
     def pid_batch_mode_validate_enum(cls, value):
@@ -130,10 +132,25 @@ class UpdateConfigEndpointInput(BaseModel):
         if self.max_responses is None and "max_responses" in self.model_fields_set:
             _dict['maxResponses'] = None
 
+        # set to None if serve_to_response_ratio (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_to_response_ratio is None and "serve_to_response_ratio" in self.model_fields_set:
+            _dict['serveToResponseRatio'] = None
+
+        # set to None if serve_timeout_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_timeout_seconds is None and "serve_timeout_seconds" in self.model_fields_set:
+            _dict['serveTimeoutSeconds'] = None
+
         # set to None if responses_required (nullable) is None
         # and model_fields_set contains the field
         if self.responses_required is None and "responses_required" in self.model_fields_set:
             _dict['responsesRequired'] = None
+
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
 
         # set to None if target_response_count (nullable) is None
         # and model_fields_set contains the field
@@ -183,6 +200,8 @@ class UpdateConfigEndpointInput(BaseModel):
             "scalingFactor": obj.get("scalingFactor"),
             "minResponses": obj.get("minResponses"),
             "maxResponses": obj.get("maxResponses"),
+            "serveToResponseRatio": obj.get("serveToResponseRatio"),
+            "serveTimeoutSeconds": obj.get("serveTimeoutSeconds"),
             "responsesRequired": obj.get("responsesRequired"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "targetResponseCount": obj.get("targetResponseCount"),

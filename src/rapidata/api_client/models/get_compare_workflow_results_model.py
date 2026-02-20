@@ -29,7 +29,7 @@ class GetCompareWorkflowResultsModel(BaseModel):
     Model for getting the overview of a compare workflow result.
     """ # noqa: E501
     page: Optional[PageInfo] = Field(default=None, description="The size of the page and the page number to display.")
-    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
     __properties: ClassVar[List[str]] = ["page", "sortCriteria"]
 
     model_config = ConfigDict(
@@ -81,6 +81,11 @@ class GetCompareWorkflowResultsModel(BaseModel):
                 if _item_sort_criteria:
                     _items.append(_item_sort_criteria.to_dict())
             _dict['sortCriteria'] = _items
+        # set to None if sort_criteria (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
+            _dict['sortCriteria'] = None
+
         return _dict
 
     @classmethod

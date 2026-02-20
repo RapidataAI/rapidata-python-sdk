@@ -170,6 +170,80 @@
         }
       }
     },
+    "/flow/ranking/{flowId}/flow-item-creation-timeseries": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Returns flow item creation counts bucketed over time.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "description": "The ID of the flow.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Optional start of the date range filter (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Optional end of the date range filter (exclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "datapoints",
+            "in": "query",
+            "description": "Number of time buckets (default 100, max 1000).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFlowItemCreationTimeseriesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/flow/ranking/{flowId}/response-count-histogram": {
       "get": {
         "tags": [
@@ -1047,6 +1121,16 @@
             "description": "Maximum number of responses per comparison.",
             "format": "int32"
           },
+          "serveToResponseRatio": {
+            "type": "number",
+            "description": "Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.",
+            "format": "double"
+          },
+          "serveTimeoutSeconds": {
+            "type": "integer",
+            "description": "Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.",
+            "format": "int32"
+          },
           "minResponses": {
             "type": "integer",
             "description": "Minimum number of responses per comparison. Defaults to 1.",
@@ -1060,7 +1144,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                },
+                "nullable": true
               }
             ],
             "description": "Optional feature flags to enable for this flow."
@@ -1168,10 +1256,35 @@
           "buckets": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Output_ListOfOutput_Bucket"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCompletionTimeHistogramEndpoint_Output_Bucket"
+                }
               }
             ],
             "description": "The histogram buckets."
+          }
+        }
+      },
+      "GetCompletionTimeHistogramEndpoint_Output_Bucket": {
+        "required": [
+          "lowerBound",
+          "upperBound",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "lowerBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1284,6 +1397,42 @@
           }
         }
       },
+      "GetFlowItemCreationTimeseriesEndpoint_Output": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetFlowItemCreationTimeseriesEndpoint_Output_DataPoint"
+                }
+              }
+            ],
+            "description": "The timeseries data points."
+          }
+        }
+      },
+      "GetFlowItemCreationTimeseriesEndpoint_Output_DataPoint": {
+        "required": [
+          "timestamp",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "GetRankingFlowItemResultsEndpoint_Output": {
         "required": [
           "datapoints",
@@ -1294,7 +1443,10 @@
           "datapoints": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Output_ListOfOutput_Datapoint"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetRankingFlowItemResultsEndpoint_Output_Datapoint"
+                }
               }
             ],
             "description": "The ranked datapoints with their Elo scores."
@@ -1303,6 +1455,26 @@
             "type": "integer",
             "description": "The total number of votes across all datapoints.",
             "format": "int64"
+          }
+        }
+      },
+      "GetRankingFlowItemResultsEndpoint_Output_Datapoint": {
+        "required": [
+          "id",
+          "asset",
+          "elo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "elo": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1339,7 +1511,14 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfListOfDouble"
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
               }
             ],
             "description": "The vote counts as a two-dimensional matrix where Data[i][j] is the number of times row i was preferred over column j."
@@ -1355,10 +1534,35 @@
           "buckets": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Output_ListOfOutput_Bucket"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetResponseCountHistogramEndpoint_Output_Bucket"
+                }
               }
             ],
             "description": "The histogram buckets."
+          }
+        }
+      },
+      "GetResponseCountHistogramEndpoint_Output_Bucket": {
+        "required": [
+          "lowerBound",
+          "upperBound",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "lowerBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1371,10 +1575,30 @@
           "datapoints": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Output_ListOfOutput_DataPoint"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetResponseCountTimeseriesEndpoint_Output_DataPoint"
+                }
               }
             ],
             "description": "The timeseries data points."
+          }
+        }
+      },
+      "GetResponseCountTimeseriesEndpoint_Output_DataPoint": {
+        "required": [
+          "timestamp",
+          "averageResponseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "averageResponseCount": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -1447,7 +1671,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -1747,108 +1974,10 @@
           }
         }
       },
-      "ListOfFeatureFlag": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlag"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfListOfDouble": {
-        "type": "array",
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        }
-      },
       "MetadataModelCollection": {
         "type": "object",
         "additionalProperties": {
           "$ref": "#/components/schemas/IMetadataModel"
-        }
-      },
-      "Output_Bucket": {
-        "required": [
-          "lowerBound",
-          "upperBound",
-          "count"
-        ],
-        "type": "object",
-        "properties": {
-          "lowerBound": {
-            "type": "number",
-            "format": "double"
-          },
-          "upperBound": {
-            "type": "number",
-            "format": "double"
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "Output_Datapoint": {
-        "required": [
-          "id",
-          "asset",
-          "elo"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "elo": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "Output_DataPoint": {
-        "required": [
-          "timestamp",
-          "averageResponseCount"
-        ],
-        "type": "object",
-        "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "averageResponseCount": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "Output_ListOfOutput_Bucket": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Output_Bucket"
-        }
-      },
-      "Output_ListOfOutput_Datapoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Output_Datapoint"
-        }
-      },
-      "Output_ListOfOutput_DataPoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Output_DataPoint"
         }
       },
       "ProblemDetails": {
@@ -1874,12 +2003,6 @@
             "type": "string",
             "nullable": true
           }
-        }
-      },
-      "QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryFlowItemsEndpoint_Output"
         }
       },
       "QueryFlowItemsEndpoint_Output": {
@@ -1964,18 +2087,15 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryFlowItemsEndpoint_Output"
+            }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           }
-        }
-      },
-      "QueryFlowsEndpoint_ListOfQueryFlowsEndpoint_Output": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryFlowsEndpoint_Output"
         }
       },
       "QueryFlowsEndpoint_Output": {
@@ -2038,7 +2158,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/QueryFlowsEndpoint_ListOfQueryFlowsEndpoint_Output"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryFlowsEndpoint_Output"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2084,6 +2207,18 @@
             "format": "int32",
             "nullable": true
           },
+          "serveToResponseRatio": {
+            "type": "number",
+            "description": "Ratio of concurrent serves to max responses. Set to null to remove the limit.",
+            "format": "double",
+            "nullable": true
+          },
+          "serveTimeoutSeconds": {
+            "type": "integer",
+            "description": "Time in seconds a user has to submit an answer after loading the task. Set to null to use the global default.",
+            "format": "int32",
+            "nullable": true
+          },
           "responsesRequired": {
             "type": "integer",
             "description": "Deprecated. Use MaxResponses instead.",
@@ -2093,7 +2228,10 @@
           "featureFlags": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               },
               {
                 "nullable": true

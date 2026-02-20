@@ -30,7 +30,7 @@ class CreateAudienceRequest(BaseModel):
     """ # noqa: E501
     name: StrictStr = Field(description="The name to give the newly created audience.")
     description: Optional[StrictStr] = Field(default=None, description="An optional markdown-supported description of the audience's purpose.")
-    filters: Optional[List[IAudienceFilter]] = Field(default=None, description="The filters to apply to any orders created for this audience.  A filter can be used to restrict the audience to a specific subset of users.")
+    filters: Optional[List[IAudienceFilter]] = None
     minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The minimum user score used to determine whether a user can be included in an audience.", alias="minimumUserScore")
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, description="The minimum number of users required for an audience to be activated.", alias="minimumSizeForActivation")
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An optional logo image for the audience. Must be an existing image asset.")
@@ -96,6 +96,11 @@ class CreateAudienceRequest(BaseModel):
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
+
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
 
         return _dict
 

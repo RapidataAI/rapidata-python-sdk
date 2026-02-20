@@ -78,6 +78,11 @@ class ConditionalValidationSelectionValidationChance(BaseModel):
                 if _item_selections:
                     _items.append(_item_selections.to_dict())
             _dict['selections'] = _items
+        # set to None if selections (nullable) is None
+        # and model_fields_set contains the field
+        if self.selections is None and "selections" in self.model_fields_set:
+            _dict['selections'] = None
+
         return _dict
 
     @classmethod

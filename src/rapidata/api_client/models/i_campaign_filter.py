@@ -24,6 +24,7 @@ from rapidata.api_client.models.i_campaign_filter_demographic_filter import ICam
 from rapidata.api_client.models.i_campaign_filter_device_filter import ICampaignFilterDeviceFilter
 from rapidata.api_client.models.i_campaign_filter_language_filter import ICampaignFilterLanguageFilter
 from rapidata.api_client.models.i_campaign_filter_new_user_filter import ICampaignFilterNewUserFilter
+from rapidata.api_client.models.i_campaign_filter_or_filter import ICampaignFilterOrFilter
 from rapidata.api_client.models.i_campaign_filter_response_count_filter import ICampaignFilterResponseCountFilter
 from rapidata.api_client.models.i_campaign_filter_user_action_restriction_filter import ICampaignFilterUserActionRestrictionFilter
 from rapidata.api_client.models.i_campaign_filter_user_score_filter import ICampaignFilterUserScoreFilter
@@ -290,7 +291,6 @@ class ICampaignFilter(BaseModel):
 
 from rapidata.api_client.models.i_campaign_filter_and_filter import ICampaignFilterAndFilter
 from rapidata.api_client.models.i_campaign_filter_not_filter import ICampaignFilterNotFilter
-from rapidata.api_client.models.i_campaign_filter_or_filter import ICampaignFilterOrFilter
 # TODO: Rewrite to not use raise_errors
 ICampaignFilter.model_rebuild(raise_errors=False)
 

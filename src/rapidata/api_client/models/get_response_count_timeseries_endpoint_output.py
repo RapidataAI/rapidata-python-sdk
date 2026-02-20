@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.output_data_point import OutputDataPoint
+from rapidata.api_client.models.get_response_count_timeseries_endpoint_output_data_point import GetResponseCountTimeseriesEndpointOutputDataPoint
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class GetResponseCountTimeseriesEndpointOutput(BaseModel):
     """
     GetResponseCountTimeseriesEndpointOutput
     """ # noqa: E501
-    datapoints: List[OutputDataPoint] = Field(description="The timeseries data points.")
+    datapoints: List[GetResponseCountTimeseriesEndpointOutputDataPoint]
     __properties: ClassVar[List[str]] = ["datapoints"]
 
     model_config = ConfigDict(
@@ -88,7 +88,7 @@ class GetResponseCountTimeseriesEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapoints": [OutputDataPoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None
+            "datapoints": [GetResponseCountTimeseriesEndpointOutputDataPoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None
         })
         return _obj
 

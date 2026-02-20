@@ -113,6 +113,11 @@ class CreateJobRevisionEndpointInput(BaseModel):
         if self.dataset_id is None and "dataset_id" in self.model_fields_set:
             _dict['datasetId'] = None
 
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
+
         # set to None if aggregator_type (nullable) is None
         # and model_fields_set contains the field
         if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:

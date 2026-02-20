@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.gender_user_filter_model_gender import GenderUserFilterModelGender
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +28,7 @@ class IUserFilterModelGenderUserFilterModel(BaseModel):
     IUserFilterModelGenderUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    genders: List[StrictStr]
+    genders: List[GenderUserFilterModelGender]
     __properties: ClassVar[List[str]] = ["_t", "genders"]
 
     @field_validator('t')
@@ -35,14 +36,6 @@ class IUserFilterModelGenderUserFilterModel(BaseModel):
         """Validates the enum"""
         if value not in set(['GenderFilter']):
             raise ValueError("must be one of enum values ('GenderFilter')")
-        return value
-
-    @field_validator('genders')
-    def genders_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['Male', 'Female', 'Other']):
-                raise ValueError("each list item must be one of ('Male', 'Female', 'Other')")
         return value
 
     model_config = ConfigDict(

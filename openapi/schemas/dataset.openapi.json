@@ -528,7 +528,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -624,7 +627,10 @@
         "type": "object",
         "properties": {
           "datapoints": {
-            "$ref": "#/components/schemas/GetFailedDatapointsResult_ListOfGetFailedDatapointsResult_Datapoint"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
+            }
           }
         }
       },
@@ -655,12 +661,6 @@
             "type": "string",
             "format": "date-time"
           }
-        }
-      },
-      "GetFailedDatapointsResult_ListOfGetFailedDatapointsResult_Datapoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
         }
       },
       "IAssetInput": {
@@ -732,7 +732,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetInput"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
           },
           "metadata": {
             "oneOf": [
@@ -850,7 +853,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -1189,36 +1195,6 @@
           }
         }
       },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfIAssetInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetInput"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfQueryDatapointsByDatasetIdResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryDatapointsByDatasetIdResult"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
-      },
       "LogicOperator": {
         "enum": [
           "And",
@@ -1274,7 +1250,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryDatapointsByDatasetIdResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryDatapointsByDatasetIdResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -1338,14 +1317,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -1353,7 +1329,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"

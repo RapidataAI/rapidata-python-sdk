@@ -27,9 +27,9 @@ class ICampaignFilterOrFilter(BaseModel):
     ICampaignFilterOrFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    filters: List[ICampaignFilter]
+    filters: Optional[Any]
     execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    inner_filters: Optional[List[ICampaignFilter]] = Field(default=None, alias="innerFilters")
+    inner_filters: Optional[Any] = Field(default=None, alias="innerFilters")
     __properties: ClassVar[List[str]] = ["_t", "filters", "executionOrder", "innerFilters"]
 
     @field_validator('t')
@@ -78,20 +78,16 @@ class ICampaignFilterOrFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in inner_filters (list)
-        _items = []
-        if self.inner_filters:
-            for _item_inner_filters in self.inner_filters:
-                if _item_inner_filters:
-                    _items.append(_item_inner_filters.to_dict())
-            _dict['innerFilters'] = _items
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
+        # set to None if inner_filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.inner_filters is None and "inner_filters" in self.model_fields_set:
+            _dict['innerFilters'] = None
+
         return _dict
 
     @classmethod
@@ -105,13 +101,10 @@ class ICampaignFilterOrFilter(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
-            "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "filters": obj.get("filters"),
             "executionOrder": obj.get("executionOrder"),
-            "innerFilters": [ICampaignFilter.from_dict(_item) for _item in obj["innerFilters"]] if obj.get("innerFilters") is not None else None
+            "innerFilters": obj.get("innerFilters")
         })
         return _obj
 
-from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-# TODO: Rewrite to not use raise_errors
-ICampaignFilterOrFilter.model_rebuild(raise_errors=False)
 

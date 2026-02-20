@@ -96,6 +96,11 @@ class QueryModel(BaseModel):
         if self.filter is None and "filter" in self.model_fields_set:
             _dict['filter'] = None
 
+        # set to None if sort_criteria (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
+            _dict['sortCriteria'] = None
+
         return _dict
 
     @classmethod

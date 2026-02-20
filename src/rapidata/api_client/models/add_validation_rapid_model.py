@@ -37,7 +37,7 @@ class AddValidationRapidModel(BaseModel):
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
     context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user about the rapid.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset that provides additional context to the user about the rapid.", alias="contextAsset")
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags to enable for the rapid.", alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "featureFlags"]
 
     model_config = ConfigDict(
@@ -107,6 +107,11 @@ class AddValidationRapidModel(BaseModel):
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
+
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
 
         return _dict
 
