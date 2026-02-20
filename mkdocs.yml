@@ -71,6 +71,8 @@ plugins:
           - mri_advanced.md
         Flows:
           - flows.md
+        Claude Code:
+          - claude_code.md
         Migration:
           - migration_guide.md
       enable_markdown_urls: true
@@ -125,6 +127,7 @@ nav:
       - "🔭 Model Ranking Insights Advanced": mri_advanced.md
     - "♻️ Flows":
       - "Overview": flows.md
+    - "🤖 Claude Code Plugin": claude_code.md
     - "🔄 Migration Guide": migration_guide.md
 
 theme:
