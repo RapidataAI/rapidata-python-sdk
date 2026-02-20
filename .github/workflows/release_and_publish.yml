@@ -171,3 +171,12 @@ jobs:
         files: |
           dist/*.whl
           dist/*.tar.gz
+
+    - name: Trigger skills plugin version sync
+      if: steps.release_type.outputs.type == 'stable'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.SKILLS_REPO_PAT }}
+        repository: rapidataAI/skills
+        event-type: sdk-release
+        client-payload: '{"version": "${{ steps.update_version.outputs.new_version }}"}'
