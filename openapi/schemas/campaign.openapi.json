@@ -276,8 +276,9 @@
       "BoostingProfile": {
         "type": "object",
         "properties": {
-          "requiresGlobalBoost": {
-            "type": "boolean"
+          "globalBoostLevel": {
+            "type": "integer",
+            "format": "int32"
           },
           "languageBoosts": {
             "type": "array",
@@ -288,7 +289,8 @@
           "kayzenAudienceIds": {
             "type": "array",
             "items": {
-              "type": "number"
+              "type": "integer",
+              "format": "int32"
             }
           }
         }
@@ -345,8 +347,7 @@
       },
       "ChangeBoostModel": {
         "required": [
-          "isManual",
-          "isActive"
+          "isManual"
         ],
         "type": "object",
         "properties": {
@@ -357,6 +358,11 @@
           "isActive": {
             "type": "boolean",
             "description": "If manual is set to true it will overrule the system with this."
+          },
+          "level": {
+            "type": "integer",
+            "description": "The boost level. Takes precedence over IsActive when set.",
+            "format": "int32"
           }
         },
         "description": "The model to update the manual boost status. or putting it back to autopilot."
@@ -376,7 +382,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -425,7 +434,8 @@
           "unknownCampaigns": {
             "type": "array",
             "items": {
-              "type": "number"
+              "type": "integer",
+              "format": "int32"
             }
           }
         }
@@ -443,24 +453,6 @@
           "Partial",
           "Unknown"
         ]
-      },
-      "ListOfCampaignQueryResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/CampaignQueryResult"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
       },
       "LogicOperator": {
         "enum": [
@@ -491,7 +483,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfCampaignQueryResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignQueryResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -536,14 +531,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -551,7 +543,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"

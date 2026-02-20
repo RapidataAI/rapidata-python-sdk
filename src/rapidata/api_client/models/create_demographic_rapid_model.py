@@ -31,7 +31,7 @@ class CreateDemographicRapidModel(BaseModel):
     """ # noqa: E501
     key: StrictStr = Field(description="The identifier of the demographic classification.")
     payload: ClassifyPayload = Field(description="The payload for the classification.")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Optional feature flags to apply to the rapid.", alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     asset: Optional[IAssetInput] = Field(default=None, description="An optional asset to associate with the rapid.")
     context: Optional[StrictStr] = Field(default=None, description="An optional text context to show to the user.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset to use as context to show to the user.", alias="contextAsset")
@@ -92,6 +92,11 @@ class CreateDemographicRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
+
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:

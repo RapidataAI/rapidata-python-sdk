@@ -17,19 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_ranking_flow_item_results_endpoint_output_datapoint import GetRankingFlowItemResultsEndpointOutputDatapoint
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
+from typing import Any, ClassVar, Dict, List, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetRankingFlowItemResultsEndpointOutput(BaseModel):
+class GetCompletionTimeHistogramEndpointOutputBucket(BaseModel):
     """
-    GetRankingFlowItemResultsEndpointOutput
+    GetCompletionTimeHistogramEndpointOutputBucket
     """ # noqa: E501
-    datapoints: List[GetRankingFlowItemResultsEndpointOutputDatapoint]
-    total_votes: StrictInt = Field(description="The total number of votes across all datapoints.", alias="totalVotes")
-    __properties: ClassVar[List[str]] = ["datapoints", "totalVotes"]
+    lower_bound: Union[StrictFloat, StrictInt] = Field(alias="lowerBound")
+    upper_bound: Union[StrictFloat, StrictInt] = Field(alias="upperBound")
+    count: StrictInt
+    __properties: ClassVar[List[str]] = ["lowerBound", "upperBound", "count"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +49,7 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a JSON string"""
+        """Create an instance of GetCompletionTimeHistogramEndpointOutputBucket from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,18 +70,11 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in datapoints (list)
-        _items = []
-        if self.datapoints:
-            for _item_datapoints in self.datapoints:
-                if _item_datapoints:
-                    _items.append(_item_datapoints.to_dict())
-            _dict['datapoints'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a dict"""
+        """Create an instance of GetCompletionTimeHistogramEndpointOutputBucket from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +82,9 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapoints": [GetRankingFlowItemResultsEndpointOutputDatapoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None,
-            "totalVotes": obj.get("totalVotes")
+            "lowerBound": obj.get("lowerBound"),
+            "upperBound": obj.get("upperBound"),
+            "count": obj.get("count")
         })
         return _obj
 

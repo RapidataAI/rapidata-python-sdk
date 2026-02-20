@@ -26,7 +26,7 @@ class CreateBatchUploadEndpointInput(BaseModel):
     """
     CreateBatchUploadEndpointInput
     """ # noqa: E501
-    urls: List[StrictStr] = Field(description="The URLs to download and process.")
+    urls: List[StrictStr]
     correlation_id: Optional[StrictStr] = Field(default=None, description="Optional client-supplied identifier to group related batch uploads.", alias="correlationId")
     __properties: ClassVar[List[str]] = ["urls", "correlationId"]
 

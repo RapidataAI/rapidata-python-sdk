@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
@@ -33,8 +33,13 @@ class UpdateAudienceRequest(BaseModel):
     filters: Optional[List[IAudienceFilter]] = None
     logo: Optional[ExistingAssetInput] = None
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  When graduated count is below this, KayzenDistillingAudienceId is added to campaign boosting.", alias="minGraduatedForDistillingBoost")
-    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  When distilling count is below this, RequiresGlobalBoost is set to true.", alias="minDistillingForGlobalBoost")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost"]
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  When distilling count is below this, GlobalBoostLevel is set above zero.", alias="minDistillingForGlobalBoost")
+    minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The minimum user score used to determine whether a user can be included in an audience.", alias="minimumUserScore")
+    max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Set to null to disable this exit condition.", alias="maxDistillingResponses")
+    min_distilling_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the score floor check applies.  Users need at least this many responses before they can be kicked out for low score.  Set to null to apply score floor check from the first response.", alias="minDistillingResponses")
+    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum user score floor - users below this score exit the distilling campaign  (only after completing MinDistillingResponses).  Set to null to disable this exit condition.", alias="minDistillingScoreFloor")
+    max_distilling_sessions: Optional[StrictInt] = Field(default=None, description="Maximum sessions (rapid retrievals) before user exits the distilling campaign.  Set to a value to enable session-based exit condition.", alias="maxDistillingSessions")
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "minimumUserScore", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "maxDistillingSessions"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -95,6 +100,11 @@ class UpdateAudienceRequest(BaseModel):
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
 
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -109,6 +119,31 @@ class UpdateAudienceRequest(BaseModel):
         # and model_fields_set contains the field
         if self.min_distilling_for_global_boost is None and "min_distilling_for_global_boost" in self.model_fields_set:
             _dict['minDistillingForGlobalBoost'] = None
+
+        # set to None if minimum_user_score (nullable) is None
+        # and model_fields_set contains the field
+        if self.minimum_user_score is None and "minimum_user_score" in self.model_fields_set:
+            _dict['minimumUserScore'] = None
+
+        # set to None if max_distilling_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_distilling_responses is None and "max_distilling_responses" in self.model_fields_set:
+            _dict['maxDistillingResponses'] = None
+
+        # set to None if min_distilling_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_distilling_responses is None and "min_distilling_responses" in self.model_fields_set:
+            _dict['minDistillingResponses'] = None
+
+        # set to None if min_distilling_score_floor (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_distilling_score_floor is None and "min_distilling_score_floor" in self.model_fields_set:
+            _dict['minDistillingScoreFloor'] = None
+
+        # set to None if max_distilling_sessions (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_distilling_sessions is None and "max_distilling_sessions" in self.model_fields_set:
+            _dict['maxDistillingSessions'] = None
 
         return _dict
 
@@ -127,7 +162,12 @@ class UpdateAudienceRequest(BaseModel):
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),
-            "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost")
+            "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
+            "minimumUserScore": obj.get("minimumUserScore"),
+            "maxDistillingResponses": obj.get("maxDistillingResponses"),
+            "minDistillingResponses": obj.get("minDistillingResponses"),
+            "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
+            "maxDistillingSessions": obj.get("maxDistillingSessions")
         })
         return _obj
 

@@ -2327,6 +2327,16 @@
   },
   "components": {
     "schemas": {
+      "AgeUserFilterModel_AgeGroup": {
+        "enum": [
+          "0-17",
+          "18-29",
+          "30-39",
+          "40-49",
+          "50-64",
+          "65+"
+        ]
+      },
       "BenchmarkQueryResult": {
         "required": [
           "id",
@@ -2535,7 +2545,11 @@
           "filters": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfIUserFilterModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IUserFilterModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The filters will be applied on every order that is created by this leaderboard.\n Cannot be specified together with AudienceId."
@@ -2543,7 +2557,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "Feature flags that will be applied to every order that is created by this leaderboard."
@@ -2610,6 +2628,13 @@
         },
         "description": "The model used to create a sample to a participant."
       },
+      "DeviceType": {
+        "enum": [
+          "Unknown",
+          "Phone",
+          "Tablet"
+        ]
+      },
       "FeatureFlag": {
         "required": [
           "key",
@@ -2663,7 +2688,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -2691,6 +2719,13 @@
             "type": "string"
           }
         }
+      },
+      "GenderUserFilterModel_Gender": {
+        "enum": [
+          "Male",
+          "Female",
+          "Other"
+        ]
       },
       "GetBenchmarkByIdResult": {
         "required": [
@@ -2775,10 +2810,16 @@
             "nullable": true
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -2957,7 +2998,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetInput"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
           },
           "metadata": {
             "oneOf": [
@@ -3075,7 +3119,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -3209,14 +3256,21 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
           },
           "executionOrder": {
             "type": "integer",
             "format": "uint32"
           },
           "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            },
+            "nullable": true
           }
         }
       },
@@ -3337,11 +3391,7 @@
           "deviceTypes": {
             "type": "array",
             "items": {
-              "enum": [
-                "Unknown",
-                "Phone",
-                "Tablet"
-              ]
+              "$ref": "#/components/schemas/DeviceType"
             }
           },
           "executionOrder": {
@@ -3410,9 +3460,7 @@
             "type": "integer",
             "format": "uint32"
           },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          }
+          "innerFilters": { }
         }
       },
       "ICampaignFilterOrFilter": {
@@ -3427,16 +3475,12 @@
             ],
             "type": "string"
           },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          },
+          "filters": { },
           "executionOrder": {
             "type": "integer",
             "format": "uint32"
           },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          }
+          "innerFilters": { }
         }
       },
       "ICampaignFilterResponseCountFilter": {
@@ -3481,15 +3525,7 @@
             ],
             "type": "string"
           },
-          "requiredActions": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Listen",
-                "UseKeyboard"
-              ]
-            }
-          },
+          "requiredActions": { },
           "executionOrder": {
             "type": "integer",
             "format": "uint32"
@@ -3890,14 +3926,7 @@
           "ageGroups": {
             "type": "array",
             "items": {
-              "enum": [
-                "0-17",
-                "18-29",
-                "30-39",
-                "40-49",
-                "50-64",
-                "65+"
-              ]
+              "$ref": "#/components/schemas/AgeUserFilterModel_AgeGroup"
             }
           }
         }
@@ -3915,7 +3944,10 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIUserFilterModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUserFilterModel"
+            }
           }
         }
       },
@@ -3998,11 +4030,7 @@
           "deviceTypes": {
             "type": "array",
             "items": {
-              "enum": [
-                "Unknown",
-                "Phone",
-                "Tablet"
-              ]
+              "$ref": "#/components/schemas/DeviceType"
             }
           }
         }
@@ -4022,11 +4050,7 @@
           "genders": {
             "type": "array",
             "items": {
-              "enum": [
-                "Male",
-                "Female",
-                "Other"
-              ]
+              "$ref": "#/components/schemas/GenderUserFilterModel_Gender"
             }
           }
         }
@@ -4093,9 +4117,7 @@
             ],
             "type": "string"
           },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfIUserFilterModel"
-          }
+          "filters": { }
         }
       },
       "IUserFilterModelResponseCountUserFilterModel": {
@@ -4199,122 +4221,17 @@
             "nullable": true
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
-        }
-      },
-      "ListOfBenchmarkQueryResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BenchmarkQueryResult"
-        }
-      },
-      "ListOfFeatureFlag": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlag"
-        }
-      },
-      "ListOfFeatureFlagModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlagModel"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfIAssetInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetInput"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfICampaignFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ICampaignFilter"
-        }
-      },
-      "ListOfIUserFilterModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IUserFilterModel"
-        }
-      },
-      "ListOfLeaderboardsQueryResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LeaderboardsQueryResult"
-        }
-      },
-      "ListOfListOfDouble": {
-        "type": "array",
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        }
-      },
-      "ListOfParticipantByBenchmark": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ParticipantByBenchmark"
-        }
-      },
-      "ListOfPromptByBenchmarkResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PromptByBenchmarkResult"
-        }
-      },
-      "ListOfRunsByLeaderboardResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/RunsByLeaderboardResult"
-        }
-      },
-      "ListOfSampleByIdentifier": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SampleByIdentifier"
-        }
-      },
-      "ListOfSampleByParticipant": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SampleByParticipant"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
-      },
-      "ListOfStandingByBenchmark": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/StandingByBenchmark"
-        }
-      },
-      "ListOfStandingByLeaderboard": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/StandingByLeaderboard"
         }
       },
       "LogicOperator": {
@@ -4372,7 +4289,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfBenchmarkQueryResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkQueryResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4402,7 +4322,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfLeaderboardsQueryResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardsQueryResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4432,7 +4355,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfParticipantByBenchmark"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantByBenchmark"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4462,7 +4388,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfPromptByBenchmarkResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromptByBenchmarkResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4492,7 +4421,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfRunsByLeaderboardResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RunsByLeaderboardResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4522,7 +4454,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfSampleByIdentifier"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleByIdentifier"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4552,7 +4487,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfSampleByParticipant"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleByParticipant"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4582,7 +4520,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfStandingByLeaderboard"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByLeaderboard"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4698,14 +4639,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -4713,7 +4651,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"
@@ -5005,7 +4946,10 @@
         "type": "object",
         "properties": {
           "items": {
-            "$ref": "#/components/schemas/ListOfStandingByBenchmark"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByBenchmark"
+            }
           }
         }
       },
@@ -5016,7 +4960,10 @@
         "type": "object",
         "properties": {
           "items": {
-            "$ref": "#/components/schemas/ListOfStandingByLeaderboard"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByLeaderboard"
+            }
           }
         }
       },
@@ -5073,7 +5020,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "The tags of a given prompt"
@@ -5279,7 +5227,14 @@
             }
           },
           "data": {
-            "$ref": "#/components/schemas/ListOfListOfDouble"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              }
+            }
           }
         }
       }

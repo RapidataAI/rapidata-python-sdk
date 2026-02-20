@@ -29,7 +29,7 @@ class ICampaignFilterNotFilter(BaseModel):
     t: StrictStr = Field(alias="_t")
     filter: ICampaignFilter
     execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    inner_filters: Optional[List[ICampaignFilter]] = Field(default=None, alias="innerFilters")
+    inner_filters: Optional[Any] = Field(default=None, alias="innerFilters")
     __properties: ClassVar[List[str]] = ["_t", "filter", "executionOrder", "innerFilters"]
 
     @field_validator('t')
@@ -81,13 +81,11 @@ class ICampaignFilterNotFilter(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in inner_filters (list)
-        _items = []
-        if self.inner_filters:
-            for _item_inner_filters in self.inner_filters:
-                if _item_inner_filters:
-                    _items.append(_item_inner_filters.to_dict())
-            _dict['innerFilters'] = _items
+        # set to None if inner_filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.inner_filters is None and "inner_filters" in self.model_fields_set:
+            _dict['innerFilters'] = None
+
         return _dict
 
     @classmethod
@@ -103,7 +101,7 @@ class ICampaignFilterNotFilter(BaseModel):
             "_t": obj.get("_t"),
             "filter": ICampaignFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
             "executionOrder": obj.get("executionOrder"),
-            "innerFilters": [ICampaignFilter.from_dict(_item) for _item in obj["innerFilters"]] if obj.get("innerFilters") is not None else None
+            "innerFilters": obj.get("innerFilters")
         })
         return _obj
 

@@ -102,6 +102,11 @@ class ValidationSetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if dimensions (nullable) is None
+        # and model_fields_set contains the field
+        if self.dimensions is None and "dimensions" in self.model_fields_set:
+            _dict['dimensions'] = None
+
         return _dict
 
     @classmethod

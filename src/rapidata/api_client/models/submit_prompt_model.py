@@ -80,6 +80,11 @@ class SubmitPromptModel(BaseModel):
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod

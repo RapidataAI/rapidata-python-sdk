@@ -34,7 +34,7 @@ class CreateJobDefinitionEndpointInput(BaseModel):
     workflow: IOrderWorkflowModel = Field(description="The workflow configuration.")
     referee: IRefereeModel = Field(description="The referee configuration.")
     dataset_id: StrictStr = Field(description="The dataset id.", alias="datasetId")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="The feature flags.", alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
     __properties: ClassVar[List[str]] = ["definitionName", "workflow", "referee", "datasetId", "featureFlags", "aggregatorType"]
 

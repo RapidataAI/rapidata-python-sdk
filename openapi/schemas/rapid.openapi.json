@@ -682,7 +682,10 @@
         "type": "object",
         "properties": {
           "categories": {
-            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -702,12 +705,6 @@
           "value": {
             "type": "string"
           }
-        }
-      },
-      "ClassifyPayload_ListOfClassifyPayload_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClassifyPayload_Category"
         }
       },
       "CreateDemographicRapidModel": {
@@ -732,7 +729,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                },
+                "nullable": true
               }
             ],
             "description": "Optional feature flags to apply to the rapid."
@@ -810,7 +811,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -835,14 +839,11 @@
         "type": "object",
         "properties": {
           "responses": {
-            "$ref": "#/components/schemas/GetPublicResponsesResult_ListOfGetPublicResponsesResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetPublicResponsesResult_Response"
+            }
           }
-        }
-      },
-      "GetPublicResponsesResult_ListOfGetPublicResponsesResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetPublicResponsesResult_Response"
         }
       },
       "GetPublicResponsesResult_Response": {
@@ -892,17 +893,14 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "responses": {
-            "$ref": "#/components/schemas/GetResponsesForRapidResult_ListOfGetResponsesForRapidResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
+            }
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
           }
-        }
-      },
-      "GetResponsesForRapidResult_ListOfGetResponsesForRapidResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
         }
       },
       "GetResponsesForRapidResult_Response": {
@@ -1017,7 +1015,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetInput"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
           },
           "metadata": {
             "oneOf": [
@@ -1135,7 +1136,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -1567,7 +1571,10 @@
             "type": "string"
           },
           "categories": {
-            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -1724,7 +1731,10 @@
             "type": "string"
           },
           "transcription": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           }
         }
       },
@@ -1820,7 +1830,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -1885,7 +1898,10 @@
             "type": "string"
           },
           "lines": {
-            "$ref": "#/components/schemas/LineResult_ListOfLineResult_Line"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_Line"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -1906,7 +1922,10 @@
             "type": "string"
           },
           "coordinates": {
-            "$ref": "#/components/schemas/ListOfLocateCoordinate"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocateCoordinate"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -1927,7 +1946,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -1948,7 +1970,10 @@
             "type": "string"
           },
           "shapes": {
-            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Shape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Shape"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -1971,7 +1996,8 @@
           "timestamps": {
             "type": "array",
             "items": {
-              "type": "number"
+              "type": "integer",
+              "format": "int32"
             }
           },
           "rapidId": {
@@ -2010,7 +2036,10 @@
             "type": "string"
           },
           "selectedWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -2292,7 +2321,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "requiredPrecision": {
             "type": "number",
@@ -2498,7 +2530,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "requiredPrecision": {
             "type": "number",
@@ -2523,7 +2558,13 @@
             "type": "string"
           },
           "correctCombinations": {
-            "$ref": "#/components/schemas/ListOfListOfString"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -2540,7 +2581,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           }
         }
       },
@@ -2570,7 +2614,10 @@
             "type": "string"
           },
           "validRanges": {
-            "$ref": "#/components/schemas/ListOfScrubRange"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
           }
         }
       },
@@ -2600,7 +2647,10 @@
             "type": "string"
           },
           "correctWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "strictGrading": {
             "type": "boolean",
@@ -2629,7 +2679,13 @@
             "type": "string"
           },
           "correctCombinations": {
-            "$ref": "#/components/schemas/ListOfListOfString"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -2646,7 +2702,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           }
         }
       },
@@ -2676,7 +2735,10 @@
             "type": "string"
           },
           "validRanges": {
-            "$ref": "#/components/schemas/ListOfScrubRange"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
           }
         }
       },
@@ -2706,7 +2768,10 @@
             "type": "string"
           },
           "correctWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "strictGrading": {
             "type": "boolean",
@@ -2734,7 +2799,10 @@
             "format": "double"
           },
           "points": {
-            "$ref": "#/components/schemas/LineResult_ListOfLineResult_LinePoint"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_LinePoint"
+            }
           }
         }
       },
@@ -2753,99 +2821,6 @@
             "type": "number",
             "format": "double"
           }
-        }
-      },
-      "LineResult_ListOfLineResult_Line": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_Line"
-        }
-      },
-      "LineResult_ListOfLineResult_LinePoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_LinePoint"
-        }
-      },
-      "ListOfBoxShape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BoxShape"
-        }
-      },
-      "ListOfFeatureFlag": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlag"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfIAssetInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetInput"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfListOfString": {
-        "type": "array",
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "ListOfLocateCoordinate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LocateCoordinate"
-        }
-      },
-      "ListOfNamedClassification": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/NamedClassification"
-        }
-      },
-      "ListOfQueryValidationRapidEligibilityResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryValidationRapidEligibilityResult"
-        }
-      },
-      "ListOfRapidModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/RapidModel"
-        }
-      },
-      "ListOfScrubRange": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ScrubRange"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
-      },
-      "ListOfTranscriptionWord": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/TranscriptionWord"
         }
       },
       "LocateCoordinate": {
@@ -2941,7 +2916,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryValidationRapidEligibilityResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryValidationRapidEligibilityResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2971,7 +2949,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfRapidModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -3009,18 +2990,6 @@
           }
         }
       },
-      "PolygonResult_ListOfPolygonResult_Coordinate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Coordinate"
-        }
-      },
-      "PolygonResult_ListOfPolygonResult_Shape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Shape"
-        }
-      },
       "PolygonResult_Shape": {
         "required": [
           "edges"
@@ -3028,7 +2997,10 @@
         "type": "object",
         "properties": {
           "edges": {
-            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Coordinate"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Coordinate"
+            }
           }
         }
       },
@@ -3056,14 +3028,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -3200,7 +3169,10 @@
             "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -3288,7 +3260,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"

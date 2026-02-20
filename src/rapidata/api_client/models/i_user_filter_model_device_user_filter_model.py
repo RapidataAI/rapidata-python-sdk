@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.device_type import DeviceType
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +28,7 @@ class IUserFilterModelDeviceUserFilterModel(BaseModel):
     IUserFilterModelDeviceUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    device_types: List[StrictStr] = Field(alias="deviceTypes")
+    device_types: List[DeviceType] = Field(alias="deviceTypes")
     __properties: ClassVar[List[str]] = ["_t", "deviceTypes"]
 
     @field_validator('t')
@@ -35,14 +36,6 @@ class IUserFilterModelDeviceUserFilterModel(BaseModel):
         """Validates the enum"""
         if value not in set(['DeviceFilter']):
             raise ValueError("must be one of enum values ('DeviceFilter')")
-        return value
-
-    @field_validator('device_types')
-    def device_types_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['Unknown', 'Phone', 'Tablet']):
-                raise ValueError("each list item must be one of ('Unknown', 'Phone', 'Tablet')")
         return value
 
     model_config = ConfigDict(

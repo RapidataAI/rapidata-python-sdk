@@ -746,7 +746,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The feature flags to enable for the rapid."
@@ -818,12 +822,6 @@
           }
         }
       },
-      "ClassifyPayload_ListOfClassifyPayload_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClassifyPayload_Category"
-        }
-      },
       "CreateAudienceRequest": {
         "required": [
           "name"
@@ -842,7 +840,11 @@
           "filters": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfIAudienceFilter"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IAudienceFilter"
+                },
+                "nullable": true
               }
             ],
             "description": "The filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
@@ -976,7 +978,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -1027,7 +1032,10 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAudienceFilter"
+            }
           },
           "logo": {
             "type": "string",
@@ -1056,6 +1064,10 @@
           },
           "boostLevel": {
             "$ref": "#/components/schemas/BoostLevel"
+          },
+          "randomAdmissionProbability": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -1143,7 +1155,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetInput"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
           },
           "metadata": {
             "oneOf": [
@@ -1261,7 +1276,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -1363,7 +1381,10 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAudienceFilter"
+            }
           }
         }
       },
@@ -1436,9 +1457,7 @@
             ],
             "type": "string"
           },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
-          }
+          "filters": { }
         }
       },
       "IMetadataInput": {
@@ -1808,7 +1827,10 @@
             "type": "string"
           },
           "categories": {
-            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -1965,7 +1987,10 @@
             "type": "string"
           },
           "transcription": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           }
         }
       },
@@ -2139,7 +2164,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "requiredPrecision": {
             "type": "number",
@@ -2345,7 +2373,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "requiredPrecision": {
             "type": "number",
@@ -2370,7 +2401,13 @@
             "type": "string"
           },
           "correctCombinations": {
-            "$ref": "#/components/schemas/ListOfListOfString"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -2387,7 +2424,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           }
         }
       },
@@ -2417,7 +2457,10 @@
             "type": "string"
           },
           "validRanges": {
-            "$ref": "#/components/schemas/ListOfScrubRange"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
           }
         }
       },
@@ -2447,7 +2490,10 @@
             "type": "string"
           },
           "correctWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "strictGrading": {
             "type": "boolean",
@@ -2476,7 +2522,13 @@
             "type": "string"
           },
           "correctCombinations": {
-            "$ref": "#/components/schemas/ListOfListOfString"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -2493,7 +2545,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           }
         }
       },
@@ -2523,7 +2578,10 @@
             "type": "string"
           },
           "validRanges": {
-            "$ref": "#/components/schemas/ListOfScrubRange"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
           }
         }
       },
@@ -2553,7 +2611,10 @@
             "type": "string"
           },
           "correctWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "strictGrading": {
             "type": "boolean",
@@ -2567,93 +2628,6 @@
             "type": "number",
             "format": "double"
           }
-        }
-      },
-      "ListOfBoxShape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BoxShape"
-        }
-      },
-      "ListOfFeatureFlagModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlagModel"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfIAssetInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetInput"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfIAudienceFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAudienceFilter"
-        }
-      },
-      "ListOfListOfString": {
-        "type": "array",
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "ListOfNamedClassification": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/NamedClassification"
-        }
-      },
-      "ListOfQueryAudiencesResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryAudiencesResult"
-        }
-      },
-      "ListOfQueryJobsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryJobsResult"
-        }
-      },
-      "ListOfQueryRapidsForAudienceResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryRapidsForAudienceResult"
-        }
-      },
-      "ListOfScrubRange": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ScrubRange"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
-      },
-      "ListOfTranscriptionWord": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/TranscriptionWord"
         }
       },
       "LogicOperator": {
@@ -2732,7 +2706,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryAudiencesResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryAudiencesResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2762,7 +2739,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryJobsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryJobsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2792,7 +2772,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryRapidsForAudienceResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryRapidsForAudienceResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2845,7 +2828,10 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAudienceFilter"
+            }
           },
           "logo": {
             "type": "string",
@@ -2863,6 +2849,10 @@
           },
           "isDistilling": {
             "type": "boolean"
+          },
+          "randomAdmissionProbability": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -2931,14 +2921,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -3033,7 +3020,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"
@@ -3159,7 +3149,10 @@
           "filters": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ListOfIAudienceFilter"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IAudienceFilter"
+                }
               },
               {
                 "nullable": true
@@ -3186,8 +3179,38 @@
           },
           "minDistillingForGlobalBoost": {
             "type": "integer",
-            "description": "Minimum distilling users before disabling global boost.\n When distilling count is below this, RequiresGlobalBoost is set to true.",
+            "description": "Minimum distilling users before disabling global boost.\n When distilling count is below this, GlobalBoostLevel is set above zero.",
             "format": "int32",
+            "nullable": true
+          },
+          "minimumUserScore": {
+            "type": "number",
+            "description": "The minimum user score used to determine whether a user can be included in an audience.",
+            "format": "double",
+            "nullable": true
+          },
+          "maxDistillingResponses": {
+            "type": "integer",
+            "description": "Maximum responses before user exits the distilling campaign.\n Set to null to disable this exit condition.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "description": "Minimum responses before the score floor check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Set to null to apply score floor check from the first response.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "description": "Minimum user score floor - users below this score exit the distilling campaign\n (only after completing MinDistillingResponses).\n Set to null to disable this exit condition.",
+            "format": "double",
+            "nullable": true
+          },
+          "maxDistillingSessions": {
+            "type": "integer",
+            "description": "Maximum sessions (rapid retrievals) before user exits the distilling campaign.\n Set to a value to enable session-based exit condition.",
+            "format": "uint32",
             "nullable": true
           }
         },

@@ -177,12 +177,6 @@
           }
         }
       },
-      "AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
-        }
-      },
       "EloConfig": {
         "type": "object",
         "properties": {
@@ -245,7 +239,10 @@
             }
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -449,7 +446,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAsset"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAsset"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataCollection"
@@ -957,7 +957,10 @@
             }
           },
           "categories": {
-            "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -1343,7 +1346,10 @@
             "$ref": "#/components/schemas/IPairMakerConfig"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -1371,7 +1377,10 @@
             "type": "boolean"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -1437,7 +1446,10 @@
             "$ref": "#/components/schemas/IPairMakerConfig"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -1465,20 +1477,11 @@
             "format": "int32"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
-        }
-      },
-      "ListOfFeatureFlag": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlag"
-        }
-      },
-      "ListOfIAsset": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAsset"
         }
       },
       "MetadataCollection": {

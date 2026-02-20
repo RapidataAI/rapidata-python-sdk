@@ -150,6 +150,7 @@ Class | Method | HTTP request | Description
 *FlowApi* | [**flow_flow_id_get**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_get) | **GET** /flow/{flowId} | Retrieves a flow by its ID.
 *FlowApi* | [**flow_get**](rapidata/api_client/docs/FlowApi.md#flow_get) | **GET** /flow | Queries flows with filtering and pagination.
 *FlowApi* | [**flow_ranking_flow_id_completion_time_histogram_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_completion_time_histogram_get) | **GET** /flow/ranking/{flowId}/completion-time-histogram | Returns the distribution of completion durations (in seconds) per completed flow item.
+*FlowApi* | [**flow_ranking_flow_id_flow_item_creation_timeseries_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_flow_item_creation_timeseries_get) | **GET** /flow/ranking/{flowId}/flow-item-creation-timeseries | Returns flow item creation counts bucketed over time.
 *FlowApi* | [**flow_ranking_flow_id_response_count_histogram_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_histogram_get) | **GET** /flow/ranking/{flowId}/response-count-histogram | Returns the distribution of total votes per completed flow item.
 *FlowApi* | [**flow_ranking_flow_id_response_count_timeseries_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_timeseries_get) | **GET** /flow/ranking/{flowId}/response-count-timeseries | Returns average response counts bucketed over time for completed flow items.
 *FlowItemApi* | [**flow_item_flow_item_id_stop_post**](rapidata/api_client/docs/FlowItemApi.md#flow_item_flow_item_id_stop_post) | **POST** /flow/item/{flowItemId}/stop | Stops the specified flow item and triggers partial result processing.
@@ -206,6 +207,7 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_aggregated_overview_get**](rapidata/api_client/docs/OrderApi.md#orders_aggregated_overview_get) | **GET** /orders/aggregated-overview | Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders based on a filter, page, and sort criteria.
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves orders that are public and can be cloned by any user.
+*OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant on a benchmark.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
 *ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by it&#39;s Id.
@@ -260,6 +262,7 @@ Class | Method | HTTP request | Description
  - [AddRapidToAudienceModel](rapidata/api_client/docs/AddRapidToAudienceModel.md)
  - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
+ - [AgeUserFilterModelAgeGroup](rapidata/api_client/docs/AgeUserFilterModelAgeGroup.md)
  - [AggregatedOrdersModel](rapidata/api_client/docs/AggregatedOrdersModel.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
  - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
@@ -326,6 +329,7 @@ Class | Method | HTTP request | Description
  - [CreateValidationSetModel](rapidata/api_client/docs/CreateValidationSetModel.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
  - [DefinitionType](rapidata/api_client/docs/DefinitionType.md)
+ - [DeviceType](rapidata/api_client/docs/DeviceType.md)
  - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
  - [EloConfig](rapidata/api_client/docs/EloConfig.md)
  - [EloConfigModel](rapidata/api_client/docs/EloConfigModel.md)
@@ -340,6 +344,7 @@ Class | Method | HTTP request | Description
  - [FlowItemState](rapidata/api_client/docs/FlowItemState.md)
  - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
+ - [GenderUserFilterModelGender](rapidata/api_client/docs/GenderUserFilterModelGender.md)
  - [GetAudienceByIdResult](rapidata/api_client/docs/GetAudienceByIdResult.md)
  - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
@@ -355,6 +360,7 @@ Class | Method | HTTP request | Description
  - [GetCompareWorkflowResultsResult](rapidata/api_client/docs/GetCompareWorkflowResultsResult.md)
  - [GetCompareWorkflowResultsResultDatapoint](rapidata/api_client/docs/GetCompareWorkflowResultsResultDatapoint.md)
  - [GetCompletionTimeHistogramEndpointOutput](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutput.md)
+ - [GetCompletionTimeHistogramEndpointOutputBucket](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutputBucket.md)
  - [GetDatapointByIdResult](rapidata/api_client/docs/GetDatapointByIdResult.md)
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
@@ -364,6 +370,8 @@ Class | Method | HTTP request | Description
  - [GetFileMetadataResult](rapidata/api_client/docs/GetFileMetadataResult.md)
  - [GetFlowByIdEndpointOutput](rapidata/api_client/docs/GetFlowByIdEndpointOutput.md)
  - [GetFlowItemByIdEndpointOutput](rapidata/api_client/docs/GetFlowItemByIdEndpointOutput.md)
+ - [GetFlowItemCreationTimeseriesEndpointOutput](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutput.md)
+ - [GetFlowItemCreationTimeseriesEndpointOutputDataPoint](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutputDataPoint.md)
  - [GetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResult.md)
  - [GetJobByIdEndpointOutput](rapidata/api_client/docs/GetJobByIdEndpointOutput.md)
  - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
@@ -376,10 +384,13 @@ Class | Method | HTTP request | Description
  - [GetPublicResponsesResult](rapidata/api_client/docs/GetPublicResponsesResult.md)
  - [GetPublicResponsesResultResponse](rapidata/api_client/docs/GetPublicResponsesResultResponse.md)
  - [GetRankingFlowItemResultsEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemResultsEndpointOutput.md)
+ - [GetRankingFlowItemResultsEndpointOutputDatapoint](rapidata/api_client/docs/GetRankingFlowItemResultsEndpointOutputDatapoint.md)
  - [GetRankingFlowItemVoteMatrixEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemVoteMatrixEndpointOutput.md)
  - [GetRecommendedValidationSetResult](rapidata/api_client/docs/GetRecommendedValidationSetResult.md)
  - [GetResponseCountHistogramEndpointOutput](rapidata/api_client/docs/GetResponseCountHistogramEndpointOutput.md)
+ - [GetResponseCountHistogramEndpointOutputBucket](rapidata/api_client/docs/GetResponseCountHistogramEndpointOutputBucket.md)
  - [GetResponseCountTimeseriesEndpointOutput](rapidata/api_client/docs/GetResponseCountTimeseriesEndpointOutput.md)
+ - [GetResponseCountTimeseriesEndpointOutputDataPoint](rapidata/api_client/docs/GetResponseCountTimeseriesEndpointOutputDataPoint.md)
  - [GetResponsesForRapidResult](rapidata/api_client/docs/GetResponsesForRapidResult.md)
  - [GetResponsesForRapidResultResponse](rapidata/api_client/docs/GetResponsesForRapidResultResponse.md)
  - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
@@ -617,9 +628,6 @@ Class | Method | HTTP request | Description
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
  - [OrderModel](rapidata/api_client/docs/OrderModel.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
- - [OutputBucket](rapidata/api_client/docs/OutputBucket.md)
- - [OutputDataPoint](rapidata/api_client/docs/OutputDataPoint.md)
- - [OutputDatapoint](rapidata/api_client/docs/OutputDatapoint.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
  - [PagedResultOfAggregatedOrdersModel](rapidata/api_client/docs/PagedResultOfAggregatedOrdersModel.md)
  - [PagedResultOfBenchmarkQueryResult](rapidata/api_client/docs/PagedResultOfBenchmarkQueryResult.md)
@@ -667,6 +675,8 @@ Class | Method | HTTP request | Description
  - [QueryJobRevisionsResult](rapidata/api_client/docs/QueryJobRevisionsResult.md)
  - [QueryJobsResult](rapidata/api_client/docs/QueryJobsResult.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
+ - [QueryOrganizationsEndpointOutput](rapidata/api_client/docs/QueryOrganizationsEndpointOutput.md)
+ - [QueryOrganizationsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryOrganizationsEndpointPagedResultOfOutput.md)
  - [QueryRapidsForAudienceResult](rapidata/api_client/docs/QueryRapidsForAudienceResult.md)
  - [QueryValidationRapidEligibilityModelQueryValidationModel](rapidata/api_client/docs/QueryValidationRapidEligibilityModelQueryValidationModel.md)
  - [QueryValidationRapidEligibilityResult](rapidata/api_client/docs/QueryValidationRapidEligibilityResult.md)

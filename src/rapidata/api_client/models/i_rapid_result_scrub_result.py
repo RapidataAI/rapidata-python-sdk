@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class IRapidResultScrubResult(BaseModel):
     IRapidResultScrubResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    timestamps: List[Union[StrictFloat, StrictInt]]
+    timestamps: List[StrictInt]
     rapid_id: StrictStr = Field(alias="rapidId")
     __properties: ClassVar[List[str]] = ["_t", "timestamps", "rapidId"]
 

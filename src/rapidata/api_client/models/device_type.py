@@ -18,21 +18,21 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class GenderUserFilterModelGender(str, Enum):
+class DeviceType(str, Enum):
     """
-    GenderUserFilterModelGender
+    DeviceType
     """
 
     """
     allowed enum values
     """
-    MALE = 'Male'
-    FEMALE = 'Female'
-    OTHER = 'Other'
+    UNKNOWN = 'Unknown'
+    PHONE = 'Phone'
+    TABLET = 'Tablet'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of GenderUserFilterModelGender from a JSON string"""
+        """Create an instance of DeviceType from a JSON string"""
         return cls(json.loads(json_str))
 
 

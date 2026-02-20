@@ -130,6 +130,11 @@ class IOrderWorkflowModelCompareWorkflowModel(BaseModel):
         if self.context_asset is None and "context_asset" in self.model_fields_set:
             _dict['contextAsset'] = None
 
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
+
         return _dict
 
     @classmethod

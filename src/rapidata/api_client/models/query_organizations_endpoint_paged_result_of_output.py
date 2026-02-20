@@ -18,18 +18,21 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_ranking_flow_item_results_endpoint_output_datapoint import GetRankingFlowItemResultsEndpointOutputDatapoint
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.query_organizations_endpoint_output import QueryOrganizationsEndpointOutput
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetRankingFlowItemResultsEndpointOutput(BaseModel):
+class QueryOrganizationsEndpointPagedResultOfOutput(BaseModel):
     """
-    GetRankingFlowItemResultsEndpointOutput
+    QueryOrganizationsEndpointPagedResultOfOutput
     """ # noqa: E501
-    datapoints: List[GetRankingFlowItemResultsEndpointOutputDatapoint]
-    total_votes: StrictInt = Field(description="The total number of votes across all datapoints.", alias="totalVotes")
-    __properties: ClassVar[List[str]] = ["datapoints", "totalVotes"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[QueryOrganizationsEndpointOutput]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +52,7 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a JSON string"""
+        """Create an instance of QueryOrganizationsEndpointPagedResultOfOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,18 +73,18 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in datapoints (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
         _items = []
-        if self.datapoints:
-            for _item_datapoints in self.datapoints:
-                if _item_datapoints:
-                    _items.append(_item_datapoints.to_dict())
-            _dict['datapoints'] = _items
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a dict"""
+        """Create an instance of QueryOrganizationsEndpointPagedResultOfOutput from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +92,11 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapoints": [GetRankingFlowItemResultsEndpointOutputDatapoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None,
-            "totalVotes": obj.get("totalVotes")
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [QueryOrganizationsEndpointOutput.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 

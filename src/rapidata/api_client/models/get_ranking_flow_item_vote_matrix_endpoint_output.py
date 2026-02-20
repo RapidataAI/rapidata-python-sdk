@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +28,7 @@ class GetRankingFlowItemVoteMatrixEndpointOutput(BaseModel):
     """ # noqa: E501
     index: List[StrictStr]
     columns: List[StrictStr]
-    data: List[List[Union[StrictFloat, StrictInt]]] = Field(description="The vote counts as a two-dimensional matrix where Data[i][j] is the number of times row i was preferred over column j.")
+    data: List[List[Union[StrictFloat, StrictInt]]]
     __properties: ClassVar[List[str]] = ["index", "columns", "data"]
 
     model_config = ConfigDict(

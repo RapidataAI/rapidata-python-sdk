@@ -76,6 +76,11 @@ class JsonWebKeySet(BaseModel):
                 if _item_keys:
                     _items.append(_item_keys.to_dict())
             _dict['keys'] = _items
+        # set to None if keys (nullable) is None
+        # and model_fields_set contains the field
+        if self.keys is None and "keys" in self.model_fields_set:
+            _dict['keys'] = None
+
         return _dict
 
     @classmethod

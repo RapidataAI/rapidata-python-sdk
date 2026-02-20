@@ -39,8 +39,8 @@ class CreateLeaderboardModel(BaseModel):
     is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The Validation set that should be attached to every run.", alias="validationSetId")
     audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the leaderboard will target users who have  graduated from the audience (i.e., users with a score at or above the audience's minimum threshold).  Cannot be specified together with Filters.", alias="audienceId")
-    filters: Optional[List[IUserFilterModel]] = Field(default=None, description="The filters will be applied on every order that is created by this leaderboard.  Cannot be specified together with AudienceId.")
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="Feature flags that will be applied to every order that is created by this leaderboard.", alias="featureFlags")
+    filters: Optional[List[IUserFilterModel]] = None
+    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "audienceId", "filters", "featureFlags"]
 
     model_config = ConfigDict(
@@ -115,6 +115,16 @@ class CreateLeaderboardModel(BaseModel):
         # and model_fields_set contains the field
         if self.audience_id is None and "audience_id" in self.model_fields_set:
             _dict['audienceId'] = None
+
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
 
         return _dict
 

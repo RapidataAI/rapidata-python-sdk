@@ -19,6 +19,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_audience_filter_country_audience_filter import IAudienceFilterCountryAudienceFilter
 from rapidata.api_client.models.i_audience_filter_language_audience_filter import IAudienceFilterLanguageAudienceFilter
+from rapidata.api_client.models.i_audience_filter_or_audience_filter import IAudienceFilterOrAudienceFilter
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
@@ -178,7 +179,6 @@ class IAudienceFilter(BaseModel):
 
 from rapidata.api_client.models.i_audience_filter_and_audience_filter import IAudienceFilterAndAudienceFilter
 from rapidata.api_client.models.i_audience_filter_not_audience_filter import IAudienceFilterNotAudienceFilter
-from rapidata.api_client.models.i_audience_filter_or_audience_filter import IAudienceFilterOrAudienceFilter
 # TODO: Rewrite to not use raise_errors
 IAudienceFilter.model_rebuild(raise_errors=False)
 

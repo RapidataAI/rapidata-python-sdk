@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.get_boost_result_boost_mode import GetBoostResultBoostMode
 from rapidata.api_client.models.get_boost_result_boost_status import GetBoostResultBoostStatus
 from typing import Optional, Set
@@ -32,7 +32,7 @@ class GetBoostResult(BaseModel):
     mode: GetBoostResultBoostMode
     active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
     inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
-    unknown_campaigns: List[Union[StrictFloat, StrictInt]] = Field(alias="unknownCampaigns")
+    unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
     __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
 
     model_config = ConfigDict(

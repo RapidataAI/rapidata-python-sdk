@@ -50,6 +50,7 @@ _API_IMPORTS = {
     "LeaderboardApi": "rapidata.api_client.api.leaderboard_api",
     "NewsletterApi": "rapidata.api_client.api.newsletter_api",
     "OrderApi": "rapidata.api_client.api.order_api",
+    "OrganizationApi": "rapidata.api_client.api.organization_api",
     "ParticipantApi": "rapidata.api_client.api.participant_api",
     "PipelineApi": "rapidata.api_client.api.pipeline_api",
     "PromptApi": "rapidata.api_client.api.prompt_api",

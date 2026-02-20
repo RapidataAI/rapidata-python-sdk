@@ -17,19 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_ranking_flow_item_results_endpoint_output_datapoint import GetRankingFlowItemResultsEndpointOutputDatapoint
+from rapidata.api_client.models.get_flow_item_creation_timeseries_endpoint_output_data_point import GetFlowItemCreationTimeseriesEndpointOutputDataPoint
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetRankingFlowItemResultsEndpointOutput(BaseModel):
+class GetFlowItemCreationTimeseriesEndpointOutput(BaseModel):
     """
-    GetRankingFlowItemResultsEndpointOutput
+    GetFlowItemCreationTimeseriesEndpointOutput
     """ # noqa: E501
-    datapoints: List[GetRankingFlowItemResultsEndpointOutputDatapoint]
-    total_votes: StrictInt = Field(description="The total number of votes across all datapoints.", alias="totalVotes")
-    __properties: ClassVar[List[str]] = ["datapoints", "totalVotes"]
+    datapoints: List[GetFlowItemCreationTimeseriesEndpointOutputDataPoint]
+    __properties: ClassVar[List[str]] = ["datapoints"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +48,7 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a JSON string"""
+        """Create an instance of GetFlowItemCreationTimeseriesEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,7 +80,7 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a dict"""
+        """Create an instance of GetFlowItemCreationTimeseriesEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +88,7 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapoints": [GetRankingFlowItemResultsEndpointOutputDatapoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None,
-            "totalVotes": obj.get("totalVotes")
+            "datapoints": [GetFlowItemCreationTimeseriesEndpointOutputDataPoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None
         })
         return _obj
 

@@ -464,7 +464,11 @@
           "urls": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfUri"
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
             ],
             "description": "The URLs to download and process."
@@ -495,12 +499,6 @@
           "Video",
           "Audio"
         ]
-      },
-      "GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_UrlOutput"
-        }
       },
       "GetBatchUploadResultEndpoint_Output": {
         "required": [
@@ -538,7 +536,10 @@
           "items": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_UrlOutput"
+                }
               }
             ],
             "description": "The individual results for each URL in the batch."
@@ -893,13 +894,6 @@
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
           }
-        }
-      },
-      "ListOfUri": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "format": "uri"
         }
       },
       "MetadataCollection": {

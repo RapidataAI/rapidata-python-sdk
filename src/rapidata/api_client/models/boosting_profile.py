@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,10 +26,10 @@ class BoostingProfile(BaseModel):
     """
     BoostingProfile
     """ # noqa: E501
-    requires_global_boost: Optional[StrictBool] = Field(default=None, alias="requiresGlobalBoost")
+    global_boost_level: Optional[StrictInt] = Field(default=None, alias="globalBoostLevel")
     language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
-    kayzen_audience_ids: Optional[List[Union[StrictFloat, StrictInt]]] = Field(default=None, alias="kayzenAudienceIds")
-    __properties: ClassVar[List[str]] = ["requiresGlobalBoost", "languageBoosts", "kayzenAudienceIds"]
+    kayzen_audience_ids: Optional[List[StrictInt]] = Field(default=None, alias="kayzenAudienceIds")
+    __properties: ClassVar[List[str]] = ["globalBoostLevel", "languageBoosts", "kayzenAudienceIds"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,7 +82,7 @@ class BoostingProfile(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "requiresGlobalBoost": obj.get("requiresGlobalBoost"),
+            "globalBoostLevel": obj.get("globalBoostLevel"),
             "languageBoosts": obj.get("languageBoosts"),
             "kayzenAudienceIds": obj.get("kayzenAudienceIds")
         })

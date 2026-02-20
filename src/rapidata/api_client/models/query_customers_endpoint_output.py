@@ -28,7 +28,9 @@ class QueryCustomersEndpointOutput(BaseModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the customer.")
     email: Optional[StrictStr] = Field(description="The email address of the customer.")
-    __properties: ClassVar[List[str]] = ["id", "email"]
+    organization_name: Optional[StrictStr] = Field(description="The name of the organization this customer belongs to, if any.", alias="organizationName")
+    organization_id: Optional[StrictStr] = Field(description="The identifier of the organization this customer belongs to, if any.", alias="organizationId")
+    __properties: ClassVar[List[str]] = ["id", "email", "organizationName", "organizationId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,6 +76,16 @@ class QueryCustomersEndpointOutput(BaseModel):
         if self.email is None and "email" in self.model_fields_set:
             _dict['email'] = None
 
+        # set to None if organization_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_name is None and "organization_name" in self.model_fields_set:
+            _dict['organizationName'] = None
+
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -87,7 +99,9 @@ class QueryCustomersEndpointOutput(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "email": obj.get("email")
+            "email": obj.get("email"),
+            "organizationName": obj.get("organizationName"),
+            "organizationId": obj.get("organizationId")
         })
         return _obj
 
