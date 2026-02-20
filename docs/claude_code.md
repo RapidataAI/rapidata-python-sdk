@@ -1,6 +1,6 @@
 # Using Rapidata with Claude Code
 
-The Rapidata SDK has an official [Claude Code](https://claude.ai/claude-code) plugin that teaches Claude how to use the SDK. Once installed, Claude can help you write Rapidata integration code, create labeling jobs, set up audiences, and more — either automatically when it detects you're working with Rapidata, or on demand via the `/rapidata` command.
+The Rapidata SDK has an official [Claude Code](https://claude.com/product/claude-code) plugin that teaches Claude how to use the SDK. Once installed, Claude can help you write Rapidata integration code, create labeling jobs, set up audiences, and more - either automatically when it detects you're working with Rapidata, or on demand via the `/rapidata` command.
 
 ## Installation
 
