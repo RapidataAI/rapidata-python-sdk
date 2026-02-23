@@ -25,8 +25,8 @@
 
         client = RapidataClient()
 
-        # Get the global audience
-        audience = client.audience.get_audience_by_id("global")
+        # Get the curated alignment audience
+        audience = client.audience.find_audiences("alignment")[0]
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -53,8 +53,8 @@
 
         client = RapidataClient()
 
-        # Get the global audience
-        audience = client.audience.get_audience_by_id("global")
+        # Get the curated alignment audience
+        audience = client.audience.find_audiences("alignment")[0]
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -130,7 +130,7 @@
         print(results)
         ```
 
-    > **Note**: The global audience gets you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
+    > **Note**: The curated/global audiences get you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
 
     [:octicons-arrow-right-24: Quickstart Guide](quickstart.md)
 
@@ -180,13 +180,13 @@ client = RapidataClient(client_id="Your client ID", client_secret="Your client s
 
 ### Step 1: Get an Audience
 
-The simplest way to get started is with the global audience - a pre-existing pool of labelers ready to work on your tasks:
+The simplest way to get started is with a curated audience - a pre-existing pool of labelers trained on a specific type of task:
 
 ```py
-audience = client.audience.get_audience_by_id("global")
+audience = client.audience.find_audiences("alignment")[0]
 ```
 
-> **Note**: The global audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
+> **Note**: The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
 ### Step 2: Create a Job Definition
 
@@ -194,7 +194,7 @@ A job definition configures what you want labeled. Here we create a compare job 
 
 ```py
 job_definition = client.job.create_compare_job_definition(
-    name="Example Image Comparison",
+    name="Example Image Prompt Alignment",
     instruction="Which image matches the description better?",
     datapoints=[
         ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
@@ -243,7 +243,7 @@ To understand the results format, see the [Understanding the Results](understand
 
 ```py
 # Find audiences by name
-audiences = client.audience.find_audiences("Image Comparison")
+audiences = client.audience.find_audiences("alignment")
 
 # Get a specific audience by ID
 audience = client.audience.get_audience_by_id("audience_id")
@@ -253,7 +253,7 @@ audience = client.audience.get_audience_by_id("audience_id")
 
 ```py
 # Find job definitions by name
-job_definitions = client.job.find_job_definitions("Prompt Alignment")
+job_definitions = client.job.find_job_definitions("Example Image Prompt Alignment")
 
 # Get a specific job definition by ID
 job_definition = client.job.get_job_defintion_by_id("job_definition_id")
@@ -263,7 +263,7 @@ job_definition = client.job.get_job_defintion_by_id("job_definition_id")
 
 ```py
 # Find jobs by name
-jobs = client.job.find_jobs("Prompt Alignment")
+jobs = client.job.find_jobs("Example Image Prompt Alignment")
 
 # Get a specific job by ID
 job = client.job.get_job_by_id("job_id")
@@ -277,19 +277,19 @@ jobs = audience.find_jobs("Prompt Alignment")
 
 ## Complete Example
 
-Here's the full workflow using the global audience:
+Here's the full workflow using the curated alignment audience:
 
 ```py
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Get the global audience
-audience = client.audience.get_audience_by_id("global")
+# Get the curated alignment audience
+audience = client.audience.find_audiences("alignment")[0]
 
 # Create job definition
 job_definition = client.job.create_compare_job_definition(
-    name="Example Image Comparison",
+    name="Example Image Prompt Alignment",
     instruction="Which image matches the description better?",
     datapoints=[
         ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
@@ -323,16 +323,21 @@ print(results)
 
 Custom audiences let you train labelers with qualification examples specific to your task, resulting in higher quality labels.
 
-## Global vs Custom Audiences
+## Audience Types
 
 | Audience Type | Speed | Quality | Best For |
 |---------------|-------|---------|----------|
-| **Global** | Fast | Good | Quick prototyping, simple tasks |
-| **Custom** | Slower initial setup | Higher | Production workloads, nuanced tasks |
+| **Global** | Fastest | Baseline | Quick prototyping, simple tasks |
+| **Curated** | Fast | Good | Tasks with a known domain (e.g. prompt alignment) |
+| **Custom** | Slower initial setup | Highest | Production workloads, nuanced tasks |
 
-The **global audience** is a pre-existing pool of labelers ready to work immediately. Use it when you need results quickly and your task is straightforward.
+The **global audience** is the broadest pool of labelers, ready to work on any task immediately.
 
-A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to more accurate results.
+A **curated audience** is a pre-existing pool of labelers trained on a specific type of task. It offers better quality than the global audience without requiring any setup.
+
+A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to the most accurate results.
+
+> **Note**: You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 ## Creating a Custom Audience
 
@@ -2037,7 +2042,7 @@ flow_item = flow.create_new_flow_batch(
 
 ### 3. Get Results
 
-Call `get_results()` on a flow item to retrieve the ranking results. If the flow item is still processing, this will automatically wait until it completes:
+Call `get_results()` on a flow item to retrieve the ranking results. If the flow item is still processing, this will automatically wait until it completes (or becomes incomplete due to `time_to_live`):
 
 ```python
 results = flow_item.get_results()
@@ -2046,8 +2051,10 @@ results = flow_item.get_results()
 You can also check the status without blocking:
 
 ```python
-status = flow_item.get_status()  # Pending, Running, Completed, Failed, or Stopped
+status = flow_item.get_status()  # Pending, Running, Completed, Failed, Stopped, or Incomplete
 ```
+
+> **Note:** A flow item enters the `Incomplete` state when its `time_to_live` expires before all responses are collected. You can still retrieve partial results from incomplete flow items.
 
 To get the win/loss matrix per flow item and see what datapoints were preferred over each other:
 
@@ -2056,6 +2063,12 @@ matrix = flow_item.get_win_loss_matrix()
 ```
 
 This returns a pandas `DataFrame` where `matrix.loc[a, b]` is the number of times item `a` was preferred over item `b`.
+
+To get the total number of pairwise comparison responses collected for a flow item:
+
+```python
+response_count = flow_item.get_response_count()
+```
 
 To query all flow items for a flow:
 

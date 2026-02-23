@@ -2,370 +2,374 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.rapidata.ai/3.x/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/api/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/audiences/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/confidence_stopping/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/config/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/error_handling/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/flows/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/human_prompting/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/job_definition_parameters/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/migration_guide/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/mri/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/mri_advanced/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/quickstart/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/starting_page/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/understanding_the_results/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/examples/classify_job/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/examples/compare_job/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/SUMMARY/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/rapidata_client/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/api/rapidata_api_client/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/audience/audience_example_handler/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/audience/rapidata_audience/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/audience/rapidata_audience_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/benchmark/leaderboard/rapidata_leaderboard/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/logger/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/logging_config/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/managed_print/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/rapidata_config/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/tracer/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/upload_config/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/datapoints/assets/constants/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/demographic/demographic_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/exceptions/asset_upload_exception/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/exceptions/failed_upload/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/exceptions/failed_upload_exception/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/exceptions/rapidata_error/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/age_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/and_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/campaign_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/country_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/custom_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/device_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/gender_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/language_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/new_user_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/not_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/or_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/rapidata_filters/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/response_count_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/user_score_filter/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/models/age_group/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/models/device_type/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/models/gender/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/flow/flow_item_result/</loc>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/flow/rapidata_flow/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/flow/rapidata_flow_item/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/flow/rapidata_flow_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/job/rapidata_job/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/job/rapidata_job_definition/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/job/rapidata_job_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/order/rapidata_order/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/order/rapidata_order_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/results/rapidata_results/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/ab_test_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/capped_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/conditional_validation_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/demographic_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/effort_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/labeling_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/rapidata_retrieval_modes/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/rapidata_selections/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/shuffling_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/static_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/selection/validation_selection/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/alert_on_fast_response/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/allow_neither_both/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/custom_setting/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/free_text_minimum_characters/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/mute_video/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/no_shuffle/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/play_video_until_the_end/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/rapidata_settings/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/swap_context_instruction/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/translation_behaviour/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/models/translation_behaviour_options/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/utils/threaded_uploader/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/validation/rapidata_validation_set/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/validation/validation_set_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/validation/rapids/box/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/validation/rapids/rapids/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
     <url>
          <loc>https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/validation/rapids/rapids_manager/</loc>
-         <lastmod>2026-02-11</lastmod>
+         <lastmod>2026-02-23</lastmod>
     </url>
 </urlset>

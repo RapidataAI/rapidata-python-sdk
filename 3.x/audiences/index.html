@@ -579,10 +579,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#global-vs-custom-audiences" class="md-nav__link">
+  <a href="#audience-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Global vs Custom Audiences
+        Audience Types
       
     </span>
   </a>
@@ -1233,7 +1233,7 @@
 
 <h1 id="custom-audiences">Custom Audiences<a class="headerlink" href="#custom-audiences" title="Permanent link">#</a></h1>
 <p>Custom audiences let you train labelers with qualification examples specific to your task, resulting in higher quality labels.</p>
-<h2 id="global-vs-custom-audiences">Global vs Custom Audiences<a class="headerlink" href="#global-vs-custom-audiences" title="Permanent link">#</a></h2>
+<h2 id="audience-types">Audience Types<a class="headerlink" href="#audience-types" title="Permanent link">#</a></h2>
 <table>
 <thead>
 <tr>
@@ -1246,20 +1246,30 @@
 <tbody>
 <tr>
 <td><strong>Global</strong></td>
+<td>Fastest</td>
+<td>Baseline</td>
+<td>Quick prototyping, simple tasks</td>
+</tr>
+<tr>
+<td><strong>Curated</strong></td>
 <td>Fast</td>
 <td>Good</td>
-<td>Quick prototyping, simple tasks</td>
+<td>Tasks with a known domain (e.g. prompt alignment)</td>
 </tr>
 <tr>
 <td><strong>Custom</strong></td>
 <td>Slower initial setup</td>
-<td>Higher</td>
+<td>Highest</td>
 <td>Production workloads, nuanced tasks</td>
 </tr>
 </tbody>
 </table>
-<p>The <strong>global audience</strong> is a pre-existing pool of labelers ready to work immediately. Use it when you need results quickly and your task is straightforward.</p>
-<p>A <strong>custom audience</strong> filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to more accurate results.</p>
+<p>The <strong>global audience</strong> is the broadest pool of labelers, ready to work on any task immediately.</p>
+<p>A <strong>curated audience</strong> is a pre-existing pool of labelers trained on a specific type of task. It offers better quality than the global audience without requiring any setup.</p>
+<p>A <strong>custom audience</strong> filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to the most accurate results.</p>
+<blockquote>
+<p><strong>Note</strong>: You can see the curated audiences along with your own in the <a href="https://app.rapidata.ai/audiences">Rapidata Dashboard</a>.</p>
+</blockquote>
 <h2 id="creating-a-custom-audience">Creating a Custom Audience<a class="headerlink" href="#creating-a-custom-audience" title="Permanent link">#</a></h2>
 <h3 id="step-1-create-the-audience">Step 1: Create the Audience<a class="headerlink" href="#step-1-create-the-audience" title="Permanent link">#</a></h3>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>

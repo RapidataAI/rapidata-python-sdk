@@ -19,8 +19,8 @@
 
         client = RapidataClient()
 
-        # Get the global audience
-        audience = client.audience.get_audience_by_id("global")
+        # Get the curated alignment audience
+        audience = client.audience.find_audiences("alignment")[0]
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -47,8 +47,8 @@
 
         client = RapidataClient()
 
-        # Get the global audience
-        audience = client.audience.get_audience_by_id("global")
+        # Get the curated alignment audience
+        audience = client.audience.find_audiences("alignment")[0]
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -124,7 +124,7 @@
         print(results)
         ```
 
-    > **Note**: The global audience gets you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
+    > **Note**: The curated/global audiences get you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
 
     [:octicons-arrow-right-24: Quickstart Guide](quickstart.md)
 
