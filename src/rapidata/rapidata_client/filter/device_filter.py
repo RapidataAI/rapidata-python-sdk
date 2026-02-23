@@ -26,11 +26,12 @@ class DeviceFilter(RapidataFilter, BaseModel):
         from rapidata.api_client.models.i_user_filter_model_device_user_filter_model import (
             IUserFilterModelDeviceUserFilterModel,
         )
+        from rapidata.api_client.models.device_type import DeviceType as ApiDeviceType
 
         return IUserFilterModel(
             actual_instance=IUserFilterModelDeviceUserFilterModel(
                 _t="DeviceFilter",
-                deviceTypes=[dt._to_backend_model() for dt in self.device_types],
+                deviceTypes=[ApiDeviceType(dt._to_backend_model()) for dt in self.device_types],
             )
         )
 
