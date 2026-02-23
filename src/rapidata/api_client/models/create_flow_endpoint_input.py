@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,10 +34,12 @@ class CreateFlowEndpointInput(BaseModel):
     k_factor: Optional[StrictInt] = Field(default=None, description="K-factor controlling Elo rating sensitivity. Defaults to 40.", alias="kFactor")
     scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation. Defaults to 400.", alias="scalingFactor")
     max_responses: Optional[StrictInt] = Field(default=None, description="Maximum number of responses per comparison.", alias="maxResponses")
+    serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.", alias="serveToResponseRatio")
+    serve_timeout_seconds: Optional[StrictInt] = Field(default=None, description="Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.", alias="serveTimeoutSeconds")
     min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 1.", alias="minResponses")
     responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Optional feature flags to enable for this flow.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "minResponses", "responsesRequired", "featureFlags"]
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,6 +92,11 @@ class CreateFlowEndpointInput(BaseModel):
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
             _dict['validationSetId'] = None
 
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
+
         return _dict
 
     @classmethod
@@ -109,6 +116,8 @@ class CreateFlowEndpointInput(BaseModel):
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor"),
             "maxResponses": obj.get("maxResponses"),
+            "serveToResponseRatio": obj.get("serveToResponseRatio"),
+            "serveTimeoutSeconds": obj.get("serveTimeoutSeconds"),
             "minResponses": obj.get("minResponses"),
             "responsesRequired": obj.get("responsesRequired"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None

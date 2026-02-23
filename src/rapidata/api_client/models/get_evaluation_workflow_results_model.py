@@ -17,9 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.rapid_state import RapidState
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,20 +30,9 @@ class GetEvaluationWorkflowResultsModel(BaseModel):
     Model for getting the overview of a simple workflow result.
     """ # noqa: E501
     page: Optional[PageInfo] = Field(default=None, description="The size of the page and the page number to display.")
-    states: Optional[List[StrictStr]] = None
-    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
+    states: Optional[List[RapidState]] = None
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
     __properties: ClassVar[List[str]] = ["page", "states", "sortCriteria"]
-
-    @field_validator('states')
-    def states_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        for i in value:
-            if i not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None', 'Rejected']):
-                raise ValueError("each list item must be one of ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None', 'Rejected')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,6 +83,16 @@ class GetEvaluationWorkflowResultsModel(BaseModel):
                 if _item_sort_criteria:
                     _items.append(_item_sort_criteria.to_dict())
             _dict['sortCriteria'] = _items
+        # set to None if states (nullable) is None
+        # and model_fields_set contains the field
+        if self.states is None and "states" in self.model_fields_set:
+            _dict['states'] = None
+
+        # set to None if sort_criteria (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
+            _dict['sortCriteria'] = None
+
         return _dict
 
     @classmethod

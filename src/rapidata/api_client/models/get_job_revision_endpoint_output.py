@@ -40,7 +40,7 @@ class GetJobRevisionEndpointOutput(BaseModel):
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
     workflow: IOrderWorkflowModel = Field(description="The workflow configuration. Can be used directly to create a new revision.")
     referee: IRefereeModel = Field(description="The referee configuration. Can be used directly to create a new revision.")
-    feature_flags: List[FeatureFlag] = Field(description="The feature flags.", alias="featureFlags")
+    feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     created_by_id: StrictStr = Field(description="The id of the user who created the revision.", alias="createdById")
     created_by_mail: StrictStr = Field(description="The email of the user who created the revision.", alias="createdByMail")

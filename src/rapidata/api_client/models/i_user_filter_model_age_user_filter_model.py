@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.age_user_filter_model_age_group import AgeUserFilterModelAgeGroup
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +28,7 @@ class IUserFilterModelAgeUserFilterModel(BaseModel):
     IUserFilterModelAgeUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    age_groups: List[StrictStr] = Field(alias="ageGroups")
+    age_groups: List[AgeUserFilterModelAgeGroup] = Field(alias="ageGroups")
     __properties: ClassVar[List[str]] = ["_t", "ageGroups"]
 
     @field_validator('t')
@@ -35,14 +36,6 @@ class IUserFilterModelAgeUserFilterModel(BaseModel):
         """Validates the enum"""
         if value not in set(['AgeFilter']):
             raise ValueError("must be one of enum values ('AgeFilter')")
-        return value
-
-    @field_validator('age_groups')
-    def age_groups_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['0-17', '18-29', '30-39', '40-49', '50-64', '65+']):
-                raise ValueError("each list item must be one of ('0-17', '18-29', '30-39', '40-49', '50-64', '65+')")
         return value
 
     model_config = ConfigDict(

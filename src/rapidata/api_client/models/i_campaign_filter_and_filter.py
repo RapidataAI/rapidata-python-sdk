@@ -92,6 +92,11 @@ class ICampaignFilterAndFilter(BaseModel):
                 if _item_inner_filters:
                     _items.append(_item_inner_filters.to_dict())
             _dict['innerFilters'] = _items
+        # set to None if inner_filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.inner_filters is None and "inner_filters" in self.model_fields_set:
+            _dict['innerFilters'] = None
+
         return _dict
 
     @classmethod

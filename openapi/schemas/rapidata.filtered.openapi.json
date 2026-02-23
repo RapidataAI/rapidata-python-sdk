@@ -80,6 +80,10 @@
       "x-displayName": "Customer"
     },
     {
+      "name": "Organization",
+      "x-displayName": "Organization"
+    },
+    {
       "name": "Benchmark",
       "x-displayName": "Benchmark"
     },
@@ -2644,6 +2648,95 @@
         ]
       }
     },
+    "/flow/ranking/{flowId}/flow-item-creation-timeseries": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Returns flow item creation counts bucketed over time.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "description": "The ID of the flow.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Optional start of the date range filter (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Optional end of the date range filter (exclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "datapoints",
+            "in": "query",
+            "description": "Number of time buckets (default 100, max 1000).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFlowItemCreationTimeseriesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/flow/ranking/{flowId}/response-count-histogram": {
       "get": {
         "tags": [
@@ -3676,6 +3769,217 @@
           "Customer"
         ],
         "summary": "Queries customers with filtering and pagination.",
+        "description": "Results are scoped to customers that belong to the caller's organization.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "email",
+                  "-email",
+                  "organization_name",
+                  "-organization_name"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Filter by email.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "organization_name",
+            "in": "query",
+            "description": "Filter by organization_name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "description": "Filter by organization_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -3683,6 +3987,224 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryCustomersEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns a paged list of organizations.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "domain",
+                  "-domain"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "domain",
+            "in": "query",
+            "description": "Filter by domain.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "description": "Filter by owner.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryOrganizationsEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -11020,7 +11542,11 @@
           "urls": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfUri"
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
             ],
             "description": "The URLs to download and process."
@@ -11051,12 +11577,6 @@
           "Video",
           "Audio"
         ]
-      },
-      "GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_UrlOutput"
-        }
       },
       "GetBatchUploadResultEndpoint_Output": {
         "required": [
@@ -11094,7 +11614,10 @@
           "items": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_UrlOutput"
+                }
               }
             ],
             "description": "The individual results for each URL in the batch."
@@ -11451,13 +11974,6 @@
           }
         }
       },
-      "ListOfUri": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "format": "uri"
-        }
-      },
       "MetadataCollection": {
         "type": "object",
         "additionalProperties": {
@@ -11623,7 +12139,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The feature flags to enable for the rapid."
@@ -11695,12 +12215,6 @@
           }
         }
       },
-      "ClassifyPayload_ListOfClassifyPayload_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClassifyPayload_Category"
-        }
-      },
       "CreateAudienceRequest": {
         "required": [
           "name"
@@ -11719,7 +12233,11 @@
           "filters": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfIAudienceFilter"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IAudienceFilter"
+                },
+                "nullable": true
               }
             ],
             "description": "The filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
@@ -11845,7 +12363,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -11896,7 +12417,10 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAudienceFilter"
+            }
           },
           "logo": {
             "type": "string",
@@ -11925,6 +12449,10 @@
           },
           "boostLevel": {
             "$ref": "#/components/schemas/BoostLevel"
+          },
+          "randomAdmissionProbability": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -12012,7 +12540,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetInput"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
           },
           "metadata": {
             "oneOf": [
@@ -12130,7 +12661,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -12232,7 +12766,10 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAudienceFilter"
+            }
           }
         }
       },
@@ -12305,9 +12842,7 @@
             ],
             "type": "string"
           },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
-          }
+          "filters": {}
         }
       },
       "IMetadataInput": {
@@ -12677,7 +13212,10 @@
             "type": "string"
           },
           "categories": {
-            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -12834,7 +13372,10 @@
             "type": "string"
           },
           "transcription": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           }
         }
       },
@@ -13008,7 +13549,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "requiredPrecision": {
             "type": "number",
@@ -13214,7 +13758,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "requiredPrecision": {
             "type": "number",
@@ -13239,7 +13786,13 @@
             "type": "string"
           },
           "correctCombinations": {
-            "$ref": "#/components/schemas/ListOfListOfString"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -13256,7 +13809,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           }
         }
       },
@@ -13286,7 +13842,10 @@
             "type": "string"
           },
           "validRanges": {
-            "$ref": "#/components/schemas/ListOfScrubRange"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
           }
         }
       },
@@ -13316,7 +13875,10 @@
             "type": "string"
           },
           "correctWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "strictGrading": {
             "type": "boolean",
@@ -13345,7 +13907,13 @@
             "type": "string"
           },
           "correctCombinations": {
-            "$ref": "#/components/schemas/ListOfListOfString"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -13362,7 +13930,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           }
         }
       },
@@ -13392,7 +13963,10 @@
             "type": "string"
           },
           "validRanges": {
-            "$ref": "#/components/schemas/ListOfScrubRange"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
           }
         }
       },
@@ -13422,7 +13996,10 @@
             "type": "string"
           },
           "correctWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "strictGrading": {
             "type": "boolean",
@@ -13436,93 +14013,6 @@
             "type": "number",
             "format": "double"
           }
-        }
-      },
-      "ListOfBoxShape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BoxShape"
-        }
-      },
-      "ListOfFeatureFlagModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlagModel"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfIAssetInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetInput"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfIAudienceFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAudienceFilter"
-        }
-      },
-      "ListOfListOfString": {
-        "type": "array",
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "ListOfNamedClassification": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/NamedClassification"
-        }
-      },
-      "ListOfQueryAudiencesResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryAudiencesResult"
-        }
-      },
-      "ListOfQueryJobsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryJobsResult"
-        }
-      },
-      "ListOfQueryRapidsForAudienceResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryRapidsForAudienceResult"
-        }
-      },
-      "ListOfScrubRange": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ScrubRange"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
-      },
-      "ListOfTranscriptionWord": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/TranscriptionWord"
         }
       },
       "LogicOperator": {
@@ -13587,7 +14077,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryAudiencesResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryAudiencesResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -13617,7 +14110,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryJobsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryJobsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -13647,7 +14143,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryRapidsForAudienceResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryRapidsForAudienceResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -13700,7 +14199,10 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAudienceFilter"
+            }
           },
           "logo": {
             "type": "string",
@@ -13718,6 +14220,10 @@
           },
           "isDistilling": {
             "type": "boolean"
+          },
+          "randomAdmissionProbability": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -13786,14 +14292,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -13888,7 +14391,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"
@@ -14014,7 +14520,10 @@
           "filters": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ListOfIAudienceFilter"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IAudienceFilter"
+                }
               },
               {
                 "nullable": true
@@ -14041,8 +14550,38 @@
           },
           "minDistillingForGlobalBoost": {
             "type": "integer",
-            "description": "Minimum distilling users before disabling global boost.\n When distilling count is below this, RequiresGlobalBoost is set to true.",
+            "description": "Minimum distilling users before disabling global boost.\n When distilling count is below this, GlobalBoostLevel is set above zero.",
             "format": "int32",
+            "nullable": true
+          },
+          "minimumUserScore": {
+            "type": "number",
+            "description": "The minimum user score used to determine whether a user can be included in an audience.",
+            "format": "double",
+            "nullable": true
+          },
+          "maxDistillingResponses": {
+            "type": "integer",
+            "description": "Maximum responses before user exits the distilling campaign.\n Set to null to disable this exit condition.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "description": "Minimum responses before the score floor check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Set to null to apply score floor check from the first response.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "description": "Minimum user score floor - users below this score exit the distilling campaign\n (only after completing MinDistillingResponses).\n Set to null to disable this exit condition.",
+            "format": "double",
+            "nullable": true
+          },
+          "maxDistillingSessions": {
+            "type": "integer",
+            "description": "Maximum sessions (rapid retrievals) before user exits the distilling campaign.\n Set to a value to enable session-based exit condition.",
+            "format": "uint32",
             "nullable": true
           }
         },
@@ -14066,8 +14605,9 @@
       "BoostingProfile": {
         "type": "object",
         "properties": {
-          "requiresGlobalBoost": {
-            "type": "boolean"
+          "globalBoostLevel": {
+            "type": "integer",
+            "format": "int32"
           },
           "languageBoosts": {
             "type": "array",
@@ -14078,7 +14618,8 @@
           "kayzenAudienceIds": {
             "type": "array",
             "items": {
-              "type": "number"
+              "type": "integer",
+              "format": "int32"
             }
           }
         }
@@ -14135,8 +14676,7 @@
       },
       "ChangeBoostModel": {
         "required": [
-          "isManual",
-          "isActive"
+          "isManual"
         ],
         "type": "object",
         "properties": {
@@ -14147,6 +14687,11 @@
           "isActive": {
             "type": "boolean",
             "description": "If manual is set to true it will overrule the system with this."
+          },
+          "level": {
+            "type": "integer",
+            "description": "The boost level. Takes precedence over IsActive when set.",
+            "format": "int32"
           }
         },
         "description": "The model to update the manual boost status. or putting it back to autopilot."
@@ -14182,7 +14727,8 @@
           "unknownCampaigns": {
             "type": "array",
             "items": {
-              "type": "number"
+              "type": "integer",
+              "format": "int32"
             }
           }
         }
@@ -14200,12 +14746,6 @@
           "Partial",
           "Unknown"
         ]
-      },
-      "ListOfCampaignQueryResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/CampaignQueryResult"
-        }
       },
       "PagedResultOfCampaignQueryResult": {
         "required": [
@@ -14229,7 +14769,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfCampaignQueryResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignQueryResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -14443,7 +14986,10 @@
         "type": "object",
         "properties": {
           "datapoints": {
-            "$ref": "#/components/schemas/GetFailedDatapointsResult_ListOfGetFailedDatapointsResult_Datapoint"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
+            }
           }
         }
       },
@@ -14476,18 +15022,6 @@
           }
         }
       },
-      "GetFailedDatapointsResult_ListOfGetFailedDatapointsResult_Datapoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
-        }
-      },
-      "ListOfQueryDatapointsByDatasetIdResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryDatapointsByDatasetIdResult"
-        }
-      },
       "PagedResultOfQueryDatapointsByDatasetIdResult": {
         "required": [
           "total",
@@ -14510,7 +15044,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryDatapointsByDatasetIdResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryDatapointsByDatasetIdResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -14590,6 +15127,16 @@
             "description": "Maximum number of responses per comparison.",
             "format": "int32"
           },
+          "serveToResponseRatio": {
+            "type": "number",
+            "description": "Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.",
+            "format": "double"
+          },
+          "serveTimeoutSeconds": {
+            "type": "integer",
+            "description": "Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.",
+            "format": "int32"
+          },
           "minResponses": {
             "type": "integer",
             "description": "Minimum number of responses per comparison. Defaults to 1.",
@@ -14603,7 +15150,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                },
+                "nullable": true
               }
             ],
             "description": "Optional feature flags to enable for this flow."
@@ -14703,10 +15254,35 @@
           "buckets": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Output_ListOfOutput_Bucket"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCompletionTimeHistogramEndpoint_Output_Bucket"
+                }
               }
             ],
             "description": "The histogram buckets."
+          }
+        }
+      },
+      "GetCompletionTimeHistogramEndpoint_Output_Bucket": {
+        "required": [
+          "lowerBound",
+          "upperBound",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "lowerBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -14819,6 +15395,42 @@
           }
         }
       },
+      "GetFlowItemCreationTimeseriesEndpoint_Output": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetFlowItemCreationTimeseriesEndpoint_Output_DataPoint"
+                }
+              }
+            ],
+            "description": "The timeseries data points."
+          }
+        }
+      },
+      "GetFlowItemCreationTimeseriesEndpoint_Output_DataPoint": {
+        "required": [
+          "timestamp",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "GetRankingFlowItemResultsEndpoint_Output": {
         "required": [
           "datapoints",
@@ -14829,7 +15441,10 @@
           "datapoints": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Output_ListOfOutput_Datapoint"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetRankingFlowItemResultsEndpoint_Output_Datapoint"
+                }
               }
             ],
             "description": "The ranked datapoints with their Elo scores."
@@ -14838,6 +15453,26 @@
             "type": "integer",
             "description": "The total number of votes across all datapoints.",
             "format": "int64"
+          }
+        }
+      },
+      "GetRankingFlowItemResultsEndpoint_Output_Datapoint": {
+        "required": [
+          "id",
+          "asset",
+          "elo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "elo": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -14874,7 +15509,14 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfListOfDouble"
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
               }
             ],
             "description": "The vote counts as a two-dimensional matrix where Data[i][j] is the number of times row i was preferred over column j."
@@ -14890,45 +15532,17 @@
           "buckets": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Output_ListOfOutput_Bucket"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetResponseCountHistogramEndpoint_Output_Bucket"
+                }
               }
             ],
             "description": "The histogram buckets."
           }
         }
       },
-      "GetResponseCountTimeseriesEndpoint_Output": {
-        "required": [
-          "datapoints"
-        ],
-        "type": "object",
-        "properties": {
-          "datapoints": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Output_ListOfOutput_DataPoint"
-              }
-            ],
-            "description": "The timeseries data points."
-          }
-        }
-      },
-      "ListOfFeatureFlag": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlag"
-        }
-      },
-      "ListOfListOfDouble": {
-        "type": "array",
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        }
-      },
-      "Output_Bucket": {
+      "GetResponseCountHistogramEndpoint_Output_Bucket": {
         "required": [
           "lowerBound",
           "upperBound",
@@ -14950,27 +15564,26 @@
           }
         }
       },
-      "Output_Datapoint": {
+      "GetResponseCountTimeseriesEndpoint_Output": {
         "required": [
-          "id",
-          "asset",
-          "elo"
+          "datapoints"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "elo": {
-            "type": "integer",
-            "format": "int32"
+          "datapoints": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetResponseCountTimeseriesEndpoint_Output_DataPoint"
+                }
+              }
+            ],
+            "description": "The timeseries data points."
           }
         }
       },
-      "Output_DataPoint": {
+      "GetResponseCountTimeseriesEndpoint_Output_DataPoint": {
         "required": [
           "timestamp",
           "averageResponseCount"
@@ -14985,30 +15598,6 @@
             "type": "number",
             "format": "double"
           }
-        }
-      },
-      "Output_ListOfOutput_Bucket": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Output_Bucket"
-        }
-      },
-      "Output_ListOfOutput_Datapoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Output_Datapoint"
-        }
-      },
-      "Output_ListOfOutput_DataPoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Output_DataPoint"
-        }
-      },
-      "QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryFlowItemsEndpoint_Output"
         }
       },
       "QueryFlowItemsEndpoint_Output": {
@@ -15093,18 +15682,15 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryFlowItemsEndpoint_Output"
+            }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           }
-        }
-      },
-      "QueryFlowsEndpoint_ListOfQueryFlowsEndpoint_Output": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryFlowsEndpoint_Output"
         }
       },
       "QueryFlowsEndpoint_Output": {
@@ -15167,7 +15753,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/QueryFlowsEndpoint_ListOfQueryFlowsEndpoint_Output"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryFlowsEndpoint_Output"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -15213,6 +15802,18 @@
             "format": "int32",
             "nullable": true
           },
+          "serveToResponseRatio": {
+            "type": "number",
+            "description": "Ratio of concurrent serves to max responses. Set to null to remove the limit.",
+            "format": "double",
+            "nullable": true
+          },
+          "serveTimeoutSeconds": {
+            "type": "integer",
+            "description": "Time in seconds a user has to submit an answer after loading the task. Set to null to use the global default.",
+            "format": "int32",
+            "nullable": true
+          },
           "responsesRequired": {
             "type": "integer",
             "description": "Deprecated. Use MaxResponses instead.",
@@ -15222,7 +15823,10 @@
           "featureFlags": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               },
               {
                 "nullable": true
@@ -15365,7 +15969,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "Array of strings representing ways to contact people responsible for this client,\n typically email addresses."
@@ -15466,19 +16071,22 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "grant_types": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "response_types": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "client_id": {
             "type": "string",
@@ -15507,7 +16115,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "Array of strings representing ways to contact people responsible for this client,\n typically email addresses."
@@ -15583,7 +16192,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "kid": {
             "type": "string",
@@ -15601,7 +16211,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "p": {
             "type": "string",
@@ -15627,7 +16238,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "x5t": {
             "type": "string",
@@ -15651,20 +16263,12 @@
         "type": "object",
         "properties": {
           "keys": {
-            "$ref": "#/components/schemas/ListOfJsonWebKey"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JsonWebKey"
+            },
+            "nullable": true
           }
-        }
-      },
-      "ListOfClientsQueryResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClientsQueryResult"
-        }
-      },
-      "ListOfJsonWebKey": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/JsonWebKey"
         }
       },
       "NewsletterModel": {
@@ -15718,7 +16322,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfClientsQueryResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientsQueryResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -15726,16 +16333,12 @@
           }
         }
       },
-      "QueryCustomersEndpoint_ListOfQueryCustomersEndpoint_Output": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryCustomersEndpoint_Output"
-        }
-      },
       "QueryCustomersEndpoint_Output": {
         "required": [
           "id",
-          "email"
+          "email",
+          "organizationName",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -15747,6 +16350,17 @@
           "email": {
             "type": "string",
             "description": "The email address of the customer.",
+            "nullable": true
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The name of the organization this customer belongs to, if any.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The identifier of the organization this customer belongs to, if any.",
+            "format": "uuid",
             "nullable": true
           }
         }
@@ -15773,7 +16387,66 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/QueryCustomersEndpoint_ListOfQueryCustomersEndpoint_Output"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryCustomersEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryOrganizationsEndpoint_Output": {
+        "required": [
+          "owner",
+          "name",
+          "domain"
+        ],
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "description": "The customer ID of the organization owner.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the organization."
+          },
+          "domain": {
+            "type": "string",
+            "description": "The domain associated with this organization."
+          }
+        }
+      },
+      "QueryOrganizationsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryOrganizationsEndpoint_Output"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -15833,6 +16506,16 @@
           }
         },
         "description": "The model user for submitting a survey"
+      },
+      "AgeUserFilterModel_AgeGroup": {
+        "enum": [
+          "0-17",
+          "18-29",
+          "30-39",
+          "40-49",
+          "50-64",
+          "65+"
+        ]
       },
       "BenchmarkQueryResult": {
         "required": [
@@ -16042,7 +16725,11 @@
           "filters": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfIUserFilterModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IUserFilterModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The filters will be applied on every order that is created by this leaderboard.\n Cannot be specified together with AudienceId."
@@ -16050,7 +16737,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "Feature flags that will be applied to every order that is created by this leaderboard."
@@ -16117,6 +16808,13 @@
         },
         "description": "The model used to create a sample to a participant."
       },
+      "DeviceType": {
+        "enum": [
+          "Unknown",
+          "Phone",
+          "Tablet"
+        ]
+      },
       "ForkBenchmarkResult": {
         "required": [
           "id"
@@ -16127,6 +16825,13 @@
             "type": "string"
           }
         }
+      },
+      "GenderUserFilterModel_Gender": {
+        "enum": [
+          "Male",
+          "Female",
+          "Other"
+        ]
       },
       "GetBenchmarkByIdResult": {
         "required": [
@@ -16211,10 +16916,16 @@
             "nullable": true
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -16402,14 +17113,21 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
           },
           "executionOrder": {
             "type": "integer",
             "format": "uint32"
           },
           "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            },
+            "nullable": true
           }
         }
       },
@@ -16530,11 +17248,7 @@
           "deviceTypes": {
             "type": "array",
             "items": {
-              "enum": [
-                "Unknown",
-                "Phone",
-                "Tablet"
-              ]
+              "$ref": "#/components/schemas/DeviceType"
             }
           },
           "executionOrder": {
@@ -16603,9 +17317,7 @@
             "type": "integer",
             "format": "uint32"
           },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          }
+          "innerFilters": {}
         }
       },
       "ICampaignFilterOrFilter": {
@@ -16620,16 +17332,12 @@
             ],
             "type": "string"
           },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          },
+          "filters": {},
           "executionOrder": {
             "type": "integer",
             "format": "uint32"
           },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          }
+          "innerFilters": {}
         }
       },
       "ICampaignFilterResponseCountFilter": {
@@ -16674,15 +17382,7 @@
             ],
             "type": "string"
           },
-          "requiredActions": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Listen",
-                "UseKeyboard"
-              ]
-            }
-          },
+          "requiredActions": {},
           "executionOrder": {
             "type": "integer",
             "format": "uint32"
@@ -16800,14 +17500,7 @@
           "ageGroups": {
             "type": "array",
             "items": {
-              "enum": [
-                "0-17",
-                "18-29",
-                "30-39",
-                "40-49",
-                "50-64",
-                "65+"
-              ]
+              "$ref": "#/components/schemas/AgeUserFilterModel_AgeGroup"
             }
           }
         }
@@ -16825,7 +17518,10 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIUserFilterModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUserFilterModel"
+            }
           }
         }
       },
@@ -16908,11 +17604,7 @@
           "deviceTypes": {
             "type": "array",
             "items": {
-              "enum": [
-                "Unknown",
-                "Phone",
-                "Tablet"
-              ]
+              "$ref": "#/components/schemas/DeviceType"
             }
           }
         }
@@ -16932,11 +17624,7 @@
           "genders": {
             "type": "array",
             "items": {
-              "enum": [
-                "Male",
-                "Female",
-                "Other"
-              ]
+              "$ref": "#/components/schemas/GenderUserFilterModel_Gender"
             }
           }
         }
@@ -17003,9 +17691,7 @@
             ],
             "type": "string"
           },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfIUserFilterModel"
-          }
+          "filters": {}
         }
       },
       "IUserFilterModelResponseCountUserFilterModel": {
@@ -17109,77 +17795,17 @@
             "nullable": true
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
-        }
-      },
-      "ListOfBenchmarkQueryResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BenchmarkQueryResult"
-        }
-      },
-      "ListOfICampaignFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ICampaignFilter"
-        }
-      },
-      "ListOfIUserFilterModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IUserFilterModel"
-        }
-      },
-      "ListOfLeaderboardsQueryResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LeaderboardsQueryResult"
-        }
-      },
-      "ListOfParticipantByBenchmark": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ParticipantByBenchmark"
-        }
-      },
-      "ListOfPromptByBenchmarkResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PromptByBenchmarkResult"
-        }
-      },
-      "ListOfRunsByLeaderboardResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/RunsByLeaderboardResult"
-        }
-      },
-      "ListOfSampleByIdentifier": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SampleByIdentifier"
-        }
-      },
-      "ListOfSampleByParticipant": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SampleByParticipant"
-        }
-      },
-      "ListOfStandingByBenchmark": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/StandingByBenchmark"
-        }
-      },
-      "ListOfStandingByLeaderboard": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/StandingByLeaderboard"
         }
       },
       "PagedResultOfBenchmarkQueryResult": {
@@ -17204,7 +17830,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfBenchmarkQueryResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkQueryResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17234,7 +17863,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfLeaderboardsQueryResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardsQueryResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17264,7 +17896,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfParticipantByBenchmark"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantByBenchmark"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17294,7 +17929,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfPromptByBenchmarkResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromptByBenchmarkResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17324,7 +17962,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfRunsByLeaderboardResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RunsByLeaderboardResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17354,7 +17995,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfSampleByIdentifier"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleByIdentifier"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17384,7 +18028,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfSampleByParticipant"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleByParticipant"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17414,7 +18061,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfStandingByLeaderboard"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByLeaderboard"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -17757,7 +18407,10 @@
         "type": "object",
         "properties": {
           "items": {
-            "$ref": "#/components/schemas/ListOfStandingByBenchmark"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByBenchmark"
+            }
           }
         }
       },
@@ -17768,7 +18421,10 @@
         "type": "object",
         "properties": {
           "items": {
-            "$ref": "#/components/schemas/ListOfStandingByLeaderboard"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByLeaderboard"
+            }
           }
         }
       },
@@ -17825,7 +18481,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "The tags of a given prompt"
@@ -17997,7 +18654,14 @@
             }
           },
           "data": {
-            "$ref": "#/components/schemas/ListOfListOfDouble"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              }
+            }
           }
         }
       },
@@ -18070,12 +18734,6 @@
           }
         }
       },
-      "AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
-        }
-      },
       "CloneOrderModel": {
         "required": [
           "orderName"
@@ -18104,12 +18762,6 @@
           }
         }
       },
-      "ConditionalValidationSelection_ListOfConditionalValidationSelection_ValidationChance": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ConditionalValidationSelection_ValidationChance"
-        }
-      },
       "ConditionalValidationSelection_ValidationChance": {
         "required": [
           "userScoreThreshold",
@@ -18131,14 +18783,11 @@
             "format": "int32"
           },
           "selections": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfISelection"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            },
+            "nullable": true
           }
         }
       },
@@ -18232,7 +18881,10 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               }
             ],
             "description": "The feature flags."
@@ -18352,7 +19004,10 @@
           "featureFlags": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               },
               {
                 "nullable": true
@@ -18443,7 +19098,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The feature flags are used to enable or disable certain features."
@@ -18477,7 +19136,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "The user score dimensions are used to determine the score of the responses from the user."
@@ -18488,7 +19148,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "The demographic keys are used to determine which demographics to store on the responses from the user."
@@ -18496,7 +19157,11 @@
           "userFilters": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfIUserFilterModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IUserFilterModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The user filters are used to restrict the order to only collect votes from a specific demographic."
@@ -18509,7 +19174,11 @@
           "selections": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfISelection"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ISelection"
+                },
+                "nullable": true
               }
             ],
             "description": "The selections are used to determine which tasks are shown to a user."
@@ -18811,7 +19480,10 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               }
             ],
             "description": "The feature flags."
@@ -18880,7 +19552,10 @@
         "type": "object",
         "properties": {
           "orders": {
-            "$ref": "#/components/schemas/ListOfPublicOrderModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicOrderModel"
+            }
           }
         }
       },
@@ -18997,17 +19672,17 @@
             ]
           },
           "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/Metadata_ListOfMetadata_IOrderMetadataInput"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
+            },
+            "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -19031,7 +19706,10 @@
             "type": "boolean"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -19081,7 +19759,10 @@
             "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           },
           "maxParallelism": {
             "type": "integer",
@@ -19109,7 +19790,10 @@
             "format": "int32"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -19221,10 +19905,16 @@
             "type": "string"
           },
           "artifacts": {
-            "$ref": "#/components/schemas/ListOfIPipelineArtifactModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IPipelineArtifactModel"
+            }
           },
           "pipelineSteps": {
-            "$ref": "#/components/schemas/ListOfIPipelineStepModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IPipelineStepModel"
+            }
           },
           "namePrefix": {
             "type": "string"
@@ -19490,7 +20180,10 @@
             }
           },
           "categories": {
-            "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -19844,10 +20537,16 @@
             "type": "string"
           },
           "a": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           },
           "b": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           }
         }
       },
@@ -19865,7 +20564,10 @@
             "type": "string"
           },
           "selections": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           },
           "maxRapids": {
             "type": "integer",
@@ -19890,7 +20592,10 @@
             "type": "string"
           },
           "validationChances": {
-            "$ref": "#/components/schemas/ConditionalValidationSelection_ListOfConditionalValidationSelection_ValidationChance"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConditionalValidationSelection_ValidationChance"
+            }
           },
           "dimensions": {
             "type": "array",
@@ -19990,7 +20695,10 @@
             "type": "string"
           },
           "selections": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           }
         }
       },
@@ -20043,54 +20751,6 @@
           "Failed"
         ],
         "description": "The state of the revision."
-      },
-      "ListOfAggregatedOrdersModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AggregatedOrdersModel"
-        }
-      },
-      "ListOfIPipelineArtifactModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IPipelineArtifactModel"
-        }
-      },
-      "ListOfIPipelineStepModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IPipelineStepModel"
-        }
-      },
-      "ListOfISelection": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ISelection"
-        }
-      },
-      "ListOfOrderModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/OrderModel"
-        }
-      },
-      "ListOfPublicOrderModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PublicOrderModel"
-        }
-      },
-      "ListOfQueryJobDefinitionsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryJobDefinitionsResult"
-        }
-      },
-      "ListOfQueryJobRevisionsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryJobRevisionsResult"
-        }
       },
       "Metadata_IOrderMetadataInput": {
         "required": [
@@ -20166,12 +20826,6 @@
           "transcription": {
             "type": "string"
           }
-        }
-      },
-      "Metadata_ListOfMetadata_IOrderMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
         }
       },
       "OrderModel": {
@@ -20252,7 +20906,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfAggregatedOrdersModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregatedOrdersModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -20282,7 +20939,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfOrderModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -20312,7 +20972,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryJobDefinitionsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryJobDefinitionsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -20342,7 +21005,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryJobRevisionsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryJobRevisionsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -20582,7 +21248,10 @@
             }
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -20786,7 +21455,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAsset"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAsset"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataCollection"
@@ -21157,7 +21829,10 @@
             "$ref": "#/components/schemas/IPairMakerConfig"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -21185,7 +21860,10 @@
             "type": "boolean"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -21251,7 +21929,10 @@
             "$ref": "#/components/schemas/IPairMakerConfig"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -21279,14 +21960,11 @@
             "format": "int32"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
-        }
-      },
-      "ListOfIAsset": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAsset"
         }
       },
       "PreliminaryDownloadModel": {
@@ -21365,7 +22043,10 @@
         "type": "object",
         "properties": {
           "categories": {
-            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -21394,7 +22075,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                },
+                "nullable": true
               }
             ],
             "description": "Optional feature flags to apply to the rapid."
@@ -21441,14 +22126,11 @@
         "type": "object",
         "properties": {
           "responses": {
-            "$ref": "#/components/schemas/GetPublicResponsesResult_ListOfGetPublicResponsesResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetPublicResponsesResult_Response"
+            }
           }
-        }
-      },
-      "GetPublicResponsesResult_ListOfGetPublicResponsesResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetPublicResponsesResult_Response"
         }
       },
       "GetPublicResponsesResult_Response": {
@@ -21498,17 +22180,14 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "responses": {
-            "$ref": "#/components/schemas/GetResponsesForRapidResult_ListOfGetResponsesForRapidResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
+            }
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
           }
-        }
-      },
-      "GetResponsesForRapidResult_ListOfGetResponsesForRapidResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
         }
       },
       "GetResponsesForRapidResult_Response": {
@@ -21655,7 +22334,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -21720,7 +22402,10 @@
             "type": "string"
           },
           "lines": {
-            "$ref": "#/components/schemas/LineResult_ListOfLineResult_Line"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_Line"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -21741,7 +22426,10 @@
             "type": "string"
           },
           "coordinates": {
-            "$ref": "#/components/schemas/ListOfLocateCoordinate"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocateCoordinate"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -21762,7 +22450,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -21783,7 +22474,10 @@
             "type": "string"
           },
           "shapes": {
-            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Shape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Shape"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -21806,7 +22500,8 @@
           "timestamps": {
             "type": "array",
             "items": {
-              "type": "number"
+              "type": "integer",
+              "format": "int32"
             }
           },
           "rapidId": {
@@ -21845,7 +22540,10 @@
             "type": "string"
           },
           "selectedWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -21969,7 +22667,10 @@
             "format": "double"
           },
           "points": {
-            "$ref": "#/components/schemas/LineResult_ListOfLineResult_LinePoint"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_LinePoint"
+            }
           }
         }
       },
@@ -21988,36 +22689,6 @@
             "type": "number",
             "format": "double"
           }
-        }
-      },
-      "LineResult_ListOfLineResult_Line": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_Line"
-        }
-      },
-      "LineResult_ListOfLineResult_LinePoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_LinePoint"
-        }
-      },
-      "ListOfLocateCoordinate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LocateCoordinate"
-        }
-      },
-      "ListOfQueryValidationRapidEligibilityResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryValidationRapidEligibilityResult"
-        }
-      },
-      "ListOfRapidModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/RapidModel"
         }
       },
       "LocateCoordinate": {
@@ -22059,7 +22730,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryValidationRapidEligibilityResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryValidationRapidEligibilityResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -22089,7 +22763,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfRapidModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -22114,18 +22791,6 @@
           }
         }
       },
-      "PolygonResult_ListOfPolygonResult_Coordinate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Coordinate"
-        }
-      },
-      "PolygonResult_ListOfPolygonResult_Shape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Shape"
-        }
-      },
       "PolygonResult_Shape": {
         "required": [
           "edges"
@@ -22133,7 +22798,10 @@
         "type": "object",
         "properties": {
           "edges": {
-            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Coordinate"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Coordinate"
+            }
           }
         }
       },
@@ -22270,7 +22938,10 @@
             "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -22467,7 +23138,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The feature flags to enable for the rapid."
@@ -22519,7 +23194,10 @@
         "type": "object",
         "properties": {
           "validationSets": {
-            "$ref": "#/components/schemas/ListOfValidationSetOverviewModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetOverviewModel"
+            }
           }
         }
       },
@@ -22530,7 +23208,10 @@
         "type": "object",
         "properties": {
           "validationSets": {
-            "$ref": "#/components/schemas/ListOfValidationSetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetModel"
+            }
           }
         }
       },
@@ -22650,24 +23331,6 @@
           }
         }
       },
-      "ListOfGetValidationRapidsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetValidationRapidsResult"
-        }
-      },
-      "ListOfValidationSetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ValidationSetModel"
-        }
-      },
-      "ListOfValidationSetOverviewModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ValidationSetOverviewModel"
-        }
-      },
       "PagedResultOfGetValidationRapidsResult": {
         "required": [
           "total",
@@ -22690,7 +23353,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfGetValidationRapidsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetValidationRapidsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -22720,7 +23386,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfValidationSetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -22864,7 +23533,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "isPublic": {
             "type": "boolean"
@@ -22935,7 +23605,11 @@
           "sortCriteria": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -22970,7 +23644,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_ListOfGetCompareWorkflowResultsResult_Datapoint"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_Datapoint"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -22998,12 +23675,6 @@
           }
         }
       },
-      "GetCompareWorkflowResultsResult_ListOfGetCompareWorkflowResultsResult_Datapoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_Datapoint"
-        }
-      },
       "GetEvaluationWorkflowResultsModel": {
         "type": "object",
         "properties": {
@@ -23020,16 +23691,9 @@
               {
                 "type": "array",
                 "items": {
-                  "enum": [
-                    "Labeling",
-                    "Paused",
-                    "Incomplete",
-                    "Flagged",
-                    "Done",
-                    "None",
-                    "Rejected"
-                  ]
-                }
+                  "$ref": "#/components/schemas/RapidState"
+                },
+                "nullable": true
               }
             ],
             "description": "An optional list of states to filter the rapids by."
@@ -23037,7 +23701,11 @@
           "sortCriteria": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -23075,14 +23743,11 @@
         "type": "object",
         "properties": {
           "responses": {
-            "$ref": "#/components/schemas/GetResponsesResult_ListOfGetResponsesResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetResponsesResult_Response"
+            }
           }
-        }
-      },
-      "GetResponsesResult_ListOfGetResponsesResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetResponsesResult_Response"
         }
       },
       "GetResponsesResult_Response": {
@@ -23144,16 +23809,9 @@
               {
                 "type": "array",
                 "items": {
-                  "enum": [
-                    "Labeling",
-                    "Paused",
-                    "Incomplete",
-                    "Flagged",
-                    "Done",
-                    "None",
-                    "Rejected"
-                  ]
-                }
+                  "$ref": "#/components/schemas/RapidState"
+                },
+                "nullable": true
               }
             ],
             "description": "An optional list of states to filter the rapids by."
@@ -23161,7 +23819,11 @@
           "sortCriteria": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -23226,7 +23888,10 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "responses": {
-            "$ref": "#/components/schemas/GetWorkflowResultsResult_ListOfGetWorkflowResultsResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
+            }
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
@@ -23245,12 +23910,6 @@
               }
             ]
           }
-        }
-      },
-      "GetWorkflowResultsResult_ListOfGetWorkflowResultsResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
         }
       },
       "GetWorkflowResultsResult_Response": {
@@ -23582,24 +24241,6 @@
           }
         }
       },
-      "ListOfGetGroupedRankingWorkflowResultsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResult"
-        }
-      },
-      "ListOfGetWorkflowResultsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetWorkflowResultsResult"
-        }
-      },
-      "ListOfIWorkflowModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IWorkflowModel"
-        }
-      },
       "PagedResultOfGetGroupedRankingWorkflowResultsResult": {
         "required": [
           "total",
@@ -23622,7 +24263,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfGetGroupedRankingWorkflowResultsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -23652,7 +24296,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfGetWorkflowResultsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetWorkflowResultsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -23682,7 +24329,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfIWorkflowModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IWorkflowModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -23776,7 +24426,8 @@
         "Identity",
         "Newsletter",
         "Survey",
-        "Customer"
+        "Customer",
+        "Organization"
       ]
     },
     {

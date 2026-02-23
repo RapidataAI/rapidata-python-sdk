@@ -27,7 +27,7 @@ class ICampaignFilterUserActionRestrictionFilter(BaseModel):
     ICampaignFilterUserActionRestrictionFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    required_actions: List[StrictStr] = Field(alias="requiredActions")
+    required_actions: Optional[Any] = Field(alias="requiredActions")
     execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
     __properties: ClassVar[List[str]] = ["_t", "requiredActions", "executionOrder"]
 
@@ -36,14 +36,6 @@ class ICampaignFilterUserActionRestrictionFilter(BaseModel):
         """Validates the enum"""
         if value not in set(['UserActionRestrictionFilter']):
             raise ValueError("must be one of enum values ('UserActionRestrictionFilter')")
-        return value
-
-    @field_validator('required_actions')
-    def required_actions_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['Listen', 'UseKeyboard']):
-                raise ValueError("each list item must be one of ('Listen', 'UseKeyboard')")
         return value
 
     model_config = ConfigDict(
@@ -85,6 +77,11 @@ class ICampaignFilterUserActionRestrictionFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if required_actions (nullable) is None
+        # and model_fields_set contains the field
+        if self.required_actions is None and "required_actions" in self.model_fields_set:
+            _dict['requiredActions'] = None
+
         return _dict
 
     @classmethod

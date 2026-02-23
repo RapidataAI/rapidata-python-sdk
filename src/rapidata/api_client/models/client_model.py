@@ -38,7 +38,7 @@ class ClientModel(BaseModel):
     client_uri: Optional[StrictStr]
     logo_uri: Optional[StrictStr]
     scope: Optional[StrictStr] = Field(description="String containing a space-separated list of scope values  that the client can use when requesting access tokens.")
-    contacts: List[StrictStr]
+    contacts: Optional[List[StrictStr]]
     tos_uri: Optional[StrictStr]
     policy_uri: Optional[StrictStr]
     jwks_uri: Optional[StrictStr]
@@ -126,6 +126,11 @@ class ClientModel(BaseModel):
         # and model_fields_set contains the field
         if self.scope is None and "scope" in self.model_fields_set:
             _dict['scope'] = None
+
+        # set to None if contacts (nullable) is None
+        # and model_fields_set contains the field
+        if self.contacts is None and "contacts" in self.model_fields_set:
+            _dict['contacts'] = None
 
         # set to None if tos_uri (nullable) is None
         # and model_fields_set contains the field

@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class IAudienceFilterOrAudienceFilter(BaseModel):
     IAudienceFilterOrAudienceFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    filters: List[IAudienceFilter]
+    filters: Optional[Any]
     __properties: ClassVar[List[str]] = ["_t", "filters"]
 
     @field_validator('t')
@@ -76,13 +76,11 @@ class IAudienceFilterOrAudienceFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
         return _dict
 
     @classmethod
@@ -96,11 +94,8 @@ class IAudienceFilterOrAudienceFilter(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
-            "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+            "filters": obj.get("filters")
         })
         return _obj
 
-from rapidata.api_client.models.i_audience_filter import IAudienceFilter
-# TODO: Rewrite to not use raise_errors
-IAudienceFilterOrAudienceFilter.model_rebuild(raise_errors=False)
 

@@ -1626,6 +1626,16 @@
   },
   "components": {
     "schemas": {
+      "AgeUserFilterModel_AgeGroup": {
+        "enum": [
+          "0-17",
+          "18-29",
+          "30-39",
+          "40-49",
+          "50-64",
+          "65+"
+        ]
+      },
       "AggregatedOrdersModel": {
         "required": [
           "amount",
@@ -1695,12 +1705,6 @@
           }
         }
       },
-      "AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
-        }
-      },
       "AudienceJobState": {
         "enum": [
           "Running",
@@ -1746,12 +1750,6 @@
           "GreaterThanOrEqual"
         ]
       },
-      "ConditionalValidationSelection_ListOfConditionalValidationSelection_ValidationChance": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ConditionalValidationSelection_ValidationChance"
-        }
-      },
       "ConditionalValidationSelection_ValidationChance": {
         "required": [
           "userScoreThreshold",
@@ -1773,14 +1771,11 @@
             "format": "int32"
           },
           "selections": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfISelection"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            },
+            "nullable": true
           }
         }
       },
@@ -1874,7 +1869,10 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               }
             ],
             "description": "The feature flags."
@@ -1994,7 +1992,10 @@
           "featureFlags": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               },
               {
                 "nullable": true
@@ -2085,7 +2086,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The feature flags are used to enable or disable certain features."
@@ -2119,7 +2124,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "The user score dimensions are used to determine the score of the responses from the user."
@@ -2130,7 +2136,8 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "nullable": true
               }
             ],
             "description": "The demographic keys are used to determine which demographics to store on the responses from the user."
@@ -2138,7 +2145,11 @@
           "userFilters": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfIUserFilterModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IUserFilterModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The user filters are used to restrict the order to only collect votes from a specific demographic."
@@ -2151,7 +2162,11 @@
           "selections": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfISelection"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ISelection"
+                },
+                "nullable": true
               }
             ],
             "description": "The selections are used to determine which tasks are shown to a user."
@@ -2244,6 +2259,13 @@
         ],
         "description": "The type of the job definition."
       },
+      "DeviceType": {
+        "enum": [
+          "Unknown",
+          "Phone",
+          "Tablet"
+        ]
+      },
       "EloConfigModel": {
         "type": "object",
         "properties": {
@@ -2333,7 +2355,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -2349,6 +2374,13 @@
           "StartsWith",
           "EndsWith",
           "In"
+        ]
+      },
+      "GenderUserFilterModel_Gender": {
+        "enum": [
+          "Male",
+          "Female",
+          "Other"
         ]
       },
       "GetJobByIdEndpoint_Output": {
@@ -2516,7 +2548,10 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlag"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               }
             ],
             "description": "The feature flags."
@@ -2585,7 +2620,10 @@
         "type": "object",
         "properties": {
           "orders": {
-            "$ref": "#/components/schemas/ListOfPublicOrderModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicOrderModel"
+            }
           }
         }
       },
@@ -2658,7 +2696,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetInput"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
           },
           "metadata": {
             "oneOf": [
@@ -2859,17 +2900,17 @@
             ]
           },
           "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/Metadata_ListOfMetadata_IOrderMetadataInput"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
+            },
+            "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -2893,7 +2934,10 @@
             "type": "boolean"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -2943,7 +2987,10 @@
             "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           },
           "maxParallelism": {
             "type": "integer",
@@ -2971,7 +3018,10 @@
             "format": "int32"
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -3083,10 +3133,16 @@
             "type": "string"
           },
           "artifacts": {
-            "$ref": "#/components/schemas/ListOfIPipelineArtifactModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IPipelineArtifactModel"
+            }
           },
           "pipelineSteps": {
-            "$ref": "#/components/schemas/ListOfIPipelineStepModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IPipelineStepModel"
+            }
           },
           "namePrefix": {
             "type": "string"
@@ -3352,7 +3408,10 @@
             }
           },
           "categories": {
-            "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -3706,10 +3765,16 @@
             "type": "string"
           },
           "a": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           },
           "b": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           }
         }
       },
@@ -3727,7 +3792,10 @@
             "type": "string"
           },
           "selections": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           },
           "maxRapids": {
             "type": "integer",
@@ -3752,7 +3820,10 @@
             "type": "string"
           },
           "validationChances": {
-            "$ref": "#/components/schemas/ConditionalValidationSelection_ListOfConditionalValidationSelection_ValidationChance"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConditionalValidationSelection_ValidationChance"
+            }
           },
           "dimensions": {
             "type": "array",
@@ -3852,7 +3923,10 @@
             "type": "string"
           },
           "selections": {
-            "$ref": "#/components/schemas/ListOfISelection"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISelection"
+            }
           }
         }
       },
@@ -3978,14 +4052,7 @@
           "ageGroups": {
             "type": "array",
             "items": {
-              "enum": [
-                "0-17",
-                "18-29",
-                "30-39",
-                "40-49",
-                "50-64",
-                "65+"
-              ]
+              "$ref": "#/components/schemas/AgeUserFilterModel_AgeGroup"
             }
           }
         }
@@ -4003,7 +4070,10 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfIUserFilterModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUserFilterModel"
+            }
           }
         }
       },
@@ -4086,11 +4156,7 @@
           "deviceTypes": {
             "type": "array",
             "items": {
-              "enum": [
-                "Unknown",
-                "Phone",
-                "Tablet"
-              ]
+              "$ref": "#/components/schemas/DeviceType"
             }
           }
         }
@@ -4110,11 +4176,7 @@
           "genders": {
             "type": "array",
             "items": {
-              "enum": [
-                "Male",
-                "Female",
-                "Other"
-              ]
+              "$ref": "#/components/schemas/GenderUserFilterModel_Gender"
             }
           }
         }
@@ -4181,9 +4243,7 @@
             ],
             "type": "string"
           },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfIUserFilterModel"
-          }
+          "filters": { }
         }
       },
       "IUserFilterModelResponseCountUserFilterModel": {
@@ -4244,96 +4304,6 @@
           "Failed"
         ],
         "description": "The state of the revision."
-      },
-      "ListOfAggregatedOrdersModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AggregatedOrdersModel"
-        }
-      },
-      "ListOfFeatureFlag": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlag"
-        }
-      },
-      "ListOfFeatureFlagModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlagModel"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfIAssetInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetInput"
-        }
-      },
-      "ListOfIPipelineArtifactModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IPipelineArtifactModel"
-        }
-      },
-      "ListOfIPipelineStepModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IPipelineStepModel"
-        }
-      },
-      "ListOfISelection": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ISelection"
-        }
-      },
-      "ListOfIUserFilterModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IUserFilterModel"
-        }
-      },
-      "ListOfOrderModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/OrderModel"
-        }
-      },
-      "ListOfPublicOrderModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PublicOrderModel"
-        }
-      },
-      "ListOfQueryJobDefinitionsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryJobDefinitionsResult"
-        }
-      },
-      "ListOfQueryJobRevisionsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryJobRevisionsResult"
-        }
-      },
-      "ListOfQueryJobsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/QueryJobsResult"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
       },
       "LogicOperator": {
         "enum": [
@@ -4416,12 +4386,6 @@
           "transcription": {
             "type": "string"
           }
-        }
-      },
-      "Metadata_ListOfMetadata_IOrderMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
         }
       },
       "MetadataInputCollection": {
@@ -4522,7 +4486,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfAggregatedOrdersModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregatedOrdersModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4552,7 +4519,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfOrderModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4582,7 +4552,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryJobDefinitionsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryJobDefinitionsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4612,7 +4585,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryJobRevisionsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryJobRevisionsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4642,7 +4618,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfQueryJobsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryJobsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -4812,14 +4791,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -4834,7 +4810,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"

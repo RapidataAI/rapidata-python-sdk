@@ -84,6 +84,21 @@ class DynamicClientRegistrationRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of jwks
         if self.jwks:
             _dict['jwks'] = self.jwks.to_dict()
+        # set to None if redirect_uris (nullable) is None
+        # and model_fields_set contains the field
+        if self.redirect_uris is None and "redirect_uris" in self.model_fields_set:
+            _dict['redirect_uris'] = None
+
+        # set to None if grant_types (nullable) is None
+        # and model_fields_set contains the field
+        if self.grant_types is None and "grant_types" in self.model_fields_set:
+            _dict['grant_types'] = None
+
+        # set to None if response_types (nullable) is None
+        # and model_fields_set contains the field
+        if self.response_types is None and "response_types" in self.model_fields_set:
+            _dict['response_types'] = None
+
         # set to None if client_id (nullable) is None
         # and model_fields_set contains the field
         if self.client_id is None and "client_id" in self.model_fields_set:
@@ -108,6 +123,11 @@ class DynamicClientRegistrationRequest(BaseModel):
         # and model_fields_set contains the field
         if self.scope is None and "scope" in self.model_fields_set:
             _dict['scope'] = None
+
+        # set to None if contacts (nullable) is None
+        # and model_fields_set contains the field
+        if self.contacts is None and "contacts" in self.model_fields_set:
+            _dict['contacts'] = None
 
         # set to None if tos_uri (nullable) is None
         # and model_fields_set contains the field

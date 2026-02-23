@@ -677,7 +677,11 @@
           "featureFlags": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
               }
             ],
             "description": "The feature flags to enable for the rapid."
@@ -732,12 +736,6 @@
           "value": {
             "type": "string"
           }
-        }
-      },
-      "ClassifyPayload_ListOfClassifyPayload_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClassifyPayload_Category"
         }
       },
       "CreateEmptyValidationSetResult": {
@@ -806,7 +804,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -831,7 +832,10 @@
         "type": "object",
         "properties": {
           "validationSets": {
-            "$ref": "#/components/schemas/ListOfValidationSetOverviewModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetOverviewModel"
+            }
           }
         }
       },
@@ -842,7 +846,10 @@
         "type": "object",
         "properties": {
           "validationSets": {
-            "$ref": "#/components/schemas/ListOfValidationSetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetModel"
+            }
           }
         }
       },
@@ -1031,7 +1038,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetInput"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
           },
           "metadata": {
             "oneOf": [
@@ -1149,7 +1159,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -1572,7 +1585,10 @@
             "type": "string"
           },
           "categories": {
-            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -1729,7 +1745,10 @@
             "type": "string"
           },
           "transcription": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           }
         }
       },
@@ -1927,7 +1946,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "requiredPrecision": {
             "type": "number",
@@ -1952,7 +1974,13 @@
             "type": "string"
           },
           "correctCombinations": {
-            "$ref": "#/components/schemas/ListOfListOfString"
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -1969,7 +1997,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           }
         }
       },
@@ -1999,7 +2030,10 @@
             "type": "string"
           },
           "validRanges": {
-            "$ref": "#/components/schemas/ListOfScrubRange"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
           }
         }
       },
@@ -2029,7 +2063,10 @@
             "type": "string"
           },
           "correctWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "strictGrading": {
             "type": "boolean",
@@ -2043,87 +2080,6 @@
             "type": "number",
             "format": "double"
           }
-        }
-      },
-      "ListOfBoxShape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BoxShape"
-        }
-      },
-      "ListOfFeatureFlagModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FeatureFlagModel"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfGetValidationRapidsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetValidationRapidsResult"
-        }
-      },
-      "ListOfIAssetInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetInput"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfListOfString": {
-        "type": "array",
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "ListOfNamedClassification": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/NamedClassification"
-        }
-      },
-      "ListOfScrubRange": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ScrubRange"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
-      },
-      "ListOfTranscriptionWord": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/TranscriptionWord"
-        }
-      },
-      "ListOfValidationSetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ValidationSetModel"
-        }
-      },
-      "ListOfValidationSetOverviewModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ValidationSetOverviewModel"
         }
       },
       "LogicOperator": {
@@ -2202,7 +2158,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfGetValidationRapidsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetValidationRapidsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2232,7 +2191,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfValidationSetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2313,14 +2275,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -2358,7 +2317,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"
@@ -2525,7 +2487,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           },
           "isPublic": {
             "type": "boolean"

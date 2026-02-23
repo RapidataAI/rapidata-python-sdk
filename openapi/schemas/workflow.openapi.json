@@ -499,12 +499,6 @@
           }
         }
       },
-      "AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
-        }
-      },
       "BoxShape": {
         "type": "object",
         "properties": {
@@ -539,12 +533,6 @@
           "value": {
             "type": "string"
           }
-        }
-      },
-      "ClassifyPayload_ListOfClassifyPayload_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClassifyPayload_Category"
         }
       },
       "EloConfig": {
@@ -591,7 +579,10 @@
             "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           }
         }
       },
@@ -642,7 +633,11 @@
           "sortCriteria": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -677,7 +672,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_ListOfGetCompareWorkflowResultsResult_Datapoint"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_Datapoint"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -705,12 +703,6 @@
           }
         }
       },
-      "GetCompareWorkflowResultsResult_ListOfGetCompareWorkflowResultsResult_Datapoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_Datapoint"
-        }
-      },
       "GetEvaluationWorkflowResultsModel": {
         "type": "object",
         "properties": {
@@ -727,16 +719,9 @@
               {
                 "type": "array",
                 "items": {
-                  "enum": [
-                    "Labeling",
-                    "Paused",
-                    "Incomplete",
-                    "Flagged",
-                    "Done",
-                    "None",
-                    "Rejected"
-                  ]
-                }
+                  "$ref": "#/components/schemas/RapidState"
+                },
+                "nullable": true
               }
             ],
             "description": "An optional list of states to filter the rapids by."
@@ -744,7 +729,11 @@
           "sortCriteria": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -782,14 +771,11 @@
         "type": "object",
         "properties": {
           "responses": {
-            "$ref": "#/components/schemas/GetResponsesResult_ListOfGetResponsesResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetResponsesResult_Response"
+            }
           }
-        }
-      },
-      "GetResponsesResult_ListOfGetResponsesResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetResponsesResult_Response"
         }
       },
       "GetResponsesResult_Response": {
@@ -851,16 +837,9 @@
               {
                 "type": "array",
                 "items": {
-                  "enum": [
-                    "Labeling",
-                    "Paused",
-                    "Incomplete",
-                    "Flagged",
-                    "Done",
-                    "None",
-                    "Rejected"
-                  ]
-                }
+                  "$ref": "#/components/schemas/RapidState"
+                },
+                "nullable": true
               }
             ],
             "description": "An optional list of states to filter the rapids by."
@@ -868,7 +847,11 @@
           "sortCriteria": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -933,7 +916,10 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "responses": {
-            "$ref": "#/components/schemas/GetWorkflowResultsResult_ListOfGetWorkflowResultsResult_Response"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
+            }
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
@@ -952,12 +938,6 @@
               }
             ]
           }
-        }
-      },
-      "GetWorkflowResultsResult_ListOfGetWorkflowResultsResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
         }
       },
       "GetWorkflowResultsResult_Response": {
@@ -1072,7 +1052,10 @@
             "type": "string"
           },
           "assets": {
-            "$ref": "#/components/schemas/ListOfIAssetModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetModel"
+            }
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
@@ -1570,7 +1553,10 @@
             }
           },
           "categories": {
-            "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -1834,7 +1820,10 @@
             "type": "string"
           },
           "categories": {
-            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
           },
           "title": {
             "type": "string"
@@ -1991,7 +1980,10 @@
             "type": "string"
           },
           "transcription": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           }
         }
       },
@@ -2087,7 +2079,10 @@
             "type": "string"
           },
           "boundingBoxes": {
-            "$ref": "#/components/schemas/ListOfBoxShape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -2152,7 +2147,10 @@
             "type": "string"
           },
           "lines": {
-            "$ref": "#/components/schemas/LineResult_ListOfLineResult_Line"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_Line"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -2173,7 +2171,10 @@
             "type": "string"
           },
           "coordinates": {
-            "$ref": "#/components/schemas/ListOfLocateCoordinate"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocateCoordinate"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -2194,7 +2195,10 @@
             "type": "string"
           },
           "classifications": {
-            "$ref": "#/components/schemas/ListOfNamedClassification"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -2215,7 +2219,10 @@
             "type": "string"
           },
           "shapes": {
-            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Shape"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Shape"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -2238,7 +2245,8 @@
           "timestamps": {
             "type": "array",
             "items": {
-              "type": "number"
+              "type": "integer",
+              "format": "int32"
             }
           },
           "rapidId": {
@@ -2277,7 +2285,10 @@
             "type": "string"
           },
           "selectedWords": {
-            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -2650,7 +2661,10 @@
             "format": "double"
           },
           "points": {
-            "$ref": "#/components/schemas/LineResult_ListOfLineResult_LinePoint"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_LinePoint"
+            }
           }
         }
       },
@@ -2669,78 +2683,6 @@
             "type": "number",
             "format": "double"
           }
-        }
-      },
-      "LineResult_ListOfLineResult_Line": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_Line"
-        }
-      },
-      "LineResult_ListOfLineResult_LinePoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_LinePoint"
-        }
-      },
-      "ListOfBoxShape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BoxShape"
-        }
-      },
-      "ListOfFilter": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfGetGroupedRankingWorkflowResultsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResult"
-        }
-      },
-      "ListOfGetWorkflowResultsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetWorkflowResultsResult"
-        }
-      },
-      "ListOfIAssetModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfIWorkflowModel": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IWorkflowModel"
-        }
-      },
-      "ListOfLocateCoordinate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LocateCoordinate"
-        }
-      },
-      "ListOfNamedClassification": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/NamedClassification"
-        }
-      },
-      "ListOfSortCriterion": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SortCriterion"
-        }
-      },
-      "ListOfTranscriptionWord": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/TranscriptionWord"
         }
       },
       "LocateCoordinate": {
@@ -2816,7 +2758,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfGetGroupedRankingWorkflowResultsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2846,7 +2791,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfGetWorkflowResultsResult"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetWorkflowResultsResult"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2876,7 +2824,10 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfIWorkflowModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IWorkflowModel"
+            }
           },
           "totalPages": {
             "type": "integer",
@@ -2914,18 +2865,6 @@
           }
         }
       },
-      "PolygonResult_ListOfPolygonResult_Coordinate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Coordinate"
-        }
-      },
-      "PolygonResult_ListOfPolygonResult_Shape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Shape"
-        }
-      },
       "PolygonResult_Shape": {
         "required": [
           "edges"
@@ -2933,7 +2872,10 @@
         "type": "object",
         "properties": {
           "edges": {
-            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Coordinate"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Coordinate"
+            }
           }
         }
       },
@@ -2961,14 +2903,11 @@
             ]
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
@@ -2987,7 +2926,10 @@
         "type": "object",
         "properties": {
           "filters": {
-            "$ref": "#/components/schemas/ListOfFilter"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"
