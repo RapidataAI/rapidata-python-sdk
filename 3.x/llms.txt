@@ -26,6 +26,10 @@
 
 - [Overview](https://docs.rapidata.ai/3.x/flows/index.md)
 
+## Claude Code
+
+- [🤖 Claude Code Plugin](https://docs.rapidata.ai/3.x/claude_code/index.md)
+
 ## Migration
 
 - [🔄 Migration Guide](https://docs.rapidata.ai/3.x/migration_guide/index.md)
