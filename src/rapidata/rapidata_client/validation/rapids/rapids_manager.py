@@ -127,7 +127,7 @@ class RapidsManager:
                 _t="ComparePayload", criteria=instruction
             )
         )
-        # truth_basename = os.path.basename(truth)
+
         if truth not in datapoint:
             raise ValueError("Truth must be one of the datapoints")
 
