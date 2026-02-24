@@ -372,6 +372,7 @@ class RapidataOrderManager:
                 media_contexts=media_contexts,
                 private_metadata=private_metadata,
                 data_type=data_type,
+                multi_asset=True,
             )
             return self._create_general_order(
                 name=name,
