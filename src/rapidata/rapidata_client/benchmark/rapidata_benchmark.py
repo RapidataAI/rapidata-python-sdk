@@ -236,7 +236,7 @@ class RapidataBenchmark:
 
         from rapidata.api_client.models.i_asset_input import IAssetInput
 
-        with tracer.start_as_current_span("RapidataBenchmark.add_prompt"):
+        with tracer.start_as_current_span("RapidataBenchmark.add_prompt_to_benchmark"):
             if tags is None:
                 tags = []
 
@@ -350,7 +350,7 @@ class RapidataBenchmark:
             RapidataLeaderboard,
         )
 
-        with tracer.start_as_current_span("create_leaderboard"):
+        with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
                 or level_of_detail not in ["low", "medium", "high", "very high"]
@@ -445,7 +445,7 @@ class RapidataBenchmark:
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
         """
-        with tracer.start_as_current_span("evaluate_model"):
+        with tracer.start_as_current_span("RapidataBenchmark.evaluate_model"):
             participant = self.add_model(
                 name=name,
                 media=media,
@@ -479,12 +479,11 @@ class RapidataBenchmark:
         from rapidata.api_client.models.create_benchmark_participant_model import (
             CreateBenchmarkParticipantModel,
         )
-        from rapidata.api_client.models.participant_status import ParticipantStatus
         from rapidata.rapidata_client.benchmark.participant.participant import (
             BenchmarkParticipant,
         )
 
-        with tracer.start_as_current_span("add_model"):
+        with tracer.start_as_current_span("RapidataBenchmark.add_model"):
             if not media:
                 raise ValueError("Media must be a non-empty list of strings")
 
