@@ -27,3 +27,4 @@ When writing documentation, make sure to keep focused, easy to understand, and n
 
 ## General rules
 at the end of your edits make sure to run 'pyright src/rapidata/rapidata_client' and make sure there are no errors.
+when updating any interfaces make sure you update the docs and examples.
