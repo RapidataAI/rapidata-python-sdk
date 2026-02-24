@@ -87,6 +87,47 @@ benchmark.evaluate_model(
 )
 ```
 
+### 3b. Adding Models Without Immediate Submission
+
+If you want to add a model and control when it is submitted for evaluation, use `add_model` instead of `evaluate_model`. This lets you upload media, inspect the participant, and submit on your own schedule.
+
+```python
+# Add a model without submitting
+participant = benchmark.add_model(
+    name="MyAIModel_v2.1",
+    media=[
+        "https://assets.rapidata.ai/mountain_sunset1.png",
+        "https://assets.rapidata.ai/futuristic_city.png",
+        "https://assets.rapidata.ai/wizard_portrait.png"
+    ],
+    prompts=[
+        "A serene mountain landscape at sunset",
+        "A futuristic city with flying cars",
+        "A portrait of a wise old wizard"
+    ]
+)
+
+# Upload additional media to the same participant
+participant.upload_media(
+    assets=["https://assets.rapidata.ai/mountain_sunset2.png"],
+    identifiers=["A serene mountain landscape at sunset"]
+)
+
+# Submit the individual participant
+participant.run()
+
+# Or submit all unsubmitted participants at once
+benchmark.run()
+```
+
+You can also inspect existing participants:
+
+```python
+# List all participants
+for p in benchmark.participants:
+    print(p.name, p.status)
+```
+
 ### 4. Matchmaking and Ranking
 MRI creates fair comparisons by:
 

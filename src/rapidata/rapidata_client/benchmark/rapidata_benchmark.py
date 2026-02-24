@@ -11,6 +11,9 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
         RapidataLeaderboard,
     )
+    from rapidata.rapidata_client.benchmark.participant.participant import (
+        BenchmarkParticipant,
+    )
     from rapidata.rapidata_client.filter import RapidataFilter
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
@@ -39,6 +42,7 @@ class RapidataBenchmark:
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
+        self.__participants: list[BenchmarkParticipant] = []
         self.__benchmark_page: str = (
             f"https://app.{self._openapi_service.environment}/mri/benchmarks/{self.id}"
         )
@@ -184,6 +188,31 @@ class RapidataBenchmark:
 
             return self.__leaderboards
 
+    @property
+    def participants(self) -> list[BenchmarkParticipant]:
+        """Returns the participants that are registered for the benchmark."""
+        from rapidata.rapidata_client.benchmark.participant.participant import (
+            BenchmarkParticipant,
+        )
+
+        with tracer.start_as_current_span("RapidataBenchmark.participants"):
+            if not self.__participants:
+                result = self._openapi_service.benchmark_api.benchmark_benchmark_id_participants_get(
+                    benchmark_id=self.id,
+                )
+
+                self.__participants = [
+                    BenchmarkParticipant(
+                        name=p.name,
+                        id=p.id,
+                        openapi_service=self._openapi_service,
+                        status=p.status,
+                    )
+                    for p in result.items
+                ]
+
+            return self.__participants
+
     def add_prompt(
         self,
         identifier: str | None = None,
@@ -207,7 +236,7 @@ class RapidataBenchmark:
 
         from rapidata.api_client.models.i_asset_input import IAssetInput
 
-        with tracer.start_as_current_span("RapidataBenchmark.add_prompt"):
+        with tracer.start_as_current_span("RapidataBenchmark.add_prompt_to_benchmark"):
             if tags is None:
                 tags = []
 
@@ -321,7 +350,7 @@ class RapidataBenchmark:
             RapidataLeaderboard,
         )
 
-        with tracer.start_as_current_span("create_leaderboard"):
+        with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
                 or level_of_detail not in ["low", "medium", "high", "very high"]
@@ -416,14 +445,45 @@ class RapidataBenchmark:
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
         """
+        with tracer.start_as_current_span("RapidataBenchmark.evaluate_model"):
+            participant = self.add_model(
+                name=name,
+                media=media,
+                identifiers=identifiers,
+                prompts=prompts,
+            )
+            participant.run()
+
+    def add_model(
+        self,
+        name: str,
+        media: list[str],
+        identifiers: list[str] | None = None,
+        prompts: list[str] | None = None,
+    ) -> BenchmarkParticipant:
+        """Adds a model to the benchmark without immediately submitting it for evaluation.
+
+        This method creates a participant, uploads media, but does NOT submit the participant.
+        Use `participant.run()` or `benchmark.run()` to submit afterwards.
+
+        Args:
+            name: The name of the model.
+            media: The generated images/videos that will be used to evaluate the model.
+            identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.\n
+                The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
+            prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
+
+        Returns:
+            The created BenchmarkParticipant instance.
+        """
         from rapidata.api_client.models.create_benchmark_participant_model import (
             CreateBenchmarkParticipantModel,
         )
-        from rapidata.rapidata_client.benchmark.participant._participant import (
+        from rapidata.rapidata_client.benchmark.participant.participant import (
             BenchmarkParticipant,
         )
 
-        with tracer.start_as_current_span("evaluate_model"):
+        with tracer.start_as_current_span("RapidataBenchmark.add_model"):
             if not media:
                 raise ValueError("Media must be a non-empty list of strings")
 
@@ -459,7 +519,9 @@ class RapidataBenchmark:
             logger.info(f"Participant created: {participant_result.participant_id}")
 
             participant = BenchmarkParticipant(
-                name, participant_result.participant_id, self._openapi_service
+                name,
+                participant_result.participant_id,
+                self._openapi_service,
             )
 
             with tracer.start_as_current_span("upload_media_for_participant"):
@@ -493,9 +555,28 @@ class RapidataBenchmark:
                         "No uploads were successful. The model evaluation will not be completed."
                     )
 
-                self._openapi_service.participant_api.participants_participant_id_submit_post(
-                    participant_id=participant_result.participant_id
-                )
+            # Clear cache so next access re-fetches
+            self.__participants = []
+
+            return participant
+
+    def run(self) -> None:
+        """Submits all participants that are in `CREATED` state.
+
+        This is a convenience method to submit all unsubmitted participants at once.
+        """
+        from rapidata.api_client.models.participant_status import ParticipantStatus
+
+        with tracer.start_as_current_span("RapidataBenchmark.run"):
+            created = [
+                p for p in self.participants if p.status == ParticipantStatus.CREATED
+            ]
+            logger.info(f"Submitting {len(created)} participants in CREATED state")
+            for participant in created:
+                participant.run()
+
+            # Clear cache so next access re-fetches
+            self.__participants = []
 
     def view(self) -> None:
         """

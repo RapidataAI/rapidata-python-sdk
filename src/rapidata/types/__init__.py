@@ -15,6 +15,9 @@ from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
     RapidataLeaderboard,
 )
+from rapidata.rapidata_client.benchmark.participant.participant import (
+    BenchmarkParticipant,
+)
 
 # Selection Types
 from rapidata.rapidata_client.selection.ab_test_selection import AbTestSelection
@@ -97,6 +100,7 @@ __all__ = [
     "RapidataBenchmark",
     "RapidataBenchmarkManager",
     "RapidataLeaderboard",
+    "BenchmarkParticipant",
     # Selection Types
     "AbTestSelection",
     "CappedSelection",

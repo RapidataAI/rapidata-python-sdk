@@ -12,7 +12,7 @@ In the MRI quickstart we used the prompts to identify the media and create the a
 
 ```python
 # Example 1: Explicit identifiers
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["scene_1", "scene_2", "scene_3"],
     prompts=[
@@ -28,7 +28,7 @@ benchmark = benchmark_manager.create_new_benchmark(
 )
 
 # Example 2: Identifiers used for the same prompts but different seeding
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["seed_1", "seed_2", "seed_3"],
     prompts=["prompt_1", "prompt_1", "prompt_1"],
@@ -36,7 +36,7 @@ benchmark = benchmark_manager.create_new_benchmark(
 )
 
 # Example 3: Using only prompt assets
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["image_1", "image_2", "image_3"],   
     prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset2.jpg", "https://example.com/asset3.jpg"]
@@ -58,7 +58,7 @@ tags = [
     ["indoor", "vehicle"]
 ]
 
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Tagged Benchmark",
     identifiers=["scene_1", "scene_2", "scene_3", "scene_4"],
     prompts=["A sunny beach", "A mountain landscape", "A city skyline", "A car in a garage"],
@@ -132,8 +132,39 @@ leaderboard = benchmark.create_leaderboard(
 )
 ```
 
+## Participant Management
+
+### Listing Participants
+
+You can list all participants in a benchmark using the `participants` property:
+
+```python
+for participant in benchmark.participants:
+    print(f"{participant.name} - {participant.status}")
+```
+
+### Submitting Participants
+
+When using `add_model`, participants are created in the `CREATED` state and are not yet submitted for evaluation. You can submit them individually or in bulk:
+
+```python
+# Submit a single participant
+participant = benchmark.add_model(
+    name="ModelA",
+    media=["https://example.com/img1.png"],
+    identifiers=["scene_1"]
+)
+participant.run()
+
+# Or add multiple models and submit them all at once
+benchmark.add_model(name="ModelB", media=["https://example.com/img2.png"], identifiers=["scene_1"])
+benchmark.add_model(name="ModelC", media=["https://example.com/img3.png"], identifiers=["scene_1"])
+benchmark.run()  # Submits all participants in CREATED state
+```
+
 ## References
 - [RapidataBenchmarkManager](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/)
 - [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)
 - [RapidataLeaderboard](/reference/rapidata/rapidata_client/benchmark/leaderboard/rapidata_leaderboard/)
+- [BenchmarkParticipant](/reference/rapidata/rapidata_client/benchmark/participant/participant/)
 
