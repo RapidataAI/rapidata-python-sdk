@@ -127,10 +127,13 @@ class RapidsManager:
                 _t="ComparePayload", criteria=instruction
             )
         )
-        truth_basename = os.path.basename(truth)
+        # truth_basename = os.path.basename(truth)
+        if truth not in datapoint:
+            raise ValueError("Truth must be one of the datapoints")
+
         model_truth = IValidationTruthModel(
             actual_instance=IValidationTruthModelCompareTruthModel(
-                _t="CompareTruth", winnerId=truth_basename
+                _t="CompareTruth", winnerId=truth
             )
         )
 
