@@ -34,18 +34,29 @@ audience = client.audience.create_audience(name="Image Comparison Audience")
 Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience:
 
 ```py
-for _ in range(3):
+audience = client.audience.create_audience(name="Image Comparison Audience")
+
+
+DATAPOINTS = [
+    ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+    ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+    ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"],
+]
+PROMPTS = [
+    "A sign that says 'Diffusion'.",
+    "A psychedelic duck with glasses",
+    "A small blue book sitting on a large red book."
+]
+
+for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
     audience.add_compare_example(
         instruction="Which image follows the prompt more accurately?",
-        datapoint=[
-            "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-            "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-        ],
-        truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        context="A sign that says 'Diffusion'."
+        datapoint=datapoint,
+        truth=datapoint[0],
+        context=prompt
     )
 ```
-> **Note**: You need at least 3 examples to create an audience. In this example, we're adding the same qualification example 5 times for demonstration purposes only. Adding duplicates doesn't improve quality beyond adding it once. For best results, provide diverse, unique examples that cover different aspects of your task.
+> **Note**: In practice you'd want to add more examples to the audience to improve the quality of the results.
 
 **Parameters:**
 
@@ -64,17 +75,26 @@ from rapidata import RapidataClient
 client = RapidataClient()
 
 # Create and configure audience with qualification examples
-audience = client.audience.create_audience(name="Prompt Alignment Audience")
+audience = client.audience.create_audience(name="Image Comparison Audience")
 
-for _ in range(3):
+
+DATAPOINTS = [
+    ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+    ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+    ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"],
+]
+PROMPTS = [
+    "A sign that says 'Diffusion'.",
+    "A psychedelic duck with glasses",
+    "A small blue book sitting on a large red book."
+]
+
+for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
     audience.add_compare_example(
         instruction="Which image follows the prompt more accurately?",
-        datapoint=[
-            "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-            "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-        ],
-        truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        context="A sign that says 'Diffusion'."
+        datapoint=datapoint,
+        truth=datapoint[0],
+        context=prompt
     )
 
 # Create job definition
