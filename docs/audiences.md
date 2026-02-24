@@ -34,9 +34,6 @@ audience = client.audience.create_audience(name="Image Comparison Audience")
 Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience:
 
 ```py
-audience = client.audience.create_audience(name="Image Comparison Audience")
-
-
 DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
     ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
@@ -76,7 +73,6 @@ client = RapidataClient()
 
 # Create and configure audience with qualification examples
 audience = client.audience.create_audience(name="Image Comparison Audience")
-
 
 DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
