@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
-from typing import TYPE_CHECKING
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger
@@ -16,9 +15,7 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 
 from rapidata.service.openapi_service import OpenAPIService
-
-if TYPE_CHECKING:
-    from rapidata.api_client.models.participant_status import ParticipantStatus
+from rapidata.api_client.models.participant_status import ParticipantStatus
 
 
 class BenchmarkParticipant:
@@ -58,8 +55,6 @@ class BenchmarkParticipant:
         After uploading media, call this method to submit the participant
         so that it enters the evaluation pipeline.
         """
-        from rapidata.api_client.models.participant_status import ParticipantStatus
-
         self._openapi_service.participant_api.participants_participant_id_submit_post(
             participant_id=self.id
         )
