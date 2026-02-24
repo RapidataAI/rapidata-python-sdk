@@ -1123,6 +1123,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#participant-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Participant Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Participant Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#listing-participants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing Participants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#submitting-participants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submitting Participants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1323,7 +1362,7 @@
 <h3 id="using-identifiers">Using Identifiers<a class="headerlink" href="#using-identifiers" title="Permanent link">#</a></h3>
 <p>In the MRI quickstart we used the prompts to identify the media and create the appropriate matchups. However, more generally you might not have an exact 1-to-1 relationship between prompts and media (e.g., you may have different settings or inputs for the same prompt - for example input images for image-to-video models. More about this below). To handle this case, we allow you to supply your own identifiers, which will then be used when creating the matchups.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Example 1: Explicit identifiers</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">benchmark_manager</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Preference Benchmark"</span><span class="p">,</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">,</span> <span class="s2">"scene_2"</span><span class="p">,</span> <span class="s2">"scene_3"</span><span class="p">],</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">[</span>
@@ -1339,7 +1378,7 @@
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">)</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Example 2: Identifiers used for the same prompts but different seeding</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">benchmark_manager</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Preference Benchmark"</span><span class="p">,</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"seed_1"</span><span class="p">,</span> <span class="s2">"seed_2"</span><span class="p">,</span> <span class="s2">"seed_3"</span><span class="p">],</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">[</span><span class="s2">"prompt_1"</span><span class="p">,</span> <span class="s2">"prompt_1"</span><span class="p">,</span> <span class="s2">"prompt_1"</span><span class="p">],</span>
@@ -1347,7 +1386,7 @@
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">)</span>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Example 3: Using only prompt assets</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">benchmark_manager</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
 </span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Preference Benchmark"</span><span class="p">,</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"image_1"</span><span class="p">,</span> <span class="s2">"image_2"</span><span class="p">,</span> <span class="s2">"image_3"</span><span class="p">],</span>   
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">prompt_assets</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/asset1.jpg"</span><span class="p">,</span> <span class="s2">"https://example.com/asset2.jpg"</span><span class="p">,</span> <span class="s2">"https://example.com/asset3.jpg"</span><span class="p">]</span>
@@ -1366,7 +1405,7 @@
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">[</span><span class="s2">"indoor"</span><span class="p">,</span> <span class="s2">"vehicle"</span><span class="p">]</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">]</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">benchmark_manager</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Tagged Benchmark"</span><span class="p">,</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">,</span> <span class="s2">"scene_2"</span><span class="p">,</span> <span class="s2">"scene_3"</span><span class="p">,</span> <span class="s2">"scene_4"</span><span class="p">],</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A sunny beach"</span><span class="p">,</span> <span class="s2">"A mountain landscape"</span><span class="p">,</span> <span class="s2">"A city skyline"</span><span class="p">,</span> <span class="s2">"A car in a garage"</span><span class="p">],</span>
@@ -1422,11 +1461,33 @@
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="s2">"medium"</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span>
 </span></code></pre></div>
+<h2 id="participant-management">Participant Management<a class="headerlink" href="#participant-management" title="Permanent link">#</a></h2>
+<h3 id="listing-participants">Listing Participants<a class="headerlink" href="#listing-participants" title="Permanent link">#</a></h3>
+<p>You can list all participants in a benchmark using the <code>participants</code> property:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">for</span> <span class="n">participant</span> <span class="ow">in</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="submitting-participants">Submitting Participants<a class="headerlink" href="#submitting-participants" title="Permanent link">#</a></h3>
+<p>When using <code>add_model</code>, participants are created in the <code>CREATED</code> state and are not yet submitted for evaluation. You can submit them individually or in bulk:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Submit a single participant</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"ModelA"</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img1.png"</span><span class="p">],</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">]</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">)</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">participant</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Or add multiple models and submit them all at once</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelB"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img2.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelC"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img3.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Submits all participants in CREATED state</span>
+</span></code></pre></div>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
 <li><a href="/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/">RapidataBenchmarkManager</a></li>
 <li><a href="/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/">RapidataBenchmark</a></li>
 <li><a href="/reference/rapidata/rapidata_client/benchmark/leaderboard/rapidata_leaderboard/">RapidataLeaderboard</a></li>
+<li><a href="/reference/rapidata/rapidata_client/benchmark/participant/participant/">BenchmarkParticipant</a></li>
 </ul>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📋</button>
