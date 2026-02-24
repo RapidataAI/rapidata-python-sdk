@@ -45,7 +45,7 @@ class BenchmarkParticipant:
         self._status = status
 
     @property
-    def status(self) -> ParticipantStatus | None:
+    def status(self) -> ParticipantStatus:
         """The current status of the participant."""
         return self._status
 

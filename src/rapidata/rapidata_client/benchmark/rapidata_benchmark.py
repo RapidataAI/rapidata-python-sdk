@@ -445,86 +445,14 @@ class RapidataBenchmark:
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
         """
-        from rapidata.api_client.models.create_benchmark_participant_model import (
-            CreateBenchmarkParticipantModel,
-        )
-        from rapidata.rapidata_client.benchmark.participant.participant import (
-            BenchmarkParticipant,
-        )
-
         with tracer.start_as_current_span("evaluate_model"):
-            if not media:
-                raise ValueError("Media must be a non-empty list of strings")
-
-            if not identifiers and not prompts:
-                raise ValueError("Identifiers or prompts must be provided.")
-
-            if identifiers and prompts:
-                raise ValueError(
-                    "Identifiers and prompts cannot be provided at the same time. Use one or the other."
-                )
-
-            if not identifiers:
-                assert prompts is not None
-                identifiers = prompts
-
-            if len(media) != len(identifiers):
-                raise ValueError(
-                    "Media and identifiers/prompts must have the same length"
-                )
-
-            if not all(identifier in self.identifiers for identifier in identifiers):
-                raise ValueError(
-                    "All identifiers/prompts must be in the registered identifiers/prompts list. To see the registered identifiers/prompts, use the identifiers/prompts property."
-                )
-
-            participant_result = self._openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
-                benchmark_id=self.id,
-                create_benchmark_participant_model=CreateBenchmarkParticipantModel(
-                    name=name,
-                ),
+            participant = self.add_model(
+                name=name,
+                media=media,
+                identifiers=identifiers,
+                prompts=prompts,
             )
-
-            logger.info(f"Participant created: {participant_result.participant_id}")
-
-            participant = BenchmarkParticipant(
-                name, participant_result.participant_id, self._openapi_service
-            )
-
-            with tracer.start_as_current_span("upload_media_for_participant"):
-                logger.info(
-                    f"Uploading {len(media)} media assets to participant {participant.id}"
-                )
-
-                successful_uploads, failed_uploads = participant.upload_media(
-                    media,
-                    identifiers,
-                )
-
-                total_uploads = len(media)
-                success_rate = (
-                    (len(successful_uploads) / total_uploads * 100)
-                    if total_uploads > 0
-                    else 0
-                )
-                logger.info(
-                    f"Upload complete: {len(successful_uploads)} successful, {len(failed_uploads)} failed ({success_rate:.1f}% success rate)"
-                )
-
-                if failed_uploads:
-                    logger.error(f"Failed uploads for media: {failed_uploads}")
-                    logger.warning(
-                        "Some uploads failed. The model evaluation may be incomplete."
-                    )
-
-                if len(successful_uploads) == 0:
-                    raise RuntimeError(
-                        "No uploads were successful. The model evaluation will not be completed."
-                    )
-
-                self._openapi_service.participant_api.participants_participant_id_submit_post(
-                    participant_id=participant_result.participant_id
-                )
+            participant.run()
 
     def add_model(
         self,

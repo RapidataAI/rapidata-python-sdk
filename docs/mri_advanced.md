@@ -12,7 +12,7 @@ In the MRI quickstart we used the prompts to identify the media and create the a
 
 ```python
 # Example 1: Explicit identifiers
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["scene_1", "scene_2", "scene_3"],
     prompts=[
@@ -28,7 +28,7 @@ benchmark = benchmark_manager.create_new_benchmark(
 )
 
 # Example 2: Identifiers used for the same prompts but different seeding
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["seed_1", "seed_2", "seed_3"],
     prompts=["prompt_1", "prompt_1", "prompt_1"],
@@ -36,7 +36,7 @@ benchmark = benchmark_manager.create_new_benchmark(
 )
 
 # Example 3: Using only prompt assets
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["image_1", "image_2", "image_3"],   
     prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset2.jpg", "https://example.com/asset3.jpg"]
@@ -58,7 +58,7 @@ tags = [
     ["indoor", "vehicle"]
 ]
 
-benchmark = benchmark_manager.create_new_benchmark(
+benchmark = client.mri.create_new_benchmark(
     name="Tagged Benchmark",
     identifiers=["scene_1", "scene_2", "scene_3", "scene_4"],
     prompts=["A sunny beach", "A mountain landscape", "A city skyline", "A car in a garage"],
