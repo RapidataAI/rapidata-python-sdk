@@ -132,8 +132,39 @@ leaderboard = benchmark.create_leaderboard(
 )
 ```
 
+## Participant Management
+
+### Listing Participants
+
+You can list all participants in a benchmark using the `participants` property:
+
+```python
+for participant in benchmark.participants:
+    print(f"{participant.name} - {participant.status}")
+```
+
+### Submitting Participants
+
+When using `add_model`, participants are created in the `CREATED` state and are not yet submitted for evaluation. You can submit them individually or in bulk:
+
+```python
+# Submit a single participant
+participant = benchmark.add_model(
+    name="ModelA",
+    media=["https://example.com/img1.png"],
+    identifiers=["scene_1"]
+)
+participant.run()
+
+# Or add multiple models and submit them all at once
+benchmark.add_model(name="ModelB", media=["https://example.com/img2.png"], identifiers=["scene_1"])
+benchmark.add_model(name="ModelC", media=["https://example.com/img3.png"], identifiers=["scene_1"])
+benchmark.run()  # Submits all participants in CREATED state
+```
+
 ## References
 - [RapidataBenchmarkManager](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/)
 - [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)
 - [RapidataLeaderboard](/reference/rapidata/rapidata_client/benchmark/leaderboard/rapidata_leaderboard/)
+- [BenchmarkParticipant](/reference/rapidata/rapidata_client/benchmark/participant/participant/)
 

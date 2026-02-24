@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
+from typing import TYPE_CHECKING
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger
@@ -16,13 +17,59 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 from rapidata.service.openapi_service import OpenAPIService
 
+if TYPE_CHECKING:
+    from rapidata.api_client.models.participant_status import ParticipantStatus
+
 
 class BenchmarkParticipant:
-    def __init__(self, name: str, id: str, openapi_service: OpenAPIService):
+    """A participant (model) in a benchmark evaluation.
+
+    Represents a model that has been added to a benchmark for evaluation.
+    Provides methods to upload media and submit the participant for evaluation.
+
+    Args:
+        name: The name of the participant/model.
+        id: The unique identifier of the participant.
+        openapi_service: The OpenAPI service for API communication.
+        status: The current status of the participant.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        id: str,
+        openapi_service: OpenAPIService,
+        status: ParticipantStatus = ParticipantStatus.CREATED,
+    ):
         self.name = name
         self.id = id
         self._openapi_service = openapi_service
         self._asset_uploader = AssetUploader(openapi_service)
+        self._status = status
+
+    @property
+    def status(self) -> ParticipantStatus | None:
+        """The current status of the participant."""
+        return self._status
+
+    def run(self) -> None:
+        """Submits the participant for evaluation.
+
+        After uploading media, call this method to submit the participant
+        so that it enters the evaluation pipeline.
+        """
+        from rapidata.api_client.models.participant_status import ParticipantStatus
+
+        self._openapi_service.participant_api.participants_participant_id_submit_post(
+            participant_id=self.id
+        )
+        self._status = ParticipantStatus.SUBMITTED
+
+    def __str__(self) -> str:
+        return f"BenchmarkParticipant(name={self.name}, id={self.id}, status={self._status})"
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
     def _process_single_sample_upload(
         self,
