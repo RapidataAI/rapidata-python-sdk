@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import Literal, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -122,20 +121,25 @@ class RapidsManager:
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
+        if len(datapoint) != 2:
+            raise ValueError("Compare rapid requires exactly two media paths")
+
+        if truth not in datapoint:
+            raise ValueError(
+                f"Truth '{truth}' must be one of the datapoints: {datapoint}"
+            )
+
         payload = IRapidPayload(
             actual_instance=IRapidPayloadComparePayload(
                 _t="ComparePayload", criteria=instruction
             )
         )
-        truth_basename = os.path.basename(truth)
+
         model_truth = IValidationTruthModel(
             actual_instance=IValidationTruthModelCompareTruthModel(
-                _t="CompareTruth", winnerId=truth_basename
+                _t="CompareTruth", winnerId=truth
             )
         )
-
-        if len(datapoint) != 2:
-            raise ValueError("Compare rapid requires exactly two media paths")
 
         return Rapid(
             asset=datapoint,
