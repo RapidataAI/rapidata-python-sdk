@@ -345,17 +345,17 @@
         }
       }
     },
-    "/job/{jobId}/download-results": {
-      "get": {
+    "/job/{jobId}": {
+      "delete": {
         "tags": [
           "Job"
         ],
-        "summary": "Downloads the results of a job as a file attachment.",
+        "summary": "Deletes a job.",
         "parameters": [
           {
             "name": "jobId",
             "in": "path",
-            "description": "The id of the job to download results for.",
+            "description": "The id of the job to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -363,8 +363,18 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthenticated"
@@ -373,9 +383,7 @@
             "description": "Forbidden"
           }
         }
-      }
-    },
-    "/job/{jobId}": {
+      },
       "get": {
         "tags": [
           "Job"
@@ -461,6 +469,36 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/download-results": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Downloads the results of a job as a file attachment.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job to download results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "401": {
             "description": "Unauthenticated"
@@ -2832,13 +2870,13 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IOrderWorkflowModelCompareWorkflowModel"
-          },
-          {
             "$ref": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel"
+          },
+          {
+            "$ref": "#/components/schemas/IOrderWorkflowModelRankingWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
@@ -2847,70 +2885,10 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CompareWorkflow": "#/components/schemas/IOrderWorkflowModelCompareWorkflowModel",
             "EvaluationWorkflow": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel",
             "GroupedRankingWorkflow": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel",
+            "RankingWorkflow": "#/components/schemas/IOrderWorkflowModelRankingWorkflowModel",
             "SimpleWorkflow": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
-          }
-        }
-      },
-      "IOrderWorkflowModelCompareWorkflowModel": {
-        "required": [
-          "criteria",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflow"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfigModel"
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfigModel"
-          },
-          "rankingConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IRankingConfigModel"
-              }
-            ]
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              }
-            ]
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
-            },
-            "nullable": true
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
           }
         }
       },
@@ -2995,6 +2973,66 @@
           "maxParallelism": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "IOrderWorkflowModelRankingWorkflowModel": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingWorkflow"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfigModel"
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfigModel"
+              }
+            ]
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
+            },
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },

@@ -17,30 +17,30 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.i_workflow_model_compare_workflow_model import IWorkflowModelCompareWorkflowModel
 from rapidata.api_client.models.i_workflow_model_evaluation_workflow_model import IWorkflowModelEvaluationWorkflowModel
 from rapidata.api_client.models.i_workflow_model_grouped_ranking_workflow_model import IWorkflowModelGroupedRankingWorkflowModel
+from rapidata.api_client.models.i_workflow_model_ranking_workflow_model import IWorkflowModelRankingWorkflowModel
 from rapidata.api_client.models.i_workflow_model_simple_workflow_model import IWorkflowModelSimpleWorkflowModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IWORKFLOWMODEL_ONE_OF_SCHEMAS = ["IWorkflowModelCompareWorkflowModel", "IWorkflowModelEvaluationWorkflowModel", "IWorkflowModelGroupedRankingWorkflowModel", "IWorkflowModelSimpleWorkflowModel"]
+IWORKFLOWMODEL_ONE_OF_SCHEMAS = ["IWorkflowModelEvaluationWorkflowModel", "IWorkflowModelGroupedRankingWorkflowModel", "IWorkflowModelRankingWorkflowModel", "IWorkflowModelSimpleWorkflowModel"]
 
 class IWorkflowModel(BaseModel):
     """
     IWorkflowModel
     """
-    # data type: IWorkflowModelCompareWorkflowModel
-    oneof_schema_1_validator: Optional[IWorkflowModelCompareWorkflowModel] = None
     # data type: IWorkflowModelEvaluationWorkflowModel
-    oneof_schema_2_validator: Optional[IWorkflowModelEvaluationWorkflowModel] = None
+    oneof_schema_1_validator: Optional[IWorkflowModelEvaluationWorkflowModel] = None
     # data type: IWorkflowModelGroupedRankingWorkflowModel
-    oneof_schema_3_validator: Optional[IWorkflowModelGroupedRankingWorkflowModel] = None
+    oneof_schema_2_validator: Optional[IWorkflowModelGroupedRankingWorkflowModel] = None
+    # data type: IWorkflowModelRankingWorkflowModel
+    oneof_schema_3_validator: Optional[IWorkflowModelRankingWorkflowModel] = None
     # data type: IWorkflowModelSimpleWorkflowModel
     oneof_schema_4_validator: Optional[IWorkflowModelSimpleWorkflowModel] = None
-    actual_instance: Optional[Union[IWorkflowModelCompareWorkflowModel, IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel]] = None
-    one_of_schemas: Set[str] = { "IWorkflowModelCompareWorkflowModel", "IWorkflowModelEvaluationWorkflowModel", "IWorkflowModelGroupedRankingWorkflowModel", "IWorkflowModelSimpleWorkflowModel" }
+    actual_instance: Optional[Union[IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel]] = None
+    one_of_schemas: Set[str] = { "IWorkflowModelEvaluationWorkflowModel", "IWorkflowModelGroupedRankingWorkflowModel", "IWorkflowModelRankingWorkflowModel", "IWorkflowModelSimpleWorkflowModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -66,11 +66,6 @@ class IWorkflowModel(BaseModel):
         instance = IWorkflowModel.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IWorkflowModelCompareWorkflowModel
-        if not isinstance(v, IWorkflowModelCompareWorkflowModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IWorkflowModelCompareWorkflowModel`")
-        else:
-            match += 1
         # validate data type: IWorkflowModelEvaluationWorkflowModel
         if not isinstance(v, IWorkflowModelEvaluationWorkflowModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IWorkflowModelEvaluationWorkflowModel`")
@@ -81,6 +76,11 @@ class IWorkflowModel(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IWorkflowModelGroupedRankingWorkflowModel`")
         else:
             match += 1
+        # validate data type: IWorkflowModelRankingWorkflowModel
+        if not isinstance(v, IWorkflowModelRankingWorkflowModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IWorkflowModelRankingWorkflowModel`")
+        else:
+            match += 1
         # validate data type: IWorkflowModelSimpleWorkflowModel
         if not isinstance(v, IWorkflowModelSimpleWorkflowModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IWorkflowModelSimpleWorkflowModel`")
@@ -88,10 +88,10 @@ class IWorkflowModel(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IWorkflowModel with oneOf schemas: IWorkflowModelCompareWorkflowModel, IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IWorkflowModel with oneOf schemas: IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IWorkflowModel with oneOf schemas: IWorkflowModelCompareWorkflowModel, IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IWorkflowModel with oneOf schemas: IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -106,12 +106,6 @@ class IWorkflowModel(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IWorkflowModelCompareWorkflowModel
-        try:
-            instance.actual_instance = IWorkflowModelCompareWorkflowModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into IWorkflowModelEvaluationWorkflowModel
         try:
             instance.actual_instance = IWorkflowModelEvaluationWorkflowModel.from_json(json_str)
@@ -124,6 +118,12 @@ class IWorkflowModel(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IWorkflowModelRankingWorkflowModel
+        try:
+            instance.actual_instance = IWorkflowModelRankingWorkflowModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IWorkflowModelSimpleWorkflowModel
         try:
             instance.actual_instance = IWorkflowModelSimpleWorkflowModel.from_json(json_str)
@@ -133,10 +133,10 @@ class IWorkflowModel(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IWorkflowModel with oneOf schemas: IWorkflowModelCompareWorkflowModel, IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IWorkflowModel with oneOf schemas: IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IWorkflowModel with oneOf schemas: IWorkflowModelCompareWorkflowModel, IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IWorkflowModel with oneOf schemas: IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -150,7 +150,7 @@ class IWorkflowModel(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IWorkflowModelCompareWorkflowModel, IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

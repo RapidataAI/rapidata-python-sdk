@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -42,7 +42,8 @@ class QueryRapidsForAudienceResult(BaseModel):
     context_asset: Optional[IAssetModel] = Field(default=None, alias="contextAsset")
     explanation: Optional[StrictStr] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
-    __properties: ClassVar[List[str]] = ["id", "type", "asset", "payload", "correctValidationCount", "invalidValidationCount", "state", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability"]
+    is_common_sense: StrictBool = Field(alias="isCommonSense")
+    __properties: ClassVar[List[str]] = ["id", "type", "asset", "payload", "correctValidationCount", "invalidValidationCount", "state", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability", "isCommonSense"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -143,7 +144,8 @@ class QueryRapidsForAudienceResult(BaseModel):
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "explanation": obj.get("explanation"),
-            "randomCorrectProbability": obj.get("randomCorrectProbability")
+            "randomCorrectProbability": obj.get("randomCorrectProbability"),
+            "isCommonSense": obj.get("isCommonSense")
         })
         return _obj
 

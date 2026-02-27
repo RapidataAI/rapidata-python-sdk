@@ -2937,7 +2937,8 @@
           "payload",
           "correctValidationCount",
           "invalidValidationCount",
-          "state"
+          "state",
+          "isCommonSense"
         ],
         "type": "object",
         "properties": {
@@ -3002,6 +3003,9 @@
           "randomCorrectProbability": {
             "type": "number",
             "format": "double"
+          },
+          "isCommonSense": {
+            "type": "boolean"
           }
         }
       },

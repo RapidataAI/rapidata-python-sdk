@@ -17,18 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.i_asset_model import IAssetModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBenchmarkParticipantResult(BaseModel):
+class GetRankingWorkflowResultsResultDatapoint(BaseModel):
     """
-    CreateBenchmarkParticipantResult
+    GetRankingWorkflowResultsResultDatapoint
     """ # noqa: E501
-    participant_id: StrictStr = Field(alias="participantId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
+    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
+    asset: IAssetModel
+    elo: StrictInt
+    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +50,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a JSON string"""
+        """Create an instance of GetRankingWorkflowResultsResultDatapoint from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +71,14 @@ class CreateBenchmarkParticipantResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a dict"""
+        """Create an instance of GetRankingWorkflowResultsResultDatapoint from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +86,9 @@ class CreateBenchmarkParticipantResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "participantId": obj.get("participantId"),
-            "datasetId": obj.get("datasetId")
+            "workflowDatapointId": obj.get("workflowDatapointId"),
+            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "elo": obj.get("elo")
         })
         return _obj
 

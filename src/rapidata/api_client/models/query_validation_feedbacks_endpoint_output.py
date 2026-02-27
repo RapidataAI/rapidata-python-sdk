@@ -17,18 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBenchmarkParticipantResult(BaseModel):
+class QueryValidationFeedbacksEndpointOutput(BaseModel):
     """
-    CreateBenchmarkParticipantResult
+    QueryValidationFeedbacksEndpointOutput
     """ # noqa: E501
-    participant_id: StrictStr = Field(alias="participantId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
+    id: StrictStr = Field(description="The unique identifier of the feedback.")
+    user_id: StrictStr = Field(description="The ID of the user who submitted the feedback.", alias="userId")
+    session_id: StrictStr = Field(description="The session ID of the user who submitted the feedback.", alias="sessionId")
+    feedback: StrictStr = Field(description="The feedback text.")
+    created_at: datetime = Field(description="The timestamp when the feedback was created.", alias="createdAt")
+    __properties: ClassVar[List[str]] = ["id", "userId", "sessionId", "feedback", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +52,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a JSON string"""
+        """Create an instance of QueryValidationFeedbacksEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +77,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a dict"""
+        """Create an instance of QueryValidationFeedbacksEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +85,11 @@ class CreateBenchmarkParticipantResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "participantId": obj.get("participantId"),
-            "datasetId": obj.get("datasetId")
+            "id": obj.get("id"),
+            "userId": obj.get("userId"),
+            "sessionId": obj.get("sessionId"),
+            "feedback": obj.get("feedback"),
+            "createdAt": obj.get("createdAt")
         })
         return _obj
 

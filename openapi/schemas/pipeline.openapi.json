@@ -1274,13 +1274,13 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig"
-          },
-          {
             "$ref": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig"
           },
           {
             "$ref": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigRankingWorkflowConfig"
           },
           {
             "$ref": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
@@ -1289,67 +1289,10 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CompareWorkflowConfig": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig",
             "EvaluationWorkflowConfig": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig",
             "GroupedRankingWorkflowConfig": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig",
+            "RankingWorkflowConfig": "#/components/schemas/IWorkflowConfigRankingWorkflowConfig",
             "SimpleWorkflowConfig": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
-          }
-        }
-      },
-      "IWorkflowConfigCompareWorkflowConfig": {
-        "required": [
-          "criteria",
-          "referee",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflowConfig"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "referee": {
-            "$ref": "#/components/schemas/IRefereeConfig"
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ]
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
-          },
-          "rankingConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IRankingConfig"
-              }
-            ]
-          },
-          "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfig"
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
           }
         }
       },
@@ -1428,6 +1371,63 @@
               "$ref": "#/components/schemas/IAsset"
             },
             "nullable": true
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfig"
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          }
+        }
+      },
+      "IWorkflowConfigRankingWorkflowConfig": {
+        "required": [
+          "criteria",
+          "referee",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ]
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"

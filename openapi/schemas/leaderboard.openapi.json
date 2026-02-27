@@ -101,6 +101,260 @@
         }
       }
     },
+    "/benchmark/combined-matrix": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the combined pairwise vote matrix for multiple benchmarks.",
+        "parameters": [
+          {
+            "name": "benchmarkIds",
+            "in": "query",
+            "description": "The identifiers of the benchmarks to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring to the matrix values.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedBenchmarkMatrixEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmark/combined-standings": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the combined standings for multiple benchmarks.",
+        "parameters": [
+          {
+            "name": "benchmarkIds",
+            "in": "query",
+            "description": "The identifiers of the benchmarks to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "description": "Whether to include confidence intervals in results.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedBenchmarkStandingsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/leaderboard/combined-matrix": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Returns the combined pairwise vote matrix for multiple leaderboards.",
+        "parameters": [
+          {
+            "name": "leaderboardIds",
+            "in": "query",
+            "description": "The identifiers of the leaderboards to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring to the matrix values.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedLeaderboardMatrixEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/leaderboard/combined-standings": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Returns the combined standings for multiple leaderboards.",
+        "parameters": [
+          {
+            "name": "leaderboardIds",
+            "in": "query",
+            "description": "The identifiers of the leaderboards to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "description": "Whether to include confidence intervals in results.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedLeaderboardStandingsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/leaderboard/{leaderboardId}/matrix": {
       "get": {
         "tags": [
@@ -434,6 +688,18 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
             }
           }
         ],
@@ -2188,6 +2454,14 @@
                 }
               }
             }
+          },
+          {
+            "name": "fillMissing",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -2196,17 +2470,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
                 }
               }
             }
@@ -2757,6 +3031,238 @@
           },
           "ownerMail": {
             "type": "string"
+          }
+        }
+      },
+      "GetCombinedBenchmarkMatrixEndpoint_Output": {
+        "required": [
+          "index",
+          "columns",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Row participant names."
+          },
+          "columns": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Column participant names."
+          },
+          "data": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              }
+            ],
+            "description": "NxN matrix where Data[i][j] = wins of Index[i] over Columns[j]."
+          }
+        },
+        "description": "Combined benchmark matrix output in pandas split format."
+      },
+      "GetCombinedBenchmarkStandingsEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCombinedBenchmarkStandingsEndpoint_OutputItem"
+                }
+              }
+            ],
+            "description": "The standings items."
+          }
+        },
+        "description": "Combined benchmark standings output."
+      },
+      "GetCombinedBenchmarkStandingsEndpoint_OutputItem": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ]
+          }
+        }
+      },
+      "GetCombinedLeaderboardMatrixEndpoint_Output": {
+        "required": [
+          "index",
+          "columns",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Row participant names."
+          },
+          "columns": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Column participant names."
+          },
+          "data": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              }
+            ],
+            "description": "NxN matrix where Data[i][j] = wins of Index[i] over Columns[j]."
+          }
+        },
+        "description": "Combined leaderboard matrix output in pandas split format."
+      },
+      "GetCombinedLeaderboardStandingsEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCombinedLeaderboardStandingsEndpoint_OutputItem"
+                }
+              }
+            ],
+            "description": "The standings items."
+          }
+        },
+        "description": "Combined leaderboard standings output."
+      },
+      "GetCombinedLeaderboardStandingsEndpoint_OutputItem": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ]
           }
         }
       },
@@ -3846,6 +4352,123 @@
           }
         }
       },
+      "ISampleByParticipant": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ISampleByParticipantPlaceholderSampleByParticipant"
+          },
+          {
+            "$ref": "#/components/schemas/ISampleByParticipantSampleByParticipant"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "PlaceholderSampleByParticipant": "#/components/schemas/ISampleByParticipantPlaceholderSampleByParticipant",
+            "SampleByParticipant": "#/components/schemas/ISampleByParticipantSampleByParticipant"
+          }
+        }
+      },
+      "ISampleByParticipantPlaceholderSampleByParticipant": {
+        "required": [
+          "identifier",
+          "tags",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PlaceholderSampleByParticipant"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ISampleByParticipantSampleByParticipant": {
+        "required": [
+          "id",
+          "identifier",
+          "asset",
+          "tags",
+          "ownerMail",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SampleByParticipant"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
       "IUserFilterModel": {
         "required": [
           "_t"
@@ -4300,6 +4923,39 @@
           }
         }
       },
+      "PagedResultOfISampleByParticipant": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISampleByParticipant"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PagedResultOfLeaderboardsQueryResult": {
         "required": [
           "total",
@@ -4457,39 +5113,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SampleByIdentifier"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResultOfSampleByParticipant": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SampleByParticipant"
             }
           },
           "totalPages": {
@@ -4724,58 +5347,6 @@
             "type": "string"
           },
           "participantName": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ownerId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ownerMail": {
-            "type": "string"
-          }
-        }
-      },
-      "SampleByParticipant": {
-        "required": [
-          "id",
-          "identifier",
-          "asset",
-          "tags",
-          "ownerMail"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "identifier": {
             "type": "string"
           },
           "asset": {
