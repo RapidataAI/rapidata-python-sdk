@@ -4,6 +4,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Callable, TYPE_CHECKING
 
+from opentelemetry import context as otel_context
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, rapidata_config
@@ -289,14 +290,20 @@ class AssetUploadOrchestrator:
         """
         failed_uploads: list[FailedUpload[str]] = []
 
+        # Capture the current OpenTelemetry context before creating threads
+        current_context = otel_context.get_current()
+
         def upload_single_file(file_path: str) -> FailedUpload[str] | None:
             """Upload a single file and return FailedUpload if it fails."""
+            token = otel_context.attach(current_context)
             try:
                 self.asset_uploader.upload_asset(file_path)
                 return None
             except Exception as e:
                 logger.warning(f"Failed to upload file {file_path}: {e}")
                 return FailedUpload.from_exception(file_path, e)
+            finally:
+                otel_context.detach(token)
 
         with ThreadPoolExecutor(
             max_workers=rapidata_config.upload.maxWorkers

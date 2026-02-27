@@ -185,6 +185,7 @@ class RapidataTracer:
 
     def set_session_id(self, session_id: str) -> None:
         self.session_id = session_id
+        logger.debug(f"Session ID set to: {self.session_id}")
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
