@@ -115,14 +115,13 @@ class AssetUploader:
         )
 
     def upload_asset(self, asset: str) -> str:
-        with tracer.start_as_current_span("AssetUploader.upload_asset"):
-            logger.debug("Uploading asset: %s", asset)
-            assert isinstance(asset, str), "Asset must be a string"
+        logger.debug("Uploading asset: %s", asset)
+        assert isinstance(asset, str), "Asset must be a string"
 
-            if re.match(r"^https?://", asset):
-                return self._upload_url_asset(asset)
+        if re.match(r"^https?://", asset):
+            return self._upload_url_asset(asset)
 
-            return self._upload_file_asset(asset)
+        return self._upload_file_asset(asset)
 
     def clear_cache(self) -> None:
         """Clear both URL and file caches."""

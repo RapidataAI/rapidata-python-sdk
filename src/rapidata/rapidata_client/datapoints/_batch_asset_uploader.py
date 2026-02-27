@@ -6,6 +6,8 @@ import threading
 import uuid
 from typing import Callable, TYPE_CHECKING
 
+from opentelemetry import context as otel_context
+
 from rapidata.rapidata_client.config import logger, rapidata_config
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
@@ -78,41 +80,48 @@ class BatchAssetUploader:
         batch_to_urls: dict[str, list[str]] = {}
         submission_complete = threading.Event()
 
+        # Capture the current OpenTelemetry context before creating threads
+        current_context = otel_context.get_current()
+
         try:
             # Submit batches in background thread
             def submit_batches_background():
                 """Submit all batches and signal completion."""
-                for batch_idx, batch in enumerate(batches):
-                    # Check if interrupted before submitting next batch
-                    if self._interrupted:
-                        logger.debug("Batch submission stopped due to interruption")
-                        break
+                token = otel_context.attach(current_context)
+                try:
+                    for batch_idx, batch in enumerate(batches):
+                        # Check if interrupted before submitting next batch
+                        if self._interrupted:
+                            logger.debug("Batch submission stopped due to interruption")
+                            break
 
-                    try:
-                        result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
-                            create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
-                                urls=batch, correlationId=correlation_id
+                        try:
+                            result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
+                                create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
+                                    urls=batch, correlationId=correlation_id
+                                )
                             )
+                            batch_id = result.batch_upload_id
+
+                            # Add to shared collections (thread-safe)
+                            with batch_ids_lock:
+                                batch_ids.append(batch_id)
+                                batch_to_urls[batch_id] = batch
+
+                            logger.debug(
+                                f"Submitted batch {batch_idx + 1}/{len(batches)}: {batch_id}"
+                            )
+                        except Exception as e:
+                            logger.error(f"Failed to submit batch {batch_idx + 1}: {e}")
+
+                    # Signal that all batches have been submitted
+                    submission_complete.set()
+                    with batch_ids_lock:
+                        logger.info(
+                            f"Successfully submitted {len(batch_ids)}/{len(batches)} batches"
                         )
-                        batch_id = result.batch_upload_id
-
-                        # Add to shared collections (thread-safe)
-                        with batch_ids_lock:
-                            batch_ids.append(batch_id)
-                            batch_to_urls[batch_id] = batch
-
-                        logger.debug(
-                            f"Submitted batch {batch_idx + 1}/{len(batches)}: {batch_id}"
-                        )
-                    except Exception as e:
-                        logger.error(f"Failed to submit batch {batch_idx + 1}: {e}")
-
-                # Signal that all batches have been submitted
-                submission_complete.set()
-                with batch_ids_lock:
-                    logger.info(
-                        f"Successfully submitted {len(batch_ids)}/{len(batches)} batches"
-                    )
+                finally:
+                    otel_context.detach(token)
 
             # Start background submission
             submission_thread = threading.Thread(

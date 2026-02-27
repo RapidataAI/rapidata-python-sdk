@@ -40,6 +40,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, Future
 from typing import Callable
 
+from opentelemetry import context as otel_context
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -332,10 +333,14 @@ class RapidataDataset:
             executor: Thread pool executor for datapoint creation.
             datapoint_pbar: Progress bar for datapoint creation.
         """
+        # Capture the current OpenTelemetry context before creating threads
+        current_context = otel_context.get_current()
+
         for datapoint_idx in ready_datapoint_indices:
 
             def upload_and_update(dp_idx):
                 """Upload datapoint and update progress bar when done."""
+                token = otel_context.attach(current_context)
                 try:
                     self.datapoint_uploader.upload_datapoint(
                         dataset_id=self.id,
@@ -343,6 +348,7 @@ class RapidataDataset:
                         index=dp_idx,
                     )
                 finally:
+                    otel_context.detach(token)
                     datapoint_pbar.update(1)
 
             future = executor.submit(upload_and_update, datapoint_idx)
