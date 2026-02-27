@@ -17,18 +17,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.i_asset_model import IAssetModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBenchmarkParticipantResult(BaseModel):
+class ISampleByParticipantPlaceholderSampleByParticipant(BaseModel):
     """
-    CreateBenchmarkParticipantResult
+    ISampleByParticipantPlaceholderSampleByParticipant
     """ # noqa: E501
-    participant_id: StrictStr = Field(alias="participantId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
+    t: StrictStr = Field(alias="_t")
+    identifier: StrictStr
+    prompt: Optional[StrictStr] = None
+    prompt_asset: Optional[IAssetModel] = Field(default=None, alias="promptAsset")
+    tags: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "identifier", "prompt", "promptAsset", "tags"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['PlaceholderSampleByParticipant']):
+            raise ValueError("must be one of enum values ('PlaceholderSampleByParticipant')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +59,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a JSON string"""
+        """Create an instance of ISampleByParticipantPlaceholderSampleByParticipant from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +80,24 @@ class CreateBenchmarkParticipantResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of prompt_asset
+        if self.prompt_asset:
+            _dict['promptAsset'] = self.prompt_asset.to_dict()
+        # set to None if prompt (nullable) is None
+        # and model_fields_set contains the field
+        if self.prompt is None and "prompt" in self.model_fields_set:
+            _dict['prompt'] = None
+
+        # set to None if prompt_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.prompt_asset is None and "prompt_asset" in self.model_fields_set:
+            _dict['promptAsset'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a dict"""
+        """Create an instance of ISampleByParticipantPlaceholderSampleByParticipant from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +105,11 @@ class CreateBenchmarkParticipantResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "participantId": obj.get("participantId"),
-            "datasetId": obj.get("datasetId")
+            "_t": obj.get("_t"),
+            "identifier": obj.get("identifier"),
+            "prompt": obj.get("prompt"),
+            "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
+            "tags": obj.get("tags")
         })
         return _obj
 

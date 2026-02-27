@@ -35,7 +35,6 @@ _API_IMPORTS = {
     "BenchmarkApi": "rapidata.api_client.api.benchmark_api",
     "CampaignApi": "rapidata.api_client.api.campaign_api",
     "ClientApi": "rapidata.api_client.api.client_api",
-    "CompareWorkflowApi": "rapidata.api_client.api.compare_workflow_api",
     "CustomerApi": "rapidata.api_client.api.customer_api",
     "CustomerRapidApi": "rapidata.api_client.api.customer_rapid_api",
     "DatapointApi": "rapidata.api_client.api.datapoint_api",
@@ -56,6 +55,7 @@ _API_IMPORTS = {
     "PromptApi": "rapidata.api_client.api.prompt_api",
     "RankingFlowApi": "rapidata.api_client.api.ranking_flow_api",
     "RankingFlowItemApi": "rapidata.api_client.api.ranking_flow_item_api",
+    "RankingWorkflowApi": "rapidata.api_client.api.ranking_workflow_api",
     "RapidApi": "rapidata.api_client.api.rapid_api",
     "RapidataIdentityAPIApi": "rapidata.api_client.api.rapidata_identity_api_api",
     "RapidsApi": "rapidata.api_client.api.rapids_api",
@@ -63,6 +63,7 @@ _API_IMPORTS = {
     "SimpleWorkflowApi": "rapidata.api_client.api.simple_workflow_api",
     "SurveyApi": "rapidata.api_client.api.survey_api",
     "UserRapidApi": "rapidata.api_client.api.user_rapid_api",
+    "ValidationFeedbackApi": "rapidata.api_client.api.validation_feedback_api",
     "ValidationSetApi": "rapidata.api_client.api.validation_set_api",
     "WorkflowApi": "rapidata.api_client.api.workflow_api",
 }

@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.get_combined_leaderboard_standings_endpoint_output_item import GetCombinedLeaderboardStandingsEndpointOutputItem
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBenchmarkParticipantResult(BaseModel):
+class GetCombinedLeaderboardStandingsEndpointOutput(BaseModel):
     """
-    CreateBenchmarkParticipantResult
+    Combined leaderboard standings output.
     """ # noqa: E501
-    participant_id: StrictStr = Field(alias="participantId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
+    items: List[GetCombinedLeaderboardStandingsEndpointOutputItem]
+    __properties: ClassVar[List[str]] = ["items"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a JSON string"""
+        """Create an instance of GetCombinedLeaderboardStandingsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +69,18 @@ class CreateBenchmarkParticipantResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a dict"""
+        """Create an instance of GetCombinedLeaderboardStandingsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +88,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "participantId": obj.get("participantId"),
-            "datasetId": obj.get("datasetId")
+            "items": [GetCombinedLeaderboardStandingsEndpointOutputItem.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None
         })
         return _obj
 

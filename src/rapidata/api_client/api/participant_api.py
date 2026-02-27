@@ -16,12 +16,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictBool, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
-from rapidata.api_client.models.paged_result_of_sample_by_participant import PagedResultOfSampleByParticipant
+from rapidata.api_client.models.paged_result_of_i_sample_by_participant import PagedResultOfISampleByParticipant
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.update_participant_model import UpdateParticipantModel
@@ -1383,6 +1383,7 @@ class ParticipantApi:
         self,
         participant_id: StrictStr,
         request: Optional[QueryModel] = None,
+        fill_missing: Optional[StrictBool] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1395,7 +1396,7 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfSampleByParticipant:
+    ) -> PagedResultOfISampleByParticipant:
         """Queries all samples of a participant.
 
 
@@ -1403,6 +1404,8 @@ class ParticipantApi:
         :type participant_id: str
         :param request: 
         :type request: QueryModel
+        :param fill_missing:
+        :type fill_missing: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1428,6 +1431,7 @@ class ParticipantApi:
         _param = self._participant_participant_id_samples_get_serialize(
             participant_id=participant_id,
             request=request,
+            fill_missing=fill_missing,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1435,7 +1439,7 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfSampleByParticipant",
+            '200': "PagedResultOfISampleByParticipant",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1453,6 +1457,7 @@ class ParticipantApi:
         self,
         participant_id: StrictStr,
         request: Optional[QueryModel] = None,
+        fill_missing: Optional[StrictBool] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1465,7 +1470,7 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfSampleByParticipant]:
+    ) -> ApiResponse[PagedResultOfISampleByParticipant]:
         """Queries all samples of a participant.
 
 
@@ -1473,6 +1478,8 @@ class ParticipantApi:
         :type participant_id: str
         :param request: 
         :type request: QueryModel
+        :param fill_missing:
+        :type fill_missing: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1498,6 +1505,7 @@ class ParticipantApi:
         _param = self._participant_participant_id_samples_get_serialize(
             participant_id=participant_id,
             request=request,
+            fill_missing=fill_missing,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1505,7 +1513,7 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfSampleByParticipant",
+            '200': "PagedResultOfISampleByParticipant",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1523,6 +1531,7 @@ class ParticipantApi:
         self,
         participant_id: StrictStr,
         request: Optional[QueryModel] = None,
+        fill_missing: Optional[StrictBool] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1543,6 +1552,8 @@ class ParticipantApi:
         :type participant_id: str
         :param request: 
         :type request: QueryModel
+        :param fill_missing:
+        :type fill_missing: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1568,6 +1579,7 @@ class ParticipantApi:
         _param = self._participant_participant_id_samples_get_serialize(
             participant_id=participant_id,
             request=request,
+            fill_missing=fill_missing,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1575,7 +1587,7 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfSampleByParticipant",
+            '200': "PagedResultOfISampleByParticipant",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1588,6 +1600,7 @@ class ParticipantApi:
         self,
         participant_id,
         request,
+        fill_missing,
         _request_auth,
         _content_type,
         _headers,
@@ -1615,6 +1628,10 @@ class ParticipantApi:
         if request is not None:
             
             _query_params.append(('request', request))
+            
+        if fill_missing is not None:
+            
+            _query_params.append(('fillMissing', fill_missing))
             
         # process the header parameters
         # process the form parameters

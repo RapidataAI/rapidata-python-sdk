@@ -17,18 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBenchmarkParticipantResult(BaseModel):
+class GetCombinedLeaderboardMatrixEndpointOutput(BaseModel):
     """
-    CreateBenchmarkParticipantResult
+    Combined leaderboard matrix output in pandas split format.
     """ # noqa: E501
-    participant_id: StrictStr = Field(alias="participantId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
+    index: List[StrictStr]
+    columns: List[StrictStr]
+    data: List[List[Union[StrictFloat, StrictInt]]]
+    __properties: ClassVar[List[str]] = ["index", "columns", "data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +49,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a JSON string"""
+        """Create an instance of GetCombinedLeaderboardMatrixEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +74,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a dict"""
+        """Create an instance of GetCombinedLeaderboardMatrixEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +82,9 @@ class CreateBenchmarkParticipantResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "participantId": obj.get("participantId"),
-            "datasetId": obj.get("datasetId")
+            "index": obj.get("index"),
+            "columns": obj.get("columns"),
+            "data": obj.get("data")
         })
         return _obj
 

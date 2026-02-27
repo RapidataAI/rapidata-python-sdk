@@ -17,18 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBenchmarkParticipantResult(BaseModel):
+class GetRankingWorkflowResultsModel(BaseModel):
     """
-    CreateBenchmarkParticipantResult
+    Model for getting the overview of a ranking workflow result.
     """ # noqa: E501
-    participant_id: StrictStr = Field(alias="participantId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
+    page: Optional[PageInfo] = Field(default=None, description="The size of the page and the page number to display.")
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
+    __properties: ClassVar[List[str]] = ["page", "sortCriteria"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +50,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a JSON string"""
+        """Create an instance of GetRankingWorkflowResultsModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +71,26 @@ class CreateBenchmarkParticipantResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of page
+        if self.page:
+            _dict['page'] = self.page.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in sort_criteria (list)
+        _items = []
+        if self.sort_criteria:
+            for _item_sort_criteria in self.sort_criteria:
+                if _item_sort_criteria:
+                    _items.append(_item_sort_criteria.to_dict())
+            _dict['sortCriteria'] = _items
+        # set to None if sort_criteria (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
+            _dict['sortCriteria'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateBenchmarkParticipantResult from a dict"""
+        """Create an instance of GetRankingWorkflowResultsModel from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +98,8 @@ class CreateBenchmarkParticipantResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "participantId": obj.get("participantId"),
-            "datasetId": obj.get("datasetId")
+            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
         })
         return _obj
 

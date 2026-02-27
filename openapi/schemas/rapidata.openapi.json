@@ -132,12 +132,12 @@
       "x-displayName": "Rapid"
     },
     {
-      "name": "ValidationSet",
-      "x-displayName": "ValidationSet"
+      "name": "ValidationFeedback",
+      "x-displayName": "ValidationFeedback"
     },
     {
-      "name": "CompareWorkflow",
-      "x-displayName": "CompareWorkflow"
+      "name": "ValidationSet",
+      "x-displayName": "ValidationSet"
     },
     {
       "name": "EvaluationWorkflow",
@@ -146,6 +146,10 @@
     {
       "name": "GroupedRankingWorkflow",
       "x-displayName": "GroupedRankingWorkflow"
+    },
+    {
+      "name": "RankingWorkflow",
+      "x-displayName": "RankingWorkflow"
     },
     {
       "name": "SimpleWorkflow",
@@ -5053,6 +5057,320 @@
         ]
       }
     },
+    "/benchmark/combined-matrix": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the combined pairwise vote matrix for multiple benchmarks.",
+        "parameters": [
+          {
+            "name": "benchmarkIds",
+            "in": "query",
+            "description": "The identifiers of the benchmarks to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring to the matrix values.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedBenchmarkMatrixEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/combined-standings": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the combined standings for multiple benchmarks.",
+        "parameters": [
+          {
+            "name": "benchmarkIds",
+            "in": "query",
+            "description": "The identifiers of the benchmarks to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "description": "Whether to include confidence intervals in results.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedBenchmarkStandingsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/leaderboard/combined-matrix": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Returns the combined pairwise vote matrix for multiple leaderboards.",
+        "parameters": [
+          {
+            "name": "leaderboardIds",
+            "in": "query",
+            "description": "The identifiers of the leaderboards to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring to the matrix values.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedLeaderboardMatrixEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/leaderboard/combined-standings": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Returns the combined standings for multiple leaderboards.",
+        "parameters": [
+          {
+            "name": "leaderboardIds",
+            "in": "query",
+            "description": "The identifiers of the leaderboards to combine.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "description": "Whether to include confidence intervals in results.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCombinedLeaderboardStandingsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/leaderboard/{leaderboardId}/matrix": {
       "get": {
         "tags": [
@@ -5491,6 +5809,18 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
             }
           }
         ],
@@ -7785,6 +8115,14 @@
                 }
               }
             }
+          },
+          {
+            "name": "fillMissing",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -7793,17 +8131,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
                 }
               }
             }
@@ -8420,17 +8758,17 @@
         ]
       }
     },
-    "/job/{jobId}/download-results": {
-      "get": {
+    "/job/{jobId}": {
+      "delete": {
         "tags": [
           "Job"
         ],
-        "summary": "Downloads the results of a job as a file attachment.",
+        "summary": "Deletes a job.",
         "parameters": [
           {
             "name": "jobId",
             "in": "path",
-            "description": "The id of the job to download results for.",
+            "description": "The id of the job to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -8438,8 +8776,18 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthenticated"
@@ -8463,9 +8811,7 @@
             ]
           }
         ]
-      }
-    },
-    "/job/{jobId}": {
+      },
       "get": {
         "tags": [
           "Job"
@@ -8566,6 +8912,51 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/{jobId}/download-results": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Downloads the results of a job as a file attachment.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job to download results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "401": {
             "description": "Unauthenticated"
@@ -10412,6 +10803,295 @@
         ]
       }
     },
+    "/rapid/{rapidId}/validation-feedback": {
+      "post": {
+        "tags": [
+          "ValidationFeedback"
+        ],
+        "summary": "Submits feedback for a validation rapid outcome.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The ID of the rapid to provide feedback for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The feedback input.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateValidationFeedbackEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "ValidationFeedback"
+        ],
+        "summary": "Queries validation feedbacks for a rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The ID of the rapid to query feedbacks for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "Filter by user_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "feedback",
+            "in": "query",
+            "description": "Filter by feedback.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationFeedbacksEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/rapids/flagged": {
       "get": {
         "tags": [
@@ -11974,74 +12654,6 @@
         ]
       }
     },
-    "/workflow/compare/{workflowId}/results": {
-      "get": {
-        "tags": [
-          "CompareWorkflow"
-        ],
-        "summary": "Get the result overview for a compare workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "path",
-            "description": "The ID of the workflow to get the results for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "model",
-            "in": "query",
-            "description": "The model for the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
     "/workflow/evaluation/{workflowId}/results": {
       "get": {
         "tags": [
@@ -12115,7 +12727,7 @@
         "tags": [
           "GroupedRankingWorkflow"
         ],
-        "summary": "Get the result overview for a multi compare workflow.",
+        "summary": "Get the result overview for a multi ranking workflow.",
         "parameters": [
           {
             "name": "workflowId",
@@ -12156,6 +12768,74 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PagedResultOfGetGroupedRankingWorkflowResultsResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/workflow/compare/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "RankingWorkflow"
+        ],
+        "summary": "Get the result overview for a ranking workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "description": "The model for the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsResult"
                 }
               }
             }
@@ -12422,7 +13102,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Calculates a summary of the results for a simple compare workflow.\n The summary includes the number of times an asset at each index was the winner.",
+        "summary": "Calculates a summary of the results for a simple ranking workflow.\n The summary includes the number of times an asset at each index was the winner.",
         "parameters": [
           {
             "name": "workflowId",
@@ -15393,7 +16073,8 @@
           "payload",
           "correctValidationCount",
           "invalidValidationCount",
-          "state"
+          "state",
+          "isCommonSense"
         ],
         "type": "object",
         "properties": {
@@ -15458,6 +16139,9 @@
           "randomCorrectProbability": {
             "type": "number",
             "format": "double"
+          },
+          "isCommonSense": {
+            "type": "boolean"
           }
         }
       },
@@ -17951,6 +18635,238 @@
           }
         }
       },
+      "GetCombinedBenchmarkMatrixEndpoint_Output": {
+        "required": [
+          "index",
+          "columns",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Row participant names."
+          },
+          "columns": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Column participant names."
+          },
+          "data": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              }
+            ],
+            "description": "NxN matrix where Data[i][j] = wins of Index[i] over Columns[j]."
+          }
+        },
+        "description": "Combined benchmark matrix output in pandas split format."
+      },
+      "GetCombinedBenchmarkStandingsEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCombinedBenchmarkStandingsEndpoint_OutputItem"
+                }
+              }
+            ],
+            "description": "The standings items."
+          }
+        },
+        "description": "Combined benchmark standings output."
+      },
+      "GetCombinedBenchmarkStandingsEndpoint_OutputItem": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ]
+          }
+        }
+      },
+      "GetCombinedLeaderboardMatrixEndpoint_Output": {
+        "required": [
+          "index",
+          "columns",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Row participant names."
+          },
+          "columns": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Column participant names."
+          },
+          "data": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              }
+            ],
+            "description": "NxN matrix where Data[i][j] = wins of Index[i] over Columns[j]."
+          }
+        },
+        "description": "Combined leaderboard matrix output in pandas split format."
+      },
+      "GetCombinedLeaderboardStandingsEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCombinedLeaderboardStandingsEndpoint_OutputItem"
+                }
+              }
+            ],
+            "description": "The standings items."
+          }
+        },
+        "description": "Combined leaderboard standings output."
+      },
+      "GetCombinedLeaderboardStandingsEndpoint_OutputItem": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ]
+          }
+        }
+      },
       "GetLeaderboardByIdResult": {
         "required": [
           "id",
@@ -18505,6 +19421,123 @@
           }
         }
       },
+      "ISampleByParticipant": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ISampleByParticipantPlaceholderSampleByParticipant"
+          },
+          {
+            "$ref": "#/components/schemas/ISampleByParticipantSampleByParticipant"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "PlaceholderSampleByParticipant": "#/components/schemas/ISampleByParticipantPlaceholderSampleByParticipant",
+            "SampleByParticipant": "#/components/schemas/ISampleByParticipantSampleByParticipant"
+          }
+        }
+      },
+      "ISampleByParticipantPlaceholderSampleByParticipant": {
+        "required": [
+          "identifier",
+          "tags",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PlaceholderSampleByParticipant"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ISampleByParticipantSampleByParticipant": {
+        "required": [
+          "id",
+          "identifier",
+          "asset",
+          "tags",
+          "ownerMail",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SampleByParticipant"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
       "IUserFilterModel": {
         "required": [
           "_t"
@@ -18926,6 +19959,39 @@
           }
         }
       },
+      "PagedResultOfISampleByParticipant": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ISampleByParticipant"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PagedResultOfLeaderboardsQueryResult": {
         "required": [
           "total",
@@ -19083,39 +20149,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SampleByIdentifier"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResultOfSampleByParticipant": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SampleByParticipant"
             }
           },
           "totalPages": {
@@ -19291,58 +20324,6 @@
             "type": "string"
           },
           "participantName": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ownerId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ownerMail": {
-            "type": "string"
-          }
-        }
-      },
-      "SampleByParticipant": {
-        "required": [
-          "id",
-          "identifier",
-          "asset",
-          "tags",
-          "ownerMail"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "identifier": {
             "type": "string"
           },
           "asset": {
@@ -20689,13 +21670,13 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IOrderWorkflowModelCompareWorkflowModel"
-          },
-          {
             "$ref": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel"
+          },
+          {
+            "$ref": "#/components/schemas/IOrderWorkflowModelRankingWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
@@ -20704,70 +21685,10 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CompareWorkflow": "#/components/schemas/IOrderWorkflowModelCompareWorkflowModel",
             "EvaluationWorkflow": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel",
             "GroupedRankingWorkflow": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel",
+            "RankingWorkflow": "#/components/schemas/IOrderWorkflowModelRankingWorkflowModel",
             "SimpleWorkflow": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
-          }
-        }
-      },
-      "IOrderWorkflowModelCompareWorkflowModel": {
-        "required": [
-          "criteria",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflow"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfigModel"
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfigModel"
-          },
-          "rankingConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IRankingConfigModel"
-              }
-            ]
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              }
-            ]
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
-            },
-            "nullable": true
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
           }
         }
       },
@@ -20852,6 +21773,66 @@
           "maxParallelism": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "IOrderWorkflowModelRankingWorkflowModel": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingWorkflow"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfigModel"
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfigModel"
+              }
+            ]
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
+            },
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         }
       },
@@ -22842,13 +23823,13 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig"
-          },
-          {
             "$ref": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig"
           },
           {
             "$ref": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigRankingWorkflowConfig"
           },
           {
             "$ref": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
@@ -22857,67 +23838,10 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CompareWorkflowConfig": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig",
             "EvaluationWorkflowConfig": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig",
             "GroupedRankingWorkflowConfig": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig",
+            "RankingWorkflowConfig": "#/components/schemas/IWorkflowConfigRankingWorkflowConfig",
             "SimpleWorkflowConfig": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
-          }
-        }
-      },
-      "IWorkflowConfigCompareWorkflowConfig": {
-        "required": [
-          "criteria",
-          "referee",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflowConfig"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "referee": {
-            "$ref": "#/components/schemas/IRefereeConfig"
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ]
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
-          },
-          "rankingConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IRankingConfig"
-              }
-            ]
-          },
-          "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfig"
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
           }
         }
       },
@@ -22996,6 +23920,63 @@
               "$ref": "#/components/schemas/IAsset"
             },
             "nullable": true
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfig"
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          }
+        }
+      },
+      "IWorkflowConfigRankingWorkflowConfig": {
+        "required": [
+          "criteria",
+          "referee",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ]
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
@@ -23201,6 +24182,18 @@
         "properties": {
           "rapidId": {
             "type": "string"
+          }
+        }
+      },
+      "CreateValidationFeedbackEndpoint_Input": {
+        "required": [
+          "feedback"
+        ],
+        "type": "object",
+        "properties": {
+          "feedback": {
+            "type": "string",
+            "description": "The feedback text."
           }
         }
       },
@@ -23887,6 +24880,73 @@
             "items": {
               "$ref": "#/components/schemas/PolygonResult_Coordinate"
             }
+          }
+        }
+      },
+      "QueryValidationFeedbacksEndpoint_Output": {
+        "required": [
+          "id",
+          "userId",
+          "sessionId",
+          "feedback",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the feedback."
+          },
+          "userId": {
+            "type": "string",
+            "description": "The ID of the user who submitted the feedback."
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "The session ID of the user who submitted the feedback.",
+            "format": "uuid"
+          },
+          "feedback": {
+            "type": "string",
+            "description": "The feedback text."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the feedback was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryValidationFeedbacksEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryValidationFeedbacksEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -24676,90 +25736,6 @@
           }
         }
       },
-      "GetCompareWorkflowResultsModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PageInfo"
-              }
-            ],
-            "description": "The size of the page and the page number to display."
-          },
-          "sortCriteria": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "A list of criteria to sort the results by."
-          }
-        },
-        "description": "Model for getting the overview of a compare workflow result."
-      },
-      "GetCompareWorkflowResultsResult": {
-        "required": [
-          "totalVotes",
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "totalVotes": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_Datapoint"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "GetCompareWorkflowResultsResult_Datapoint": {
-        "required": [
-          "workflowDatapointId",
-          "asset",
-          "elo"
-        ],
-        "type": "object",
-        "properties": {
-          "workflowDatapointId": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "elo": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "GetEvaluationWorkflowResultsModel": {
         "type": "object",
         "properties": {
@@ -24818,6 +25794,90 @@
           },
           "pairMakerInformation": {
             "$ref": "#/components/schemas/IPairMakerInformation"
+          }
+        }
+      },
+      "GetRankingWorkflowResultsModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ],
+            "description": "The size of the page and the page number to display."
+          },
+          "sortCriteria": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "A list of criteria to sort the results by."
+          }
+        },
+        "description": "Model for getting the overview of a ranking workflow result."
+      },
+      "GetRankingWorkflowResultsResult": {
+        "required": [
+          "totalVotes",
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "totalVotes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetRankingWorkflowResultsResult_Datapoint"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetRankingWorkflowResultsResult_Datapoint": {
+        "required": [
+          "workflowDatapointId",
+          "asset",
+          "elo"
+        ],
+        "type": "object",
+        "properties": {
+          "workflowDatapointId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "elo": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -25106,13 +26166,13 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IWorkflowModelCompareWorkflowModel"
-          },
-          {
             "$ref": "#/components/schemas/IWorkflowModelEvaluationWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IWorkflowModelGroupedRankingWorkflowModel"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowModelRankingWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IWorkflowModelSimpleWorkflowModel"
@@ -25121,81 +26181,10 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CompareWorkflowModel": "#/components/schemas/IWorkflowModelCompareWorkflowModel",
             "EvaluationWorkflow": "#/components/schemas/IWorkflowModelEvaluationWorkflowModel",
             "GroupedRankingWorkflowModel": "#/components/schemas/IWorkflowModelGroupedRankingWorkflowModel",
+            "RankingWorkflowModel": "#/components/schemas/IWorkflowModelRankingWorkflowModel",
             "SimpleWorkflowModel": "#/components/schemas/IWorkflowModelSimpleWorkflowModel"
-          }
-        }
-      },
-      "IWorkflowModelCompareWorkflowModel": {
-        "required": [
-          "id",
-          "referee",
-          "pairMakerInformation",
-          "state",
-          "criteria",
-          "name",
-          "context",
-          "contextAsset",
-          "ownerMail",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflowModel"
-            ],
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "referee": {
-            "$ref": "#/components/schemas/IRefereeConfig"
-          },
-          "pairMakerInformation": {
-            "$ref": "#/components/schemas/IPairMakerInformation"
-          },
-          "state": {
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
-          },
-          "rankingConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IRankingConfig"
-              }
-            ]
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "ownerMail": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -25285,6 +26274,77 @@
                 "$ref": "#/components/schemas/IRankingConfig"
               }
             ]
+          }
+        }
+      },
+      "IWorkflowModelRankingWorkflowModel": {
+        "required": [
+          "id",
+          "referee",
+          "pairMakerInformation",
+          "state",
+          "criteria",
+          "name",
+          "context",
+          "contextAsset",
+          "ownerMail",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingWorkflowModel"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "pairMakerInformation": {
+            "$ref": "#/components/schemas/IPairMakerInformation"
+          },
+          "state": {
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "ownerMail": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -25544,7 +26604,8 @@
       "tags": [
         "CustomerRapid",
         "UserRapid",
-        "Rapid"
+        "Rapid",
+        "ValidationFeedback"
       ]
     },
     {
@@ -25556,9 +26617,9 @@
     {
       "name": "Rapidata Workflow API",
       "tags": [
-        "CompareWorkflow",
         "EvaluationWorkflow",
         "GroupedRankingWorkflow",
+        "RankingWorkflow",
         "SimpleWorkflow",
         "Workflow"
       ]

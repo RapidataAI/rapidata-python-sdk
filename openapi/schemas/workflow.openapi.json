@@ -11,59 +11,6 @@
     }
   ],
   "paths": {
-    "/workflow/compare/{workflowId}/results": {
-      "get": {
-        "tags": [
-          "CompareWorkflow"
-        ],
-        "summary": "Get the result overview for a compare workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "path",
-            "description": "The ID of the workflow to get the results for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "model",
-            "in": "query",
-            "description": "The model for the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/workflow/evaluation/{workflowId}/results": {
       "get": {
         "tags": [
@@ -122,7 +69,7 @@
         "tags": [
           "GroupedRankingWorkflow"
         ],
-        "summary": "Get the result overview for a multi compare workflow.",
+        "summary": "Get the result overview for a multi ranking workflow.",
         "parameters": [
           {
             "name": "workflowId",
@@ -163,6 +110,59 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PagedResultOfGetGroupedRankingWorkflowResultsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflow/compare/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "RankingWorkflow"
+        ],
+        "summary": "Get the result overview for a ranking workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "description": "The model for the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingWorkflowResultsResult"
                 }
               }
             }
@@ -354,7 +354,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Calculates a summary of the results for a simple compare workflow.\n The summary includes the number of times an asset at each index was the winner.",
+        "summary": "Calculates a summary of the results for a simple ranking workflow.\n The summary includes the number of times an asset at each index was the winner.",
         "parameters": [
           {
             "name": "workflowId",
@@ -619,90 +619,6 @@
           }
         }
       },
-      "GetCompareWorkflowResultsModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PageInfo"
-              }
-            ],
-            "description": "The size of the page and the page number to display."
-          },
-          "sortCriteria": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "A list of criteria to sort the results by."
-          }
-        },
-        "description": "Model for getting the overview of a compare workflow result."
-      },
-      "GetCompareWorkflowResultsResult": {
-        "required": [
-          "totalVotes",
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "totalVotes": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_Datapoint"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "GetCompareWorkflowResultsResult_Datapoint": {
-        "required": [
-          "workflowDatapointId",
-          "asset",
-          "elo"
-        ],
-        "type": "object",
-        "properties": {
-          "workflowDatapointId": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "elo": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "GetEvaluationWorkflowResultsModel": {
         "type": "object",
         "properties": {
@@ -761,6 +677,90 @@
           },
           "pairMakerInformation": {
             "$ref": "#/components/schemas/IPairMakerInformation"
+          }
+        }
+      },
+      "GetRankingWorkflowResultsModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ],
+            "description": "The size of the page and the page number to display."
+          },
+          "sortCriteria": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortCriterion"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "A list of criteria to sort the results by."
+          }
+        },
+        "description": "Model for getting the overview of a ranking workflow result."
+      },
+      "GetRankingWorkflowResultsResult": {
+        "required": [
+          "totalVotes",
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "totalVotes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetRankingWorkflowResultsResult_Datapoint"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetRankingWorkflowResultsResult_Datapoint": {
+        "required": [
+          "workflowDatapointId",
+          "asset",
+          "elo"
+        ],
+        "type": "object",
+        "properties": {
+          "workflowDatapointId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "elo": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -2429,13 +2429,13 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IWorkflowModelCompareWorkflowModel"
-          },
-          {
             "$ref": "#/components/schemas/IWorkflowModelEvaluationWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IWorkflowModelGroupedRankingWorkflowModel"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowModelRankingWorkflowModel"
           },
           {
             "$ref": "#/components/schemas/IWorkflowModelSimpleWorkflowModel"
@@ -2444,81 +2444,10 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CompareWorkflowModel": "#/components/schemas/IWorkflowModelCompareWorkflowModel",
             "EvaluationWorkflow": "#/components/schemas/IWorkflowModelEvaluationWorkflowModel",
             "GroupedRankingWorkflowModel": "#/components/schemas/IWorkflowModelGroupedRankingWorkflowModel",
+            "RankingWorkflowModel": "#/components/schemas/IWorkflowModelRankingWorkflowModel",
             "SimpleWorkflowModel": "#/components/schemas/IWorkflowModelSimpleWorkflowModel"
-          }
-        }
-      },
-      "IWorkflowModelCompareWorkflowModel": {
-        "required": [
-          "id",
-          "referee",
-          "pairMakerInformation",
-          "state",
-          "criteria",
-          "name",
-          "context",
-          "contextAsset",
-          "ownerMail",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflowModel"
-            ],
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "referee": {
-            "$ref": "#/components/schemas/IRefereeConfig"
-          },
-          "pairMakerInformation": {
-            "$ref": "#/components/schemas/IPairMakerInformation"
-          },
-          "state": {
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
-          },
-          "rankingConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IRankingConfig"
-              }
-            ]
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "ownerMail": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -2608,6 +2537,77 @@
                 "$ref": "#/components/schemas/IRankingConfig"
               }
             ]
+          }
+        }
+      },
+      "IWorkflowModelRankingWorkflowModel": {
+        "required": [
+          "id",
+          "referee",
+          "pairMakerInformation",
+          "state",
+          "criteria",
+          "name",
+          "context",
+          "contextAsset",
+          "ownerMail",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingWorkflowModel"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "pairMakerInformation": {
+            "$ref": "#/components/schemas/IPairMakerInformation"
+          },
+          "state": {
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "ownerMail": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -3031,13 +3031,13 @@
   ],
   "tags": [
     {
-      "name": "CompareWorkflow"
-    },
-    {
       "name": "EvaluationWorkflow"
     },
     {
       "name": "GroupedRankingWorkflow"
+    },
+    {
+      "name": "RankingWorkflow"
     },
     {
       "name": "SimpleWorkflow"

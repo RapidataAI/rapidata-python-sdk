@@ -26,6 +26,8 @@ from rapidata.api_client.models.create_benchmark_prompt_result import CreateBenc
 from rapidata.api_client.models.create_benchmark_result import CreateBenchmarkResult
 from rapidata.api_client.models.fork_benchmark_result import ForkBenchmarkResult
 from rapidata.api_client.models.get_benchmark_by_id_result import GetBenchmarkByIdResult
+from rapidata.api_client.models.get_combined_benchmark_matrix_endpoint_output import GetCombinedBenchmarkMatrixEndpointOutput
+from rapidata.api_client.models.get_combined_benchmark_standings_endpoint_output import GetCombinedBenchmarkStandingsEndpointOutput
 from rapidata.api_client.models.paged_result_of_benchmark_query_result import PagedResultOfBenchmarkQueryResult
 from rapidata.api_client.models.paged_result_of_leaderboards_query_result import PagedResultOfLeaderboardsQueryResult
 from rapidata.api_client.models.paged_result_of_participant_by_benchmark import PagedResultOfParticipantByBenchmark
@@ -1459,6 +1461,7 @@ class BenchmarkApi:
     def benchmark_benchmark_id_participants_get(
         self,
         benchmark_id: StrictStr,
+        request: Optional[QueryModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1477,6 +1480,8 @@ class BenchmarkApi:
 
         :param benchmark_id:  (required)
         :type benchmark_id: str
+        :param request: 
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1501,6 +1506,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_participants_get_serialize(
             benchmark_id=benchmark_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1525,6 +1531,7 @@ class BenchmarkApi:
     def benchmark_benchmark_id_participants_get_with_http_info(
         self,
         benchmark_id: StrictStr,
+        request: Optional[QueryModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1543,6 +1550,8 @@ class BenchmarkApi:
 
         :param benchmark_id:  (required)
         :type benchmark_id: str
+        :param request: 
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1567,6 +1576,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_participants_get_serialize(
             benchmark_id=benchmark_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1591,6 +1601,7 @@ class BenchmarkApi:
     def benchmark_benchmark_id_participants_get_without_preload_content(
         self,
         benchmark_id: StrictStr,
+        request: Optional[QueryModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1609,6 +1620,8 @@ class BenchmarkApi:
 
         :param benchmark_id:  (required)
         :type benchmark_id: str
+        :param request: 
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1633,6 +1646,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_participants_get_serialize(
             benchmark_id=benchmark_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1652,6 +1666,7 @@ class BenchmarkApi:
     def _benchmark_benchmark_id_participants_get_serialize(
         self,
         benchmark_id,
+        request,
         _request_auth,
         _content_type,
         _headers,
@@ -1676,6 +1691,10 @@ class BenchmarkApi:
         if benchmark_id is not None:
             _path_params['benchmarkId'] = benchmark_id
         # process the query parameters
+        if request is not None:
+            
+            _query_params.append(('request', request))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -3754,6 +3773,601 @@ class BenchmarkApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/benchmark/{benchmarkId}/tags',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_combined_matrix_get(
+        self,
+        benchmark_ids: Annotated[List[StrictStr], Field(description="The identifiers of the benchmarks to combine.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetCombinedBenchmarkMatrixEndpointOutput:
+        """Returns the combined pairwise vote matrix for multiple benchmarks.
+
+
+        :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
+        :type benchmark_ids: List[str]
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :type use_weighted_scoring: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_combined_matrix_get_serialize(
+            benchmark_ids=benchmark_ids,
+            use_weighted_scoring=use_weighted_scoring,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCombinedBenchmarkMatrixEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_combined_matrix_get_with_http_info(
+        self,
+        benchmark_ids: Annotated[List[StrictStr], Field(description="The identifiers of the benchmarks to combine.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetCombinedBenchmarkMatrixEndpointOutput]:
+        """Returns the combined pairwise vote matrix for multiple benchmarks.
+
+
+        :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
+        :type benchmark_ids: List[str]
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :type use_weighted_scoring: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_combined_matrix_get_serialize(
+            benchmark_ids=benchmark_ids,
+            use_weighted_scoring=use_weighted_scoring,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCombinedBenchmarkMatrixEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_combined_matrix_get_without_preload_content(
+        self,
+        benchmark_ids: Annotated[List[StrictStr], Field(description="The identifiers of the benchmarks to combine.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Returns the combined pairwise vote matrix for multiple benchmarks.
+
+
+        :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
+        :type benchmark_ids: List[str]
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :type use_weighted_scoring: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_combined_matrix_get_serialize(
+            benchmark_ids=benchmark_ids,
+            use_weighted_scoring=use_weighted_scoring,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCombinedBenchmarkMatrixEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_combined_matrix_get_serialize(
+        self,
+        benchmark_ids,
+        use_weighted_scoring,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'benchmarkIds': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if benchmark_ids is not None:
+            
+            _query_params.append(('benchmarkIds', benchmark_ids))
+            
+        if use_weighted_scoring is not None:
+            
+            _query_params.append(('useWeightedScoring', use_weighted_scoring))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/benchmark/combined-matrix',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_combined_standings_get(
+        self,
+        benchmark_ids: Annotated[List[StrictStr], Field(description="The identifiers of the benchmarks to combine.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetCombinedBenchmarkStandingsEndpointOutput:
+        """Returns the combined standings for multiple benchmarks.
+
+
+        :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
+        :type benchmark_ids: List[str]
+        :param use_weighted_scoring: Whether to apply weighted scoring.
+        :type use_weighted_scoring: bool
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
+        :type include_confidence_intervals: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_combined_standings_get_serialize(
+            benchmark_ids=benchmark_ids,
+            use_weighted_scoring=use_weighted_scoring,
+            include_confidence_intervals=include_confidence_intervals,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCombinedBenchmarkStandingsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_combined_standings_get_with_http_info(
+        self,
+        benchmark_ids: Annotated[List[StrictStr], Field(description="The identifiers of the benchmarks to combine.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetCombinedBenchmarkStandingsEndpointOutput]:
+        """Returns the combined standings for multiple benchmarks.
+
+
+        :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
+        :type benchmark_ids: List[str]
+        :param use_weighted_scoring: Whether to apply weighted scoring.
+        :type use_weighted_scoring: bool
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
+        :type include_confidence_intervals: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_combined_standings_get_serialize(
+            benchmark_ids=benchmark_ids,
+            use_weighted_scoring=use_weighted_scoring,
+            include_confidence_intervals=include_confidence_intervals,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCombinedBenchmarkStandingsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_combined_standings_get_without_preload_content(
+        self,
+        benchmark_ids: Annotated[List[StrictStr], Field(description="The identifiers of the benchmarks to combine.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Returns the combined standings for multiple benchmarks.
+
+
+        :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
+        :type benchmark_ids: List[str]
+        :param use_weighted_scoring: Whether to apply weighted scoring.
+        :type use_weighted_scoring: bool
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
+        :type include_confidence_intervals: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_combined_standings_get_serialize(
+            benchmark_ids=benchmark_ids,
+            use_weighted_scoring=use_weighted_scoring,
+            include_confidence_intervals=include_confidence_intervals,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCombinedBenchmarkStandingsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_combined_standings_get_serialize(
+        self,
+        benchmark_ids,
+        use_weighted_scoring,
+        include_confidence_intervals,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'benchmarkIds': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if benchmark_ids is not None:
+            
+            _query_params.append(('benchmarkIds', benchmark_ids))
+            
+        if use_weighted_scoring is not None:
+            
+            _query_params.append(('useWeightedScoring', use_weighted_scoring))
+            
+        if include_confidence_intervals is not None:
+            
+            _query_params.append(('includeConfidenceIntervals', include_confidence_intervals))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/benchmark/combined-standings',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
