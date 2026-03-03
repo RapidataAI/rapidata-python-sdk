@@ -40,7 +40,7 @@ class RapidataClient:
         client_id: str | None = None,
         client_secret: str | None = None,
         environment: str = "rapidata.ai",
-        oauth_scope: str = "openid roles",
+        oauth_scope: str = "openid roles email",
         cert_path: str | None = None,
         token: dict | None = None,
         leeway: int = 60,
@@ -142,6 +142,12 @@ class RapidataClient:
                     .decode("utf-8")
                 )
                 logger.debug("Userinfo: %s", result)
+
+                client_id = result.get("sub")
+                email = result.get("email")
+                if client_id and email:
+                    tracer.set_user_info(client_id=client_id, email=email)
+
                 if "Admin" not in result.get("role", []):
                     logger.debug("User is not an admin, not enabling beta features")
                     return

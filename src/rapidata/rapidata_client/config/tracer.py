@@ -36,6 +36,7 @@ class TracerProtocol(Protocol):
     def start_span(self, name: str, *args, **kwargs) -> Any: ...
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any: ...
     def set_session_id(self, session_id: str) -> None: ...
+    def set_user_info(self, client_id: str, email: str) -> None: ...
 
 
 class NoOpSpan:
@@ -76,6 +77,9 @@ class NoOpTracer:
     def set_session_id(self, session_id: str) -> None:
         pass
 
+    def set_user_info(self, client_id: str, email: str) -> None:
+        pass
+
     def __getattr__(self, name: str) -> Any:
         """Delegate to no-op behavior."""
         return lambda *args, **kwargs: NoOpSpan()
@@ -84,14 +88,21 @@ class NoOpTracer:
 class SpanContextManagerWrapper:
     """Wrapper for span context managers to add session_id on enter."""
 
-    def __init__(self, context_manager: Any, session_id: str | None):
+    def __init__(self, context_manager: Any, session_id: str | None, client_id: str | None = None, email: str | None = None):
         self._context_manager = context_manager
         self.session_id = session_id
+        self.client_id = client_id
+        self.email = email
 
     def __enter__(self):
         span = self._context_manager.__enter__()
-        if self.session_id and hasattr(span, "set_attribute"):
-            span.set_attribute("SDK.session.id", self.session_id)
+        if hasattr(span, "set_attribute"):
+            if self.session_id:
+                span.set_attribute("SDK.session.id", self.session_id)
+            if self.client_id:
+                span.set_attribute("SDK.user.id", self.client_id)
+            if self.email:
+                span.set_attribute("SDK.user.email", self.email)
         return span
 
     def __exit__(self, *args):
@@ -110,6 +121,8 @@ class RapidataTracer:
         self._no_op_tracer = NoOpTracer()
         self._enabled = True  # Default to enabled
         self.session_id: str | None = None
+        self.client_id: str | None = None
+        self.email: str | None = None
 
         # Register this tracer to receive configuration updates
         register_config_handler(self._handle_config_update)
@@ -157,10 +170,15 @@ class RapidataTracer:
                 logger.warning(f"Failed to initialize tracing: {e}")
                 self._enabled = False
 
-    def _add_session_id_to_span(self, span: Any) -> Any:
-        """Add session_id attribute to a span if session_id is set."""
-        if self.session_id and hasattr(span, "set_attribute"):
-            span.set_attribute("SDK.session.id", self.session_id)
+    def _add_attributes_to_span(self, span: Any) -> Any:
+        """Add session and user attributes to a span."""
+        if hasattr(span, "set_attribute"):
+            if self.session_id:
+                span.set_attribute("SDK.session.id", self.session_id)
+            if self.client_id:
+                span.set_attribute("SDK.user.id", self.client_id)
+            if self.email:
+                span.set_attribute("SDK.user.email", self.email)
         return span
 
     def start_span(self, name: str, *args, **kwargs) -> Any:
@@ -169,7 +187,7 @@ class RapidataTracer:
             self._ensure_initialized()
             if self._real_tracer:
                 span = self._real_tracer.start_span(name, *args, **kwargs)
-                return self._add_session_id_to_span(span)
+                return self._add_attributes_to_span(span)
         return self._no_op_tracer.start_span(name, *args, **kwargs)
 
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any:
@@ -180,12 +198,17 @@ class RapidataTracer:
                 context_manager = self._real_tracer.start_as_current_span(
                     name, *args, **kwargs
                 )
-                return SpanContextManagerWrapper(context_manager, self.session_id)
+                return SpanContextManagerWrapper(context_manager, self.session_id, self.client_id, self.email)
         return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
 
     def set_session_id(self, session_id: str) -> None:
         self.session_id = session_id
         logger.debug(f"Session ID set to: {self.session_id}")
+
+    def set_user_info(self, client_id: str, email: str) -> None:
+        self.client_id = client_id
+        self.email = email
+        logger.debug(f"User info set - client_id: {self.client_id}, email: {self.email}")
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
