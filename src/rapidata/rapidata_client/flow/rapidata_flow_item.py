@@ -71,7 +71,7 @@ class RapidataFlowItem:
                 status_message="Flow item '%s' is in state %s, waiting for completion...",
             )
 
-            results = self._openapi_service.ranking_flow_item_api.flow_ranking_item_flow_item_id_results_get(
+            results = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_item_flow_item_id_results_get(
                 flow_item_id=self.id,
             )
 
@@ -111,7 +111,7 @@ class RapidataFlowItem:
                 status_message="Flow item '%s' is in state %s, waiting for completion...",
             )
 
-            result = self._openapi_service.ranking_flow_item_api.flow_ranking_item_flow_item_id_vote_matrix_get(
+            result = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_item_flow_item_id_vote_matrix_get(
                 flow_item_id=self.id,
             )
             self._response_count = sum(sum(row) for row in result.data)
@@ -167,7 +167,7 @@ class RapidataFlowItem:
 
     def _get_details(self) -> GetFlowItemByIdEndpointOutput:
         """Fetch the full details of this flow item from the API."""
-        return self._openapi_service.ranking_flow_item_api.flow_ranking_item_flow_item_id_get(
+        return self._openapi_service.flow.ranking_flow_item_api.flow_ranking_item_flow_item_id_get(
             flow_item_id=self.id,
         )
 

@@ -96,7 +96,7 @@ class BatchAssetUploader:
                             break
 
                         try:
-                            result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
+                            result = self.openapi_service.asset.batch_upload_api.asset_batch_upload_post(
                                 create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
                                     urls=batch, correlationId=correlation_id
                                 )
@@ -220,7 +220,7 @@ class BatchAssetUploader:
             )
             try:
                 status = (
-                    self.openapi_service.batch_upload_api.asset_batch_upload_status_get(
+                    self.openapi_service.asset.batch_upload_api.asset_batch_upload_status_get(
                         correlation_id=correlation_id
                     )
                 )
@@ -294,7 +294,7 @@ class BatchAssetUploader:
         failed_uploads: list[FailedUpload[str]] = []
 
         try:
-            result = self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_get(
+            result = self.openapi_service.asset.batch_upload_api.asset_batch_upload_batch_upload_id_get(
                 batch_upload_id=batch_id
             )
 
@@ -407,7 +407,7 @@ class BatchAssetUploader:
 
             for batch_id in batches_to_abort:
                 try:
-                    self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_abort_post(
+                    self.openapi_service.asset.batch_upload_api.asset_batch_upload_batch_upload_id_abort_post(
                         batch_upload_id=batch_id
                     )
                     abort_successes += 1

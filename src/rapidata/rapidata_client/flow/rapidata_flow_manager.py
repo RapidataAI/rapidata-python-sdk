@@ -53,7 +53,7 @@ class RapidataFlowManager:
 
             logger.debug("Creating ranking flow: %s", name)
 
-            response = self._openapi_service.ranking_flow_api.flow_ranking_post(
+            response = self._openapi_service.flow.ranking_flow_api.flow_ranking_post(
                 create_flow_endpoint_input=CreateFlowEndpointInput(
                     name=name,
                     criteria=instruction,
@@ -90,7 +90,7 @@ class RapidataFlowManager:
 
             logger.debug("Getting flow by id: %s", flow_id)
 
-            response = self._openapi_service.flow_api.flow_flow_id_get(
+            response = self._openapi_service.flow.flow_api.flow_flow_id_get(
                 flow_id=flow_id,
             )
 
@@ -114,7 +114,7 @@ class RapidataFlowManager:
 
             logger.debug("Finding flows, amount: %s", amount)
 
-            response = self._openapi_service.flow_api.flow_get()
+            response = self._openapi_service.flow.flow_api.flow_get()
 
             return [
                 RapidataFlow(

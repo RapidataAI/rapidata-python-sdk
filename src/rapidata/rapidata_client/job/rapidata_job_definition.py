@@ -77,7 +77,7 @@ class RapidataJobDefinition:
                 data_type=data_type,
             )
 
-            dataset = self._openapi_service.dataset_api.dataset_post(
+            dataset = self._openapi_service.dataset.dataset_api.dataset_post(
                 create_dataset_endpoint_input=CreateDatasetEndpointInput(
                     name=self.name + "_dataset"
                 )
@@ -94,7 +94,7 @@ class RapidataJobDefinition:
                         rapidata_dataset, failed_uploads, job_definition=self
                     )
 
-            self._openapi_service.job_api.job_definition_definition_id_revision_post(
+            self._openapi_service.order.job_api.job_definition_definition_id_revision_post(
                 definition_id=self.id,
                 create_job_revision_endpoint_input=CreateJobRevisionEndpointInput(
                     datasetId=rapidata_dataset.id,

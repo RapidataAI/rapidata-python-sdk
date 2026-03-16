@@ -85,7 +85,7 @@ class AssetUploader:
         """
 
         def upload_url() -> str:
-            response = self.openapi_service.asset_api.asset_url_post(url=url)
+            response = self.openapi_service.asset.asset_api.asset_url_post(url=url)
             logger.info(
                 "Asset uploaded from URL: %s, file name: %s", url, response.file_name
             )
@@ -102,7 +102,7 @@ class AssetUploader:
         """
 
         def upload_file() -> str:
-            response = self.openapi_service.asset_api.asset_file_post(file=file_path)
+            response = self.openapi_service.asset.asset_api.asset_file_post(file=file_path)
             logger.info(
                 "Asset uploaded from file: %s, file name: %s",
                 file_path,

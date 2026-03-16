@@ -62,7 +62,7 @@ class RapidataBenchmark:
             total_pages = None
 
             while True:
-                prompts_result = self._openapi_service.benchmark_api.benchmark_benchmark_id_prompts_get(
+                prompts_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompts_get(
                     benchmark_id=self.id,
                     request=QueryModel(page=PageInfo(index=current_page, size=100)),
                 )
@@ -149,7 +149,7 @@ class RapidataBenchmark:
                 total_pages = None
 
                 while True:
-                    leaderboards_result = self._openapi_service.benchmark_api.benchmark_benchmark_id_leaderboards_get(
+                    leaderboards_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_leaderboards_get(
                         benchmark_id=self.id,
                         request=QueryModel(
                             page=PageInfo(index=current_page, size=100),
@@ -197,7 +197,7 @@ class RapidataBenchmark:
 
         with tracer.start_as_current_span("RapidataBenchmark.participants"):
             if not self.__participants:
-                result = self._openapi_service.benchmark_api.benchmark_benchmark_id_participants_get(
+                result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_participants_get(
                     benchmark_id=self.id,
                 )
 
@@ -289,7 +289,7 @@ class RapidataBenchmark:
             self.__prompts.append(prompt)
             self.__prompt_assets.append(prompt_asset)
 
-            self._openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
+            self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
                 benchmark_id=self.id,
                 submit_prompt_model=SubmitPromptModel(
                     identifier=identifier,
@@ -381,7 +381,7 @@ class RapidataBenchmark:
                 settings,
             )
 
-            leaderboard_result = self._openapi_service.leaderboard_api.leaderboard_post(
+            leaderboard_result = self._openapi_service.leaderboard.leaderboard_api.leaderboard_post(
                 create_leaderboard_model=CreateLeaderboardModel(
                     benchmarkId=self.id,
                     name=name,
@@ -509,7 +509,7 @@ class RapidataBenchmark:
                     "All identifiers/prompts must be in the registered identifiers/prompts list. To see the registered identifiers/prompts, use the identifiers/prompts property."
                 )
 
-            participant_result = self._openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
+            participant_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_participants_post(
                 benchmark_id=self.id,
                 create_benchmark_participant_model=CreateBenchmarkParticipantModel(
                     name=name,
@@ -602,7 +602,7 @@ class RapidataBenchmark:
         import pandas as pd
 
         with tracer.start_as_current_span("get_overall_standings"):
-            participants = self._openapi_service.benchmark_api.benchmark_benchmark_id_standings_get(
+            participants = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_get(
                 benchmark_id=self.id,
                 tags=tags,
             )
@@ -651,7 +651,7 @@ class RapidataBenchmark:
 
         with tracer.start_as_current_span("get_win_loss_matrix"):
             result = (
-                self._openapi_service.benchmark_api.benchmark_benchmark_id_matrix_get(
+                self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_matrix_get(
                     benchmark_id=self.id,
                     tags=tags,
                     participant_ids=participant_ids,

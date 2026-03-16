@@ -11,24 +11,17 @@ from rapidata.rapidata_client.config import logger, managed_print
 from authlib.integrations.httpx_client import OAuthError
 
 if TYPE_CHECKING:
-    from rapidata.api_client.api.job_api import JobApi
-    from rapidata.api_client import CustomerRapidApi
-    from rapidata.api_client.api.campaign_api import CampaignApi
-    from rapidata.api_client.api.asset_api import AssetApi
-    from rapidata.api_client.api.dataset_api import DatasetApi
-    from rapidata.api_client.api.benchmark_api import BenchmarkApi
-    from rapidata.api_client.api.order_api import OrderApi
-    from rapidata.api_client.api.pipeline_api import PipelineApi
-    from rapidata.api_client.api.leaderboard_api import LeaderboardApi
-    from rapidata.api_client.api.validation_set_api import ValidationSetApi
-    from rapidata.api_client.api.workflow_api import WorkflowApi
-    from rapidata.api_client.api.participant_api import ParticipantApi
-    from rapidata.api_client.api.audience_api import AudienceApi
-    from rapidata.api_client.api.batch_upload_api import BatchUploadApi
-    from rapidata.api_client.api.flow_api import FlowApi
-    from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
-    from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
-    from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
+    from rapidata.service.services.asset_service import AssetService
+    from rapidata.service.services.order_service import OrderService
+    from rapidata.service.services.flow_service import FlowService
+    from rapidata.service.services.audience_service import AudienceService
+    from rapidata.service.services.validation_service import ValidationService
+    from rapidata.service.services.dataset_service import DatasetService
+    from rapidata.service.services.campaign_service import CampaignService
+    from rapidata.service.services.pipeline_service import PipelineService
+    from rapidata.service.services.workflow_service import WorkflowService
+    from rapidata.service.services.leaderboard_service import LeaderboardService
+    from rapidata.service.services.rapid_service import RapidService
 
 
 class OpenAPIService:
@@ -70,6 +63,18 @@ class OpenAPIService:
             header_value=f"RapidataPythonSDK/{self._get_rapidata_package_version()}",
         )
         logger.debug("RapidataApiClient initialized")
+
+        self._asset: AssetService | None = None
+        self._order: OrderService | None = None
+        self._flow: FlowService | None = None
+        self._audience: AudienceService | None = None
+        self._validation: ValidationService | None = None
+        self._dataset: DatasetService | None = None
+        self._campaign: CampaignService | None = None
+        self._pipeline: PipelineService | None = None
+        self._workflow: WorkflowService | None = None
+        self._leaderboard: LeaderboardService | None = None
+        self._rapid: RapidService | None = None
 
         if token:
             logger.debug("Using token for authentication")
@@ -130,106 +135,81 @@ class OpenAPIService:
         logger.info("Credentials reset in OpenAPIService")
 
     @property
-    def order_api(self) -> OrderApi:
-        from rapidata.api_client.api.order_api import OrderApi
-
-        return OrderApi(self.api_client)
-
-    @property
-    def job_api(self) -> JobApi:
-        from rapidata.api_client.api.job_api import JobApi
-
-        return JobApi(self.api_client)
+    def asset(self) -> AssetService:
+        if self._asset is None:
+            from rapidata.service.services.asset_service import AssetService
+            self._asset = AssetService(self.api_client)
+        return self._asset
 
     @property
-    def asset_api(self) -> AssetApi:
-        from rapidata.api_client.api.asset_api import AssetApi
-
-        return AssetApi(self.api_client)
-
-    @property
-    def batch_upload_api(self) -> BatchUploadApi:
-        from rapidata.api_client.api.batch_upload_api import BatchUploadApi
-
-        return BatchUploadApi(self.api_client)
+    def order(self) -> OrderService:
+        if self._order is None:
+            from rapidata.service.services.order_service import OrderService
+            self._order = OrderService(self.api_client)
+        return self._order
 
     @property
-    def dataset_api(self) -> DatasetApi:
-        from rapidata.api_client.api.dataset_api import DatasetApi
-
-        return DatasetApi(self.api_client)
-
-    @property
-    def validation_api(self) -> ValidationSetApi:
-        from rapidata.api_client.api.validation_set_api import ValidationSetApi
-
-        return ValidationSetApi(self.api_client)
+    def flow(self) -> FlowService:
+        if self._flow is None:
+            from rapidata.service.services.flow_service import FlowService
+            self._flow = FlowService(self.api_client)
+        return self._flow
 
     @property
-    def flow_api(self) -> FlowApi:
-        from rapidata.api_client.api.flow_api import FlowApi
-
-        return FlowApi(self.api_client)
-
-    @property
-    def ranking_flow_api(self) -> RankingFlowApi:
-        from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
-
-        return RankingFlowApi(self.api_client)
+    def audience(self) -> AudienceService:
+        if self._audience is None:
+            from rapidata.service.services.audience_service import AudienceService
+            self._audience = AudienceService(self.api_client)
+        return self._audience
 
     @property
-    def ranking_flow_item_api(self) -> RankingFlowItemApi:
-        from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
-
-        return RankingFlowItemApi(self.api_client)
-
-    @property
-    def rapid_api(self) -> CustomerRapidApi:
-        from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
-
-        return CustomerRapidApi(self.api_client)
+    def validation(self) -> ValidationService:
+        if self._validation is None:
+            from rapidata.service.services.validation_service import ValidationService
+            self._validation = ValidationService(self.api_client)
+        return self._validation
 
     @property
-    def campaign_api(self) -> CampaignApi:
-        from rapidata.api_client.api.campaign_api import CampaignApi
-
-        return CampaignApi(self.api_client)
-
-    @property
-    def pipeline_api(self) -> PipelineApi:
-        from rapidata.api_client.api.pipeline_api import PipelineApi
-
-        return PipelineApi(self.api_client)
+    def dataset(self) -> DatasetService:
+        if self._dataset is None:
+            from rapidata.service.services.dataset_service import DatasetService
+            self._dataset = DatasetService(self.api_client)
+        return self._dataset
 
     @property
-    def workflow_api(self) -> WorkflowApi:
-        from rapidata.api_client.api.workflow_api import WorkflowApi
-
-        return WorkflowApi(self.api_client)
-
-    @property
-    def leaderboard_api(self) -> LeaderboardApi:
-        from rapidata.api_client.api.leaderboard_api import LeaderboardApi
-
-        return LeaderboardApi(self.api_client)
+    def campaign(self) -> CampaignService:
+        if self._campaign is None:
+            from rapidata.service.services.campaign_service import CampaignService
+            self._campaign = CampaignService(self.api_client)
+        return self._campaign
 
     @property
-    def benchmark_api(self) -> BenchmarkApi:
-        from rapidata.api_client.api.benchmark_api import BenchmarkApi
-
-        return BenchmarkApi(self.api_client)
-
-    @property
-    def participant_api(self) -> ParticipantApi:
-        from rapidata.api_client.api.participant_api import ParticipantApi
-
-        return ParticipantApi(self.api_client)
+    def pipeline(self) -> PipelineService:
+        if self._pipeline is None:
+            from rapidata.service.services.pipeline_service import PipelineService
+            self._pipeline = PipelineService(self.api_client)
+        return self._pipeline
 
     @property
-    def audience_api(self) -> AudienceApi:
-        from rapidata.api_client.api.audience_api import AudienceApi
+    def workflow(self) -> WorkflowService:
+        if self._workflow is None:
+            from rapidata.service.services.workflow_service import WorkflowService
+            self._workflow = WorkflowService(self.api_client)
+        return self._workflow
 
-        return AudienceApi(self.api_client)
+    @property
+    def leaderboard(self) -> LeaderboardService:
+        if self._leaderboard is None:
+            from rapidata.service.services.leaderboard_service import LeaderboardService
+            self._leaderboard = LeaderboardService(self.api_client)
+        return self._leaderboard
+
+    @property
+    def rapid(self) -> RapidService:
+        if self._rapid is None:
+            from rapidata.service.services.rapid_service import RapidService
+            self._rapid = RapidService(self.api_client)
+        return self._rapid
 
     def _get_rapidata_package_version(self):
         """

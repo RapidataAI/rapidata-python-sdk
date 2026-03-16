@@ -55,7 +55,7 @@ class BenchmarkParticipant:
         After uploading media, call this method to submit the participant
         so that it enters the evaluation pipeline.
         """
-        self._openapi_service.participant_api.participants_participant_id_submit_post(
+        self._openapi_service.leaderboard.participant_api.participants_participant_id_submit_post(
             participant_id=self.id
         )
         self._status = ParticipantStatus.SUBMITTED
@@ -92,7 +92,7 @@ class BenchmarkParticipant:
         for attempt in range(rapidata_config.upload.maxRetries):
             try:
                 with suppress_rapidata_error_logging():
-                    self._openapi_service.participant_api.participant_participant_id_sample_post(
+                    self._openapi_service.leaderboard.participant_api.participant_participant_id_sample_post(
                         participant_id=self.id,
                         create_sample_model=CreateSampleModel(
                             identifier=identifier,

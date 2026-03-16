@@ -70,7 +70,7 @@ class RapidataOrder:
     def _get_order_failure_message(self) -> str | None:
         """Retrieves the failure message from the order if available."""
         try:
-            order = self._openapi_service.order_api.order_order_id_get(self.id)
+            order = self._openapi_service.order.order_api.order_order_id_get(self.id)
             return order.failure_message
         except Exception:
             logger.debug("Failed to get order failure message", self, exc_info=True)
@@ -142,7 +142,7 @@ class RapidataOrder:
     def created_at(self) -> datetime:
         """Returns the creation date of the order."""
         if not self.__created_at:
-            self.__created_at = self._openapi_service.order_api.order_order_id_get(
+            self.__created_at = self._openapi_service.order.order_api.order_order_id_get(
                 self.id
             ).order_date
         return self.__created_at
@@ -151,7 +151,7 @@ class RapidataOrder:
         """Gets the pipeline ID for this order (cached, internal use only)."""
         if not self.__pipeline_id:
             self.__pipeline_id = self._retry_operation(
-                lambda: self._openapi_service.order_api.order_order_id_get(
+                lambda: self._openapi_service.order.order_api.order_order_id_get(
                     self.id
                 ).pipeline_id,
             )
@@ -183,7 +183,7 @@ class RapidataOrder:
             )
 
             pipeline_id = self.__get_pipeline_id()
-            pipeline = self._openapi_service.pipeline_api.pipeline_pipeline_id_get(
+            pipeline = self._openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
                 pipeline_id
             )
             self.__workflow_id = cast(
@@ -203,7 +203,7 @@ class RapidataOrder:
         def get_progress():
             with suppress_rapidata_error_logging():
                 workflow_id = self.__get_workflow_id()
-                return self._openapi_service.workflow_api.workflow_workflow_id_progress_get(
+                return self._openapi_service.workflow.workflow_api.workflow_workflow_id_progress_get(
                     workflow_id
                 )
 
@@ -233,7 +233,7 @@ class RapidataOrder:
                     UpdateOrderModel,
                 )
 
-                self._openapi_service.order_api.order_order_id_patch(
+                self._openapi_service.order.order_api.order_order_id_patch(
                     self.id,
                     UpdateOrderModel(
                         precedingOrderId=(
@@ -243,7 +243,7 @@ class RapidataOrder:
                 )
 
             logger.info("Starting order '%s'", self)
-            self._openapi_service.order_api.order_order_id_submit_post(
+            self._openapi_service.order.order_api.order_order_id_submit_post(
                 self.id, SubmitOrderModel(ignoreFailedDatapoints=True)
             )
             logger.debug("Order '%s' has been started.", self)
@@ -256,7 +256,7 @@ class RapidataOrder:
         """Pauses the order."""
         with tracer.start_as_current_span("RapidataOrder.pause"):
             logger.info("Pausing order '%s'", self)
-            self._openapi_service.order_api.order_order_id_pause_post(self.id)
+            self._openapi_service.order.order_api.order_order_id_pause_post(self.id)
             logger.debug("Order '%s' has been paused.", self)
             managed_print(f"Order '{self}' has been paused.")
 
@@ -264,7 +264,7 @@ class RapidataOrder:
         """Unpauses/resumes the order."""
         with tracer.start_as_current_span("RapidataOrder.unpause"):
             logger.info("Unpausing order '%s'", self)
-            self._openapi_service.order_api.order_order_id_resume_post(self.id)
+            self._openapi_service.order.order_api.order_order_id_resume_post(self.id)
             logger.debug("Order '%s' has been unpaused.", self)
             managed_print(f"Order '{self}' has been unpaused.")
 
@@ -272,7 +272,7 @@ class RapidataOrder:
         """Deletes the order."""
         with tracer.start_as_current_span("RapidataOrder.delete"):
             logger.info("Deleting order '%s'", self)
-            self._openapi_service.order_api.order_order_id_delete(self.id)
+            self._openapi_service.order.order_api.order_order_id_delete(self.id)
             logger.debug("Order '%s' has been deleted.", self)
             managed_print(f"Order '{self}' has been deleted.")
 
@@ -291,7 +291,7 @@ class RapidataOrder:
             Failed: The order has failed.
         """
         with tracer.start_as_current_span("RapidataOrder.get_status"):
-            return self._openapi_service.order_api.order_order_id_get(self.id).state
+            return self._openapi_service.order.order_api.order_order_id_get(self.id).state
 
     def display_progress_bar(self, refresh_rate: int = 5) -> None:
         """
@@ -380,7 +380,7 @@ class RapidataOrder:
 
             try:
                 results = (
-                    self._openapi_service.order_api.order_order_id_download_results_get(
+                    self._openapi_service.order.order_api.order_order_id_download_results_get(
                         order_id=self.id
                     )
                 )
@@ -398,12 +398,12 @@ class RapidataOrder:
 
         try:
             pipeline_id = self.__get_pipeline_id()
-            download_id = self._openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
+            download_id = self._openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
                 pipeline_id, PreliminaryDownloadModel(sendEmail=False)
             ).download_id
 
             def check_results():
-                results = self._openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(
+                results = self._openapi_service.pipeline.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(
                     preliminary_download_id=download_id
                 )
                 return RapidataResults(json.loads(results))
@@ -439,7 +439,7 @@ class RapidataOrder:
 
         if self.get_status() == OrderState.CREATED:
             logger.info("Order is still in state created. Setting it to preview.")
-            self._openapi_service.order_api.order_order_id_preview_post(
+            self._openapi_service.order.order_api.order_order_id_preview_post(
                 self.id, PreviewOrderModel(ignoreFailedDatapoints=True)
             )
             logger.info("Order is now in preview state.")

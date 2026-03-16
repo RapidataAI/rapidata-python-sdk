@@ -33,7 +33,7 @@ class ValidationRapidUploader:
         # Translate truth for compare rapids with media assets
         truth = self._translate_compare_truth(rapid, asset_to_uploaded)
 
-        self.openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
+        self.openapi_service.validation.validation_api.validation_set_validation_set_id_rapid_post(
             validation_set_id=validation_set_id,
             add_validation_rapid_model=AddValidationRapidModel(
                 asset=uploaded_asset,

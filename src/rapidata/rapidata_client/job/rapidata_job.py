@@ -66,7 +66,7 @@ class RapidataJob:
     def _get_job_failure_message(self) -> str | None:
         """Retrieves the failure message from the job if available."""
         try:
-            job = self._openapi_service.job_api.job_job_id_get(self.id)
+            job = self._openapi_service.order.job_api.job_job_id_get(self.id)
             return job.failure_message
         except Exception:
             logger.debug("Failed to get job failure message", self, exc_info=True)
@@ -138,7 +138,7 @@ class RapidataJob:
     def completed_at(self) -> datetime | None:
         """Returns the completion date of the job, or None if not completed."""
         if not self.__completed_at:
-            self.__completed_at = self._openapi_service.job_api.job_job_id_get(
+            self.__completed_at = self._openapi_service.order.job_api.job_job_id_get(
                 self.id
             ).completed_at
         return self.__completed_at
@@ -147,7 +147,7 @@ class RapidataJob:
     def pipeline_id(self) -> str:
         """Returns the pipeline ID of the job."""
         if not self.__pipeline_id:
-            self.__pipeline_id = self._openapi_service.job_api.job_job_id_get(
+            self.__pipeline_id = self._openapi_service.order.job_api.job_job_id_get(
                 self.id
             ).pipeline_id
         return self.__pipeline_id
@@ -160,7 +160,7 @@ class RapidataJob:
             The current status of the job as a string.
         """
         with tracer.start_as_current_span("RapidataJob.get_status"):
-            return self._openapi_service.job_api.job_job_id_get(self.id).status
+            return self._openapi_service.order.job_api.job_job_id_get(self.id).status
 
     def get_results(self) -> RapidataResults:
         """
@@ -189,7 +189,7 @@ class RapidataJob:
             )
 
             try:
-                results = self._openapi_service.job_api.job_job_id_results_get(
+                results = self._openapi_service.order.job_api.job_job_id_results_get(
                     job_id=self.id
                 )
                 return RapidataResults(json.loads(results))
@@ -268,14 +268,14 @@ class RapidataJob:
 
         try:
             with suppress_rapidata_error_logging():
-                pipeline = self._openapi_service.pipeline_api.pipeline_pipeline_id_get(
+                pipeline = self._openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
                     self.pipeline_id
                 )
                 workflow_id = cast(
                     WorkflowArtifactModel,
                     pipeline.artifacts["workflow-artifact"].actual_instance,
                 ).workflow_id
-                return self._openapi_service.workflow_api.workflow_workflow_id_progress_get(
+                return self._openapi_service.workflow.workflow_api.workflow_workflow_id_progress_get(
                     workflow_id
                 )
         except Exception:

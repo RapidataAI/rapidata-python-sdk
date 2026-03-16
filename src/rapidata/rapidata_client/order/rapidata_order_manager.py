@@ -901,7 +901,7 @@ class RapidataOrderManager:
         with tracer.start_as_current_span("RapidataOrderManager.get_order_by_id"):
             from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
-            order = self.__openapi_service.order_api.order_order_id_get(order_id)
+            order = self.__openapi_service.order.order_api.order_order_id_get(order_id)
 
             return RapidataOrder(
                 order_id=order_id,
@@ -928,7 +928,7 @@ class RapidataOrderManager:
             from rapidata.api_client.models.sort_criterion import SortCriterion
             from rapidata.api_client.models.sort_direction import SortDirection
 
-            order_page_result = self.__openapi_service.order_api.orders_get(
+            order_page_result = self.__openapi_service.order.order_api.orders_get(
                 QueryModel(
                     page=PageInfo(index=1, size=amount),
                     filter=RootFilter(

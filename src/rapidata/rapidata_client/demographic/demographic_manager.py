@@ -41,7 +41,7 @@ class DemographicManager:
             ),
         )
 
-        result = self._openapi_service.rapid_api.rapid_demographic_post(
+        result = self._openapi_service.rapid.rapid_api.rapid_demographic_post(
             create_demographic_rapid_model=model
         )
         logger.info(f"Demographic Rapid created: {result.rapid_id}")
