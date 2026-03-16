@@ -75,7 +75,7 @@ class RapidataJobManager:
             CreateJobDefinitionEndpointInput,
         )
 
-        dataset = self._openapi_service.dataset_api.dataset_post(
+        dataset = self._openapi_service.dataset.dataset_api.dataset_post(
             create_dataset_endpoint_input=CreateDatasetEndpointInput(
                 name=name + "_dataset"
             )
@@ -85,7 +85,7 @@ class RapidataJobManager:
         with tracer.start_as_current_span("add_datapoints"):
             _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
 
-        job_definition_response = self._openapi_service.job_api.job_definition_post(
+        job_definition_response = self._openapi_service.order.job_api.job_definition_post(
             create_job_definition_endpoint_input=CreateJobDefinitionEndpointInput(
                 definitionName=name,
                 workflow=workflow._to_model(),
@@ -626,7 +626,7 @@ class RapidataJobManager:
         with tracer.start_as_current_span("JobManager.get_job_definition_by_id"):
 
             job_definition = (
-                self._openapi_service.job_api.job_definition_definition_id_get(
+                self._openapi_service.order.job_api.job_definition_definition_id_get(
                     definition_id=job_definition_id,
                 )
             )
@@ -659,7 +659,7 @@ class RapidataJobManager:
             from rapidata.api_client.models.sort_direction import SortDirection
 
             job_definition_page_result = (
-                self._openapi_service.job_api.job_definitions_get(
+                self._openapi_service.order.job_api.job_definitions_get(
                     request=QueryModel(
                         page=PageInfo(index=1, size=amount),
                         filter=RootFilter(
@@ -702,7 +702,7 @@ class RapidataJobManager:
         with tracer.start_as_current_span("JobManager.get_job_by_id"):
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
-            job_response = self._openapi_service.job_api.job_job_id_get(
+            job_response = self._openapi_service.order.job_api.job_job_id_get(
                 job_id=job_id,
             )
             return RapidataJob(
@@ -735,7 +735,7 @@ class RapidataJobManager:
             from rapidata.api_client.models.sort_direction import SortDirection
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
-            response = self._openapi_service.job_api.jobs_get(
+            response = self._openapi_service.order.job_api.jobs_get(
                 request=QueryModel(
                     page=PageInfo(index=1, size=amount),
                     filter=RootFilter(

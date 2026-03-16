@@ -140,7 +140,7 @@ class RapidataOrderBuilder:
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
 
-        result = self._openapi_service.order_api.order_post(
+        result = self._openapi_service.order.order_api.order_post(
             create_order_model=order_model
         )
 
@@ -168,7 +168,7 @@ class RapidataOrderBuilder:
         logger.debug("Datapoints added to the order.")
         logger.debug("Setting order to preview")
         try:
-            self._openapi_service.order_api.order_order_id_preview_post(order.id)
+            self._openapi_service.order.order_api.order_order_id_preview_post(order.id)
         except Exception as e:
             logger.error("Failed to set order to preview: %s", e)
         return order

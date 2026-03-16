@@ -66,7 +66,7 @@ class RapidataFlow:
                 data_type=data_type,
                 private_metadata=private_metadata,
             )
-            dataset = self._openapi_service.dataset_api.dataset_post(
+            dataset = self._openapi_service.dataset.dataset_api.dataset_post(
                 create_dataset_endpoint_input=CreateDatasetEndpointInput(
                     name=self.name + "_dataset",
                 ),
@@ -87,7 +87,7 @@ class RapidataFlow:
                         "Failed to upload %d datapoints", len(failed_uploads)
                     )
 
-            response = self._openapi_service.ranking_flow_item_api.flow_ranking_flow_id_item_post(
+            response = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post(
                 flow_id=self.id,
                 create_flow_item_endpoint_input=CreateFlowItemEndpointInput(
                     datasetId=rapidata_dataset.id,
@@ -117,7 +117,7 @@ class RapidataFlow:
 
             logger.debug("Getting flow items for flow '%s'", self.name)
 
-            response = self._openapi_service.ranking_flow_item_api.flow_ranking_flow_id_item_get(
+            response = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_flow_id_item_get(
                 flow_id=self.id,
                 sort=["-created_at"],
                 page=1,
@@ -155,7 +155,7 @@ class RapidataFlow:
 
             logger.debug("Updating config for flow '%s'", self.name)
 
-            self._openapi_service.ranking_flow_api.flow_ranking_flow_id_config_patch(
+            self._openapi_service.flow.ranking_flow_api.flow_ranking_flow_id_config_patch(
                 flow_id=self.id,
                 update_config_endpoint_input=UpdateConfigEndpointInput(
                     criteria=instruction,
@@ -170,7 +170,7 @@ class RapidataFlow:
         """Soft delete this flow."""
         with tracer.start_as_current_span("RapidataFlow.delete"):
             logger.debug("Deleting flow '%s'", self.name)
-            self._openapi_service.flow_api.flow_flow_id_delete(flow_id=self.id)
+            self._openapi_service.flow.flow_api.flow_flow_id_delete(flow_id=self.id)
 
     def __str__(self) -> str:
         return f"Flow(id={self.id}, name={self.name})"

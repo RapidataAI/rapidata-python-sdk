@@ -149,7 +149,7 @@ class RapidataBenchmarkManager:
 
             logger.info("Creating new benchmark %s", name)
 
-            benchmark_result = self.__openapi_service.benchmark_api.benchmark_post(
+            benchmark_result = self.__openapi_service.leaderboard.benchmark_api.benchmark_post(
                 create_benchmark_model=CreateBenchmarkModel(
                     name=name,
                 )
@@ -176,7 +176,7 @@ class RapidataBenchmarkManager:
             "RapidataBenchmarkManager.get_benchmark_by_id"
         ):
             benchmark_result = (
-                self.__openapi_service.benchmark_api.benchmark_benchmark_id_get(
+                self.__openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_get(
                     benchmark_id=id
                 )
             )
@@ -191,7 +191,7 @@ class RapidataBenchmarkManager:
         Returns a list of benchmarks by their name.
         """
         with tracer.start_as_current_span("RapidataBenchmarkManager.find_benchmarks"):
-            benchmark_result = self.__openapi_service.benchmark_api.benchmarks_get(
+            benchmark_result = self.__openapi_service.leaderboard.benchmark_api.benchmarks_get(
                 QueryModel(
                     page=PageInfo(index=1, size=amount),
                     filter=RootFilter(

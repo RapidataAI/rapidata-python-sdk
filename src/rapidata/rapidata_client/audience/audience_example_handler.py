@@ -91,7 +91,7 @@ class AudienceExampleHandler:
             )
         )
 
-        self._openapi_service.audience_api.audience_audience_id_rapid_post(
+        self._openapi_service.audience.audience_api.audience_audience_id_rapid_post(
             audience_id=self._audience_id,
             add_rapid_to_audience_model=AddRapidToAudienceModel(
                 asset=asset_input,
@@ -165,7 +165,7 @@ class AudienceExampleHandler:
         if len(datapoint) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
 
-        self._openapi_service.audience_api.audience_audience_id_rapid_post(
+        self._openapi_service.audience.audience_api.audience_audience_id_rapid_post(
             audience_id=self._audience_id,
             add_rapid_to_audience_model=AddRapidToAudienceModel(
                 asset=asset_input,
@@ -226,7 +226,7 @@ class AudienceExampleHandler:
             truth_dict = cast(dict[str, Any], rapid.truth.to_dict())
             model_truth = IValidationTruth.from_dict(truth_dict)
 
-        self._openapi_service.audience_api.audience_audience_id_rapid_post(
+        self._openapi_service.audience.audience_api.audience_audience_id_rapid_post(
             audience_id=self._audience_id,
             add_rapid_to_audience_model=AddRapidToAudienceModel(
                 asset=asset_input,

@@ -62,7 +62,7 @@ class RapidataValidationSet:
             logger.debug(
                 "Updating dimensions for validation set %s to %s", self.id, dimensions
             )
-            self._openapi_service.validation_api.validation_set_validation_set_id_patch(
+            self._openapi_service.validation.validation_api.validation_set_validation_set_id_patch(
                 self.id, UpdateValidationSetModel(dimensions=dimensions)
             )
             self.dimensions = dimensions
@@ -81,7 +81,7 @@ class RapidataValidationSet:
             logger.debug(
                 "Setting shouldAlert for validation set %s to %s", self.id, should_alert
             )
-            self._openapi_service.validation_api.validation_set_validation_set_id_patch(
+            self._openapi_service.validation.validation_api.validation_set_validation_set_id_patch(
                 self.id, UpdateValidationSetModel(shouldAlert=should_alert)
             )
             return self
@@ -100,7 +100,7 @@ class RapidataValidationSet:
                 self.id,
                 can_be_flagged,
             )
-            self._openapi_service.validation_api.validation_set_validation_set_id_patch(
+            self._openapi_service.validation.validation_api.validation_set_validation_set_id_patch(
                 self.id, UpdateValidationSetModel(isFlagOverruled=(not can_be_flagged))
             )
             return self
@@ -128,7 +128,7 @@ class RapidataValidationSet:
         """Deletes the validation set"""
         with tracer.start_as_current_span("RapidataValidationSet.delete"):
             logger.info("Deleting ValidationSet '%s'", self)
-            self._openapi_service.validation_api.validation_set_validation_set_id_delete(
+            self._openapi_service.validation.validation_api.validation_set_validation_set_id_delete(
                 self.id
             )
             logger.debug("ValidationSet '%s' has been deleted.", self)

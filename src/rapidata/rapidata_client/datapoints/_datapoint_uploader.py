@@ -40,7 +40,7 @@ class DatapointUploader:
         else:
             uploaded_asset = self.asset_mapper.create_text_input(datapoint.asset)
 
-        return self.openapi_service.dataset_api.dataset_dataset_id_datapoint_post(
+        return self.openapi_service.dataset.dataset_api.dataset_dataset_id_datapoint_post(
             dataset_id=dataset_id,
             create_datapoint_model=CreateDatapointModel(
                 asset=uploaded_asset,

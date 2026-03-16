@@ -66,7 +66,7 @@ class RapidataAudience:
             )
 
             logger.debug(f"Updating filters for audience: {self.id} to {filters}")
-            self._openapi_service.audience_api.audience_audience_id_patch(
+            self._openapi_service.audience.audience_api.audience_audience_id_patch(
                 audience_id=self.id,
                 update_audience_request=UpdateAudienceRequest(
                     filters=[filter._to_audience_model() for filter in filters],
@@ -90,7 +90,7 @@ class RapidataAudience:
             )
 
             logger.debug(f"Updating name for audience: {self.id} to {name}")
-            self._openapi_service.audience_api.audience_audience_id_patch(
+            self._openapi_service.audience.audience_api.audience_audience_id_patch(
                 audience_id=self.id,
                 update_audience_request=UpdateAudienceRequest(name=name),
             )
@@ -117,7 +117,7 @@ class RapidataAudience:
             from datetime import datetime
 
             logger.debug(f"Assigning job to audience: {self.id}")
-            response = self._openapi_service.job_api.job_post(
+            response = self._openapi_service.order.job_api.job_post(
                 create_job_endpoint_input=CreateJobEndpointInput(
                     audienceId=self.id,
                     jobDefinitionId=job_definition.id,
@@ -245,7 +245,7 @@ class RapidataAudience:
             from rapidata.api_client.models.sort_criterion import SortCriterion
             from rapidata.api_client.models.sort_direction import SortDirection
 
-            response = self._openapi_service.job_api.jobs_get(
+            response = self._openapi_service.order.job_api.jobs_get(
                 request=QueryModel(
                     page=PageInfo(index=1, size=amount),
                     filter=RootFilter(
@@ -317,7 +317,7 @@ class RapidataAudience:
             logger.debug(f"Sending request to start recruiting for audience: {self.id}")
             with suppress_rapidata_error_logging():
                 try:
-                    self._openapi_service.audience_api.audience_audience_id_recruit_post(
+                    self._openapi_service.audience.audience_api.audience_audience_id_recruit_post(
                         audience_id=self.id,
                     )
                     logger.info(f"Started recruiting for audience: {self.id}")

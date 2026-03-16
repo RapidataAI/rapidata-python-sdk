@@ -56,7 +56,7 @@ class ValidationSetManager:
     def _get_total_and_labeled_rapids_count(
         self, validation_set_id: str
     ) -> tuple[int, int]:
-        uploaded_rapids = self._openapi_service.validation_api.validation_set_validation_set_id_rapids_get(
+        uploaded_rapids = self._openapi_service.validation.validation_api.validation_set_validation_set_id_rapids_get(
             validation_set_id=validation_set_id
         ).items
         return len(uploaded_rapids), sum(1 for rapid in uploaded_rapids if rapid.truth)
@@ -566,7 +566,7 @@ class ValidationSetManager:
     ) -> RapidataValidationSet:
         logger.debug("Creating validation set")
         validation_set_id = (
-            self._openapi_service.validation_api.validation_set_post(
+            self._openapi_service.validation.validation_api.validation_set_post(
                 create_validation_set_model=CreateValidationSetModel(name=name)
             )
         ).validation_set_id
@@ -644,7 +644,7 @@ class ValidationSetManager:
             "ValidationSetManager.get_validation_set_by_id"
         ):
             logger.debug("Getting validation set by ID: %s", validation_set_id)
-            validation_set = self._openapi_service.validation_api.validation_set_validation_set_id_get(
+            validation_set = self._openapi_service.validation.validation_api.validation_set_validation_set_id_get(
                 validation_set_id=validation_set_id
             )
 
@@ -673,7 +673,7 @@ class ValidationSetManager:
             )
 
             validation_page_result = (
-                self._openapi_service.validation_api.validation_sets_get(
+                self._openapi_service.validation.validation_api.validation_sets_get(
                     QueryModel(
                         page=PageInfo(index=1, size=amount),
                         filter=RootFilter(

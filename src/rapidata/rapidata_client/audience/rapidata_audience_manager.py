@@ -46,7 +46,7 @@ class RapidataAudienceManager:
             logger.debug(f"Creating audience: {name}")
             if filters is None:
                 filters = []
-            response = self._openapi_service.audience_api.audience_post(
+            response = self._openapi_service.audience.audience_api.audience_post(
                 create_audience_request=CreateAudienceRequest(
                     name=name,
                     filters=[filter._to_audience_model() for filter in filters],
@@ -78,7 +78,7 @@ class RapidataAudienceManager:
             )
 
             logger.debug(f"Getting audience by id: {audience_id}")
-            response = self._openapi_service.audience_api.audience_audience_id_get(
+            response = self._openapi_service.audience.audience_api.audience_audience_id_get(
                 audience_id=audience_id,
             )
             return RapidataAudience(
@@ -119,7 +119,7 @@ class RapidataAudienceManager:
             )
 
             logger.debug(f"Finding audiences: {name}, {amount}")
-            response = self._openapi_service.audience_api.audiences_get(
+            response = self._openapi_service.audience.audience_api.audiences_get(
                 request=QueryModel(
                     page=PageInfo(index=1, size=amount),
                     filter=RootFilter(

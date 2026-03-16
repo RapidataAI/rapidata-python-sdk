@@ -161,7 +161,7 @@ class RapidataLeaderboard:
             A pandas DataFrame containing the standings of the leaderboard.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_standings"):
-            participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_standings_get(
+            participants = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_standings_get(
                 leaderboard_id=self.id, tags=tags
             )
 
@@ -204,7 +204,7 @@ class RapidataLeaderboard:
             containing the pairwise win counts.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_win_loss_matrix"):
-            result = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_matrix_get(
+            result = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_matrix_get(
                 leaderboard_id=self.id,
                 tags=tags,
                 use_weighted_scoring=use_weighted_scoring,
@@ -241,7 +241,7 @@ class RapidataLeaderboard:
 
     def _update_config(self):
         with tracer.start_as_current_span("RapidataLeaderboard._update_config"):
-            self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_patch(
+            self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_patch(
                 leaderboard_id=self.id,
                 update_leaderboard_model=UpdateLeaderboardModel(
                     name=self.__name,
