@@ -184,6 +184,7 @@ class RapidataOrderManager:
         media_contexts: list[str] | None = None,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
+        quorum_threshold: int | None = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
@@ -211,6 +212,9 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
+            quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
+                If provided, the classification datapoint will stop when this many responses agree or that quorum can't be reached anymore or after responses_per_datapoint votes.
+                Cannot be used together with confidence_threshold.
             filters (Sequence[RapidataFilter], optional): The list of filters for the classification. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to []. Decides in what order the tasks should be shown.
@@ -261,6 +265,7 @@ class RapidataOrderManager:
                 responses_per_datapoint=responses_per_datapoint,
                 validation_set_id=validation_set_id,
                 confidence_threshold=confidence_threshold,
+                quorum_threshold=quorum_threshold,
                 filters=filters,
                 selections=selections,
                 settings=settings,
