@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#early-stopping-based-on-confidence" class="md-skip">
+        <a href="#early-stopping" class="md-skip">
           Skip to content
         </a>
       
@@ -721,6 +721,18 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#confidence-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence Stopping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Confidence Stopping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -729,8 +741,7 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="How it Works">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#confidence-calculation" class="md-nav__link">
@@ -757,25 +768,53 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-early-stopping-in-your-job" class="md-nav__link">
+    <nav class="md-nav" aria-label="Understanding the Confidence Threshold">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-confidence-stopping-in-your-job" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Early Stopping in Your Job
+        Using Confidence Stopping in Your Job
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using Early Stopping in Your Job">
+    <nav class="md-nav" aria-label="Using Confidence Stopping in Your Job">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-classification-job-with-early-stopping" class="md-nav__link">
+  <a href="#example-classification-job-with-confidence-stopping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example: Classification Job with Early Stopping
+        Example: Classification Job with Confidence Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-confidence-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Confidence Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyzing-confidence-stopping-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analyzing Confidence Stopping Results
       
     </span>
   </a>
@@ -788,24 +827,69 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-to-use-early-stopping" class="md-nav__link">
+  <a href="#quorum-stopping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When to Use Early Stopping
+        Quorum Stopping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quorum Stopping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it Works
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#analyzing-early-stopping-results" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#using-quorum-stopping-in-your-job" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Analyzing Early Stopping Results
+        Using Quorum Stopping in Your Job
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Using Quorum Stopping in Your Job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-classification-job-with-quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Classification Job with Quorum Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Quorum Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1294,17 +1378,24 @@
   
 
 
-<h1 id="early-stopping-based-on-confidence">Early Stopping Based on Confidence<a class="headerlink" href="#early-stopping-based-on-confidence" title="Permanent link">#</a></h1>
-<p>To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers an Early Stopping feature based on confidence thresholds. This feature allows you to automatically stop collecting responses for a datapoint once a specified confidence level is reached, saving time and resources without compromising quality.</p>
+<h1 id="early-stopping">Early Stopping<a class="headerlink" href="#early-stopping" title="Permanent link">#</a></h1>
+<p>To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers Early Stopping features that automatically stop collecting responses for a datapoint once a stopping condition is met, saving time and resources without compromising quality.</p>
+<p>There are two early stopping strategies:</p>
+<ul>
+<li><strong>Confidence Stopping</strong>: Stops when a statistical confidence threshold is reached, using labeler trust scores.</li>
+<li><strong>Quorum Stopping</strong>: Stops when a fixed number of responses agree on the same answer.</li>
+</ul>
+<p>You can use one or the other, but not both at the same time.</p>
 <h2 id="why-use-early-stopping">Why Use Early Stopping?<a class="headerlink" href="#why-use-early-stopping" title="Permanent link">#</a></h2>
-<p>In traditional data labeling workflows, you might request a fixed number of responses per datapoint to ensure accuracy. However, once a consensus is reached with high confidence, continuing to collect more responses becomes redundant and incurs unnecessary costs.</p>
+<p>In traditional data labeling workflows, you might request a fixed number of responses per datapoint to ensure accuracy. However, once a consensus is reached, continuing to collect more responses becomes redundant and incurs unnecessary costs.</p>
 <p>Early Stopping addresses this by:</p>
 <ul>
-<li><strong>Reducing Costs</strong>: Stop collecting responses when sufficient confidence is achieved.</li>
+<li><strong>Reducing Costs</strong>: Stop collecting responses when sufficient agreement is achieved.</li>
 <li><strong>Improving Efficiency</strong>: Accelerate the labeling process by focusing resources where they are most needed.</li>
-<li><strong>Maintaining Quality</strong>: Ensure that each datapoint meets your specified confidence level before stopping.</li>
+<li><strong>Maintaining Quality</strong>: Ensure that each datapoint meets your specified stopping condition before stopping.</li>
 </ul>
-<h2 id="how-it-works">How it Works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
+<h2 id="confidence-stopping">Confidence Stopping<a class="headerlink" href="#confidence-stopping" title="Permanent link">#</a></h2>
+<h3 id="how-it-works">How it Works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h3>
 <p>The Early Stopping feature leverages the trustworthiness, quantified through their <code>userScores</code>, to calculate the confidence level of each category for any given datapoint.</p>
 <h3 id="confidence-calculation">Confidence Calculation<a class="headerlink" href="#confidence-calculation" title="Permanent link">#</a></h3>
 <ul>
@@ -1316,7 +1407,7 @@
 <p>We've created a plot based on empirical data aided by simulations to give you an estimate of the number of responses required to reach a certain confidence level.</p>
 <p>There are a few things to keep in mind when interpreting the results:</p>
 <ul>
-<li><strong>Unambiguous Scenario</strong>: The graph represents an ideal situation such as in the <a href="#using-early-stopping-in-your-job">example below</a> with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.</li>
+<li><strong>Unambiguous Scenario</strong>: The graph represents an ideal situation such as in the <a href="#using-confidence-stopping-in-your-job">example below</a> with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.</li>
 <li><strong>Real-World Variability</strong>: Actual required responses may vary based on task complexity.</li>
 <li><strong>Guidance Tool</strong>: Use the graph as a reference to set realistic expectations for your jobs.</li>
 <li><strong>Response Overflow</strong>: The number of responses per datapoint may exceed the specified amount due to multiple users answering simultaneously.</li>
@@ -1329,9 +1420,9 @@
 <blockquote>
 <p><strong>Note:</strong> The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.</p>
 </blockquote>
-<h2 id="using-early-stopping-in-your-job">Using Early Stopping in Your Job<a class="headerlink" href="#using-early-stopping-in-your-job" title="Permanent link">#</a></h2>
-<p>Implementing Early Stopping is straightforward. You simply add the confidence threshold as a parameter when creating the job definition.</p>
-<h3 id="example-classification-job-with-early-stopping">Example: Classification Job with Early Stopping<a class="headerlink" href="#example-classification-job-with-early-stopping" title="Permanent link">#</a></h3>
+<h3 id="using-confidence-stopping-in-your-job">Using Confidence Stopping in Your Job<a class="headerlink" href="#using-confidence-stopping-in-your-job" title="Permanent link">#</a></h3>
+<p>You simply add the <code>confidence_threshold</code> parameter when creating the job definition.</p>
+<h4 id="example-classification-job-with-confidence-stopping">Example: Classification Job with Confidence Stopping<a class="headerlink" href="#example-classification-job-with-confidence-stopping" title="Permanent link">#</a></h4>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
@@ -1368,14 +1459,14 @@
 <li><code>confidence_threshold=0.99</code>: Specifies that data collection for a datapoint should stop once a 99% confidence level is reached.</li>
 </ul>
 <p>We'd expect this to take roughly 4 responses to reach the 99% confidence level.</p>
-<h2 id="when-to-use-early-stopping">When to Use Early Stopping<a class="headerlink" href="#when-to-use-early-stopping" title="Permanent link">#</a></h2>
-<p>We recommend using Early Stopping when:</p>
+<h3 id="when-to-use-confidence-stopping">When to Use Confidence Stopping<a class="headerlink" href="#when-to-use-confidence-stopping" title="Permanent link">#</a></h3>
+<p>We recommend using Confidence Stopping when:</p>
 <ul>
 <li><strong>Cost Efficiency</strong>: You want to optimize costs by reducing the number of responses per datapoint.</li>
 <li><strong>Clear Correct Answer</strong>: The task has a clear correct answer, and you're not interested in a distribution.</li>
 </ul>
-<h2 id="analyzing-early-stopping-results">Analyzing Early Stopping Results<a class="headerlink" href="#analyzing-early-stopping-results" title="Permanent link">#</a></h2>
-<p>When using Early Stopping, the <a href="../understanding_the_results/">results</a> will additionally include a <code>confidencePerCategory</code> field for each datapoint. This field shows the confidence level for each of the categories in the task.</p>
+<h3 id="analyzing-confidence-stopping-results">Analyzing Confidence Stopping Results<a class="headerlink" href="#analyzing-confidence-stopping-results" title="Permanent link">#</a></h3>
+<p>When using Confidence Stopping, the <a href="../understanding_the_results/">results</a> will additionally include a <code>confidencePerCategory</code> field for each datapoint. This field shows the confidence level for each of the categories in the task.</p>
 <p>Example:
 </p><div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1450,6 +1541,69 @@
 </span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="p">}</span>
 </span></code></pre></div><p></p>
+<hr>
+<h2 id="quorum-stopping">Quorum Stopping<a class="headerlink" href="#quorum-stopping" title="Permanent link">#</a></h2>
+<h3 id="how-it-works_1">How it Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">#</a></h3>
+<p>Quorum Stopping uses a simple vote-counting approach. A task is completed when:</p>
+<ol>
+<li>A minimum number of responses (<code>quorum_threshold</code>) agree on the same answer, <strong>OR</strong></li>
+<li>Quorum becomes mathematically impossible to reach, <strong>OR</strong></li>
+<li>The maximum number of votes (<code>responses_per_datapoint</code>) is reached.</li>
+</ol>
+<p>For example, with <code>quorum_threshold=7</code> and <code>responses_per_datapoint=10</code>:</p>
+<ul>
+<li>The task completes when 7 responses agree (quorum reached).</li>
+<li>The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).</li>
+<li>The task completes after 10 total votes if neither condition is met.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Quorum Stopping is supported for the Classification and Comparison workflows, just like Confidence Stopping.</p>
+</blockquote>
+<h3 id="using-quorum-stopping-in-your-job">Using Quorum Stopping in Your Job<a class="headerlink" href="#using-quorum-stopping-in-your-job" title="Permanent link">#</a></h3>
+<p>You add the <code>quorum_threshold</code> parameter when creating the job definition.</p>
+<h4 id="example-classification-job-with-quorum-stopping">Example: Classification Job with Quorum Stopping<a class="headerlink" href="#example-classification-job-with-quorum-stopping" title="Permanent link">#</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create audience with qualification example</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Animal Classification Audience"</span><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">audience</span><span class="o">.</span><span class="n">add_classification_example</span><span class="p">(</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">datapoint</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/cat.jpeg"</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">truth</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">]</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Create job definition with quorum stopping</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Test Classification with Quorum Stopping"</span><span class="p">,</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://assets.rapidata.ai/dog.jpeg"</span><span class="p">],</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="n">quorum_threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">)</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Preview and run</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</span></code></pre></div>
+<p>In this example:</p>
+<ul>
+<li><code>responses_per_datapoint=10</code>: Sets the maximum number of responses per datapoint.</li>
+<li><code>quorum_threshold=7</code>: Specifies that data collection for a datapoint should stop once 7 responses agree on the same answer.</li>
+</ul>
+<h3 id="when-to-use-quorum-stopping">When to Use Quorum Stopping<a class="headerlink" href="#when-to-use-quorum-stopping" title="Permanent link">#</a></h3>
+<p>Quorum Stopping is a good choice when:</p>
+<ul>
+<li><strong>Simplicity</strong>: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.</li>
+<li><strong>Predictable Costs</strong>: You want to set an upper bound on responses while still allowing early termination.</li>
+<li><strong>Clear Correct Answer</strong>: The task has a clear correct answer, and you expect most labelers to agree.</li>
+</ul>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📋</button>
         </div>

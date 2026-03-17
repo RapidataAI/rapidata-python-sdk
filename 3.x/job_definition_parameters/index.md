@@ -9,7 +9,7 @@ When creating a job definition, you'll use parameters to control:
 - **What data** is shown to labelers (datapoints, contexts)
 - **How many responses** you need (responses_per_datapoint)
 - **How tasks are displayed** (settings)
-- **Quality assurance** (confidence_threshold)
+- **Quality assurance** (confidence_threshold, quorum_threshold)
 
 ---
 
@@ -211,6 +211,33 @@ job_definition = client.job.create_classification_job_definition(
 
 ---
 
+### `quorum_threshold`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `Optional[int]` |
+| **Required** | No |
+| **Default** | `None` |
+
+Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after `responses_per_datapoint` votes.
+
+Cannot be used together with `confidence_threshold`.
+
+**Related:** [Early Stopping](confidence_stopping.md#quorum-stopping)
+
+```python
+job_definition = client.job.create_classification_job_definition(
+    name="Cat or Dog with Quorum Stopping",
+    instruction="What animal is in this image?",
+    answer_options=["Cat", "Dog"],
+    datapoints=["pet1.jpg", "pet2.jpg"],
+    responses_per_datapoint=10,  # Maximum responses
+    quorum_threshold=7,          # Stop when 7 agree
+)
+```
+
+---
+
 ## Settings
 
 Settings allow you to customize how tasks are displayed.
@@ -317,6 +344,7 @@ job_definition = client.job.create_compare_job_definition(
 | `contexts` | :white_check_mark: | :white_check_mark: |
 | `media_contexts` | :white_check_mark: | :white_check_mark: |
 | `confidence_threshold` | :white_check_mark: | :white_check_mark: |
+| `quorum_threshold` | :white_check_mark: | :white_check_mark: |
 | `settings` | :white_check_mark: | :white_check_mark: |
 | `answer_options` | :white_check_mark: | :x: |
 | `a_b_names` | :x: | :white_check_mark: |
