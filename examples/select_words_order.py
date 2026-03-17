@@ -1,8 +1,9 @@
-'''
+"""
 SelectWords order with validation set
-'''
+"""
 
 from rapidata import RapidataClient
+
 
 def create_validation_set(rapi: RapidataClient):
     validation_set = rapi.validation.create_select_words_set(
@@ -16,6 +17,7 @@ def create_validation_set(rapi: RapidataClient):
     )
     return validation_set
 
+
 def new_select_words_order(rapi: RapidataClient, validation_set_id: str):
     order = rapi.order.create_select_words_order(
         name="Example SelectWords Order",
@@ -24,19 +26,19 @@ def new_select_words_order(rapi: RapidataClient, validation_set_id: str):
         sentences=["Hello, welcome to OpenAI's Text-to-Speech demo!"],
         validation_set_id=validation_set_id,
         responses_per_datapoint=25,
-        filters=[
-            rapi.order.filters.language(["en"])
-        ]
+        filters=[rapi.order.filters.Language(["en"])],
     ).run()
-    
+
     return order
+
 
 if __name__ == "__main__":
     rapi = RapidataClient()
-    validation_set = create_validation_set(rapi) # only call this once
-    validation_set = rapi.validation.find_validation_sets(name="Example SelectWords Validation Set")[0]
+    validation_set = create_validation_set(rapi)  # only call this once
+    validation_set = rapi.validation.find_validation_sets(
+        name="Example SelectWords Validation Set"
+    )[0]
     order = new_select_words_order(rapi, validation_set.id)
     order.display_progress_bar()
     result = order.get_results()
     print(result)
-
