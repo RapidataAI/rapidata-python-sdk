@@ -2,7 +2,7 @@
 SelectWords order with validation set
 """
 
-from rapidata import RapidataClient
+from rapidata import RapidataClient, LanguageFilter
 
 
 def create_validation_set(rapi: RapidataClient):
@@ -26,7 +26,7 @@ def new_select_words_order(rapi: RapidataClient, validation_set_id: str):
         sentences=["Hello, welcome to OpenAI's Text-to-Speech demo!"],
         validation_set_id=validation_set_id,
         responses_per_datapoint=25,
-        filters=[rapi.order.filters.Language(["en"])],
+        filters=[LanguageFilter(["en"])],
     ).run()
 
     return order

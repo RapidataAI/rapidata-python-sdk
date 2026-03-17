@@ -1,4 +1,4 @@
-from rapidata import RapidataClient, RapidataSettings
+from rapidata import RapidataClient, AlertOnFastResponse
 
 IMAGE_URLS = [
     "https://assets.rapidata.ai/eac11c3e-ad57-402b-90ed-23378d2ff869.jpg",
@@ -18,7 +18,7 @@ if __name__ == "__main__":
         datapoints=IMAGE_URLS,
         responses_per_datapoint=35,
         settings=[
-            RapidataSettings.Alert_on_fast_response(2500)
+            AlertOnFastResponse(2500)
         ],  # This is optional, it will alert you if the annotators are responding before 2.5 seconds
         validation_set_id="6768a557026456ec851f51f9",  # in this example, the validation set has already been created
     ).run()
