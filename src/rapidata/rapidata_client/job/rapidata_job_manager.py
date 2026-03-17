@@ -40,32 +40,47 @@ class RapidataJobManager:
         datapoints: list[Datapoint],
         responses_per_datapoint: int = 10,
         confidence_threshold: float | None = None,
+        quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
 
-        if not confidence_threshold:
+        if confidence_threshold is not None and quorum_threshold is not None:
+            raise ValueError(
+                "Cannot set both confidence_threshold and quorum_threshold. Choose one stopping strategy."
+            )
+
+        if confidence_threshold is None and quorum_threshold is None:
             from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 
             referee = NaiveReferee(responses=responses_per_datapoint)
+        elif quorum_threshold is not None:
+            from rapidata.rapidata_client.referee._quorum_referee import QuorumReferee
+
+            referee = QuorumReferee(
+                threshold=quorum_threshold,
+                max_votes=responses_per_datapoint,
+            )
         else:
             from rapidata.rapidata_client.referee._early_stopping_referee import (
                 EarlyStoppingReferee,
             )
 
+            assert confidence_threshold is not None
             referee = EarlyStoppingReferee(
                 threshold=confidence_threshold,
                 max_responses=responses_per_datapoint,
             )
 
         logger.debug(
-            "Creating job with parameters: name %s, workflow %s, datapoints %s, responses_per_datapoint %s, confidence_threshold %s, settings %s",
+            "Creating job with parameters: name %s, workflow %s, datapoints %s, responses_per_datapoint %s, confidence_threshold %s, quorum_threshold %s, settings %s",
             name,
             workflow,
             datapoints,
             responses_per_datapoint,
             confidence_threshold,
+            quorum_threshold,
             settings,
         )
         from rapidata.api_client.models.create_dataset_endpoint_input import (
@@ -120,6 +135,7 @@ class RapidataJobManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         confidence_threshold: float | None = None,
+        quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
@@ -143,6 +159,9 @@ class RapidataJobManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
+            quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
+                If provided, the classification datapoint will stop after the quorum is reached or at the number of responses, whatever happens first.
+                Cannot be used together with confidence_threshold.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
                 If provided has to be the same length as datapoints.\n
@@ -171,6 +190,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 confidence_threshold=confidence_threshold,
+                quorum_threshold=quorum_threshold,
                 settings=settings,
             )
 
@@ -185,6 +205,7 @@ class RapidataJobManager:
         media_contexts: list[str] | None = None,
         a_b_names: list[str] | None = None,
         confidence_threshold: float | None = None,
+        quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
@@ -216,6 +237,9 @@ class RapidataJobManager:
                 If not provided, the results will be shown as "A" and "B".
             confidence_threshold (float, optional): The probability threshold for the comparison. Defaults to None.\n
                 If provided, the comparison datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
+            quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
+                If provided, the comparison datapoint will stop after the quorum is reached or at the number of responses, whatever happens first.
+                Cannot be used together with confidence_threshold.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -251,6 +275,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 confidence_threshold=confidence_threshold,
+                quorum_threshold=quorum_threshold,
                 settings=settings,
             )
 

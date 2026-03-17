@@ -1,19 +1,27 @@
-# Early Stopping Based on Confidence
+# Early Stopping
 
-To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers an Early Stopping feature based on confidence thresholds. This feature allows you to automatically stop collecting responses for a datapoint once a specified confidence level is reached, saving time and resources without compromising quality.
+To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers Early Stopping features that automatically stop collecting responses for a datapoint once a stopping condition is met, saving time and resources without compromising quality.
 
+There are two early stopping strategies:
+
+- **Confidence Stopping**: Stops when a statistical confidence threshold is reached, using labeler trust scores.
+- **Quorum Stopping**: Stops when a fixed number of responses agree on the same answer.
+
+You can use one or the other, but not both at the same time.
 
 ## Why Use Early Stopping?
 
-In traditional data labeling workflows, you might request a fixed number of responses per datapoint to ensure accuracy. However, once a consensus is reached with high confidence, continuing to collect more responses becomes redundant and incurs unnecessary costs.
+In traditional data labeling workflows, you might request a fixed number of responses per datapoint to ensure accuracy. However, once a consensus is reached, continuing to collect more responses becomes redundant and incurs unnecessary costs.
 
 Early Stopping addresses this by:
 
-- **Reducing Costs**: Stop collecting responses when sufficient confidence is achieved.
+- **Reducing Costs**: Stop collecting responses when sufficient agreement is achieved.
 - **Improving Efficiency**: Accelerate the labeling process by focusing resources where they are most needed.
-- **Maintaining Quality**: Ensure that each datapoint meets your specified confidence level before stopping.
+- **Maintaining Quality**: Ensure that each datapoint meets your specified stopping condition before stopping.
 
-## How it Works
+## Confidence Stopping
+
+### How it Works
 
 The Early Stopping feature leverages the trustworthiness, quantified through their `userScores`, to calculate the confidence level of each category for any given datapoint.
 
@@ -28,7 +36,7 @@ We've created a plot based on empirical data aided by simulations to give you an
 
 There are a few things to keep in mind when interpreting the results:
 
-- **Unambiguous Scenario**: The graph represents an ideal situation such as in the [example below](#using-early-stopping-in-your-job) with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.
+- **Unambiguous Scenario**: The graph represents an ideal situation such as in the [example below](#using-confidence-stopping-in-your-job) with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.
 - **Real-World Variability**: Actual required responses may vary based on task complexity.
 - **Guidance Tool**: Use the graph as a reference to set realistic expectations for your jobs.
 - **Response Overflow**: The number of responses per datapoint may exceed the specified amount due to multiple users answering simultaneously.
@@ -46,11 +54,11 @@ There are a few things to keep in mind when interpreting the results:
 
 >**Note:** The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
 
-## Using Early Stopping in Your Job
+### Using Confidence Stopping in Your Job
 
-Implementing Early Stopping is straightforward. You simply add the confidence threshold as a parameter when creating the job definition.
+You simply add the `confidence_threshold` parameter when creating the job definition.
 
-### Example: Classification Job with Early Stopping
+#### Example: Classification Job with Confidence Stopping
 
 ```python
 from rapidata import RapidataClient
@@ -91,16 +99,16 @@ In this example:
 
 We'd expect this to take roughly 4 responses to reach the 99% confidence level.
 
-## When to Use Early Stopping
+### When to Use Confidence Stopping
 
-We recommend using Early Stopping when:
+We recommend using Confidence Stopping when:
 
 - **Cost Efficiency**: You want to optimize costs by reducing the number of responses per datapoint.
 - **Clear Correct Answer**: The task has a clear correct answer, and you're not interested in a distribution.
 
-## Analyzing Early Stopping Results
+### Analyzing Confidence Stopping Results
 
-When using Early Stopping, the [results](understanding_the_results.md) will additionally include a `confidencePerCategory` field for each datapoint. This field shows the confidence level for each of the categories in the task.
+When using Confidence Stopping, the [results](understanding_the_results.md) will additionally include a `confidencePerCategory` field for each datapoint. This field shows the confidence level for each of the categories in the task.
 
 Example:
 ```json
@@ -177,3 +185,74 @@ Example:
     }
 }
 ```
+
+---
+
+## Quorum Stopping
+
+### How it Works
+
+Quorum Stopping uses a simple vote-counting approach. A task is completed when:
+
+1. A minimum number of responses (`quorum_threshold`) agree on the same answer, **OR**
+2. Quorum becomes mathematically impossible to reach, **OR**
+3. The maximum number of votes (`responses_per_datapoint`) is reached.
+
+For example, with `quorum_threshold=7` and `responses_per_datapoint=10`:
+
+- The task completes when 7 responses agree (quorum reached).
+- The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).
+- The task completes after 10 total votes if neither condition is met.
+
+>**Note:** Quorum Stopping is supported for the Classification and Comparison workflows, just like Confidence Stopping.
+
+### Using Quorum Stopping in Your Job
+
+You add the `quorum_threshold` parameter when creating the job definition.
+
+#### Example: Classification Job with Quorum Stopping
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Create audience with qualification example
+audience = client.audience.create_audience(name="Animal Classification Audience")
+audience.add_classification_example(
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
+    datapoint="https://assets.rapidata.ai/cat.jpeg",
+    truth=["Cat"]
+)
+
+# Create job definition with quorum stopping
+job_definition = client.job.create_classification_job_definition(
+    name="Test Classification with Quorum Stopping",
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
+    datapoints=["https://assets.rapidata.ai/dog.jpeg"],
+    responses_per_datapoint=10,
+    quorum_threshold=7,
+)
+
+# Preview and run
+job_definition.preview()
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+In this example:
+
+- `responses_per_datapoint=10`: Sets the maximum number of responses per datapoint.
+- `quorum_threshold=7`: Specifies that data collection for a datapoint should stop once 7 responses agree on the same answer.
+
+### When to Use Quorum Stopping
+
+Quorum Stopping is a good choice when:
+
+- **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
+- **Predictable Costs**: You want to set an upper bound on responses while still allowing early termination.
+- **Clear Correct Answer**: The task has a clear correct answer, and you expect most labelers to agree.
