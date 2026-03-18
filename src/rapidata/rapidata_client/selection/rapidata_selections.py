@@ -1,11 +1,9 @@
-from rapidata.rapidata_client.selection import (
-    DemographicSelection,
-    LabelingSelection,
-    ValidationSelection,
-    ConditionalValidationSelection,
-    CappedSelection,
-    ShufflingSelection,
-)
+from rapidata.rapidata_client.selection.demographic_selection import DemographicSelection
+from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
+from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
+from rapidata.rapidata_client.selection.conditional_validation_selection import ConditionalValidationSelection
+from rapidata.rapidata_client.selection.capped_selection import CappedSelection
+from rapidata.rapidata_client.selection.shuffling_selection import ShufflingSelection
 
 
 class RapidataSelections:

@@ -1,13 +1,11 @@
-from rapidata.rapidata_client.settings import (
-    AlertOnFastResponse,
-    TranslationBehaviour,
-    FreeTextMinimumCharacters,
-    NoShuffle,
-    PlayVideoUntilTheEnd,
-    AllowNeitherBoth,
-    SwapContextInstruction,
-    MuteVideo,
-)
+from rapidata.rapidata_client.settings.alert_on_fast_response import AlertOnFastResponse
+from rapidata.rapidata_client.settings.translation_behaviour import TranslationBehaviour
+from rapidata.rapidata_client.settings.free_text_minimum_characters import FreeTextMinimumCharacters
+from rapidata.rapidata_client.settings.no_shuffle import NoShuffle
+from rapidata.rapidata_client.settings.play_video_until_the_end import PlayVideoUntilTheEnd
+from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBoth
+from rapidata.rapidata_client.settings.swap_context_instruction import SwapContextInstruction
+from rapidata.rapidata_client.settings.mute_video import MuteVideo
 
 
 class RapidataSettings:

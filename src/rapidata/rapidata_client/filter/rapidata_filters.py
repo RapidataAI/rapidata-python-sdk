@@ -1,10 +1,8 @@
-from rapidata.rapidata_client.filter import (
-    CountryFilter,
-    LanguageFilter,
-    NotFilter,
-    OrFilter,
-    AndFilter,
-)
+from rapidata.rapidata_client.filter.country_filter import CountryFilter
+from rapidata.rapidata_client.filter.language_filter import LanguageFilter
+from rapidata.rapidata_client.filter.not_filter import NotFilter
+from rapidata.rapidata_client.filter.or_filter import OrFilter
+from rapidata.rapidata_client.filter.and_filter import AndFilter
 
 
 class RapidataFilters:
