@@ -16,12 +16,12 @@ class RapidataSelections:
     As an example, a session might be 1 validation task, 2 labeling tasks.
 
     Attributes:
-        labeling (LabelingSelection): Decides how many actual datapoints you want to show per session.
-        validation (ValidationSelection): Decides how many validation rapids you want to show per session.
-        conditional_validation (ConditionalValidationSelection): Probabilistically decides how many validation rapids you want to show per session based on the user score.
-        demographic (DemographicSelection): Decides if and how many demographic questions you want to show per session.
-        capped (CappedSelection): Takes in different selections and caps the amount of rapids that can be shown.
-        shuffling (ShufflingSelection): Shuffles the selections provided in the list.
+        Labeling (LabelingSelection): Decides how many actual datapoints you want to show per session.
+        Validation (ValidationSelection): Decides how many validation rapids you want to show per session.
+        ConditionalValidation (ConditionalValidationSelection): Probabilistically decides how many validation rapids you want to show per session based on the user score.
+        Demographic (DemographicSelection): Decides if and how many demographic questions you want to show per session.
+        Capped (CappedSelection): Takes in different selections and caps the amount of rapids that can be shown.
+        Shuffling (ShufflingSelection): Shuffles the selections provided in the list.
 
     Example:
         ```python
@@ -35,13 +35,13 @@ class RapidataSelections:
 
     Labeling = LabelingSelection
     Validation = ValidationSelection
-    Conditional_validation = ConditionalValidationSelection
+    ConditionalValidation = ConditionalValidationSelection
     Demographic = DemographicSelection
     Capped = CappedSelection
     Shuffling = ShufflingSelection
 
     def __str__(self) -> str:
-        return f"RapidataSelections(Labeling={self.Labeling}, Validation={self.Validation}, Conditional_validation={self.Conditional_validation}, Demographic={self.Demographic}, Capped={self.Capped}, Shuffling={self.Shuffling})"
+        return f"RapidataSelections(Labeling={self.Labeling}, Validation={self.Validation}, ConditionalValidation={self.ConditionalValidation}, Demographic={self.Demographic}, Capped={self.Capped}, Shuffling={self.Shuffling})"
 
     def __repr__(self) -> str:
         return self.__str__()

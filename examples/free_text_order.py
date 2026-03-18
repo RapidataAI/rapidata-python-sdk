@@ -10,7 +10,7 @@ def get_prompt_ideas(rapi: RapidataClient):
         name="Example prompt generation",
         instruction="What would you like to ask an AI? please spell out the question",
         datapoints=["https://assets.rapidata.ai/ai_question.png"],
-        settings=[rapi.order.settings.free_text_minimum_characters(5)]
+        settings=[rapi.order.settings.FreeTextMinimumCharacters(5)]
     ).run()
 
     return order

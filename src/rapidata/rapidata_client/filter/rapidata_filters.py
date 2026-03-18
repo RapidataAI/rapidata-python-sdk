@@ -18,11 +18,11 @@ class RapidataFilters:
         This might significantly slow down the number of responses you receive.
 
     Attributes:
-        country (CountryFilter): Filters for users with a specific country.
-        language (LanguageFilter): Filters for users with a specific language.
-        not_filter (NotFilter): Inverts the filter.
-        or_filter (OrFilter): Combines multiple filters with a logical OR operation.
-        and_filter (AndFilter): Combines multiple filters with a logical AND operation.
+        Country (CountryFilter): Filters for users with a specific country.
+        Language (LanguageFilter): Filters for users with a specific language.
+        Not (NotFilter): Inverts the filter.
+        Or (OrFilter): Combines multiple filters with a logical OR operation.
+        And (AndFilter): Combines multiple filters with a logical AND operation.
 
     Example:
         ```python
@@ -46,6 +46,6 @@ class RapidataFilters:
 
     Country = CountryFilter
     Language = LanguageFilter
-    Not_filter = NotFilter
-    Or_filter = OrFilter
-    And_filter = AndFilter
+    Not = NotFilter
+    Or = OrFilter
+    And = AndFilter
