@@ -114,6 +114,16 @@ class {{classname}}:
         # process the query parameters
 {{#queryParams}}
         if {{paramName}} is not None:
+            {{#isDeepObject}}
+            _param_val = {{paramName}}
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('{{baseName}}[' + _k + ']', _v))
+            {{/isDeepObject}}
+            {{^isDeepObject}}
             {{#isDateTime}}
             if isinstance({{paramName}}, datetime):
                 _query_params.append(
@@ -143,6 +153,7 @@ class {{classname}}:
             {{^isDateTime}}{{^isDate}}
             _query_params.append(('{{baseName}}', {{paramName}}{{#isEnumRef}}.value{{/isEnumRef}}))
             {{/isDate}}{{/isDateTime}}
+            {{/isDeepObject}}
 {{/queryParams}}
         # process the header parameters
 {{#headerParams}}

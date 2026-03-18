@@ -5397,17 +5397,29 @@ class OrderApi:
             _query_params.append(('sort', sort))
             
         if customer_mail is not None:
-            
-            _query_params.append(('customer_mail', customer_mail))
-            
+            _param_val = customer_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('customer_mail[' + _k + ']', _v))
         if last_order_date is not None:
-            
-            _query_params.append(('last_order_date', last_order_date))
-            
+            _param_val = last_order_date
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('last_order_date[' + _k + ']', _v))
         if last_order_name is not None:
-            
-            _query_params.append(('last_order_name', last_order_name))
-            
+            _param_val = last_order_name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('last_order_name[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -5780,25 +5792,45 @@ class OrderApi:
             _query_params.append(('sort', sort))
             
         if order_name is not None:
-            
-            _query_params.append(('order_name', order_name))
-            
+            _param_val = order_name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('order_name[' + _k + ']', _v))
         if state is not None:
-            
-            _query_params.append(('state', state))
-            
+            _param_val = state
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('state[' + _k + ']', _v))
         if order_date is not None:
-            
-            _query_params.append(('order_date', order_date))
-            
+            _param_val = order_date
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('order_date[' + _k + ']', _v))
         if customer_mail is not None:
-            
-            _query_params.append(('customer_mail', customer_mail))
-            
+            _param_val = customer_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('customer_mail[' + _k + ']', _v))
         if is_public is not None:
-            
-            _query_params.append(('is_public', is_public))
-            
+            _param_val = is_public
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('is_public[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter

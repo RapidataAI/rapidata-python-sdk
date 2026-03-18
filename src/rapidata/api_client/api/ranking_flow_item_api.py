@@ -354,13 +354,21 @@ class RankingFlowItemApi:
             _query_params.append(('sort', sort))
             
         if state is not None:
-            
-            _query_params.append(('state', state))
-            
+            _param_val = state
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('state[' + _k + ']', _v))
         if created_at is not None:
-            
-            _query_params.append(('created_at', created_at))
-            
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter

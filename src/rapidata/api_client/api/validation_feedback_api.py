@@ -363,17 +363,29 @@ class ValidationFeedbackApi:
             _query_params.append(('sort', sort))
             
         if user_id is not None:
-            
-            _query_params.append(('user_id', user_id))
-            
+            _param_val = user_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('user_id[' + _k + ']', _v))
         if feedback is not None:
-            
-            _query_params.append(('feedback', feedback))
-            
+            _param_val = feedback
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('feedback[' + _k + ']', _v))
         if created_at is not None:
-            
-            _query_params.append(('created_at', created_at))
-            
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter

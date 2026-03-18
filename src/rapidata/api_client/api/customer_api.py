@@ -363,21 +363,37 @@ class CustomerApi:
             _query_params.append(('sort', sort))
             
         if id is not None:
-            
-            _query_params.append(('id', id))
-            
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
         if email is not None:
-            
-            _query_params.append(('email', email))
-            
+            _param_val = email
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('email[' + _k + ']', _v))
         if organization_name is not None:
-            
-            _query_params.append(('organization_name', organization_name))
-            
+            _param_val = organization_name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('organization_name[' + _k + ']', _v))
         if organization_id is not None:
-            
-            _query_params.append(('organization_id', organization_id))
-            
+            _param_val = organization_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('organization_id[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
