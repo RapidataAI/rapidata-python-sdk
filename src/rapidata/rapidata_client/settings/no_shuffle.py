@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+import warnings
+
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class NoShuffle(RapidataSetting):
+class NoShuffleSetting(RapidataSetting):
     """
     Only for classification and compare tasks. If true, the order of the categories / images will not be shuffled and presented in the same order as specified.
 
@@ -16,3 +20,15 @@ class NoShuffle(RapidataSetting):
             raise ValueError("The value must be a boolean.")
 
         super().__init__(key="no_shuffle", value=value)
+
+
+class NoShuffle(NoShuffleSetting):
+    """Deprecated: Use :class:`NoShuffleSetting` instead."""
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "NoShuffle is deprecated, use NoShuffleSetting instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)

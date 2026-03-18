@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+import warnings
+
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class SwapContextInstruction(RapidataSetting):
+class SwapContextInstructionSetting(RapidataSetting):
     """
     Swap the place of the context and instruction.
 
@@ -18,3 +22,15 @@ class SwapContextInstruction(RapidataSetting):
             raise ValueError("The value must be a boolean.")
 
         super().__init__(key="swap_question_and_prompt", value=value)
+
+
+class SwapContextInstruction(SwapContextInstructionSetting):
+    """Deprecated: Use :class:`SwapContextInstructionSetting` instead."""
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "SwapContextInstruction is deprecated, use SwapContextInstructionSetting instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)

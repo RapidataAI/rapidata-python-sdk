@@ -1,12 +1,12 @@
 from .models import TranslationBehaviourOptions
-from .alert_on_fast_response import AlertOnFastResponse
-from .translation_behaviour import TranslationBehaviour
-from .free_text_minimum_characters import FreeTextMinimumCharacters
-from .no_shuffle import NoShuffle
-from .play_video_until_the_end import PlayVideoUntilTheEnd
+from .alert_on_fast_response import AlertOnFastResponseSetting, AlertOnFastResponse
+from .translation_behaviour import TranslationBehaviourSetting, TranslationBehaviour
+from .free_text_minimum_characters import FreeTextMinimumCharactersSetting, FreeTextMinimumCharacters
+from .no_shuffle import NoShuffleSetting, NoShuffle
+from .play_video_until_the_end import PlayVideoUntilTheEndSetting, PlayVideoUntilTheEnd
 from .custom_setting import CustomSetting
 from ._rapidata_setting import RapidataSetting
-from .allow_neither_both import AllowNeitherBoth
-from .swap_context_instruction import SwapContextInstruction
-from .mute_video import MuteVideo
+from .allow_neither_both import AllowNeitherBothSetting, AllowNeitherBoth
+from .swap_context_instruction import SwapContextInstructionSetting, SwapContextInstruction
+from .mute_video import MuteVideoSetting, MuteVideo
 from .rapidata_settings import RapidataSettings

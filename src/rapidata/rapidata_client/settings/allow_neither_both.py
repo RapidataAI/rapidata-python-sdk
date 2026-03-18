@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+import warnings
+
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class AllowNeitherBoth(RapidataSetting):
+class AllowNeitherBothSetting(RapidataSetting):
     """
     Set whether to allow neither or both options.
     This setting only works for compare orders.
@@ -15,3 +19,15 @@ class AllowNeitherBoth(RapidataSetting):
         if not isinstance(value, bool):
             raise ValueError("The value must be a boolean.")
         super().__init__(key="compare_unsure", value=value)
+
+
+class AllowNeitherBoth(AllowNeitherBothSetting):
+    """Deprecated: Use :class:`AllowNeitherBothSetting` instead."""
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "AllowNeitherBoth is deprecated, use AllowNeitherBothSetting instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)

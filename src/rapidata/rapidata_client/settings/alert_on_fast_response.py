@@ -1,8 +1,12 @@
+from __future__ import annotations
+
+import warnings
+
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 from rapidata.rapidata_client.config import managed_print
 
 
-class AlertOnFastResponse(RapidataSetting):
+class AlertOnFastResponseSetting(RapidataSetting):
     """
     Gives an alert as a pop up on the UI when the response time is less than the milliseconds.
 
@@ -23,3 +27,15 @@ class AlertOnFastResponse(RapidataSetting):
             raise ValueError("The alert must be greater than or equal to 0.")
 
         super().__init__(key="alert_on_fast_response", value=threshold)
+
+
+class AlertOnFastResponse(AlertOnFastResponseSetting):
+    """Deprecated: Use :class:`AlertOnFastResponseSetting` instead."""
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "AlertOnFastResponse is deprecated, use AlertOnFastResponseSetting instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)
