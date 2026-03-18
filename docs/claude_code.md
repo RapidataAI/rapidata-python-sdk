@@ -56,7 +56,7 @@ The plugin gives Claude detailed knowledge of:
 - **Audiences** — finding curated audiences, creating custom audiences with qualification examples, applying demographic filters
 - **Flows** — continuous ranking without full job setup
 - **MRI / Benchmarks** — comparing and ranking AI models on leaderboards
-- **Settings** — `NoShuffleSetting`, `AllowNeitherBothSetting`, `Markdown`, and other display options
+- **Settings** — `NoShuffleSetting`, `AllowNeitherBothSetting`, `MarkdownSetting`, and other display options
 - **Error handling** — working with `FailedUploadException` for partial upload failures
 - **Legacy order API** — backwards-compatible order creation
 

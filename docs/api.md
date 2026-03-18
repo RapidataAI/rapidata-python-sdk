@@ -39,6 +39,7 @@ classDiagram
         +AllowNeitherBoth
         +SwapContextInstruction
         +MuteVideo
+        +Markdown
     }
 
     class RapidataSelections {

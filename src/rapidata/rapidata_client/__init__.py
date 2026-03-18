@@ -43,6 +43,8 @@ from .settings import (
     SwapContextInstruction,
     MuteVideoSetting,
     MuteVideo,
+    MarkdownSetting,
+    Markdown,
 )
 from .filter import (
     CountryFilter,

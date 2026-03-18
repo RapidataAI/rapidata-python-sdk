@@ -265,19 +265,19 @@ job_definition = client.job.create_classification_job_definition(
 )
 ```
 
-#### `Markdown()`
+#### `MarkdownSetting()`
 
 Enables limited markdown rendering for text datapoints. Useful when comparing formatted text like LLM outputs.
 
 ```python
-from rapidata import Markdown
+from rapidata import MarkdownSetting
 
 job_definition = client.job.create_compare_job_definition(
     name="LLM Response Comparison",
     instruction="Which response is better formatted?",
     datapoints=[["**Bold** and _italic_", "Plain text only"]],
     data_type="text",
-    settings=[Markdown()]
+    settings=[MarkdownSetting()]
 )
 ```
 

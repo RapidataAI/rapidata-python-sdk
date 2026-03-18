@@ -6,6 +6,7 @@ from rapidata.rapidata_client.settings.play_video_until_the_end import PlayVideo
 from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting
 from rapidata.rapidata_client.settings.swap_context_instruction import SwapContextInstructionSetting
 from rapidata.rapidata_client.settings.mute_video import MuteVideoSetting
+from rapidata.rapidata_client.settings.markdown import MarkdownSetting
 
 
 class RapidataSettings:
@@ -23,6 +24,7 @@ class RapidataSettings:
         AllowNeitherBoth (AllowNeitherBothSetting): Only for compare tasks. If true, the users will be able to select neither or both instead of exclusively one of the options.
         SwapContextInstruction (SwapContextInstructionSetting): Swap the place of the context and instruction.
         MuteVideo (MuteVideoSetting): Mute the video.
+        Markdown (MarkdownSetting): Enables limited markdown rendering for text datapoints.
 
     Example:
         ```python
@@ -41,6 +43,7 @@ class RapidataSettings:
     AllowNeitherBoth = AllowNeitherBothSetting
     SwapContextInstruction = SwapContextInstructionSetting
     MuteVideo = MuteVideoSetting
+    Markdown = MarkdownSetting
 
     def __str__(self) -> str:
         return f"RapidataSettings(AlertOnFastResponse={self.AlertOnFastResponse}, TranslationBehaviour={self.TranslationBehaviour}, FreeTextMinimumCharacters={self.FreeTextMinimumCharacters}, NoShuffle={self.NoShuffle}, PlayVideoUntilTheEnd={self.PlayVideoUntilTheEnd}, AllowNeitherBoth={self.AllowNeitherBoth}, SwapContextInstruction={self.SwapContextInstruction}, MuteVideo={self.MuteVideo})"

@@ -66,6 +66,7 @@ from rapidata.rapidata_client.settings.no_shuffle import NoShuffleSetting, NoShu
 from rapidata.rapidata_client.settings.play_video_until_the_end import (
     PlayVideoUntilTheEndSetting, PlayVideoUntilTheEnd,
 )
+from rapidata.rapidata_client.settings.markdown import MarkdownSetting, Markdown
 from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings
 from rapidata.rapidata_client.settings.translation_behaviour import TranslationBehaviourSetting, TranslationBehaviour
 from rapidata.rapidata_client.settings.models.translation_behaviour_options import (
@@ -140,6 +141,8 @@ __all__ = [
     "NoShuffle",
     "PlayVideoUntilTheEndSetting",
     "PlayVideoUntilTheEnd",
+    "MarkdownSetting",
+    "Markdown",
     "RapidataSettings",
     "TranslationBehaviourSetting",
     "TranslationBehaviour",

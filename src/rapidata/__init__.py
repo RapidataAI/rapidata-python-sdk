@@ -35,6 +35,8 @@ from .rapidata_client import (
     PlayVideoUntilTheEnd,
     MuteVideoSetting,
     MuteVideo,
+    MarkdownSetting,
+    Markdown,
     CustomSetting,
     AllowNeitherBothSetting,
     AllowNeitherBoth,
