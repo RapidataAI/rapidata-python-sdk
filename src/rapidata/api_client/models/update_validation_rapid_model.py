@@ -33,7 +33,8 @@ class UpdateValidationRapidModel(BaseModel):
     context: Optional[StrictStr] = Field(default=None, description="An optional text context that will be shown to the user.")
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability that if the user answers at random that he'll be correct.", alias="randomCorrectProbability")
-    __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability"]
+    sort_index: Optional[StrictInt] = Field(default=None, description="Controls the serving order of rapids within a target group.", alias="sortIndex")
+    __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability", "sortIndex"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -105,6 +106,11 @@ class UpdateValidationRapidModel(BaseModel):
         if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
             _dict['randomCorrectProbability'] = None
 
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         return _dict
 
     @classmethod
@@ -121,7 +127,8 @@ class UpdateValidationRapidModel(BaseModel):
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "randomCorrectProbability": obj.get("randomCorrectProbability")
+            "randomCorrectProbability": obj.get("randomCorrectProbability"),
+            "sortIndex": obj.get("sortIndex")
         })
         return _obj
 

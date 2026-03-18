@@ -36,7 +36,8 @@ class FlowGetNameParameter(BaseModel):
     starts_with: Optional[StrictStr] = None
     ends_with: Optional[StrictStr] = None
     var_in: Optional[StrictStr] = Field(default=None, alias="in")
-    __properties: ClassVar[List[str]] = ["eq", "neq", "gt", "gte", "lt", "lte", "contains", "starts_with", "ends_with", "in"]
+    not_contains: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["eq", "neq", "gt", "gte", "lt", "lte", "contains", "starts_with", "ends_with", "in", "not_contains"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -98,7 +99,8 @@ class FlowGetNameParameter(BaseModel):
             "contains": obj.get("contains"),
             "starts_with": obj.get("starts_with"),
             "ends_with": obj.get("ends_with"),
-            "in": obj.get("in")
+            "in": obj.get("in"),
+            "not_contains": obj.get("not_contains")
         })
         return _obj
 

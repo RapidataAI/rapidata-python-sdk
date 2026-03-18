@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.get_workflow_results_result_response import GetWorkflowResultsResultResponse
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -37,7 +37,8 @@ class GetWorkflowResultsResult(BaseModel):
     state: RapidState
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetModel] = Field(default=None, alias="contextAsset")
-    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state", "context", "contextAsset"]
+    decisiveness: Optional[Union[StrictFloat, StrictInt]] = None
+    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state", "context", "contextAsset", "decisiveness"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -122,7 +123,8 @@ class GetWorkflowResultsResult(BaseModel):
             "responses": [GetWorkflowResultsResultResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
             "state": obj.get("state"),
             "context": obj.get("context"),
-            "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
+            "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "decisiveness": obj.get("decisiveness")
         })
         return _obj
 

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
@@ -32,14 +32,28 @@ class UpdateAudienceRequest(BaseModel):
     description: Optional[StrictStr] = Field(default=None, description="The new description for the audience. Supports markdown. Set to null to remove.")
     filters: Optional[List[IAudienceFilter]] = None
     logo: Optional[ExistingAssetInput] = None
-    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  When graduated count is below this, KayzenDistillingAudienceId is added to campaign boosting.", alias="minGraduatedForDistillingBoost")
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  When graduated count is below this, external distilling audience ID is added to campaign boosting.", alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  When distilling count is below this, GlobalBoostLevel is set above zero.", alias="minDistillingForGlobalBoost")
     minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The minimum user score used to determine whether a user can be included in an audience.", alias="minimumUserScore")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Set to null to disable this exit condition.", alias="maxDistillingResponses")
     min_distilling_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the score floor check applies.  Users need at least this many responses before they can be kicked out for low score.  Set to null to apply score floor check from the first response.", alias="minDistillingResponses")
     min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum user score floor - users below this score exit the distilling campaign  (only after completing MinDistillingResponses).  Set to null to disable this exit condition.", alias="minDistillingScoreFloor")
     max_distilling_sessions: Optional[StrictInt] = Field(default=None, description="Maximum sessions (rapid retrievals) before user exits the distilling campaign.  Set to a value to enable session-based exit condition.", alias="maxDistillingSessions")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "minimumUserScore", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "maxDistillingSessions"]
+    inactivity_drop_days: Optional[StrictInt] = Field(default=None, description="Number of days of inactivity before a distilling user is dropped.  Set to null to disable this exit condition.", alias="inactivityDropDays")
+    min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate (responses / sessions) before a user is dropped.  Set to null to disable this exit condition.", alias="minSubmissionRate")
+    min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Set to null to apply from the first session.", alias="minSessionsForSubmissionRate")
+    distilling_retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "minimumUserScore", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "distillingRetrievalMode"]
+
+    @field_validator('distilling_retrieval_mode')
+    def distilling_retrieval_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['Random', 'Shuffled', 'Sequential']):
+            raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -145,6 +159,21 @@ class UpdateAudienceRequest(BaseModel):
         if self.max_distilling_sessions is None and "max_distilling_sessions" in self.model_fields_set:
             _dict['maxDistillingSessions'] = None
 
+        # set to None if inactivity_drop_days (nullable) is None
+        # and model_fields_set contains the field
+        if self.inactivity_drop_days is None and "inactivity_drop_days" in self.model_fields_set:
+            _dict['inactivityDropDays'] = None
+
+        # set to None if min_submission_rate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_submission_rate is None and "min_submission_rate" in self.model_fields_set:
+            _dict['minSubmissionRate'] = None
+
+        # set to None if min_sessions_for_submission_rate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_sessions_for_submission_rate is None and "min_sessions_for_submission_rate" in self.model_fields_set:
+            _dict['minSessionsForSubmissionRate'] = None
+
         return _dict
 
     @classmethod
@@ -167,7 +196,11 @@ class UpdateAudienceRequest(BaseModel):
             "maxDistillingResponses": obj.get("maxDistillingResponses"),
             "minDistillingResponses": obj.get("minDistillingResponses"),
             "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
-            "maxDistillingSessions": obj.get("maxDistillingSessions")
+            "maxDistillingSessions": obj.get("maxDistillingSessions"),
+            "inactivityDropDays": obj.get("inactivityDropDays"),
+            "minSubmissionRate": obj.get("minSubmissionRate"),
+            "minSessionsForSubmissionRate": obj.get("minSessionsForSubmissionRate"),
+            "distillingRetrievalMode": obj.get("distillingRetrievalMode")
         })
         return _obj
 

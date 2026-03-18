@@ -2980,7 +2980,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "ForkBenchmarkResult": {
@@ -3694,6 +3695,9 @@
             "$ref": "#/components/schemas/ICampaignFilterAndFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterAudienceStateFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
           },
           {
@@ -3734,6 +3738,7 @@
           "propertyName": "_t",
           "mapping": {
             "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
+            "AudienceStateFilter": "#/components/schemas/ICampaignFilterAudienceStateFilter",
             "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
             "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter",
             "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
@@ -3777,6 +3782,31 @@
               "$ref": "#/components/schemas/ICampaignFilter"
             },
             "nullable": true
+          }
+        }
+      },
+      "ICampaignFilterAudienceStateFilter": {
+        "required": [
+          "audienceId",
+          "requiredState",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AudienceStateFilter"
+            ],
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "requiredState": {
+            "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
           }
         }
       },
@@ -5384,6 +5414,13 @@
             "type": "string"
           }
         }
+      },
+      "SimplifiedAudienceUserState": {
+        "enum": [
+          "Distilling",
+          "Graduated",
+          "Dropped"
+        ]
       },
       "SortCriterion": {
         "required": [

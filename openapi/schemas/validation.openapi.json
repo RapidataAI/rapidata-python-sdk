@@ -822,7 +822,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "GetAvailableValidationSetsResult": {

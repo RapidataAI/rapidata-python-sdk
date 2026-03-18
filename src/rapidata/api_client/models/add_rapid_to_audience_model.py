@@ -38,7 +38,7 @@ class AddRapidToAudienceModel(BaseModel):
     context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user about the rapid.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset that provides additional context to the user about the rapid.", alias="contextAsset")
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
-    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this rapid should be treated as commonsense validation.  When true, incorrect answers are not accepted and the rapid affects global score.  When null, AI auto-detection will determine if the rapid is common sense (defaults to false initially).  Defaults to null (AI auto-detection enabled).", alias="isCommonSense")
+    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this rapid should be treated as commonsense validation.", alias="isCommonSense")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "featureFlags", "isCommonSense"]
 
     model_config = ConfigDict(

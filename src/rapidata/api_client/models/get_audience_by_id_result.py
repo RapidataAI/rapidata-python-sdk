@@ -22,6 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.audience_status import AudienceStatus
 from rapidata.api_client.models.boost_level import BoostLevel
+from rapidata.api_client.models.distilling_retrieval_mode import DistillingRetrievalMode
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
 from typing_extensions import Self
@@ -43,9 +44,21 @@ class GetAudienceByIdResult(BaseModel):
     is_distilling: StrictBool = Field(alias="isDistilling")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
+    minimum_user_score: Union[StrictFloat, StrictInt] = Field(alias="minimumUserScore")
+    max_distilling_responses: Optional[StrictInt] = Field(default=None, alias="maxDistillingResponses")
+    min_distilling_responses: Optional[StrictInt] = Field(default=None, alias="minDistillingResponses")
+    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minDistillingScoreFloor")
+    max_distilling_sessions: Optional[StrictInt] = Field(default=None, alias="maxDistillingSessions")
+    inactivity_drop_days: Optional[StrictInt] = Field(default=None, alias="inactivityDropDays")
+    min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minSubmissionRate")
+    min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, alias="minSessionsForSubmissionRate")
+    distilling_retrieval_mode: DistillingRetrievalMode = Field(alias="distillingRetrievalMode")
     boost_level: BoostLevel = Field(alias="boostLevel")
     random_admission_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomAdmissionProbability")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "boostLevel", "randomAdmissionProbability"]
+    health: Optional[Union[StrictFloat, StrictInt]] = None
+    graduated: Optional[StrictInt] = None
+    dropped: Optional[StrictInt] = None
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "minimumUserScore", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "distillingRetrievalMode", "boostLevel", "randomAdmissionProbability", "health", "graduated", "dropped"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -128,8 +141,20 @@ class GetAudienceByIdResult(BaseModel):
             "isDistilling": obj.get("isDistilling"),
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),
             "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
+            "minimumUserScore": obj.get("minimumUserScore"),
+            "maxDistillingResponses": obj.get("maxDistillingResponses"),
+            "minDistillingResponses": obj.get("minDistillingResponses"),
+            "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
+            "maxDistillingSessions": obj.get("maxDistillingSessions"),
+            "inactivityDropDays": obj.get("inactivityDropDays"),
+            "minSubmissionRate": obj.get("minSubmissionRate"),
+            "minSessionsForSubmissionRate": obj.get("minSessionsForSubmissionRate"),
+            "distillingRetrievalMode": obj.get("distillingRetrievalMode"),
             "boostLevel": obj.get("boostLevel"),
-            "randomAdmissionProbability": obj.get("randomAdmissionProbability")
+            "randomAdmissionProbability": obj.get("randomAdmissionProbability"),
+            "health": obj.get("health"),
+            "graduated": obj.get("graduated"),
+            "dropped": obj.get("dropped")
         })
         return _obj
 

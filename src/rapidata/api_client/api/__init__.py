@@ -5,6 +5,7 @@ from rapidata.api_client.api.asset_api import AssetApi
 from rapidata.api_client.api.audience_api import AudienceApi
 from rapidata.api_client.api.batch_upload_api import BatchUploadApi
 from rapidata.api_client.api.benchmark_api import BenchmarkApi
+from rapidata.api_client.api.cache_api import CacheApi
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.client_api import ClientApi
 from rapidata.api_client.api.customer_api import CustomerApi
@@ -12,6 +13,7 @@ from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
 from rapidata.api_client.api.datapoint_api import DatapointApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.evaluation_workflow_api import EvaluationWorkflowApi
+from rapidata.api_client.api.examples_api import ExamplesApi
 from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.flow_api import FlowApi
 from rapidata.api_client.api.flow_item_api import FlowItemApi

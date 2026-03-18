@@ -306,6 +306,57 @@
         }
       }
     },
+    "/audience/{audienceId}/recreate-external-audiences": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Recreates external audiences for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The unique identifier of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Configuration for which external audiences to recreate.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecreateExternalAudiencesEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/audience/{audienceId}/resume-distillation": {
       "post": {
         "tags": [
@@ -409,6 +460,222 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateBoostConfigEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/example": {
+      "post": {
+        "tags": [
+          "Examples"
+        ],
+        "summary": "Adds a new example to an audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The unique identifier of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The example data to add.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddExampleToAudienceEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/example/{exampleId}": {
+      "delete": {
+        "tags": [
+          "Examples"
+        ],
+        "summary": "Deletes the specified audience example.",
+        "parameters": [
+          {
+            "name": "exampleId",
+            "in": "path",
+            "description": "The unique identifier of the example to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/examples": {
+      "get": {
+        "tags": [
+          "Examples"
+        ],
+        "summary": "Queries all examples for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The unique identifier of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryExamplesForAudienceEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/example/{exampleId}": {
+      "patch": {
+        "tags": [
+          "Examples"
+        ],
+        "summary": "Updates an example's properties within an audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The unique identifier of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exampleId",
+            "in": "path",
+            "description": "The unique identifier of the example to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The example properties to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceExampleEndpoint_Input"
               }
             }
           },
@@ -591,57 +858,6 @@
         }
       }
     },
-    "/audience/{audienceId}/rapids": {
-      "get": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Queries all rapids for the specified audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsForAudienceResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsForAudienceResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsForAudienceResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/audience/{audienceId}/rapid": {
       "post": {
         "tags": [
@@ -682,12 +898,145 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
+      }
+    },
+    "/audience/{audienceId}/rapids": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Queries all rapids for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsOutput"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsOutput"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsOutput"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
       }
     }
   },
   "components": {
     "schemas": {
+      "AddExampleToAudienceEndpoint_Input": {
+        "required": [
+          "asset",
+          "payload",
+          "randomCorrectProbability"
+        ],
+        "type": "object",
+        "properties": {
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "The asset to use for the example."
+          },
+          "payload": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IExamplePayload"
+              }
+            ],
+            "description": "The payload to use for the example."
+          },
+          "truth": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IExampleTruth"
+              }
+            ],
+            "description": "The ground truth for the example."
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "The probability for an answer to be correct when randomly guessing.",
+            "format": "double"
+          },
+          "explanation": {
+            "type": "string",
+            "description": "An explanation for the users if they answer the example incorrectly.",
+            "nullable": true
+          },
+          "context": {
+            "type": "string",
+            "description": "An optional textual context that provides additional information to the user.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "An optional asset that provides additional context to the user."
+          },
+          "sortIndex": {
+            "type": "integer",
+            "description": "The sort index that controls the serving order of this example within the audience.\n When null, the next sort index is automatically calculated.",
+            "format": "int32"
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlagModel"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The feature flags to enable for the example."
+          },
+          "isCommonSense": {
+            "type": "boolean",
+            "description": "Whether this example should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the example affects global score.\n When null, AI auto-detection will determine if the example is common sense.",
+            "nullable": true
+          }
+        },
+        "description": "Input model for adding an example to an audience."
+      },
       "AddRapidToAudienceModel": {
         "required": [
           "asset",
@@ -757,7 +1106,7 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this rapid should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the rapid affects global score.\n When null, AI auto-detection will determine if the rapid is common sense (defaults to false initially).\n Defaults to null (AI auto-detection enabled).",
+            "description": "Whether this rapid should be treated as commonsense validation.",
             "nullable": true
           }
         },
@@ -891,6 +1240,24 @@
             "description": "Maximum sessions (rapid retrievals) before user exits the distilling campaign.\n Defaults to null (disabled). Set to a value to enable session-based exit condition.",
             "format": "uint32"
           },
+          "inactivityDropDays": {
+            "type": "integer",
+            "description": "Number of days of inactivity before a distilling user is dropped.\n Defaults to null (disabled).",
+            "format": "uint32"
+          },
+          "minSubmissionRate": {
+            "type": "number",
+            "description": "Minimum submission rate (responses / sessions) before a user is dropped.\n Defaults to null (disabled).",
+            "format": "double"
+          },
+          "minSessionsForSubmissionRate": {
+            "type": "integer",
+            "description": "Minimum number of sessions before the submission rate check applies.\n Defaults to null (applies from first session).",
+            "format": "uint32"
+          },
+          "distillingRetrievalMode": {
+            "$ref": "#/components/schemas/DistillingRetrievalMode"
+          },
           "minDistillingForGlobalBoost": {
             "type": "integer",
             "description": "Minimum distilling users before disabling global boost.\n Defaults to 200. Admin-only override.",
@@ -911,6 +1278,28 @@
         "type": "object",
         "properties": {
           "audienceId": {
+            "type": "string"
+          }
+        }
+      },
+      "DistillingRetrievalMode": {
+        "enum": [
+          "Random",
+          "Shuffled",
+          "Sequential"
+        ]
+      },
+      "ExampleCategory": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
             "type": "string"
           }
         }
@@ -996,7 +1385,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "GetAudienceByIdResult": {
@@ -1010,6 +1400,8 @@
           "ownerMail",
           "isPublic",
           "isDistilling",
+          "minimumUserScore",
+          "distillingRetrievalMode",
           "boostLevel"
         ],
         "type": "object",
@@ -1062,12 +1454,59 @@
             "type": "integer",
             "format": "int32"
           },
+          "minimumUserScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxDistillingSessions": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "inactivityDropDays": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minSubmissionRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "minSessionsForSubmissionRate": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "distillingRetrievalMode": {
+            "$ref": "#/components/schemas/DistillingRetrievalMode"
+          },
           "boostLevel": {
             "$ref": "#/components/schemas/BoostLevel"
           },
           "randomAdmissionProbability": {
             "type": "number",
             "format": "double"
+          },
+          "health": {
+            "type": "number",
+            "format": "double"
+          },
+          "graduated": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dropped": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -1458,6 +1897,126 @@
             "type": "string"
           },
           "filters": { }
+        }
+      },
+      "IExamplePayload": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IExamplePayloadClassifyExamplePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IExamplePayloadCompareExamplePayload"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassifyExamplePayload": "#/components/schemas/IExamplePayloadClassifyExamplePayload",
+            "CompareExamplePayload": "#/components/schemas/IExamplePayloadCompareExamplePayload"
+          }
+        }
+      },
+      "IExamplePayloadClassifyExamplePayload": {
+        "required": [
+          "categories",
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyExamplePayload"
+            ],
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExampleCategory"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IExamplePayloadCompareExamplePayload": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareExamplePayload"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          }
+        }
+      },
+      "IExampleTruth": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IExampleTruthClassifyExampleTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IExampleTruthCompareExampleTruth"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassifyExampleTruth": "#/components/schemas/IExampleTruthClassifyExampleTruth",
+            "CompareExampleTruth": "#/components/schemas/IExampleTruthCompareExampleTruth"
+          }
+        }
+      },
+      "IExampleTruthClassifyExampleTruth": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyExampleTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IExampleTruthCompareExampleTruth": {
+        "required": [
+          "winnerId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareExampleTruth"
+            ],
+            "type": "string"
+          },
+          "winnerId": {
+            "type": "string"
+          }
         }
       },
       "IMetadataInput": {
@@ -2750,7 +3309,7 @@
           }
         }
       },
-      "PagedResultOfQueryRapidsForAudienceResult": {
+      "PagedResultOfQueryRapidsOutput": {
         "required": [
           "total",
           "page",
@@ -2774,7 +3333,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/QueryRapidsForAudienceResult"
+              "$ref": "#/components/schemas/QueryRapidsOutput"
             }
           },
           "totalPages": {
@@ -2853,6 +3412,139 @@
           "randomAdmissionProbability": {
             "type": "number",
             "format": "double"
+          },
+          "health": {
+            "type": "number",
+            "format": "double"
+          },
+          "graduated": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dropped": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "QueryExamplesForAudienceEndpoint_Output": {
+        "required": [
+          "id",
+          "asset",
+          "payload",
+          "correctCount",
+          "incorrectCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the example."
+          },
+          "rapidId": {
+            "type": "string",
+            "description": "The ID of the rapid associated with this example.",
+            "nullable": true
+          },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset associated with this example."
+          },
+          "payload": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IExamplePayload"
+              }
+            ],
+            "description": "The payload of the example."
+          },
+          "correctCount": {
+            "type": "integer",
+            "description": "The number of correct responses.",
+            "format": "int32"
+          },
+          "incorrectCount": {
+            "type": "integer",
+            "description": "The number of incorrect responses.",
+            "format": "int32"
+          },
+          "truth": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IExampleTruth"
+              }
+            ],
+            "description": "The truth value of the example."
+          },
+          "context": {
+            "type": "string",
+            "description": "The context text for the example.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The context asset for the example."
+          },
+          "explanation": {
+            "type": "string",
+            "description": "The explanation for the example.",
+            "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "The probability of a random correct answer.",
+            "format": "double"
+          },
+          "isCommonSense": {
+            "type": "boolean",
+            "description": "Whether this example is common sense.",
+            "nullable": true
+          },
+          "sortIndex": {
+            "type": "integer",
+            "description": "The sort index that controls serving order.",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryExamplesForAudienceEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryExamplesForAudienceEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -2929,7 +3621,7 @@
           }
         }
       },
-      "QueryRapidsForAudienceResult": {
+      "QueryRapidsOutput": {
         "required": [
           "id",
           "type",
@@ -3007,7 +3699,8 @@
           "isCommonSense": {
             "type": "boolean"
           }
-        }
+        },
+        "description": "Output model for the backwards-compatible rapids query."
       },
       "RapidState": {
         "enum": [
@@ -3019,6 +3712,18 @@
           "None",
           "Rejected"
         ]
+      },
+      "RecreateExternalAudiencesEndpoint_Input": {
+        "required": [
+          "recreateAll"
+        ],
+        "type": "object",
+        "properties": {
+          "recreateAll": {
+            "type": "boolean",
+            "description": "Whether to recreate all 3 external audiences or only the missing ones."
+          }
+        }
       },
       "RootFilter": {
         "type": "object",
@@ -3088,6 +3793,61 @@
           }
         }
       },
+      "UpdateAudienceExampleEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IExampleTruth"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The truth for the example."
+          },
+          "explanation": {
+            "type": "string",
+            "description": "The optional explanation that will be shown to the user when answering wrong.",
+            "nullable": true
+          },
+          "context": {
+            "type": "string",
+            "description": "An optional text context that will be shown to the user.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "An optional asset that will be used as context to show to the user."
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "The probability that if the user answers at random that they'll be correct.",
+            "format": "double",
+            "nullable": true
+          },
+          "isCommonSense": {
+            "type": "boolean",
+            "description": "Whether this example should be treated as commonsense validation.",
+            "nullable": true
+          },
+          "sortIndex": {
+            "type": "integer",
+            "description": "The sort index that controls the serving order of this example.",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "description": "Input model for updating an audience example."
+      },
       "UpdateAudienceRapidEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -3131,7 +3891,7 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this rapid should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the rapid affects global score.",
+            "description": "Whether this rapid should be treated as commonsense validation.",
             "nullable": true
           }
         },
@@ -3177,7 +3937,7 @@
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
-            "description": "Minimum graduated users before disabling distilling boost.\n When graduated count is below this, KayzenDistillingAudienceId is added to campaign boosting.",
+            "description": "Minimum graduated users before disabling distilling boost.\n When graduated count is below this, external distilling audience ID is added to campaign boosting.",
             "format": "int32",
             "nullable": true
           },
@@ -3216,6 +3976,32 @@
             "description": "Maximum sessions (rapid retrievals) before user exits the distilling campaign.\n Set to a value to enable session-based exit condition.",
             "format": "uint32",
             "nullable": true
+          },
+          "inactivityDropDays": {
+            "type": "integer",
+            "description": "Number of days of inactivity before a distilling user is dropped.\n Set to null to disable this exit condition.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "minSubmissionRate": {
+            "type": "number",
+            "description": "Minimum submission rate (responses / sessions) before a user is dropped.\n Set to null to disable this exit condition.",
+            "format": "double",
+            "nullable": true
+          },
+          "minSessionsForSubmissionRate": {
+            "type": "integer",
+            "description": "Minimum number of sessions before the submission rate check applies.\n Set to null to apply from the first session.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "distillingRetrievalMode": {
+            "enum": [
+              "Random",
+              "Shuffled",
+              "Sequential"
+            ],
+            "description": "The retrieval mode used by the distilling campaign to select rapids for users."
           }
         },
         "description": "The body request to update an audience."

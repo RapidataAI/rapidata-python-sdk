@@ -473,6 +473,9 @@
                 },
                 "in": {
                   "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
                 }
               }
             },
@@ -515,6 +518,9 @@
                   "type": "string"
                 },
                 "in": {
+                  "type": "string"
+                },
+                "not_contains": {
                   "type": "string"
                 }
               }
@@ -836,6 +842,9 @@
                 },
                 "in": {
                   "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
                 }
               }
             },
@@ -878,6 +887,9 @@
                   "type": "string"
                 },
                 "in": {
+                  "type": "string"
+                },
+                "not_contains": {
                   "type": "string"
                 }
               }
