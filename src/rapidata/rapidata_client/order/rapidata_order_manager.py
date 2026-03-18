@@ -617,6 +617,7 @@ class RapidataOrderManager:
         datapoints: list[str],
         sentences: list[str],
         responses_per_datapoint: int = 10,
+        media_contexts: list[str] | None = None,
         validation_set_id: str | None = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -636,6 +637,8 @@ class RapidataOrderManager:
             sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n
                 Must be the same length as datapoints.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            media_contexts (list[str], optional): The list of media contexts for the select words i.e links to the images / videos. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
@@ -669,6 +672,7 @@ class RapidataOrderManager:
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 sentences=sentences,
+                media_contexts=media_contexts,
                 private_metadata=private_metadata,
             )
             return self._create_general_order(
