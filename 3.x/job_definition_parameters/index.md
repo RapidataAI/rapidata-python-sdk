@@ -250,49 +250,49 @@ Settings allow you to customize how tasks are displayed.
 
 ### Commonly Used Settings
 
-#### `NoShuffle()`
+#### `NoShuffleSetting()`
 
 Keeps answer options in the order you specified. By default, options are randomized to reduce bias. Use this for Likert scales or any ordered options.
 
 ```python
-from rapidata import NoShuffle
+from rapidata import NoShuffleSetting
 
 job_definition = client.job.create_classification_job_definition(
     instruction="Rate the quality of this image",
     answer_options=["1: Poor", "2: Fair", "3: Good", "4: Excellent"],
     datapoints=["image.jpg"],
-    settings=[NoShuffle()]
+    settings=[NoShuffleSetting()]
 )
 ```
 
-#### `Markdown()`
+#### `MarkdownSetting()`
 
 Enables limited markdown rendering for text datapoints. Useful when comparing formatted text like LLM outputs.
 
 ```python
-from rapidata import Markdown
+from rapidata import MarkdownSetting
 
 job_definition = client.job.create_compare_job_definition(
     name="LLM Response Comparison",
     instruction="Which response is better formatted?",
     datapoints=[["**Bold** and _italic_", "Plain text only"]],
     data_type="text",
-    settings=[Markdown()]
+    settings=[MarkdownSetting()]
 )
 ```
 
-#### `AllowNeitherBoth()`
+#### `AllowNeitherBothSetting()`
 
 For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice.
 
 ```python
-from rapidata import AllowNeitherBoth
+from rapidata import AllowNeitherBothSetting
 
 job_definition = client.job.create_compare_job_definition(
     name="Image Quality Comparison",
     instruction="Which image is higher quality?",
     datapoints=[["img_a.jpg", "img_b.jpg"]],
-    settings=[AllowNeitherBoth()]
+    settings=[AllowNeitherBothSetting()]
 )
 ```
 

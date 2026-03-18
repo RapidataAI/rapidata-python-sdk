@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/play_video_until_the_end/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/markdown/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Play video until the end - Rapidata Python SDK Documentation</title>
+        <title>Markdown - Rapidata Python SDK Documentation</title>
       
     
     
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.settings.play_video_until_the_end" class="md-skip">
+        <a href="#rapidata.rapidata_client.settings.markdown" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Play video until the end
+              Markdown
             
           </span>
         </div>
@@ -1138,13 +1138,13 @@
   
 
 
-  <h1>Play video until the end</h1>
+  <h1>Markdown</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.settings.play_video_until_the_end"></a>
+<a id="rapidata.rapidata_client.settings.markdown"></a>
     <div class="doc doc-contents first">
 
 
@@ -1170,12 +1170,12 @@
 
 
 
-<h2 id="rapidata.rapidata_client.settings.play_video_until_the_end.PlayVideoUntilTheEndSetting" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">PlayVideoUntilTheEndSetting</span>
+<h2 id="rapidata.rapidata_client.settings.markdown.MarkdownSetting" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">MarkdownSetting</span>
 
 
-<a href="#rapidata.rapidata_client.settings.play_video_until_the_end.PlayVideoUntilTheEndSetting" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">PlayVideoUntilTheEndSetting</span><span class="p">(</span><span class="n">additional_time</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<a href="#rapidata.rapidata_client.settings.markdown.MarkdownSetting" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">MarkdownSetting</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1184,8 +1184,8 @@
 
 
 
-        <p>Allows users to only answer once the video has finished playing.
-The additional time gets added on top of the video duration. Can be negative to allow answers before the video ends.</p>
+        <p>Enables limited markdown rendering for text datapoints.
+Useful when comparing formatted text like LLM outputs.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1201,18 +1201,18 @@ The additional time gets added on top of the video duration. Can be negative to 
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>additional_time</code>
+                <code>value</code>
             </td>
             <td>
-                  <code><span title="int">int</span></code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Additional time in milliseconds. Defaults to 0.</p>
+                <p>Whether to enable markdown rendering. Defaults to True.</p>
               </div>
             </td>
             <td>
-                  <code>0</code>
+                  <code>True</code>
             </td>
           </tr>
       </tbody>
@@ -1226,20 +1226,14 @@ The additional time gets added on top of the video duration. Can be negative to 
 
 
                   <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/rapidata/rapidata_client/settings/play_video_until_the_end.py</code></summary>
+                    <summary>Source code in <code>src/rapidata/rapidata_client/settings/markdown.py</code></summary>
                     <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-17">17</a></span>
 <span class="normal"><a href="#__codelineno-0-18">18</a></span>
 <span class="normal"><a href="#__codelineno-0-19">19</a></span>
-<span class="normal"><a href="#__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#__codelineno-0-23">23</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="k">if</span> <span class="n">additional_time</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">25000</span> <span class="ow">or</span> <span class="n">additional_time</span> <span class="o">&gt;</span> <span class="mi">25000</span><span class="p">:</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The additional time must be between -25000 and 25000."</span><span class="p">)</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="n">key</span><span class="o">=</span><span class="s2">"alert_on_fast_response_add_media_duration"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">additional_time</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The value must be a boolean."</span><span class="p">)</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">"use_text_asset_markdown"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 
@@ -1268,21 +1262,21 @@ The additional time gets added on top of the video duration. Can be negative to 
 
 
 
-<h2 id="rapidata.rapidata_client.settings.play_video_until_the_end.PlayVideoUntilTheEnd" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">PlayVideoUntilTheEnd</span>
+<h2 id="rapidata.rapidata_client.settings.markdown.Markdown" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">Markdown</span>
 
 
-<a href="#rapidata.rapidata_client.settings.play_video_until_the_end.PlayVideoUntilTheEnd" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">PlayVideoUntilTheEnd</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a href="#rapidata.rapidata_client.settings.markdown.Markdown" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Markdown</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="PlayVideoUntilTheEndSetting (rapidata.rapidata_client.settings.play_video_until_the_end.PlayVideoUntilTheEndSetting)" href="#rapidata.rapidata_client.settings.play_video_until_the_end.PlayVideoUntilTheEndSetting">PlayVideoUntilTheEndSetting</a></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="MarkdownSetting (rapidata.rapidata_client.settings.markdown.MarkdownSetting)" href="#rapidata.rapidata_client.settings.markdown.MarkdownSetting">MarkdownSetting</a></code></p>
 
 
 
-        <p>Deprecated: Use :class:<code>PlayVideoUntilTheEndSetting</code> instead.</p>
+        <p>Deprecated: Use :class:<code>MarkdownSetting</code> instead.</p>
 
 
 
@@ -1292,20 +1286,20 @@ The additional time gets added on top of the video duration. Can be negative to 
 
 
                   <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/rapidata/rapidata_client/settings/play_video_until_the_end.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-29">29</a></span>
+                    <summary>Source code in <code>src/rapidata/rapidata_client/settings/markdown.py</code></summary>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
 <span class="normal"><a href="#__codelineno-0-30">30</a></span>
 <span class="normal"><a href="#__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#__codelineno-0-32">32</a></span>
-<span class="normal"><a href="#__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>        <span class="s2">"PlayVideoUntilTheEnd is deprecated, use PlayVideoUntilTheEndSetting instead"</span><span class="p">,</span>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="ne">DeprecationWarning</span><span class="p">,</span>
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a>        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="p">)</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="s2">"Markdown is deprecated, use MarkdownSetting instead"</span><span class="p">,</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="p">)</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 

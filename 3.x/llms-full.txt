@@ -711,49 +711,49 @@ Settings allow you to customize how tasks are displayed.
 
 ### Commonly Used Settings
 
-#### `NoShuffle()`
+#### `NoShuffleSetting()`
 
 Keeps answer options in the order you specified. By default, options are randomized to reduce bias. Use this for Likert scales or any ordered options.
 
 ```python
-from rapidata import NoShuffle
+from rapidata import NoShuffleSetting
 
 job_definition = client.job.create_classification_job_definition(
     instruction="Rate the quality of this image",
     answer_options=["1: Poor", "2: Fair", "3: Good", "4: Excellent"],
     datapoints=["image.jpg"],
-    settings=[NoShuffle()]
+    settings=[NoShuffleSetting()]
 )
 ```
 
-#### `Markdown()`
+#### `MarkdownSetting()`
 
 Enables limited markdown rendering for text datapoints. Useful when comparing formatted text like LLM outputs.
 
 ```python
-from rapidata import Markdown
+from rapidata import MarkdownSetting
 
 job_definition = client.job.create_compare_job_definition(
     name="LLM Response Comparison",
     instruction="Which response is better formatted?",
     datapoints=[["**Bold** and _italic_", "Plain text only"]],
     data_type="text",
-    settings=[Markdown()]
+    settings=[MarkdownSetting()]
 )
 ```
 
-#### `AllowNeitherBoth()`
+#### `AllowNeitherBothSetting()`
 
 For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice.
 
 ```python
-from rapidata import AllowNeitherBoth
+from rapidata import AllowNeitherBothSetting
 
 job_definition = client.job.create_compare_job_definition(
     name="Image Quality Comparison",
     instruction="Which image is higher quality?",
     datapoints=[["img_a.jpg", "img_b.jpg"]],
-    settings=[AllowNeitherBoth()]
+    settings=[AllowNeitherBothSetting()]
 )
 ```
 
@@ -1587,7 +1587,7 @@ instruction="Which of these sentences makes more sense?"
 # Simple classification
 instruction="What object is in the image?"
 
-# Likert classification (add NoShuffle setting)
+# Likert classification (add NoShuffleSetting setting)
 instruction="How well does the video match the description?"
 answer_options=["1: Perfectly",
                 "2: Very well",
@@ -1722,10 +1722,10 @@ from rapidata import RapidataClient
 
 To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
 
-In this example, we want to rate different images based on a Likert scale to assess how well generated images match their descriptions. The `NoShuffle` setting ensures answer options remain in order since they represent a scale.
+In this example, we want to rate different images based on a Likert scale to assess how well generated images match their descriptions. The `NoShuffleSetting` setting ensures answer options remain in order since they represent a scale.
 
 ```python
-from rapidata import RapidataClient, NoShuffle
+from rapidata import RapidataClient, NoShuffleSetting
 
 IMAGE_URLS = [
     "https://assets.rapidata.ai/tshirt-4o.png",
@@ -1755,7 +1755,7 @@ job_definition = client.job.create_classification_job_definition(
     contexts=CONTEXTS,
     datapoints=IMAGE_URLS,
     responses_per_datapoint=25,
-    settings=[NoShuffle()]
+    settings=[NoShuffleSetting()]
 )
 
 # Preview the job definition
@@ -2365,7 +2365,7 @@ The plugin gives Claude detailed knowledge of:
 - **Audiences** — finding curated audiences, creating custom audiences with qualification examples, applying demographic filters
 - **Flows** — continuous ranking without full job setup
 - **MRI / Benchmarks** — comparing and ranking AI models on leaderboards
-- **Settings** — `NoShuffle`, `AllowNeitherBoth`, `Markdown`, and other display options
+- **Settings** — `NoShuffleSetting`, `AllowNeitherBothSetting`, `MarkdownSetting`, and other display options
 - **Error handling** — working with `FailedUploadException` for partial upload failures
 - **Legacy order API** — backwards-compatible order creation
 
