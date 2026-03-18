@@ -546,7 +546,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "GetDatapointByIdResult": {

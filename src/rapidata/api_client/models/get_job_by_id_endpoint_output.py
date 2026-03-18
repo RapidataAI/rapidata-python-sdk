@@ -39,7 +39,9 @@ class GetJobByIdEndpointOutput(BaseModel):
     failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job failed.", alias="failedAt")
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message.", alias="failureMessage")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt"]
+    owner_id: StrictStr = Field(description="The owner id.", alias="ownerId")
+    owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt", "ownerId", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -123,7 +125,9 @@ class GetJobByIdEndpointOutput(BaseModel):
             "resultFileName": obj.get("resultFileName"),
             "failedAt": obj.get("failedAt"),
             "failureMessage": obj.get("failureMessage"),
-            "createdAt": obj.get("createdAt")
+            "createdAt": obj.get("createdAt"),
+            "ownerId": obj.get("ownerId"),
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 

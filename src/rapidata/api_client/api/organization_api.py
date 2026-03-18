@@ -347,17 +347,29 @@ class OrganizationApi:
             _query_params.append(('sort', sort))
             
         if name is not None:
-            
-            _query_params.append(('name', name))
-            
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
         if domain is not None:
-            
-            _query_params.append(('domain', domain))
-            
+            _param_val = domain
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('domain[' + _k + ']', _v))
         if owner is not None:
-            
-            _query_params.append(('owner', owner))
-            
+            _param_val = owner
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter

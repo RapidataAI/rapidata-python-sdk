@@ -597,7 +597,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "GetCompareAbSummaryResult": {
@@ -937,6 +938,10 @@
                 "$ref": "#/components/schemas/IAssetModel"
               }
             ]
+          },
+          "decisiveness": {
+            "type": "number",
+            "format": "double"
           }
         }
       },

@@ -11,6 +11,78 @@
     }
   ],
   "paths": {
+    "/campaign/cache/campaigns": {
+      "get": {
+        "tags": [
+          "Cache"
+        ],
+        "summary": "Returns the current state of the in-memory campaign cache.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaignCacheEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/campaign/cache/user-scores": {
+      "get": {
+        "tags": [
+          "Cache"
+        ],
+        "summary": "Returns the current state of the in-memory default user score cache.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserScoreCacheEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/campaign/monitor": {
       "get": {
         "tags": [
@@ -400,7 +472,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "GetBoostResult": {
@@ -453,6 +526,110 @@
           "Partial",
           "Unknown"
         ]
+      },
+      "GetCampaignCacheEndpoint_CampaignEntry": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "priority",
+          "filterCount",
+          "selectionCount",
+          "userScoreDimensionCount",
+          "featureFlagCount",
+          "rateLimitCount",
+          "isPreviewEnabled",
+          "isSimpleBoostingLocked"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filterCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selectionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userScoreDimensionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "featureFlagCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rateLimitCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPreviewEnabled": {
+            "type": "boolean"
+          },
+          "isSimpleBoostingLocked": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetCampaignCacheEndpoint_Output": {
+        "required": [
+          "count",
+          "campaigns"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "The total number of cached campaigns.",
+            "format": "int32"
+          },
+          "campaigns": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCampaignCacheEndpoint_CampaignEntry"
+                }
+              }
+            ],
+            "description": "The list of cached campaign summaries."
+          }
+        }
+      },
+      "GetUserScoreCacheEndpoint_Output": {
+        "required": [
+          "count",
+          "scores"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "The total number of cached user scores.",
+            "format": "int32"
+          },
+          "scores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "description": "The cached dimension-to-score mappings."
+          }
+        }
       },
       "LogicOperator": {
         "enum": [
@@ -604,6 +781,40 @@
           }
         },
         "description": "The model to update the campaign priority."
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
       }
     },
     "securitySchemes": {

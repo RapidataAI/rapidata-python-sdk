@@ -189,8 +189,10 @@ class RapidataJob:
             )
 
             try:
-                results = self._openapi_service.order.job_api.job_job_id_results_get(
-                    job_id=self.id
+                results = (
+                    self._openapi_service.order.job_api.job_job_id_download_results_get(
+                        job_id=self.id
+                    )
                 )
                 return RapidataResults(json.loads(results))
             except (ApiException, json.JSONDecodeError) as e:

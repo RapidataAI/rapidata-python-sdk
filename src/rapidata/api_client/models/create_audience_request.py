@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.distilling_retrieval_mode import DistillingRetrievalMode
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
@@ -39,9 +40,13 @@ class CreateAudienceRequest(BaseModel):
     min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum user score floor - users below this score exit the distilling campaign  (only after completing MinDistillingResponses).  Defaults to 0.2. Set to null to disable this exit condition.", alias="minDistillingScoreFloor")
     is_distilling_campaign_sticky: Optional[StrictBool] = Field(default=None, description="Whether the distilling campaign should be sticky (users stay until filters don't match).  Defaults to true (Temporary sticky).", alias="isDistillingCampaignSticky")
     max_distilling_sessions: Optional[StrictInt] = Field(default=None, description="Maximum sessions (rapid retrievals) before user exits the distilling campaign.  Defaults to null (disabled). Set to a value to enable session-based exit condition.", alias="maxDistillingSessions")
+    inactivity_drop_days: Optional[StrictInt] = Field(default=None, description="Number of days of inactivity before a distilling user is dropped.  Defaults to null (disabled).", alias="inactivityDropDays")
+    min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate (responses / sessions) before a user is dropped.  Defaults to null (disabled).", alias="minSubmissionRate")
+    min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Defaults to null (applies from first session).", alias="minSessionsForSubmissionRate")
+    distilling_retrieval_mode: Optional[DistillingRetrievalMode] = Field(default=None, alias="distillingRetrievalMode")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  Defaults to 200. Admin-only override.", alias="minDistillingForGlobalBoost")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  Defaults to 100. Admin-only override.", alias="minGraduatedForDistillingBoost")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -125,6 +130,10 @@ class CreateAudienceRequest(BaseModel):
             "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
             "isDistillingCampaignSticky": obj.get("isDistillingCampaignSticky"),
             "maxDistillingSessions": obj.get("maxDistillingSessions"),
+            "inactivityDropDays": obj.get("inactivityDropDays"),
+            "minSubmissionRate": obj.get("minSubmissionRate"),
+            "minSessionsForSubmissionRate": obj.get("minSessionsForSubmissionRate"),
+            "distillingRetrievalMode": obj.get("distillingRetrievalMode"),
             "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost")
         })

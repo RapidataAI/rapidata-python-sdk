@@ -498,7 +498,15 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthenticated"
@@ -581,6 +589,1388 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/approve": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Approves a submitted order so the pipeline can start processing it.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to approve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/clone": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Clones an existing public order.",
+        "description": "The order to clone must be marked as public.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to clone.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The clone order details.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneOrderEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneOrderEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/complex": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a new order with a custom pipeline configuration.",
+        "requestBody": {
+          "description": "The complex order creation details.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComplexOrderEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateComplexOrderEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a new order with the given configuration.",
+        "description": "Once created, use the returned dataset ID to fill the dataset with datapoints,\n then submit the order for processing.",
+        "requestBody": {
+          "description": "The order creation configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/unsupported": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a notification for an unsupported order type.",
+        "requestBody": {
+          "description": "The unsupported order details.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnsupportedOrderEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}": {
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Deletes an order and its associated resources.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves the details of a specific order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates the name or preceding order of an order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The properties to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/download-results": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Aggregates the results of an order and returns them as a file attachment.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/results": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Aggregates the results of an order and returns them as a JSON string.",
+        "description": "For file download, use the download-results endpoint instead.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/orders/public": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves all publicly available orders.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicOrdersEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/demo": {
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Marks or unmarks an order as a demo.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isDemo",
+            "in": "query",
+            "description": "Whether to mark or unmark the order as a demo.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/pause": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Pauses an order, stopping all campaigns from processing.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to pause.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/preview": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Starts preview mode for an order so labelers' experience can be inspected.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to preview.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Optional preview configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/PreviewOrderEndpoint_Input"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/orders/aggregated-overview": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves orders aggregated by customer with total amounts and most recent order information.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "amount",
+                  "-amount",
+                  "last7_days",
+                  "-last7_days",
+                  "last_order_date",
+                  "-last_order_date",
+                  "customer_mail",
+                  "-customer_mail"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "customer_mail",
+            "in": "query",
+            "description": "Filter by customer_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "last_order_date",
+            "in": "query",
+            "description": "Filter by last_order_date.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "last_order_name",
+            "in": "query",
+            "description": "Filter by last_order_name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryAggregatedOrdersEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "order_name",
+                  "-order_name",
+                  "order_date",
+                  "-order_date",
+                  "state",
+                  "-state"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "order_name",
+            "in": "query",
+            "description": "Filter by order_name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "order_date",
+            "in": "query",
+            "description": "Filter by order_date.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "customer_mail",
+            "in": "query",
+            "description": "Filter by customer_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryOrdersEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/resume": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Resumes a paused order, restarting all campaigns.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to resume.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/retry": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retries processing of a failed order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to retry.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/share": {
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Marks or unmarks an order as public.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isPublic",
+            "in": "query",
+            "description": "Whether to mark or unmark the order as public.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/submit": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Submits an order for processing.",
+        "description": "Once submitted, the order will be locked and no further changes can be made.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to submit.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Optional submission configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/SubmitOrderEndpoint_Input"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/unlock": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Unlocks a cloned order so it can be modified.",
+        "description": "Unlocking clones the entire dataset and its datapoints.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The ID of the order to unlock.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockOrderEndpoint_Output"
                 }
               }
             }
@@ -778,888 +2168,6 @@
           }
         }
       }
-    },
-    "/orders": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Queries orders based on a filter, page, and sort criteria.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The parameters for filtering, paging, and sorting",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfOrderModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfOrderModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfOrderModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/orders/aggregated-overview": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves the orders aggregated by customer, with total amounts and most recent order informations.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfAggregatedOrdersModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfAggregatedOrdersModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfAggregatedOrdersModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/orders/public": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves orders that are public and can be cloned by any user.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/order/{orderId}": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves an order by its id.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetOrderByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetOrderByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetOrderByIdResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates properties of an order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Deletes an order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to delete",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/results": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Aggregates the results of an order and returns the result as a json body.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/order/{orderId}/download-results": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Aggregates the results of an order and returns it as a file attachment.",
-        "description": "Returns the aggregated result as a file with a given name.\n The annotated type of the response represents the content type of the file.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/order": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Used to create a new order.",
-        "requestBody": {
-          "description": "The body request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateOrderResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/order/complex": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Creates a new order with a custom pipeline.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/order/unsupported": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Notifies the admins that a user wants to create an order with an unsupported label type or data type.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/clone": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Clones an existing order.",
-        "description": "In order to clone an order, the existing order must be marked as public.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to clone",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/order/{orderId}/unlock": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Unlocks a newly cloned order.",
-        "description": "When an order is cloned only the necessary information is copied.\n In order to make changes to the order, it must be unlocked first.\n Unlocking the order will clone the entire dataset and its datapoints.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to unlock",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/order/{orderId}/demo": {
-      "patch": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates whether an order is a demo or not.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isDemo",
-            "in": "query",
-            "description": "Whether to mark or unmark the order as a demo",
-            "schema": {
-              "type": "boolean",
-              "default": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/share": {
-      "patch": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates whether an order is public or not.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isPublic",
-            "in": "query",
-            "description": "Whether to mark or unmark the order as public",
-            "schema": {
-              "type": "boolean",
-              "default": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/submit": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Submits an order for approval.",
-        "description": "Once an order is created its order id and dataset id is returned.\n The dataset id can be used to fill the dataset with data points.\n Once submitted, the order will be locked and no further changes can be made.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to submit",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The model containing additional information for the submission.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/SubmitOrderModel"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/SubmitOrderModel"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/SubmitOrderModel"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/approve": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Approves an order that has been submitted for manual approval.",
-        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\n determine if the order is safe to process.\n Once an order is approved, the pipeline will start processing the order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to approve",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/name": {
-      "patch": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates the name of an order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderNameModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderNameModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderNameModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/order/{orderId}/retry": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retries a failed order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to retry",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/pause": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Pauses an order that is processing. Meaning all campaigns in the order will be paused.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to pause",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/preview": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Puts the order into preview mode, where one can inspect what our labelers receive.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to submit",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The model containing additional information for the preview.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/PreviewOrderModel"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/PreviewOrderModel"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/PreviewOrderModel"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/order/{orderId}/resume": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Resumes a paused order. Meaning all campaigns in the order will be resumed.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "The id of the order to resume",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -1673,40 +2181,6 @@
           "50-64",
           "65+"
         ]
-      },
-      "AggregatedOrdersModel": {
-        "required": [
-          "amount",
-          "last7Days",
-          "lastOrderDate",
-          "lastOrderName",
-          "lastOrderId",
-          "customerMail"
-        ],
-        "type": "object",
-        "properties": {
-          "amount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "last7Days": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastOrderDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastOrderName": {
-            "type": "string"
-          },
-          "lastOrderId": {
-            "type": "string"
-          },
-          "customerMail": {
-            "type": "string"
-          }
-        }
       },
       "AggregatorType": {
         "enum": [
@@ -1750,7 +2224,7 @@
           "Failed"
         ]
       },
-      "CloneOrderModel": {
+      "CloneOrderEndpoint_Input": {
         "required": [
           "orderName"
         ],
@@ -1758,12 +2232,11 @@
         "properties": {
           "orderName": {
             "type": "string",
-            "description": "The name of the new order"
+            "description": "The name of the new cloned order."
           }
-        },
-        "description": "The model for cloning an existing order."
+        }
       },
-      "CloneOrderResult": {
+      "CloneOrderEndpoint_Output": {
         "required": [
           "orderId"
         ],
@@ -1771,10 +2244,12 @@
         "properties": {
           "datasetId": {
             "type": "string",
+            "description": "The dataset ID of the cloned order.",
             "nullable": true
           },
           "orderId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the newly cloned order."
           }
         }
       },
@@ -1817,7 +2292,7 @@
           }
         }
       },
-      "CreateComplexOrderModel": {
+      "CreateComplexOrderEndpoint_Input": {
         "required": [
           "orderName",
           "pipeline"
@@ -1826,7 +2301,7 @@
         "properties": {
           "orderName": {
             "type": "string",
-            "description": "The name of the order"
+            "description": "The name of the order."
           },
           "pipeline": {
             "allOf": [
@@ -1834,21 +2309,20 @@
                 "$ref": "#/components/schemas/IPipelineModel"
               }
             ],
-            "description": "The pipeline to use"
+            "description": "The pipeline configuration to use."
           },
           "isDemo": {
             "type": "boolean",
-            "description": "Whether the order is public"
+            "description": "Whether the order is a demo."
           },
           "precedingOrderId": {
             "type": "string",
             "description": "Optional ID of the order that must complete before this order starts processing.",
             "nullable": true
           }
-        },
-        "description": "The model for creating a new order with a custom pipeline."
+        }
       },
-      "CreateComplexOrderResult": {
+      "CreateComplexOrderEndpoint_Output": {
         "required": [
           "orderId",
           "pipelineId"
@@ -1857,17 +2331,21 @@
         "properties": {
           "datasetId": {
             "type": "string",
+            "description": "The dataset ID of the created order.",
             "nullable": true
           },
           "orderId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the created order."
           },
           "campaignId": {
             "type": "string",
+            "description": "The campaign ID of the created order.",
             "nullable": true
           },
           "pipelineId": {
-            "type": "string"
+            "type": "string",
+            "description": "The pipeline ID of the created order."
           }
         }
       },
@@ -2083,6 +2561,33 @@
         },
         "description": "The result when a job revision has been created."
       },
+      "CreateOrderEndpoint_Output": {
+        "required": [
+          "orderId",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "description": "The dataset ID of the created order.",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "description": "The ID of the created order."
+          },
+          "campaignId": {
+            "type": "string",
+            "description": "The campaign ID of the created order.",
+            "nullable": true
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The pipeline ID of the created order."
+          }
+        }
+      },
       "CreateOrderModel": {
         "required": [
           "orderName",
@@ -2232,30 +2737,7 @@
         },
         "description": "This model is used to create a simple order"
       },
-      "CreateOrderResult": {
-        "required": [
-          "orderId",
-          "pipelineId"
-        ],
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string",
-            "nullable": true
-          },
-          "orderId": {
-            "type": "string"
-          },
-          "campaignId": {
-            "type": "string",
-            "nullable": true
-          },
-          "pipelineId": {
-            "type": "string"
-          }
-        }
-      },
-      "CreateUnsupportedOrderModel": {
+      "CreateUnsupportedOrderEndpoint_Input": {
         "required": [
           "orderName",
           "dataType",
@@ -2265,18 +2747,17 @@
         "properties": {
           "orderName": {
             "type": "string",
-            "description": "The name of the order"
+            "description": "The name of the order."
           },
           "dataType": {
             "type": "string",
-            "description": "The type of the data that was attempted to be ordered"
+            "description": "The type of data that was attempted to be ordered."
           },
           "labelType": {
             "type": "string",
-            "description": "The type of the labels that were attempted to be ordered"
+            "description": "The type of labels that were attempted to be ordered."
           }
-        },
-        "description": "The model for creating an order with an unsupported label type or data type."
+        }
       },
       "DefinitionType": {
         "enum": [
@@ -2374,10 +2855,6 @@
         },
         "description": "The model for submitting feedback."
       },
-      "FileStreamResult": {
-        "type": "string",
-        "format": "binary"
-      },
       "Filter": {
         "type": "object",
         "properties": {
@@ -2411,7 +2888,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "GenderUserFilterModel_Gender": {
@@ -2430,7 +2908,9 @@
           "revisionNumber",
           "pipelineId",
           "status",
-          "createdAt"
+          "createdAt",
+          "ownerId",
+          "ownerMail"
         ],
         "type": "object",
         "properties": {
@@ -2489,6 +2969,15 @@
             "type": "string",
             "description": "The creation timestamp.",
             "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The owner id.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The owner email."
           }
         },
         "description": "The result when a job has been retrieved."
@@ -2611,7 +3100,7 @@
         },
         "description": "The result when a job revision has been retrieved."
       },
-      "GetOrderByIdResult": {
+      "GetOrderByIdEndpoint_Output": {
         "required": [
           "orderName",
           "customerMail",
@@ -2624,44 +3113,76 @@
         "type": "object",
         "properties": {
           "orderName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the order."
           },
           "customerMail": {
-            "type": "string"
+            "type": "string",
+            "description": "The email of the customer who placed the order."
           },
           "orderDate": {
             "type": "string",
+            "description": "The date the order was placed.",
             "format": "date-time"
           },
           "state": {
-            "type": "string"
+            "type": "string",
+            "description": "The current state of the order."
           },
           "pipelineId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the pipeline associated with the order."
           },
           "isLocked": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the order is locked."
           },
           "isPublic": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the order is publicly visible."
           },
           "failureMessage": {
             "type": "string",
+            "description": "The failure message if the order failed.",
             "nullable": true
           }
         }
       },
-      "GetPublicOrdersResult": {
+      "GetPublicOrdersEndpoint_OrderOutput": {
+        "required": [
+          "id",
+          "name",
+          "isPublic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetPublicOrdersEndpoint_Output": {
         "required": [
           "orders"
         ],
         "type": "object",
         "properties": {
           "orders": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PublicOrderModel"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetPublicOrdersEndpoint_OrderOutput"
+                }
+              }
+            ],
+            "description": "The list of publicly available orders."
           }
         }
       },
@@ -4446,47 +4967,6 @@
           "type": "string"
         }
       },
-      "OrderModel": {
-        "required": [
-          "id",
-          "pipelineId",
-          "orderDate",
-          "customerMail",
-          "state",
-          "orderName",
-          "isPublic"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "pipelineId": {
-            "type": "string"
-          },
-          "orderDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "customerMail": {
-            "type": "string"
-          },
-          "state": {
-            "$ref": "#/components/schemas/OrderState"
-          },
-          "orderName": {
-            "type": "string"
-          },
-          "isPublic": {
-            "type": "boolean"
-          },
-          "failureMessage": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
       "OrderState": {
         "enum": [
           "Created",
@@ -4500,73 +4980,8 @@
           "Cancelled",
           "Failed",
           "StaleResults"
-        ]
-      },
-      "PagedResultOfAggregatedOrdersModel": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
         ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AggregatedOrdersModel"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResultOfOrderModel": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrderModel"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
+        "description": "The current state of the order."
       },
       "PagedResultOfQueryJobDefinitionsResult": {
         "required": [
@@ -4680,33 +5095,86 @@
           }
         }
       },
-      "PreviewOrderModel": {
+      "PreviewOrderEndpoint_Input": {
         "type": "object",
         "properties": {
           "ignoreFailedDatapoints": {
             "type": "boolean",
-            "description": "whether the order should proceed to be submitted even if certain datapoints failed.",
+            "description": "Whether the order should proceed even if certain datapoints failed.",
             "nullable": true
           }
-        },
-        "description": "The model for previewing an order."
+        }
       },
-      "PublicOrderModel": {
+      "QueryAggregatedOrdersEndpoint_Output": {
         "required": [
-          "id",
-          "name",
-          "isPublic"
+          "amount",
+          "last7Days",
+          "lastOrderDate",
+          "lastOrderName",
+          "lastOrderId",
+          "customerMail"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
+          "amount": {
+            "type": "integer",
+            "description": "The total number of orders for this customer.",
+            "format": "int32"
           },
-          "name": {
-            "type": "string"
+          "last7Days": {
+            "type": "integer",
+            "description": "The number of orders placed in the last 7 days.",
+            "format": "int32"
           },
-          "isPublic": {
-            "type": "boolean"
+          "lastOrderDate": {
+            "type": "string",
+            "description": "The date of the most recent order.",
+            "format": "date-time"
+          },
+          "lastOrderName": {
+            "type": "string",
+            "description": "The name of the most recent order."
+          },
+          "lastOrderId": {
+            "type": "string",
+            "description": "The ID of the most recent order."
+          },
+          "customerMail": {
+            "type": "string",
+            "description": "The customer's email address."
+          }
+        }
+      },
+      "QueryAggregatedOrdersEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryAggregatedOrdersEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -4837,6 +5305,87 @@
           }
         }
       },
+      "QueryOrdersEndpoint_Output": {
+        "required": [
+          "id",
+          "pipelineId",
+          "orderDate",
+          "customerMail",
+          "state",
+          "orderName",
+          "isPublic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the order."
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The ID of the pipeline associated with the order."
+          },
+          "orderDate": {
+            "type": "string",
+            "description": "The date the order was placed.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "customerMail": {
+            "type": "string",
+            "description": "The email of the customer who placed the order."
+          },
+          "state": {
+            "$ref": "#/components/schemas/OrderState"
+          },
+          "orderName": {
+            "type": "string",
+            "description": "The name of the order."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the order is publicly visible."
+          },
+          "failureMessage": {
+            "type": "string",
+            "description": "The failure message if the order failed.",
+            "nullable": true
+          }
+        }
+      },
+      "QueryOrdersEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryOrdersEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "RetrievalMode": {
         "enum": [
           "Random",
@@ -4909,18 +5458,17 @@
         ],
         "description": "Indicates if the underlying campaign should be sticky."
       },
-      "SubmitOrderModel": {
+      "SubmitOrderEndpoint_Input": {
         "type": "object",
         "properties": {
           "ignoreFailedDatapoints": {
             "type": "boolean",
-            "description": "whether the order should proceed to be submitted even if certain datapoints failed.",
+            "description": "Whether the order should proceed even if certain datapoints failed.",
             "nullable": true
           }
-        },
-        "description": "The model for submitting an order."
+        }
       },
-      "UnlockOrderResult": {
+      "UnlockOrderEndpoint_Output": {
         "required": [
           "datasetIds"
         ],
@@ -4930,7 +5478,8 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "The dataset IDs created by unlocking the order."
           }
         }
       },
@@ -4956,7 +5505,7 @@
         },
         "description": "The input for the update job endpoint."
       },
-      "UpdateOrderModel": {
+      "UpdateOrderEndpoint_Input": {
         "type": "object",
         "properties": {
           "name": {
@@ -4969,21 +5518,7 @@
             "description": "The ID of the order that must complete before this order starts processing.\n Set to null to clear an existing preceding order.",
             "nullable": true
           }
-        },
-        "description": "The model for updating properties of an order."
-      },
-      "UpdateOrderNameModel": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The new name of the order."
-          }
-        },
-        "description": "The model for updating the name of an order."
+        }
       },
       "ValidationProblemDetails": {
         "type": "object",
@@ -5071,9 +5606,6 @@
     },
     {
       "name": "Job"
-    },
-    {
-      "name": "Order"
     }
   ]
 }

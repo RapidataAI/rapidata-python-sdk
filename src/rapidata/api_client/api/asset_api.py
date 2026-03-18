@@ -60,7 +60,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> bytearray:
         """Compresses an uploaded image and returns the WebP result.
 
         Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
@@ -107,6 +107,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
+            '200': "bytearray",
             '400': "str",
             '401': None,
             '403': None,
@@ -141,7 +142,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[bytearray]:
         """Compresses an uploaded image and returns the WebP result.
 
         Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
@@ -188,6 +189,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
+            '200': "bytearray",
             '400': "str",
             '401': None,
             '403': None,
@@ -269,6 +271,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
+            '200': "bytearray",
             '400': "str",
             '401': None,
             '403': None,
@@ -331,6 +334,7 @@ class AssetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
+                    'application/octet-stream', 
                     'application/json'
                 ]
             )

@@ -223,19 +223,17 @@ class RapidataOrder:
             The order itself.
         """
         with tracer.start_as_current_span("RapidataOrder.run"):
-            from rapidata.api_client.models.submit_order_model import SubmitOrderModel
-
             if after:
                 logger.info(
                     "Setting preceding order for order '%s' to '%s'", self, after
                 )
-                from rapidata.api_client.models.update_order_model import (
-                    UpdateOrderModel,
+                from rapidata.api_client.models.update_order_endpoint_input import (
+                    UpdateOrderEndpointInput,
                 )
 
                 self._openapi_service.order.order_api.order_order_id_patch(
                     self.id,
-                    UpdateOrderModel(
+                    UpdateOrderEndpointInput(
                         precedingOrderId=(
                             after.id if isinstance(after, RapidataOrder) else after
                         )
@@ -243,8 +241,11 @@ class RapidataOrder:
                 )
 
             logger.info("Starting order '%s'", self)
+            from rapidata.api_client.models.submit_order_endpoint_input import (
+                SubmitOrderEndpointInput,
+            )
             self._openapi_service.order.order_api.order_order_id_submit_post(
-                self.id, SubmitOrderModel(ignoreFailedDatapoints=True)
+                self.id, SubmitOrderEndpointInput(ignoreFailedDatapoints=True)
             )
             logger.debug("Order '%s' has been started.", self)
             managed_print(
@@ -433,14 +434,14 @@ class RapidataOrder:
     def preview(self) -> None:
         """Opens a preview of the order in the browser."""
         from rapidata.api_client.models.order_state import OrderState
-        from rapidata.api_client.models.preview_order_model import PreviewOrderModel
+        from rapidata.api_client.models.preview_order_endpoint_input import PreviewOrderEndpointInput
 
         logger.info("Opening order preview in browser...")
 
         if self.get_status() == OrderState.CREATED:
             logger.info("Order is still in state created. Setting it to preview.")
             self._openapi_service.order.order_api.order_order_id_preview_post(
-                self.id, PreviewOrderModel(ignoreFailedDatapoints=True)
+                self.id, PreviewOrderEndpointInput(ignoreFailedDatapoints=True)
             )
             logger.info("Order is now in preview state.")
 

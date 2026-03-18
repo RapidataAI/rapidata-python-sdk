@@ -16,25 +16,25 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictBytes, StrictStr
-from typing import Optional, Tuple, Union
+from pydantic import Field, StrictBool, StrictBytes, StrictInt, StrictStr, field_validator
+from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.clone_order_model import CloneOrderModel
-from rapidata.api_client.models.clone_order_result import CloneOrderResult
-from rapidata.api_client.models.create_complex_order_model import CreateComplexOrderModel
-from rapidata.api_client.models.create_complex_order_result import CreateComplexOrderResult
+from rapidata.api_client.models.clone_order_endpoint_input import CloneOrderEndpointInput
+from rapidata.api_client.models.clone_order_endpoint_output import CloneOrderEndpointOutput
+from rapidata.api_client.models.create_complex_order_endpoint_input import CreateComplexOrderEndpointInput
+from rapidata.api_client.models.create_complex_order_endpoint_output import CreateComplexOrderEndpointOutput
+from rapidata.api_client.models.create_order_endpoint_output import CreateOrderEndpointOutput
 from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.api_client.models.create_order_result import CreateOrderResult
-from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
-from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
-from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
-from rapidata.api_client.models.paged_result_of_aggregated_orders_model import PagedResultOfAggregatedOrdersModel
-from rapidata.api_client.models.paged_result_of_order_model import PagedResultOfOrderModel
-from rapidata.api_client.models.preview_order_model import PreviewOrderModel
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.submit_order_model import SubmitOrderModel
-from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
-from rapidata.api_client.models.update_order_model import UpdateOrderModel
+from rapidata.api_client.models.create_unsupported_order_endpoint_input import CreateUnsupportedOrderEndpointInput
+from rapidata.api_client.models.flow_get_name_parameter import FlowGetNameParameter
+from rapidata.api_client.models.get_order_by_id_endpoint_output import GetOrderByIdEndpointOutput
+from rapidata.api_client.models.get_public_orders_endpoint_output import GetPublicOrdersEndpointOutput
+from rapidata.api_client.models.preview_order_endpoint_input import PreviewOrderEndpointInput
+from rapidata.api_client.models.query_aggregated_orders_endpoint_paged_result_of_output import QueryAggregatedOrdersEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_orders_endpoint_paged_result_of_output import QueryOrdersEndpointPagedResultOfOutput
+from rapidata.api_client.models.submit_order_endpoint_input import SubmitOrderEndpointInput
+from rapidata.api_client.models.unlock_order_endpoint_output import UnlockOrderEndpointOutput
+from rapidata.api_client.models.update_order_endpoint_input import UpdateOrderEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -57,7 +57,7 @@ class OrderApi:
     @validate_call
     def order_complex_post(
         self,
-        create_complex_order_model: Annotated[CreateComplexOrderModel, Field(description="The body content of the request")],
+        create_complex_order_endpoint_input: Annotated[CreateComplexOrderEndpointInput, Field(description="The complex order creation details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -70,12 +70,12 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateComplexOrderResult:
-        """Creates a new order with a custom pipeline.
+    ) -> CreateComplexOrderEndpointOutput:
+        """Creates a new order with a custom pipeline configuration.
 
 
-        :param create_complex_order_model: The body content of the request (required)
-        :type create_complex_order_model: CreateComplexOrderModel
+        :param create_complex_order_endpoint_input: The complex order creation details. (required)
+        :type create_complex_order_endpoint_input: CreateComplexOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -99,7 +99,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_complex_post_serialize(
-            create_complex_order_model=create_complex_order_model,
+            create_complex_order_endpoint_input=create_complex_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -107,7 +107,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateComplexOrderResult",
+            '200': "CreateComplexOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -123,7 +126,7 @@ class OrderApi:
     @validate_call
     def order_complex_post_with_http_info(
         self,
-        create_complex_order_model: Annotated[CreateComplexOrderModel, Field(description="The body content of the request")],
+        create_complex_order_endpoint_input: Annotated[CreateComplexOrderEndpointInput, Field(description="The complex order creation details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -136,12 +139,12 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateComplexOrderResult]:
-        """Creates a new order with a custom pipeline.
+    ) -> ApiResponse[CreateComplexOrderEndpointOutput]:
+        """Creates a new order with a custom pipeline configuration.
 
 
-        :param create_complex_order_model: The body content of the request (required)
-        :type create_complex_order_model: CreateComplexOrderModel
+        :param create_complex_order_endpoint_input: The complex order creation details. (required)
+        :type create_complex_order_endpoint_input: CreateComplexOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -165,7 +168,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_complex_post_serialize(
-            create_complex_order_model=create_complex_order_model,
+            create_complex_order_endpoint_input=create_complex_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -173,7 +176,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateComplexOrderResult",
+            '200': "CreateComplexOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -189,7 +195,7 @@ class OrderApi:
     @validate_call
     def order_complex_post_without_preload_content(
         self,
-        create_complex_order_model: Annotated[CreateComplexOrderModel, Field(description="The body content of the request")],
+        create_complex_order_endpoint_input: Annotated[CreateComplexOrderEndpointInput, Field(description="The complex order creation details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -203,11 +209,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new order with a custom pipeline.
+        """Creates a new order with a custom pipeline configuration.
 
 
-        :param create_complex_order_model: The body content of the request (required)
-        :type create_complex_order_model: CreateComplexOrderModel
+        :param create_complex_order_endpoint_input: The complex order creation details. (required)
+        :type create_complex_order_endpoint_input: CreateComplexOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -231,7 +237,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_complex_post_serialize(
-            create_complex_order_model=create_complex_order_model,
+            create_complex_order_endpoint_input=create_complex_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -239,7 +245,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateComplexOrderResult",
+            '200': "CreateComplexOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -250,7 +259,7 @@ class OrderApi:
 
     def _order_complex_post_serialize(
         self,
-        create_complex_order_model,
+        create_complex_order_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -276,17 +285,15 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_complex_order_model is not None:
-            _body_params = create_complex_order_model
+        if create_complex_order_endpoint_input is not None:
+            _body_params = create_complex_order_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -297,9 +304,7 @@ class OrderApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -334,7 +339,7 @@ class OrderApi:
     @validate_call
     def order_order_id_approve_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to approve")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to approve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -348,11 +353,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Approves an order that has been submitted for manual approval.
+        """Approves a submitted order so the pipeline can start processing it.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
 
-        :param order_id: The id of the order to approve (required)
+        :param order_id: The ID of the order to approve. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -386,6 +390,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -401,7 +408,7 @@ class OrderApi:
     @validate_call
     def order_order_id_approve_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to approve")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to approve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -415,11 +422,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Approves an order that has been submitted for manual approval.
+        """Approves a submitted order so the pipeline can start processing it.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
 
-        :param order_id: The id of the order to approve (required)
+        :param order_id: The ID of the order to approve. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -453,6 +459,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -468,7 +477,7 @@ class OrderApi:
     @validate_call
     def order_order_id_approve_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to approve")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to approve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -482,11 +491,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Approves an order that has been submitted for manual approval.
+        """Approves a submitted order so the pipeline can start processing it.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
 
-        :param order_id: The id of the order to approve (required)
+        :param order_id: The ID of the order to approve. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -520,6 +528,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -560,6 +571,13 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -590,8 +608,8 @@ class OrderApi:
     @validate_call
     def order_order_id_clone_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to clone")],
-        clone_order_model: Annotated[CloneOrderModel, Field(description="The body content of the request")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to clone.")],
+        clone_order_endpoint_input: Annotated[CloneOrderEndpointInput, Field(description="The clone order details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -604,15 +622,15 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CloneOrderResult:
-        """Clones an existing order.
+    ) -> CloneOrderEndpointOutput:
+        """Clones an existing public order.
 
-        In order to clone an order, the existing order must be marked as public.
+        The order to clone must be marked as public.
 
-        :param order_id: The id of the order to clone (required)
+        :param order_id: The ID of the order to clone. (required)
         :type order_id: str
-        :param clone_order_model: The body content of the request (required)
-        :type clone_order_model: CloneOrderModel
+        :param clone_order_endpoint_input: The clone order details. (required)
+        :type clone_order_endpoint_input: CloneOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -637,7 +655,7 @@ class OrderApi:
 
         _param = self._order_order_id_clone_post_serialize(
             order_id=order_id,
-            clone_order_model=clone_order_model,
+            clone_order_endpoint_input=clone_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -645,7 +663,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CloneOrderResult",
+            '200': "CloneOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -661,8 +682,8 @@ class OrderApi:
     @validate_call
     def order_order_id_clone_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to clone")],
-        clone_order_model: Annotated[CloneOrderModel, Field(description="The body content of the request")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to clone.")],
+        clone_order_endpoint_input: Annotated[CloneOrderEndpointInput, Field(description="The clone order details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -675,15 +696,15 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CloneOrderResult]:
-        """Clones an existing order.
+    ) -> ApiResponse[CloneOrderEndpointOutput]:
+        """Clones an existing public order.
 
-        In order to clone an order, the existing order must be marked as public.
+        The order to clone must be marked as public.
 
-        :param order_id: The id of the order to clone (required)
+        :param order_id: The ID of the order to clone. (required)
         :type order_id: str
-        :param clone_order_model: The body content of the request (required)
-        :type clone_order_model: CloneOrderModel
+        :param clone_order_endpoint_input: The clone order details. (required)
+        :type clone_order_endpoint_input: CloneOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -708,7 +729,7 @@ class OrderApi:
 
         _param = self._order_order_id_clone_post_serialize(
             order_id=order_id,
-            clone_order_model=clone_order_model,
+            clone_order_endpoint_input=clone_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -716,7 +737,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CloneOrderResult",
+            '200': "CloneOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -732,8 +756,8 @@ class OrderApi:
     @validate_call
     def order_order_id_clone_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to clone")],
-        clone_order_model: Annotated[CloneOrderModel, Field(description="The body content of the request")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to clone.")],
+        clone_order_endpoint_input: Annotated[CloneOrderEndpointInput, Field(description="The clone order details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -747,14 +771,14 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Clones an existing order.
+        """Clones an existing public order.
 
-        In order to clone an order, the existing order must be marked as public.
+        The order to clone must be marked as public.
 
-        :param order_id: The id of the order to clone (required)
+        :param order_id: The ID of the order to clone. (required)
         :type order_id: str
-        :param clone_order_model: The body content of the request (required)
-        :type clone_order_model: CloneOrderModel
+        :param clone_order_endpoint_input: The clone order details. (required)
+        :type clone_order_endpoint_input: CloneOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -779,7 +803,7 @@ class OrderApi:
 
         _param = self._order_order_id_clone_post_serialize(
             order_id=order_id,
-            clone_order_model=clone_order_model,
+            clone_order_endpoint_input=clone_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -787,7 +811,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CloneOrderResult",
+            '200': "CloneOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -799,7 +826,7 @@ class OrderApi:
     def _order_order_id_clone_post_serialize(
         self,
         order_id,
-        clone_order_model,
+        clone_order_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -827,17 +854,15 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if clone_order_model is not None:
-            _body_params = clone_order_model
+        if clone_order_endpoint_input is not None:
+            _body_params = clone_order_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -848,9 +873,7 @@ class OrderApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -885,7 +908,7 @@ class OrderApi:
     @validate_call
     def order_order_id_delete(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to delete")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -899,10 +922,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Deletes an order.
+        """Deletes an order and its associated resources.
 
 
-        :param order_id: The id of the order to delete (required)
+        :param order_id: The ID of the order to delete. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -936,6 +959,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -951,7 +977,7 @@ class OrderApi:
     @validate_call
     def order_order_id_delete_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to delete")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -965,10 +991,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Deletes an order.
+        """Deletes an order and its associated resources.
 
 
-        :param order_id: The id of the order to delete (required)
+        :param order_id: The ID of the order to delete. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1002,6 +1028,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1017,7 +1046,7 @@ class OrderApi:
     @validate_call
     def order_order_id_delete_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to delete")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1031,10 +1060,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Deletes an order.
+        """Deletes an order and its associated resources.
 
 
-        :param order_id: The id of the order to delete (required)
+        :param order_id: The ID of the order to delete. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1068,6 +1097,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1108,6 +1140,13 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1138,8 +1177,8 @@ class OrderApi:
     @validate_call
     def order_order_id_demo_patch(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        is_demo: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as a demo")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
+        is_demo: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as a demo.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1153,12 +1192,12 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates whether an order is a demo or not.
+        """Marks or unmarks an order as a demo.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
-        :param is_demo: Whether to mark or unmark the order as a demo
+        :param is_demo: Whether to mark or unmark the order as a demo.
         :type is_demo: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1192,7 +1231,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1208,8 +1250,8 @@ class OrderApi:
     @validate_call
     def order_order_id_demo_patch_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        is_demo: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as a demo")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
+        is_demo: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as a demo.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1223,12 +1265,12 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates whether an order is a demo or not.
+        """Marks or unmarks an order as a demo.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
-        :param is_demo: Whether to mark or unmark the order as a demo
+        :param is_demo: Whether to mark or unmark the order as a demo.
         :type is_demo: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1262,7 +1304,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1278,8 +1323,8 @@ class OrderApi:
     @validate_call
     def order_order_id_demo_patch_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        is_demo: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as a demo")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
+        is_demo: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as a demo.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1293,12 +1338,12 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates whether an order is a demo or not.
+        """Marks or unmarks an order as a demo.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
-        :param is_demo: Whether to mark or unmark the order as a demo
+        :param is_demo: Whether to mark or unmark the order as a demo.
         :type is_demo: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1332,7 +1377,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1378,6 +1426,13 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1408,7 +1463,7 @@ class OrderApi:
     @validate_call
     def order_order_id_download_results_get(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1422,11 +1477,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> bytearray:
-        """Aggregates the results of an order and returns it as a file attachment.
+        """Aggregates the results of an order and returns them as a file attachment.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1460,6 +1514,8 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1475,7 +1531,7 @@ class OrderApi:
     @validate_call
     def order_order_id_download_results_get_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1489,11 +1545,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[bytearray]:
-        """Aggregates the results of an order and returns it as a file attachment.
+        """Aggregates the results of an order and returns them as a file attachment.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1527,6 +1582,8 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1542,7 +1599,7 @@ class OrderApi:
     @validate_call
     def order_order_id_download_results_get_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1556,11 +1613,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Aggregates the results of an order and returns it as a file attachment.
+        """Aggregates the results of an order and returns them as a file attachment.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1594,6 +1650,8 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1638,9 +1696,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/octet-stream'
                 ]
             )
 
@@ -1673,7 +1729,7 @@ class OrderApi:
     @validate_call
     def order_order_id_get(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1686,11 +1742,11 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetOrderByIdResult:
-        """Retrieves an order by its id.
+    ) -> GetOrderByIdEndpointOutput:
+        """Retrieves the details of a specific order.
 
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1723,7 +1779,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetOrderByIdResult",
+            '200': "GetOrderByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1739,7 +1798,7 @@ class OrderApi:
     @validate_call
     def order_order_id_get_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1752,11 +1811,11 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetOrderByIdResult]:
-        """Retrieves an order by its id.
+    ) -> ApiResponse[GetOrderByIdEndpointOutput]:
+        """Retrieves the details of a specific order.
 
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1789,7 +1848,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetOrderByIdResult",
+            '200': "GetOrderByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1805,7 +1867,7 @@ class OrderApi:
     @validate_call
     def order_order_id_get_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1819,10 +1881,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Retrieves an order by its id.
+        """Retrieves the details of a specific order.
 
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1855,7 +1917,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetOrderByIdResult",
+            '200': "GetOrderByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1900,9 +1965,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1935,8 +1998,8 @@ class OrderApi:
     @validate_call
     def order_order_id_patch(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        update_order_model: Annotated[UpdateOrderModel, Field(description="The body content of the request")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to update.")],
+        update_order_endpoint_input: Annotated[UpdateOrderEndpointInput, Field(description="The properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1950,13 +2013,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates properties of an order.
+        """Updates the name or preceding order of an order.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order to update. (required)
         :type order_id: str
-        :param update_order_model: The body content of the request (required)
-        :type update_order_model: UpdateOrderModel
+        :param update_order_endpoint_input: The properties to update. (required)
+        :type update_order_endpoint_input: UpdateOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1981,7 +2044,7 @@ class OrderApi:
 
         _param = self._order_order_id_patch_serialize(
             order_id=order_id,
-            update_order_model=update_order_model,
+            update_order_endpoint_input=update_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1990,6 +2053,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2005,8 +2071,8 @@ class OrderApi:
     @validate_call
     def order_order_id_patch_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        update_order_model: Annotated[UpdateOrderModel, Field(description="The body content of the request")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to update.")],
+        update_order_endpoint_input: Annotated[UpdateOrderEndpointInput, Field(description="The properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2020,13 +2086,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates properties of an order.
+        """Updates the name or preceding order of an order.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order to update. (required)
         :type order_id: str
-        :param update_order_model: The body content of the request (required)
-        :type update_order_model: UpdateOrderModel
+        :param update_order_endpoint_input: The properties to update. (required)
+        :type update_order_endpoint_input: UpdateOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2051,7 +2117,7 @@ class OrderApi:
 
         _param = self._order_order_id_patch_serialize(
             order_id=order_id,
-            update_order_model=update_order_model,
+            update_order_endpoint_input=update_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2060,6 +2126,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2075,8 +2144,8 @@ class OrderApi:
     @validate_call
     def order_order_id_patch_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        update_order_model: Annotated[UpdateOrderModel, Field(description="The body content of the request")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to update.")],
+        update_order_endpoint_input: Annotated[UpdateOrderEndpointInput, Field(description="The properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2090,13 +2159,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates properties of an order.
+        """Updates the name or preceding order of an order.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order to update. (required)
         :type order_id: str
-        :param update_order_model: The body content of the request (required)
-        :type update_order_model: UpdateOrderModel
+        :param update_order_endpoint_input: The properties to update. (required)
+        :type update_order_endpoint_input: UpdateOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2121,7 +2190,7 @@ class OrderApi:
 
         _param = self._order_order_id_patch_serialize(
             order_id=order_id,
-            update_order_model=update_order_model,
+            update_order_endpoint_input=update_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2130,6 +2199,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2141,7 +2213,7 @@ class OrderApi:
     def _order_order_id_patch_serialize(
         self,
         order_id,
-        update_order_model,
+        update_order_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -2169,10 +2241,17 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_order_model is not None:
-            _body_params = update_order_model
+        if update_order_endpoint_input is not None:
+            _body_params = update_order_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -2181,9 +2260,7 @@ class OrderApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -2218,7 +2295,7 @@ class OrderApi:
     @validate_call
     def order_order_id_pause_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to pause")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to pause.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2232,10 +2309,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Pauses an order that is processing. Meaning all campaigns in the order will be paused.
+        """Pauses an order, stopping all campaigns from processing.
 
 
-        :param order_id: The id of the order to pause (required)
+        :param order_id: The ID of the order to pause. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2269,6 +2346,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2284,7 +2364,7 @@ class OrderApi:
     @validate_call
     def order_order_id_pause_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to pause")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to pause.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2298,10 +2378,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Pauses an order that is processing. Meaning all campaigns in the order will be paused.
+        """Pauses an order, stopping all campaigns from processing.
 
 
-        :param order_id: The id of the order to pause (required)
+        :param order_id: The ID of the order to pause. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2335,6 +2415,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2350,7 +2433,7 @@ class OrderApi:
     @validate_call
     def order_order_id_pause_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to pause")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to pause.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2364,10 +2447,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Pauses an order that is processing. Meaning all campaigns in the order will be paused.
+        """Pauses an order, stopping all campaigns from processing.
 
 
-        :param order_id: The id of the order to pause (required)
+        :param order_id: The ID of the order to pause. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2401,6 +2484,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2441,6 +2527,13 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -2471,8 +2564,8 @@ class OrderApi:
     @validate_call
     def order_order_id_preview_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
-        preview_order_model: Annotated[Optional[PreviewOrderModel], Field(description="The model containing additional information for the preview.")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to preview.")],
+        preview_order_endpoint_input: Annotated[Optional[PreviewOrderEndpointInput], Field(description="Optional preview configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2486,13 +2579,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Puts the order into preview mode, where one can inspect what our labelers receive.
+        """Starts preview mode for an order so labelers' experience can be inspected.
 
 
-        :param order_id: The id of the order to submit (required)
+        :param order_id: The ID of the order to preview. (required)
         :type order_id: str
-        :param preview_order_model: The model containing additional information for the preview.
-        :type preview_order_model: PreviewOrderModel
+        :param preview_order_endpoint_input: Optional preview configuration.
+        :type preview_order_endpoint_input: PreviewOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2517,7 +2610,7 @@ class OrderApi:
 
         _param = self._order_order_id_preview_post_serialize(
             order_id=order_id,
-            preview_order_model=preview_order_model,
+            preview_order_endpoint_input=preview_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2525,7 +2618,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2541,8 +2637,8 @@ class OrderApi:
     @validate_call
     def order_order_id_preview_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
-        preview_order_model: Annotated[Optional[PreviewOrderModel], Field(description="The model containing additional information for the preview.")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to preview.")],
+        preview_order_endpoint_input: Annotated[Optional[PreviewOrderEndpointInput], Field(description="Optional preview configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2556,13 +2652,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Puts the order into preview mode, where one can inspect what our labelers receive.
+        """Starts preview mode for an order so labelers' experience can be inspected.
 
 
-        :param order_id: The id of the order to submit (required)
+        :param order_id: The ID of the order to preview. (required)
         :type order_id: str
-        :param preview_order_model: The model containing additional information for the preview.
-        :type preview_order_model: PreviewOrderModel
+        :param preview_order_endpoint_input: Optional preview configuration.
+        :type preview_order_endpoint_input: PreviewOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2587,7 +2683,7 @@ class OrderApi:
 
         _param = self._order_order_id_preview_post_serialize(
             order_id=order_id,
-            preview_order_model=preview_order_model,
+            preview_order_endpoint_input=preview_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2595,7 +2691,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2611,8 +2710,8 @@ class OrderApi:
     @validate_call
     def order_order_id_preview_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
-        preview_order_model: Annotated[Optional[PreviewOrderModel], Field(description="The model containing additional information for the preview.")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to preview.")],
+        preview_order_endpoint_input: Annotated[Optional[PreviewOrderEndpointInput], Field(description="Optional preview configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2626,13 +2725,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Puts the order into preview mode, where one can inspect what our labelers receive.
+        """Starts preview mode for an order so labelers' experience can be inspected.
 
 
-        :param order_id: The id of the order to submit (required)
+        :param order_id: The ID of the order to preview. (required)
         :type order_id: str
-        :param preview_order_model: The model containing additional information for the preview.
-        :type preview_order_model: PreviewOrderModel
+        :param preview_order_endpoint_input: Optional preview configuration.
+        :type preview_order_endpoint_input: PreviewOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2657,7 +2756,7 @@ class OrderApi:
 
         _param = self._order_order_id_preview_post_serialize(
             order_id=order_id,
-            preview_order_model=preview_order_model,
+            preview_order_endpoint_input=preview_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2665,7 +2764,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2677,7 +2779,7 @@ class OrderApi:
     def _order_order_id_preview_post_serialize(
         self,
         order_id,
-        preview_order_model,
+        preview_order_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -2705,10 +2807,17 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if preview_order_model is not None:
-            _body_params = preview_order_model
+        if preview_order_endpoint_input is not None:
+            _body_params = preview_order_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -2717,9 +2826,7 @@ class OrderApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -2754,7 +2861,7 @@ class OrderApi:
     @validate_call
     def order_order_id_results_get(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2768,10 +2875,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> str:
-        """Aggregates the results of an order and returns the result as a json body.
+        """Aggregates the results of an order and returns them as a JSON string.
 
+        For file download, use the download-results endpoint instead.
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2805,6 +2913,8 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "str",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2820,7 +2930,7 @@ class OrderApi:
     @validate_call
     def order_order_id_results_get_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2834,10 +2944,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[str]:
-        """Aggregates the results of an order and returns the result as a json body.
+        """Aggregates the results of an order and returns them as a JSON string.
 
+        For file download, use the download-results endpoint instead.
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2871,6 +2982,8 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "str",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2886,7 +2999,7 @@ class OrderApi:
     @validate_call
     def order_order_id_results_get_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2900,10 +3013,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Aggregates the results of an order and returns the result as a json body.
+        """Aggregates the results of an order and returns them as a JSON string.
 
+        For file download, use the download-results endpoint instead.
 
-        :param order_id: The id of the order (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2937,6 +3051,8 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "str",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2981,9 +3097,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -3016,7 +3130,7 @@ class OrderApi:
     @validate_call
     def order_order_id_resume_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to resume")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to resume.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3030,10 +3144,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Resumes a paused order. Meaning all campaigns in the order will be resumed.
+        """Resumes a paused order, restarting all campaigns.
 
 
-        :param order_id: The id of the order to resume (required)
+        :param order_id: The ID of the order to resume. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3067,6 +3181,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3082,7 +3199,7 @@ class OrderApi:
     @validate_call
     def order_order_id_resume_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to resume")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to resume.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3096,10 +3213,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Resumes a paused order. Meaning all campaigns in the order will be resumed.
+        """Resumes a paused order, restarting all campaigns.
 
 
-        :param order_id: The id of the order to resume (required)
+        :param order_id: The ID of the order to resume. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3133,6 +3250,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3148,7 +3268,7 @@ class OrderApi:
     @validate_call
     def order_order_id_resume_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to resume")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to resume.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3162,10 +3282,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Resumes a paused order. Meaning all campaigns in the order will be resumed.
+        """Resumes a paused order, restarting all campaigns.
 
 
-        :param order_id: The id of the order to resume (required)
+        :param order_id: The ID of the order to resume. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3199,6 +3319,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3239,6 +3362,13 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -3269,7 +3399,7 @@ class OrderApi:
     @validate_call
     def order_order_id_retry_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to retry")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to retry.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3283,10 +3413,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Retries a failed order.
+        """Retries processing of a failed order.
 
 
-        :param order_id: The id of the order to retry (required)
+        :param order_id: The ID of the order to retry. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3320,6 +3450,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3335,7 +3468,7 @@ class OrderApi:
     @validate_call
     def order_order_id_retry_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to retry")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to retry.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3349,10 +3482,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Retries a failed order.
+        """Retries processing of a failed order.
 
 
-        :param order_id: The id of the order to retry (required)
+        :param order_id: The ID of the order to retry. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3386,6 +3519,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3401,7 +3537,7 @@ class OrderApi:
     @validate_call
     def order_order_id_retry_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to retry")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to retry.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3415,10 +3551,10 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Retries a failed order.
+        """Retries processing of a failed order.
 
 
-        :param order_id: The id of the order to retry (required)
+        :param order_id: The ID of the order to retry. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3452,6 +3588,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3492,6 +3631,13 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -3522,8 +3668,8 @@ class OrderApi:
     @validate_call
     def order_order_id_share_patch(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        is_public: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as public")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
+        is_public: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as public.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3537,12 +3683,12 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates whether an order is public or not.
+        """Marks or unmarks an order as public.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
-        :param is_public: Whether to mark or unmark the order as public
+        :param is_public: Whether to mark or unmark the order as public.
         :type is_public: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3576,7 +3722,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3592,8 +3741,8 @@ class OrderApi:
     @validate_call
     def order_order_id_share_patch_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        is_public: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as public")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
+        is_public: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as public.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3607,12 +3756,12 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates whether an order is public or not.
+        """Marks or unmarks an order as public.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
-        :param is_public: Whether to mark or unmark the order as public
+        :param is_public: Whether to mark or unmark the order as public.
         :type is_public: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3646,7 +3795,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3662,8 +3814,8 @@ class OrderApi:
     @validate_call
     def order_order_id_share_patch_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        is_public: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as public")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order.")],
+        is_public: Annotated[Optional[StrictBool], Field(description="Whether to mark or unmark the order as public.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3677,12 +3829,12 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates whether an order is public or not.
+        """Marks or unmarks an order as public.
 
 
-        :param order_id: The id of the order to update (required)
+        :param order_id: The ID of the order. (required)
         :type order_id: str
-        :param is_public: Whether to mark or unmark the order as public
+        :param is_public: Whether to mark or unmark the order as public.
         :type is_public: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3716,7 +3868,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3762,6 +3917,13 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -3792,8 +3954,8 @@ class OrderApi:
     @validate_call
     def order_order_id_submit_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
-        submit_order_model: Annotated[Optional[SubmitOrderModel], Field(description="The model containing additional information for the submission.")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to submit.")],
+        submit_order_endpoint_input: Annotated[Optional[SubmitOrderEndpointInput], Field(description="Optional submission configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3807,14 +3969,14 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Submits an order for approval.
+        """Submits an order for processing.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once submitted, the order will be locked and no further changes can be made.
 
-        :param order_id: The id of the order to submit (required)
+        :param order_id: The ID of the order to submit. (required)
         :type order_id: str
-        :param submit_order_model: The model containing additional information for the submission.
-        :type submit_order_model: SubmitOrderModel
+        :param submit_order_endpoint_input: Optional submission configuration.
+        :type submit_order_endpoint_input: SubmitOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3839,7 +4001,7 @@ class OrderApi:
 
         _param = self._order_order_id_submit_post_serialize(
             order_id=order_id,
-            submit_order_model=submit_order_model,
+            submit_order_endpoint_input=submit_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3847,7 +4009,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3863,8 +4028,8 @@ class OrderApi:
     @validate_call
     def order_order_id_submit_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
-        submit_order_model: Annotated[Optional[SubmitOrderModel], Field(description="The model containing additional information for the submission.")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to submit.")],
+        submit_order_endpoint_input: Annotated[Optional[SubmitOrderEndpointInput], Field(description="Optional submission configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3878,14 +4043,14 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Submits an order for approval.
+        """Submits an order for processing.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once submitted, the order will be locked and no further changes can be made.
 
-        :param order_id: The id of the order to submit (required)
+        :param order_id: The ID of the order to submit. (required)
         :type order_id: str
-        :param submit_order_model: The model containing additional information for the submission.
-        :type submit_order_model: SubmitOrderModel
+        :param submit_order_endpoint_input: Optional submission configuration.
+        :type submit_order_endpoint_input: SubmitOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3910,7 +4075,7 @@ class OrderApi:
 
         _param = self._order_order_id_submit_post_serialize(
             order_id=order_id,
-            submit_order_model=submit_order_model,
+            submit_order_endpoint_input=submit_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3918,7 +4083,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3934,8 +4102,8 @@ class OrderApi:
     @validate_call
     def order_order_id_submit_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
-        submit_order_model: Annotated[Optional[SubmitOrderModel], Field(description="The model containing additional information for the submission.")] = None,
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to submit.")],
+        submit_order_endpoint_input: Annotated[Optional[SubmitOrderEndpointInput], Field(description="Optional submission configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3949,14 +4117,14 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Submits an order for approval.
+        """Submits an order for processing.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once submitted, the order will be locked and no further changes can be made.
 
-        :param order_id: The id of the order to submit (required)
+        :param order_id: The ID of the order to submit. (required)
         :type order_id: str
-        :param submit_order_model: The model containing additional information for the submission.
-        :type submit_order_model: SubmitOrderModel
+        :param submit_order_endpoint_input: Optional submission configuration.
+        :type submit_order_endpoint_input: SubmitOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3981,7 +4149,7 @@ class OrderApi:
 
         _param = self._order_order_id_submit_post_serialize(
             order_id=order_id,
-            submit_order_model=submit_order_model,
+            submit_order_endpoint_input=submit_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3989,7 +4157,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4001,7 +4172,7 @@ class OrderApi:
     def _order_order_id_submit_post_serialize(
         self,
         order_id,
-        submit_order_model,
+        submit_order_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -4029,10 +4200,17 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if submit_order_model is not None:
-            _body_params = submit_order_model
+        if submit_order_endpoint_input is not None:
+            _body_params = submit_order_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -4041,9 +4219,7 @@ class OrderApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -4078,7 +4254,7 @@ class OrderApi:
     @validate_call
     def order_order_id_unlock_post(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to unlock")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to unlock.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4091,12 +4267,12 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UnlockOrderResult:
-        """Unlocks a newly cloned order.
+    ) -> UnlockOrderEndpointOutput:
+        """Unlocks a cloned order so it can be modified.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        Unlocking clones the entire dataset and its datapoints.
 
-        :param order_id: The id of the order to unlock (required)
+        :param order_id: The ID of the order to unlock. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4129,7 +4305,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UnlockOrderResult",
+            '200': "UnlockOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4145,7 +4324,7 @@ class OrderApi:
     @validate_call
     def order_order_id_unlock_post_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to unlock")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to unlock.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4158,12 +4337,12 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UnlockOrderResult]:
-        """Unlocks a newly cloned order.
+    ) -> ApiResponse[UnlockOrderEndpointOutput]:
+        """Unlocks a cloned order so it can be modified.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        Unlocking clones the entire dataset and its datapoints.
 
-        :param order_id: The id of the order to unlock (required)
+        :param order_id: The ID of the order to unlock. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4196,7 +4375,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UnlockOrderResult",
+            '200': "UnlockOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4212,7 +4394,7 @@ class OrderApi:
     @validate_call
     def order_order_id_unlock_post_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="The id of the order to unlock")],
+        order_id: Annotated[StrictStr, Field(description="The ID of the order to unlock.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4226,11 +4408,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Unlocks a newly cloned order.
+        """Unlocks a cloned order so it can be modified.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        Unlocking clones the entire dataset and its datapoints.
 
-        :param order_id: The id of the order to unlock (required)
+        :param order_id: The ID of the order to unlock. (required)
         :type order_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4263,7 +4445,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UnlockOrderResult",
+            '200': "UnlockOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4308,9 +4493,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -4343,7 +4526,7 @@ class OrderApi:
     @validate_call
     def order_post(
         self,
-        create_order_model: Annotated[CreateOrderModel, Field(description="The body request.")],
+        create_order_model: Annotated[CreateOrderModel, Field(description="The order creation configuration.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4356,11 +4539,12 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateOrderResult:
-        """Used to create a new order.
+    ) -> CreateOrderEndpointOutput:
+        """Creates a new order with the given configuration.
 
+        Once created, use the returned dataset ID to fill the dataset with datapoints,  then submit the order for processing.
 
-        :param create_order_model: The body request. (required)
+        :param create_order_model: The order creation configuration. (required)
         :type create_order_model: CreateOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4393,7 +4577,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateOrderResult",
+            '200': "CreateOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4409,7 +4596,7 @@ class OrderApi:
     @validate_call
     def order_post_with_http_info(
         self,
-        create_order_model: Annotated[CreateOrderModel, Field(description="The body request.")],
+        create_order_model: Annotated[CreateOrderModel, Field(description="The order creation configuration.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4422,11 +4609,12 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateOrderResult]:
-        """Used to create a new order.
+    ) -> ApiResponse[CreateOrderEndpointOutput]:
+        """Creates a new order with the given configuration.
 
+        Once created, use the returned dataset ID to fill the dataset with datapoints,  then submit the order for processing.
 
-        :param create_order_model: The body request. (required)
+        :param create_order_model: The order creation configuration. (required)
         :type create_order_model: CreateOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4459,7 +4647,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateOrderResult",
+            '200': "CreateOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4475,7 +4666,7 @@ class OrderApi:
     @validate_call
     def order_post_without_preload_content(
         self,
-        create_order_model: Annotated[CreateOrderModel, Field(description="The body request.")],
+        create_order_model: Annotated[CreateOrderModel, Field(description="The order creation configuration.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4489,10 +4680,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Used to create a new order.
+        """Creates a new order with the given configuration.
 
+        Once created, use the returned dataset ID to fill the dataset with datapoints,  then submit the order for processing.
 
-        :param create_order_model: The body request. (required)
+        :param create_order_model: The order creation configuration. (required)
         :type create_order_model: CreateOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4525,7 +4717,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateOrderResult",
+            '200': "CreateOrderEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4570,9 +4765,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -4583,8 +4776,7 @@ class OrderApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -4619,7 +4811,7 @@ class OrderApi:
     @validate_call
     def order_unsupported_post(
         self,
-        create_unsupported_order_model: Annotated[CreateUnsupportedOrderModel, Field(description="The body content of the request")],
+        create_unsupported_order_endpoint_input: Annotated[CreateUnsupportedOrderEndpointInput, Field(description="The unsupported order details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4633,11 +4825,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Notifies the admins that a user wants to create an order with an unsupported label type or data type.
+        """Creates a notification for an unsupported order type.
 
 
-        :param create_unsupported_order_model: The body content of the request (required)
-        :type create_unsupported_order_model: CreateUnsupportedOrderModel
+        :param create_unsupported_order_endpoint_input: The unsupported order details. (required)
+        :type create_unsupported_order_endpoint_input: CreateUnsupportedOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4661,7 +4853,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_unsupported_post_serialize(
-            create_unsupported_order_model=create_unsupported_order_model,
+            create_unsupported_order_endpoint_input=create_unsupported_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4670,6 +4862,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4685,7 +4880,7 @@ class OrderApi:
     @validate_call
     def order_unsupported_post_with_http_info(
         self,
-        create_unsupported_order_model: Annotated[CreateUnsupportedOrderModel, Field(description="The body content of the request")],
+        create_unsupported_order_endpoint_input: Annotated[CreateUnsupportedOrderEndpointInput, Field(description="The unsupported order details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4699,11 +4894,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Notifies the admins that a user wants to create an order with an unsupported label type or data type.
+        """Creates a notification for an unsupported order type.
 
 
-        :param create_unsupported_order_model: The body content of the request (required)
-        :type create_unsupported_order_model: CreateUnsupportedOrderModel
+        :param create_unsupported_order_endpoint_input: The unsupported order details. (required)
+        :type create_unsupported_order_endpoint_input: CreateUnsupportedOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4727,7 +4922,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_unsupported_post_serialize(
-            create_unsupported_order_model=create_unsupported_order_model,
+            create_unsupported_order_endpoint_input=create_unsupported_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4736,6 +4931,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4751,7 +4949,7 @@ class OrderApi:
     @validate_call
     def order_unsupported_post_without_preload_content(
         self,
-        create_unsupported_order_model: Annotated[CreateUnsupportedOrderModel, Field(description="The body content of the request")],
+        create_unsupported_order_endpoint_input: Annotated[CreateUnsupportedOrderEndpointInput, Field(description="The unsupported order details.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4765,11 +4963,11 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Notifies the admins that a user wants to create an order with an unsupported label type or data type.
+        """Creates a notification for an unsupported order type.
 
 
-        :param create_unsupported_order_model: The body content of the request (required)
-        :type create_unsupported_order_model: CreateUnsupportedOrderModel
+        :param create_unsupported_order_endpoint_input: The unsupported order details. (required)
+        :type create_unsupported_order_endpoint_input: CreateUnsupportedOrderEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4793,7 +4991,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_unsupported_post_serialize(
-            create_unsupported_order_model=create_unsupported_order_model,
+            create_unsupported_order_endpoint_input=create_unsupported_order_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4802,6 +5000,9 @@ class OrderApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4812,7 +5013,7 @@ class OrderApi:
 
     def _order_unsupported_post_serialize(
         self,
-        create_unsupported_order_model,
+        create_unsupported_order_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -4838,10 +5039,17 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_unsupported_order_model is not None:
-            _body_params = create_unsupported_order_model
+        if create_unsupported_order_endpoint_input is not None:
+            _body_params = create_unsupported_order_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -4850,9 +5058,7 @@ class OrderApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -4887,7 +5093,12 @@ class OrderApi:
     @validate_call
     def orders_aggregated_overview_get(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        customer_mail: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by customer_mail.")] = None,
+        last_order_date: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by last_order_date.")] = None,
+        last_order_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by last_order_name.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4900,12 +5111,22 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfAggregatedOrdersModel:
-        """Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
+    ) -> QueryAggregatedOrdersEndpointPagedResultOfOutput:
+        """Retrieves orders aggregated by customer with total amounts and most recent order information.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param customer_mail: Filter by customer_mail.
+        :type customer_mail: FlowGetNameParameter
+        :param last_order_date: Filter by last_order_date.
+        :type last_order_date: FlowGetNameParameter
+        :param last_order_name: Filter by last_order_name.
+        :type last_order_name: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4929,7 +5150,12 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._orders_aggregated_overview_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            customer_mail=customer_mail,
+            last_order_date=last_order_date,
+            last_order_name=last_order_name,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4937,7 +5163,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfAggregatedOrdersModel",
+            '200': "QueryAggregatedOrdersEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4953,7 +5182,12 @@ class OrderApi:
     @validate_call
     def orders_aggregated_overview_get_with_http_info(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        customer_mail: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by customer_mail.")] = None,
+        last_order_date: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by last_order_date.")] = None,
+        last_order_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by last_order_name.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4966,12 +5200,22 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfAggregatedOrdersModel]:
-        """Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
+    ) -> ApiResponse[QueryAggregatedOrdersEndpointPagedResultOfOutput]:
+        """Retrieves orders aggregated by customer with total amounts and most recent order information.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param customer_mail: Filter by customer_mail.
+        :type customer_mail: FlowGetNameParameter
+        :param last_order_date: Filter by last_order_date.
+        :type last_order_date: FlowGetNameParameter
+        :param last_order_name: Filter by last_order_name.
+        :type last_order_name: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4995,7 +5239,12 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._orders_aggregated_overview_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            customer_mail=customer_mail,
+            last_order_date=last_order_date,
+            last_order_name=last_order_name,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5003,7 +5252,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfAggregatedOrdersModel",
+            '200': "QueryAggregatedOrdersEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5019,7 +5271,12 @@ class OrderApi:
     @validate_call
     def orders_aggregated_overview_get_without_preload_content(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        customer_mail: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by customer_mail.")] = None,
+        last_order_date: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by last_order_date.")] = None,
+        last_order_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by last_order_name.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5033,11 +5290,21 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
+        """Retrieves orders aggregated by customer with total amounts and most recent order information.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param customer_mail: Filter by customer_mail.
+        :type customer_mail: FlowGetNameParameter
+        :param last_order_date: Filter by last_order_date.
+        :type last_order_date: FlowGetNameParameter
+        :param last_order_name: Filter by last_order_name.
+        :type last_order_name: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5061,7 +5328,12 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._orders_aggregated_overview_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            customer_mail=customer_mail,
+            last_order_date=last_order_date,
+            last_order_name=last_order_name,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5069,7 +5341,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfAggregatedOrdersModel",
+            '200': "QueryAggregatedOrdersEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5080,7 +5355,12 @@ class OrderApi:
 
     def _orders_aggregated_overview_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        customer_mail,
+        last_order_date,
+        last_order_name,
         _request_auth,
         _content_type,
         _headers,
@@ -5090,6 +5370,7 @@ class OrderApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -5103,10 +5384,42 @@ class OrderApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if customer_mail is not None:
+            _param_val = customer_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('customer_mail[' + _k + ']', _v))
+        if last_order_date is not None:
+            _param_val = last_order_date
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('last_order_date[' + _k + ']', _v))
+        if last_order_name is not None:
+            _param_val = last_order_name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('last_order_name[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -5116,9 +5429,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -5151,7 +5462,14 @@ class OrderApi:
     @validate_call
     def orders_get(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        order_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by order_name.")] = None,
+        state: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by state.")] = None,
+        order_date: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by order_date.")] = None,
+        customer_mail: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by customer_mail.")] = None,
+        is_public: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by is_public.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5164,12 +5482,26 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfOrderModel:
-        """Queries orders based on a filter, page, and sort criteria.
+    ) -> QueryOrdersEndpointPagedResultOfOutput:
+        """orders_get
 
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param order_name: Filter by order_name.
+        :type order_name: FlowGetNameParameter
+        :param state: Filter by state.
+        :type state: FlowGetNameParameter
+        :param order_date: Filter by order_date.
+        :type order_date: FlowGetNameParameter
+        :param customer_mail: Filter by customer_mail.
+        :type customer_mail: FlowGetNameParameter
+        :param is_public: Filter by is_public.
+        :type is_public: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5193,7 +5525,14 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._orders_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            order_name=order_name,
+            state=state,
+            order_date=order_date,
+            customer_mail=customer_mail,
+            is_public=is_public,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5201,7 +5540,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfOrderModel",
+            '200': "QueryOrdersEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5217,7 +5559,14 @@ class OrderApi:
     @validate_call
     def orders_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        order_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by order_name.")] = None,
+        state: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by state.")] = None,
+        order_date: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by order_date.")] = None,
+        customer_mail: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by customer_mail.")] = None,
+        is_public: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by is_public.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5230,12 +5579,26 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfOrderModel]:
-        """Queries orders based on a filter, page, and sort criteria.
+    ) -> ApiResponse[QueryOrdersEndpointPagedResultOfOutput]:
+        """orders_get
 
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param order_name: Filter by order_name.
+        :type order_name: FlowGetNameParameter
+        :param state: Filter by state.
+        :type state: FlowGetNameParameter
+        :param order_date: Filter by order_date.
+        :type order_date: FlowGetNameParameter
+        :param customer_mail: Filter by customer_mail.
+        :type customer_mail: FlowGetNameParameter
+        :param is_public: Filter by is_public.
+        :type is_public: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5259,7 +5622,14 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._orders_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            order_name=order_name,
+            state=state,
+            order_date=order_date,
+            customer_mail=customer_mail,
+            is_public=is_public,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5267,7 +5637,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfOrderModel",
+            '200': "QueryOrdersEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5283,7 +5656,14 @@ class OrderApi:
     @validate_call
     def orders_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        order_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by order_name.")] = None,
+        state: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by state.")] = None,
+        order_date: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by order_date.")] = None,
+        customer_mail: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by customer_mail.")] = None,
+        is_public: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by is_public.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5297,11 +5677,25 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries orders based on a filter, page, and sort criteria.
+        """orders_get
 
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param order_name: Filter by order_name.
+        :type order_name: FlowGetNameParameter
+        :param state: Filter by state.
+        :type state: FlowGetNameParameter
+        :param order_date: Filter by order_date.
+        :type order_date: FlowGetNameParameter
+        :param customer_mail: Filter by customer_mail.
+        :type customer_mail: FlowGetNameParameter
+        :param is_public: Filter by is_public.
+        :type is_public: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5325,7 +5719,14 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._orders_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            order_name=order_name,
+            state=state,
+            order_date=order_date,
+            customer_mail=customer_mail,
+            is_public=is_public,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5333,7 +5734,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfOrderModel",
+            '200': "QueryOrdersEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5344,7 +5748,14 @@ class OrderApi:
 
     def _orders_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        order_name,
+        state,
+        order_date,
+        customer_mail,
+        is_public,
         _request_auth,
         _content_type,
         _headers,
@@ -5354,6 +5765,7 @@ class OrderApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -5367,10 +5779,58 @@ class OrderApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if order_name is not None:
+            _param_val = order_name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('order_name[' + _k + ']', _v))
+        if state is not None:
+            _param_val = state
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('state[' + _k + ']', _v))
+        if order_date is not None:
+            _param_val = order_date
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('order_date[' + _k + ']', _v))
+        if customer_mail is not None:
+            _param_val = customer_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('customer_mail[' + _k + ']', _v))
+        if is_public is not None:
+            _param_val = is_public
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('is_public[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -5380,9 +5840,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -5427,8 +5885,8 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetPublicOrdersResult:
-        """Retrieves orders that are public and can be cloned by any user.
+    ) -> GetPublicOrdersEndpointOutput:
+        """Retrieves all publicly available orders.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -5461,7 +5919,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPublicOrdersResult",
+            '200': "GetPublicOrdersEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5489,8 +5950,8 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetPublicOrdersResult]:
-        """Retrieves orders that are public and can be cloned by any user.
+    ) -> ApiResponse[GetPublicOrdersEndpointOutput]:
+        """Retrieves all publicly available orders.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -5523,7 +5984,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPublicOrdersResult",
+            '200': "GetPublicOrdersEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5552,7 +6016,7 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Retrieves orders that are public and can be cloned by any user.
+        """Retrieves all publicly available orders.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -5585,7 +6049,10 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPublicOrdersResult",
+            '200': "GetPublicOrdersEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5627,9 +6094,7 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

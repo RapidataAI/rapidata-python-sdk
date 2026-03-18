@@ -189,6 +189,9 @@
                 },
                 "in": {
                   "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
                 }
               }
             },
@@ -232,6 +235,9 @@
                 },
                 "in": {
                   "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
                 }
               }
             },
@@ -274,6 +280,9 @@
                   "type": "string"
                 },
                 "in": {
+                  "type": "string"
+                },
+                "not_contains": {
                   "type": "string"
                 }
               }
@@ -1100,7 +1109,8 @@
           "Contains",
           "StartsWith",
           "EndsWith",
-          "In"
+          "In",
+          "NotContains"
         ]
       },
       "GetPublicResponsesResult": {
@@ -3724,6 +3734,12 @@
             "type": "number",
             "description": "The probability that if the user answers at random that he'll be correct.",
             "format": "double",
+            "nullable": true
+          },
+          "sortIndex": {
+            "type": "integer",
+            "description": "Controls the serving order of rapids within a target group.",
+            "format": "int32",
             "nullable": true
           }
         },

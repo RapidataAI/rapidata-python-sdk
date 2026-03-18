@@ -41,7 +41,10 @@ class QueryAudiencesResult(BaseModel):
     is_public: StrictBool = Field(alias="isPublic")
     is_distilling: StrictBool = Field(alias="isDistilling")
     random_admission_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomAdmissionProbability")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "randomAdmissionProbability"]
+    health: Optional[Union[StrictFloat, StrictInt]] = None
+    graduated: Optional[StrictInt] = None
+    dropped: Optional[StrictInt] = None
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "randomAdmissionProbability", "health", "graduated", "dropped"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -122,7 +125,10 @@ class QueryAudiencesResult(BaseModel):
             "ownerMail": obj.get("ownerMail"),
             "isPublic": obj.get("isPublic"),
             "isDistilling": obj.get("isDistilling"),
-            "randomAdmissionProbability": obj.get("randomAdmissionProbability")
+            "randomAdmissionProbability": obj.get("randomAdmissionProbability"),
+            "health": obj.get("health"),
+            "graduated": obj.get("graduated"),
+            "dropped": obj.get("dropped")
         })
         return _obj
 
