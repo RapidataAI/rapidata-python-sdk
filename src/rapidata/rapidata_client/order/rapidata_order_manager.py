@@ -929,32 +929,15 @@ class RapidataOrderManager:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
         with tracer.start_as_current_span("RapidataOrderManager.find_orders"):
-            from rapidata.api_client.models.page_info import PageInfo
-            from rapidata.api_client.models.query_model import QueryModel
-            from rapidata.api_client.models.root_filter import RootFilter
-            from rapidata.api_client.models.filter import Filter
-            from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.sort_criterion import SortCriterion
-            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.flow_get_name_parameter import (
+                FlowGetNameParameter,
+            )
 
             order_page_result = self.__openapi_service.order.order_api.orders_get(
-                QueryModel(
-                    page=PageInfo(index=1, size=amount),
-                    filter=RootFilter(
-                        filters=[
-                            Filter(
-                                field="OrderName",
-                                operator=FilterOperator.CONTAINS,
-                                value=name,
-                            )
-                        ]
-                    ),
-                    sortCriteria=[
-                        SortCriterion(
-                            direction=SortDirection.DESC, propertyName="OrderDate"
-                        )
-                    ],
-                )
+                page=1,
+                page_size=amount,
+                order_name=FlowGetNameParameter(contains=name),
+                sort=["-order_date"],
             )
 
             orders = [

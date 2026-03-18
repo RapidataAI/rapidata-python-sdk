@@ -5,22 +5,22 @@ from typing import Literal, TYPE_CHECKING, Any, cast
 if TYPE_CHECKING:
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
-from rapidata.api_client.models.i_validation_truth_attach_category_truth import (
-    IValidationTruthAttachCategoryTruth,
+from rapidata.api_client.models.i_example_truth_classify_example_truth import (
+    IExampleTruthClassifyExampleTruth,
 )
-from rapidata.api_client.models.i_rapid_payload_classify_payload import (
-    IRapidPayloadClassifyPayload,
+from rapidata.api_client.models.i_example_payload_classify_example_payload import (
+    IExamplePayloadClassifyExamplePayload,
 )
-from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
-from rapidata.api_client.models.i_rapid_payload_compare_payload import (
-    IRapidPayloadComparePayload,
+from rapidata.api_client.models.example_category import ExampleCategory
+from rapidata.api_client.models.i_example_payload_compare_example_payload import (
+    IExamplePayloadCompareExamplePayload,
 )
-from rapidata.api_client.models.i_validation_truth_compare_truth import (
-    IValidationTruthCompareTruth,
+from rapidata.api_client.models.i_example_truth_compare_example_truth import (
+    IExampleTruthCompareExampleTruth,
 )
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.i_rapid_payload import IRapidPayload
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.i_example_payload import IExamplePayload
+from rapidata.api_client.models.i_example_truth import IExampleTruth
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 
@@ -59,8 +59,8 @@ class AudienceExampleHandler:
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
-        from rapidata.api_client.models.add_rapid_to_audience_model import (
-            AddRapidToAudienceModel,
+        from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
+            AddExampleToAudienceEndpointInput,
         )
 
         if not isinstance(truth, list):
@@ -75,25 +75,25 @@ class AudienceExampleHandler:
         else:
             asset_input = self._asset_mapper.create_text_input(datapoint)
 
-        payload = IRapidPayload(
-            actual_instance=IRapidPayloadClassifyPayload(
-                _t="ClassifyPayload",
+        payload = IExamplePayload(
+            actual_instance=IExamplePayloadClassifyExamplePayload(
+                _t="ClassifyExamplePayload",
                 categories=[
-                    ClassifyPayloadCategory(label=option, value=option)
+                    ExampleCategory(label=option, value=option)
                     for option in answer_options
                 ],
                 title=instruction,
             )
         )
-        model_truth = IValidationTruth(
-            actual_instance=IValidationTruthAttachCategoryTruth(
-                correctCategories=truth, _t="AttachCategoryTruth"
+        model_truth = IExampleTruth(
+            actual_instance=IExampleTruthClassifyExampleTruth(
+                correctCategories=truth, _t="ClassifyExampleTruth"
             )
         )
 
-        self._openapi_service.audience.audience_api.audience_audience_id_rapid_post(
+        self._openapi_service.audience.examples_api.audience_audience_id_example_post(
             audience_id=self._audience_id,
-            add_rapid_to_audience_model=AddRapidToAudienceModel(
+            add_example_to_audience_endpoint_input=AddExampleToAudienceEndpointInput(
                 asset=asset_input,
                 payload=payload,
                 truth=model_truth,
@@ -131,13 +131,13 @@ class AudienceExampleHandler:
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
-        from rapidata.api_client.models.add_rapid_to_audience_model import (
-            AddRapidToAudienceModel,
+        from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
+            AddExampleToAudienceEndpointInput,
         )
 
-        payload = IRapidPayload(
-            actual_instance=IRapidPayloadComparePayload(
-                _t="ComparePayload", criteria=instruction
+        payload = IExamplePayload(
+            actual_instance=IExamplePayloadCompareExamplePayload(
+                _t="CompareExamplePayload", criteria=instruction
             )
         )
 
@@ -156,18 +156,18 @@ class AudienceExampleHandler:
             winner_id = uploaded_names[truth_index]
         else:
             winner_id = truth
-        model_truth = IValidationTruth(
-            actual_instance=IValidationTruthCompareTruth(
-                _t="CompareTruth", winnerId=winner_id
+        model_truth = IExampleTruth(
+            actual_instance=IExampleTruthCompareExampleTruth(
+                _t="CompareExampleTruth", winnerId=winner_id
             )
         )
 
         if len(datapoint) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
 
-        self._openapi_service.audience.audience_api.audience_audience_id_rapid_post(
+        self._openapi_service.audience.examples_api.audience_audience_id_example_post(
             audience_id=self._audience_id,
-            add_rapid_to_audience_model=AddRapidToAudienceModel(
+            add_example_to_audience_endpoint_input=AddExampleToAudienceEndpointInput(
                 asset=asset_input,
                 payload=payload,
                 truth=model_truth,
@@ -190,8 +190,8 @@ class AudienceExampleHandler:
         Args:
             rapid (Rapid): The rapid object to add as an example.
         """
-        from rapidata.api_client.models.add_rapid_to_audience_model import (
-            AddRapidToAudienceModel,
+        from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
+            AddExampleToAudienceEndpointInput,
         )
 
         # Handle asset uploading based on data type
@@ -218,19 +218,23 @@ class AudienceExampleHandler:
                 self._asset_uploader.upload_asset(rapid.media_context)
             )
 
-        # Convert IValidationTruthModel to IValidationTruth
+        # Convert IValidationTruthModel to IExampleTruth
         # Both types are structurally identical (same JSON schema), differing only in class names
         # The dict-based conversion is safe and preserves all data
-        model_truth: IValidationTruth | None = None
+        model_truth: IExampleTruth | None = None
         if rapid.truth:
             truth_dict = cast(dict[str, Any], rapid.truth.to_dict())
-            model_truth = IValidationTruth.from_dict(truth_dict)
+            model_truth = IExampleTruth.from_dict(truth_dict)
 
-        self._openapi_service.audience.audience_api.audience_audience_id_rapid_post(
+        # Convert IRapidPayload to IExamplePayload
+        payload_dict = cast(dict[str, Any], rapid.payload.to_dict())
+        example_payload = IExamplePayload.from_dict(payload_dict)
+
+        self._openapi_service.audience.examples_api.audience_audience_id_example_post(
             audience_id=self._audience_id,
-            add_rapid_to_audience_model=AddRapidToAudienceModel(
+            add_example_to_audience_endpoint_input=AddExampleToAudienceEndpointInput(
                 asset=asset_input,
-                payload=rapid.payload,
+                payload=example_payload,
                 truth=model_truth,
                 context=rapid.context,
                 contextAsset=context_asset,
