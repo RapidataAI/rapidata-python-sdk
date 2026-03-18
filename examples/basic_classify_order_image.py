@@ -1,4 +1,4 @@
-from rapidata import RapidataClient, NoShuffle
+from rapidata import RapidataClient, NoShuffleSetting
 
 # List of image URLs representing different emotions
 IMAGE_URLS: list[str] = [
@@ -26,7 +26,7 @@ if __name__ == "__main__":
         contexts=CONTEXTS,
         datapoints=IMAGE_URLS,
         responses_per_datapoint=25,
-        settings=[NoShuffle()]  # Do not shuffle the answer options
+        settings=[NoShuffleSetting()]  # Do not shuffle the answer options
     ).run()  # Execute the order
     
     # Display a progress bar for the order

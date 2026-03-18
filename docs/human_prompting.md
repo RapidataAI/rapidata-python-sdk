@@ -119,7 +119,7 @@ instruction="Which of these sentences makes more sense?"
 # Simple classification
 instruction="What object is in the image?"
 
-# Likert classification (add NoShuffle setting)
+# Likert classification (add NoShuffleSetting setting)
 instruction="How well does the video match the description?"
 answer_options=["1: Perfectly",
                 "2: Very well",

@@ -56,18 +56,18 @@ from rapidata.rapidata_client.filter.models.age_group import AgeGroup
 from rapidata.rapidata_client.filter.models.gender import Gender
 
 # Settings Types
-from rapidata.rapidata_client.settings.alert_on_fast_response import AlertOnFastResponse
-from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBoth
+from rapidata.rapidata_client.settings.alert_on_fast_response import AlertOnFastResponseSetting, AlertOnFastResponse
+from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting, AllowNeitherBoth
 from rapidata.rapidata_client.settings.custom_setting import CustomSetting
 from rapidata.rapidata_client.settings.free_text_minimum_characters import (
-    FreeTextMinimumCharacters,
+    FreeTextMinimumCharactersSetting, FreeTextMinimumCharacters,
 )
-from rapidata.rapidata_client.settings.no_shuffle import NoShuffle
+from rapidata.rapidata_client.settings.no_shuffle import NoShuffleSetting, NoShuffle
 from rapidata.rapidata_client.settings.play_video_until_the_end import (
-    PlayVideoUntilTheEnd,
+    PlayVideoUntilTheEndSetting, PlayVideoUntilTheEnd,
 )
 from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings
-from rapidata.rapidata_client.settings.translation_behaviour import TranslationBehaviour
+from rapidata.rapidata_client.settings.translation_behaviour import TranslationBehaviourSetting, TranslationBehaviour
 from rapidata.rapidata_client.settings.models.translation_behaviour_options import (
     TranslationBehaviourOptions,
 )
@@ -129,13 +129,19 @@ __all__ = [
     "AgeGroup",
     "Gender",
     # Settings Types
+    "AlertOnFastResponseSetting",
     "AlertOnFastResponse",
+    "AllowNeitherBothSetting",
     "AllowNeitherBoth",
     "CustomSetting",
+    "FreeTextMinimumCharactersSetting",
     "FreeTextMinimumCharacters",
+    "NoShuffleSetting",
     "NoShuffle",
+    "PlayVideoUntilTheEndSetting",
     "PlayVideoUntilTheEnd",
     "RapidataSettings",
+    "TranslationBehaviourSetting",
     "TranslationBehaviour",
     "TranslationBehaviourOptions",
     # Configuration Types

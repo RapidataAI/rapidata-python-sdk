@@ -1,4 +1,4 @@
-from rapidata import RapidataClient, NoShuffle
+from rapidata import RapidataClient, NoShuffleSetting
 
 # ===== TASK CONFIGURATION =====
 # Likert scale options (from lowest to highest agreement)
@@ -83,7 +83,7 @@ def main():
         datapoints=IMAGE_URLS,
         validation_set_id=validation_set_id,  # Using our validation set
         responses_per_datapoint=25,
-        settings=[NoShuffle()]               # Keep Likert scale in order
+        settings=[NoShuffleSetting()]               # Keep Likert scale in order
     ).run()  # Start the order
 
     order.display_progress_bar()

@@ -2,10 +2,10 @@
 
 To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
 
-In this example, we want to rate different images based on a Likert scale to assess how well generated images match their descriptions. The `NoShuffle` setting ensures answer options remain in order since they represent a scale.
+In this example, we want to rate different images based on a Likert scale to assess how well generated images match their descriptions. The `NoShuffleSetting` setting ensures answer options remain in order since they represent a scale.
 
 ```python
-from rapidata import RapidataClient, NoShuffle
+from rapidata import RapidataClient, NoShuffleSetting
 
 IMAGE_URLS = [
     "https://assets.rapidata.ai/tshirt-4o.png",
@@ -35,7 +35,7 @@ job_definition = client.job.create_classification_job_definition(
     contexts=CONTEXTS,
     datapoints=IMAGE_URLS,
     responses_per_datapoint=25,
-    settings=[NoShuffle()]
+    settings=[NoShuffleSetting()]
 )
 
 # Preview the job definition

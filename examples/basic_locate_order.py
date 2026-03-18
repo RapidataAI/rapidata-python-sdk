@@ -15,6 +15,6 @@ if __name__ == "__main__":
         instruction="Look close, find incoherent errors, like senseless or malformed objects, incomprehensible details, or visual glitches? Tap to select.",
         datapoints=IMAGE_URLS,
         responses_per_datapoint=35,
-        settings=[RapidataSettings.alert_on_fast_response(2500)], # This is optional, it will alert you if the annotators are responding before 2.5 seconds
+        settings=[RapidataSettings.AlertOnFastResponse(2500)], # This is optional, it will alert you if the annotators are responding before 2.5 seconds
         validation_set_id="6768a557026456ec851f51f9" # in this example, the validation set has already been created
     ).run()

@@ -224,7 +224,7 @@ class RapidataOrderManager:
 
         Example:
             ```python
-            from rapidata import RapidataClient, NoShuffle
+            from rapidata import RapidataClient, NoShuffleSetting
 
             rapi = RapidataClient()
             order = rapi.order.create_classification_order(
@@ -233,7 +233,7 @@ class RapidataOrderManager:
                 answer_options=["1: Poor", "2: Fair", "3: Good", "4: Excellent"],
                 datapoints=["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
                 responses_per_datapoint=15,
-                settings=[NoShuffle()],  # Keep options in order for Likert scale
+                settings=[NoShuffleSetting()],  # Keep options in order for Likert scale
             ).run()
 
             results = order.get_results()
@@ -574,7 +574,7 @@ class RapidataOrderManager:
 
         Example:
             ```python
-            from rapidata import RapidataClient, FreeTextMinimumCharacters
+            from rapidata import RapidataClient, FreeTextMinimumCharactersSetting
 
             rapi = RapidataClient()
             order = rapi.order.create_free_text_order(
@@ -582,7 +582,7 @@ class RapidataOrderManager:
                 instruction="Describe what you see in this image in detail",
                 datapoints=["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
                 responses_per_datapoint=5,
-                settings=[FreeTextMinimumCharacters(20)],  # Require at least 20 characters
+                settings=[FreeTextMinimumCharactersSetting(20)],  # Require at least 20 characters
             ).run()
 
             results = order.get_results()

@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+import warnings
+
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class PlayVideoUntilTheEnd(RapidataSetting):
+class PlayVideoUntilTheEndSetting(RapidataSetting):
     """
     Allows users to only answer once the video has finished playing.
     The additional time gets added on top of the video duration. Can be negative to allow answers before the video ends.
@@ -17,3 +21,15 @@ class PlayVideoUntilTheEnd(RapidataSetting):
         super().__init__(
             key="alert_on_fast_response_add_media_duration", value=additional_time
         )
+
+
+class PlayVideoUntilTheEnd(PlayVideoUntilTheEndSetting):
+    """Deprecated: Use :class:`PlayVideoUntilTheEndSetting` instead."""
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "PlayVideoUntilTheEnd is deprecated, use PlayVideoUntilTheEndSetting instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)

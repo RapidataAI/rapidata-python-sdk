@@ -1,10 +1,8 @@
-from rapidata.rapidata_client.filter import (
-    CountryFilter,
-    LanguageFilter,
-    NotFilter,
-    OrFilter,
-    AndFilter,
-)
+from rapidata.rapidata_client.filter.country_filter import CountryFilter
+from rapidata.rapidata_client.filter.language_filter import LanguageFilter
+from rapidata.rapidata_client.filter.not_filter import NotFilter
+from rapidata.rapidata_client.filter.or_filter import OrFilter
+from rapidata.rapidata_client.filter.and_filter import AndFilter
 
 
 class RapidataFilters:
@@ -18,11 +16,11 @@ class RapidataFilters:
         This might significantly slow down the number of responses you receive.
 
     Attributes:
-        country (CountryFilter): Filters for users with a specific country.
-        language (LanguageFilter): Filters for users with a specific language.
-        not_filter (NotFilter): Inverts the filter.
-        or_filter (OrFilter): Combines multiple filters with a logical OR operation.
-        and_filter (AndFilter): Combines multiple filters with a logical AND operation.
+        Country (CountryFilter): Filters for users with a specific country.
+        Language (LanguageFilter): Filters for users with a specific language.
+        Not (NotFilter): Inverts the filter.
+        Or (OrFilter): Combines multiple filters with a logical OR operation.
+        And (AndFilter): Combines multiple filters with a logical AND operation.
 
     Example:
         ```python
@@ -46,6 +44,6 @@ class RapidataFilters:
 
     Country = CountryFilter
     Language = LanguageFilter
-    Not_filter = NotFilter
-    Or_filter = OrFilter
-    And_filter = AndFilter
+    Not = NotFilter
+    Or = OrFilter
+    And = AndFilter

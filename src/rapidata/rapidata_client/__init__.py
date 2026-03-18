@@ -26,14 +26,22 @@ from .datapoints.metadata import (
 from .settings import (
     RapidataSettings,
     TranslationBehaviourOptions,
+    AlertOnFastResponseSetting,
     AlertOnFastResponse,
+    TranslationBehaviourSetting,
     TranslationBehaviour,
+    FreeTextMinimumCharactersSetting,
     FreeTextMinimumCharacters,
+    NoShuffleSetting,
     NoShuffle,
+    PlayVideoUntilTheEndSetting,
     PlayVideoUntilTheEnd,
     CustomSetting,
+    AllowNeitherBothSetting,
     AllowNeitherBoth,
+    SwapContextInstructionSetting,
     SwapContextInstruction,
+    MuteVideoSetting,
     MuteVideo,
 )
 from .filter import (
