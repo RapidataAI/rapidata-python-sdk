@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.flow_get_name_parameter import FlowGetNameParameter
+from rapidata.api_client.models.campaigns_get_id_parameter import CampaignsGetIdParameter
 from rapidata.api_client.models.query_customers_endpoint_paged_result_of_output import QueryCustomersEndpointPagedResultOfOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -46,10 +46,10 @@ class CustomerApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by id.")] = None,
-        email: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by email.")] = None,
-        organization_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by organization_name.")] = None,
-        organization_id: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by organization_id.")] = None,
+        id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by id.")] = None,
+        email: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by email.")] = None,
+        organization_name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by organization_name.")] = None,
+        organization_id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by organization_id.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -74,13 +74,13 @@ class CustomerApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: FlowGetNameParameter
+        :type id: CampaignsGetIdParameter
         :param email: Filter by email.
-        :type email: FlowGetNameParameter
+        :type email: CampaignsGetIdParameter
         :param organization_name: Filter by organization_name.
-        :type organization_name: FlowGetNameParameter
+        :type organization_name: CampaignsGetIdParameter
         :param organization_id: Filter by organization_id.
-        :type organization_id: FlowGetNameParameter
+        :type organization_id: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -140,10 +140,10 @@ class CustomerApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by id.")] = None,
-        email: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by email.")] = None,
-        organization_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by organization_name.")] = None,
-        organization_id: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by organization_id.")] = None,
+        id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by id.")] = None,
+        email: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by email.")] = None,
+        organization_name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by organization_name.")] = None,
+        organization_id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by organization_id.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -168,13 +168,13 @@ class CustomerApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: FlowGetNameParameter
+        :type id: CampaignsGetIdParameter
         :param email: Filter by email.
-        :type email: FlowGetNameParameter
+        :type email: CampaignsGetIdParameter
         :param organization_name: Filter by organization_name.
-        :type organization_name: FlowGetNameParameter
+        :type organization_name: CampaignsGetIdParameter
         :param organization_id: Filter by organization_id.
-        :type organization_id: FlowGetNameParameter
+        :type organization_id: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -234,10 +234,10 @@ class CustomerApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by id.")] = None,
-        email: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by email.")] = None,
-        organization_name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by organization_name.")] = None,
-        organization_id: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by organization_id.")] = None,
+        id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by id.")] = None,
+        email: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by email.")] = None,
+        organization_name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by organization_name.")] = None,
+        organization_id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by organization_id.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -262,13 +262,13 @@ class CustomerApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: FlowGetNameParameter
+        :type id: CampaignsGetIdParameter
         :param email: Filter by email.
-        :type email: FlowGetNameParameter
+        :type email: CampaignsGetIdParameter
         :param organization_name: Filter by organization_name.
-        :type organization_name: FlowGetNameParameter
+        :type organization_name: CampaignsGetIdParameter
         :param organization_id: Filter by organization_id.
-        :type organization_id: FlowGetNameParameter
+        :type organization_id: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

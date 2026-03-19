@@ -17,29 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.simplified_audience_user_state import SimplifiedAudienceUserState
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.boost_mode_model import BoostModeModel
+from rapidata.api_client.models.boost_status_model import BoostStatusModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterAudienceStateFilter(BaseModel):
+class GetBoostStatusEndpointOutput(BaseModel):
     """
-    ICampaignFilterAudienceStateFilter
+    GetBoostStatusEndpointOutput
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    audience_id: StrictStr = Field(alias="audienceId")
-    allowed_states: Optional[List[SimplifiedAudienceUserState]] = Field(default=None, alias="allowedStates")
-    include_unknown_state: Optional[StrictBool] = Field(default=None, alias="includeUnknownState")
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "audienceId", "allowedStates", "includeUnknownState", "executionOrder"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['AudienceStateFilter']):
-            raise ValueError("must be one of enum values ('AudienceStateFilter')")
-        return value
+    status: BoostStatusModel
+    mode: BoostModeModel
+    active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
+    inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
+    unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
+    __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -59,7 +53,7 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ICampaignFilterAudienceStateFilter from a JSON string"""
+        """Create an instance of GetBoostStatusEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -84,7 +78,7 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ICampaignFilterAudienceStateFilter from a dict"""
+        """Create an instance of GetBoostStatusEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -92,11 +86,11 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t"),
-            "audienceId": obj.get("audienceId"),
-            "allowedStates": obj.get("allowedStates"),
-            "includeUnknownState": obj.get("includeUnknownState"),
-            "executionOrder": obj.get("executionOrder")
+            "status": obj.get("status"),
+            "mode": obj.get("mode"),
+            "activeCampaigns": obj.get("activeCampaigns"),
+            "inactiveCampaigns": obj.get("inactiveCampaigns"),
+            "unknownCampaigns": obj.get("unknownCampaigns")
         })
         return _obj
 

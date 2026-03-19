@@ -1255,6 +1255,11 @@
             "description": "Minimum number of sessions before the submission rate check applies.\n Defaults to null (applies from first session).",
             "format": "uint32"
           },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
+            "format": "double"
+          },
           "distillingRetrievalMode": {
             "$ref": "#/components/schemas/DistillingRetrievalMode"
           },
@@ -1400,6 +1405,7 @@
           "ownerMail",
           "isPublic",
           "isDistilling",
+          "distillingCampaignId",
           "minimumUserScore",
           "distillingRetrievalMode",
           "boostLevel"
@@ -1446,6 +1452,9 @@
           "isDistilling": {
             "type": "boolean"
           },
+          "distillingCampaignId": {
+            "type": "string"
+          },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "format": "int32"
@@ -1485,6 +1494,10 @@
           "minSessionsForSubmissionRate": {
             "type": "integer",
             "format": "uint32"
+          },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "format": "double"
           },
           "distillingRetrievalMode": {
             "$ref": "#/components/schemas/DistillingRetrievalMode"
@@ -3993,6 +4006,12 @@
             "type": "integer",
             "description": "Minimum number of sessions before the submission rate check applies.\n Set to null to apply from the first session.",
             "format": "uint32",
+            "nullable": true
+          },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
+            "format": "double",
             "nullable": true
           },
           "distillingRetrievalMode": {

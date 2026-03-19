@@ -3788,7 +3788,6 @@
       "ICampaignFilterAudienceStateFilter": {
         "required": [
           "audienceId",
-          "requiredState",
           "_t"
         ],
         "properties": {
@@ -3801,8 +3800,14 @@
           "audienceId": {
             "type": "string"
           },
-          "requiredState": {
-            "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+          "allowedStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+            }
+          },
+          "includeUnknownState": {
+            "type": "boolean"
           },
           "executionOrder": {
             "type": "integer",

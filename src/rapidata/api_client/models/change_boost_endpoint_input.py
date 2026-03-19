@@ -17,29 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.simplified_audience_user_state import SimplifiedAudienceUserState
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterAudienceStateFilter(BaseModel):
+class ChangeBoostEndpointInput(BaseModel):
     """
-    ICampaignFilterAudienceStateFilter
+    ChangeBoostEndpointInput
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    audience_id: StrictStr = Field(alias="audienceId")
-    allowed_states: Optional[List[SimplifiedAudienceUserState]] = Field(default=None, alias="allowedStates")
-    include_unknown_state: Optional[StrictBool] = Field(default=None, alias="includeUnknownState")
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "audienceId", "allowedStates", "includeUnknownState", "executionOrder"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['AudienceStateFilter']):
-            raise ValueError("must be one of enum values ('AudienceStateFilter')")
-        return value
+    is_manual: StrictBool = Field(description="Whether the manual overwrite should be applied.", alias="isManual")
+    is_active: Optional[StrictBool] = Field(default=None, description="Whether the boost is active. Deprecated in favor of Level.", alias="isActive")
+    level: Optional[StrictInt] = Field(default=None, description="The boost level. Takes precedence over IsActive when set.")
+    __properties: ClassVar[List[str]] = ["isManual", "isActive", "level"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -59,7 +49,7 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ICampaignFilterAudienceStateFilter from a JSON string"""
+        """Create an instance of ChangeBoostEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -84,7 +74,7 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ICampaignFilterAudienceStateFilter from a dict"""
+        """Create an instance of ChangeBoostEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -92,11 +82,9 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t"),
-            "audienceId": obj.get("audienceId"),
-            "allowedStates": obj.get("allowedStates"),
-            "includeUnknownState": obj.get("includeUnknownState"),
-            "executionOrder": obj.get("executionOrder")
+            "isManual": obj.get("isManual"),
+            "isActive": obj.get("isActive"),
+            "level": obj.get("level")
         })
         return _obj
 

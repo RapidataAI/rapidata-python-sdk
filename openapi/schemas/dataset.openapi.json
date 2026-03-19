@@ -58,6 +58,57 @@
         }
       }
     },
+    "/dataset/{datasetId}/group": {
+      "post": {
+        "tags": [
+          "DatasetGroup"
+        ],
+        "summary": "Creates a new dataset group.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to create the group for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The dataset group creation parameters.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatasetGroupEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/datapoint/{datapointId}": {
       "get": {
         "tags": [
@@ -497,6 +548,31 @@
           }
         },
         "description": "The result when a dataset has been created."
+      },
+      "CreateDatasetGroupEndpoint_Input": {
+        "required": [
+          "group"
+        ],
+        "type": "object",
+        "properties": {
+          "group": {
+            "type": "string",
+            "description": "The name of the group."
+          },
+          "context": {
+            "type": "string",
+            "description": "The optional text context for the group.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "The optional asset context for the group."
+          }
+        }
       },
       "DatapointState": {
         "enum": [

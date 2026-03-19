@@ -16,14 +16,14 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
-from typing import Optional
+from pydantic import Field, StrictInt, StrictStr, field_validator
+from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.change_boost_model import ChangeBoostModel
-from rapidata.api_client.models.get_boost_result import GetBoostResult
-from rapidata.api_client.models.paged_result_of_campaign_query_result import PagedResultOfCampaignQueryResult
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
+from rapidata.api_client.models.campaigns_get_id_parameter import CampaignsGetIdParameter
+from rapidata.api_client.models.change_boost_endpoint_input import ChangeBoostEndpointInput
+from rapidata.api_client.models.get_boost_status_endpoint_output import GetBoostStatusEndpointOutput
+from rapidata.api_client.models.query_campaigns_endpoint_paged_result_of_output import QueryCampaignsEndpointPagedResultOfOutput
+from rapidata.api_client.models.update_campaign_endpoint_input import UpdateCampaignEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -46,7 +46,7 @@ class CampaignApi:
     @validate_call
     def campaign_boost_put(
         self,
-        change_boost_model: ChangeBoostModel,
+        change_boost_endpoint_input: Annotated[ChangeBoostEndpointInput, Field(description="The boost configuration to apply.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -60,11 +60,11 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates the boost with manual boosts.
+        """Changes the boost configuration.
 
 
-        :param change_boost_model: (required)
-        :type change_boost_model: ChangeBoostModel
+        :param change_boost_endpoint_input: The boost configuration to apply. (required)
+        :type change_boost_endpoint_input: ChangeBoostEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -88,7 +88,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._campaign_boost_put_serialize(
-            change_boost_model=change_boost_model,
+            change_boost_endpoint_input=change_boost_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -97,6 +97,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -112,7 +115,7 @@ class CampaignApi:
     @validate_call
     def campaign_boost_put_with_http_info(
         self,
-        change_boost_model: ChangeBoostModel,
+        change_boost_endpoint_input: Annotated[ChangeBoostEndpointInput, Field(description="The boost configuration to apply.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -126,11 +129,11 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates the boost with manual boosts.
+        """Changes the boost configuration.
 
 
-        :param change_boost_model: (required)
-        :type change_boost_model: ChangeBoostModel
+        :param change_boost_endpoint_input: The boost configuration to apply. (required)
+        :type change_boost_endpoint_input: ChangeBoostEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -154,7 +157,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._campaign_boost_put_serialize(
-            change_boost_model=change_boost_model,
+            change_boost_endpoint_input=change_boost_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -163,6 +166,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -178,7 +184,7 @@ class CampaignApi:
     @validate_call
     def campaign_boost_put_without_preload_content(
         self,
-        change_boost_model: ChangeBoostModel,
+        change_boost_endpoint_input: Annotated[ChangeBoostEndpointInput, Field(description="The boost configuration to apply.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -192,11 +198,11 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates the boost with manual boosts.
+        """Changes the boost configuration.
 
 
-        :param change_boost_model: (required)
-        :type change_boost_model: ChangeBoostModel
+        :param change_boost_endpoint_input: The boost configuration to apply. (required)
+        :type change_boost_endpoint_input: ChangeBoostEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -220,7 +226,7 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._campaign_boost_put_serialize(
-            change_boost_model=change_boost_model,
+            change_boost_endpoint_input=change_boost_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -229,6 +235,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -239,7 +248,7 @@ class CampaignApi:
 
     def _campaign_boost_put_serialize(
         self,
-        change_boost_model,
+        change_boost_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -265,10 +274,17 @@ class CampaignApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if change_boost_model is not None:
-            _body_params = change_boost_model
+        if change_boost_endpoint_input is not None:
+            _body_params = change_boost_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -277,9 +293,7 @@ class CampaignApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -326,8 +340,8 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetBoostResult:
-        """Gets the status of the boost.
+    ) -> GetBoostStatusEndpointOutput:
+        """Returns the current boost status including active and inactive campaigns.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -360,7 +374,10 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBoostResult",
+            '200': "GetBoostStatusEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -388,8 +405,8 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetBoostResult]:
-        """Gets the status of the boost.
+    ) -> ApiResponse[GetBoostStatusEndpointOutput]:
+        """Returns the current boost status including active and inactive campaigns.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -422,7 +439,10 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBoostResult",
+            '200': "GetBoostStatusEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -451,7 +471,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets the status of the boost.
+        """Returns the current boost status including active and inactive campaigns.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -484,7 +504,10 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBoostResult",
+            '200': "GetBoostStatusEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -526,9 +549,7 @@ class CampaignApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -561,8 +582,8 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_patch(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign to update")],
-        update_campaign_model: Annotated[UpdateCampaignModel, Field(description="model containing the updates")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to update.")],
+        update_campaign_endpoint_input: Annotated[UpdateCampaignEndpointInput, Field(description="The properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -576,13 +597,13 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates a campaign.
+        """Updates the specified campaign's properties.
 
 
-        :param campaign_id: id of the campaign to update (required)
+        :param campaign_id: The identifier of the campaign to update. (required)
         :type campaign_id: str
-        :param update_campaign_model: model containing the updates (required)
-        :type update_campaign_model: UpdateCampaignModel
+        :param update_campaign_endpoint_input: The properties to update. (required)
+        :type update_campaign_endpoint_input: UpdateCampaignEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -607,7 +628,7 @@ class CampaignApi:
 
         _param = self._campaign_campaign_id_patch_serialize(
             campaign_id=campaign_id,
-            update_campaign_model=update_campaign_model,
+            update_campaign_endpoint_input=update_campaign_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -616,6 +637,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -631,8 +655,8 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_patch_with_http_info(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign to update")],
-        update_campaign_model: Annotated[UpdateCampaignModel, Field(description="model containing the updates")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to update.")],
+        update_campaign_endpoint_input: Annotated[UpdateCampaignEndpointInput, Field(description="The properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -646,13 +670,13 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates a campaign.
+        """Updates the specified campaign's properties.
 
 
-        :param campaign_id: id of the campaign to update (required)
+        :param campaign_id: The identifier of the campaign to update. (required)
         :type campaign_id: str
-        :param update_campaign_model: model containing the updates (required)
-        :type update_campaign_model: UpdateCampaignModel
+        :param update_campaign_endpoint_input: The properties to update. (required)
+        :type update_campaign_endpoint_input: UpdateCampaignEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -677,7 +701,7 @@ class CampaignApi:
 
         _param = self._campaign_campaign_id_patch_serialize(
             campaign_id=campaign_id,
-            update_campaign_model=update_campaign_model,
+            update_campaign_endpoint_input=update_campaign_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -686,6 +710,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -701,8 +728,8 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_patch_without_preload_content(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign to update")],
-        update_campaign_model: Annotated[UpdateCampaignModel, Field(description="model containing the updates")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to update.")],
+        update_campaign_endpoint_input: Annotated[UpdateCampaignEndpointInput, Field(description="The properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -716,13 +743,13 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates a campaign.
+        """Updates the specified campaign's properties.
 
 
-        :param campaign_id: id of the campaign to update (required)
+        :param campaign_id: The identifier of the campaign to update. (required)
         :type campaign_id: str
-        :param update_campaign_model: model containing the updates (required)
-        :type update_campaign_model: UpdateCampaignModel
+        :param update_campaign_endpoint_input: The properties to update. (required)
+        :type update_campaign_endpoint_input: UpdateCampaignEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -747,7 +774,7 @@ class CampaignApi:
 
         _param = self._campaign_campaign_id_patch_serialize(
             campaign_id=campaign_id,
-            update_campaign_model=update_campaign_model,
+            update_campaign_endpoint_input=update_campaign_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -756,6 +783,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -767,7 +797,7 @@ class CampaignApi:
     def _campaign_campaign_id_patch_serialize(
         self,
         campaign_id,
-        update_campaign_model,
+        update_campaign_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -795,10 +825,17 @@ class CampaignApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_campaign_model is not None:
-            _body_params = update_campaign_model
+        if update_campaign_endpoint_input is not None:
+            _body_params = update_campaign_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -807,9 +844,7 @@ class CampaignApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -844,7 +879,7 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_pause_post(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign that should be paused")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to pause.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -858,10 +893,10 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Pauses a campaign.
+        """Pauses the specified campaign.
 
 
-        :param campaign_id: id of the campaign that should be paused (required)
+        :param campaign_id: The identifier of the campaign to pause. (required)
         :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -895,6 +930,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -910,7 +948,7 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_pause_post_with_http_info(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign that should be paused")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to pause.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -924,10 +962,10 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Pauses a campaign.
+        """Pauses the specified campaign.
 
 
-        :param campaign_id: id of the campaign that should be paused (required)
+        :param campaign_id: The identifier of the campaign to pause. (required)
         :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -961,6 +999,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -976,7 +1017,7 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_pause_post_without_preload_content(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign that should be paused")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to pause.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -990,10 +1031,10 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Pauses a campaign.
+        """Pauses the specified campaign.
 
 
-        :param campaign_id: id of the campaign that should be paused (required)
+        :param campaign_id: The identifier of the campaign to pause. (required)
         :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1027,6 +1068,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1067,6 +1111,13 @@ class CampaignApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1097,7 +1148,7 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_resume_post(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign that should be paused")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to resume.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1111,10 +1162,10 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Resumes a campaign.
+        """Resumes the specified campaign.
 
 
-        :param campaign_id: id of the campaign that should be paused (required)
+        :param campaign_id: The identifier of the campaign to resume. (required)
         :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1148,6 +1199,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1163,7 +1217,7 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_resume_post_with_http_info(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign that should be paused")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to resume.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1177,10 +1231,10 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Resumes a campaign.
+        """Resumes the specified campaign.
 
 
-        :param campaign_id: id of the campaign that should be paused (required)
+        :param campaign_id: The identifier of the campaign to resume. (required)
         :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1214,6 +1268,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1229,7 +1286,7 @@ class CampaignApi:
     @validate_call
     def campaign_campaign_id_resume_post_without_preload_content(
         self,
-        campaign_id: Annotated[StrictStr, Field(description="id of the campaign that should be paused")],
+        campaign_id: Annotated[StrictStr, Field(description="The identifier of the campaign to resume.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1243,10 +1300,10 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Resumes a campaign.
+        """Resumes the specified campaign.
 
 
-        :param campaign_id: id of the campaign that should be paused (required)
+        :param campaign_id: The identifier of the campaign to resume. (required)
         :type campaign_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1280,6 +1337,9 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1320,6 +1380,13 @@ class CampaignApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1363,7 +1430,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """The monitor endpoint is used to monitor the health of the service
+        """campaign_monitor_get
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -1397,6 +1464,7 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '400': "ValidationProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1425,7 +1493,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """The monitor endpoint is used to monitor the health of the service
+        """campaign_monitor_get
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -1459,6 +1527,7 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '400': "ValidationProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1487,7 +1556,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """The monitor endpoint is used to monitor the health of the service
+        """campaign_monitor_get
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -1521,6 +1590,7 @@ class CampaignApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '400': "ValidationProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1558,6 +1628,13 @@ class CampaignApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1588,7 +1665,15 @@ class CampaignApi:
     @validate_call
     def campaigns_get(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by status.")] = None,
+        priority: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by priority.")] = None,
+        owner_mail: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1601,12 +1686,28 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfCampaignQueryResult:
-        """Queries orders based on a filter, page, and sort criteria.
+    ) -> QueryCampaignsEndpointPagedResultOfOutput:
+        """Queries campaigns with optional filtering, sorting, and pagination.
 
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: CampaignsGetIdParameter
+        :param name: Filter by name.
+        :type name: CampaignsGetIdParameter
+        :param status: Filter by status.
+        :type status: CampaignsGetIdParameter
+        :param priority: Filter by priority.
+        :type priority: CampaignsGetIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: CampaignsGetIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1630,7 +1731,15 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._campaigns_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            priority=priority,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1638,7 +1747,10 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfCampaignQueryResult",
+            '200': "QueryCampaignsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1654,7 +1766,15 @@ class CampaignApi:
     @validate_call
     def campaigns_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by status.")] = None,
+        priority: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by priority.")] = None,
+        owner_mail: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1667,12 +1787,28 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfCampaignQueryResult]:
-        """Queries orders based on a filter, page, and sort criteria.
+    ) -> ApiResponse[QueryCampaignsEndpointPagedResultOfOutput]:
+        """Queries campaigns with optional filtering, sorting, and pagination.
 
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: CampaignsGetIdParameter
+        :param name: Filter by name.
+        :type name: CampaignsGetIdParameter
+        :param status: Filter by status.
+        :type status: CampaignsGetIdParameter
+        :param priority: Filter by priority.
+        :type priority: CampaignsGetIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: CampaignsGetIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1696,7 +1832,15 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._campaigns_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            priority=priority,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1704,7 +1848,10 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfCampaignQueryResult",
+            '200': "QueryCampaignsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1720,7 +1867,15 @@ class CampaignApi:
     @validate_call
     def campaigns_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by status.")] = None,
+        priority: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by priority.")] = None,
+        owner_mail: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1734,11 +1889,27 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries orders based on a filter, page, and sort criteria.
+        """Queries campaigns with optional filtering, sorting, and pagination.
 
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: CampaignsGetIdParameter
+        :param name: Filter by name.
+        :type name: CampaignsGetIdParameter
+        :param status: Filter by status.
+        :type status: CampaignsGetIdParameter
+        :param priority: Filter by priority.
+        :type priority: CampaignsGetIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: CampaignsGetIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1762,7 +1933,15 @@ class CampaignApi:
         """ # noqa: E501
 
         _param = self._campaigns_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            priority=priority,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1770,7 +1949,10 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfCampaignQueryResult",
+            '200': "QueryCampaignsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1781,7 +1963,15 @@ class CampaignApi:
 
     def _campaigns_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
+        status,
+        priority,
+        owner_mail,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -1791,6 +1981,7 @@ class CampaignApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1804,10 +1995,66 @@ class CampaignApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if status is not None:
+            _param_val = status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('status[' + _k + ']', _v))
+        if priority is not None:
+            _param_val = priority
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('priority[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1817,9 +2064,7 @@ class CampaignApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

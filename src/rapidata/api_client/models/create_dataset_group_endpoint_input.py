@@ -17,29 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.simplified_audience_user_state import SimplifiedAudienceUserState
+from rapidata.api_client.models.i_asset_input import IAssetInput
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterAudienceStateFilter(BaseModel):
+class CreateDatasetGroupEndpointInput(BaseModel):
     """
-    ICampaignFilterAudienceStateFilter
+    CreateDatasetGroupEndpointInput
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    audience_id: StrictStr = Field(alias="audienceId")
-    allowed_states: Optional[List[SimplifiedAudienceUserState]] = Field(default=None, alias="allowedStates")
-    include_unknown_state: Optional[StrictBool] = Field(default=None, alias="includeUnknownState")
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "audienceId", "allowedStates", "includeUnknownState", "executionOrder"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['AudienceStateFilter']):
-            raise ValueError("must be one of enum values ('AudienceStateFilter')")
-        return value
+    group: StrictStr = Field(description="The name of the group.")
+    context: Optional[StrictStr] = Field(default=None, description="The optional text context for the group.")
+    context_asset: Optional[IAssetInput] = Field(default=None, description="The optional asset context for the group.", alias="contextAsset")
+    __properties: ClassVar[List[str]] = ["group", "context", "contextAsset"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -59,7 +50,7 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ICampaignFilterAudienceStateFilter from a JSON string"""
+        """Create an instance of CreateDatasetGroupEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,11 +71,19 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ICampaignFilterAudienceStateFilter from a dict"""
+        """Create an instance of CreateDatasetGroupEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -92,11 +91,9 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t"),
-            "audienceId": obj.get("audienceId"),
-            "allowedStates": obj.get("allowedStates"),
-            "includeUnknownState": obj.get("includeUnknownState"),
-            "executionOrder": obj.get("executionOrder")
+            "group": obj.get("group"),
+            "context": obj.get("context"),
+            "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
         })
         return _obj
 

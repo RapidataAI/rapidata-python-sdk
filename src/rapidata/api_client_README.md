@@ -118,13 +118,13 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
-*CampaignApi* | [**campaign_boost_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_put) | **PUT** /campaign/boost | Updates the boost with manual boosts.
-*CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
-*CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates a campaign.
-*CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
-*CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes a campaign.
-*CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | The monitor endpoint is used to monitor the health of the service
-*CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries orders based on a filter, page, and sort criteria.
+*CampaignApi* | [**campaign_boost_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_put) | **PUT** /campaign/boost | Changes the boost configuration.
+*CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Returns the current boost status including active and inactive campaigns.
+*CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates the specified campaign&#39;s properties.
+*CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses the specified campaign.
+*CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes the specified campaign.
+*CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | 
+*CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries campaigns with optional filtering, sorting, and pagination.
 *ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a customers&#39; client.
 *ClientApi* | [**client_client_id_get**](rapidata/api_client/docs/ClientApi.md#client_client_id_get) | **GET** /client/{clientId} | Gets a specific client by its ID.
 *ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
@@ -148,6 +148,7 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_dataset_id_name_patch**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_name_patch) | **PATCH** /dataset/{datasetId}/name | Updates the name of a dataset.
 *DatasetApi* | [**dataset_dataset_id_progress_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_progress_get) | **GET** /dataset/{datasetId}/progress | Gets the upload progress of a dataset.
 *DatasetApi* | [**dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_post) | **POST** /dataset | Creates a new empty dataset.
+*DatasetGroupApi* | [**dataset_dataset_id_group_post**](rapidata/api_client/docs/DatasetGroupApi.md#dataset_dataset_id_group_post) | **POST** /dataset/{datasetId}/group | Creates a new dataset group.
 *EvaluationWorkflowApi* | [**workflow_evaluation_workflow_id_results_get**](rapidata/api_client/docs/EvaluationWorkflowApi.md#workflow_evaluation_workflow_id_results_get) | **GET** /workflow/evaluation/{workflowId}/results | Get the results for an evaluation workflow.
 *ExamplesApi* | [**audience_audience_id_example_example_id_patch**](rapidata/api_client/docs/ExamplesApi.md#audience_audience_id_example_example_id_patch) | **PATCH** /audience/{audienceId}/example/{exampleId} | Updates an example&#39;s properties within an audience.
 *ExamplesApi* | [**audience_audience_id_example_post**](rapidata/api_client/docs/ExamplesApi.md#audience_audience_id_example_post) | **POST** /audience/{audienceId}/example | Adds a new example to an audience.
@@ -288,11 +289,13 @@ Class | Method | HTTP request | Description
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
  - [BoostLevel](rapidata/api_client/docs/BoostLevel.md)
+ - [BoostModeModel](rapidata/api_client/docs/BoostModeModel.md)
+ - [BoostStatusModel](rapidata/api_client/docs/BoostStatusModel.md)
  - [BoostingProfile](rapidata/api_client/docs/BoostingProfile.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
- - [CampaignQueryResult](rapidata/api_client/docs/CampaignQueryResult.md)
  - [CampaignStatus](rapidata/api_client/docs/CampaignStatus.md)
- - [ChangeBoostModel](rapidata/api_client/docs/ChangeBoostModel.md)
+ - [CampaignsGetIdParameter](rapidata/api_client/docs/CampaignsGetIdParameter.md)
+ - [ChangeBoostEndpointInput](rapidata/api_client/docs/ChangeBoostEndpointInput.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
  - [ClassifyPayloadCategory](rapidata/api_client/docs/ClassifyPayloadCategory.md)
  - [ClientModel](rapidata/api_client/docs/ClientModel.md)
@@ -321,6 +324,7 @@ Class | Method | HTTP request | Description
  - [CreateDatapointResult](rapidata/api_client/docs/CreateDatapointResult.md)
  - [CreateDatasetEndpointInput](rapidata/api_client/docs/CreateDatasetEndpointInput.md)
  - [CreateDatasetEndpointOutput](rapidata/api_client/docs/CreateDatasetEndpointOutput.md)
+ - [CreateDatasetGroupEndpointInput](rapidata/api_client/docs/CreateDatasetGroupEndpointInput.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
  - [CreateFlowEndpointInput](rapidata/api_client/docs/CreateFlowEndpointInput.md)
@@ -357,7 +361,6 @@ Class | Method | HTTP request | Description
  - [FileType](rapidata/api_client/docs/FileType.md)
  - [Filter](rapidata/api_client/docs/Filter.md)
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
- - [FlowGetNameParameter](rapidata/api_client/docs/FlowGetNameParameter.md)
  - [FlowItemState](rapidata/api_client/docs/FlowItemState.md)
  - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
@@ -369,9 +372,7 @@ Class | Method | HTTP request | Description
  - [GetBatchUploadResultEndpointUrlOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointUrlOutput.md)
  - [GetBatchUploadStatusEndpointOutput](rapidata/api_client/docs/GetBatchUploadStatusEndpointOutput.md)
  - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
- - [GetBoostResult](rapidata/api_client/docs/GetBoostResult.md)
- - [GetBoostResultBoostMode](rapidata/api_client/docs/GetBoostResultBoostMode.md)
- - [GetBoostResultBoostStatus](rapidata/api_client/docs/GetBoostResultBoostStatus.md)
+ - [GetBoostStatusEndpointOutput](rapidata/api_client/docs/GetBoostStatusEndpointOutput.md)
  - [GetCampaignCacheEndpointCampaignEntry](rapidata/api_client/docs/GetCampaignCacheEndpointCampaignEntry.md)
  - [GetCampaignCacheEndpointOutput](rapidata/api_client/docs/GetCampaignCacheEndpointOutput.md)
  - [GetCombinedBenchmarkMatrixEndpointOutput](rapidata/api_client/docs/GetCombinedBenchmarkMatrixEndpointOutput.md)
@@ -666,7 +667,6 @@ Class | Method | HTTP request | Description
  - [OrderState](rapidata/api_client/docs/OrderState.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
  - [PagedResultOfBenchmarkQueryResult](rapidata/api_client/docs/PagedResultOfBenchmarkQueryResult.md)
- - [PagedResultOfCampaignQueryResult](rapidata/api_client/docs/PagedResultOfCampaignQueryResult.md)
  - [PagedResultOfClientsQueryResult](rapidata/api_client/docs/PagedResultOfClientsQueryResult.md)
  - [PagedResultOfGetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/PagedResultOfGetGroupedRankingWorkflowResultsResult.md)
  - [PagedResultOfGetValidationRapidsResult](rapidata/api_client/docs/PagedResultOfGetValidationRapidsResult.md)
@@ -699,6 +699,8 @@ Class | Method | HTTP request | Description
  - [QueryAggregatedOrdersEndpointOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointOutput.md)
  - [QueryAggregatedOrdersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointPagedResultOfOutput.md)
  - [QueryAudiencesResult](rapidata/api_client/docs/QueryAudiencesResult.md)
+ - [QueryCampaignsEndpointOutput](rapidata/api_client/docs/QueryCampaignsEndpointOutput.md)
+ - [QueryCampaignsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCampaignsEndpointPagedResultOfOutput.md)
  - [QueryCustomersEndpointOutput](rapidata/api_client/docs/QueryCustomersEndpointOutput.md)
  - [QueryCustomersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCustomersEndpointPagedResultOfOutput.md)
  - [QueryDatapointsByDatasetIdResult](rapidata/api_client/docs/QueryDatapointsByDatasetIdResult.md)
@@ -760,7 +762,7 @@ Class | Method | HTTP request | Description
  - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
  - [UpdateBoostConfigEndpointInput](rapidata/api_client/docs/UpdateBoostConfigEndpointInput.md)
- - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
+ - [UpdateCampaignEndpointInput](rapidata/api_client/docs/UpdateCampaignEndpointInput.md)
  - [UpdateConfigEndpointInput](rapidata/api_client/docs/UpdateConfigEndpointInput.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
@@ -772,7 +774,6 @@ Class | Method | HTTP request | Description
  - [UpdateOrderEndpointInput](rapidata/api_client/docs/UpdateOrderEndpointInput.md)
  - [UpdateParticipantModel](rapidata/api_client/docs/UpdateParticipantModel.md)
  - [UpdateParticipantNameModel](rapidata/api_client/docs/UpdateParticipantNameModel.md)
- - [UpdatePriorityModel](rapidata/api_client/docs/UpdatePriorityModel.md)
  - [UpdatePromptTagsModel](rapidata/api_client/docs/UpdatePromptTagsModel.md)
  - [UpdateShouldAlertModel](rapidata/api_client/docs/UpdateShouldAlertModel.md)
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
