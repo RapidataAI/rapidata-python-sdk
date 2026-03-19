@@ -37,7 +37,7 @@ class OrFilter(RapidataFilter, BaseModel):
         return IUserFilterModel(
             actual_instance=IUserFilterModelOrUserFilterModel(
                 _t="OrFilter",
-                filters=[filter._to_model() for filter in self.filters],
+                filters=[filter._to_model().to_dict() for filter in self.filters],
             )
         )
 
@@ -50,6 +50,6 @@ class OrFilter(RapidataFilter, BaseModel):
         return IAudienceFilter(
             actual_instance=IAudienceFilterOrAudienceFilter(
                 _t="OrFilter",
-                filters=[filter._to_audience_model() for filter in self.filters],
+                filters=[filter._to_audience_model().to_dict() for filter in self.filters],
             )
         )
