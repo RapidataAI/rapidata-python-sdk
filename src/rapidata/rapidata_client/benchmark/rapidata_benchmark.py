@@ -2,7 +2,7 @@ from __future__ import annotations
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Optional, Sequence, TYPE_CHECKING
+from typing import Literal, Optional, Sequence, TYPE_CHECKING
 from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 
@@ -432,6 +432,7 @@ class RapidataBenchmark:
         media: list[str],
         identifiers: list[str] | None = None,
         prompts: list[str] | None = None,
+        data_type: Literal["media", "text"] = "media",
     ) -> None:
         """
         Evaluates a model on the benchmark across all leaderboards.
@@ -440,10 +441,11 @@ class RapidataBenchmark:
 
         Args:
             name: The name of the model.
-            media: The generated images/videos that will be used to evaluate the model.
+            media: The generated media or text that will be used to evaluate the model.
             identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.\n
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
+            data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
         """
         with tracer.start_as_current_span("RapidataBenchmark.evaluate_model"):
             participant = self.add_model(
@@ -451,6 +453,7 @@ class RapidataBenchmark:
                 media=media,
                 identifiers=identifiers,
                 prompts=prompts,
+                data_type=data_type,
             )
             participant.run()
 
@@ -460,6 +463,7 @@ class RapidataBenchmark:
         media: list[str],
         identifiers: list[str] | None = None,
         prompts: list[str] | None = None,
+        data_type: Literal["media", "text"] = "media",
     ) -> BenchmarkParticipant:
         """Adds a model to the benchmark without immediately submitting it for evaluation.
 
@@ -468,10 +472,11 @@ class RapidataBenchmark:
 
         Args:
             name: The name of the model.
-            media: The generated images/videos that will be used to evaluate the model.
+            media: The generated media or text that will be used to evaluate the model.
             identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.\n
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
+            data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
 
         Returns:
             The created BenchmarkParticipant instance.
@@ -532,6 +537,7 @@ class RapidataBenchmark:
                 successful_uploads, failed_uploads = participant.upload_media(
                     media,
                     identifiers,
+                    data_type=data_type,
                 )
 
                 total_uploads = len(media)

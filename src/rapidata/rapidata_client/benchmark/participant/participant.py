@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
+from typing import Literal
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger
@@ -12,6 +13,7 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
 
 from opentelemetry import context as otel_context
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 
 
 from rapidata.service.openapi_service import OpenAPIService
@@ -70,38 +72,37 @@ class BenchmarkParticipant:
         self,
         asset: str,
         identifier: str,
+        data_type: Literal["media", "text"] = "media",
     ) -> tuple[str | None, str | None]:
         """
         Process single sample upload with retry logic and error tracking.
 
         Args:
-            asset: MediaAsset to upload
+            asset: MediaAsset to upload or text content
             identifier: Identifier for the sample
+            data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
 
         Returns:
             tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
         """
         from rapidata.api_client.models.create_sample_model import CreateSampleModel
-        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
-            IAssetInputExistingAssetInput,
-        )
-
-        from rapidata.api_client.models.i_asset_input import IAssetInput
 
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
             try:
+                if data_type == "text":
+                    asset_input = AssetMapper.create_text_input(asset)
+                else:
+                    asset_input = AssetMapper.create_existing_asset_input(
+                        self._asset_uploader.upload_asset(asset)
+                    )
+
                 with suppress_rapidata_error_logging():
                     self._openapi_service.leaderboard.participant_api.participant_participant_id_sample_post(
                         participant_id=self.id,
                         create_sample_model=CreateSampleModel(
                             identifier=identifier,
-                            asset=IAssetInput(
-                                actual_instance=IAssetInputExistingAssetInput(
-                                    _t="ExistingAssetInput",
-                                    name=self._asset_uploader.upload_asset(asset),
-                                ),
-                            ),
+                            asset=asset_input,
                         ),
                     )
 
@@ -127,6 +128,7 @@ class BenchmarkParticipant:
         self,
         assets: list[str],
         identifiers: list[str],
+        data_type: Literal["media", "text"] = "media",
     ) -> tuple[list[str], list[str]]:
         """
         Upload samples concurrently with proper error handling and progress tracking.
@@ -134,6 +136,7 @@ class BenchmarkParticipant:
         Args:
             assets: List of strings to upload
             identifiers: List of identifiers matching the assets
+            data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
 
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed identifiers
@@ -145,7 +148,7 @@ class BenchmarkParticipant:
             """Wrapper function that runs _process_single_sample_upload with the provided context."""
             token = otel_context.attach(context)
             try:
-                return self._process_single_sample_upload(asset, identifier)
+                return self._process_single_sample_upload(asset, identifier, data_type=data_type)
             finally:
                 otel_context.detach(token)
 
