@@ -112,9 +112,12 @@ class BackendFilterMapper:
                 ]
             )
         elif isinstance(actual_instance, BackendOrAudienceFilter):
+            from rapidata.api_client.models.i_audience_filter import IAudienceFilter
             return ClientOrFilter(
                 [
-                    cls.backend_filter_from_rapidata_filter(child_filter)
+                    cls.backend_filter_from_rapidata_filter(
+                        IAudienceFilter.from_dict(child_filter) if isinstance(child_filter, dict) else child_filter
+                    )
                     for child_filter in actual_instance.filters  # type: ignore[attr-defined]
                 ]
             )
