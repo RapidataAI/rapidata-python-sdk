@@ -42,8 +42,9 @@ class UpdateAudienceRequest(BaseModel):
     inactivity_drop_days: Optional[StrictInt] = Field(default=None, description="Number of days of inactivity before a distilling user is dropped.  Set to null to disable this exit condition.", alias="inactivityDropDays")
     min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate (responses / sessions) before a user is dropped.  Set to null to disable this exit condition.", alias="minSubmissionRate")
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Set to null to apply from the first session.", alias="minSessionsForSubmissionRate")
+    min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.  Set a lower value to be more lenient with graduated users.", alias="minSubmissionRateGraduated")
     distilling_retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "minimumUserScore", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "distillingRetrievalMode"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "minimumUserScore", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode"]
 
     @field_validator('distilling_retrieval_mode')
     def distilling_retrieval_mode_validate_enum(cls, value):
@@ -174,6 +175,11 @@ class UpdateAudienceRequest(BaseModel):
         if self.min_sessions_for_submission_rate is None and "min_sessions_for_submission_rate" in self.model_fields_set:
             _dict['minSessionsForSubmissionRate'] = None
 
+        # set to None if min_submission_rate_graduated (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_submission_rate_graduated is None and "min_submission_rate_graduated" in self.model_fields_set:
+            _dict['minSubmissionRateGraduated'] = None
+
         return _dict
 
     @classmethod
@@ -200,6 +206,7 @@ class UpdateAudienceRequest(BaseModel):
             "inactivityDropDays": obj.get("inactivityDropDays"),
             "minSubmissionRate": obj.get("minSubmissionRate"),
             "minSessionsForSubmissionRate": obj.get("minSessionsForSubmissionRate"),
+            "minSubmissionRateGraduated": obj.get("minSubmissionRateGraduated"),
             "distillingRetrievalMode": obj.get("distillingRetrievalMode")
         })
         return _obj

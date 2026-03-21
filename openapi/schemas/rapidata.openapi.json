@@ -32,12 +32,12 @@
       "x-displayName": "Rapids"
     },
     {
-      "name": "Campaign",
-      "x-displayName": "Campaign"
-    },
-    {
       "name": "Cache",
       "x-displayName": "Cache"
+    },
+    {
+      "name": "Campaign",
+      "x-displayName": "Campaign"
     },
     {
       "name": "Datapoint",
@@ -46,6 +46,10 @@
     {
       "name": "Dataset",
       "x-displayName": "Dataset"
+    },
+    {
+      "name": "DatasetGroup",
+      "x-displayName": "DatasetGroup"
     },
     {
       "name": "Flow",
@@ -2065,15 +2069,42 @@
         ]
       }
     },
-    "/campaign/monitor": {
-      "get": {
+    "/campaign/boost": {
+      "put": {
         "tags": [
           "Campaign"
         ],
-        "summary": "The monitor endpoint is used to monitor the health of the service",
+        "summary": "Changes the boost configuration.",
+        "requestBody": {
+          "description": "The boost configuration to apply.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -2093,43 +2124,72 @@
         ]
       }
     },
-    "/campaigns": {
+    "/campaign/boost/status": {
       "get": {
         "tags": [
           "Campaign"
         ],
-        "summary": "Queries orders based on a filter, page, and sort criteria.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The parameters for filtering, paging, and sorting",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
+        "summary": "Returns the current boost status including active and inactive campaigns.",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfCampaignQueryResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfCampaignQueryResult"
+                  "$ref": "#/components/schemas/GetBoostStatusEndpoint_Output"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfCampaignQueryResult"
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/monitor": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
@@ -2157,12 +2217,12 @@
         "tags": [
           "Campaign"
         ],
-        "summary": "Pauses a campaign.",
+        "summary": "Pauses the specified campaign.",
         "parameters": [
           {
             "name": "campaignId",
             "in": "path",
-            "description": "id of the campaign that should be paused",
+            "description": "The identifier of the campaign to pause.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2172,6 +2232,391 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaigns": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Queries campaigns with optional filtering, sorting, and pagination.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "priority",
+                  "-priority",
+                  "status",
+                  "-status",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "description": "Filter by priority.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCampaignsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -2196,12 +2641,12 @@
         "tags": [
           "Campaign"
         ],
-        "summary": "Resumes a campaign.",
+        "summary": "Resumes the specified campaign.",
         "parameters": [
           {
             "name": "campaignId",
             "in": "path",
-            "description": "id of the campaign that should be paused",
+            "description": "The identifier of the campaign to resume.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2211,6 +2656,22 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -2235,12 +2696,12 @@
         "tags": [
           "Campaign"
         ],
-        "summary": "Updates a campaign.",
+        "summary": "Updates the specified campaign's properties.",
         "parameters": [
           {
             "name": "campaignId",
             "in": "path",
-            "description": "id of the campaign to update",
+            "description": "The identifier of the campaign to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2248,21 +2709,11 @@
           }
         ],
         "requestBody": {
-          "description": "model containing the updates",
+          "description": "The properties to update.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
+                "$ref": "#/components/schemas/UpdateCampaignEndpoint_Input"
               }
             }
           },
@@ -2271,160 +2722,22 @@
         "responses": {
           "204": {
             "description": "No Content"
-          }
-        },
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
-    "/campaign/{campaignId}/priority": {
-      "put": {
-        "tags": [
-          "Campaign"
-        ],
-        "summary": "Updates the priority of a campaign.",
-        "parameters": [
-          {
-            "name": "campaignId",
-            "in": "path",
-            "description": "id of the campaign to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "model containing the new priority",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePriorityModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePriorityModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePriorityModel"
-              }
-            }
           },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true,
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
-    "/campaign/boost/status": {
-      "get": {
-        "tags": [
-          "Campaign"
-        ],
-        "summary": "Gets the status of the boost.",
-        "responses": {
-          "200": {
-            "description": "OK",
+          "400": {
+            "description": "Bad Request",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBoostResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBoostResult"
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBoostResult"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
-    "/campaign/boost": {
-      "put": {
-        "tags": [
-          "Campaign"
-        ],
-        "summary": "Updates the boost with manual boosts.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeBoostModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeBoostModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeBoostModel"
               }
             }
           },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -2471,6 +2784,72 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/dataset/{datasetId}/group": {
+      "post": {
+        "tags": [
+          "DatasetGroup"
+        ],
+        "summary": "Creates a new dataset group.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to create the group for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The dataset group creation parameters.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatasetGroupEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -15144,6 +15523,11 @@
             "description": "Minimum number of sessions before the submission rate check applies.\n Defaults to null (applies from first session).",
             "format": "uint32"
           },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
+            "format": "double"
+          },
           "distillingRetrievalMode": {
             "$ref": "#/components/schemas/DistillingRetrievalMode"
           },
@@ -15281,6 +15665,7 @@
           "ownerMail",
           "isPublic",
           "isDistilling",
+          "distillingCampaignId",
           "minimumUserScore",
           "distillingRetrievalMode",
           "boostLevel"
@@ -15327,6 +15712,9 @@
           "isDistilling": {
             "type": "boolean"
           },
+          "distillingCampaignId": {
+            "type": "string"
+          },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "format": "int32"
@@ -15366,6 +15754,10 @@
           "minSessionsForSubmissionRate": {
             "type": "integer",
             "format": "uint32"
+          },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "format": "double"
           },
           "distillingRetrievalMode": {
             "$ref": "#/components/schemas/DistillingRetrievalMode"
@@ -17862,6 +18254,12 @@
             "format": "uint32",
             "nullable": true
           },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
+            "format": "double",
+            "nullable": true
+          },
           "distillingRetrievalMode": {
             "enum": [
               "Random",
@@ -17910,45 +18308,21 @@
           }
         }
       },
-      "CampaignQueryResult": {
-        "required": [
-          "id",
-          "ownerMail",
-          "name",
-          "status",
-          "priority",
-          "boostingProfile",
-          "createdAt"
+      "BoostModeModel": {
+        "enum": [
+          "Automatic",
+          "Manual"
         ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "ownerMail": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/CampaignStatus"
-          },
-          "priority": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "boostingProfile": {
-            "$ref": "#/components/schemas/BoostingProfile"
-          },
-          "requiresBooster": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
+        "description": "The current boost mode."
+      },
+      "BoostStatusModel": {
+        "enum": [
+          "Active",
+          "Inactive",
+          "Partial",
+          "Unknown"
+        ],
+        "description": "The current boost status."
       },
       "CampaignStatus": {
         "enum": [
@@ -17960,7 +18334,7 @@
           "Completed"
         ]
       },
-      "ChangeBoostModel": {
+      "ChangeBoostEndpoint_Input": {
         "required": [
           "isManual"
         ],
@@ -17968,21 +18342,20 @@
         "properties": {
           "isManual": {
             "type": "boolean",
-            "description": "If the manual overwrite should be applied"
+            "description": "Whether the manual overwrite should be applied."
           },
           "isActive": {
             "type": "boolean",
-            "description": "If manual is set to true it will overrule the system with this."
+            "description": "Whether the boost is active. Deprecated in favor of Level."
           },
           "level": {
             "type": "integer",
             "description": "The boost level. Takes precedence over IsActive when set.",
             "format": "int32"
           }
-        },
-        "description": "The model to update the manual boost status. or putting it back to autopilot."
+        }
       },
-      "GetBoostResult": {
+      "GetBoostStatusEndpoint_Output": {
         "required": [
           "status",
           "mode",
@@ -17993,45 +18366,46 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/GetBoostResult_BoostStatus"
+            "$ref": "#/components/schemas/BoostStatusModel"
           },
           "mode": {
-            "$ref": "#/components/schemas/GetBoostResult_BoostMode"
+            "$ref": "#/components/schemas/BoostModeModel"
           },
           "activeCampaigns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The list of active campaign identifiers."
           },
           "inactiveCampaigns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The list of inactive campaign identifiers."
           },
           "unknownCampaigns": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            ],
+            "description": "The list of unknown campaign identifiers."
           }
         }
-      },
-      "GetBoostResult_BoostMode": {
-        "enum": [
-          "Automatic",
-          "Manual"
-        ]
-      },
-      "GetBoostResult_BoostStatus": {
-        "enum": [
-          "Active",
-          "Inactive",
-          "Partial",
-          "Unknown"
-        ]
       },
       "GetCampaignCacheEndpoint_CampaignEntry": {
         "required": [
@@ -18137,7 +18511,59 @@
           }
         }
       },
-      "PagedResultOfCampaignQueryResult": {
+      "QueryCampaignsEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "priority",
+          "boostingProfile",
+          "requiresBooster",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the campaign."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority level of the campaign.",
+            "format": "int32"
+          },
+          "boostingProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingProfile"
+              }
+            ],
+            "description": "The boosting profile configuration."
+          },
+          "requiresBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign requires a booster."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the campaign owner."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the campaign was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryCampaignsEndpoint_PagedResultOfOutput": {
         "required": [
           "total",
           "page",
@@ -18161,7 +18587,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CampaignQueryResult"
+              "$ref": "#/components/schemas/QueryCampaignsEndpoint_Output"
             }
           },
           "totalPages": {
@@ -18170,7 +18596,7 @@
           }
         }
       },
-      "UpdateCampaignModel": {
+      "UpdateCampaignEndpoint_Input": {
         "type": "object",
         "properties": {
           "priority": {
@@ -18184,22 +18610,7 @@
             "description": "Whether the campaign requires booster.",
             "nullable": true
           }
-        },
-        "description": "The model to update campaign properties."
-      },
-      "UpdatePriorityModel": {
-        "required": [
-          "priority"
-        ],
-        "type": "object",
-        "properties": {
-          "priority": {
-            "type": "integer",
-            "description": "The new priority value for the campaign.",
-            "format": "int32"
-          }
-        },
-        "description": "The model to update the campaign priority."
+        }
       },
       "CreateDatapointModel": {
         "required": [
@@ -18290,6 +18701,31 @@
           }
         },
         "description": "The result when a dataset has been created."
+      },
+      "CreateDatasetGroupEndpoint_Input": {
+        "required": [
+          "group"
+        ],
+        "type": "object",
+        "properties": {
+          "group": {
+            "type": "string",
+            "description": "The name of the group."
+          },
+          "context": {
+            "type": "string",
+            "description": "The optional text context for the group.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "The optional asset context for the group."
+          }
+        }
       },
       "DatapointState": {
         "enum": [
@@ -20760,7 +21196,6 @@
       "ICampaignFilterAudienceStateFilter": {
         "required": [
           "audienceId",
-          "requiredState",
           "_t"
         ],
         "properties": {
@@ -20773,8 +21208,14 @@
           "audienceId": {
             "type": "string"
           },
-          "requiredState": {
-            "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+          "allowedStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+            }
+          },
+          "includeUnknownState": {
+            "type": "boolean"
           },
           "executionOrder": {
             "type": "integer",
@@ -28242,15 +28683,16 @@
     {
       "name": "Rapidata Campaign API",
       "tags": [
-        "Campaign",
-        "Cache"
+        "Cache",
+        "Campaign"
       ]
     },
     {
       "name": "Rapidata Dataset API",
       "tags": [
         "Datapoint",
-        "Dataset"
+        "Dataset",
+        "DatasetGroup"
       ]
     },
     {
