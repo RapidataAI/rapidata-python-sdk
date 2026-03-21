@@ -142,9 +142,11 @@ class RapidataOrder:
     def created_at(self) -> datetime:
         """Returns the creation date of the order."""
         if not self.__created_at:
-            self.__created_at = self._openapi_service.order.order_api.order_order_id_get(
-                self.id
-            ).order_date
+            self.__created_at = (
+                self._openapi_service.order.order_api.order_order_id_get(
+                    self.id
+                ).order_date
+            )
         return self.__created_at
 
     def __get_pipeline_id(self) -> str:
@@ -183,8 +185,10 @@ class RapidataOrder:
             )
 
             pipeline_id = self.__get_pipeline_id()
-            pipeline = self._openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
-                pipeline_id
+            pipeline = (
+                self._openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
+                    pipeline_id
+                )
             )
             self.__workflow_id = cast(
                 WorkflowArtifactModel,
@@ -244,6 +248,7 @@ class RapidataOrder:
             from rapidata.api_client.models.submit_order_endpoint_input import (
                 SubmitOrderEndpointInput,
             )
+
             self._openapi_service.order.order_api.order_order_id_submit_post(
                 self.id, SubmitOrderEndpointInput(ignoreFailedDatapoints=True)
             )
@@ -292,7 +297,9 @@ class RapidataOrder:
             Failed: The order has failed.
         """
         with tracer.start_as_current_span("RapidataOrder.get_status"):
-            return self._openapi_service.order.order_api.order_order_id_get(self.id).state
+            return self._openapi_service.order.order_api.order_order_id_get(
+                self.id
+            ).state
 
     def display_progress_bar(self, refresh_rate: int = 5) -> None:
         """
@@ -353,6 +360,9 @@ class RapidataOrder:
         Args:
             preliminary_results: If True, returns the preliminary results of the order. Defaults to False.
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the ones that are already available.
+
+        Info:
+            Currently the SDK does not support streaming. The preliminary results are simply a snapshot of the results at the time of the request.
         """
         with tracer.start_as_current_span("RapidataOrder.get_results"):
             from rapidata.api_client.models.order_state import OrderState
@@ -380,10 +390,8 @@ class RapidataOrder:
             )
 
             try:
-                results = (
-                    self._openapi_service.order.order_api.order_order_id_download_results_get(
-                        order_id=self.id
-                    )
+                results = self._openapi_service.order.order_api.order_order_id_download_results_get(
+                    order_id=self.id
                 )
                 return RapidataResults(json.loads(results))
             except (ApiException, json.JSONDecodeError) as e:
@@ -434,7 +442,9 @@ class RapidataOrder:
     def preview(self) -> None:
         """Opens a preview of the order in the browser."""
         from rapidata.api_client.models.order_state import OrderState
-        from rapidata.api_client.models.preview_order_endpoint_input import PreviewOrderEndpointInput
+        from rapidata.api_client.models.preview_order_endpoint_input import (
+            PreviewOrderEndpointInput,
+        )
 
         logger.info("Opening order preview in browser...")
 
