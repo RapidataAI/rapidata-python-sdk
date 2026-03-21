@@ -381,29 +381,33 @@ class RapidataBenchmark:
                 settings,
             )
 
-            leaderboard_result = self._openapi_service.leaderboard.leaderboard_api.leaderboard_post(
-                create_leaderboard_model=CreateLeaderboardModel(
-                    benchmarkId=self.id,
-                    name=name,
-                    instruction=instruction,
-                    showPrompt=show_prompt,
-                    showPromptAsset=show_prompt_asset,
-                    isInversed=inverse_ranking,
-                    minResponses=min_responses_per_matchup,
-                    responseBudget=(
-                        DetailMapper.get_budget(level_of_detail)
-                        if level_of_detail is not None
-                        else None
-                    ),
-                    validationSetId=validation_set_id,
-                    filters=(
-                        [filter._to_model() for filter in filters] if filters else None
-                    ),
-                    featureFlags=(
-                        [setting._to_feature_flag() for setting in settings]  # type: ignore - until backend fixes generation
-                        if settings
-                        else None
-                    ),
+            leaderboard_result = (
+                self._openapi_service.leaderboard.leaderboard_api.leaderboard_post(
+                    create_leaderboard_model=CreateLeaderboardModel(
+                        benchmarkId=self.id,
+                        name=name,
+                        instruction=instruction,
+                        showPrompt=show_prompt,
+                        showPromptAsset=show_prompt_asset,
+                        isInversed=inverse_ranking,
+                        minResponses=min_responses_per_matchup,
+                        responseBudget=(
+                            DetailMapper.get_budget(level_of_detail)
+                            if level_of_detail is not None
+                            else None
+                        ),
+                        validationSetId=validation_set_id,
+                        filters=(
+                            [filter._to_model() for filter in filters]
+                            if filters
+                            else None
+                        ),
+                        featureFlags=(
+                            [setting._to_feature_flag_model() for setting in settings]
+                            if settings
+                            else None
+                        ),
+                    )
                 )
             )
 
@@ -656,14 +660,12 @@ class RapidataBenchmark:
         import pandas as pd
 
         with tracer.start_as_current_span("get_win_loss_matrix"):
-            result = (
-                self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_matrix_get(
-                    benchmark_id=self.id,
-                    tags=tags,
-                    participant_ids=participant_ids,
-                    leaderboard_ids=leaderboard_ids,
-                    use_weighted_scoring=use_weighted_scoring,
-                )
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_matrix_get(
+                benchmark_id=self.id,
+                tags=tags,
+                participant_ids=participant_ids,
+                leaderboard_ids=leaderboard_ids,
+                use_weighted_scoring=use_weighted_scoring,
             )
 
             return pd.DataFrame(
