@@ -3788,7 +3788,6 @@
       "ICampaignFilterAudienceStateFilter": {
         "required": [
           "audienceId",
-          "requiredState",
           "_t"
         ],
         "properties": {
@@ -3801,8 +3800,14 @@
           "audienceId": {
             "type": "string"
           },
-          "requiredState": {
-            "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+          "allowedStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+            }
+          },
+          "includeUnknownState": {
+            "type": "boolean"
           },
           "executionOrder": {
             "type": "integer",
@@ -3996,7 +4001,12 @@
             "type": "integer",
             "format": "uint32"
           },
-          "innerFilters": { }
+          "innerFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
+          }
         }
       },
       "ICampaignFilterOrFilter": {
@@ -4011,12 +4021,22 @@
             ],
             "type": "string"
           },
-          "filters": { },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
+          },
           "executionOrder": {
             "type": "integer",
             "format": "uint32"
           },
-          "innerFilters": { }
+          "innerFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilter"
+            }
+          }
         }
       },
       "ICampaignFilterResponseCountFilter": {
@@ -4770,7 +4790,12 @@
             ],
             "type": "string"
           },
-          "filters": { }
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUserFilterModel"
+            }
+          }
         }
       },
       "IUserFilterModelResponseCountUserFilterModel": {

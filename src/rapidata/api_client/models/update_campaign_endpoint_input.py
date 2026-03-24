@@ -17,27 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterNotFilter(BaseModel):
+class UpdateCampaignEndpointInput(BaseModel):
     """
-    ICampaignFilterNotFilter
+    UpdateCampaignEndpointInput
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    filter: ICampaignFilter
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    inner_filters: Optional[List[ICampaignFilter]] = Field(default=None, alias="innerFilters")
-    __properties: ClassVar[List[str]] = ["_t", "filter", "executionOrder", "innerFilters"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['NotFilter']):
-            raise ValueError("must be one of enum values ('NotFilter')")
-        return value
+    priority: Optional[StrictInt] = Field(default=None, description="The new priority value for the campaign.")
+    requires_booster: Optional[StrictBool] = Field(default=None, description="Whether the campaign requires booster.", alias="requiresBooster")
+    __properties: ClassVar[List[str]] = ["priority", "requiresBooster"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +48,7 @@ class ICampaignFilterNotFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ICampaignFilterNotFilter from a JSON string"""
+        """Create an instance of UpdateCampaignEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,21 +69,21 @@ class ICampaignFilterNotFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of filter
-        if self.filter:
-            _dict['filter'] = self.filter.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in inner_filters (list)
-        _items = []
-        if self.inner_filters:
-            for _item_inner_filters in self.inner_filters:
-                if _item_inner_filters:
-                    _items.append(_item_inner_filters.to_dict())
-            _dict['innerFilters'] = _items
+        # set to None if priority (nullable) is None
+        # and model_fields_set contains the field
+        if self.priority is None and "priority" in self.model_fields_set:
+            _dict['priority'] = None
+
+        # set to None if requires_booster (nullable) is None
+        # and model_fields_set contains the field
+        if self.requires_booster is None and "requires_booster" in self.model_fields_set:
+            _dict['requiresBooster'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ICampaignFilterNotFilter from a dict"""
+        """Create an instance of UpdateCampaignEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -100,14 +91,9 @@ class ICampaignFilterNotFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t"),
-            "filter": ICampaignFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
-            "executionOrder": obj.get("executionOrder"),
-            "innerFilters": [ICampaignFilter.from_dict(_item) for _item in obj["innerFilters"]] if obj.get("innerFilters") is not None else None
+            "priority": obj.get("priority"),
+            "requiresBooster": obj.get("requiresBooster")
         })
         return _obj
 
-from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-# TODO: Rewrite to not use raise_errors
-ICampaignFilterNotFilter.model_rebuild(raise_errors=False)
 

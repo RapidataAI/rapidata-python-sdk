@@ -1093,6 +1093,22 @@
   },
   "components": {
     "schemas": {
+      "CreateFlowEndpoint_AudienceBoostInput": {
+        "required": [
+          "audienceId",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "CreateFlowEndpoint_Input": {
         "required": [
           "name",
@@ -1164,6 +1180,23 @@
               }
             ],
             "description": "Optional feature flags to enable for this flow."
+          },
+          "globalBoostLevel": {
+            "type": "integer",
+            "description": "Global boost level for the flow campaign. Defaults to 1.",
+            "format": "int32"
+          },
+          "audienceBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateFlowEndpoint_AudienceBoostInput"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Audience-specific boost levels."
           }
         }
       },
@@ -2181,6 +2214,24 @@
           }
         }
       },
+      "UpdateConfigEndpoint_AudienceBoostInput": {
+        "required": [
+          "audienceId",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "The platform audience ID (e.g., aud_xxx)."
+          },
+          "level": {
+            "type": "integer",
+            "description": "The boost level for this audience.",
+            "format": "int32"
+          }
+        }
+      },
       "UpdateConfigEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -2294,6 +2345,26 @@
               "PerBatchTimeWeighted"
             ],
             "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count."
+          },
+          "globalBoostLevel": {
+            "type": "integer",
+            "description": "Global boost level for the flow campaign.",
+            "format": "int32",
+            "nullable": true
+          },
+          "audienceBoosts": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UpdateConfigEndpoint_AudienceBoostInput"
+                }
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "Audience-specific boost levels."
           }
         }
       },

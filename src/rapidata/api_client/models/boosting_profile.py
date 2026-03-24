@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.audience_boost import AudienceBoost
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +30,10 @@ class BoostingProfile(BaseModel):
     global_boost_level: Optional[StrictInt] = Field(default=None, alias="globalBoostLevel")
     language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
     kayzen_audience_ids: Optional[List[StrictInt]] = Field(default=None, alias="kayzenAudienceIds")
-    __properties: ClassVar[List[str]] = ["globalBoostLevel", "languageBoosts", "kayzenAudienceIds"]
+    prospect_blacklist: Optional[List[StrictInt]] = Field(default=None, alias="prospectBlacklist")
+    distilling_boosts: Optional[List[AudienceBoost]] = Field(default=None, alias="distillingBoosts")
+    labeling_boosts: Optional[List[AudienceBoost]] = Field(default=None, alias="labelingBoosts")
+    __properties: ClassVar[List[str]] = ["globalBoostLevel", "languageBoosts", "kayzenAudienceIds", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +74,20 @@ class BoostingProfile(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in distilling_boosts (list)
+        _items = []
+        if self.distilling_boosts:
+            for _item_distilling_boosts in self.distilling_boosts:
+                if _item_distilling_boosts:
+                    _items.append(_item_distilling_boosts.to_dict())
+            _dict['distillingBoosts'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in labeling_boosts (list)
+        _items = []
+        if self.labeling_boosts:
+            for _item_labeling_boosts in self.labeling_boosts:
+                if _item_labeling_boosts:
+                    _items.append(_item_labeling_boosts.to_dict())
+            _dict['labelingBoosts'] = _items
         return _dict
 
     @classmethod
@@ -84,7 +102,10 @@ class BoostingProfile(BaseModel):
         _obj = cls.model_validate({
             "globalBoostLevel": obj.get("globalBoostLevel"),
             "languageBoosts": obj.get("languageBoosts"),
-            "kayzenAudienceIds": obj.get("kayzenAudienceIds")
+            "kayzenAudienceIds": obj.get("kayzenAudienceIds"),
+            "prospectBlacklist": obj.get("prospectBlacklist"),
+            "distillingBoosts": [AudienceBoost.from_dict(_item) for _item in obj["distillingBoosts"]] if obj.get("distillingBoosts") is not None else None,
+            "labelingBoosts": [AudienceBoost.from_dict(_item) for _item in obj["labelingBoosts"]] if obj.get("labelingBoosts") is not None else None
         })
         return _obj
 

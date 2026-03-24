@@ -17,27 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterNotFilter(BaseModel):
+class UpdateConfigEndpointAudienceBoostInput(BaseModel):
     """
-    ICampaignFilterNotFilter
+    UpdateConfigEndpointAudienceBoostInput
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    filter: ICampaignFilter
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    inner_filters: Optional[List[ICampaignFilter]] = Field(default=None, alias="innerFilters")
-    __properties: ClassVar[List[str]] = ["_t", "filter", "executionOrder", "innerFilters"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['NotFilter']):
-            raise ValueError("must be one of enum values ('NotFilter')")
-        return value
+    audience_id: StrictStr = Field(description="The platform audience ID (e.g., aud_xxx).", alias="audienceId")
+    level: StrictInt = Field(description="The boost level for this audience.")
+    __properties: ClassVar[List[str]] = ["audienceId", "level"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +48,7 @@ class ICampaignFilterNotFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ICampaignFilterNotFilter from a JSON string"""
+        """Create an instance of UpdateConfigEndpointAudienceBoostInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,21 +69,11 @@ class ICampaignFilterNotFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of filter
-        if self.filter:
-            _dict['filter'] = self.filter.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in inner_filters (list)
-        _items = []
-        if self.inner_filters:
-            for _item_inner_filters in self.inner_filters:
-                if _item_inner_filters:
-                    _items.append(_item_inner_filters.to_dict())
-            _dict['innerFilters'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ICampaignFilterNotFilter from a dict"""
+        """Create an instance of UpdateConfigEndpointAudienceBoostInput from a dict"""
         if obj is None:
             return None
 
@@ -100,14 +81,9 @@ class ICampaignFilterNotFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t"),
-            "filter": ICampaignFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
-            "executionOrder": obj.get("executionOrder"),
-            "innerFilters": [ICampaignFilter.from_dict(_item) for _item in obj["innerFilters"]] if obj.get("innerFilters") is not None else None
+            "audienceId": obj.get("audienceId"),
+            "level": obj.get("level")
         })
         return _obj
 
-from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-# TODO: Rewrite to not use raise_errors
-ICampaignFilterNotFilter.model_rebuild(raise_errors=False)
 

@@ -4802,7 +4802,12 @@
             ],
             "type": "string"
           },
-          "filters": { }
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUserFilterModel"
+            }
+          }
         }
       },
       "IUserFilterModelResponseCountUserFilterModel": {

@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.create_flow_endpoint_audience_boost_input import CreateFlowEndpointAudienceBoostInput
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
@@ -39,7 +40,9 @@ class CreateFlowEndpointInput(BaseModel):
     min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 1.", alias="minResponses")
     responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags"]
+    global_boost_level: Optional[StrictInt] = Field(default=None, description="Global boost level for the flow campaign. Defaults to 1.", alias="globalBoostLevel")
+    audience_boosts: Optional[List[CreateFlowEndpointAudienceBoostInput]] = Field(default=None, alias="audienceBoosts")
+    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "globalBoostLevel", "audienceBoosts"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,6 +90,13 @@ class CreateFlowEndpointInput(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in audience_boosts (list)
+        _items = []
+        if self.audience_boosts:
+            for _item_audience_boosts in self.audience_boosts:
+                if _item_audience_boosts:
+                    _items.append(_item_audience_boosts.to_dict())
+            _dict['audienceBoosts'] = _items
         # set to None if validation_set_id (nullable) is None
         # and model_fields_set contains the field
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
@@ -96,6 +106,11 @@ class CreateFlowEndpointInput(BaseModel):
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
             _dict['featureFlags'] = None
+
+        # set to None if audience_boosts (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_boosts is None and "audience_boosts" in self.model_fields_set:
+            _dict['audienceBoosts'] = None
 
         return _dict
 
@@ -120,7 +135,9 @@ class CreateFlowEndpointInput(BaseModel):
             "serveTimeoutSeconds": obj.get("serveTimeoutSeconds"),
             "minResponses": obj.get("minResponses"),
             "responsesRequired": obj.get("responsesRequired"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "globalBoostLevel": obj.get("globalBoostLevel"),
+            "audienceBoosts": [CreateFlowEndpointAudienceBoostInput.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None
         })
         return _obj
 

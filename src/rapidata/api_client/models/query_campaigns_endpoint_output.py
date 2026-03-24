@@ -17,25 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.boosting_profile import BoostingProfile
+from rapidata.api_client.models.campaign_status import CampaignStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IUserFilterModelOrUserFilterModel(BaseModel):
+class QueryCampaignsEndpointOutput(BaseModel):
     """
-    IUserFilterModelOrUserFilterModel
+    QueryCampaignsEndpointOutput
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    filters: List[IUserFilterModel]
-    __properties: ClassVar[List[str]] = ["_t", "filters"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['OrFilter']):
-            raise ValueError("must be one of enum values ('OrFilter')")
-        return value
+    id: StrictStr = Field(description="The unique identifier of the campaign.")
+    name: StrictStr = Field(description="The name of the campaign.")
+    status: CampaignStatus
+    priority: StrictInt = Field(description="The priority level of the campaign.")
+    boosting_profile: BoostingProfile = Field(description="The boosting profile configuration.", alias="boostingProfile")
+    requires_booster: StrictBool = Field(description="Whether the campaign requires a booster.", alias="requiresBooster")
+    owner_mail: StrictStr = Field(description="The email of the campaign owner.", alias="ownerMail")
+    created_at: datetime = Field(description="The timestamp when the campaign was created.", alias="createdAt")
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "boostingProfile", "requiresBooster", "ownerMail", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -55,7 +57,7 @@ class IUserFilterModelOrUserFilterModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of IUserFilterModelOrUserFilterModel from a JSON string"""
+        """Create an instance of QueryCampaignsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,18 +78,14 @@ class IUserFilterModelOrUserFilterModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of boosting_profile
+        if self.boosting_profile:
+            _dict['boostingProfile'] = self.boosting_profile.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of IUserFilterModelOrUserFilterModel from a dict"""
+        """Create an instance of QueryCampaignsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -95,12 +93,15 @@ class IUserFilterModelOrUserFilterModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t"),
-            "filters": [IUserFilterModel.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+            "id": obj.get("id"),
+            "name": obj.get("name"),
+            "status": obj.get("status"),
+            "priority": obj.get("priority"),
+            "boostingProfile": BoostingProfile.from_dict(obj["boostingProfile"]) if obj.get("boostingProfile") is not None else None,
+            "requiresBooster": obj.get("requiresBooster"),
+            "ownerMail": obj.get("ownerMail"),
+            "createdAt": obj.get("createdAt")
         })
         return _obj
 
-from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
-# TODO: Rewrite to not use raise_errors
-IUserFilterModelOrUserFilterModel.model_rebuild(raise_errors=False)
 

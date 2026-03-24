@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.simplified_audience_user_state import SimplifiedAudienceUserState
 from typing import Optional, Set
@@ -29,9 +29,10 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     audience_id: StrictStr = Field(alias="audienceId")
-    required_state: SimplifiedAudienceUserState = Field(alias="requiredState")
+    allowed_states: Optional[List[SimplifiedAudienceUserState]] = Field(default=None, alias="allowedStates")
+    include_unknown_state: Optional[StrictBool] = Field(default=None, alias="includeUnknownState")
     execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "audienceId", "requiredState", "executionOrder"]
+    __properties: ClassVar[List[str]] = ["_t", "audienceId", "allowedStates", "includeUnknownState", "executionOrder"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -93,7 +94,8 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
             "audienceId": obj.get("audienceId"),
-            "requiredState": obj.get("requiredState"),
+            "allowedStates": obj.get("allowedStates"),
+            "includeUnknownState": obj.get("includeUnknownState"),
             "executionOrder": obj.get("executionOrder")
         })
         return _obj
