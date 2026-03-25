@@ -12,6 +12,7 @@ from rapidata.api_client.api.customer_api import CustomerApi
 from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
 from rapidata.api_client.api.datapoint_api import DatapointApi
 from rapidata.api_client.api.dataset_api import DatasetApi
+from rapidata.api_client.api.dataset_group_api import DatasetGroupApi
 from rapidata.api_client.api.evaluation_workflow_api import EvaluationWorkflowApi
 from rapidata.api_client.api.examples_api import ExamplesApi
 from rapidata.api_client.api.feedback_api import FeedbackApi

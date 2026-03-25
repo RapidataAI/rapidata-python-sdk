@@ -20,7 +20,7 @@ from datetime import datetime
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.flow_get_name_parameter import FlowGetNameParameter
+from rapidata.api_client.models.campaigns_get_id_parameter import CampaignsGetIdParameter
 from rapidata.api_client.models.get_completion_time_histogram_endpoint_output import GetCompletionTimeHistogramEndpointOutput
 from rapidata.api_client.models.get_flow_by_id_endpoint_output import GetFlowByIdEndpointOutput
 from rapidata.api_client.models.get_flow_item_creation_timeseries_endpoint_output import GetFlowItemCreationTimeseriesEndpointOutput
@@ -590,8 +590,8 @@ class FlowApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by name.")] = None,
-        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
+        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -615,9 +615,9 @@ class FlowApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: FlowGetNameParameter
+        :type name: CampaignsGetIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: FlowGetNameParameter
+        :type created_at: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -675,8 +675,8 @@ class FlowApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by name.")] = None,
-        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
+        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -700,9 +700,9 @@ class FlowApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: FlowGetNameParameter
+        :type name: CampaignsGetIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: FlowGetNameParameter
+        :type created_at: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -760,8 +760,8 @@ class FlowApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by name.")] = None,
-        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
+        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -785,9 +785,9 @@ class FlowApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: FlowGetNameParameter
+        :type name: CampaignsGetIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: FlowGetNameParameter
+        :type created_at: CampaignsGetIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

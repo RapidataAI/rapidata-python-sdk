@@ -3337,8 +3337,7 @@
           },
           "sessionId": {
             "type": "string",
-            "description": "The session ID of the user who submitted the feedback.",
-            "format": "uuid"
+            "description": "The session ID of the user who submitted the feedback."
           },
           "feedback": {
             "type": "string",

@@ -1198,9 +1198,14 @@
             ],
             "description": "The filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
           },
-          "minimumUserScore": {
+          "graduationScore": {
             "type": "number",
-            "description": "The minimum user score used to determine whether a user can be included in an audience.",
+            "description": "The score used to determine whether a user graduates from the distilling campaign.",
+            "format": "double"
+          },
+          "demotionScore": {
+            "type": "number",
+            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Defaults to null (uses GraduationScore).",
             "format": "double"
           },
           "minimumSizeForActivation": {
@@ -1221,15 +1226,30 @@
             "description": "Maximum responses before user exits the distilling campaign.\n Defaults to 10. Set to null to disable this exit condition.",
             "format": "uint32"
           },
-          "minDistillingResponses": {
+          "dropMinResponses": {
             "type": "integer",
-            "description": "Minimum responses before the score floor check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Defaults to 3. Set to null to apply score floor check from the first response.",
+            "description": "Minimum responses before the drop score check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Defaults to 3. Set to null to apply drop score check from the first response.",
             "format": "uint32"
+          },
+          "dropScore": {
+            "type": "number",
+            "description": "Score floor - users below this score exit the distilling campaign\n (only after completing DropMinResponses).\n Defaults to 0.2. Set to null to disable this exit condition.",
+            "format": "double"
+          },
+          "minimumUserScore": {
+            "type": "number",
+            "description": "Use instead.",
+            "format": "double"
           },
           "minDistillingScoreFloor": {
             "type": "number",
-            "description": "Minimum user score floor - users below this score exit the distilling campaign\n (only after completing MinDistillingResponses).\n Defaults to 0.2. Set to null to disable this exit condition.",
+            "description": "Use instead.",
             "format": "double"
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "description": "Use instead.",
+            "format": "uint32"
           },
           "isDistillingCampaignSticky": {
             "type": "boolean",
@@ -1254,6 +1274,11 @@
             "type": "integer",
             "description": "Minimum number of sessions before the submission rate check applies.\n Defaults to null (applies from first session).",
             "format": "uint32"
+          },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
+            "format": "double"
           },
           "distillingRetrievalMode": {
             "$ref": "#/components/schemas/DistillingRetrievalMode"
@@ -1400,7 +1425,8 @@
           "ownerMail",
           "isPublic",
           "isDistilling",
-          "minimumUserScore",
+          "distillingCampaignId",
+          "graduationScore",
           "distillingRetrievalMode",
           "boostLevel"
         ],
@@ -1446,6 +1472,9 @@
           "isDistilling": {
             "type": "boolean"
           },
+          "distillingCampaignId": {
+            "type": "string"
+          },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "format": "int32"
@@ -1454,7 +1483,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "minimumUserScore": {
+          "graduationScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "demotionScore": {
             "type": "number",
             "format": "double"
           },
@@ -1462,11 +1495,11 @@
             "type": "integer",
             "format": "uint32"
           },
-          "minDistillingResponses": {
+          "dropMinResponses": {
             "type": "integer",
             "format": "uint32"
           },
-          "minDistillingScoreFloor": {
+          "dropScore": {
             "type": "number",
             "format": "double"
           },
@@ -1486,8 +1519,24 @@
             "type": "integer",
             "format": "uint32"
           },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "format": "double"
+          },
           "distillingRetrievalMode": {
             "$ref": "#/components/schemas/DistillingRetrievalMode"
+          },
+          "minimumUserScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "format": "double"
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
           },
           "boostLevel": {
             "$ref": "#/components/schemas/BoostLevel"
@@ -3947,9 +3996,15 @@
             "format": "int32",
             "nullable": true
           },
-          "minimumUserScore": {
+          "graduationScore": {
             "type": "number",
-            "description": "The minimum user score used to determine whether a user can be included in an audience.",
+            "description": "The score used to determine whether a user graduates from the distilling campaign.",
+            "format": "double",
+            "nullable": true
+          },
+          "demotionScore": {
+            "type": "number",
+            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Set to null to use GraduationScore.",
             "format": "double",
             "nullable": true
           },
@@ -3959,15 +4014,15 @@
             "format": "uint32",
             "nullable": true
           },
-          "minDistillingResponses": {
+          "dropMinResponses": {
             "type": "integer",
-            "description": "Minimum responses before the score floor check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Set to null to apply score floor check from the first response.",
+            "description": "Minimum responses before the drop score check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Set to null to apply drop score check from the first response.",
             "format": "uint32",
             "nullable": true
           },
-          "minDistillingScoreFloor": {
+          "dropScore": {
             "type": "number",
-            "description": "Minimum user score floor - users below this score exit the distilling campaign\n (only after completing MinDistillingResponses).\n Set to null to disable this exit condition.",
+            "description": "Score floor - users below this score exit the distilling campaign\n (only after completing DropMinResponses).\n Set to null to disable this exit condition.",
             "format": "double",
             "nullable": true
           },
@@ -3995,6 +4050,12 @@
             "format": "uint32",
             "nullable": true
           },
+          "minSubmissionRateGraduated": {
+            "type": "number",
+            "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
+            "format": "double",
+            "nullable": true
+          },
           "distillingRetrievalMode": {
             "enum": [
               "Random",
@@ -4002,6 +4063,24 @@
               "Sequential"
             ],
             "description": "The retrieval mode used by the distilling campaign to select rapids for users."
+          },
+          "minimumUserScore": {
+            "type": "number",
+            "description": "Use instead.",
+            "format": "double",
+            "nullable": true
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "description": "Use instead.",
+            "format": "double",
+            "nullable": true
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "description": "Use instead.",
+            "format": "uint32",
+            "nullable": true
           }
         },
         "description": "The body request to update an audience."

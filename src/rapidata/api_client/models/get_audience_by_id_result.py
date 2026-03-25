@@ -42,23 +42,29 @@ class GetAudienceByIdResult(BaseModel):
     owner_mail: StrictStr = Field(alias="ownerMail")
     is_public: StrictBool = Field(alias="isPublic")
     is_distilling: StrictBool = Field(alias="isDistilling")
+    distilling_campaign_id: StrictStr = Field(alias="distillingCampaignId")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
-    minimum_user_score: Union[StrictFloat, StrictInt] = Field(alias="minimumUserScore")
+    graduation_score: Union[StrictFloat, StrictInt] = Field(alias="graduationScore")
+    demotion_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="demotionScore")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, alias="maxDistillingResponses")
-    min_distilling_responses: Optional[StrictInt] = Field(default=None, alias="minDistillingResponses")
-    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minDistillingScoreFloor")
+    drop_min_responses: Optional[StrictInt] = Field(default=None, alias="dropMinResponses")
+    drop_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="dropScore")
     max_distilling_sessions: Optional[StrictInt] = Field(default=None, alias="maxDistillingSessions")
     inactivity_drop_days: Optional[StrictInt] = Field(default=None, alias="inactivityDropDays")
     min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minSubmissionRate")
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, alias="minSessionsForSubmissionRate")
+    min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minSubmissionRateGraduated")
     distilling_retrieval_mode: DistillingRetrievalMode = Field(alias="distillingRetrievalMode")
+    minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minimumUserScore")
+    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minDistillingScoreFloor")
+    min_distilling_responses: Optional[StrictInt] = Field(default=None, alias="minDistillingResponses")
     boost_level: BoostLevel = Field(alias="boostLevel")
     random_admission_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomAdmissionProbability")
     health: Optional[Union[StrictFloat, StrictInt]] = None
     graduated: Optional[StrictInt] = None
     dropped: Optional[StrictInt] = None
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "minimumUserScore", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "distillingRetrievalMode", "boostLevel", "randomAdmissionProbability", "health", "graduated", "dropped"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "distillingCampaignId", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationScore", "demotionScore", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "minimumUserScore", "minDistillingScoreFloor", "minDistillingResponses", "boostLevel", "randomAdmissionProbability", "health", "graduated", "dropped"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -139,17 +145,23 @@ class GetAudienceByIdResult(BaseModel):
             "ownerMail": obj.get("ownerMail"),
             "isPublic": obj.get("isPublic"),
             "isDistilling": obj.get("isDistilling"),
+            "distillingCampaignId": obj.get("distillingCampaignId"),
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),
             "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
-            "minimumUserScore": obj.get("minimumUserScore"),
+            "graduationScore": obj.get("graduationScore"),
+            "demotionScore": obj.get("demotionScore"),
             "maxDistillingResponses": obj.get("maxDistillingResponses"),
-            "minDistillingResponses": obj.get("minDistillingResponses"),
-            "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
+            "dropMinResponses": obj.get("dropMinResponses"),
+            "dropScore": obj.get("dropScore"),
             "maxDistillingSessions": obj.get("maxDistillingSessions"),
             "inactivityDropDays": obj.get("inactivityDropDays"),
             "minSubmissionRate": obj.get("minSubmissionRate"),
             "minSessionsForSubmissionRate": obj.get("minSessionsForSubmissionRate"),
+            "minSubmissionRateGraduated": obj.get("minSubmissionRateGraduated"),
             "distillingRetrievalMode": obj.get("distillingRetrievalMode"),
+            "minimumUserScore": obj.get("minimumUserScore"),
+            "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
+            "minDistillingResponses": obj.get("minDistillingResponses"),
             "boostLevel": obj.get("boostLevel"),
             "randomAdmissionProbability": obj.get("randomAdmissionProbability"),
             "health": obj.get("health"),

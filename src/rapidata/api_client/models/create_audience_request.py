@@ -32,21 +32,26 @@ class CreateAudienceRequest(BaseModel):
     name: StrictStr = Field(description="The name to give the newly created audience.")
     description: Optional[StrictStr] = Field(default=None, description="An optional markdown-supported description of the audience's purpose.")
     filters: Optional[List[IAudienceFilter]] = None
-    minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The minimum user score used to determine whether a user can be included in an audience.", alias="minimumUserScore")
+    graduation_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The score used to determine whether a user graduates from the distilling campaign.", alias="graduationScore")
+    demotion_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Score below which a graduated user is demoted back to distilling.  Must be less than or equal to GraduationScore. Defaults to null (uses GraduationScore).", alias="demotionScore")
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, description="The minimum number of users required for an audience to be activated.", alias="minimumSizeForActivation")
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An optional logo image for the audience. Must be an existing image asset.")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Defaults to 10. Set to null to disable this exit condition.", alias="maxDistillingResponses")
-    min_distilling_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the score floor check applies.  Users need at least this many responses before they can be kicked out for low score.  Defaults to 3. Set to null to apply score floor check from the first response.", alias="minDistillingResponses")
-    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum user score floor - users below this score exit the distilling campaign  (only after completing MinDistillingResponses).  Defaults to 0.2. Set to null to disable this exit condition.", alias="minDistillingScoreFloor")
+    drop_min_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the drop score check applies.  Users need at least this many responses before they can be kicked out for low score.  Defaults to 3. Set to null to apply drop score check from the first response.", alias="dropMinResponses")
+    drop_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Score floor - users below this score exit the distilling campaign  (only after completing DropMinResponses).  Defaults to 0.2. Set to null to disable this exit condition.", alias="dropScore")
+    minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Use instead.", alias="minimumUserScore")
+    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Use instead.", alias="minDistillingScoreFloor")
+    min_distilling_responses: Optional[StrictInt] = Field(default=None, description="Use instead.", alias="minDistillingResponses")
     is_distilling_campaign_sticky: Optional[StrictBool] = Field(default=None, description="Whether the distilling campaign should be sticky (users stay until filters don't match).  Defaults to true (Temporary sticky).", alias="isDistillingCampaignSticky")
     max_distilling_sessions: Optional[StrictInt] = Field(default=None, description="Maximum sessions (rapid retrievals) before user exits the distilling campaign.  Defaults to null (disabled). Set to a value to enable session-based exit condition.", alias="maxDistillingSessions")
     inactivity_drop_days: Optional[StrictInt] = Field(default=None, description="Number of days of inactivity before a distilling user is dropped.  Defaults to null (disabled).", alias="inactivityDropDays")
     min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate (responses / sessions) before a user is dropped.  Defaults to null (disabled).", alias="minSubmissionRate")
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Defaults to null (applies from first session).", alias="minSessionsForSubmissionRate")
+    min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.  Set a lower value to be more lenient with graduated users.", alias="minSubmissionRateGraduated")
     distilling_retrieval_mode: Optional[DistillingRetrievalMode] = Field(default=None, alias="distillingRetrievalMode")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  Defaults to 200. Admin-only override.", alias="minDistillingForGlobalBoost")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  Defaults to 100. Admin-only override.", alias="minGraduatedForDistillingBoost")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "graduationScore", "demotionScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "dropMinResponses", "dropScore", "minimumUserScore", "minDistillingScoreFloor", "minDistillingResponses", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -122,17 +127,22 @@ class CreateAudienceRequest(BaseModel):
             "name": obj.get("name"),
             "description": obj.get("description"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "minimumUserScore": obj.get("minimumUserScore"),
+            "graduationScore": obj.get("graduationScore"),
+            "demotionScore": obj.get("demotionScore"),
             "minimumSizeForActivation": obj.get("minimumSizeForActivation"),
             "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "maxDistillingResponses": obj.get("maxDistillingResponses"),
-            "minDistillingResponses": obj.get("minDistillingResponses"),
+            "dropMinResponses": obj.get("dropMinResponses"),
+            "dropScore": obj.get("dropScore"),
+            "minimumUserScore": obj.get("minimumUserScore"),
             "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
+            "minDistillingResponses": obj.get("minDistillingResponses"),
             "isDistillingCampaignSticky": obj.get("isDistillingCampaignSticky"),
             "maxDistillingSessions": obj.get("maxDistillingSessions"),
             "inactivityDropDays": obj.get("inactivityDropDays"),
             "minSubmissionRate": obj.get("minSubmissionRate"),
             "minSessionsForSubmissionRate": obj.get("minSessionsForSubmissionRate"),
+            "minSubmissionRateGraduated": obj.get("minSubmissionRateGraduated"),
             "distillingRetrievalMode": obj.get("distillingRetrievalMode"),
             "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost")
