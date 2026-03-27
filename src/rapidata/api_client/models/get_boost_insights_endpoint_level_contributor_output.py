@@ -19,21 +19,17 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.boost_mode import BoostMode
-from rapidata.api_client.models.boost_status_model import BoostStatusModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetBoostStatusEndpointOutput(BaseModel):
+class GetBoostInsightsEndpointLevelContributorOutput(BaseModel):
     """
-    GetBoostStatusEndpointOutput
+    GetBoostInsightsEndpointLevelContributorOutput
     """ # noqa: E501
-    status: BoostStatusModel
-    mode: BoostMode
-    active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
-    inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
-    unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
-    __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
+    campaign_id: StrictStr = Field(alias="campaignId")
+    campaign_name: StrictStr = Field(alias="campaignName")
+    level: StrictInt
+    __properties: ClassVar[List[str]] = ["campaignId", "campaignName", "level"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -53,7 +49,7 @@ class GetBoostStatusEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetBoostStatusEndpointOutput from a JSON string"""
+        """Create an instance of GetBoostInsightsEndpointLevelContributorOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,7 +74,7 @@ class GetBoostStatusEndpointOutput(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetBoostStatusEndpointOutput from a dict"""
+        """Create an instance of GetBoostInsightsEndpointLevelContributorOutput from a dict"""
         if obj is None:
             return None
 
@@ -86,11 +82,9 @@ class GetBoostStatusEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "status": obj.get("status"),
-            "mode": obj.get("mode"),
-            "activeCampaigns": obj.get("activeCampaigns"),
-            "inactiveCampaigns": obj.get("inactiveCampaigns"),
-            "unknownCampaigns": obj.get("unknownCampaigns")
+            "campaignId": obj.get("campaignId"),
+            "campaignName": obj.get("campaignName"),
+            "level": obj.get("level")
         })
         return _obj
 

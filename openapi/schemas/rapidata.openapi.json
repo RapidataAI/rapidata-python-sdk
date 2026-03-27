@@ -2124,6 +2124,57 @@
         ]
       }
     },
+    "/campaign/boost/insights": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Returns an attributed view of the aggregated boosting profile.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/campaign/boost/status": {
       "get": {
         "tags": [
@@ -3428,7 +3479,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetFlowByIdEndpoint_Output"
+                  "$ref": "#/components/schemas/IFlowModel"
                 }
               }
             }
@@ -16205,7 +16256,12 @@
             ],
             "type": "string"
           },
-          "filters": {}
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAudienceFilter"
+            }
+          }
         }
       },
       "IExamplePayload": {
@@ -18404,7 +18460,7 @@
           }
         }
       },
-      "BoostModeModel": {
+      "BoostMode": {
         "enum": [
           "Automatic",
           "Manual"
@@ -18451,6 +18507,207 @@
           }
         }
       },
+      "GetBoostInsightsEndpoint_AudienceOutput": {
+        "required": [
+          "kayzenAudienceId",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "kayzenAudienceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_ContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_ContributorOutput": {
+        "required": [
+          "campaignId",
+          "campaignName"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string"
+          },
+          "campaignName": {
+            "type": "string"
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_GlobalBoostOutput": {
+        "required": [
+          "effectiveLevel",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "effectiveLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LevelContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_LanguageBoostOutput": {
+        "required": [
+          "language",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_ContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_LevelContributorOutput": {
+        "required": [
+          "campaignId",
+          "campaignName",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string"
+          },
+          "campaignName": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_LeveledAudienceOutput": {
+        "required": [
+          "kayzenAudienceId",
+          "effectiveLevel",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "kayzenAudienceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "effectiveLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LevelContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_Output": {
+        "required": [
+          "mode",
+          "manualOverrideLevel",
+          "globalBoost",
+          "languageBoosts",
+          "audienceBoosts",
+          "prospectBlacklist",
+          "distillingBoosts",
+          "labelingBoosts"
+        ],
+        "type": "object",
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/BoostMode"
+          },
+          "manualOverrideLevel": {
+            "type": "integer",
+            "description": "The manual override level, if manual mode is active.",
+            "format": "int32"
+          },
+          "globalBoost": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetBoostInsightsEndpoint_GlobalBoostOutput"
+              }
+            ],
+            "description": "Global boost insight with contributing campaigns."
+          },
+          "languageBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LanguageBoostOutput"
+                }
+              }
+            ],
+            "description": "Language-specific boost insights."
+          },
+          "audienceBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
+                }
+              }
+            ],
+            "description": "Audience boost insights."
+          },
+          "prospectBlacklist": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
+                }
+              }
+            ],
+            "description": "Prospect blacklist insights."
+          },
+          "distillingBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LeveledAudienceOutput"
+                }
+              }
+            ],
+            "description": "Distilling boost insights."
+          },
+          "labelingBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LeveledAudienceOutput"
+                }
+              }
+            ],
+            "description": "Labeling boost insights."
+          }
+        }
+      },
       "GetBoostStatusEndpoint_Output": {
         "required": [
           "status",
@@ -18465,7 +18722,7 @@
             "$ref": "#/components/schemas/BoostStatusModel"
           },
           "mode": {
-            "$ref": "#/components/schemas/BoostModeModel"
+            "$ref": "#/components/schemas/BoostMode"
           },
           "activeCampaigns": {
             "allOf": [
@@ -19009,6 +19266,22 @@
         },
         "description": "The body request for updating the name of a dataset."
       },
+      "AudienceBoostModel": {
+        "required": [
+          "audienceId",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "CreateFlowEndpoint_AudienceBoostInput": {
         "required": [
           "audienceId",
@@ -19096,6 +19369,51 @@
               }
             ],
             "description": "Optional feature flags to enable for this flow."
+          },
+          "targetResponseCount": {
+            "type": "integer",
+            "description": "Target average response count per completed item. Enables PID control when set.",
+            "format": "int32"
+          },
+          "pidProportionalGain": {
+            "type": "number",
+            "description": "PID proportional gain. Defaults to 1.0.",
+            "format": "double"
+          },
+          "pidIntegralGain": {
+            "type": "number",
+            "description": "PID integral gain. Defaults to 0.1.",
+            "format": "double"
+          },
+          "pidDerivativeGain": {
+            "type": "number",
+            "description": "PID derivative gain. Defaults to 0.05.",
+            "format": "double"
+          },
+          "pidMinSessionsPerMinute": {
+            "type": "integer",
+            "description": "Minimum sessions per minute the PID can set. Defaults to 10.",
+            "format": "int32"
+          },
+          "pidMaxSessionsPerMinute": {
+            "type": "integer",
+            "description": "Maximum sessions per minute the PID can set. Defaults to 10000.",
+            "format": "int32"
+          },
+          "pidBatchMode": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/PidBatchMode"
+              }
+            ]
+          },
+          "drainDurationSeconds": {
+            "type": "integer",
+            "description": "Duration in seconds for draining flow items. Defaults to 40.",
+            "format": "int32"
           },
           "globalBoostLevel": {
             "type": "integer",
@@ -19198,7 +19516,7 @@
         "enum": [
           "Ranking"
         ],
-        "description": "The type of the flow."
+        "description": "The type of the flow. Use the _t discriminator instead."
       },
       "GetCompletionTimeHistogramEndpoint_Output": {
         "required": [
@@ -19238,44 +19556,6 @@
           "count": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "GetFlowByIdEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "type",
-          "ownerId",
-          "ownerMail",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the flow."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the flow."
-          },
-          "type": {
-            "$ref": "#/components/schemas/FlowType"
-          },
-          "ownerId": {
-            "type": "string",
-            "description": "The ID of the customer who owns the flow.",
-            "format": "uuid"
-          },
-          "ownerMail": {
-            "type": "string",
-            "description": "The email of the customer who owns the flow."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "The timestamp when the flow was created.",
-            "format": "date-time"
           }
         }
       },
@@ -19554,6 +19834,205 @@
             "format": "double"
           }
         }
+      },
+      "IFlowModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IFlowModelRankingFlowModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "RankingFlow": "#/components/schemas/IFlowModelRankingFlowModel"
+          }
+        }
+      },
+      "IFlowModelRankingFlowModel": {
+        "required": [
+          "id",
+          "type",
+          "name",
+          "flowItemCount",
+          "targetResponseCount",
+          "pidProportionalGain",
+          "pidIntegralGain",
+          "pidDerivativeGain",
+          "pidMinSessionsPerMinute",
+          "pidMaxSessionsPerMinute",
+          "pidBatchMode",
+          "serveTimeoutSeconds",
+          "drainDurationSeconds",
+          "serveToResponseRatio",
+          "globalBoostLevel",
+          "audienceBoosts",
+          "criteria",
+          "startingElo",
+          "kFactor",
+          "scalingFactor",
+          "minResponses",
+          "maxResponses",
+          "featureFlags",
+          "ownerId",
+          "ownerMail",
+          "createdAt",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingFlow"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the flow."
+          },
+          "type": {
+            "$ref": "#/components/schemas/FlowType"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the flow."
+          },
+          "flowItemCount": {
+            "type": "integer",
+            "description": "The total number of items that have been added to this flow. Incremented atomically on each item creation.",
+            "format": "int64"
+          },
+          "targetResponseCount": {
+            "type": "integer",
+            "description": "Target average response count per completed item. Enables PID-based automatic rate control when set. Null disables PID.",
+            "format": "int32"
+          },
+          "pidProportionalGain": {
+            "type": "number",
+            "description": "PID proportional gain. Controls how strongly the rate reacts to the current error between target and actual response counts.",
+            "format": "double"
+          },
+          "pidIntegralGain": {
+            "type": "number",
+            "description": "PID integral gain. Eliminates steady-state error by accumulating error over time. Includes anti-windup clamping.",
+            "format": "double"
+          },
+          "pidDerivativeGain": {
+            "type": "number",
+            "description": "PID derivative gain. Provides damping by reacting to the rate of change of the error, helping prevent overshoot.",
+            "format": "double"
+          },
+          "pidMinSessionsPerMinute": {
+            "type": "integer",
+            "description": "Minimum sessions per minute the PID controller can set. Prevents the rate from dropping to zero.",
+            "format": "int32"
+          },
+          "pidMaxSessionsPerMinute": {
+            "type": "integer",
+            "description": "Maximum sessions per minute the PID controller can set. Prevents the rate from exceeding infrastructure capacity.",
+            "format": "int32"
+          },
+          "pidBatchMode": {
+            "$ref": "#/components/schemas/PidBatchMode"
+          },
+          "serveTimeoutSeconds": {
+            "type": "integer",
+            "description": "Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.",
+            "format": "int32"
+          },
+          "drainDurationSeconds": {
+            "type": "integer",
+            "description": "Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.",
+            "format": "int32"
+          },
+          "serveToResponseRatio": {
+            "type": "number",
+            "description": "Ratio of serves to responses used to calculate how many tasks to serve per expected response.",
+            "format": "double"
+          },
+          "globalBoostLevel": {
+            "type": "integer",
+            "description": "Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.",
+            "format": "int32"
+          },
+          "audienceBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AudienceBoostModel"
+                }
+              }
+            ],
+            "description": "Audience-specific boost levels that override the global boost for targeted demographics."
+          },
+          "criteria": {
+            "type": "string",
+            "description": "The comparison instruction shown to annotators during ranking tasks (e.g. \"Which image is sharper?\").",
+            "nullable": true
+          },
+          "startingElo": {
+            "type": "integer",
+            "description": "The initial Elo rating assigned to new items entering the ranking. Standard default is 1200.",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "description": "Elo K-factor controlling rating volatility. Higher values cause larger rating changes per comparison. Used as a direct multiplier on the Elo change formula.",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "description": "Elo scaling factor that determines how rating differences translate to expected win probabilities. A difference equal to the scaling factor gives the higher-rated item approximately 90% expected win rate.",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "description": "Minimum number of responses a ranking item must receive before it is considered sufficiently evaluated.",
+            "format": "int32"
+          },
+          "maxResponses": {
+            "type": "integer",
+            "description": "Maximum number of responses a ranking item can receive before being removed from active ranking. Null allows unlimited responses.",
+            "format": "int32"
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Key-value feature flags that enable specific behaviors for this flow (e.g. rapid_hints)."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The ID of the customer who owns the flow.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who owns the flow."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the flow was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "PidBatchMode": {
+        "enum": [
+          "Total",
+          "PerBatch",
+          "PerBatchTimeWeighted"
+        ],
+        "description": "How the PID output maps to the campaign rate. Total: used directly. PerBatch: multiplied by active item count. PerBatchTimeWeighted: multiplied by time-weighted active item count based on remaining TTL."
       },
       "QueryFlowItemsEndpoint_Output": {
         "required": [

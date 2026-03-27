@@ -118,6 +118,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
+*CampaignApi* | [**campaign_boost_insights_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_insights_get) | **GET** /campaign/boost/insights | Returns an attributed view of the aggregated boosting profile.
 *CampaignApi* | [**campaign_boost_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_put) | **PUT** /campaign/boost | Changes the boost configuration.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Returns the current boost status including active and inactive campaigns.
 *CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates the specified campaign&#39;s properties.
@@ -283,6 +284,7 @@ Class | Method | HTTP request | Description
  - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
  - [AttachCategoryRapidBlueprintCategory](rapidata/api_client/docs/AttachCategoryRapidBlueprintCategory.md)
  - [AudienceBoost](rapidata/api_client/docs/AudienceBoost.md)
+ - [AudienceBoostModel](rapidata/api_client/docs/AudienceBoostModel.md)
  - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
  - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
@@ -290,7 +292,7 @@ Class | Method | HTTP request | Description
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
  - [BoostLevel](rapidata/api_client/docs/BoostLevel.md)
- - [BoostModeModel](rapidata/api_client/docs/BoostModeModel.md)
+ - [BoostMode](rapidata/api_client/docs/BoostMode.md)
  - [BoostStatusModel](rapidata/api_client/docs/BoostStatusModel.md)
  - [BoostingProfile](rapidata/api_client/docs/BoostingProfile.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
@@ -374,6 +376,13 @@ Class | Method | HTTP request | Description
  - [GetBatchUploadResultEndpointUrlOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointUrlOutput.md)
  - [GetBatchUploadStatusEndpointOutput](rapidata/api_client/docs/GetBatchUploadStatusEndpointOutput.md)
  - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
+ - [GetBoostInsightsEndpointAudienceOutput](rapidata/api_client/docs/GetBoostInsightsEndpointAudienceOutput.md)
+ - [GetBoostInsightsEndpointContributorOutput](rapidata/api_client/docs/GetBoostInsightsEndpointContributorOutput.md)
+ - [GetBoostInsightsEndpointGlobalBoostOutput](rapidata/api_client/docs/GetBoostInsightsEndpointGlobalBoostOutput.md)
+ - [GetBoostInsightsEndpointLanguageBoostOutput](rapidata/api_client/docs/GetBoostInsightsEndpointLanguageBoostOutput.md)
+ - [GetBoostInsightsEndpointLevelContributorOutput](rapidata/api_client/docs/GetBoostInsightsEndpointLevelContributorOutput.md)
+ - [GetBoostInsightsEndpointLeveledAudienceOutput](rapidata/api_client/docs/GetBoostInsightsEndpointLeveledAudienceOutput.md)
+ - [GetBoostInsightsEndpointOutput](rapidata/api_client/docs/GetBoostInsightsEndpointOutput.md)
  - [GetBoostStatusEndpointOutput](rapidata/api_client/docs/GetBoostStatusEndpointOutput.md)
  - [GetCampaignCacheEndpointCampaignEntry](rapidata/api_client/docs/GetCampaignCacheEndpointCampaignEntry.md)
  - [GetCampaignCacheEndpointOutput](rapidata/api_client/docs/GetCampaignCacheEndpointOutput.md)
@@ -393,7 +402,6 @@ Class | Method | HTTP request | Description
  - [GetFailedDatapointsResult](rapidata/api_client/docs/GetFailedDatapointsResult.md)
  - [GetFailedDatapointsResultDatapoint](rapidata/api_client/docs/GetFailedDatapointsResultDatapoint.md)
  - [GetFileMetadataResult](rapidata/api_client/docs/GetFileMetadataResult.md)
- - [GetFlowByIdEndpointOutput](rapidata/api_client/docs/GetFlowByIdEndpointOutput.md)
  - [GetFlowItemByIdEndpointOutput](rapidata/api_client/docs/GetFlowItemByIdEndpointOutput.md)
  - [GetFlowItemCreationTimeseriesEndpointOutput](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutput.md)
  - [GetFlowItemCreationTimeseriesEndpointOutputDataPoint](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutputDataPoint.md)
@@ -484,6 +492,8 @@ Class | Method | HTTP request | Description
  - [IExampleTruth](rapidata/api_client/docs/IExampleTruth.md)
  - [IExampleTruthClassifyExampleTruth](rapidata/api_client/docs/IExampleTruthClassifyExampleTruth.md)
  - [IExampleTruthCompareExampleTruth](rapidata/api_client/docs/IExampleTruthCompareExampleTruth.md)
+ - [IFlowModel](rapidata/api_client/docs/IFlowModel.md)
+ - [IFlowModelRankingFlowModel](rapidata/api_client/docs/IFlowModelRankingFlowModel.md)
  - [IMetadata](rapidata/api_client/docs/IMetadata.md)
  - [IMetadataClassificationMetadata](rapidata/api_client/docs/IMetadataClassificationMetadata.md)
  - [IMetadataCountMetadata](rapidata/api_client/docs/IMetadataCountMetadata.md)
@@ -692,6 +702,7 @@ Class | Method | HTTP request | Description
  - [PagedResultOfValidationSetModel](rapidata/api_client/docs/PagedResultOfValidationSetModel.md)
  - [ParticipantByBenchmark](rapidata/api_client/docs/ParticipantByBenchmark.md)
  - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
+ - [PidBatchMode](rapidata/api_client/docs/PidBatchMode.md)
  - [PolygonResultCoordinate](rapidata/api_client/docs/PolygonResultCoordinate.md)
  - [PolygonResultShape](rapidata/api_client/docs/PolygonResultShape.md)
  - [PreliminaryDownloadModel](rapidata/api_client/docs/PreliminaryDownloadModel.md)

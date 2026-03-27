@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class FlowType(str, Enum):
     """
-    The type of the flow.
+    The type of the flow. Use the _t discriminator instead.
     """
 
     """
