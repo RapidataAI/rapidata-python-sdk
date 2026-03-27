@@ -123,6 +123,42 @@
         }
       }
     },
+    "/campaign/boost/insights": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Returns an attributed view of the aggregated boosting profile.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/campaign/boost/status": {
       "get": {
         "tags": [
@@ -727,7 +763,7 @@
           }
         }
       },
-      "BoostModeModel": {
+      "BoostMode": {
         "enum": [
           "Automatic",
           "Manual"
@@ -774,6 +810,207 @@
           }
         }
       },
+      "GetBoostInsightsEndpoint_AudienceOutput": {
+        "required": [
+          "kayzenAudienceId",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "kayzenAudienceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_ContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_ContributorOutput": {
+        "required": [
+          "campaignId",
+          "campaignName"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string"
+          },
+          "campaignName": {
+            "type": "string"
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_GlobalBoostOutput": {
+        "required": [
+          "effectiveLevel",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "effectiveLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LevelContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_LanguageBoostOutput": {
+        "required": [
+          "language",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_ContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_LevelContributorOutput": {
+        "required": [
+          "campaignId",
+          "campaignName",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string"
+          },
+          "campaignName": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_LeveledAudienceOutput": {
+        "required": [
+          "kayzenAudienceId",
+          "effectiveLevel",
+          "contributors"
+        ],
+        "type": "object",
+        "properties": {
+          "kayzenAudienceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "effectiveLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LevelContributorOutput"
+            }
+          }
+        }
+      },
+      "GetBoostInsightsEndpoint_Output": {
+        "required": [
+          "mode",
+          "manualOverrideLevel",
+          "globalBoost",
+          "languageBoosts",
+          "audienceBoosts",
+          "prospectBlacklist",
+          "distillingBoosts",
+          "labelingBoosts"
+        ],
+        "type": "object",
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/BoostMode"
+          },
+          "manualOverrideLevel": {
+            "type": "integer",
+            "description": "The manual override level, if manual mode is active.",
+            "format": "int32"
+          },
+          "globalBoost": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetBoostInsightsEndpoint_GlobalBoostOutput"
+              }
+            ],
+            "description": "Global boost insight with contributing campaigns."
+          },
+          "languageBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LanguageBoostOutput"
+                }
+              }
+            ],
+            "description": "Language-specific boost insights."
+          },
+          "audienceBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
+                }
+              }
+            ],
+            "description": "Audience boost insights."
+          },
+          "prospectBlacklist": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
+                }
+              }
+            ],
+            "description": "Prospect blacklist insights."
+          },
+          "distillingBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LeveledAudienceOutput"
+                }
+              }
+            ],
+            "description": "Distilling boost insights."
+          },
+          "labelingBoosts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LeveledAudienceOutput"
+                }
+              }
+            ],
+            "description": "Labeling boost insights."
+          }
+        }
+      },
       "GetBoostStatusEndpoint_Output": {
         "required": [
           "status",
@@ -788,7 +1025,7 @@
             "$ref": "#/components/schemas/BoostStatusModel"
           },
           "mode": {
-            "$ref": "#/components/schemas/BoostModeModel"
+            "$ref": "#/components/schemas/BoostMode"
           },
           "activeCampaigns": {
             "allOf": [

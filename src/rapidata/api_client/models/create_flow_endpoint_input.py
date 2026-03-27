@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.create_flow_endpoint_audience_boost_input import CreateFlowEndpointAudienceBoostInput
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.pid_batch_mode import PidBatchMode
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -40,9 +41,17 @@ class CreateFlowEndpointInput(BaseModel):
     min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 1.", alias="minResponses")
     responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
+    target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Enables PID control when set.", alias="targetResponseCount")
+    pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain. Defaults to 1.0.", alias="pidProportionalGain")
+    pid_integral_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID integral gain. Defaults to 0.1.", alias="pidIntegralGain")
+    pid_derivative_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID derivative gain. Defaults to 0.05.", alias="pidDerivativeGain")
+    pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set. Defaults to 10.", alias="pidMinSessionsPerMinute")
+    pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 10000.", alias="pidMaxSessionsPerMinute")
+    pid_batch_mode: Optional[PidBatchMode] = Field(default=None, alias="pidBatchMode")
+    drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
     global_boost_level: Optional[StrictInt] = Field(default=None, description="Global boost level for the flow campaign. Defaults to 1.", alias="globalBoostLevel")
     audience_boosts: Optional[List[CreateFlowEndpointAudienceBoostInput]] = Field(default=None, alias="audienceBoosts")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "globalBoostLevel", "audienceBoosts"]
+    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds", "globalBoostLevel", "audienceBoosts"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -107,6 +116,11 @@ class CreateFlowEndpointInput(BaseModel):
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
             _dict['featureFlags'] = None
 
+        # set to None if pid_batch_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_batch_mode is None and "pid_batch_mode" in self.model_fields_set:
+            _dict['pidBatchMode'] = None
+
         # set to None if audience_boosts (nullable) is None
         # and model_fields_set contains the field
         if self.audience_boosts is None and "audience_boosts" in self.model_fields_set:
@@ -136,6 +150,14 @@ class CreateFlowEndpointInput(BaseModel):
             "minResponses": obj.get("minResponses"),
             "responsesRequired": obj.get("responsesRequired"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "targetResponseCount": obj.get("targetResponseCount"),
+            "pidProportionalGain": obj.get("pidProportionalGain"),
+            "pidIntegralGain": obj.get("pidIntegralGain"),
+            "pidDerivativeGain": obj.get("pidDerivativeGain"),
+            "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
+            "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
+            "pidBatchMode": obj.get("pidBatchMode"),
+            "drainDurationSeconds": obj.get("drainDurationSeconds"),
             "globalBoostLevel": obj.get("globalBoostLevel"),
             "audienceBoosts": [CreateFlowEndpointAudienceBoostInput.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None
         })

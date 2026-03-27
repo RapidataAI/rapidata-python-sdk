@@ -22,10 +22,10 @@ from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.campaigns_get_id_parameter import CampaignsGetIdParameter
 from rapidata.api_client.models.get_completion_time_histogram_endpoint_output import GetCompletionTimeHistogramEndpointOutput
-from rapidata.api_client.models.get_flow_by_id_endpoint_output import GetFlowByIdEndpointOutput
 from rapidata.api_client.models.get_flow_item_creation_timeseries_endpoint_output import GetFlowItemCreationTimeseriesEndpointOutput
 from rapidata.api_client.models.get_response_count_histogram_endpoint_output import GetResponseCountHistogramEndpointOutput
 from rapidata.api_client.models.get_response_count_timeseries_endpoint_output import GetResponseCountTimeseriesEndpointOutput
+from rapidata.api_client.models.i_flow_model import IFlowModel
 from rapidata.api_client.models.query_flows_endpoint_paged_result_of_output import QueryFlowsEndpointPagedResultOfOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -331,7 +331,7 @@ class FlowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetFlowByIdEndpointOutput:
+    ) -> IFlowModel:
         """Retrieves a flow by its ID.
 
 
@@ -368,7 +368,7 @@ class FlowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetFlowByIdEndpointOutput",
+            '200': "IFlowModel",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -400,7 +400,7 @@ class FlowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetFlowByIdEndpointOutput]:
+    ) -> ApiResponse[IFlowModel]:
         """Retrieves a flow by its ID.
 
 
@@ -437,7 +437,7 @@ class FlowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetFlowByIdEndpointOutput",
+            '200': "IFlowModel",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -506,7 +506,7 @@ class FlowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetFlowByIdEndpointOutput",
+            '200': "IFlowModel",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,

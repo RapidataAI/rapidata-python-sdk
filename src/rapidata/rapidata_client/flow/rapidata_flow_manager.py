@@ -93,10 +93,12 @@ class RapidataFlowManager:
             response = self._openapi_service.flow.flow_api.flow_flow_id_get(
                 flow_id=flow_id,
             )
+            if response.actual_instance is None:
+                raise ValueError(f"Flow with id {flow_id} not found")
 
             return RapidataFlow(
-                id=response.id,
-                name=response.name,
+                id=response.actual_instance.id,
+                name=response.actual_instance.name,
                 openapi_service=self._openapi_service,
             )
 
