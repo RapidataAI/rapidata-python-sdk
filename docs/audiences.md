@@ -26,7 +26,7 @@ A **custom audience** filters labelers through qualification examples before the
 from rapidata import RapidataClient
 
 client = RapidataClient()
-audience = client.audience.create_audience(name="Image Comparison Audience")
+audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
 ```
 
 ### Step 2: Add Qualification Examples
@@ -38,11 +38,21 @@ DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
     ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
     ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"],
+    ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+    ["https://assets.rapidata.ai/flux_store_front.jpg", "https://assets.rapidata.ai/mj_store_front.jpg"],
+    ["https://assets.rapidata.ai/flux_hand.jpg", "https://assets.rapidata.ai/mj_hand.jpg"],
+    ["https://assets.rapidata.ai/flux_traffic_lights.jpg", "https://assets.rapidata.ai/mj_traffic_lights.jpg"],
+    ["https://assets.rapidata.ai/flux_plane.jpg", "https://assets.rapidata.ai/mj_plane.jpg"],
 ]
 PROMPTS = [
     "A sign that says 'Diffusion'.",
     "A psychedelic duck with glasses",
-    "A small blue book sitting on a large red book."
+    "A small blue book sitting on a large red book.",
+    "A yellow flower sticking out of a bright green pot.",
+    "A store front with 'hello world' written on it.",
+    "A yellow hand on a black stone.",
+    "A green, yellow and red traffic light.",
+    "A plane flying over a person.",
 ]
 
 for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
@@ -62,27 +72,61 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
 - `truth`: The correct answer (must match one of the datapoint items exactly)
 - `context`: Additional context shown alongside the comparison (optional)
 
+### Step 3: Create and Assign a Job
+
+Once your audience is set up, create a job definition and assign it to the audience:
+
+```py
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Job",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux_book.jpg",
+         "https://assets.rapidata.ai/mj_book.jpg"]
+    ],
+    contexts=["A small blue book sitting on a large red book."]
+)
+
+job_definition.preview()
+
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
 ## Complete Example
 
-Here's the full workflow for creating a custom audience and running a labeling job:
+Here's the full workflow — creating a custom audience, adding qualification examples, and running a labeling job:
 
 ```py
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create and configure audience with qualification examples
-audience = client.audience.create_audience(name="Image Comparison Audience")
+# Create audience
+audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
 
+# Add qualification examples
 DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
     ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
     ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"],
+    ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+    ["https://assets.rapidata.ai/flux_store_front.jpg", "https://assets.rapidata.ai/mj_store_front.jpg"],
+    ["https://assets.rapidata.ai/flux_hand.jpg", "https://assets.rapidata.ai/mj_hand.jpg"],
+    ["https://assets.rapidata.ai/flux_traffic_lights.jpg", "https://assets.rapidata.ai/mj_traffic_lights.jpg"],
+    ["https://assets.rapidata.ai/flux_plane.jpg", "https://assets.rapidata.ai/mj_plane.jpg"],
 ]
 PROMPTS = [
     "A sign that says 'Diffusion'.",
     "A psychedelic duck with glasses",
-    "A small blue book sitting on a large red book."
+    "A small blue book sitting on a large red book.",
+    "A yellow flower sticking out of a bright green pot.",
+    "A store front with 'hello world' written on it.",
+    "A yellow hand on a black stone.",
+    "A green, yellow and red traffic light.",
+    "A plane flying over a person.",
 ]
 
 for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
@@ -93,21 +137,19 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
         context=prompt
     )
 
-# Create job definition
+# Create and assign job
 job_definition = client.job.create_compare_job_definition(
     name="Prompt Alignment Job",
     instruction="Which image follows the prompt more accurately?",
     datapoints=[
-        ["https://assets.rapidata.ai/flux_flower.jpg",
-         "https://assets.rapidata.ai/mj_flower.jpg"]
+        ["https://assets.rapidata.ai/flux_book.jpg",
+         "https://assets.rapidata.ai/mj_book.jpg"]
     ],
-    contexts=["A yellow flower sticking out of a green pot."]
+    contexts=["A small blue book sitting on a large red book."]
 )
 
-# Preview before running
 job_definition.preview()
 
-# Assign to audience and get results
 job = audience.assign_job(job_definition)
 job.display_progress_bar()
 results = job.get_results()
@@ -120,7 +162,7 @@ Once created, you can reuse your audience for multiple jobs:
 
 ```py
 # Find existing audiences by name
-audiences = client.audience.find_audiences("Prompt Alignment")
+audiences = client.audience.find_audiences("Custom Prompt Alignment Audience")
 
 # Or get by ID
 audience = client.audience.get_audience_by_id("audience_id")
