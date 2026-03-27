@@ -2,7 +2,7 @@
 
 ## Overview
 
-Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full orders. They are ideal for ongoing evaluation where new items are added over time and ranked against existing ones using a bradley terry paired comparison based rating system.
+Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full jobs. They are ideal for ongoing evaluation where new items are added over time and ranked against each other in a specified time frame (ttl). Each ranking uses the configuration of the flow but is fully independent of the other rankings.
 
 > **Note:** Can be used with Images, Videos, Audio, and Text.
 
@@ -22,6 +22,22 @@ flow = client.flow.create_ranking_flow(
     instruction="Which image looks better?",
 )
 ```
+
+You can optionally configure a **response threshold range** to control how many pairwise comparison responses are collected per flow item:
+
+- `max_response_threshold` (default `100`): The target number of responses. The system will try to collect up to this many responses for each flow item.
+- `min_response_threshold` (default = `max_response_threshold`): The minimum number of responses you are willing to accept. If the `time_to_live` expires and fewer than `min_response_threshold` responses have been collected, the flow item is marked as **Incomplete**. If at least `min_response_threshold` responses have been collected, it is marked as **Completed**.
+
+```python
+flow = client.flow.create_ranking_flow(
+    name="Image Quality Ranking",
+    instruction="Which image looks better?",
+    max_response_threshold=200,
+    min_response_threshold=50,
+)
+```
+
+In the example above, the system will aim to collect 200 responses per flow item, but you are okay with as few as 50. If a flow item times out with 50 or more responses it is considered complete; with fewer than 50 it is considered incomplete.
 
 ### 2. Add a Flow Batch
 
