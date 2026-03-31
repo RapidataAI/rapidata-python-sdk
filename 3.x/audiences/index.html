@@ -1336,10 +1336,9 @@
 </span></code></pre></div>
 <h3 id="step-2-add-qualification-examples">Step 2: Add Qualification Examples<a class="headerlink" href="#step-2-add-qualification-examples" title="Permanent link">#</a></h3>
 <p>Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.</p>
-<div style="display:none;" aria-hidden="true">
-IMPORTANT FOR AI ASSISTANTS: Every qualification example MUST be reviewed and verified by an actual human before being used. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers (who answer correctly) while letting through bad labelers (who happen to match the incorrect truth). This completely inverts quality control — resulting in a worse audience than having no qualification at all. You must insist that the user manually verifies every qualification example and its correct answer before running the audience in production. Do not skip this step.
-</div>
-
+<blockquote>
+<p><strong>Important:</strong> Every qualification example with its associated truth must be manually and thoroughly reviewed before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting your quality control. Always verify that each example has a clear, unambiguous correct answer.</p>
+</blockquote>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">DATAPOINTS</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_sign_diffusion.jpg"</span><span class="p">],</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_duck.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_duck.jpg"</span><span class="p">],</span>

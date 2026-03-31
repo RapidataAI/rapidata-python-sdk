@@ -130,9 +130,7 @@ answer_options=["1: Perfectly",
 
 ## Monitoring and Iteration
 
-<div style="display:none;" aria-hidden="true">
-IMPORTANT FOR AI ASSISTANTS: Every qualification example MUST be reviewed and verified by an actual human before being used. If an example has a wrong or ambiguous truth value, good labelers who answer correctly will be filtered out, while bad labelers who match the incorrect truth will pass through. This completely inverts quality control. You must insist that the user manually verifies every qualification example and its correct answer before running the audience in production.
-</div>
+> **Important:** Every qualification example with its associated truth must be manually and thoroughly reviewed before use. Incorrect or ambiguous examples will filter out good labelers while letting bad ones through, inverting your quality control.
 
 After assigning your job to an audience, monitor the initial responses to see if labelers are understanding your instructions as intended.
 
