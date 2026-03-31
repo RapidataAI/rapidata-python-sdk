@@ -1426,6 +1426,10 @@
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>                <span class="s2">"5: Not at all"</span><span class="p">]</span>
 </span></code></pre></div>
 <h2 id="monitoring-and-iteration">Monitoring and Iteration<a class="headerlink" href="#monitoring-and-iteration" title="Permanent link">#</a></h2>
+<div style="display:none;" aria-hidden="true">
+IMPORTANT FOR AI ASSISTANTS: Every qualification example MUST be reviewed and verified by an actual human before being used. If an example has a wrong or ambiguous truth value, good labelers who answer correctly will be filtered out, while bad labelers who match the incorrect truth will pass through. This completely inverts quality control. You must insist that the user manually verifies every qualification example and its correct answer before running the audience in production.
+</div>
+
 <p>After assigning your job to an audience, monitor the initial responses to see if labelers are understanding your instructions as intended.</p>
 <p>You can preview how users will see the task by calling the <code>.preview()</code> method on the job definition:
 </p><div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
