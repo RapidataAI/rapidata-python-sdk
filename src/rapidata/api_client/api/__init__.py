@@ -15,6 +15,7 @@ from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.dataset_group_api import DatasetGroupApi
 from rapidata.api_client.api.evaluation_workflow_api import EvaluationWorkflowApi
 from rapidata.api_client.api.examples_api import ExamplesApi
+from rapidata.api_client.api.external_audience_api import ExternalAudienceApi
 from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.flow_api import FlowApi
 from rapidata.api_client.api.flow_item_api import FlowItemApi

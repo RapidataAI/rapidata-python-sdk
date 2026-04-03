@@ -416,6 +416,7 @@
       "IAssetFileAsset": {
         "required": [
           "fileName",
+          "metadata",
           "_t"
         ],
         "properties": {
@@ -429,13 +430,17 @@
             "type": "string"
           },
           "metadata": {
-            "$ref": "#/components/schemas/MetadataCollection"
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IMetadata"
+            }
           }
         }
       },
       "IAssetMultiAsset": {
         "required": [
           "assets",
+          "metadata",
           "_t"
         ],
         "properties": {
@@ -452,12 +457,16 @@
             }
           },
           "metadata": {
-            "$ref": "#/components/schemas/MetadataCollection"
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IMetadata"
+            }
           }
         }
       },
       "IAssetNullAsset": {
         "required": [
+          "metadata",
           "_t"
         ],
         "properties": {
@@ -468,13 +477,17 @@
             "type": "string"
           },
           "metadata": {
-            "$ref": "#/components/schemas/MetadataCollection"
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IMetadata"
+            }
           }
         }
       },
       "IAssetTextAsset": {
         "required": [
           "text",
+          "metadata",
           "_t"
         ],
         "properties": {
@@ -488,7 +501,10 @@
             "type": "string"
           },
           "metadata": {
-            "$ref": "#/components/schemas/MetadataCollection"
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IMetadata"
+            }
           }
         }
       },
@@ -567,7 +583,6 @@
       },
       "IMetadataCountMetadata": {
         "required": [
-          "count",
           "_t"
         ],
         "properties": {
@@ -588,7 +603,6 @@
       },
       "IMetadataDurationMetadata": {
         "required": [
-          "duration",
           "_t"
         ],
         "properties": {
@@ -609,7 +623,6 @@
       },
       "IMetadataFileTypeMetadata": {
         "required": [
-          "fileType",
           "_t"
         ],
         "properties": {
@@ -653,8 +666,6 @@
       },
       "IMetadataLocationMetadata": {
         "required": [
-          "x",
-          "y",
           "_t"
         ],
         "properties": {
@@ -744,7 +755,6 @@
       },
       "IMetadataTextMetadata": {
         "required": [
-          "text",
           "_t"
         ],
         "properties": {
@@ -951,10 +961,15 @@
             "type": "string"
           },
           "possibleCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "deprecated": true
           },
           "categories": {
             "type": "array",
@@ -1188,6 +1203,10 @@
           "totalBudget": {
             "type": "integer",
             "format": "int32"
+          },
+          "totalServeBudget": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1363,17 +1382,24 @@
             "additionalProperties": {
               "type": "string"
             },
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAssets": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/IAsset"
             },
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EloConfig"
+              }
+            ],
+            "deprecated": true
           },
           "rankingConfig": {
             "oneOf": [
@@ -1430,7 +1456,12 @@
             ]
           },
           "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EloConfig"
+              }
+            ],
+            "deprecated": true
           },
           "rankingConfig": {
             "oneOf": [
@@ -1482,12 +1513,6 @@
               "$ref": "#/components/schemas/FeatureFlag"
             }
           }
-        }
-      },
-      "MetadataCollection": {
-        "type": "object",
-        "additionalProperties": {
-          "$ref": "#/components/schemas/IMetadata"
         }
       },
       "MetadataVisibilities": {

@@ -27,10 +27,10 @@ class GetBoostInsightsEndpointLeveledAudienceOutput(BaseModel):
     """
     GetBoostInsightsEndpointLeveledAudienceOutput
     """ # noqa: E501
-    kayzen_audience_id: StrictInt = Field(alias="kayzenAudienceId")
+    external_audience_id: StrictInt = Field(alias="externalAudienceId")
     effective_level: StrictInt = Field(alias="effectiveLevel")
     contributors: List[GetBoostInsightsEndpointLevelContributorOutput]
-    __properties: ClassVar[List[str]] = ["kayzenAudienceId", "effectiveLevel", "contributors"]
+    __properties: ClassVar[List[str]] = ["externalAudienceId", "effectiveLevel", "contributors"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,7 +90,7 @@ class GetBoostInsightsEndpointLeveledAudienceOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "kayzenAudienceId": obj.get("kayzenAudienceId"),
+            "externalAudienceId": obj.get("externalAudienceId"),
             "effectiveLevel": obj.get("effectiveLevel"),
             "contributors": [GetBoostInsightsEndpointLevelContributorOutput.from_dict(_item) for _item in obj["contributors"]] if obj.get("contributors") is not None else None
         })

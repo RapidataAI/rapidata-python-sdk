@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_example_payload import IExamplePayload
 from rapidata.api_client.models.i_example_truth import IExampleTruth
@@ -38,7 +38,7 @@ class AddExampleToAudienceEndpointInput(BaseModel):
     context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset that provides additional context to the user.", alias="contextAsset")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls the serving order of this example within the audience.  When null, the next sort index is automatically calculated.", alias="sortIndex")
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example should be treated as commonsense validation.  When true, incorrect answers are not accepted and the example affects global score.  When null, AI auto-detection will determine if the example is common sense.", alias="isCommonSense")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "sortIndex", "featureFlags", "isCommonSense"]
 
@@ -140,7 +140,7 @@ class AddExampleToAudienceEndpointInput(BaseModel):
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "sortIndex": obj.get("sortIndex"),
-            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "isCommonSense": obj.get("isCommonSense")
         })
         return _obj

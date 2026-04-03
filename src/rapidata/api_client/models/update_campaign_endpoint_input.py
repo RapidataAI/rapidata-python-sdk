@@ -17,8 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.boosting_profile_model import BoostingProfileModel
+from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.i_campaign_filter_model import ICampaignFilterModel
+from rapidata.api_client.models.i_campaign_selection_model import ICampaignSelectionModel
+from rapidata.api_client.models.sticky_config_model import StickyConfigModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,9 +31,14 @@ class UpdateCampaignEndpointInput(BaseModel):
     """
     UpdateCampaignEndpointInput
     """ # noqa: E501
+    name: Optional[StrictStr] = Field(default=None, description="The new name for the campaign.")
     priority: Optional[StrictInt] = Field(default=None, description="The new priority value for the campaign.")
-    requires_booster: Optional[StrictBool] = Field(default=None, description="Whether the campaign requires booster.", alias="requiresBooster")
-    __properties: ClassVar[List[str]] = ["priority", "requiresBooster"]
+    boosting_profile: Optional[BoostingProfileModel] = Field(default=None, alias="boostingProfile")
+    sticky_config: Optional[StickyConfigModel] = Field(default=None, alias="stickyConfig")
+    filters: Optional[List[ICampaignFilterModel]] = None
+    selections: Optional[List[ICampaignSelectionModel]] = None
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["name", "priority", "boostingProfile", "stickyConfig", "filters", "selections", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,15 +79,67 @@ class UpdateCampaignEndpointInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of boosting_profile
+        if self.boosting_profile:
+            _dict['boostingProfile'] = self.boosting_profile.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of sticky_config
+        if self.sticky_config:
+            _dict['stickyConfig'] = self.sticky_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
+        _items = []
+        if self.filters:
+            for _item_filters in self.filters:
+                if _item_filters:
+                    _items.append(_item_filters.to_dict())
+            _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in selections (list)
+        _items = []
+        if self.selections:
+            for _item_selections in self.selections:
+                if _item_selections:
+                    _items.append(_item_selections.to_dict())
+            _dict['selections'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
+        # set to None if name (nullable) is None
+        # and model_fields_set contains the field
+        if self.name is None and "name" in self.model_fields_set:
+            _dict['name'] = None
+
         # set to None if priority (nullable) is None
         # and model_fields_set contains the field
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
 
-        # set to None if requires_booster (nullable) is None
+        # set to None if boosting_profile (nullable) is None
         # and model_fields_set contains the field
-        if self.requires_booster is None and "requires_booster" in self.model_fields_set:
-            _dict['requiresBooster'] = None
+        if self.boosting_profile is None and "boosting_profile" in self.model_fields_set:
+            _dict['boostingProfile'] = None
+
+        # set to None if sticky_config (nullable) is None
+        # and model_fields_set contains the field
+        if self.sticky_config is None and "sticky_config" in self.model_fields_set:
+            _dict['stickyConfig'] = None
+
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
+        # set to None if selections (nullable) is None
+        # and model_fields_set contains the field
+        if self.selections is None and "selections" in self.model_fields_set:
+            _dict['selections'] = None
+
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
 
         return _dict
 
@@ -91,8 +153,13 @@ class UpdateCampaignEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "name": obj.get("name"),
             "priority": obj.get("priority"),
-            "requiresBooster": obj.get("requiresBooster")
+            "boostingProfile": BoostingProfileModel.from_dict(obj["boostingProfile"]) if obj.get("boostingProfile") is not None else None,
+            "stickyConfig": StickyConfigModel.from_dict(obj["stickyConfig"]) if obj.get("stickyConfig") is not None else None,
+            "filters": [ICampaignFilterModel.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "selections": [ICampaignSelectionModel.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

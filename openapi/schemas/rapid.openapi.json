@@ -2370,6 +2370,10 @@
           "guessAmountThreshold": {
             "type": "integer",
             "format": "int32"
+          },
+          "serveThreshold": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

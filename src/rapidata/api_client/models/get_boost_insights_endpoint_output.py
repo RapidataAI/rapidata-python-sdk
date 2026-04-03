@@ -18,11 +18,10 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.boost_mode import BoostMode
 from rapidata.api_client.models.get_boost_insights_endpoint_audience_output import GetBoostInsightsEndpointAudienceOutput
 from rapidata.api_client.models.get_boost_insights_endpoint_global_boost_output import GetBoostInsightsEndpointGlobalBoostOutput
-from rapidata.api_client.models.get_boost_insights_endpoint_language_boost_output import GetBoostInsightsEndpointLanguageBoostOutput
 from rapidata.api_client.models.get_boost_insights_endpoint_leveled_audience_output import GetBoostInsightsEndpointLeveledAudienceOutput
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,8 +33,8 @@ class GetBoostInsightsEndpointOutput(BaseModel):
     mode: BoostMode
     manual_override_level: StrictInt = Field(description="The manual override level, if manual mode is active.", alias="manualOverrideLevel")
     global_boost: GetBoostInsightsEndpointGlobalBoostOutput = Field(description="Global boost insight with contributing campaigns.", alias="globalBoost")
-    language_boosts: List[GetBoostInsightsEndpointLanguageBoostOutput] = Field(alias="languageBoosts")
-    audience_boosts: List[GetBoostInsightsEndpointAudienceOutput] = Field(alias="audienceBoosts")
+    language_boosts: Optional[Any] = Field(default=None, description="Language-specific boost insights.", alias="languageBoosts")
+    audience_boosts: Optional[Any] = Field(default=None, description="Audience boost insights.", alias="audienceBoosts")
     prospect_blacklist: List[GetBoostInsightsEndpointAudienceOutput] = Field(alias="prospectBlacklist")
     distilling_boosts: List[GetBoostInsightsEndpointLeveledAudienceOutput] = Field(alias="distillingBoosts")
     labeling_boosts: List[GetBoostInsightsEndpointLeveledAudienceOutput] = Field(alias="labelingBoosts")
@@ -83,20 +82,6 @@ class GetBoostInsightsEndpointOutput(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of global_boost
         if self.global_boost:
             _dict['globalBoost'] = self.global_boost.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in language_boosts (list)
-        _items = []
-        if self.language_boosts:
-            for _item_language_boosts in self.language_boosts:
-                if _item_language_boosts:
-                    _items.append(_item_language_boosts.to_dict())
-            _dict['languageBoosts'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in audience_boosts (list)
-        _items = []
-        if self.audience_boosts:
-            for _item_audience_boosts in self.audience_boosts:
-                if _item_audience_boosts:
-                    _items.append(_item_audience_boosts.to_dict())
-            _dict['audienceBoosts'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in prospect_blacklist (list)
         _items = []
         if self.prospect_blacklist:
@@ -133,8 +118,8 @@ class GetBoostInsightsEndpointOutput(BaseModel):
             "mode": obj.get("mode"),
             "manualOverrideLevel": obj.get("manualOverrideLevel"),
             "globalBoost": GetBoostInsightsEndpointGlobalBoostOutput.from_dict(obj["globalBoost"]) if obj.get("globalBoost") is not None else None,
-            "languageBoosts": [GetBoostInsightsEndpointLanguageBoostOutput.from_dict(_item) for _item in obj["languageBoosts"]] if obj.get("languageBoosts") is not None else None,
-            "audienceBoosts": [GetBoostInsightsEndpointAudienceOutput.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None,
+            "languageBoosts": obj.get("languageBoosts"),
+            "audienceBoosts": obj.get("audienceBoosts"),
             "prospectBlacklist": [GetBoostInsightsEndpointAudienceOutput.from_dict(_item) for _item in obj["prospectBlacklist"]] if obj.get("prospectBlacklist") is not None else None,
             "distillingBoosts": [GetBoostInsightsEndpointLeveledAudienceOutput.from_dict(_item) for _item in obj["distillingBoosts"]] if obj.get("distillingBoosts") is not None else None,
             "labelingBoosts": [GetBoostInsightsEndpointLeveledAudienceOutput.from_dict(_item) for _item in obj["labelingBoosts"]] if obj.get("labelingBoosts") is not None else None

@@ -2833,7 +2833,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/FeatureFlagModel"
+                  "$ref": "#/components/schemas/FeatureFlag"
                 },
                 "nullable": true
               }
@@ -2910,21 +2910,6 @@
         ]
       },
       "FeatureFlag": {
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
-        }
-      },
-      "FeatureFlagModel": {
         "required": [
           "key",
           "value"
@@ -3772,10 +3757,6 @@
               "$ref": "#/components/schemas/ICampaignFilter"
             }
           },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
           "innerFilters": {
             "type": "array",
             "items": {
@@ -3997,10 +3978,6 @@
           "filter": {
             "$ref": "#/components/schemas/ICampaignFilter"
           },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
           "innerFilters": {
             "type": "array",
             "items": {
@@ -4026,10 +4003,6 @@
             "items": {
               "$ref": "#/components/schemas/ICampaignFilter"
             }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
           },
           "innerFilters": {
             "type": "array",

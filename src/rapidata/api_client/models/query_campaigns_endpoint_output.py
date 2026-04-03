@@ -19,9 +19,8 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.boosting_profile import BoostingProfile
-from rapidata.api_client.models.campaign_status import CampaignStatus
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.campaign_status_model import CampaignStatusModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,13 +30,13 @@ class QueryCampaignsEndpointOutput(BaseModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the campaign.")
     name: StrictStr = Field(description="The name of the campaign.")
-    status: CampaignStatus
+    status: CampaignStatusModel
     priority: StrictInt = Field(description="The priority level of the campaign.")
-    boosting_profile: BoostingProfile = Field(description="The boosting profile configuration.", alias="boostingProfile")
-    requires_booster: StrictBool = Field(description="Whether the campaign requires a booster.", alias="requiresBooster")
+    has_booster: StrictBool = Field(description="Whether the campaign has a booster.", alias="hasBooster")
+    requires_booster: Optional[StrictBool] = Field(default=None, description="Whether the campaign requires a booster.", alias="requiresBooster")
     owner_mail: StrictStr = Field(description="The email of the campaign owner.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the campaign was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "boostingProfile", "requiresBooster", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "hasBooster", "requiresBooster", "ownerMail", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,9 +77,6 @@ class QueryCampaignsEndpointOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of boosting_profile
-        if self.boosting_profile:
-            _dict['boostingProfile'] = self.boosting_profile.to_dict()
         return _dict
 
     @classmethod
@@ -97,7 +93,7 @@ class QueryCampaignsEndpointOutput(BaseModel):
             "name": obj.get("name"),
             "status": obj.get("status"),
             "priority": obj.get("priority"),
-            "boostingProfile": BoostingProfile.from_dict(obj["boostingProfile"]) if obj.get("boostingProfile") is not None else None,
+            "hasBooster": obj.get("hasBooster"),
             "requiresBooster": obj.get("requiresBooster"),
             "ownerMail": obj.get("ownerMail"),
             "createdAt": obj.get("createdAt")

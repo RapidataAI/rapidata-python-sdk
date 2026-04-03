@@ -1093,7 +1093,7 @@
   },
   "components": {
     "schemas": {
-      "AudienceBoostModel": {
+      "AudienceBoostModel2": {
         "required": [
           "audienceId",
           "level"
@@ -1140,6 +1140,11 @@
             "type": "string",
             "description": "The ranking criteria used to compare items."
           },
+          "audienceId": {
+            "type": "string",
+            "description": "Optional audience ID. When provided, the flow will only be served to users in this audience.",
+            "nullable": true
+          },
           "validationSetId": {
             "type": "string",
             "description": "Optional ID of the validation set to use.",
@@ -1150,19 +1155,14 @@
             "description": "Initial Elo rating for new items. Defaults to 1200.",
             "format": "int32"
           },
-          "kFactor": {
-            "type": "integer",
-            "description": "K-factor controlling Elo rating sensitivity. Defaults to 40.",
-            "format": "int32"
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "description": "Scaling factor for Elo probability calculation. Defaults to 400.",
-            "format": "int32"
-          },
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses per comparison.",
+            "format": "int32"
+          },
+          "serveResponses": {
+            "type": "integer",
+            "description": "Number of accepted responses per rapid at which to stop serving. When set, must be less than or equal to MaxResponses. Null defaults to MaxResponses.",
             "format": "int32"
           },
           "serveToResponseRatio": {
@@ -1183,7 +1183,8 @@
           "responsesRequired": {
             "type": "integer",
             "description": "Deprecated. Use MaxResponses instead.",
-            "format": "int32"
+            "format": "int32",
+            "deprecated": true
           },
           "featureFlags": {
             "allOf": [
@@ -1351,7 +1352,8 @@
         "enum": [
           "Ranking"
         ],
-        "description": "The type of the flow. Use the _t discriminator instead."
+        "description": "The type of the flow. Use the _t discriminator instead.",
+        "deprecated": true
       },
       "GetCompletionTimeHistogramEndpoint_Output": {
         "required": [
@@ -1818,8 +1820,8 @@
       "IFlowModelRankingFlowModel": {
         "required": [
           "id",
-          "type",
           "name",
+          "campaignId",
           "flowItemCount",
           "targetResponseCount",
           "pidProportionalGain",
@@ -1833,12 +1835,12 @@
           "serveToResponseRatio",
           "globalBoostLevel",
           "audienceBoosts",
+          "audienceId",
           "criteria",
           "startingElo",
-          "kFactor",
-          "scalingFactor",
           "minResponses",
           "maxResponses",
+          "serveResponses",
           "featureFlags",
           "ownerId",
           "ownerMail",
@@ -1862,6 +1864,10 @@
           "name": {
             "type": "string",
             "description": "The name of the flow."
+          },
+          "campaignId": {
+            "type": "string",
+            "description": "The ID of the campaign associated with this flow."
           },
           "flowItemCount": {
             "type": "integer",
@@ -1926,11 +1932,16 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/AudienceBoostModel"
+                  "$ref": "#/components/schemas/AudienceBoostModel2"
                 }
               }
             ],
             "description": "Audience-specific boost levels that override the global boost for targeted demographics."
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "Optional audience ID. When provided, the flow will only serve items to users in this audience.",
+            "nullable": true
           },
           "criteria": {
             "type": "string",
@@ -1945,12 +1956,14 @@
           "kFactor": {
             "type": "integer",
             "description": "Elo K-factor controlling rating volatility. Higher values cause larger rating changes per comparison. Used as a direct multiplier on the Elo change formula.",
-            "format": "int32"
+            "format": "int32",
+            "deprecated": true
           },
           "scalingFactor": {
             "type": "integer",
             "description": "Elo scaling factor that determines how rating differences translate to expected win probabilities. A difference equal to the scaling factor gives the higher-rated item approximately 90% expected win rate.",
-            "format": "int32"
+            "format": "int32",
+            "deprecated": true
           },
           "minResponses": {
             "type": "integer",
@@ -1960,6 +1973,11 @@
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses a ranking item can receive before being removed from active ranking. Null allows unlimited responses.",
+            "format": "int32"
+          },
+          "serveResponses": {
+            "type": "integer",
+            "description": "Number of accepted responses per rapid at which to stop serving. Null defaults to MaxResponses.",
             "format": "int32"
           },
           "featureFlags": {
@@ -2457,6 +2475,11 @@
       "UpdateConfigEndpoint_Input": {
         "type": "object",
         "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "Optional audience ID. When provided, the flow will only serve items to users in this audience. Set to null to remove the audience restriction.",
+            "nullable": true
+          },
           "criteria": {
             "type": "string",
             "description": "The ranking criteria used to compare items.",
@@ -2465,18 +2488,6 @@
           "startingElo": {
             "type": "integer",
             "description": "Initial Elo rating for new items.",
-            "format": "int32",
-            "nullable": true
-          },
-          "kFactor": {
-            "type": "integer",
-            "description": "K-factor controlling Elo rating sensitivity.",
-            "format": "int32",
-            "nullable": true
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "description": "Scaling factor for Elo probability calculation.",
             "format": "int32",
             "nullable": true
           },
@@ -2489,6 +2500,12 @@
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses per comparison.",
+            "format": "int32",
+            "nullable": true
+          },
+          "serveResponses": {
+            "type": "integer",
+            "description": "Number of accepted responses per rapid at which to stop serving. Set to null to remove. Must be less than or equal to MaxResponses when both are set.",
             "format": "int32",
             "nullable": true
           },
@@ -2508,7 +2525,8 @@
             "type": "integer",
             "description": "Deprecated. Use MaxResponses instead.",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "featureFlags": {
             "oneOf": [

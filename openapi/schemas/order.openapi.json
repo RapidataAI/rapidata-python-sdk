@@ -2631,7 +2631,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/FeatureFlagModel"
+                  "$ref": "#/components/schemas/FeatureFlag"
                 },
                 "nullable": true
               }
@@ -2803,21 +2803,6 @@
         }
       },
       "FeatureFlag": {
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
-        }
-      },
-      "FeatureFlagModel": {
         "required": [
           "key",
           "value"
@@ -3459,7 +3444,12 @@
             "$ref": "#/components/schemas/IPairMakerConfigModel"
           },
           "eloConfig": {
-            "$ref": "#/components/schemas/EloConfigModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EloConfigModel"
+              }
+            ],
+            "deprecated": true
           },
           "rankingConfig": {
             "oneOf": [
@@ -3516,7 +3506,12 @@
             "$ref": "#/components/schemas/IPairMakerConfigModel"
           },
           "eloConfig": {
-            "$ref": "#/components/schemas/EloConfigModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EloConfigModel"
+              }
+            ],
+            "deprecated": true
           },
           "rankingConfig": {
             "oneOf": [
@@ -3543,11 +3538,16 @@
             ]
           },
           "metadata": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
-            },
-            "nullable": true
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
+                },
+                "nullable": true
+              }
+            ],
+            "deprecated": true
           },
           "featureFlags": {
             "type": "array",
@@ -3961,10 +3961,15 @@
             "type": "string"
           },
           "possibleCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "deprecated": true
           },
           "categories": {
             "type": "array",
@@ -5461,7 +5466,8 @@
           "Passive",
           null
         ],
-        "description": "Indicates if the underlying campaign should be sticky."
+        "description": "Indicates if the underlying campaign should be sticky.",
+        "deprecated": true
       },
       "SubmitOrderEndpoint_Input": {
         "type": "object",

@@ -28,7 +28,7 @@ class IMetadataDurationMetadata(BaseModel):
     IMetadataDurationMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    duration: datetime
+    duration: Optional[datetime] = None
     visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "duration", "visibilities"]
 

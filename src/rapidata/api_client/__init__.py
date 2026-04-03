@@ -43,6 +43,7 @@ _API_IMPORTS = {
     "DatasetGroupApi": "rapidata.api_client.api.dataset_group_api",
     "EvaluationWorkflowApi": "rapidata.api_client.api.evaluation_workflow_api",
     "ExamplesApi": "rapidata.api_client.api.examples_api",
+    "ExternalAudienceApi": "rapidata.api_client.api.external_audience_api",
     "FeedbackApi": "rapidata.api_client.api.feedback_api",
     "FlowApi": "rapidata.api_client.api.flow_api",
     "FlowItemApi": "rapidata.api_client.api.flow_item_api",

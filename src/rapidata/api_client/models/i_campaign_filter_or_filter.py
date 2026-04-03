@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,9 +28,8 @@ class ICampaignFilterOrFilter(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     filters: List[ICampaignFilter]
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
     inner_filters: Optional[List[ICampaignFilter]] = Field(default=None, alias="innerFilters")
-    __properties: ClassVar[List[str]] = ["_t", "filters", "executionOrder", "innerFilters"]
+    __properties: ClassVar[List[str]] = ["_t", "filters", "innerFilters"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -106,7 +105,6 @@ class ICampaignFilterOrFilter(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
             "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "executionOrder": obj.get("executionOrder"),
             "innerFilters": [ICampaignFilter.from_dict(_item) for _item in obj["innerFilters"]] if obj.get("innerFilters") is not None else None
         })
         return _obj

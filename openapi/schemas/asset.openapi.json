@@ -628,7 +628,10 @@
         "type": "object",
         "properties": {
           "metadata": {
-            "$ref": "#/components/schemas/MetadataCollection"
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IMetadata"
+            }
           }
         }
       },
@@ -711,7 +714,6 @@
       },
       "IMetadataCountMetadata": {
         "required": [
-          "count",
           "_t"
         ],
         "properties": {
@@ -732,7 +734,6 @@
       },
       "IMetadataDurationMetadata": {
         "required": [
-          "duration",
           "_t"
         ],
         "properties": {
@@ -753,7 +754,6 @@
       },
       "IMetadataFileTypeMetadata": {
         "required": [
-          "fileType",
           "_t"
         ],
         "properties": {
@@ -797,8 +797,6 @@
       },
       "IMetadataLocationMetadata": {
         "required": [
-          "x",
-          "y",
           "_t"
         ],
         "properties": {
@@ -888,7 +886,6 @@
       },
       "IMetadataTextMetadata": {
         "required": [
-          "text",
           "_t"
         ],
         "properties": {
@@ -905,12 +902,6 @@
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
           }
-        }
-      },
-      "MetadataCollection": {
-        "type": "object",
-        "additionalProperties": {
-          "$ref": "#/components/schemas/IMetadata"
         }
       },
       "MetadataVisibilities": {

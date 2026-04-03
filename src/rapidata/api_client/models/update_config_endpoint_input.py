@@ -28,12 +28,12 @@ class UpdateConfigEndpointInput(BaseModel):
     """
     UpdateConfigEndpointInput
     """ # noqa: E501
+    audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the flow will only serve items to users in this audience. Set to null to remove the audience restriction.", alias="audienceId")
     criteria: Optional[StrictStr] = Field(default=None, description="The ranking criteria used to compare items.")
     starting_elo: Optional[StrictInt] = Field(default=None, description="Initial Elo rating for new items.", alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, description="K-factor controlling Elo rating sensitivity.", alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation.", alias="scalingFactor")
     min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison.", alias="minResponses")
     max_responses: Optional[StrictInt] = Field(default=None, description="Maximum number of responses per comparison.", alias="maxResponses")
+    serve_responses: Optional[StrictInt] = Field(default=None, description="Number of accepted responses per rapid at which to stop serving. Set to null to remove. Must be less than or equal to MaxResponses when both are set.", alias="serveResponses")
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to max responses. Set to null to remove the limit.", alias="serveToResponseRatio")
     serve_timeout_seconds: Optional[StrictInt] = Field(default=None, description="Time in seconds a user has to submit an answer after loading the task. Set to null to use the global default.", alias="serveTimeoutSeconds")
     responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
@@ -47,7 +47,7 @@ class UpdateConfigEndpointInput(BaseModel):
     pid_batch_mode: Optional[StrictStr] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
     global_boost_level: Optional[StrictInt] = Field(default=None, description="Global boost level for the flow campaign.", alias="globalBoostLevel")
     audience_boosts: Optional[List[UpdateConfigEndpointAudienceBoostInput]] = Field(default=None, alias="audienceBoosts")
-    __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "globalBoostLevel", "audienceBoosts"]
+    __properties: ClassVar[List[str]] = ["audienceId", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "globalBoostLevel", "audienceBoosts"]
 
     @field_validator('pid_batch_mode')
     def pid_batch_mode_validate_enum(cls, value):
@@ -112,6 +112,11 @@ class UpdateConfigEndpointInput(BaseModel):
                 if _item_audience_boosts:
                     _items.append(_item_audience_boosts.to_dict())
             _dict['audienceBoosts'] = _items
+        # set to None if audience_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_id is None and "audience_id" in self.model_fields_set:
+            _dict['audienceId'] = None
+
         # set to None if criteria (nullable) is None
         # and model_fields_set contains the field
         if self.criteria is None and "criteria" in self.model_fields_set:
@@ -122,16 +127,6 @@ class UpdateConfigEndpointInput(BaseModel):
         if self.starting_elo is None and "starting_elo" in self.model_fields_set:
             _dict['startingElo'] = None
 
-        # set to None if k_factor (nullable) is None
-        # and model_fields_set contains the field
-        if self.k_factor is None and "k_factor" in self.model_fields_set:
-            _dict['kFactor'] = None
-
-        # set to None if scaling_factor (nullable) is None
-        # and model_fields_set contains the field
-        if self.scaling_factor is None and "scaling_factor" in self.model_fields_set:
-            _dict['scalingFactor'] = None
-
         # set to None if min_responses (nullable) is None
         # and model_fields_set contains the field
         if self.min_responses is None and "min_responses" in self.model_fields_set:
@@ -141,6 +136,11 @@ class UpdateConfigEndpointInput(BaseModel):
         # and model_fields_set contains the field
         if self.max_responses is None and "max_responses" in self.model_fields_set:
             _dict['maxResponses'] = None
+
+        # set to None if serve_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_responses is None and "serve_responses" in self.model_fields_set:
+            _dict['serveResponses'] = None
 
         # set to None if serve_to_response_ratio (nullable) is None
         # and model_fields_set contains the field
@@ -214,12 +214,12 @@ class UpdateConfigEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "audienceId": obj.get("audienceId"),
             "criteria": obj.get("criteria"),
             "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor"),
             "minResponses": obj.get("minResponses"),
             "maxResponses": obj.get("maxResponses"),
+            "serveResponses": obj.get("serveResponses"),
             "serveToResponseRatio": obj.get("serveToResponseRatio"),
             "serveTimeoutSeconds": obj.get("serveTimeoutSeconds"),
             "responsesRequired": obj.get("responsesRequired"),

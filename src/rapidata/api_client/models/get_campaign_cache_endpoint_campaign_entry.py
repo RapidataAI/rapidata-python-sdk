@@ -19,7 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.campaign_status import CampaignStatus
+from rapidata.api_client.models.boosting_control_mode import BoostingControlMode
+from rapidata.api_client.models.campaign_status_model import CampaignStatusModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +30,7 @@ class GetCampaignCacheEndpointCampaignEntry(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
-    status: CampaignStatus
+    status: CampaignStatusModel
     priority: StrictInt
     filter_count: StrictInt = Field(alias="filterCount")
     selection_count: StrictInt = Field(alias="selectionCount")
@@ -37,8 +38,8 @@ class GetCampaignCacheEndpointCampaignEntry(BaseModel):
     feature_flag_count: StrictInt = Field(alias="featureFlagCount")
     rate_limit_count: StrictInt = Field(alias="rateLimitCount")
     is_preview_enabled: StrictBool = Field(alias="isPreviewEnabled")
-    is_simple_boosting_locked: StrictBool = Field(alias="isSimpleBoostingLocked")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "filterCount", "selectionCount", "userScoreDimensionCount", "featureFlagCount", "rateLimitCount", "isPreviewEnabled", "isSimpleBoostingLocked"]
+    boosting_control_mode: BoostingControlMode = Field(alias="boostingControlMode")
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "filterCount", "selectionCount", "userScoreDimensionCount", "featureFlagCount", "rateLimitCount", "isPreviewEnabled", "boostingControlMode"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,7 +102,7 @@ class GetCampaignCacheEndpointCampaignEntry(BaseModel):
             "featureFlagCount": obj.get("featureFlagCount"),
             "rateLimitCount": obj.get("rateLimitCount"),
             "isPreviewEnabled": obj.get("isPreviewEnabled"),
-            "isSimpleBoostingLocked": obj.get("isSimpleBoostingLocked")
+            "boostingControlMode": obj.get("boostingControlMode")
         })
         return _obj
 
