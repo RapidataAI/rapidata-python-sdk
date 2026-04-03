@@ -120,7 +120,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/campaign/boost/insights": {
@@ -175,6 +176,102 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Retrieves the details of a specific campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "The ID of the campaign.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaignByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates the specified campaign's properties.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "The identifier of the campaign to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The properties to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -651,29 +748,18 @@
         }
       }
     },
-    "/campaign/{campaignId}": {
-      "patch": {
+    "/campaign/boost/global-level": {
+      "put": {
         "tags": [
           "Campaign"
         ],
-        "summary": "Updates the specified campaign's properties.",
-        "parameters": [
-          {
-            "name": "campaignId",
-            "in": "path",
-            "description": "The identifier of the campaign to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "Sets or clears the manual global boost level.",
         "requestBody": {
-          "description": "The properties to update.",
+          "description": "The manual global boost level to apply. Null clears the manual override.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignEndpoint_Input"
+                "$ref": "#/components/schemas/SetManualGlobalBoostLevelEndpoint_Input"
               }
             }
           },
@@ -701,18 +787,259 @@
           }
         }
       }
+    },
+    "/campaign/external-audiences": {
+      "get": {
+        "tags": [
+          "ExternalAudience"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "name",
+                  "-name",
+                  "count",
+                  "-count"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Filter by count.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryExternalAudiencesEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/campaign/external-audiences/sync": {
+      "post": {
+        "tags": [
+          "ExternalAudience"
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "AudienceBoost": {
+      "AudienceBoostModel": {
         "required": [
-          "kayzenAudienceId",
+          "externalAudienceId",
           "level"
         ],
         "type": "object",
         "properties": {
-          "kayzenAudienceId": {
+          "externalAudienceId": {
             "type": "integer",
             "format": "int32"
           },
@@ -722,7 +1049,19 @@
           }
         }
       },
-      "BoostingProfile": {
+      "BoostingControlMode": {
+        "enum": [
+          "Manual",
+          "Automatic"
+        ]
+      },
+      "BoostingProfileModel": {
+        "required": [
+          "globalBoostLevel",
+          "prospectBlacklist",
+          "distillingBoosts",
+          "labelingBoosts"
+        ],
         "type": "object",
         "properties": {
           "globalBoostLevel": {
@@ -730,17 +1069,29 @@
             "format": "int32"
           },
           "languageBoosts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "deprecated": true
           },
           "kayzenAudienceIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "nullable": true
+              }
+            ],
+            "deprecated": true
           },
           "prospectBlacklist": {
             "type": "array",
@@ -752,13 +1103,13 @@
           "distillingBoosts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AudienceBoost"
+              "$ref": "#/components/schemas/AudienceBoostModel"
             }
           },
           "labelingBoosts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AudienceBoost"
+              "$ref": "#/components/schemas/AudienceBoostModel"
             }
           }
         }
@@ -779,7 +1130,7 @@
         ],
         "description": "The current boost status."
       },
-      "CampaignStatus": {
+      "CampaignStatusModel": {
         "enum": [
           "Created",
           "Preview",
@@ -801,7 +1152,8 @@
           },
           "isActive": {
             "type": "boolean",
-            "description": "Whether the boost is active. Deprecated in favor of Level."
+            "description": "Whether the boost is active. Deprecated in favor of Level.",
+            "deprecated": true
           },
           "level": {
             "type": "integer",
@@ -810,14 +1162,46 @@
           }
         }
       },
+      "ComparisonOperator": {
+        "enum": [
+          "Equal",
+          "NotEqual",
+          "LessThan",
+          "LessThanOrEqual",
+          "GreaterThan",
+          "GreaterThanOrEqual"
+        ]
+      },
+      "DeviceType": {
+        "enum": [
+          "Unknown",
+          "Phone",
+          "Tablet"
+        ]
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "GetBoostInsightsEndpoint_AudienceOutput": {
         "required": [
-          "kayzenAudienceId",
+          "externalAudienceId",
           "contributors"
         ],
         "type": "object",
         "properties": {
-          "kayzenAudienceId": {
+          "externalAudienceId": {
             "type": "integer",
             "format": "int32"
           },
@@ -903,13 +1287,13 @@
       },
       "GetBoostInsightsEndpoint_LeveledAudienceOutput": {
         "required": [
-          "kayzenAudienceId",
+          "externalAudienceId",
           "effectiveLevel",
           "contributors"
         ],
         "type": "object",
         "properties": {
-          "kayzenAudienceId": {
+          "externalAudienceId": {
             "type": "integer",
             "format": "int32"
           },
@@ -930,8 +1314,6 @@
           "mode",
           "manualOverrideLevel",
           "globalBoost",
-          "languageBoosts",
-          "audienceBoosts",
           "prospectBlacklist",
           "distillingBoosts",
           "labelingBoosts"
@@ -957,10 +1339,16 @@
           "languageBoosts": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LanguageBoostOutput"
-                }
+                "allOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LanguageBoostOutput"
+                    },
+                    "nullable": true
+                  }
+                ],
+                "deprecated": true
               }
             ],
             "description": "Language-specific boost insights."
@@ -968,10 +1356,16 @@
           "audienceBoosts": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
-                }
+                "allOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
+                    },
+                    "nullable": true
+                  }
+                ],
+                "deprecated": true
               }
             ],
             "description": "Audience boost insights."
@@ -1063,6 +1457,112 @@
           }
         }
       },
+      "GetCampaignByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "priority",
+          "boostingProfile",
+          "boostingControlMode",
+          "hasBooster",
+          "stickyConfig",
+          "filters",
+          "selections",
+          "featureFlags",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the campaign."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatusModel"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority level of the campaign.",
+            "format": "int32"
+          },
+          "boostingProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingProfileModel"
+              }
+            ],
+            "description": "The boosting profile configuration."
+          },
+          "boostingControlMode": {
+            "$ref": "#/components/schemas/BoostingControlMode"
+          },
+          "hasBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign has a booster."
+          },
+          "requiresBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign requires a booster.",
+            "deprecated": true
+          },
+          "stickyConfig": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StickyConfigModel"
+              }
+            ],
+            "description": "The sticky behavior configuration."
+          },
+          "filters": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignFilterModel"
+                }
+              }
+            ],
+            "description": "The targeting filters for this campaign."
+          },
+          "selections": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignSelectionModel"
+                }
+              }
+            ],
+            "description": "The rapid selections for this campaign."
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The feature flags configured for this campaign."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the campaign owner."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the campaign was created.",
+            "format": "date-time"
+          }
+        }
+      },
       "GetCampaignCacheEndpoint_CampaignEntry": {
         "required": [
           "id",
@@ -1075,7 +1575,7 @@
           "featureFlagCount",
           "rateLimitCount",
           "isPreviewEnabled",
-          "isSimpleBoostingLocked"
+          "boostingControlMode"
         ],
         "type": "object",
         "properties": {
@@ -1086,7 +1586,7 @@
             "type": "string"
           },
           "status": {
-            "$ref": "#/components/schemas/CampaignStatus"
+            "$ref": "#/components/schemas/CampaignStatusModel"
           },
           "priority": {
             "type": "integer",
@@ -1115,8 +1615,8 @@
           "isPreviewEnabled": {
             "type": "boolean"
           },
-          "isSimpleBoostingLocked": {
-            "type": "boolean"
+          "boostingControlMode": {
+            "$ref": "#/components/schemas/BoostingControlMode"
           }
         }
       },
@@ -1167,14 +1667,685 @@
           }
         }
       },
+      "ICampaignFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelAndFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelAudienceStateFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelCampaignIdFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelCampaignSessionCountFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelCountryFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelDemographicFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelDeviceFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelLanguageFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelNewUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelNotFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelOrFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelResponseCountFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelUserActionRestrictionFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterModelUserScoreFilterModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AndFilter": "#/components/schemas/ICampaignFilterModelAndFilterModel",
+            "AudienceStateFilter": "#/components/schemas/ICampaignFilterModelAudienceStateFilterModel",
+            "CampaignIdFilter": "#/components/schemas/ICampaignFilterModelCampaignIdFilterModel",
+            "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterModelCampaignSessionCountFilterModel",
+            "CountryFilter": "#/components/schemas/ICampaignFilterModelCountryFilterModel",
+            "DemographicFilter": "#/components/schemas/ICampaignFilterModelDemographicFilterModel",
+            "DeviceFilter": "#/components/schemas/ICampaignFilterModelDeviceFilterModel",
+            "LanguageFilter": "#/components/schemas/ICampaignFilterModelLanguageFilterModel",
+            "NewUserFilter": "#/components/schemas/ICampaignFilterModelNewUserFilterModel",
+            "NotFilter": "#/components/schemas/ICampaignFilterModelNotFilterModel",
+            "OrFilter": "#/components/schemas/ICampaignFilterModelOrFilterModel",
+            "ResponseCountFilter": "#/components/schemas/ICampaignFilterModelResponseCountFilterModel",
+            "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterModelUserActionRestrictionFilterModel",
+            "UserScoreFilter": "#/components/schemas/ICampaignFilterModelUserScoreFilterModel"
+          }
+        }
+      },
+      "ICampaignFilterModelAndFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignFilterModel"
+            }
+          }
+        }
+      },
+      "ICampaignFilterModelAudienceStateFilterModel": {
+        "required": [
+          "audienceId",
+          "allowedStates",
+          "includeUnknownState",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AudienceStateFilter"
+            ],
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "allowedStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedAudienceUserState"
+            }
+          },
+          "includeUnknownState": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ICampaignFilterModelCampaignIdFilterModel": {
+        "required": [
+          "campaignIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignIdFilter"
+            ],
+            "type": "string"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ICampaignFilterModelCampaignSessionCountFilterModel": {
+        "required": [
+          "sessionCount",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignSessionCountFilter"
+            ],
+            "type": "string"
+          },
+          "sessionCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
+      "ICampaignFilterModelCountryFilterModel": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ICampaignFilterModelDemographicFilterModel": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ICampaignFilterModelDeviceFilterModel": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceType"
+            }
+          }
+        }
+      },
+      "ICampaignFilterModelLanguageFilterModel": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ICampaignFilterModelNewUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "ICampaignFilterModelNotFilterModel": {
+        "required": [
+          "filter",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/ICampaignFilterModel"
+          }
+        }
+      },
+      "ICampaignFilterModelOrFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string"
+          },
+          "filters": { }
+        }
+      },
+      "ICampaignFilterModelResponseCountFilterModel": {
+        "required": [
+          "dimension",
+          "responseCount",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
+      "ICampaignFilterModelUserActionRestrictionFilterModel": {
+        "required": [
+          "requiredActions",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserActionRestrictionFilter"
+            ],
+            "type": "string"
+          },
+          "requiredActions": { }
+        }
+      },
+      "ICampaignFilterModelUserScoreFilterModel": {
+        "required": [
+          "dimension",
+          "lowerbound",
+          "upperbound",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "lowerbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ICampaignSelectionModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelAbTestSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelAudienceSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelCappedSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelConditionalValidationSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelDemographicSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelEnforcingSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelLabelingSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelShufflingSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelStaticSelectionModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignSelectionModelValidationSelectionModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AbTestSelection": "#/components/schemas/ICampaignSelectionModelAbTestSelectionModel",
+            "AudienceSelection": "#/components/schemas/ICampaignSelectionModelAudienceSelectionModel",
+            "CappedSelection": "#/components/schemas/ICampaignSelectionModelCappedSelectionModel",
+            "ConditionalValidationSelection": "#/components/schemas/ICampaignSelectionModelConditionalValidationSelectionModel",
+            "DemographicSelection": "#/components/schemas/ICampaignSelectionModelDemographicSelectionModel",
+            "EnforcingSelection": "#/components/schemas/ICampaignSelectionModelEnforcingSelectionModel",
+            "LabelingSelection": "#/components/schemas/ICampaignSelectionModelLabelingSelectionModel",
+            "ShufflingSelection": "#/components/schemas/ICampaignSelectionModelShufflingSelectionModel",
+            "StaticSelection": "#/components/schemas/ICampaignSelectionModelStaticSelectionModel",
+            "ValidationSelection": "#/components/schemas/ICampaignSelectionModelValidationSelectionModel"
+          }
+        }
+      },
+      "ICampaignSelectionModelAbTestSelectionModel": {
+        "required": [
+          "a",
+          "b",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AbTestSelection"
+            ],
+            "type": "string"
+          },
+          "a": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignSelectionModel"
+            }
+          },
+          "b": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignSelectionModel"
+            }
+          }
+        }
+      },
+      "ICampaignSelectionModelAudienceSelectionModel": {
+        "required": [
+          "audienceId",
+          "effort",
+          "retrievalMode",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AudienceSelection"
+            ],
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "effort": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retrievalMode": {
+            "$ref": "#/components/schemas/RetrievalMode"
+          },
+          "maxIterations": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ICampaignSelectionModelCappedSelectionModel": {
+        "required": [
+          "selections",
+          "maxRapids",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CappedSelection"
+            ],
+            "type": "string"
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignSelectionModel"
+            }
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ICampaignSelectionModelConditionalValidationSelectionModel": {
+        "required": [
+          "validationChances",
+          "dimensions",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConditionalValidationSelection"
+            ],
+            "type": "string"
+          },
+          "validationChances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationChanceModel"
+            }
+          },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ICampaignSelectionModelDemographicSelectionModel": {
+        "required": [
+          "keys",
+          "maxRapids",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicSelection"
+            ],
+            "type": "string"
+          },
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "probability": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ICampaignSelectionModelEnforcingSelectionModel": {
+        "required": [
+          "selections",
+          "minSelections",
+          "minRapids",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EnforcingSelection"
+            ],
+            "type": "string"
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignSelectionModel"
+            }
+          },
+          "minSelections": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minRapids": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ICampaignSelectionModelLabelingSelectionModel": {
+        "required": [
+          "effortBudget",
+          "retrievalMode",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LabelingSelection"
+            ],
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "effortBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retrievalMode": {
+            "$ref": "#/components/schemas/RetrievalMode"
+          },
+          "maxIterations": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ICampaignSelectionModelShufflingSelectionModel": {
+        "required": [
+          "selections",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ShufflingSelection"
+            ],
+            "type": "string"
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignSelectionModel"
+            }
+          }
+        }
+      },
+      "ICampaignSelectionModelStaticSelectionModel": {
+        "required": [
+          "rapidIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StaticSelection"
+            ],
+            "type": "string"
+          },
+          "rapidIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ICampaignSelectionModelValidationSelectionModel": {
+        "required": [
+          "validationSetId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ValidationSelection"
+            ],
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "effortBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "QueryCampaignsEndpoint_Output": {
         "required": [
           "id",
           "name",
           "status",
           "priority",
-          "boostingProfile",
-          "requiresBooster",
+          "hasBooster",
           "ownerMail",
           "createdAt"
         ],
@@ -1189,24 +2360,21 @@
             "description": "The name of the campaign."
           },
           "status": {
-            "$ref": "#/components/schemas/CampaignStatus"
+            "$ref": "#/components/schemas/CampaignStatusModel"
           },
           "priority": {
             "type": "integer",
             "description": "The priority level of the campaign.",
             "format": "int32"
           },
-          "boostingProfile": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BoostingProfile"
-              }
-            ],
-            "description": "The boosting profile configuration."
+          "hasBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign has a booster."
           },
           "requiresBooster": {
             "type": "boolean",
-            "description": "Whether the campaign requires a booster."
+            "description": "Whether the campaign requires a booster.",
+            "deprecated": true
           },
           "ownerMail": {
             "type": "string",
@@ -1252,18 +2420,218 @@
           }
         }
       },
+      "QueryExternalAudiencesEndpoint_Output": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The external audience identifier.",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the external audience."
+          },
+          "count": {
+            "type": "integer",
+            "description": "The number of users in the audience.",
+            "format": "int64"
+          }
+        }
+      },
+      "QueryExternalAudiencesEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryExternalAudiencesEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RetrievalMode": {
+        "enum": [
+          "Random",
+          "Shuffled",
+          "Sequential"
+        ]
+      },
+      "SetManualGlobalBoostLevelEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "integer",
+            "description": "The global boost level. Null disables manual mode and returns to automatic.",
+            "format": "int32"
+          }
+        }
+      },
+      "SimplifiedAudienceUserState": {
+        "enum": [
+          "Distilling",
+          "Graduated",
+          "Dropped"
+        ]
+      },
+      "StickyConfigModel": {
+        "required": [
+          "isEnabled",
+          "bypassFilters",
+          "bypassPrioritySelection",
+          "blockOtherStickyCampaigns",
+          "clearOnPause"
+        ],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "bypassFilters": {
+            "type": "boolean"
+          },
+          "bypassPrioritySelection": {
+            "type": "boolean"
+          },
+          "blockOtherStickyCampaigns": {
+            "type": "boolean"
+          },
+          "clearOnPause": {
+            "type": "boolean"
+          }
+        }
+      },
       "UpdateCampaignEndpoint_Input": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name for the campaign.",
+            "nullable": true
+          },
           "priority": {
             "type": "integer",
             "description": "The new priority value for the campaign.",
             "format": "int32",
             "nullable": true
           },
-          "requiresBooster": {
-            "type": "boolean",
-            "description": "Whether the campaign requires booster.",
+          "boostingProfile": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BoostingProfileModel"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The boosting profile configuration."
+          },
+          "stickyConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StickyConfigModel"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The sticky behavior configuration."
+          },
+          "filters": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignFilterModel"
+                }
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The targeting filters for the campaign."
+          },
+          "selections": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignSelectionModel"
+                }
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The rapid selections for the campaign."
+          },
+          "featureFlags": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The feature flags for the campaign."
+          }
+        }
+      },
+      "ValidationChanceModel": {
+        "required": [
+          "userScoreThreshold",
+          "chance",
+          "rapidCount"
+        ],
+        "type": "object",
+        "properties": {
+          "userScoreThreshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "chance": {
+            "type": "number",
+            "format": "double"
+          },
+          "rapidCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICampaignSelectionModel"
+            },
             "nullable": true
           }
         }

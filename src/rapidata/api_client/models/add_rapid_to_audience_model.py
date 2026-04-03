@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_validation_truth import IValidationTruth
@@ -37,7 +37,7 @@ class AddRapidToAudienceModel(BaseModel):
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
     context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user about the rapid.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset that provides additional context to the user about the rapid.", alias="contextAsset")
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this rapid should be treated as commonsense validation.", alias="isCommonSense")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "featureFlags", "isCommonSense"]
 
@@ -138,7 +138,7 @@ class AddRapidToAudienceModel(BaseModel):
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "isCommonSense": obj.get("isCommonSense")
         })
         return _obj

@@ -20,7 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.audience_boost_model import AudienceBoostModel
+from rapidata.api_client.models.audience_boost_model2 import AudienceBoostModel2
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.flow_type import FlowType
 from rapidata.api_client.models.pid_batch_mode import PidBatchMode
@@ -33,8 +33,9 @@ class IFlowModelRankingFlowModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     id: StrictStr = Field(description="The unique identifier of the flow.")
-    type: FlowType
+    type: Optional[FlowType] = None
     name: StrictStr = Field(description="The name of the flow.")
+    campaign_id: StrictStr = Field(description="The ID of the campaign associated with this flow.", alias="campaignId")
     flow_item_count: StrictInt = Field(description="The total number of items that have been added to this flow. Incremented atomically on each item creation.", alias="flowItemCount")
     target_response_count: StrictInt = Field(description="Target average response count per completed item. Enables PID-based automatic rate control when set. Null disables PID.", alias="targetResponseCount")
     pid_proportional_gain: Union[StrictFloat, StrictInt] = Field(description="PID proportional gain. Controls how strongly the rate reacts to the current error between target and actual response counts.", alias="pidProportionalGain")
@@ -47,18 +48,20 @@ class IFlowModelRankingFlowModel(BaseModel):
     drain_duration_seconds: StrictInt = Field(description="Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.", alias="drainDurationSeconds")
     serve_to_response_ratio: Union[StrictFloat, StrictInt] = Field(description="Ratio of serves to responses used to calculate how many tasks to serve per expected response.", alias="serveToResponseRatio")
     global_boost_level: StrictInt = Field(description="Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.", alias="globalBoostLevel")
-    audience_boosts: List[AudienceBoostModel] = Field(alias="audienceBoosts")
+    audience_boosts: List[AudienceBoostModel2] = Field(alias="audienceBoosts")
+    audience_id: Optional[StrictStr] = Field(description="Optional audience ID. When provided, the flow will only serve items to users in this audience.", alias="audienceId")
     criteria: Optional[StrictStr] = Field(description="The comparison instruction shown to annotators during ranking tasks (e.g. \"Which image is sharper?\").")
     starting_elo: StrictInt = Field(description="The initial Elo rating assigned to new items entering the ranking. Standard default is 1200.", alias="startingElo")
-    k_factor: StrictInt = Field(description="Elo K-factor controlling rating volatility. Higher values cause larger rating changes per comparison. Used as a direct multiplier on the Elo change formula.", alias="kFactor")
-    scaling_factor: StrictInt = Field(description="Elo scaling factor that determines how rating differences translate to expected win probabilities. A difference equal to the scaling factor gives the higher-rated item approximately 90% expected win rate.", alias="scalingFactor")
+    k_factor: Optional[StrictInt] = Field(default=None, description="Elo K-factor controlling rating volatility. Higher values cause larger rating changes per comparison. Used as a direct multiplier on the Elo change formula.", alias="kFactor")
+    scaling_factor: Optional[StrictInt] = Field(default=None, description="Elo scaling factor that determines how rating differences translate to expected win probabilities. A difference equal to the scaling factor gives the higher-rated item approximately 90% expected win rate.", alias="scalingFactor")
     min_responses: StrictInt = Field(description="Minimum number of responses a ranking item must receive before it is considered sufficiently evaluated.", alias="minResponses")
     max_responses: StrictInt = Field(description="Maximum number of responses a ranking item can receive before being removed from active ranking. Null allows unlimited responses.", alias="maxResponses")
+    serve_responses: StrictInt = Field(description="Number of accepted responses per rapid at which to stop serving. Null defaults to MaxResponses.", alias="serveResponses")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     owner_id: StrictStr = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "id", "type", "name", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "globalBoostLevel", "audienceBoosts", "criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "type", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "globalBoostLevel", "audienceBoosts", "audienceId", "criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -120,6 +123,11 @@ class IFlowModelRankingFlowModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if audience_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_id is None and "audience_id" in self.model_fields_set:
+            _dict['audienceId'] = None
+
         # set to None if criteria (nullable) is None
         # and model_fields_set contains the field
         if self.criteria is None and "criteria" in self.model_fields_set:
@@ -141,6 +149,7 @@ class IFlowModelRankingFlowModel(BaseModel):
             "id": obj.get("id"),
             "type": obj.get("type"),
             "name": obj.get("name"),
+            "campaignId": obj.get("campaignId"),
             "flowItemCount": obj.get("flowItemCount"),
             "targetResponseCount": obj.get("targetResponseCount"),
             "pidProportionalGain": obj.get("pidProportionalGain"),
@@ -153,13 +162,15 @@ class IFlowModelRankingFlowModel(BaseModel):
             "drainDurationSeconds": obj.get("drainDurationSeconds"),
             "serveToResponseRatio": obj.get("serveToResponseRatio"),
             "globalBoostLevel": obj.get("globalBoostLevel"),
-            "audienceBoosts": [AudienceBoostModel.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None,
+            "audienceBoosts": [AudienceBoostModel2.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None,
+            "audienceId": obj.get("audienceId"),
             "criteria": obj.get("criteria"),
             "startingElo": obj.get("startingElo"),
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor"),
             "minResponses": obj.get("minResponses"),
             "maxResponses": obj.get("maxResponses"),
+            "serveResponses": obj.get("serveResponses"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),

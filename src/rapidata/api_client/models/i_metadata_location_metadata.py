@@ -27,8 +27,8 @@ class IMetadataLocationMetadata(BaseModel):
     IMetadataLocationMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    x: Union[StrictFloat, StrictInt]
-    y: Union[StrictFloat, StrictInt]
+    x: Optional[Union[StrictFloat, StrictInt]] = None
+    y: Optional[Union[StrictFloat, StrictInt]] = None
     visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "x", "y", "visibilities"]
 

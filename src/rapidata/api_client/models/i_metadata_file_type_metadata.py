@@ -28,7 +28,7 @@ class IMetadataFileTypeMetadata(BaseModel):
     IMetadataFileTypeMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    file_type: FileType = Field(alias="fileType")
+    file_type: Optional[FileType] = Field(default=None, alias="fileType")
     visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "fileType", "visibilities"]
 

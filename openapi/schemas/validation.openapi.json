@@ -679,7 +679,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/FeatureFlagModel"
+                  "$ref": "#/components/schemas/FeatureFlag"
                 },
                 "nullable": true
               }
@@ -762,7 +762,7 @@
         },
         "description": "The body request for creating a new validation set."
       },
-      "FeatureFlagModel": {
+      "FeatureFlag": {
         "required": [
           "key",
           "value"

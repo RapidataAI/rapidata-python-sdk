@@ -28,7 +28,8 @@ class IRefereeInfoNaiveRefereeInfo(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     guess_amount_threshold: Optional[StrictInt] = Field(default=None, alias="guessAmountThreshold")
-    __properties: ClassVar[List[str]] = ["_t", "guessAmountThreshold"]
+    serve_threshold: Optional[StrictInt] = Field(default=None, alias="serveThreshold")
+    __properties: ClassVar[List[str]] = ["_t", "guessAmountThreshold", "serveThreshold"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +90,8 @@ class IRefereeInfoNaiveRefereeInfo(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
-            "guessAmountThreshold": obj.get("guessAmountThreshold")
+            "guessAmountThreshold": obj.get("guessAmountThreshold"),
+            "serveThreshold": obj.get("serveThreshold")
         })
         return _obj
 

@@ -31,11 +31,11 @@ class CreateFlowEndpointInput(BaseModel):
     """ # noqa: E501
     name: StrictStr = Field(description="The name of the ranking flow.")
     criteria: StrictStr = Field(description="The ranking criteria used to compare items.")
+    audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the flow will only be served to users in this audience.", alias="audienceId")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the validation set to use.", alias="validationSetId")
     starting_elo: Optional[StrictInt] = Field(default=None, description="Initial Elo rating for new items. Defaults to 1200.", alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, description="K-factor controlling Elo rating sensitivity. Defaults to 40.", alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation. Defaults to 400.", alias="scalingFactor")
     max_responses: Optional[StrictInt] = Field(default=None, description="Maximum number of responses per comparison.", alias="maxResponses")
+    serve_responses: Optional[StrictInt] = Field(default=None, description="Number of accepted responses per rapid at which to stop serving. When set, must be less than or equal to MaxResponses. Null defaults to MaxResponses.", alias="serveResponses")
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.", alias="serveToResponseRatio")
     serve_timeout_seconds: Optional[StrictInt] = Field(default=None, description="Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.", alias="serveTimeoutSeconds")
     min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 1.", alias="minResponses")
@@ -51,7 +51,7 @@ class CreateFlowEndpointInput(BaseModel):
     drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
     global_boost_level: Optional[StrictInt] = Field(default=None, description="Global boost level for the flow campaign. Defaults to 1.", alias="globalBoostLevel")
     audience_boosts: Optional[List[CreateFlowEndpointAudienceBoostInput]] = Field(default=None, alias="audienceBoosts")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds", "globalBoostLevel", "audienceBoosts"]
+    __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds", "globalBoostLevel", "audienceBoosts"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -106,6 +106,11 @@ class CreateFlowEndpointInput(BaseModel):
                 if _item_audience_boosts:
                     _items.append(_item_audience_boosts.to_dict())
             _dict['audienceBoosts'] = _items
+        # set to None if audience_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_id is None and "audience_id" in self.model_fields_set:
+            _dict['audienceId'] = None
+
         # set to None if validation_set_id (nullable) is None
         # and model_fields_set contains the field
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
@@ -140,11 +145,11 @@ class CreateFlowEndpointInput(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "criteria": obj.get("criteria"),
+            "audienceId": obj.get("audienceId"),
             "validationSetId": obj.get("validationSetId"),
             "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor"),
             "maxResponses": obj.get("maxResponses"),
+            "serveResponses": obj.get("serveResponses"),
             "serveToResponseRatio": obj.get("serveToResponseRatio"),
             "serveTimeoutSeconds": obj.get("serveTimeoutSeconds"),
             "minResponses": obj.get("minResponses"),

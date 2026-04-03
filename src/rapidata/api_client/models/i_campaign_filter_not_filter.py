@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,9 +28,8 @@ class ICampaignFilterNotFilter(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     filter: ICampaignFilter
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
     inner_filters: Optional[List[ICampaignFilter]] = Field(default=None, alias="innerFilters")
-    __properties: ClassVar[List[str]] = ["_t", "filter", "executionOrder", "innerFilters"]
+    __properties: ClassVar[List[str]] = ["_t", "filter", "innerFilters"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -102,7 +101,6 @@ class ICampaignFilterNotFilter(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
             "filter": ICampaignFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
-            "executionOrder": obj.get("executionOrder"),
             "innerFilters": [ICampaignFilter.from_dict(_item) for _item in obj["innerFilters"]] if obj.get("innerFilters") is not None else None
         })
         return _obj

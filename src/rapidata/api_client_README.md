@@ -118,9 +118,10 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
+*CampaignApi* | [**campaign_boost_global_level_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_global_level_put) | **PUT** /campaign/boost/global-level | Sets or clears the manual global boost level.
 *CampaignApi* | [**campaign_boost_insights_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_insights_get) | **GET** /campaign/boost/insights | Returns an attributed view of the aggregated boosting profile.
-*CampaignApi* | [**campaign_boost_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_put) | **PUT** /campaign/boost | Changes the boost configuration.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Returns the current boost status including active and inactive campaigns.
+*CampaignApi* | [**campaign_campaign_id_get**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_get) | **GET** /campaign/{campaignId} | Retrieves the details of a specific campaign.
 *CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates the specified campaign&#39;s properties.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses the specified campaign.
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes the specified campaign.
@@ -155,6 +156,8 @@ Class | Method | HTTP request | Description
 *ExamplesApi* | [**audience_audience_id_example_post**](rapidata/api_client/docs/ExamplesApi.md#audience_audience_id_example_post) | **POST** /audience/{audienceId}/example | Adds a new example to an audience.
 *ExamplesApi* | [**audience_audience_id_examples_get**](rapidata/api_client/docs/ExamplesApi.md#audience_audience_id_examples_get) | **GET** /audience/{audienceId}/examples | Queries all examples for the specified audience.
 *ExamplesApi* | [**audience_example_example_id_delete**](rapidata/api_client/docs/ExamplesApi.md#audience_example_example_id_delete) | **DELETE** /audience/example/{exampleId} | Deletes the specified audience example.
+*ExternalAudienceApi* | [**campaign_external_audiences_get**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_get) | **GET** /campaign/external-audiences | 
+*ExternalAudienceApi* | [**campaign_external_audiences_sync_post**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_sync_post) | **POST** /campaign/external-audiences/sync | 
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *FlowApi* | [**flow_flow_id_delete**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_delete) | **DELETE** /flow/{flowId} | Deletes a flow.
 *FlowApi* | [**flow_flow_id_get**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_get) | **GET** /flow/{flowId} | Retrieves a flow by its ID.
@@ -283,8 +286,8 @@ Class | Method | HTTP request | Description
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
  - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
  - [AttachCategoryRapidBlueprintCategory](rapidata/api_client/docs/AttachCategoryRapidBlueprintCategory.md)
- - [AudienceBoost](rapidata/api_client/docs/AudienceBoost.md)
  - [AudienceBoostModel](rapidata/api_client/docs/AudienceBoostModel.md)
+ - [AudienceBoostModel2](rapidata/api_client/docs/AudienceBoostModel2.md)
  - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
  - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
@@ -294,9 +297,10 @@ Class | Method | HTTP request | Description
  - [BoostLevel](rapidata/api_client/docs/BoostLevel.md)
  - [BoostMode](rapidata/api_client/docs/BoostMode.md)
  - [BoostStatusModel](rapidata/api_client/docs/BoostStatusModel.md)
- - [BoostingProfile](rapidata/api_client/docs/BoostingProfile.md)
+ - [BoostingControlMode](rapidata/api_client/docs/BoostingControlMode.md)
+ - [BoostingProfileModel](rapidata/api_client/docs/BoostingProfileModel.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
- - [CampaignStatus](rapidata/api_client/docs/CampaignStatus.md)
+ - [CampaignStatusModel](rapidata/api_client/docs/CampaignStatusModel.md)
  - [CampaignsGetIdParameter](rapidata/api_client/docs/CampaignsGetIdParameter.md)
  - [ChangeBoostEndpointInput](rapidata/api_client/docs/ChangeBoostEndpointInput.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
@@ -360,7 +364,6 @@ Class | Method | HTTP request | Description
  - [ExampleCategory](rapidata/api_client/docs/ExampleCategory.md)
  - [ExistingAssetInput](rapidata/api_client/docs/ExistingAssetInput.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
- - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
  - [FileType](rapidata/api_client/docs/FileType.md)
  - [Filter](rapidata/api_client/docs/Filter.md)
@@ -384,6 +387,7 @@ Class | Method | HTTP request | Description
  - [GetBoostInsightsEndpointLeveledAudienceOutput](rapidata/api_client/docs/GetBoostInsightsEndpointLeveledAudienceOutput.md)
  - [GetBoostInsightsEndpointOutput](rapidata/api_client/docs/GetBoostInsightsEndpointOutput.md)
  - [GetBoostStatusEndpointOutput](rapidata/api_client/docs/GetBoostStatusEndpointOutput.md)
+ - [GetCampaignByIdEndpointOutput](rapidata/api_client/docs/GetCampaignByIdEndpointOutput.md)
  - [GetCampaignCacheEndpointCampaignEntry](rapidata/api_client/docs/GetCampaignCacheEndpointCampaignEntry.md)
  - [GetCampaignCacheEndpointOutput](rapidata/api_client/docs/GetCampaignCacheEndpointOutput.md)
  - [GetCombinedBenchmarkMatrixEndpointOutput](rapidata/api_client/docs/GetCombinedBenchmarkMatrixEndpointOutput.md)
@@ -478,12 +482,38 @@ Class | Method | HTTP request | Description
  - [ICampaignFilterDemographicFilter](rapidata/api_client/docs/ICampaignFilterDemographicFilter.md)
  - [ICampaignFilterDeviceFilter](rapidata/api_client/docs/ICampaignFilterDeviceFilter.md)
  - [ICampaignFilterLanguageFilter](rapidata/api_client/docs/ICampaignFilterLanguageFilter.md)
+ - [ICampaignFilterModel](rapidata/api_client/docs/ICampaignFilterModel.md)
+ - [ICampaignFilterModelAndFilterModel](rapidata/api_client/docs/ICampaignFilterModelAndFilterModel.md)
+ - [ICampaignFilterModelAudienceStateFilterModel](rapidata/api_client/docs/ICampaignFilterModelAudienceStateFilterModel.md)
+ - [ICampaignFilterModelCampaignIdFilterModel](rapidata/api_client/docs/ICampaignFilterModelCampaignIdFilterModel.md)
+ - [ICampaignFilterModelCampaignSessionCountFilterModel](rapidata/api_client/docs/ICampaignFilterModelCampaignSessionCountFilterModel.md)
+ - [ICampaignFilterModelCountryFilterModel](rapidata/api_client/docs/ICampaignFilterModelCountryFilterModel.md)
+ - [ICampaignFilterModelDemographicFilterModel](rapidata/api_client/docs/ICampaignFilterModelDemographicFilterModel.md)
+ - [ICampaignFilterModelDeviceFilterModel](rapidata/api_client/docs/ICampaignFilterModelDeviceFilterModel.md)
+ - [ICampaignFilterModelLanguageFilterModel](rapidata/api_client/docs/ICampaignFilterModelLanguageFilterModel.md)
+ - [ICampaignFilterModelNewUserFilterModel](rapidata/api_client/docs/ICampaignFilterModelNewUserFilterModel.md)
+ - [ICampaignFilterModelNotFilterModel](rapidata/api_client/docs/ICampaignFilterModelNotFilterModel.md)
+ - [ICampaignFilterModelOrFilterModel](rapidata/api_client/docs/ICampaignFilterModelOrFilterModel.md)
+ - [ICampaignFilterModelResponseCountFilterModel](rapidata/api_client/docs/ICampaignFilterModelResponseCountFilterModel.md)
+ - [ICampaignFilterModelUserActionRestrictionFilterModel](rapidata/api_client/docs/ICampaignFilterModelUserActionRestrictionFilterModel.md)
+ - [ICampaignFilterModelUserScoreFilterModel](rapidata/api_client/docs/ICampaignFilterModelUserScoreFilterModel.md)
  - [ICampaignFilterNewUserFilter](rapidata/api_client/docs/ICampaignFilterNewUserFilter.md)
  - [ICampaignFilterNotFilter](rapidata/api_client/docs/ICampaignFilterNotFilter.md)
  - [ICampaignFilterOrFilter](rapidata/api_client/docs/ICampaignFilterOrFilter.md)
  - [ICampaignFilterResponseCountFilter](rapidata/api_client/docs/ICampaignFilterResponseCountFilter.md)
  - [ICampaignFilterUserActionRestrictionFilter](rapidata/api_client/docs/ICampaignFilterUserActionRestrictionFilter.md)
  - [ICampaignFilterUserScoreFilter](rapidata/api_client/docs/ICampaignFilterUserScoreFilter.md)
+ - [ICampaignSelectionModel](rapidata/api_client/docs/ICampaignSelectionModel.md)
+ - [ICampaignSelectionModelAbTestSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelAbTestSelectionModel.md)
+ - [ICampaignSelectionModelAudienceSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelAudienceSelectionModel.md)
+ - [ICampaignSelectionModelCappedSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelCappedSelectionModel.md)
+ - [ICampaignSelectionModelConditionalValidationSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelConditionalValidationSelectionModel.md)
+ - [ICampaignSelectionModelDemographicSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelDemographicSelectionModel.md)
+ - [ICampaignSelectionModelEnforcingSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelEnforcingSelectionModel.md)
+ - [ICampaignSelectionModelLabelingSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelLabelingSelectionModel.md)
+ - [ICampaignSelectionModelShufflingSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelShufflingSelectionModel.md)
+ - [ICampaignSelectionModelStaticSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelStaticSelectionModel.md)
+ - [ICampaignSelectionModelValidationSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelValidationSelectionModel.md)
  - [IDatasetModel](rapidata/api_client/docs/IDatasetModel.md)
  - [IDatasetModelCloneDatasetModel](rapidata/api_client/docs/IDatasetModelCloneDatasetModel.md)
  - [IExamplePayload](rapidata/api_client/docs/IExamplePayload.md)
@@ -719,6 +749,8 @@ Class | Method | HTTP request | Description
  - [QueryDatapointsByDatasetIdResult](rapidata/api_client/docs/QueryDatapointsByDatasetIdResult.md)
  - [QueryExamplesForAudienceEndpointOutput](rapidata/api_client/docs/QueryExamplesForAudienceEndpointOutput.md)
  - [QueryExamplesForAudienceEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryExamplesForAudienceEndpointPagedResultOfOutput.md)
+ - [QueryExternalAudiencesEndpointOutput](rapidata/api_client/docs/QueryExternalAudiencesEndpointOutput.md)
+ - [QueryExternalAudiencesEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryExternalAudiencesEndpointPagedResultOfOutput.md)
  - [QueryFlowItemsEndpointOutput](rapidata/api_client/docs/QueryFlowItemsEndpointOutput.md)
  - [QueryFlowItemsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryFlowItemsEndpointPagedResultOfOutput.md)
  - [QueryFlowsEndpointOutput](rapidata/api_client/docs/QueryFlowsEndpointOutput.md)
@@ -751,6 +783,7 @@ Class | Method | HTTP request | Description
  - [SampleByIdentifier](rapidata/api_client/docs/SampleByIdentifier.md)
  - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)
  - [SendSurveyModel](rapidata/api_client/docs/SendSurveyModel.md)
+ - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
  - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
@@ -761,6 +794,7 @@ Class | Method | HTTP request | Description
  - [StandingsByLeaderboardResult](rapidata/api_client/docs/StandingsByLeaderboardResult.md)
  - [StartPreliminaryDownloadResult](rapidata/api_client/docs/StartPreliminaryDownloadResult.md)
  - [StickyConfig](rapidata/api_client/docs/StickyConfig.md)
+ - [StickyConfigModel](rapidata/api_client/docs/StickyConfigModel.md)
  - [StickyState](rapidata/api_client/docs/StickyState.md)
  - [SubmitOrderEndpointInput](rapidata/api_client/docs/SubmitOrderEndpointInput.md)
  - [SubmitParticipantResult](rapidata/api_client/docs/SubmitParticipantResult.md)
@@ -793,6 +827,7 @@ Class | Method | HTTP request | Description
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
  - [UploadFileResult](rapidata/api_client/docs/UploadFileResult.md)
+ - [ValidationChanceModel](rapidata/api_client/docs/ValidationChanceModel.md)
  - [ValidationProblemDetails](rapidata/api_client/docs/ValidationProblemDetails.md)
  - [ValidationSetModel](rapidata/api_client/docs/ValidationSetModel.md)
  - [ValidationSetOverviewModel](rapidata/api_client/docs/ValidationSetOverviewModel.md)
