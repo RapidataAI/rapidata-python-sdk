@@ -23,9 +23,7 @@ class ExampleFormatter:
                     "asset": ExampleFormatter._format_asset(
                         item.asset, asset_url_prefix
                     ),
-                    "truth": ExampleFormatter._format_truth(
-                        item.truth, asset_url_prefix
-                    ),
+                    "truth": ExampleFormatter._format_truth(item.truth),
                     "context": item.context,
                     "contextAsset": ExampleFormatter._format_asset(
                         item.context_asset, asset_url_prefix
@@ -64,7 +62,7 @@ class ExampleFormatter:
         return None
 
     @staticmethod
-    def _format_truth(truth: IExampleTruth | None, asset_url_prefix: str) -> str | None:
+    def _format_truth(truth: IExampleTruth | None) -> str | None:
         if truth is None or truth.actual_instance is None:
             return None
 
@@ -79,5 +77,5 @@ class ExampleFormatter:
         if isinstance(instance, IExampleTruthClassifyExampleTruth):
             return str(instance.correct_categories)
         if isinstance(instance, IExampleTruthCompareExampleTruth):
-            return f"{asset_url_prefix}{instance.winner_id}"
+            return instance.winner_id
         return None

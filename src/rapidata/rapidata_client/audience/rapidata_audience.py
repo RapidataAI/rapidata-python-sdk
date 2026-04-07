@@ -291,6 +291,18 @@ class RapidataAudience:
         amount: int = 10,
         page: int = 1,
     ) -> pd.DataFrame:
+        """Get the examples for this audience as a DataFrame.
+
+        Returns a DataFrame with columns: asset, truth, context, contextAsset.
+        Asset URLs are fully qualified with the environment's asset host.
+
+        Args:
+            amount: Number of examples per page.
+            page: Page number.
+
+        Returns:
+            A DataFrame containing the examples.
+        """
         with tracer.start_as_current_span("RapidataAudience.get_examples"):
             import pandas as pd
 
