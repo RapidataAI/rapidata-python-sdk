@@ -141,16 +141,16 @@ class RapidataFlow:
         self,
         instruction: str | None = None,
         starting_elo: int | None = None,
-        k_factor: int | None = None,
-        scaling_factor: int | None = None,
+        min_responses: int | None = None,
+        max_responses: int | None = None,
     ) -> None:
         """Update the configuration of this ranking flow.
 
         Args:
             instruction: New instruction for comparisons.
             starting_elo: New starting ELO rating.
-            k_factor: New K-factor for ELO calculations.
-            scaling_factor: New scaling factor for ELO calculations.
+            min_responses: New minimum number of responses.
+            max_responses: New maximum number of responses.
         """
         with tracer.start_as_current_span("RapidataFlow.update_config"):
             from rapidata.api_client.models.update_config_endpoint_input import (
@@ -164,9 +164,8 @@ class RapidataFlow:
                 update_config_endpoint_input=UpdateConfigEndpointInput(
                     criteria=instruction,
                     startingElo=starting_elo,
-                    kFactor=k_factor,
-                    scalingFactor=scaling_factor,
-                    responsesRequired=100,
+                    minResponses=min_responses,
+                    maxResponses=max_responses,
                 ),
             )
 

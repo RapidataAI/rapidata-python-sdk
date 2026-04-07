@@ -27,7 +27,7 @@ class IMetadataTextMetadata(BaseModel):
     IMetadataTextMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    text: Optional[StrictStr]
+    text: Optional[StrictStr] = None
     visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "text", "visibilities"]
 

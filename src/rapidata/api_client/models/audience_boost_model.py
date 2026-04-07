@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
@@ -26,9 +26,9 @@ class AudienceBoostModel(BaseModel):
     """
     AudienceBoostModel
     """ # noqa: E501
-    audience_id: StrictStr = Field(alias="audienceId")
+    external_audience_id: StrictInt = Field(alias="externalAudienceId")
     level: StrictInt
-    __properties: ClassVar[List[str]] = ["audienceId", "level"]
+    __properties: ClassVar[List[str]] = ["externalAudienceId", "level"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,7 +81,7 @@ class AudienceBoostModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "audienceId": obj.get("audienceId"),
+            "externalAudienceId": obj.get("externalAudienceId"),
             "level": obj.get("level")
         })
         return _obj

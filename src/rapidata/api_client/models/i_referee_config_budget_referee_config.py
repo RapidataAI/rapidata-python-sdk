@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,8 @@ class IRefereeConfigBudgetRefereeConfig(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     total_budget: StrictInt = Field(alias="totalBudget")
-    __properties: ClassVar[List[str]] = ["_t", "totalBudget"]
+    total_serve_budget: Optional[StrictInt] = Field(default=None, alias="totalServeBudget")
+    __properties: ClassVar[List[str]] = ["_t", "totalBudget", "totalServeBudget"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +90,8 @@ class IRefereeConfigBudgetRefereeConfig(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
-            "totalBudget": obj.get("totalBudget")
+            "totalBudget": obj.get("totalBudget"),
+            "totalServeBudget": obj.get("totalServeBudget")
         })
         return _obj
 
