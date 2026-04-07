@@ -225,12 +225,15 @@ class RapidataAudience:
             self._try_start_recruiting()
             return self
 
-    def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
+    def find_jobs(
+        self, name: str = "", amount: int = 10, page: int = 1
+    ) -> list[RapidataJob]:
         """Find jobs assigned to this audience.
 
         Args:
             name (str, optional): Filter jobs by name (matching jobs will contain this string). Defaults to "" for any job.
             amount (int, optional): The maximum number of jobs to return. Defaults to 10.
+            page (int, optional): The page of jobs to return. Defaults to 1.
 
         Returns:
             list[RapidataJob]: A list of RapidataJob instances assigned to this audience.
@@ -247,7 +250,7 @@ class RapidataAudience:
 
             response = self._openapi_service.order.job_api.jobs_get(
                 request=QueryModel(
-                    page=PageInfo(index=1, size=amount),
+                    page=PageInfo(index=page, size=amount),
                     filter=RootFilter(
                         filters=[
                             Filter(

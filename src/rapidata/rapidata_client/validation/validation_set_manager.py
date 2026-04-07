@@ -656,13 +656,14 @@ class ValidationSetManager:
             )
 
     def find_validation_sets(
-        self, name: str = "", amount: int = 10
+        self, name: str = "", amount: int = 10, page: int = 1
     ) -> list[RapidataValidationSet]:
         """Find validation sets by name.
 
         Args:
             name (str, optional): The name to search for. Defaults to "" to match with any set.
             amount (int, optional): The amount of validation sets to return. Defaults to 10.
+            page (int, optional): The page of validation sets to return. Defaults to 1.
 
         Returns:
             list[RapidataValidationSet]: The list of validation sets.
@@ -675,7 +676,7 @@ class ValidationSetManager:
             validation_page_result = (
                 self._openapi_service.validation.validation_api.validation_sets_get(
                     QueryModel(
-                        page=PageInfo(index=1, size=amount),
+                        page=PageInfo(index=page, size=amount),
                         filter=RootFilter(
                             filters=[
                                 Filter(

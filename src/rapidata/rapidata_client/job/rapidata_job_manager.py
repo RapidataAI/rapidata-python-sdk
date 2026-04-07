@@ -100,15 +100,17 @@ class RapidataJobManager:
         with tracer.start_as_current_span("add_datapoints"):
             _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
 
-        job_definition_response = self._openapi_service.order.job_api.job_definition_post(
-            create_job_definition_endpoint_input=CreateJobDefinitionEndpointInput(
-                definitionName=name,
-                workflow=workflow._to_model(),
-                datasetId=rapidata_dataset.id,
-                referee=referee._to_model(),
-                featureFlags=(
-                    [s._to_feature_flag() for s in settings] if settings else None
-                ),
+        job_definition_response = (
+            self._openapi_service.order.job_api.job_definition_post(
+                create_job_definition_endpoint_input=CreateJobDefinitionEndpointInput(
+                    definitionName=name,
+                    workflow=workflow._to_model(),
+                    datasetId=rapidata_dataset.id,
+                    referee=referee._to_model(),
+                    featureFlags=(
+                        [s._to_feature_flag() for s in settings] if settings else None
+                    ),
+                )
             )
         )
         job_model = RapidataJobDefinition(
@@ -663,13 +665,14 @@ class RapidataJobManager:
             )
 
     def find_job_definitions(
-        self, name: str = "", amount: int = 10
+        self, name: str = "", amount: int = 10, page: int = 1
     ) -> list[RapidataJobDefinition]:
         """Find your recent jobs given criteria. If nothing is provided, it will return the most recent job definitions.
 
         Args:
             name (str, optional): The name of the job definition - matching job definition will contain the name. Defaults to "" for any job definition.
             amount (int, optional): The amount of job definitions to return. Defaults to 10.
+            page (int, optional): The page of job definitions to return. Defaults to 1.
 
         Returns:
             list[JobDefinition]: A list of JobDefinition instances.
@@ -686,7 +689,7 @@ class RapidataJobManager:
             job_definition_page_result = (
                 self._openapi_service.order.job_api.job_definitions_get(
                     request=QueryModel(
-                        page=PageInfo(index=1, size=amount),
+                        page=PageInfo(index=page, size=amount),
                         filter=RootFilter(
                             filters=[
                                 Filter(
@@ -740,12 +743,15 @@ class RapidataJobManager:
                 pipeline_id=job_response.pipeline_id,
             )
 
-    def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
+    def find_jobs(
+        self, name: str = "", amount: int = 10, page: int = 1
+    ) -> list[RapidataJob]:
         """Find your recent jobs given criteria. If nothing is provided, it will return the most recent jobs.
 
         Args:
             name (str, optional): The name of the job - matching job will contain the name. Defaults to "" for any job.
             amount (int, optional): The amount of jobs to return. Defaults to 10.
+            page (int, optional): The page of jobs to return. Defaults to 1.
 
         Returns:
             list[RapidataJob]: A list of RapidataJob instances.
@@ -762,7 +768,7 @@ class RapidataJobManager:
 
             response = self._openapi_service.order.job_api.jobs_get(
                 request=QueryModel(
-                    page=PageInfo(index=1, size=amount),
+                    page=PageInfo(index=page, size=amount),
                     filter=RootFilter(
                         filters=[
                             Filter(

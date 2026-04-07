@@ -149,9 +149,11 @@ class RapidataBenchmarkManager:
 
             logger.info("Creating new benchmark %s", name)
 
-            benchmark_result = self.__openapi_service.leaderboard.benchmark_api.benchmark_post(
-                create_benchmark_model=CreateBenchmarkModel(
-                    name=name,
+            benchmark_result = (
+                self.__openapi_service.leaderboard.benchmark_api.benchmark_post(
+                    create_benchmark_model=CreateBenchmarkModel(
+                        name=name,
+                    )
                 )
             )
 
@@ -175,39 +177,47 @@ class RapidataBenchmarkManager:
         with tracer.start_as_current_span(
             "RapidataBenchmarkManager.get_benchmark_by_id"
         ):
-            benchmark_result = (
-                self.__openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_get(
-                    benchmark_id=id
-                )
+            benchmark_result = self.__openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_get(
+                benchmark_id=id
             )
             return RapidataBenchmark(
                 benchmark_result.name, benchmark_result.id, self.__openapi_service
             )
 
     def find_benchmarks(
-        self, name: str = "", amount: int = 10
+        self, name: str = "", amount: int = 10, page: int = 1
     ) -> list[RapidataBenchmark]:
         """
         Returns a list of benchmarks by their name.
+
+        Args:
+            name (str, optional): The name of the benchmark - matching benchmark will contain the name. Defaults to "" for any benchmark.
+            amount (int, optional): The amount of benchmarks to return. Defaults to 10.
+            page (int, optional): The page of benchmarks to return. Defaults to 1.
+
+        Returns:
+            list[RapidataBenchmark]: A list of RapidataBenchmark instances.
         """
         with tracer.start_as_current_span("RapidataBenchmarkManager.find_benchmarks"):
-            benchmark_result = self.__openapi_service.leaderboard.benchmark_api.benchmarks_get(
-                QueryModel(
-                    page=PageInfo(index=1, size=amount),
-                    filter=RootFilter(
-                        filters=[
-                            Filter(
-                                field="Name",
-                                operator=FilterOperator.CONTAINS,
-                                value=name,
+            benchmark_result = (
+                self.__openapi_service.leaderboard.benchmark_api.benchmarks_get(
+                    QueryModel(
+                        page=PageInfo(index=page, size=amount),
+                        filter=RootFilter(
+                            filters=[
+                                Filter(
+                                    field="Name",
+                                    operator=FilterOperator.CONTAINS,
+                                    value=name,
+                                )
+                            ]
+                        ),
+                        sortCriteria=[
+                            SortCriterion(
+                                direction=SortDirection.DESC, propertyName="CreatedAt"
                             )
-                        ]
-                    ),
-                    sortCriteria=[
-                        SortCriterion(
-                            direction=SortDirection.DESC, propertyName="CreatedAt"
-                        )
-                    ],
+                        ],
+                    )
                 )
             )
             return [

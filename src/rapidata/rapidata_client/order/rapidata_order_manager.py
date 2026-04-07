@@ -918,12 +918,15 @@ class RapidataOrderManager:
                 openapi_service=self.__openapi_service,
             )
 
-    def find_orders(self, name: str = "", amount: int = 10) -> list[RapidataOrder]:
+    def find_orders(
+        self, name: str = "", amount: int = 10, page: int = 1
+    ) -> list[RapidataOrder]:
         """Find your recent orders given criteria. If nothing is provided, it will return the most recent order.
 
         Args:
             name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.
             amount (int, optional): The amount of orders to return. Defaults to 10.
+            page (int, optional): The page of orders to return. Defaults to 1.
 
         Returns:
             list[RapidataOrder]: A list of RapidataOrder instances.
@@ -934,7 +937,7 @@ class RapidataOrderManager:
             )
 
             order_page_result = self.__openapi_service.order.order_api.orders_get(
-                page=1,
+                page=page,
                 page_size=amount,
                 order_name=CampaignsGetIdParameter(contains=name),
                 sort=["-order_date"],

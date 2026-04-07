@@ -78,8 +78,10 @@ class RapidataAudienceManager:
             )
 
             logger.debug(f"Getting audience by id: {audience_id}")
-            response = self._openapi_service.audience.audience_api.audience_audience_id_get(
-                audience_id=audience_id,
+            response = (
+                self._openapi_service.audience.audience_api.audience_audience_id_get(
+                    audience_id=audience_id,
+                )
             )
             return RapidataAudience(
                 id=audience_id,
@@ -92,13 +94,14 @@ class RapidataAudienceManager:
             )
 
     def find_audiences(
-        self, name: str = "", amount: int = 10
+        self, name: str = "", amount: int = 10, page: int = 1
     ) -> list[RapidataAudience]:
         """Find your audiences by name.
 
         Args:
             name (str, optional): Filter audiences by name (matching audiences will contain this string). Defaults to "" for any audience.
             amount (int, optional): The maximum number of audiences to return. Defaults to 10.
+            page (int, optional): The page of audiences to return. Defaults to 1.
 
         Returns:
             list[RapidataAudience]: A list of RapidataAudience instances.
@@ -121,7 +124,7 @@ class RapidataAudienceManager:
             logger.debug(f"Finding audiences: {name}, {amount}")
             response = self._openapi_service.audience.audience_api.audiences_get(
                 request=QueryModel(
-                    page=PageInfo(index=1, size=amount),
+                    page=PageInfo(index=page, size=amount),
                     filter=RootFilter(
                         filters=[
                             Filter(
