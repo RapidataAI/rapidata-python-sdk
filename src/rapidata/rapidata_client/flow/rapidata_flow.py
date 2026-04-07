@@ -104,8 +104,12 @@ class RapidataFlow:
                 openapi_service=self._openapi_service,
             )
 
-    def get_flow_items(self) -> list[RapidataFlowItem]:
-        """Query flow items for this flow, returning up to 100 most recent items sorted by creation date.
+    def get_flow_items(self, amount: int = 10, page: int = 1) -> list[RapidataFlowItem]:
+        """Query flow items for this flow, returning them in order of creation.
+
+        Args:
+            amount (int, optional): The amount of flow items to return. Defaults to 10.
+            page (int, optional): The page of flow items to return. Defaults to 1.
 
         Returns:
             list[RapidataFlowItem]: A list of flow items.
@@ -120,8 +124,8 @@ class RapidataFlow:
             response = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_flow_id_item_get(
                 flow_id=self.id,
                 sort=["-created_at"],
-                page=1,
-                page_size=100,
+                page=page,
+                page_size=amount,
             )
 
             return [

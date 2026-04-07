@@ -102,21 +102,33 @@ class RapidataFlowManager:
                 openapi_service=self._openapi_service,
             )
 
-    def find_flows(self, amount: int = 10) -> list[RapidataFlow]:
+    def find_flows(
+        self, name: str = "", amount: int = 10, page: int = 1
+    ) -> list[RapidataFlow]:
         """Find your recent flows.
 
         Args:
+            name: The name of the flow - matching flow will contain the name. Defaults to "" for any flow.
             amount: The maximum number of flows to return. Defaults to 10.
+            page: The page of flows to return. Defaults to 1.
 
         Returns:
             list[RapidataFlow]: A list of RapidataFlow instances.
         """
         with tracer.start_as_current_span("RapidataFlowManager.find_flows"):
+            from rapidata.api_client.models.campaigns_get_id_parameter import (
+                CampaignsGetIdParameter,
+            )
             from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
 
             logger.debug("Finding flows, amount: %s", amount)
 
-            response = self._openapi_service.flow.flow_api.flow_get()
+            response = self._openapi_service.flow.flow_api.flow_get(
+                page=page,
+                page_size=amount,
+                sort=["-created_at"],
+                name=CampaignsGetIdParameter(contains=name),
+            )
 
             return [
                 RapidataFlow(
@@ -124,7 +136,7 @@ class RapidataFlowManager:
                     name=flow.name,
                     openapi_service=self._openapi_service,
                 )
-                for flow in response.items[:amount]
+                for flow in response.items
             ]
 
     def __str__(self) -> str:
