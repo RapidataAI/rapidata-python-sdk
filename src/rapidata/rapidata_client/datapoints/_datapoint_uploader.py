@@ -40,18 +40,23 @@ class DatapointUploader:
         else:
             uploaded_asset = self.asset_mapper.create_text_input(datapoint.asset)
 
+        # If the datapoint belongs to a group, context is handled at group level
+        has_group = datapoint.group is not None
+        context = None if has_group else datapoint.context
+        context_asset = (
+            None
+            if has_group or not datapoint.media_context
+            else self.asset_mapper.create_existing_asset_input(
+                self.asset_uploader.upload_asset(datapoint.media_context)
+            )
+        )
+
         return self.openapi_service.dataset.dataset_api.dataset_dataset_id_datapoint_post(
             dataset_id=dataset_id,
             create_datapoint_model=CreateDatapointModel(
                 asset=uploaded_asset,
-                context=datapoint.context,
-                contextAsset=(
-                    self.asset_mapper.create_existing_asset_input(
-                        self.asset_uploader.upload_asset(datapoint.media_context)
-                    )
-                    if datapoint.media_context
-                    else None
-                ),
+                context=context,
+                contextAsset=context_asset,
                 transcription=datapoint.sentence,
                 sortIndex=index,
                 group=datapoint.group,
