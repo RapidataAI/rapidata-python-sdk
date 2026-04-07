@@ -20,7 +20,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.update_config_endpoint_audience_boost_input import UpdateConfigEndpointAudienceBoostInput
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -45,9 +44,7 @@ class UpdateConfigEndpointInput(BaseModel):
     pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[StrictStr] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
-    global_boost_level: Optional[StrictInt] = Field(default=None, description="Global boost level for the flow campaign.", alias="globalBoostLevel")
-    audience_boosts: Optional[List[UpdateConfigEndpointAudienceBoostInput]] = Field(default=None, alias="audienceBoosts")
-    __properties: ClassVar[List[str]] = ["audienceId", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "globalBoostLevel", "audienceBoosts"]
+    __properties: ClassVar[List[str]] = ["audienceId", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
 
     @field_validator('pid_batch_mode')
     def pid_batch_mode_validate_enum(cls, value):
@@ -105,13 +102,6 @@ class UpdateConfigEndpointInput(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in audience_boosts (list)
-        _items = []
-        if self.audience_boosts:
-            for _item_audience_boosts in self.audience_boosts:
-                if _item_audience_boosts:
-                    _items.append(_item_audience_boosts.to_dict())
-            _dict['audienceBoosts'] = _items
         # set to None if audience_id (nullable) is None
         # and model_fields_set contains the field
         if self.audience_id is None and "audience_id" in self.model_fields_set:
@@ -192,16 +182,6 @@ class UpdateConfigEndpointInput(BaseModel):
         if self.pid_max_sessions_per_minute is None and "pid_max_sessions_per_minute" in self.model_fields_set:
             _dict['pidMaxSessionsPerMinute'] = None
 
-        # set to None if global_boost_level (nullable) is None
-        # and model_fields_set contains the field
-        if self.global_boost_level is None and "global_boost_level" in self.model_fields_set:
-            _dict['globalBoostLevel'] = None
-
-        # set to None if audience_boosts (nullable) is None
-        # and model_fields_set contains the field
-        if self.audience_boosts is None and "audience_boosts" in self.model_fields_set:
-            _dict['audienceBoosts'] = None
-
         return _dict
 
     @classmethod
@@ -230,9 +210,7 @@ class UpdateConfigEndpointInput(BaseModel):
             "pidDerivativeGain": obj.get("pidDerivativeGain"),
             "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
             "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
-            "pidBatchMode": obj.get("pidBatchMode"),
-            "globalBoostLevel": obj.get("globalBoostLevel"),
-            "audienceBoosts": [UpdateConfigEndpointAudienceBoostInput.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None
+            "pidBatchMode": obj.get("pidBatchMode")
         })
         return _obj
 

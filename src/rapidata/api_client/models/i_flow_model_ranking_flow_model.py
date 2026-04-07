@@ -20,7 +20,6 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.audience_boost_model2 import AudienceBoostModel2
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.flow_type import FlowType
 from rapidata.api_client.models.pid_batch_mode import PidBatchMode
@@ -47,9 +46,9 @@ class IFlowModelRankingFlowModel(BaseModel):
     serve_timeout_seconds: StrictInt = Field(description="Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.", alias="serveTimeoutSeconds")
     drain_duration_seconds: StrictInt = Field(description="Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.", alias="drainDurationSeconds")
     serve_to_response_ratio: Union[StrictFloat, StrictInt] = Field(description="Ratio of serves to responses used to calculate how many tasks to serve per expected response.", alias="serveToResponseRatio")
-    global_boost_level: StrictInt = Field(description="Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.", alias="globalBoostLevel")
-    audience_boosts: List[AudienceBoostModel2] = Field(alias="audienceBoosts")
-    audience_id: Optional[StrictStr] = Field(description="Optional audience ID. When provided, the flow will only serve items to users in this audience.", alias="audienceId")
+    global_boost_level: Optional[StrictInt] = Field(default=None, description="Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.", alias="globalBoostLevel")
+    audience_boosts: Optional[Any] = Field(default=None, description="Audience-specific boost levels that override the global boost for targeted demographics.", alias="audienceBoosts")
+    audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the flow will only serve items to users in this audience.", alias="audienceId")
     criteria: Optional[StrictStr] = Field(description="The comparison instruction shown to annotators during ranking tasks (e.g. \"Which image is sharper?\").")
     starting_elo: StrictInt = Field(description="The initial Elo rating assigned to new items entering the ranking. Standard default is 1200.", alias="startingElo")
     k_factor: Optional[StrictInt] = Field(default=None, description="Elo K-factor controlling rating volatility. Higher values cause larger rating changes per comparison. Used as a direct multiplier on the Elo change formula.", alias="kFactor")
@@ -109,13 +108,6 @@ class IFlowModelRankingFlowModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in audience_boosts (list)
-        _items = []
-        if self.audience_boosts:
-            for _item_audience_boosts in self.audience_boosts:
-                if _item_audience_boosts:
-                    _items.append(_item_audience_boosts.to_dict())
-            _dict['audienceBoosts'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -162,7 +154,7 @@ class IFlowModelRankingFlowModel(BaseModel):
             "drainDurationSeconds": obj.get("drainDurationSeconds"),
             "serveToResponseRatio": obj.get("serveToResponseRatio"),
             "globalBoostLevel": obj.get("globalBoostLevel"),
-            "audienceBoosts": [AudienceBoostModel2.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None,
+            "audienceBoosts": obj.get("audienceBoosts"),
             "audienceId": obj.get("audienceId"),
             "criteria": obj.get("criteria"),
             "startingElo": obj.get("startingElo"),
