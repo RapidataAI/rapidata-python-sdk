@@ -1493,7 +1493,9 @@ Everything is matched up by the indexes of the lists.</p>
 <span class="normal"><a href="#__codelineno-0-166">166</a></span>
 <span class="normal"><a href="#__codelineno-0-167">167</a></span>
 <span class="normal"><a href="#__codelineno-0-168">168</a></span>
-<span class="normal"><a href="#__codelineno-0-169">169</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_new_benchmark</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-169">169</a></span>
+<span class="normal"><a href="#__codelineno-0-170">170</a></span>
+<span class="normal"><a href="#__codelineno-0-171">171</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_new_benchmark</span><span class="p">(</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="bp">self</span><span class="p">,</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">identifiers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1618,24 +1620,26 @@ Everything is matched up by the indexes of the lists.</p>
 </span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149"></a>
 </span><span id="__span-0-150"><a id="__codelineno-0-150" name="__codelineno-0-150"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating new benchmark </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 </span><span id="__span-0-151"><a id="__codelineno-0-151" name="__codelineno-0-151"></a>
-</span><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152"></a>        <span class="n">benchmark_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">benchmark_api</span><span class="o">.</span><span class="n">benchmark_post</span><span class="p">(</span>
-</span><span id="__span-0-153"><a id="__codelineno-0-153" name="__codelineno-0-153"></a>            <span class="n">create_benchmark_model</span><span class="o">=</span><span class="n">CreateBenchmarkModel</span><span class="p">(</span>
-</span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154"></a>                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155"></a>            <span class="p">)</span>
-</span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156"></a>        <span class="p">)</span>
-</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157"></a>
-</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Benchmark created with id </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">benchmark_result</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152"></a>        <span class="n">benchmark_result</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-153"><a id="__codelineno-0-153" name="__codelineno-0-153"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">benchmark_api</span><span class="o">.</span><span class="n">benchmark_post</span><span class="p">(</span>
+</span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154"></a>                <span class="n">create_benchmark_model</span><span class="o">=</span><span class="n">CreateBenchmarkModel</span><span class="p">(</span>
+</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155"></a>                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156"></a>                <span class="p">)</span>
+</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157"></a>            <span class="p">)</span>
+</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158"></a>        <span class="p">)</span>
 </span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159"></a>
-</span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="n">benchmark</span> <span class="o">=</span> <span class="n">RapidataBenchmark</span><span class="p">(</span>
-</span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a>            <span class="n">name</span><span class="p">,</span> <span class="n">benchmark_result</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span>
-</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="p">)</span>
-</span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163"></a>
-</span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164"></a>        <span class="k">for</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">asset</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-</span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165"></a>            <span class="n">identifiers</span><span class="p">,</span> <span class="n">prompts</span><span class="p">,</span> <span class="n">prompt_assets</span><span class="p">,</span> <span class="n">tags</span>
-</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="p">):</span>
-</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a>            <span class="n">benchmark</span><span class="o">.</span><span class="n">add_prompt</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">asset</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
-</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a>
-</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a>        <span class="k">return</span> <span class="n">benchmark</span>
+</span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Benchmark created with id </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">benchmark_result</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a>
+</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="n">benchmark</span> <span class="o">=</span> <span class="n">RapidataBenchmark</span><span class="p">(</span>
+</span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163"></a>            <span class="n">name</span><span class="p">,</span> <span class="n">benchmark_result</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span>
+</span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164"></a>        <span class="p">)</span>
+</span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165"></a>
+</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="k">for</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">asset</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a>            <span class="n">identifiers</span><span class="p">,</span> <span class="n">prompts</span><span class="p">,</span> <span class="n">prompt_assets</span><span class="p">,</span> <span class="n">tags</span>
+</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a>        <span class="p">):</span>
+</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a>            <span class="n">benchmark</span><span class="o">.</span><span class="n">add_prompt</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">asset</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+</span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a>
+</span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a>        <span class="k">return</span> <span class="n">benchmark</span>
 </span></code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
@@ -1660,9 +1664,7 @@ Everything is matched up by the indexes of the lists.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-171">171</a></span>
-<span class="normal"><a href="#__codelineno-0-172">172</a></span>
-<span class="normal"><a href="#__codelineno-0-173">173</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-173">173</a></span>
 <span class="normal"><a href="#__codelineno-0-174">174</a></span>
 <span class="normal"><a href="#__codelineno-0-175">175</a></span>
 <span class="normal"><a href="#__codelineno-0-176">176</a></span>
@@ -1674,17 +1676,15 @@ Everything is matched up by the indexes of the lists.</p>
 <span class="normal"><a href="#__codelineno-0-182">182</a></span>
 <span class="normal"><a href="#__codelineno-0-183">183</a></span>
 <span class="normal"><a href="#__codelineno-0-184">184</a></span>
-<span class="normal"><a href="#__codelineno-0-185">185</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_benchmark_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RapidataBenchmark</span><span class="p">:</span>
-</span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    Returns a benchmark by its ID.</span>
-</span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">    """</span>
-</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span>
-</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a>        <span class="s2">"RapidataBenchmarkManager.get_benchmark_by_id"</span>
-</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a>    <span class="p">):</span>
-</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a>        <span class="n">benchmark_result</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">benchmark_api</span><span class="o">.</span><span class="n">benchmark_benchmark_id_get</span><span class="p">(</span>
-</span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180"></a>                <span class="n">benchmark_id</span><span class="o">=</span><span class="nb">id</span>
-</span><span id="__span-0-181"><a id="__codelineno-0-181" name="__codelineno-0-181"></a>            <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-185">185</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_benchmark_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RapidataBenchmark</span><span class="p">:</span>
+</span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    Returns a benchmark by its ID.</span>
+</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    """</span>
+</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span>
+</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a>        <span class="s2">"RapidataBenchmarkManager.get_benchmark_by_id"</span>
+</span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="p">):</span>
+</span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180"></a>        <span class="n">benchmark_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">benchmark_api</span><span class="o">.</span><span class="n">benchmark_benchmark_id_get</span><span class="p">(</span>
+</span><span id="__span-0-181"><a id="__codelineno-0-181" name="__codelineno-0-181"></a>            <span class="n">benchmark_id</span><span class="o">=</span><span class="nb">id</span>
 </span><span id="__span-0-182"><a id="__codelineno-0-182" name="__codelineno-0-182"></a>        <span class="p">)</span>
 </span><span id="__span-0-183"><a id="__codelineno-0-183" name="__codelineno-0-183"></a>        <span class="k">return</span> <span class="n">RapidataBenchmark</span><span class="p">(</span>
 </span><span id="__span-0-184"><a id="__codelineno-0-184" name="__codelineno-0-184"></a>            <span class="n">benchmark_result</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">benchmark_result</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span>
@@ -1704,13 +1704,99 @@ Everything is matched up by the indexes of the lists.</p>
 
 <a href="#rapidata.rapidata_client.benchmark.rapidata_benchmark_manager.RapidataBenchmarkManager.find_benchmarks" class="headerlink" title="Permanent link">#</a></h3>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_benchmarks</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">10</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">1</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="RapidataBenchmark (rapidata.rapidata_client.benchmark.rapidata_benchmark.RapidataBenchmark)" href="../rapidata_benchmark/#rapidata.rapidata_client.benchmark.rapidata_benchmark.RapidataBenchmark">RapidataBenchmark</a></span><span class="p">]</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Returns a list of benchmarks by their name.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the benchmark - matching benchmark will contain the name. Defaults to "" for any benchmark.</p>
+              </div>
+            </td>
+            <td>
+                  <code>''</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>amount</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The amount of benchmarks to return. Defaults to 10.</p>
+              </div>
+            </td>
+            <td>
+                  <code>10</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>page</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The page of benchmarks to return. Defaults to 1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="RapidataBenchmark (rapidata.rapidata_client.benchmark.rapidata_benchmark.RapidataBenchmark)" href="../rapidata_benchmark/#rapidata.rapidata_client.benchmark.rapidata_benchmark.RapidataBenchmark">RapidataBenchmark</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list[RapidataBenchmark]: A list of RapidataBenchmark instances.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
             <details class="mkdocstrings-source">
@@ -1744,36 +1830,56 @@ Everything is matched up by the indexes of the lists.</p>
 <span class="normal"><a href="#__codelineno-0-213">213</a></span>
 <span class="normal"><a href="#__codelineno-0-214">214</a></span>
 <span class="normal"><a href="#__codelineno-0-215">215</a></span>
-<span class="normal"><a href="#__codelineno-0-216">216</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-187"><a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_benchmarks</span><span class="p">(</span>
-</span><span id="__span-0-188"><a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#__codelineno-0-226">226</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-187"><a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_benchmarks</span><span class="p">(</span>
+</span><span id="__span-0-188"><a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span id="__span-0-189"><a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RapidataBenchmark</span><span class="p">]:</span>
 </span><span id="__span-0-190"><a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="w">    </span><span class="sd">"""</span>
 </span><span id="__span-0-191"><a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">    Returns a list of benchmarks by their name.</span>
-</span><span id="__span-0-192"><a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="sd">    """</span>
-</span><span id="__span-0-193"><a id="__codelineno-0-193" name="__codelineno-0-193"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"RapidataBenchmarkManager.find_benchmarks"</span><span class="p">):</span>
-</span><span id="__span-0-194"><a id="__codelineno-0-194" name="__codelineno-0-194"></a>        <span class="n">benchmark_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">benchmark_api</span><span class="o">.</span><span class="n">benchmarks_get</span><span class="p">(</span>
-</span><span id="__span-0-195"><a id="__codelineno-0-195" name="__codelineno-0-195"></a>            <span class="n">QueryModel</span><span class="p">(</span>
-</span><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a>                <span class="n">page</span><span class="o">=</span><span class="n">PageInfo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">amount</span><span class="p">),</span>
-</span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>                <span class="nb">filter</span><span class="o">=</span><span class="n">RootFilter</span><span class="p">(</span>
-</span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a>                    <span class="n">filters</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a>                        <span class="n">Filter</span><span class="p">(</span>
-</span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a>                            <span class="n">field</span><span class="o">=</span><span class="s2">"Name"</span><span class="p">,</span>
-</span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a>                            <span class="n">operator</span><span class="o">=</span><span class="n">FilterOperator</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">,</span>
-</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a>                            <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a>                        <span class="p">)</span>
-</span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a>                    <span class="p">]</span>
-</span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a>                <span class="p">),</span>
-</span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a>                <span class="n">sortCriteria</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-0-207"><a id="__codelineno-0-207" name="__codelineno-0-207"></a>                    <span class="n">SortCriterion</span><span class="p">(</span>
-</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a>                        <span class="n">direction</span><span class="o">=</span><span class="n">SortDirection</span><span class="o">.</span><span class="n">DESC</span><span class="p">,</span> <span class="n">propertyName</span><span class="o">=</span><span class="s2">"CreatedAt"</span>
-</span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>                    <span class="p">)</span>
-</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>                <span class="p">],</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>            <span class="p">)</span>
-</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>        <span class="p">)</span>
-</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>        <span class="k">return</span> <span class="p">[</span>
-</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>            <span class="n">RapidataBenchmark</span><span class="p">(</span><span class="n">benchmark</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="p">)</span>
-</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a>            <span class="k">for</span> <span class="n">benchmark</span> <span class="ow">in</span> <span class="n">benchmark_result</span><span class="o">.</span><span class="n">items</span>
-</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a>        <span class="p">]</span>
+</span><span id="__span-0-192"><a id="__codelineno-0-192" name="__codelineno-0-192"></a>
+</span><span id="__span-0-193"><a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-194"><a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">        name (str, optional): The name of the benchmark - matching benchmark will contain the name. Defaults to "" for any benchmark.</span>
+</span><span id="__span-0-195"><a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">        amount (int, optional): The amount of benchmarks to return. Defaults to 10.</span>
+</span><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">        page (int, optional): The page of benchmarks to return. Defaults to 1.</span>
+</span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>
+</span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">        list[RapidataBenchmark]: A list of RapidataBenchmark instances.</span>
+</span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    """</span>
+</span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"RapidataBenchmarkManager.find_benchmarks"</span><span class="p">):</span>
+</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a>        <span class="n">benchmark_result</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">benchmark_api</span><span class="o">.</span><span class="n">benchmarks_get</span><span class="p">(</span>
+</span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a>                <span class="n">QueryModel</span><span class="p">(</span>
+</span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a>                    <span class="n">page</span><span class="o">=</span><span class="n">PageInfo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">page</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">amount</span><span class="p">),</span>
+</span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a>                    <span class="nb">filter</span><span class="o">=</span><span class="n">RootFilter</span><span class="p">(</span>
+</span><span id="__span-0-207"><a id="__codelineno-0-207" name="__codelineno-0-207"></a>                        <span class="n">filters</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a>                            <span class="n">Filter</span><span class="p">(</span>
+</span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>                                <span class="n">field</span><span class="o">=</span><span class="s2">"Name"</span><span class="p">,</span>
+</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>                                <span class="n">operator</span><span class="o">=</span><span class="n">FilterOperator</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">,</span>
+</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>                                <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>                            <span class="p">)</span>
+</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>                        <span class="p">]</span>
+</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>                    <span class="p">),</span>
+</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a>                    <span class="n">sortCriteria</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a>                        <span class="n">SortCriterion</span><span class="p">(</span>
+</span><span id="__span-0-217"><a id="__codelineno-0-217" name="__codelineno-0-217"></a>                            <span class="n">direction</span><span class="o">=</span><span class="n">SortDirection</span><span class="o">.</span><span class="n">DESC</span><span class="p">,</span> <span class="n">propertyName</span><span class="o">=</span><span class="s2">"CreatedAt"</span>
+</span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a>                        <span class="p">)</span>
+</span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a>                    <span class="p">],</span>
+</span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a>                <span class="p">)</span>
+</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a>            <span class="p">)</span>
+</span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a>        <span class="p">)</span>
+</span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a>            <span class="n">RapidataBenchmark</span><span class="p">(</span><span class="n">benchmark</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="p">)</span>
+</span><span id="__span-0-225"><a id="__codelineno-0-225" name="__codelineno-0-225"></a>            <span class="k">for</span> <span class="n">benchmark</span> <span class="ow">in</span> <span class="n">benchmark_result</span><span class="o">.</span><span class="n">items</span>
+</span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a>        <span class="p">]</span>
 </span></code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>

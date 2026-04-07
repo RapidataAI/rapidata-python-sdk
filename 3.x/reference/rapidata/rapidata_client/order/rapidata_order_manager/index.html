@@ -5034,7 +5034,7 @@ Will be match up with the datapoints using the list index.</p>
 
 <a href="#rapidata.rapidata_client.order.rapidata_order_manager.RapidataOrderManager.find_orders" class="headerlink" title="Permanent link">#</a></h3>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_orders</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">10</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">1</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="RapidataOrder (rapidata.rapidata_client.order.rapidata_order.RapidataOrder)" href="../rapidata_order/#rapidata.rapidata_client.order.rapidata_order.RapidataOrder">RapidataOrder</a></span><span class="p">]</span>
 </span></code></pre></div>
 
@@ -5084,6 +5084,22 @@ Will be match up with the datapoints using the list index.</p>
             </td>
             <td>
                   <code>10</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>page</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The page of orders to return. Defaults to 1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1</code>
             </td>
           </tr>
       </tbody>
@@ -5140,32 +5156,38 @@ Will be match up with the datapoints using the list index.</p>
 <span class="normal"><a href="#__codelineno-0-943">943</a></span>
 <span class="normal"><a href="#__codelineno-0-944">944</a></span>
 <span class="normal"><a href="#__codelineno-0-945">945</a></span>
-<span class="normal"><a href="#__codelineno-0-946">946</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-921"><a id="__codelineno-0-921" name="__codelineno-0-921"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RapidataOrder</span><span class="p">]:</span>
-</span><span id="__span-0-922"><a id="__codelineno-0-922" name="__codelineno-0-922"></a><span class="w">    </span><span class="sd">"""Find your recent orders given criteria. If nothing is provided, it will return the most recent order.</span>
-</span><span id="__span-0-923"><a id="__codelineno-0-923" name="__codelineno-0-923"></a>
-</span><span id="__span-0-924"><a id="__codelineno-0-924" name="__codelineno-0-924"></a><span class="sd">    Args:</span>
-</span><span id="__span-0-925"><a id="__codelineno-0-925" name="__codelineno-0-925"></a><span class="sd">        name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.</span>
-</span><span id="__span-0-926"><a id="__codelineno-0-926" name="__codelineno-0-926"></a><span class="sd">        amount (int, optional): The amount of orders to return. Defaults to 10.</span>
-</span><span id="__span-0-927"><a id="__codelineno-0-927" name="__codelineno-0-927"></a>
-</span><span id="__span-0-928"><a id="__codelineno-0-928" name="__codelineno-0-928"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-929"><a id="__codelineno-0-929" name="__codelineno-0-929"></a><span class="sd">        list[RapidataOrder]: A list of RapidataOrder instances.</span>
-</span><span id="__span-0-930"><a id="__codelineno-0-930" name="__codelineno-0-930"></a><span class="sd">    """</span>
-</span><span id="__span-0-931"><a id="__codelineno-0-931" name="__codelineno-0-931"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"RapidataOrderManager.find_orders"</span><span class="p">):</span>
-</span><span id="__span-0-932"><a id="__codelineno-0-932" name="__codelineno-0-932"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.campaigns_get_id_parameter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-0-933"><a id="__codelineno-0-933" name="__codelineno-0-933"></a>            <span class="n">CampaignsGetIdParameter</span><span class="p">,</span>
-</span><span id="__span-0-934"><a id="__codelineno-0-934" name="__codelineno-0-934"></a>        <span class="p">)</span>
-</span><span id="__span-0-935"><a id="__codelineno-0-935" name="__codelineno-0-935"></a>
-</span><span id="__span-0-936"><a id="__codelineno-0-936" name="__codelineno-0-936"></a>        <span class="n">order_page_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">order_api</span><span class="o">.</span><span class="n">orders_get</span><span class="p">(</span>
-</span><span id="__span-0-937"><a id="__codelineno-0-937" name="__codelineno-0-937"></a>            <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="__span-0-938"><a id="__codelineno-0-938" name="__codelineno-0-938"></a>            <span class="n">page_size</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
-</span><span id="__span-0-939"><a id="__codelineno-0-939" name="__codelineno-0-939"></a>            <span class="n">order_name</span><span class="o">=</span><span class="n">CampaignsGetIdParameter</span><span class="p">(</span><span class="n">contains</span><span class="o">=</span><span class="n">name</span><span class="p">),</span>
-</span><span id="__span-0-940"><a id="__codelineno-0-940" name="__codelineno-0-940"></a>            <span class="n">sort</span><span class="o">=</span><span class="p">[</span><span class="s2">"-order_date"</span><span class="p">],</span>
-</span><span id="__span-0-941"><a id="__codelineno-0-941" name="__codelineno-0-941"></a>        <span class="p">)</span>
-</span><span id="__span-0-942"><a id="__codelineno-0-942" name="__codelineno-0-942"></a>
-</span><span id="__span-0-943"><a id="__codelineno-0-943" name="__codelineno-0-943"></a>        <span class="n">orders</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-0-944"><a id="__codelineno-0-944" name="__codelineno-0-944"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">get_order_by_id</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">order_page_result</span><span class="o">.</span><span class="n">items</span>
-</span><span id="__span-0-945"><a id="__codelineno-0-945" name="__codelineno-0-945"></a>        <span class="p">]</span>
-</span><span id="__span-0-946"><a id="__codelineno-0-946" name="__codelineno-0-946"></a>        <span class="k">return</span> <span class="n">orders</span>
+<span class="normal"><a href="#__codelineno-0-946">946</a></span>
+<span class="normal"><a href="#__codelineno-0-947">947</a></span>
+<span class="normal"><a href="#__codelineno-0-948">948</a></span>
+<span class="normal"><a href="#__codelineno-0-949">949</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-921"><a id="__codelineno-0-921" name="__codelineno-0-921"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_orders</span><span class="p">(</span>
+</span><span id="__span-0-922"><a id="__codelineno-0-922" name="__codelineno-0-922"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="__span-0-923"><a id="__codelineno-0-923" name="__codelineno-0-923"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RapidataOrder</span><span class="p">]:</span>
+</span><span id="__span-0-924"><a id="__codelineno-0-924" name="__codelineno-0-924"></a><span class="w">    </span><span class="sd">"""Find your recent orders given criteria. If nothing is provided, it will return the most recent order.</span>
+</span><span id="__span-0-925"><a id="__codelineno-0-925" name="__codelineno-0-925"></a>
+</span><span id="__span-0-926"><a id="__codelineno-0-926" name="__codelineno-0-926"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-927"><a id="__codelineno-0-927" name="__codelineno-0-927"></a><span class="sd">        name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.</span>
+</span><span id="__span-0-928"><a id="__codelineno-0-928" name="__codelineno-0-928"></a><span class="sd">        amount (int, optional): The amount of orders to return. Defaults to 10.</span>
+</span><span id="__span-0-929"><a id="__codelineno-0-929" name="__codelineno-0-929"></a><span class="sd">        page (int, optional): The page of orders to return. Defaults to 1.</span>
+</span><span id="__span-0-930"><a id="__codelineno-0-930" name="__codelineno-0-930"></a>
+</span><span id="__span-0-931"><a id="__codelineno-0-931" name="__codelineno-0-931"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-932"><a id="__codelineno-0-932" name="__codelineno-0-932"></a><span class="sd">        list[RapidataOrder]: A list of RapidataOrder instances.</span>
+</span><span id="__span-0-933"><a id="__codelineno-0-933" name="__codelineno-0-933"></a><span class="sd">    """</span>
+</span><span id="__span-0-934"><a id="__codelineno-0-934" name="__codelineno-0-934"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"RapidataOrderManager.find_orders"</span><span class="p">):</span>
+</span><span id="__span-0-935"><a id="__codelineno-0-935" name="__codelineno-0-935"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.campaigns_get_id_parameter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-936"><a id="__codelineno-0-936" name="__codelineno-0-936"></a>            <span class="n">CampaignsGetIdParameter</span><span class="p">,</span>
+</span><span id="__span-0-937"><a id="__codelineno-0-937" name="__codelineno-0-937"></a>        <span class="p">)</span>
+</span><span id="__span-0-938"><a id="__codelineno-0-938" name="__codelineno-0-938"></a>
+</span><span id="__span-0-939"><a id="__codelineno-0-939" name="__codelineno-0-939"></a>        <span class="n">order_page_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__openapi_service</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">order_api</span><span class="o">.</span><span class="n">orders_get</span><span class="p">(</span>
+</span><span id="__span-0-940"><a id="__codelineno-0-940" name="__codelineno-0-940"></a>            <span class="n">page</span><span class="o">=</span><span class="n">page</span><span class="p">,</span>
+</span><span id="__span-0-941"><a id="__codelineno-0-941" name="__codelineno-0-941"></a>            <span class="n">page_size</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+</span><span id="__span-0-942"><a id="__codelineno-0-942" name="__codelineno-0-942"></a>            <span class="n">order_name</span><span class="o">=</span><span class="n">CampaignsGetIdParameter</span><span class="p">(</span><span class="n">contains</span><span class="o">=</span><span class="n">name</span><span class="p">),</span>
+</span><span id="__span-0-943"><a id="__codelineno-0-943" name="__codelineno-0-943"></a>            <span class="n">sort</span><span class="o">=</span><span class="p">[</span><span class="s2">"-order_date"</span><span class="p">],</span>
+</span><span id="__span-0-944"><a id="__codelineno-0-944" name="__codelineno-0-944"></a>        <span class="p">)</span>
+</span><span id="__span-0-945"><a id="__codelineno-0-945" name="__codelineno-0-945"></a>
+</span><span id="__span-0-946"><a id="__codelineno-0-946" name="__codelineno-0-946"></a>        <span class="n">orders</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-0-947"><a id="__codelineno-0-947" name="__codelineno-0-947"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">get_order_by_id</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">order_page_result</span><span class="o">.</span><span class="n">items</span>
+</span><span id="__span-0-948"><a id="__codelineno-0-948" name="__codelineno-0-948"></a>        <span class="p">]</span>
+</span><span id="__span-0-949"><a id="__codelineno-0-949" name="__codelineno-0-949"></a>        <span class="k">return</span> <span class="n">orders</span>
 </span></code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>

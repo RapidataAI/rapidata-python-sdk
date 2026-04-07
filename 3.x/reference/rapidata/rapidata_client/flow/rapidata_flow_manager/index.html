@@ -1623,7 +1623,9 @@ Flows are used to add small flow items that can be solved fast without the order
 
 
 <a href="#rapidata.rapidata_client.flow.rapidata_flow_manager.RapidataFlowManager.find_flows" class="headerlink" title="Permanent link">#</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_flows</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="RapidataFlow (rapidata.rapidata_client.flow.rapidata_flow.RapidataFlow)" href="../rapidata_flow/#rapidata.rapidata_client.flow.rapidata_flow.RapidataFlow">RapidataFlow</a></span><span class="p">]</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_flows</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="RapidataFlow (rapidata.rapidata_client.flow.rapidata_flow.RapidataFlow)" href="../rapidata_flow/#rapidata.rapidata_client.flow.rapidata_flow.RapidataFlow">RapidataFlow</a></span><span class="p">]</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1644,6 +1646,22 @@ Flows are used to add small flow items that can be solved fast without the order
       <tbody>
           <tr class="doc-section-item">
             <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the flow - matching flow will contain the name. Defaults to "" for any flow.</p>
+              </div>
+            </td>
+            <td>
+                  <code>''</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>amount</code>
             </td>
             <td>
@@ -1656,6 +1674,22 @@ Flows are used to add small flow items that can be solved fast without the order
             </td>
             <td>
                   <code>10</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>page</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The page of flows to return. Defaults to 1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1</code>
             </td>
           </tr>
       </tbody>
@@ -1710,30 +1744,54 @@ Flows are used to add small flow items that can be solved fast without the order
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
 <span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_flows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RapidataFlow</span><span class="p">]:</span>
-</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="w">    </span><span class="sd">"""Find your recent flows.</span>
-</span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107"></a>
-</span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">    Args:</span>
-</span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">        amount: The maximum number of flows to return. Defaults to 10.</span>
-</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a>
-</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">        list[RapidataFlow]: A list of RapidataFlow instances.</span>
-</span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="sd">    """</span>
-</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"RapidataFlowManager.find_flows"</span><span class="p">):</span>
-</span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.rapidata_client.flow.rapidata_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataFlow</span>
-</span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116"></a>
-</span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Finding flows, amount: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
-</span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118"></a>
-</span><span id="__span-0-119"><a id="__codelineno-0-119" name="__codelineno-0-119"></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">flow_api</span><span class="o">.</span><span class="n">flow_get</span><span class="p">()</span>
-</span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120"></a>
-</span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="k">return</span> <span class="p">[</span>
-</span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122"></a>            <span class="n">RapidataFlow</span><span class="p">(</span>
-</span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123"></a>                <span class="nb">id</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-</span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124"></a>                <span class="n">name</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125"></a>                <span class="n">openapi_service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="p">,</span>
-</span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126"></a>            <span class="p">)</span>
-</span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="k">for</span> <span class="n">flow</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">items</span><span class="p">[:</span><span class="n">amount</span><span class="p">]</span>
-</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">]</span>
+<span class="normal"><a href="#__codelineno-0-128">128</a></span>
+<span class="normal"><a href="#__codelineno-0-129">129</a></span>
+<span class="normal"><a href="#__codelineno-0-130">130</a></span>
+<span class="normal"><a href="#__codelineno-0-131">131</a></span>
+<span class="normal"><a href="#__codelineno-0-132">132</a></span>
+<span class="normal"><a href="#__codelineno-0-133">133</a></span>
+<span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
+<span class="normal"><a href="#__codelineno-0-137">137</a></span>
+<span class="normal"><a href="#__codelineno-0-138">138</a></span>
+<span class="normal"><a href="#__codelineno-0-139">139</a></span>
+<span class="normal"><a href="#__codelineno-0-140">140</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_flows</span><span class="p">(</span>
+</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RapidataFlow</span><span class="p">]:</span>
+</span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="w">    </span><span class="sd">"""Find your recent flows.</span>
+</span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109"></a>
+</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">        name: The name of the flow - matching flow will contain the name. Defaults to "" for any flow.</span>
+</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">        amount: The maximum number of flows to return. Defaults to 10.</span>
+</span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="sd">        page: The page of flows to return. Defaults to 1.</span>
+</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114"></a>
+</span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="sd">        list[RapidataFlow]: A list of RapidataFlow instances.</span>
+</span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">    """</span>
+</span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"RapidataFlowManager.find_flows"</span><span class="p">):</span>
+</span><span id="__span-0-119"><a id="__codelineno-0-119" name="__codelineno-0-119"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.campaigns_get_id_parameter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120"></a>            <span class="n">CampaignsGetIdParameter</span><span class="p">,</span>
+</span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="p">)</span>
+</span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.rapidata_client.flow.rapidata_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataFlow</span>
+</span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123"></a>
+</span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Finding flows, amount: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125"></a>
+</span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">flow_api</span><span class="o">.</span><span class="n">flow_get</span><span class="p">(</span>
+</span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="n">page</span><span class="o">=</span><span class="n">page</span><span class="p">,</span>
+</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128"></a>            <span class="n">page_size</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+</span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129"></a>            <span class="n">sort</span><span class="o">=</span><span class="p">[</span><span class="s2">"-created_at"</span><span class="p">],</span>
+</span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130"></a>            <span class="n">name</span><span class="o">=</span><span class="n">CampaignsGetIdParameter</span><span class="p">(</span><span class="n">contains</span><span class="o">=</span><span class="n">name</span><span class="p">),</span>
+</span><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="p">)</span>
+</span><span id="__span-0-132"><a id="__codelineno-0-132" name="__codelineno-0-132"></a>
+</span><span id="__span-0-133"><a id="__codelineno-0-133" name="__codelineno-0-133"></a>        <span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-0-134"><a id="__codelineno-0-134" name="__codelineno-0-134"></a>            <span class="n">RapidataFlow</span><span class="p">(</span>
+</span><span id="__span-0-135"><a id="__codelineno-0-135" name="__codelineno-0-135"></a>                <span class="nb">id</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-0-136"><a id="__codelineno-0-136" name="__codelineno-0-136"></a>                <span class="n">name</span><span class="o">=</span><span class="n">flow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137"></a>                <span class="n">openapi_service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="p">,</span>
+</span><span id="__span-0-138"><a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="p">)</span>
+</span><span id="__span-0-139"><a id="__codelineno-0-139" name="__codelineno-0-139"></a>            <span class="k">for</span> <span class="n">flow</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">items</span>
+</span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140"></a>        <span class="p">]</span>
 </span></code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
