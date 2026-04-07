@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.aggregator_type import AggregatorType
-from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_referee_model import IRefereeModel
 from rapidata.api_client.models.i_selection import ISelection
@@ -39,7 +39,7 @@ class CreateOrderModel(BaseModel):
     workflow: IOrderWorkflowModel = Field(description="The workflow helps to determine the tasks that need to be completed by the users.")
     referee: IRefereeModel = Field(description="The referee is used to determine how many votes will be collected.")
     aggregator: Optional[AggregatorType] = None
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
     sticky_state: Optional[StickyState] = Field(default=None, alias="stickyState")
     sticky_config: Optional[StickyConfig] = Field(default=None, description="Configuration for sticky campaign behavior. Takes precedence over StickyState if both are provided.", alias="stickyConfig")
@@ -188,7 +188,7 @@ class CreateOrderModel(BaseModel):
             "workflow": IOrderWorkflowModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "aggregator": obj.get("aggregator"),
-            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
             "stickyState": obj.get("stickyState"),
             "stickyConfig": StickyConfig.from_dict(obj["stickyConfig"]) if obj.get("stickyConfig") is not None else None,

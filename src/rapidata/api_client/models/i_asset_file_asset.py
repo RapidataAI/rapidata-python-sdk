@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.i_metadata import IMetadata
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,7 @@ class IAssetFileAsset(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     file_name: StrictStr = Field(alias="fileName")
-    metadata: Optional[Dict[str, IMetadata]] = None
+    metadata: Dict[str, IMetadata]
     __properties: ClassVar[List[str]] = ["_t", "fileName", "metadata"]
 
     @field_validator('t')

@@ -1552,10 +1552,15 @@
             "type": "string"
           },
           "possibleCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "deprecated": true
           },
           "categories": {
             "type": "array",
@@ -2348,6 +2353,10 @@
           "totalBudget": {
             "type": "integer",
             "format": "int32"
+          },
+          "totalServeBudget": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -2531,7 +2540,12 @@
             "nullable": true
           },
           "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EloConfig"
+              }
+            ],
+            "deprecated": true
           },
           "rankingConfig": {
             "oneOf": [
@@ -2584,7 +2598,12 @@
             "type": "string"
           },
           "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EloConfig"
+              }
+            ],
+            "deprecated": true
           },
           "rankingConfig": {
             "oneOf": [

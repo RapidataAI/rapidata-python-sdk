@@ -27,7 +27,7 @@ class IMetadataCountMetadata(BaseModel):
     IMetadataCountMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    count: StrictInt
+    count: Optional[StrictInt] = None
     visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "count", "visibilities"]
 
