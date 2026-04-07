@@ -50,7 +50,7 @@ class ValidationRapidUploader:
                 randomCorrectProbability=rapid.random_correct_probability,
                 explanation=rapid.explanation,
                 featureFlags=(
-                    [setting._to_feature_flag_model() for setting in rapid.settings]
+                    [setting._to_feature_flag() for setting in rapid.settings]
                     if rapid.settings
                     else None
                 ),

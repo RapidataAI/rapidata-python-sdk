@@ -108,7 +108,7 @@ class RapidataOrderBuilder:
             referee=self._referee._to_model(),
             validationSetId=validation_set_id,
             featureFlags=(
-                [setting._to_feature_flag_model() for setting in self._settings]
+                [setting._to_feature_flag() for setting in self._settings]
                 if self._settings is not None
                 else None
             ),

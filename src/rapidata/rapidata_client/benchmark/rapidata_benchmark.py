@@ -403,7 +403,7 @@ class RapidataBenchmark:
                             else None
                         ),
                         featureFlags=(
-                            [setting._to_feature_flag_model() for setting in settings]
+                            [setting._to_feature_flag() for setting in settings]
                             if settings
                             else None
                         ),
