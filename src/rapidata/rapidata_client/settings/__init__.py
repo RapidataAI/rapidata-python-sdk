@@ -3,7 +3,7 @@ from .alert_on_fast_response import AlertOnFastResponseSetting, AlertOnFastRespo
 from .translation_behaviour import TranslationBehaviourSetting, TranslationBehaviour
 from .free_text_minimum_characters import FreeTextMinimumCharactersSetting, FreeTextMinimumCharacters
 from .no_shuffle import NoShuffleSetting, NoShuffle
-from .play_video_until_the_end import PlayVideoUntilTheEndSetting, PlayVideoUntilTheEnd
+from .play_percentage_video import PlayPercentageVideoSetting
 from .custom_setting import CustomSetting
 from ._rapidata_setting import RapidataSetting
 from .allow_neither_both import AllowNeitherBothSetting, AllowNeitherBoth

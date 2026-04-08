@@ -63,9 +63,7 @@ from rapidata.rapidata_client.settings.free_text_minimum_characters import (
     FreeTextMinimumCharactersSetting, FreeTextMinimumCharacters,
 )
 from rapidata.rapidata_client.settings.no_shuffle import NoShuffleSetting, NoShuffle
-from rapidata.rapidata_client.settings.play_video_until_the_end import (
-    PlayVideoUntilTheEndSetting, PlayVideoUntilTheEnd,
-)
+from rapidata.rapidata_client.settings.play_percentage_video import PlayPercentageVideoSetting
 from rapidata.rapidata_client.settings.markdown import MarkdownSetting, Markdown
 from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings
 from rapidata.rapidata_client.settings.translation_behaviour import TranslationBehaviourSetting, TranslationBehaviour
@@ -139,8 +137,7 @@ __all__ = [
     "FreeTextMinimumCharacters",
     "NoShuffleSetting",
     "NoShuffle",
-    "PlayVideoUntilTheEndSetting",
-    "PlayVideoUntilTheEnd",
+    "PlayPercentageVideoSetting",
     "MarkdownSetting",
     "Markdown",
     "RapidataSettings",

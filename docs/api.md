@@ -35,7 +35,7 @@ classDiagram
         +TranslationBehaviour
         +FreeTextMinimumCharacters
         +NoShuffle
-        +PlayVideoUntilTheEnd
+        +PlayPercentageVideo
         +AllowNeitherBoth
         +SwapContextInstruction
         +MuteVideo
