@@ -1109,22 +1109,6 @@
           }
         }
       },
-      "CreateFlowEndpoint_AudienceBoostInput": {
-        "required": [
-          "audienceId",
-          "level"
-        ],
-        "type": "object",
-        "properties": {
-          "audienceId": {
-            "type": "string"
-          },
-          "level": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "CreateFlowEndpoint_Input": {
         "required": [
           "name",
@@ -1242,23 +1226,6 @@
             "type": "integer",
             "description": "Duration in seconds for draining flow items. Defaults to 40.",
             "format": "int32"
-          },
-          "globalBoostLevel": {
-            "type": "integer",
-            "description": "Global boost level for the flow campaign. Defaults to 1.",
-            "format": "int32"
-          },
-          "audienceBoosts": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/CreateFlowEndpoint_AudienceBoostInput"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "Audience-specific boost levels."
           }
         }
       },
@@ -1833,9 +1800,6 @@
           "serveTimeoutSeconds",
           "drainDurationSeconds",
           "serveToResponseRatio",
-          "globalBoostLevel",
-          "audienceBoosts",
-          "audienceId",
           "criteria",
           "startingElo",
           "minResponses",
@@ -1925,15 +1889,22 @@
           "globalBoostLevel": {
             "type": "integer",
             "description": "Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.",
-            "format": "int32"
+            "format": "int32",
+            "deprecated": true
           },
           "audienceBoosts": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/AudienceBoostModel2"
-                }
+                "allOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/AudienceBoostModel2"
+                    },
+                    "nullable": true
+                  }
+                ],
+                "deprecated": true
               }
             ],
             "description": "Audience-specific boost levels that override the global boost for targeted demographics."
@@ -1941,7 +1912,8 @@
           "audienceId": {
             "type": "string",
             "description": "Optional audience ID. When provided, the flow will only serve items to users in this audience.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "criteria": {
             "type": "string",
@@ -2454,24 +2426,6 @@
           }
         }
       },
-      "UpdateConfigEndpoint_AudienceBoostInput": {
-        "required": [
-          "audienceId",
-          "level"
-        ],
-        "type": "object",
-        "properties": {
-          "audienceId": {
-            "type": "string",
-            "description": "The platform audience ID (e.g., aud_xxx)."
-          },
-          "level": {
-            "type": "integer",
-            "description": "The boost level for this audience.",
-            "format": "int32"
-          }
-        }
-      },
       "UpdateConfigEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -2585,26 +2539,6 @@
               "PerBatchTimeWeighted"
             ],
             "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count."
-          },
-          "globalBoostLevel": {
-            "type": "integer",
-            "description": "Global boost level for the flow campaign.",
-            "format": "int32",
-            "nullable": true
-          },
-          "audienceBoosts": {
-            "oneOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/UpdateConfigEndpoint_AudienceBoostInput"
-                }
-              },
-              {
-                "nullable": true
-              }
-            ],
-            "description": "Audience-specific boost levels."
           }
         }
       },

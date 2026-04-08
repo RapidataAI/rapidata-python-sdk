@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.create_flow_endpoint_audience_boost_input import CreateFlowEndpointAudienceBoostInput
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.pid_batch_mode import PidBatchMode
 from typing import Optional, Set
@@ -49,9 +48,7 @@ class CreateFlowEndpointInput(BaseModel):
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 10000.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[PidBatchMode] = Field(default=None, alias="pidBatchMode")
     drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
-    global_boost_level: Optional[StrictInt] = Field(default=None, description="Global boost level for the flow campaign. Defaults to 1.", alias="globalBoostLevel")
-    audience_boosts: Optional[List[CreateFlowEndpointAudienceBoostInput]] = Field(default=None, alias="audienceBoosts")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds", "globalBoostLevel", "audienceBoosts"]
+    __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -99,13 +96,6 @@ class CreateFlowEndpointInput(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in audience_boosts (list)
-        _items = []
-        if self.audience_boosts:
-            for _item_audience_boosts in self.audience_boosts:
-                if _item_audience_boosts:
-                    _items.append(_item_audience_boosts.to_dict())
-            _dict['audienceBoosts'] = _items
         # set to None if audience_id (nullable) is None
         # and model_fields_set contains the field
         if self.audience_id is None and "audience_id" in self.model_fields_set:
@@ -125,11 +115,6 @@ class CreateFlowEndpointInput(BaseModel):
         # and model_fields_set contains the field
         if self.pid_batch_mode is None and "pid_batch_mode" in self.model_fields_set:
             _dict['pidBatchMode'] = None
-
-        # set to None if audience_boosts (nullable) is None
-        # and model_fields_set contains the field
-        if self.audience_boosts is None and "audience_boosts" in self.model_fields_set:
-            _dict['audienceBoosts'] = None
 
         return _dict
 
@@ -162,9 +147,7 @@ class CreateFlowEndpointInput(BaseModel):
             "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
             "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
             "pidBatchMode": obj.get("pidBatchMode"),
-            "drainDurationSeconds": obj.get("drainDurationSeconds"),
-            "globalBoostLevel": obj.get("globalBoostLevel"),
-            "audienceBoosts": [CreateFlowEndpointAudienceBoostInput.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None
+            "drainDurationSeconds": obj.get("drainDurationSeconds")
         })
         return _obj
 
