@@ -100,7 +100,10 @@ class RapidataDataset:
             executor,
         )
 
-        # 4. Collect and return results
+        # 4. Create dataset groups for datapoints that have group info
+        self._create_dataset_groups(datapoints)
+
+        # 5. Collect and return results
         return self._collect_and_return_results(
             datapoints, creation_futures, datapoint_pending_count, lock
         )
@@ -408,6 +411,41 @@ class RapidataDataset:
             f"Datapoint creation complete: {len(successful_uploads)} succeeded, {len(failed_uploads)} failed"
         )
         return successful_uploads, failed_uploads
+
+    def _create_dataset_groups(self, datapoints: list[Datapoint]) -> None:
+        """Create dataset groups from datapoints that have a group field."""
+        from rapidata.api_client.models.create_dataset_group_endpoint_input import (
+            CreateDatasetGroupEndpointInput,
+        )
+
+        # Collect unique groups (first occurrence per group wins for context)
+        groups: dict[str, tuple[str | None, str | None]] = {}
+        for dp in datapoints:
+            if dp.group is not None and dp.group not in groups:
+                groups[dp.group] = (dp.context, dp.media_context)
+
+        if not groups:
+            return
+
+        asset_uploader = self.datapoint_uploader.asset_uploader
+        asset_mapper = self.datapoint_uploader.asset_mapper
+
+        for group_id, (context, media_context) in groups.items():
+            context_asset = None
+            if media_context is not None:
+                uploaded_name = asset_uploader.upload_asset(media_context)
+                context_asset = asset_mapper.create_existing_asset_input(uploaded_name)
+
+            self.openapi_service.dataset.dataset_group_api.dataset_dataset_id_group_post(
+                dataset_id=self.id,
+                create_dataset_group_endpoint_input=CreateDatasetGroupEndpointInput(
+                    group=group_id,
+                    context=context,
+                    contextAsset=context_asset,
+                ),
+            )
+
+        logger.info(f"Created {len(groups)} dataset group(s)")
 
     def __str__(self) -> str:
         return f"RapidataDataset(id={self.id})"

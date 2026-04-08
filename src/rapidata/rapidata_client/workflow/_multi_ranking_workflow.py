@@ -9,7 +9,6 @@ from rapidata.api_client.models.i_rapid_payload_compare_payload import (
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
-from rapidata.api_client.models.i_asset_input import IAssetInput
 
 
 class MultiRankingWorkflow(Workflow):
@@ -23,8 +22,6 @@ class MultiRankingWorkflow(Workflow):
         elo_start: int = 1200,
         elo_k_factor: int = 40,
         elo_scaling_factor: int = 400,
-        contexts: dict[str, str] | None = None,
-        media_contexts: dict[str, IAssetInput] | None = None,
     ):
         from rapidata.api_client.models.i_pair_maker_config_model import (
             IPairMakerConfigModel,
@@ -35,9 +32,6 @@ class MultiRankingWorkflow(Workflow):
         from rapidata.api_client.models.elo_config_model import EloConfigModel
 
         super().__init__(type="CompareWorkflowConfig")
-
-        self.contexts = contexts
-        self.media_contexts = media_contexts
 
         self.instruction = instruction
         self.comparison_budget_per_ranking = comparison_budget_per_ranking
@@ -67,8 +61,6 @@ class MultiRankingWorkflow(Workflow):
                 criteria=self.instruction,
                 eloConfig=self.elo_config,
                 pairMakerConfig=self.pair_maker_config,
-                contexts=self.contexts,
-                contextAssets=self.media_contexts,
             )
         )
 

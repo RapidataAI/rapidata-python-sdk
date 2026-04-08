@@ -41,7 +41,8 @@ def extract_assets_from_datapoint(datapoint: Datapoint) -> set[str]:
             assets.add(datapoint.asset)
 
     # media_context is always a media asset regardless of data_type
-    if datapoint.media_context:
+    # Skip for grouped datapoints — their context is uploaded at group level
+    if datapoint.media_context and datapoint.group is None:
         assets.add(datapoint.media_context)
 
     return assets

@@ -343,10 +343,6 @@ class RapidataJobManager:
                 )
 
             from rapidata.rapidata_client.workflow import MultiRankingWorkflow
-            from rapidata.api_client.models.i_asset_input import IAssetInput
-            from rapidata.api_client.models.i_asset_input_existing_asset_input import (
-                IAssetInputExistingAssetInput,
-            )
 
             datapoints_instances = []
             for i, datapoint in enumerate(datapoints):
@@ -361,34 +357,12 @@ class RapidataJobManager:
                         )
                     )
 
-            contexts_dict = (
-                {str(i): context for i, context in enumerate(contexts)}
-                if contexts
-                else None
-            )
-
-            media_contexts_dict = (
-                {
-                    str(i): IAssetInput(
-                        actual_instance=IAssetInputExistingAssetInput(
-                            _t="ExistingAssetInput",
-                            name=self._asset_uploader.upload_asset(media_context),
-                        )
-                    )
-                    for i, media_context in enumerate(media_contexts)
-                }
-                if media_contexts
-                else None
-            )
-
             return self._create_general_job_definition(
                 name=name,
                 workflow=MultiRankingWorkflow(
                     instruction=instruction,
                     comparison_budget_per_ranking=comparison_budget_per_ranking,
                     random_comparisons_ratio=random_comparisons_ratio,
-                    contexts=contexts_dict,
-                    media_contexts=media_contexts_dict,
                 ),
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,
