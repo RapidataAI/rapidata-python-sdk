@@ -1,4 +1,4 @@
-site_name: Rapidata Python SDK Documentation
+site_name: Rapidata Python SDK
 site_url: https://docs.rapidata.ai/
 repo_url: https://github.com/RapidataAI/rapidata-python-sdk
 repo_name: rapidata-python-sdk
@@ -7,6 +7,7 @@ extra_javascript:
   - js/login.js
   - js/ai-copy-button.js
 extra_css:
+  - https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap
   - stylesheets/extra.css
 
 hooks:
@@ -135,8 +136,8 @@ theme:
   name: material
   logo: media/rapidata.svg
   favicon: media/rapidata.svg
+  font: false
   palette:
-    # Palette toggle for dark mode (default)
     - scheme: slate
       primary: black
 
@@ -145,12 +146,15 @@ theme:
 
   features:
     - content.code.copy
+    - navigation.instant
+    - navigation.instant.progress
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
     - navigation.indexes
+    - navigation.path
     - toc.follow
     - search.share
     - search.suggest
