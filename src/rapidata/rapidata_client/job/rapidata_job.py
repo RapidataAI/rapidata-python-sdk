@@ -283,6 +283,14 @@ class RapidataJob:
         except Exception:
             return None
 
+    def delete(self) -> None:
+        """Deletes the job."""
+        with tracer.start_as_current_span("RapidataJob.delete"):
+            logger.info("Deleting job '%s'", self)
+            self._openapi_service.order.job_api.job_job_id_delete(self.id)
+            logger.debug("Job '%s' has been deleted.", self)
+            managed_print(f"Job '{self}' has been deleted.")
+
     def view(self) -> None:
         """Opens the job details page in the browser."""
         logger.info("Opening job details page in browser...")

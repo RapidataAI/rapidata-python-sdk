@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
-from rapidata.rapidata_client.config import logger, tracer, rapidata_config
+from rapidata.rapidata_client.config import logger, tracer, managed_print
 from rapidata.rapidata_client.audience.audience_example_handler import (
     AudienceExampleHandler,
 )
@@ -51,6 +51,16 @@ class RapidataAudience:
     def filters(self) -> list[RapidataFilter]:
         """The list of filters applied to the audience."""
         return self._filters
+
+    def delete(self) -> None:
+        """Deletes the audience."""
+        with tracer.start_as_current_span("RapidataAudience.delete"):
+            logger.info("Deleting audience '%s'", self)
+            self._openapi_service.audience.audience_api.audience_audience_id_delete(
+                self.id
+            )
+            logger.debug("Audience '%s' has been deleted.", self)
+            managed_print(f"Audience '{self}' has been deleted.")
 
     def update_filters(self, filters: list[RapidataFilter]) -> RapidataAudience:
         """Update the filters for this audience.
