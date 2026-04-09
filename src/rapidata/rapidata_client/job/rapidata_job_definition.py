@@ -39,6 +39,16 @@ class RapidataJobDefinition:
             )
         return self
 
+    def delete(self) -> None:
+        """Deletes the job definition and all its revisions."""
+        with tracer.start_as_current_span("RapidataJobDefinition.delete"):
+            logger.info("Deleting job definition '%s'", self)
+            self._openapi_service.order.job_api.job_definition_definition_id_delete(
+                self.id
+            )
+            logger.debug("Job definition '%s' has been deleted.", self)
+            managed_print(f"Job definition '{self}' has been deleted.")
+
     def update_dataset(
         self,
         datapoints: list[str] | list[list[str]],

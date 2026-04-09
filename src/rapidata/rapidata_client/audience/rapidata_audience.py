@@ -52,6 +52,18 @@ class RapidataAudience:
         """The list of filters applied to the audience."""
         return self._filters
 
+    def delete(self) -> None:
+        """Deletes the audience."""
+        with tracer.start_as_current_span("RapidataAudience.delete"):
+            from rapidata.rapidata_client.config import managed_print
+
+            logger.info("Deleting audience '%s'", self)
+            self._openapi_service.audience.audience_api.audience_audience_id_delete(
+                self.id
+            )
+            logger.debug("Audience '%s' has been deleted.", self)
+            managed_print(f"Audience '{self}' has been deleted.")
+
     def update_filters(self, filters: list[RapidataFilter]) -> RapidataAudience:
         """Update the filters for this audience.
 
