@@ -79,7 +79,7 @@ plugins:
       enable_llms_txt: true
       enable_llms_full: true
       enable_copy_button: true
-      copy_button_text: "📋"
+      copy_button_text: "Copy for AI"
 
 extra:
   version:
@@ -109,26 +109,27 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-    - "🏠 Guides":
-      - "👀 Overview": starting_page.md
-      - "🚀 Quick Start": quickstart.md
-      - "👥 Custom Audiences": audiences.md
-      - "📖 Parameter Reference": job_definition_parameters.md
-      - "📊 Understanding Results": understanding_the_results.md
-      - "❌ Error Handling": error_handling.md
-      - "🛑 Confidence Stopping": confidence_stopping.md
-      - "💡 Human Prompting": human_prompting.md
-      - "📝 Logging & Config": config.md
-    - "📋 Job Examples":
-      - "🏷️ Classification": examples/classify_job.md
-      - "⚖️ Compare": examples/compare_job.md
-    - "📈 Benchmarks":
-      - "🧠 Model Ranking Insights": mri.md
-      - "🔭 Model Ranking Insights Advanced": mri_advanced.md
-    - "♻️ Flows":
-      - "Overview": flows.md
-    - "🤖 Claude Code Plugin": claude_code.md
-    - "🔄 Migration Guide": migration_guide.md
+    - Guides:
+      - Overview: starting_page.md
+      - Quick Start: quickstart.md
+      - Custom Audiences: audiences.md
+      - Parameter Reference: job_definition_parameters.md
+      - Understanding Results: understanding_the_results.md
+      - Error Handling: error_handling.md
+      - Early Stopping: confidence_stopping.md
+      - Instruction Design: human_prompting.md
+      - Logging & Config: config.md
+    - Examples:
+      - Classification: examples/classify_job.md
+      - Comparison: examples/compare_job.md
+    - Ranking Flows:
+      - Overview: flows.md
+    - Model Ranking:
+      - Getting Started: mri.md
+      - Advanced Features: mri_advanced.md
+    - Resources:
+      - Claude Code Plugin: claude_code.md
+      - Migration Guide: migration_guide.md
 
 theme:
   name: material
@@ -144,7 +145,6 @@ theme:
 
   features:
     - content.code.copy
-    - navigation.expand
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
@@ -152,6 +152,5 @@ theme:
     - navigation.tracking
     - navigation.indexes
     - toc.follow
-    - toc.integrate
     - search.share
     - search.suggest

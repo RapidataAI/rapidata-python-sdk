@@ -5,7 +5,7 @@
 
 /* Ensure tab content has space from the tab labels */
 .tabbed-set>input:checked+label+.tabbed-content {
-    padding-top: 100.5rem;
+    padding-top: 0.5rem;
 }
 
 .login-button {
@@ -65,17 +65,13 @@
 
 .md-nav__link:hover {
     background-color: var(--md-accent-fg-color--transparent);
-    transform: translateX(4px);
 }
 
 
 
 /* Navigation sections */
 .md-nav--secondary .md-nav__title {
-    background: linear-gradient(135deg, var(--md-primary-fg-color), var(--md-accent-fg-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--md-default-fg-color);
 }
 
 /* Collapsible sections styling */
