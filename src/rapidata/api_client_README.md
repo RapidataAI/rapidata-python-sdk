@@ -120,6 +120,7 @@ Class | Method | HTTP request | Description
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
 *CampaignApi* | [**campaign_boost_global_level_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_global_level_put) | **PUT** /campaign/boost/global-level | Sets or clears the manual global boost level.
 *CampaignApi* | [**campaign_boost_insights_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_insights_get) | **GET** /campaign/boost/insights | Returns an attributed view of the aggregated boosting profile.
+*CampaignApi* | [**campaign_boost_preheat_post**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_preheat_post) | **POST** /campaign/boost/preheat | 
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Returns the current boost status including active and inactive campaigns.
 *CampaignApi* | [**campaign_campaign_id_get**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_get) | **GET** /campaign/{campaignId} | Retrieves the details of a specific campaign.
 *CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates the specified campaign&#39;s properties.
@@ -706,7 +707,6 @@ Class | Method | HTTP request | Description
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
- - [PageInfo](rapidata/api_client/docs/PageInfo.md)
  - [PagedResultOfBenchmarkQueryResult](rapidata/api_client/docs/PagedResultOfBenchmarkQueryResult.md)
  - [PagedResultOfClientsQueryResult](rapidata/api_client/docs/PagedResultOfClientsQueryResult.md)
  - [PagedResultOfGetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/PagedResultOfGetGroupedRankingWorkflowResultsResult.md)
@@ -729,6 +729,7 @@ Class | Method | HTTP request | Description
  - [PagedResultOfSampleByIdentifier](rapidata/api_client/docs/PagedResultOfSampleByIdentifier.md)
  - [PagedResultOfStandingByLeaderboard](rapidata/api_client/docs/PagedResultOfStandingByLeaderboard.md)
  - [PagedResultOfValidationSetModel](rapidata/api_client/docs/PagedResultOfValidationSetModel.md)
+ - [Pagination](rapidata/api_client/docs/Pagination.md)
  - [ParticipantByBenchmark](rapidata/api_client/docs/ParticipantByBenchmark.md)
  - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
  - [PidBatchMode](rapidata/api_client/docs/PidBatchMode.md)
@@ -784,6 +785,7 @@ Class | Method | HTTP request | Description
  - [SendSurveyModel](rapidata/api_client/docs/SendSurveyModel.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
+ - [SortCriteria](rapidata/api_client/docs/SortCriteria.md)
  - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
  - [StandingByBenchmark](rapidata/api_client/docs/StandingByBenchmark.md)

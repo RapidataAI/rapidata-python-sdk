@@ -91,6 +91,11 @@ class Filter(BaseModel):
         if self.value is None and "value" in self.model_fields_set:
             _dict['value'] = None
 
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
         return _dict
 
     @classmethod

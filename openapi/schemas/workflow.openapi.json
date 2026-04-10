@@ -582,7 +582,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Filter"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -626,7 +627,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -646,11 +647,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -687,7 +684,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -695,11 +692,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -828,7 +821,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -848,11 +841,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -2859,7 +2848,7 @@
           }
         }
       },
-      "PageInfo": {
+      "Pagination": {
         "type": "object",
         "properties": {
           "index": {
@@ -2912,7 +2901,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ]
           },
@@ -2947,6 +2936,9 @@
         ]
       },
       "RootFilter": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "filters": {
@@ -2960,10 +2952,21 @@
           }
         }
       },
+      "SortCriteria": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
+          }
+        }
+      },
       "SortCriterion": {
         "required": [
-          "propertyName",
-          "direction"
+          "propertyName"
         ],
         "type": "object",
         "properties": {
