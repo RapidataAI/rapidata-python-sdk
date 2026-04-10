@@ -27,8 +27,10 @@ A **custom audience** filters labelers through qualification examples before the
 from rapidata import RapidataClient
 
 client = RapidataClient()
-audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
+audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
 ```
+
+1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next.
 
 ### Step 2: Add Qualification Examples
 
@@ -62,20 +64,18 @@ PROMPTS = [
 for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
     audience.add_compare_example(
         instruction="Which image follows the prompt more accurately?",
-        datapoint=datapoint,
-        truth=datapoint[0],
-        context=prompt
+        datapoint=datapoint, # (1)!
+        truth=datapoint[0], # (2)!
+        context=prompt # (3)!
     )
 ```
+
+1. The items to compare — a list of URLs, local paths, or text strings.
+2. The correct answer — must match one of the datapoint items exactly.
+3. Additional context shown alongside the comparison (optional).
+
 !!! note
     In practice you'd want to add more examples to the audience to improve the quality of the results.
-
-**Parameters:**
-
-- `instruction`: The question shown to labelers
-- `datapoint`: The items to compare (list of URLs, local paths or text)
-- `truth`: The correct answer (must match one of the datapoint items exactly)
-- `context`: Additional context shown alongside the comparison (optional)
 
 ### Step 3: Create and Assign a Job
 

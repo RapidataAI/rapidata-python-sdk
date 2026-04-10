@@ -14,10 +14,13 @@ All configuration is managed through the **global** `rapidata_config` object, wh
 ```python
 from rapidata import rapidata_config, logger
 
-logger.info("This will not be shown")
+logger.info("This will not be shown") # (1)!
 rapidata_config.logging.level = "INFO"
-logger.info("This will be shown")
+logger.info("This will be shown") # (2)!
 ```
+
+1. Default level is `WARNING`, so `INFO` messages are suppressed.
+2. After changing the level, `INFO` messages are now visible.
 !!! note
     The logging system is now fully managed through `rapidata_config.logging`. Changes to the configuration are automatically applied to the logger in real-time.
 

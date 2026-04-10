@@ -21,16 +21,17 @@ pip install -U rapidata
 
 All operations are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
 
-Create a client as follows. This will save your credentials in your `~/.config/rapidata/credentials.json` file so you don't have to log in again on that machine:
+Create a client as follows:
 
 ```py
 from rapidata import RapidataClient
 
-# The first time executing it on a machine will require you to log in
-client = RapidataClient()
+client = RapidataClient() # (1)!
 ```
 
-Alternatively you can generate a Client ID and Secret in the [Rapidata Settings](https://app.rapidata.ai/settings/tokens) and pass them to the client constructor:
+1. The first time you run this on a machine, it will open a browser window to log in. Your credentials are saved to `~/.config/rapidata/credentials.json` so you don't have to log in again.
+
+Alternatively, authenticate with a client ID and secret from [Rapidata Settings](https://app.rapidata.ai/settings/tokens):
 
 ```py
 from rapidata import RapidataClient
@@ -39,30 +40,36 @@ client = RapidataClient(client_id="Your client ID", client_secret="Your client s
 
 ### Step 1: Get an Audience
 
-The simplest way to get started is with a curated audience - a pre-existing pool of labelers trained on a specific type of task:
+The simplest way to get started is with a curated audience:
 
 ```py
-audience = client.audience.find_audiences("alignment")[0]
+audience = client.audience.find_audiences("alignment")[0] # (1)!
 ```
+
+1. Curated audiences are pre-existing pools of labelers trained on a specific type of task.
 
 !!! note
     The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
 ### Step 2: Create a Job Definition
 
-A job definition configures what you want labeled. Here we create a compare job to assess image-prompt alignment:
+A job definition configures what you want labeled:
 
 ```py
 job_definition = client.job.create_compare_job_definition(
     name="Example Image Prompt Alignment",
-    instruction="Which image matches the description better?",
-    datapoints=[
+    instruction="Which image matches the description better?", # (1)!
+    datapoints=[ # (2)!
         ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
          "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]
     ],
-    contexts=["A small blue book sitting on a large red book."]
+    contexts=["A small blue book sitting on a large red book."] # (3)!
 )
 ```
+
+1. The instruction shown to labelers. Should be clear and unambiguous.
+2. For compare jobs, each datapoint is a pair of items. Supports URLs, local paths, or text.
+3. Optional text context shown alongside each datapoint (must match the length of `datapoints`).
 
 !!! tip
     If some datapoints fail to upload, a `FailedUploadException` will be raised. Learn how to handle this in the [Error Handling Guide](error_handling.md).
@@ -74,27 +81,21 @@ For a detailed explanation of all available parameters (including name, instruct
 Before running your job, preview it to see exactly what labelers will see:
 
 ```py
-job_definition.preview()
+job_definition.preview() # (1)!
 ```
 
-This opens your browser where you can review and adjust the job configuration.
+1. Opens your browser where you can review and adjust the job configuration.
 
 ### Step 4: Run and Get Results
 
-Assign your job definition to the audience and monitor progress:
-
 ```py
-job = audience.assign_job(job_definition)
+job = audience.assign_job(job_definition) # (1)!
 job.display_progress_bar()
+results = job.get_results() # (2)!
 ```
 
-Once complete, retrieve your results:
-
-```py
-results = job.get_results()
-```
-
-You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
+1. Assigns the job definition to the audience and starts collecting responses.
+2. Blocks until the job is complete and returns the results. You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
 
 To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
 
@@ -146,10 +147,8 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Get the curated alignment audience
 audience = client.audience.find_audiences("alignment")[0]
 
-# Create job definition
 job_definition = client.job.create_compare_job_definition(
     name="Example Image Prompt Alignment",
     instruction="Which image matches the description better?",
@@ -160,15 +159,15 @@ job_definition = client.job.create_compare_job_definition(
     contexts=["A small blue book sitting on a large red book."]
 )
 
-# Preview before running
-job_definition.preview()
+job_definition.preview() # (1)!
 
-# Assign to audience and get results
 job = audience.assign_job(job_definition)
 job.display_progress_bar()
 results = job.get_results()
 print(results)
 ```
+
+1. Optional — opens a browser preview of what labelers will see.
 
 ## Next Steps
 

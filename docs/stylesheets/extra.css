@@ -155,7 +155,25 @@ body {
    Navigation
    ========================================================================== */
 
+/* Dim all nav links, highlight only active */
+.md-nav__link {
+    color: var(--md-default-fg-color--light);
+}
+
+.md-nav__link:hover {
+    color: var(--md-default-fg-color);
+}
+
 .md-nav__link--active {
+    color: var(--color-blue-400);
+}
+
+/* Right TOC: dim all links, highlight only current */
+.md-sidebar--secondary .md-nav__link {
+    color: var(--md-default-fg-color--light);
+}
+
+.md-sidebar--secondary .md-nav__link--active {
     color: var(--color-blue-400);
 }
 

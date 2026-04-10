@@ -66,7 +66,6 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create audience with qualification example
 audience = client.audience.create_audience(name="Animal Classification Audience")
 audience.add_classification_example(
     instruction="What do you see in the image?",
@@ -75,17 +74,15 @@ audience.add_classification_example(
     truth=["Cat"]
 )
 
-# Create job definition with early stopping
 job_definition = client.job.create_classification_job_definition(
     name="Test Classification with Early Stopping",
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
     datapoints=["https://assets.rapidata.ai/dog.jpeg"],
-    responses_per_datapoint=50,
-    confidence_threshold=0.99,
+    responses_per_datapoint=50, # (1)!
+    confidence_threshold=0.99, # (2)!
 )
 
-# Preview and run
 job_definition.preview()
 job = audience.assign_job(job_definition)
 job.display_progress_bar()
@@ -93,12 +90,8 @@ results = job.get_results()
 print(results)
 ```
 
-In this example:
-
-- `responses_per_datapoint=50`: Sets the maximum number of responses per datapoint.
-- `confidence_threshold=0.99`: Specifies that data collection for a datapoint should stop once a 99% confidence level is reached.
-
-We'd expect this to take roughly 4 responses to reach the 99% confidence level.
+1. Sets the **maximum** number of responses per datapoint.
+2. Stops collecting once 99% confidence is reached — for clear-cut tasks like this, expect roughly 4 responses.
 
 ### When to Use Confidence Stopping
 
@@ -219,7 +212,6 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create audience with qualification example
 audience = client.audience.create_audience(name="Animal Classification Audience")
 audience.add_classification_example(
     instruction="What do you see in the image?",
@@ -228,17 +220,15 @@ audience.add_classification_example(
     truth=["Cat"]
 )
 
-# Create job definition with quorum stopping
 job_definition = client.job.create_classification_job_definition(
     name="Test Classification with Quorum Stopping",
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
     datapoints=["https://assets.rapidata.ai/dog.jpeg"],
-    responses_per_datapoint=10,
-    quorum_threshold=7,
+    responses_per_datapoint=10, # (1)!
+    quorum_threshold=7, # (2)!
 )
 
-# Preview and run
 job_definition.preview()
 job = audience.assign_job(job_definition)
 job.display_progress_bar()
@@ -246,10 +236,8 @@ results = job.get_results()
 print(results)
 ```
 
-In this example:
-
-- `responses_per_datapoint=10`: Sets the maximum number of responses per datapoint.
-- `quorum_threshold=7`: Specifies that data collection for a datapoint should stop once 7 responses agree on the same answer.
+1. Sets the **maximum** number of responses per datapoint.
+2. Stops collecting once 7 responses agree on the same answer.
 
 ### When to Use Quorum Stopping
 

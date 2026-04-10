@@ -18,10 +18,8 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    # Get the curated alignment audience
     audience = client.audience.find_audiences("alignment")[0]
 
-    # Create job definition
     job_definition = client.job.create_compare_job_definition(
         name="Example Image Comparison",
         instruction="Which image matches the description better?",
@@ -30,10 +28,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
                     "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
     )
 
-    # Assign to audience
     job = audience.assign_job(job_definition)
-    
-    # View the job in the browser
     job.view()
     job.display_progress_bar()
     results = job.get_results()
@@ -46,10 +41,8 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    # Get the curated alignment audience
     audience = client.audience.find_audiences("alignment")[0]
 
-    # Create job definition
     job_definition = client.job.create_compare_job_definition(
         name="Example Video Comparison",
         instruction="Which video fits the description better?",
@@ -58,10 +51,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
                     "https://assets.rapidata.ai/0074_hunyuan_1724.mp4"]],
     )
 
-    # Assign to audience
     job = audience.assign_job(job_definition)
-    
-    # View the job in the browser
     job.view()
     job.display_progress_bar()
     results = job.get_results()
@@ -74,10 +64,8 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    # Get the global audience
     audience = client.audience.get_audience_by_id("global")
 
-    # Create job definition
     job_definition = client.job.create_compare_job_definition(
         name="Example Audio Comparison",
         instruction="Which audio clip sounds more natural?",
@@ -85,10 +73,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
                     "https://assets.rapidata.ai/ElevenLabs.mp3"]],
     )
 
-    # Assign to audience
     job = audience.assign_job(job_definition)
-    
-    # View the job in the browser
     job.view()
     job.display_progress_bar()
     results = job.get_results()
@@ -101,10 +86,8 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    # Get the global audience
     audience = client.audience.get_audience_by_id("global")
 
-    # Create job definition
     job_definition = client.job.create_compare_job_definition(
         name="Example Text Comparison",
         instruction="Which sentence is grammatically more correct?",
@@ -113,10 +96,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
         data_type="text",
     )
 
-    # Assign to audience
     job = audience.assign_job(job_definition)
-    
-    # View the job in the browser
     job.view()
     job.display_progress_bar()
     results = job.get_results()
