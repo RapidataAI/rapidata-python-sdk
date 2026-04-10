@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.sort_direction import SortDirection
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +28,7 @@ class SortCriterion(BaseModel):
     SortCriterion
     """ # noqa: E501
     property_name: StrictStr = Field(alias="propertyName")
-    direction: SortDirection
+    direction: Optional[SortDirection] = None
     __properties: ClassVar[List[str]] = ["propertyName", "direction"]
 
     model_config = ConfigDict(

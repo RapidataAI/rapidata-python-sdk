@@ -19,9 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.pagination import Pagination
 from rapidata.api_client.models.rapid_state import RapidState
-from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.models.sort_criteria import SortCriteria
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,9 +29,9 @@ class GetEvaluationWorkflowResultsModel(BaseModel):
     """
     Model for getting the overview of a simple workflow result.
     """ # noqa: E501
-    page: Optional[PageInfo] = Field(default=None, description="The size of the page and the page number to display.")
+    page: Optional[Pagination] = Field(default=None, description="The size of the page and the page number to display.")
     states: Optional[List[RapidState]] = None
-    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
+    sort_criteria: Optional[SortCriteria] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
     __properties: ClassVar[List[str]] = ["page", "states", "sortCriteria"]
 
     model_config = ConfigDict(
@@ -76,22 +76,13 @@ class GetEvaluationWorkflowResultsModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of page
         if self.page:
             _dict['page'] = self.page.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in sort_criteria (list)
-        _items = []
+        # override the default output from pydantic by calling `to_dict()` of sort_criteria
         if self.sort_criteria:
-            for _item_sort_criteria in self.sort_criteria:
-                if _item_sort_criteria:
-                    _items.append(_item_sort_criteria.to_dict())
-            _dict['sortCriteria'] = _items
+            _dict['sortCriteria'] = self.sort_criteria.to_dict()
         # set to None if states (nullable) is None
         # and model_fields_set contains the field
         if self.states is None and "states" in self.model_fields_set:
             _dict['states'] = None
-
-        # set to None if sort_criteria (nullable) is None
-        # and model_fields_set contains the field
-        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
-            _dict['sortCriteria'] = None
 
         return _dict
 
@@ -105,9 +96,9 @@ class GetEvaluationWorkflowResultsModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "page": Pagination.from_dict(obj["page"]) if obj.get("page") is not None else None,
             "states": obj.get("states"),
-            "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
+            "sortCriteria": SortCriteria.from_dict(obj["sortCriteria"]) if obj.get("sortCriteria") is not None else None
         })
         return _obj
 

@@ -2270,6 +2270,49 @@
         ]
       }
     },
+    "/campaign/boost/preheat": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/campaigns": {
       "get": {
         "tags": [
@@ -14947,7 +14990,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Filter"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -16937,7 +16981,7 @@
           }
         }
       },
-      "PageInfo": {
+      "Pagination": {
         "type": "object",
         "properties": {
           "index": {
@@ -17193,7 +17237,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ]
           },
@@ -17321,6 +17365,9 @@
         }
       },
       "RootFilter": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "filters": {
@@ -17353,8 +17400,7 @@
       },
       "SortCriterion": {
         "required": [
-          "propertyName",
-          "direction"
+          "propertyName"
         ],
         "type": "object",
         "properties": {
@@ -27973,7 +28019,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "pagination information"
@@ -28765,7 +28811,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -28785,11 +28831,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -28826,7 +28868,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -28834,11 +28876,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -28967,7 +29005,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -28987,11 +29025,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -29519,6 +29553,18 @@
           "totalPages": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "SortCriteria": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
           }
         }
       },
