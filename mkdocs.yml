@@ -1,4 +1,4 @@
-site_name: Rapidata Python SDK Documentation
+site_name: Rapidata Python SDK
 site_url: https://docs.rapidata.ai/
 repo_url: https://github.com/RapidataAI/rapidata-python-sdk
 repo_name: rapidata-python-sdk
@@ -7,6 +7,7 @@ extra_javascript:
   - js/login.js
   - js/ai-copy-button.js
 extra_css:
+  - https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap
   - stylesheets/extra.css
 
 hooks:
@@ -79,18 +80,20 @@ plugins:
       enable_llms_txt: true
       enable_llms_full: true
       enable_copy_button: true
-      copy_button_text: "📋"
+      copy_button_text: "Copy for AI"
 
 extra:
   version:
     provider: mike
 
 markdown_extensions:
+  - admonition
   - attr_list
   - sane_lists
   - md_in_html
   - toc:
       permalink: "#"
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -109,42 +112,52 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-    - "🏠 Guides":
-      - "👀 Overview": starting_page.md
-      - "🚀 Quick Start": quickstart.md
-      - "👥 Custom Audiences": audiences.md
-      - "📖 Parameter Reference": job_definition_parameters.md
-      - "📊 Understanding Results": understanding_the_results.md
-      - "❌ Error Handling": error_handling.md
-      - "🛑 Confidence Stopping": confidence_stopping.md
-      - "💡 Human Prompting": human_prompting.md
-      - "📝 Logging & Config": config.md
-    - "📋 Job Examples":
-      - "🏷️ Classification": examples/classify_job.md
-      - "⚖️ Compare": examples/compare_job.md
-    - "📈 Benchmarks":
-      - "🧠 Model Ranking Insights": mri.md
-      - "🔭 Model Ranking Insights Advanced": mri_advanced.md
-    - "♻️ Flows":
-      - "Overview": flows.md
-    - "🤖 Claude Code Plugin": claude_code.md
-    - "🔄 Migration Guide": migration_guide.md
+    - Guides:
+      - Overview: starting_page.md
+      - Quick Start: quickstart.md
+      - Custom Audiences: audiences.md
+      - Parameter Reference: job_definition_parameters.md
+      - Understanding Results: understanding_the_results.md
+      - Early Stopping: confidence_stopping.md
+      - Instruction Design: human_prompting.md
+      - Error Handling: error_handling.md
+      - Logging & Config: config.md
+    - Examples:
+      - Classification: examples/classify_job.md
+      - Comparison: examples/compare_job.md
+    - Ranking Flows: flows.md
+    - Model Ranking:
+      - Getting Started: mri.md
+      - Advanced: mri_advanced.md
+    - Resources:
+      - Claude Code: claude_code.md
+      - Migration Guide: migration_guide.md
 
 theme:
   name: material
   logo: media/rapidata.svg
   favicon: media/rapidata.svg
+  font: false
   palette:
-    # Palette toggle for dark mode (default)
     - scheme: slate
       primary: black
+      accent: blue
 
   icon:
     repo: fontawesome/brands/github-alt
+    admonition:
+      note: octicons/info-16
+      tip: octicons/light-bulb-16
+      warning: octicons/alert-16
+      danger: octicons/x-circle-16
+      example: octicons/code-16
 
   features:
     - content.code.copy
-    - navigation.expand
+    - content.code.annotate
+    - content.tabs.link
+    - navigation.instant
+    - navigation.instant.progress
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
@@ -152,6 +165,5 @@ theme:
     - navigation.tracking
     - navigation.indexes
     - toc.follow
-    - toc.integrate
-    - search.share
     - search.suggest
+    - search.highlight

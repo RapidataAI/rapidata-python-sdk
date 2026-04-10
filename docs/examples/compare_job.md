@@ -25,7 +25,6 @@ IMAGE_PAIRS = [
 
 client = RapidataClient()
 
-# Create audience with qualification example
 audience = client.audience.create_audience(name="Prompt Alignment Audience")
 audience.add_compare_example(
     instruction="Which image follows the prompt more accurately?",
@@ -37,7 +36,6 @@ audience.add_compare_example(
     context="A sign that says 'Diffusion'."
 )
 
-# Create job definition
 job_definition = client.job.create_compare_job_definition(
     name="Example Image Prompt Alignment Job",
     instruction="Which image follows the prompt more accurately?",
@@ -46,10 +44,8 @@ job_definition = client.job.create_compare_job_definition(
     contexts=PROMPTS
 )
 
-# Preview the job definition
 job_definition.preview()
 
-# Assign to audience and get results
 job = audience.assign_job(job_definition)
 job.display_progress_bar()
 results = job.get_results()
