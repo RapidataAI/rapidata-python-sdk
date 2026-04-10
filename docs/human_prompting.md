@@ -130,7 +130,8 @@ answer_options=["1: Perfectly",
 
 ## Monitoring and Iteration
 
-> **Important:** Every qualification example with its associated truth must be manually and thoroughly reviewed before use. Incorrect or ambiguous examples will filter out good labelers while letting bad ones through, inverting your quality control.
+!!! warning
+    Every qualification example with its associated truth must be manually and thoroughly reviewed before use. Incorrect or ambiguous examples will filter out good labelers while letting bad ones through, inverting your quality control.
 
 After assigning your job to an audience, monitor the initial responses to see if labelers are understanding your instructions as intended.
 

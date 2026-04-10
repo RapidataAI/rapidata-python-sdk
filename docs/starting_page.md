@@ -1,6 +1,6 @@
 # Rapidata Python SDK
 
-Get humans to label your data in minutes.
+Get humans to label your data in minutes. Create labeling jobs, compare model outputs, and collect human feedback at scale.
 
 ```
 pip install -U rapidata
@@ -10,133 +10,144 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
 ---
 
-## Compare two outputs
+## Quick example
 
-```python
-from rapidata import RapidataClient
+=== "Image"
+    ```python
+    from rapidata import RapidataClient
 
-client = RapidataClient()
-audience = client.audience.find_audiences("alignment")[0]
+    client = RapidataClient()
 
-job_definition = client.job.create_compare_job_definition(
-    name="Image Comparison",
-    instruction="Which image matches the description better?",
-    contexts=["A small blue book sitting on a large red book."],
-    datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
-                "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
-)
+    # Get the curated alignment audience
+    audience = client.audience.find_audiences("alignment")[0]
 
-job = audience.assign_job(job_definition)
-job.display_progress_bar()
-results = job.get_results()
-```
+    # Create job definition
+    job_definition = client.job.create_compare_job_definition(
+        name="Example Image Comparison",
+        instruction="Which image matches the description better?",
+        contexts=["A small blue book sitting on a large red book."],
+        datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+                    "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
+    )
 
-Works with images, video, audio, and text. Pass `data_type="text"` for plain text comparisons. See the full [comparison example](examples/compare_job.md).
+    # Assign to audience
+    job = audience.assign_job(job_definition)
+    
+    # View the job in the browser
+    job.view()
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+=== "Video"
+    ```python
+    from rapidata import RapidataClient
+
+    client = RapidataClient()
+
+    # Get the curated alignment audience
+    audience = client.audience.find_audiences("alignment")[0]
+
+    # Create job definition
+    job_definition = client.job.create_compare_job_definition(
+        name="Example Video Comparison",
+        instruction="Which video fits the description better?",
+        contexts=["A group of elephants painting vibrant murals on a city wall."],
+        datapoints=[["https://assets.rapidata.ai/0074_sora_1.mp4",
+                    "https://assets.rapidata.ai/0074_hunyuan_1724.mp4"]],
+    )
+
+    # Assign to audience
+    job = audience.assign_job(job_definition)
+    
+    # View the job in the browser
+    job.view()
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+=== "Audio"
+    ```python
+    from rapidata import RapidataClient, LanguageFilter
+
+    client = RapidataClient()
+
+    # Get the global audience
+    audience = client.audience.get_audience_by_id("global")
+
+    # Create job definition
+    job_definition = client.job.create_compare_job_definition(
+        name="Example Audio Comparison",
+        instruction="Which audio clip sounds more natural?",
+        datapoints=[["https://assets.rapidata.ai/Chat_gpt.mp3",
+                    "https://assets.rapidata.ai/ElevenLabs.mp3"]],
+    )
+
+    # Assign to audience
+    job = audience.assign_job(job_definition)
+    
+    # View the job in the browser
+    job.view()
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+=== "Text"
+    ```python
+    from rapidata import RapidataClient, LanguageFilter
+
+    client = RapidataClient()
+
+    # Get the global audience
+    audience = client.audience.get_audience_by_id("global")
+
+    # Create job definition
+    job_definition = client.job.create_compare_job_definition(
+        name="Example Text Comparison",
+        instruction="Which sentence is grammatically more correct?",
+        datapoints=[["The children were amazed by the magician's tricks",
+                    "The children were amusing by the magician's tricks."]],
+        data_type="text",
+    )
+
+    # Assign to audience
+    job = audience.assign_job(job_definition)
+    
+    # View the job in the browser
+    job.view()
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+!!! note
+    The curated/global audiences get you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
 
 ---
 
-## Classify data
+## Core workflow
 
-```python
-from rapidata import RapidataClient, NoShuffleSetting
+The SDK is built around three concepts:
 
-client = RapidataClient()
-audience = client.audience.find_audiences("alignment")[0]
+**Audience** --- A group of labelers filtered through qualification examples. Use curated audiences for quick starts or create custom ones for higher quality.
+[:octicons-arrow-right-24: Custom Audiences](audiences.md)
 
-job_definition = client.job.create_classification_job_definition(
-    name="Image Rating",
-    instruction="How well does the image match the description?",
-    answer_options=["1: Not at all", "2: A little", "3: Moderately", "4: Very well", "5: Perfectly"],
-    datapoints=["https://assets.rapidata.ai/tshirt-4o.png"],
-    contexts=["A t-shirt with the text 'Running on caffeine & dreams'"],
-    settings=[NoShuffleSetting()],
-)
+**Job Definition** --- Configures what you want labeled: the data, instruction, response format, and quality settings.
+[:octicons-arrow-right-24: Parameter Reference](job_definition_parameters.md)
 
-job = audience.assign_job(job_definition)
-job.display_progress_bar()
-results = job.get_results()
-```
-
-Use `NoShuffleSetting` for ordered scales (Likert). See the full [classification example](examples/classify_job.md).
+**Job** --- A running labeling task. Assign a job definition to an audience, monitor progress, and retrieve results.
+[:octicons-arrow-right-24: Quick Start](quickstart.md)
 
 ---
 
-## Benchmark models
+## What you can do
 
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-benchmark = client.mri.create_new_benchmark(
-    name="Image Quality",
-    prompts=["A serene mountain landscape at sunset",
-             "A futuristic city with flying cars"],
-)
-
-leaderboard = benchmark.create_leaderboard(
-    name="Realism",
-    instruction="Which image is more realistic?",
-)
-
-benchmark.evaluate_model(
-    name="ModelA",
-    media=["https://assets.rapidata.ai/mountain_sunset1.png",
-           "https://assets.rapidata.ai/futuristic_city.png"],
-    prompts=["A serene mountain landscape at sunset",
-             "A futuristic city with flying cars"],
-)
-
-standings = leaderboard.get_standings()
-```
-
-Creates leaderboards comparing AI models with human evaluation. See the full [MRI guide](mri.md).
-
----
-
-## Continuous ranking
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-flow = client.flow.create_ranking_flow(
-    name="Image Quality Ranking",
-    instruction="Which image looks better?",
-)
-
-flow_item = flow.create_new_flow_batch(
-    datapoints=["https://example.com/a.jpg",
-                "https://example.com/b.jpg",
-                "https://example.com/c.jpg"],
-    time_to_live=300,
-)
-
-results = flow_item.get_results()
-matrix = flow_item.get_win_loss_matrix()
-```
-
-Ranking flows let you keep adding items over time without creating full jobs. See the [Ranking Flows guide](flows.md).
-
----
-
-## Custom audiences for better quality
-
-The examples above use curated audiences. For production, create your own with qualification examples:
-
-```python
-audience = client.audience.create_audience(name="My Audience")
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=["https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-               "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'.",
-)
-
-# Now use this audience for any job
-job = audience.assign_job(job_definition)
-```
-
-Only labelers who pass your examples get included. See the full [Custom Audiences guide](audiences.md).
+| Use case | Description | Guide |
+|---|---|---|
+| **Compare** | Side-by-side comparison of images, video, audio, or text | [Comparison example](examples/compare_job.md) |
+| **Classify** | Categorize data with custom labels or Likert scales | [Classification example](examples/classify_job.md) |
+| **Rank models** | Benchmark AI models on leaderboards with human evaluation | [Model Ranking](mri.md) |
+| **Continuous ranking** | Lightweight ongoing ranking without full job setup | [Ranking Flows](flows.md) |

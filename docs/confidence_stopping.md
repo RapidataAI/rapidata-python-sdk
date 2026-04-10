@@ -52,7 +52,8 @@ There are a few things to keep in mind when interpreting the results:
     </iframe>
 </div>
 
->**Note:** The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
+!!! note
+    The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
 
 ### Using Confidence Stopping in Your Job
 
@@ -204,7 +205,8 @@ For example, with `quorum_threshold=7` and `responses_per_datapoint=10`:
 - The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).
 - The task completes after 10 total votes if neither condition is met.
 
->**Note:** Quorum Stopping is supported for the Classification and Comparison workflows, just like Confidence Stopping.
+!!! note
+    Quorum Stopping is supported for the Classification and Comparison workflows, just like Confidence Stopping.
 
 ### Using Quorum Stopping in Your Job
 

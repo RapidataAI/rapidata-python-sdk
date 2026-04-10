@@ -45,7 +45,8 @@ The simplest way to get started is with a curated audience - a pre-existing pool
 audience = client.audience.find_audiences("alignment")[0]
 ```
 
-> **Note**: The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
+!!! note
+    The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
 ### Step 2: Create a Job Definition
 
@@ -63,7 +64,8 @@ job_definition = client.job.create_compare_job_definition(
 )
 ```
 
-> **Tip**: If some datapoints fail to upload, a `FailedUploadException` will be raised. Learn how to handle this in the [Error Handling Guide](error_handling.md).
+!!! tip
+    If some datapoints fail to upload, a `FailedUploadException` will be raised. Learn how to handle this in the [Error Handling Guide](error_handling.md).
 
 For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
 
@@ -132,7 +134,8 @@ audience = client.audience.get_audience_by_id("audience_id")
 jobs = audience.find_jobs("Prompt Alignment")
 ```
 
-> **Note**: The `find_*` can be executed without the `name` parameter to return the most recent resources.
+!!! note
+    The `find_*` can be executed without the `name` parameter to return the most recent resources.
 
 ## Complete Example
 

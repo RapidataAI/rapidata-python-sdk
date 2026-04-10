@@ -6,7 +6,8 @@ Model Ranking Insights (MRI) provides a powerful way to compare and rank differe
 
 ![MRI Process Flow](../media/benchmark.svg)
 
-> **Note:** Can be used with Images, Videos, Audio, and Text.
+!!! note
+    Can be used with Images, Videos, Audio, and Text.
 
 Each evaluation aspect results in a leaderboard and these leaderboards are grouped under a benchmark. This allows convenient extensibility because when you would like to evaluate the models under a new criteria, it is as easy as adding a new leaderboard to your benchmark.
 
@@ -44,7 +45,8 @@ Once your benchmark is set up, you can create leaderboards for it.
 - **Instruction**: The criteria upon which labelers choose the better model
 - **Show Prompt**: Whether to display the prompt to evaluators. Including this option adds complexity and cost, so it is advised to only include it in settings where the prompt is necessary for the labelers to follow the instruction (e.g., prompt alignment).
 
-> **Note:** You can find all leaderboards for a benchmark by using the `leaderboards` attribute of the benchmark.
+!!! note
+    You can find all leaderboards for a benchmark by using the `leaderboards` attribute of the benchmark.
 
 
 ```python
@@ -65,7 +67,8 @@ Once your benchmark and leaderboard are set up, you can evaluate models by the f
 
 All prompts must be from the benchmark's registered prompt set (available through the `prompts` attribute of the benchmark)
 
-> **Note:** You are not limited to one media per prompt; you can supply the same prompt multiple times.
+!!! note
+    You are not limited to one media per prompt; you can supply the same prompt multiple times.
 
 
 ```python

@@ -4,7 +4,8 @@
 
 Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full jobs. They are ideal for ongoing evaluation where new items are added over time and ranked against each other in a specified time frame (ttl). Each ranking uses the configuration of the flow but is fully independent of the other rankings.
 
-> **Note:** Can be used with Images, Videos, Audio, and Text.
+!!! note
+    Can be used with Images, Videos, Audio, and Text.
 
 ## How to use Ranking Flows
 
@@ -81,7 +82,8 @@ You can also check the status without blocking:
 status = flow_item.get_status()  # Pending, Running, Completed, Failed, Stopped, or Incomplete
 ```
 
-> **Note:** A flow item enters the `Incomplete` state when its `time_to_live` expires before all responses are collected. You can still retrieve partial results from incomplete flow items.
+!!! note
+    A flow item enters the `Incomplete` state when its `time_to_live` expires before all responses are collected. You can still retrieve partial results from incomplete flow items.
 
 To get the win/loss matrix per flow item and see what datapoints were preferred over each other:
 
@@ -113,7 +115,8 @@ flow.update_config(
 )
 ```
 
-> **Note:** This config will only effect new flow items and not modify existing ones.
+!!! note
+    This config will only affect new flow items and not modify existing ones.
 
 
 ### Retrieving Existing Flows

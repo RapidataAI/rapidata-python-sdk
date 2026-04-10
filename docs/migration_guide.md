@@ -2,7 +2,8 @@
 
 This guide helps you migrate from the legacy Order API to the recommended Audience & Job API.
 
-> **Note:** The Order and Validation APIs (`client.order`, `client.validation`) remain available for backwards compatibility in the near term.
+!!! note
+    The Order and Validation APIs (`client.order`, `client.validation`) remain available for backwards compatibility in the near term.
 
 We observe higher quality responses when first curating an audience that is vetted on your specific task. While it was possible to do this with the previous Order API, the new Audience & Job API puts the recommended workflow front and center. The new paradigm revolves around two steps:
 

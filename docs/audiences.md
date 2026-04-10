@@ -16,7 +16,8 @@ A **curated audience** is a pre-existing pool of labelers trained on a specific 
 
 A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to the most accurate results.
 
-> **Note**: You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+!!! note
+    You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 ## Creating a Custom Audience
 
@@ -33,7 +34,8 @@ audience = client.audience.create_audience(name="Custom Prompt Alignment Audienc
 
 Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.
 
-> **Important:** Every qualification example with its associated truth must be manually and thoroughly reviewed before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting your quality control. Always verify that each example has a clear, unambiguous correct answer.
+!!! warning "Review your qualification examples carefully"
+    Every qualification example with its associated truth must be manually and thoroughly reviewed before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting your quality control. Always verify that each example has a clear, unambiguous correct answer.
 
 ```py
 DATAPOINTS = [
@@ -65,7 +67,8 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
         context=prompt
     )
 ```
-> **Note**: In practice you'd want to add more examples to the audience to improve the quality of the results.
+!!! note
+    In practice you'd want to add more examples to the audience to improve the quality of the results.
 
 **Parameters:**
 

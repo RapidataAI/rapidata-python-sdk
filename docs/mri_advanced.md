@@ -43,7 +43,8 @@ benchmark = client.mri.create_new_benchmark(
 )
 ```
 
-> **Note:** Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models.
+!!! note
+    Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models.
 
 ### Tagging System
 
