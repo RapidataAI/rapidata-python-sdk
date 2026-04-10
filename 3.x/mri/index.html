@@ -8,7 +8,7 @@
         <link rel="canonical" href="https://docs.rapidata.ai/3.x/mri/">
       
       
-        <link rel="prev" href="../examples/compare_job/">
+        <link rel="prev" href="../flows/">
       
       
         <link rel="next" href="../mri_advanced/">
@@ -22,7 +22,7 @@
     
     
       
-        <title>🧠 Model Ranking Insights - Rapidata Python SDK Documentation</title>
+        <title>Getting Started - Rapidata Python SDK</title>
       
     
     
@@ -32,6 +32,36 @@
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
+  
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+  
+  <style>:root{--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.5%207.75A.75.75%200%200%201%207.25%207h1a.75.75%200%200%201%20.75.75v2.75h.25a.75.75%200%200%201%200%201.5h-2a.75.75%200%200%201%200-1.5h.25v-2h-.25a.75.75%200%200%201-.75-.75M8%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22/%3E%3C/svg%3E');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M8%201.5c-2.363%200-4%201.69-4%203.75%200%20.984.424%201.625.984%202.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621%201.49a.75.75%200%200%201-1.484.211c-.04-.282-.163-.547-.37-.847a9%209%200%200%200-.542-.68q-.126-.149-.268-.32C3.201%207.75%202.5%206.766%202.5%205.25%202.5%202.31%204.863%200%208%200s5.5%202.31%205.5%205.25c0%201.516-.701%202.5-1.328%203.259q-.142.172-.268.319c-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751%200%200%201-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848q.113-.133.213-.253c.561-.679.985-1.32.985-2.304%200-2.06-1.637-3.75-4-3.75M5.75%2012h4.5a.75.75%200%200%201%200%201.5h-4.5a.75.75%200%200%201%200-1.5M6%2015.25a.75.75%200%200%201%20.75-.75h2.5a.75.75%200%200%201%200%201.5h-2.5a.75.75%200%200%201-.75-.75%22/%3E%3C/svg%3E');--md-admonition-icon--warning:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M6.457%201.047c.659-1.234%202.427-1.234%203.086%200l6.082%2011.378A1.75%201.75%200%200%201%2014.082%2015H1.918a1.75%201.75%200%200%201-1.543-2.575Zm1.763.707a.25.25%200%200%200-.44%200L1.698%2013.132a.25.25%200%200%200%20.22.368h12.164a.25.25%200%200%200%20.22-.368Zm.53%203.996v2.5a.75.75%200%200%201-1.5%200v-2.5a.75.75%200%200%201%201.5%200M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--danger:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.344%202.343za8%208%200%200%201%2011.314%2011.314A8.002%208.002%200%200%201%20.234%2010.089a8%208%200%200%201%202.11-7.746m1.06%2010.253a6.5%206.5%200%201%200%209.108-9.275%206.5%206.5%200%200%200-9.108%209.275M6.03%204.97%208%206.94l1.97-1.97a.749.749%200%200%201%201.275.326.75.75%200%200%201-.215.734L9.06%208l1.97%201.97a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L8%209.06l-1.97%201.97a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L6.94%208%204.97%206.03a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018%22/%3E%3C/svg%3E');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22m11.28%203.22%204.25%204.25a.75.75%200%200%201%200%201.06l-4.25%204.25a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L13.94%208l-3.72-3.72a.749.749%200%200%201%20.326-1.275.75.75%200%200%201%20.734.215m-6.56%200a.75.75%200%200%201%201.042.018.75.75%200%200%201%20.018%201.042L2.06%208l3.72%203.72a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L.47%208.53a.75.75%200%200%201%200-1.06Z%22/%3E%3C/svg%3E');}</style>
+
 
 
     
@@ -39,16 +69,12 @@
       
     
     
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
     
       <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap">
     
       <link rel="stylesheet" href="../stylesheets/extra.css">
     
@@ -78,7 +104,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -107,7 +133,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Rapidata Python SDK Documentation" class="md-header__button md-logo" aria-label="Rapidata Python SDK Documentation" data-md-component="logo">
+    <a href=".." title="Rapidata Python SDK" class="md-header__button md-logo" aria-label="Rapidata Python SDK" data-md-component="logo">
       
   <img src="../media/rapidata.svg" alt="logo">
 
@@ -120,13 +146,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Rapidata Python SDK Documentation
+            Rapidata Python SDK
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🧠 Model Ranking Insights
+              Getting Started
             
           </span>
         </div>
@@ -139,7 +165,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-hidden="true" type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue" aria-hidden="true" type="radio" name="__palette" id="__palette_0">
     
   
 </form>
@@ -168,11 +194,6 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
-        
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
-          </a>
         
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
@@ -232,7 +253,7 @@
   
     
   
-  🏠 Guides
+  Guides
 
         </a>
       </li>
@@ -254,11 +275,30 @@
   
     
   
-  📋 Job Examples
+  Examples
 
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../flows/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Ranking Flows
+
+      </a>
+    </li>
   
 
       
@@ -278,7 +318,7 @@
   
     
   
-  📈 Benchmarks
+  Model Ranking
 
         </a>
       </li>
@@ -294,55 +334,17 @@
     
     
       <li class="md-tabs__item">
-        <a href="../flows/" class="md-tabs__link">
+        <a href="../claude_code/" class="md-tabs__link">
           
   
   
     
   
-  ♻️ Flows
+  Resources
 
         </a>
       </li>
     
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../claude_code/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  🤖 Claude Code Plugin
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../migration_guide/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  🔄 Migration Guide
-
-      </a>
-    </li>
   
 
       
@@ -372,16 +374,14 @@
   
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Rapidata Python SDK Documentation" class="md-nav__button md-logo" aria-label="Rapidata Python SDK Documentation" data-md-component="logo">
+    <a href=".." title="Rapidata Python SDK" class="md-nav__button md-logo" aria-label="Rapidata Python SDK" data-md-component="logo">
       
   <img src="../media/rapidata.svg" alt="logo">
 
     </a>
-    Rapidata Python SDK Documentation
+    Rapidata Python SDK
   </label>
   
     <div class="md-nav__source">
@@ -438,9 +438,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1">
         
           
           <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
@@ -450,7 +448,7 @@
   <span class="md-ellipsis">
     
   
-    🏠 Guides
+    Guides
   
 
     
@@ -466,7 +464,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    🏠 Guides
+    Guides
   
 
           </label>
@@ -486,7 +484,7 @@
   <span class="md-ellipsis">
     
   
-    👀 Overview
+    Overview
   
 
     
@@ -514,7 +512,7 @@
   <span class="md-ellipsis">
     
   
-    🚀 Quick Start
+    Quick Start
   
 
     
@@ -542,7 +540,7 @@
   <span class="md-ellipsis">
     
   
-    👥 Custom Audiences
+    Custom Audiences
   
 
     
@@ -570,7 +568,7 @@
   <span class="md-ellipsis">
     
   
-    📖 Parameter Reference
+    Parameter Reference
   
 
     
@@ -598,35 +596,7 @@
   <span class="md-ellipsis">
     
   
-    📊 Understanding Results
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../error_handling/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ❌ Error Handling
+    Understanding Results
   
 
     
@@ -654,7 +624,7 @@
   <span class="md-ellipsis">
     
   
-    🛑 Confidence Stopping
+    Early Stopping
   
 
     
@@ -682,7 +652,35 @@
   <span class="md-ellipsis">
     
   
-    💡 Human Prompting
+    Instruction Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../error_handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
   
 
     
@@ -710,7 +708,7 @@
   <span class="md-ellipsis">
     
   
-    📝 Logging &amp; Config
+    Logging &amp; Config
   
 
     
@@ -757,9 +755,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -769,7 +765,7 @@
   <span class="md-ellipsis">
     
   
-    📋 Job Examples
+    Examples
   
 
     
@@ -785,7 +781,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    📋 Job Examples
+    Examples
   
 
           </label>
@@ -805,7 +801,7 @@
   <span class="md-ellipsis">
     
   
-    🏷️ Classification
+    Classification
   
 
     
@@ -833,7 +829,7 @@
   <span class="md-ellipsis">
     
   
-    ⚖️ Compare
+    Comparison
   
 
     
@@ -850,6 +846,33 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ranking Flows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -885,17 +908,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    📈 Benchmarks
+    Model Ranking
   
 
     
@@ -906,12 +929,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
-    📈 Benchmarks
+    Model Ranking
   
 
           </label>
@@ -940,7 +963,7 @@
   <span class="md-ellipsis">
     
   
-    🧠 Model Ranking Insights
+    Getting Started
   
 
     
@@ -958,7 +981,7 @@
   <span class="md-ellipsis">
     
   
-    🧠 Model Ranking Insights
+    Getting Started
   
 
     
@@ -1122,7 +1145,7 @@
   <span class="md-ellipsis">
     
   
-    🔭 Model Ranking Insights Advanced
+    Advanced
   
 
     
@@ -1151,6 +1174,8 @@
   
     
     
+      
+        
       
         
       
@@ -1167,19 +1192,17 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    ♻️ Flows
+    Resources
   
 
     
@@ -1190,12 +1213,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
-    ♻️ Flows
+    Resources
   
 
           </label>
@@ -1208,14 +1231,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../flows/" class="md-nav__link">
+      <a href="../claude_code/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Overview
+    Claude Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide
   
 
     
@@ -1236,66 +1287,154 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../claude_code/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🤖 Claude Code Plugin
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migration_guide/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🔄 Migration Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
             
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-mri" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to use MRI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use MRI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-benchmark-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Benchmark Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-leaderboard-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Leaderboard Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-model-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Model Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3b-adding-models-without-immediate-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3b. Adding Models Without Immediate Submission
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-matchmaking-and-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Matchmaking and Ranking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-results-and-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Results and Visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieving-existing-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieving Existing Benchmarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieving-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieving Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
             
           
           
@@ -1314,9 +1453,10 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
 <p>Model Ranking Insights (MRI) provides a powerful way to compare and rank different AI models based on their performance on specific tasks. They allow you to create standardized evaluation environments where multiple models can be tested against each other and ranked based on human feedback.</p>
 <p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../media/benchmark.svg" data-desc-position="bottom"><img alt="MRI Process Flow" src="../media/benchmark.svg"></a></p>
-<blockquote>
-<p><strong>Note:</strong> Can be used with Images, Videos, Audio, and Text.</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Can be used with Images, Videos, Audio, and Text.</p>
+</div>
 <p>Each evaluation aspect results in a leaderboard and these leaderboards are grouped under a benchmark. This allows convenient extensibility because when you would like to evaluate the models under a new criteria, it is as easy as adding a new leaderboard to your benchmark.</p>
 <h2 id="how-to-use-mri">How to use MRI<a class="headerlink" href="#how-to-use-mri" title="Permanent link">#</a></h2>
 <h3 id="1-benchmark-creation">1. Benchmark Creation<a class="headerlink" href="#1-benchmark-creation" title="Permanent link">#</a></h3>
@@ -1328,20 +1468,20 @@
 <p>Use the <code>RapidataClient</code> to authenticate yourself and create a new leaderboard:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Initialize the client</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Running this the first time will open a browser window and ask you to login</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span> 
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Create a new benchmark</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"AI Art Competition"</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="s2">"A serene mountain landscape at sunset"</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="s2">"A futuristic city with flying cars"</span><span class="p">,</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="s2">"A portrait of a wise old wizard"</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="p">]</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">create_new_benchmark</span><span class="p">(</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"AI Art Competition"</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">[</span> <span class="c1"># (1)!</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="s2">"A serene mountain landscape at sunset"</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="s2">"A futuristic city with flying cars"</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="s2">"A portrait of a wise old wizard"</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="p">]</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
 </span></code></pre></div>
+<ol>
+<li>The prompts used to generate the media that will be evaluated. Models are matched against each other per prompt.</li>
+</ol>
 <h3 id="2-leaderboard-creation">2. Leaderboard Creation<a class="headerlink" href="#2-leaderboard-creation" title="Permanent link">#</a></h3>
 <p>Once your benchmark is set up, you can create leaderboards for it.</p>
 <ul>
@@ -1349,16 +1489,19 @@
 <li><strong>Instruction</strong>: The criteria upon which labelers choose the better model</li>
 <li><strong>Show Prompt</strong>: Whether to display the prompt to evaluators. Including this option adds complexity and cost, so it is advised to only include it in settings where the prompt is necessary for the labelers to follow the instruction (e.g., prompt alignment).</li>
 </ul>
-<blockquote>
-<p><strong>Note:</strong> You can find all leaderboards for a benchmark by using the <code>leaderboards</code> attribute of the benchmark.</p>
-</blockquote>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a new leaderboard on a benchmark</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Realism"</span><span class="p">,</span> 
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is more realistic?"</span><span class="p">,</span> 
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">show_prompt</span><span class="o">=</span><span class="kc">False</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can find all leaderboards for a benchmark by using the <code>leaderboards</code> attribute of the benchmark.</p>
+</div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Realism"</span><span class="p">,</span> 
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is more realistic?"</span><span class="p">,</span> 
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">show_prompt</span><span class="o">=</span><span class="kc">False</span> <span class="c1"># (1)!</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
 </span></code></pre></div>
+<ol>
+<li>Whether to display the prompt to evaluators. Only include it when the prompt is necessary for the task (e.g., prompt alignment). It adds complexity and cost.</li>
+</ol>
 <h3 id="3-model-evaluation">3. Model Evaluation<a class="headerlink" href="#3-model-evaluation" title="Permanent link">#</a></h3>
 <p>Once your benchmark and leaderboard are set up, you can evaluate models by the following:</p>
 <ul>
@@ -1366,26 +1509,30 @@
 <li><strong>Prompts</strong>: Each media file must be paired with a prompt</li>
 </ul>
 <p>All prompts must be from the benchmark's registered prompt set (available through the <code>prompts</code> attribute of the benchmark)</p>
-<blockquote>
-<p><strong>Note:</strong> You are not limited to one media per prompt; you can supply the same prompt multiple times.</p>
-</blockquote>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Evaluate a model</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">evaluate_model</span><span class="p">(</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"MyAIModel_v2.1"</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">media</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="s2">"https://assets.rapidata.ai/mountain_sunset1.png"</span><span class="p">,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="s2">"https://assets.rapidata.ai/mountain_sunset2.png"</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="s2">"https://assets.rapidata.ai/futuristic_city.png"</span><span class="p">,</span> 
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="s2">"https://assets.rapidata.ai/wizard_portrait.png"</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">],</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">[</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You are not limited to one media per prompt; you can supply the same prompt multiple times.</p>
+</div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">evaluate_model</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"MyAIModel_v2.1"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">media</span><span class="o">=</span><span class="p">[</span> <span class="c1"># (1)!</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="s2">"https://assets.rapidata.ai/mountain_sunset1.png"</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="s2">"https://assets.rapidata.ai/mountain_sunset2.png"</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="s2">"https://assets.rapidata.ai/futuristic_city.png"</span><span class="p">,</span> 
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="s2">"https://assets.rapidata.ai/wizard_portrait.png"</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="p">],</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">[</span> <span class="c1"># (2)!</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="s2">"A serene mountain landscape at sunset"</span><span class="p">,</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="s2">"A serene mountain landscape at sunset"</span><span class="p">,</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="s2">"A serene mountain landscape at sunset"</span><span class="p">,</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="s2">"A futuristic city with flying cars"</span><span class="p">,</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="s2">"A portrait of a wise old wizard"</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="p">]</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="s2">"A futuristic city with flying cars"</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="s2">"A portrait of a wise old wizard"</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="p">]</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">)</span>
 </span></code></pre></div>
+<ol>
+<li>Images, videos, or audio files generated by your model.</li>
+<li>Each media file must be paired with a prompt from the benchmark's registered prompt set. You can supply the same prompt multiple times.</li>
+</ol>
 <h3 id="3b-adding-models-without-immediate-submission">3b. Adding Models Without Immediate Submission<a class="headerlink" href="#3b-adding-models-without-immediate-submission" title="Permanent link">#</a></h3>
 <p>If you want to add a model and control when it is submitted for evaluation, use <code>add_model</code> instead of <code>evaluate_model</code>. This lets you upload media, inspect the participant, and submit on your own schedule.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add a model without submitting</span>
@@ -1453,7 +1600,7 @@
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">standings</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_standings</span><span class="p">()</span> <span class="c1"># Returns a pandas dataframe</span>
 </span></code></pre></div>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
-            <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📋</button>
+            <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>
         <script>
         async function copyMarkdownToClipboard() {
@@ -1504,6 +1651,8 @@
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
@@ -1538,11 +1687,13 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
     
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.expand", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.indexes", "toc.follow", "toc.integrate", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link", "navigation.instant", "navigation.instant.progress", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>

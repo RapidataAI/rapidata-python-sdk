@@ -23,12 +23,17 @@ The exception provides these properties to help you understand and recover from 
 
 ```python
 FailedUploadException(
-    dataset: RapidataDataset,              # The dataset that was being created
-    failed_uploads: list[FailedUpload],    # Basic list of failed datapoints
-    order: Optional[RapidataOrder],        # The order object (if order creation)
-    job_definition: Optional[JobDefinition] # The job definition object (if job creation)
+    dataset: RapidataDataset, # (1)!
+    failed_uploads: list[FailedUpload], # (2)!
+    order: Optional[RapidataOrder], # (3)!
+    job_definition: Optional[JobDefinition] # (4)!
 )
 ```
+
+1. The dataset that was being created.
+2. Basic list of failed datapoints.
+3. The order object (only present during order creation).
+4. The job definition object (only present during job definition creation).
 
 ### Understanding Failure Information
 
@@ -117,14 +122,14 @@ try:
 except FailedUploadException as e:
     print(f"Warning: {len(e.failed_uploads)} datapoints failed to upload")
 
-    # Check if failure rate is acceptable
-    if len(e.failed_uploads) > len(datapoints) * 0.1:  # More than 10% failed
+    if len(e.failed_uploads) > len(datapoints) * 0.1: # (1)!
         raise ValueError("Too many failures, aborting")
 
-    # Continue with the job definition that was created with successful datapoints
-    job_def = e.job_definition
-    # You can now use job_def normally - it contains the successfully uploaded datapoints
+    job_def = e.job_definition # (2)!
 ```
+
+1. Check if the failure rate is acceptable — here we abort if more than 10% failed.
+2. The job definition was still created with the successfully uploaded datapoints. You can use it normally.
 
 **For Orders:**
 ```python
@@ -143,12 +148,11 @@ try:
 except FailedUploadException as e:
     print(f"Warning: {len(e.failed_uploads)} datapoints failed")
 
-    # Continue with the order that was created with successful datapoints
-    order = e.order
-
-    # Run the order with the successfully uploaded datapoints
+    order = e.order # (1)!
     order.run()
 ```
+
+1. The order was still created with the successfully uploaded datapoints.
 
 ### Strategy 2: Retry Failed Datapoints
 
@@ -168,19 +172,18 @@ try:
         datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"]
     )
 except FailedUploadException as e:
-    # Inspect what failed
     print(f"{len(e.failed_uploads)} datapoints failed:")
     for reason, datapoints in e.failures_by_reason.items():
         print(f"  {reason}: {len(datapoints)} datapoints")
 
-    # Fix the issues (e.g., correct file paths), then retry
-    # Note: You need to fix the issues before retrying
-    successful_retries, failed_retries = e.dataset.add_datapoints(e.failed_uploads)
+    successful_retries, failed_retries = e.dataset.add_datapoints(e.failed_uploads) # (1)!
     print(f"{len(successful_retries)} datapoints successfully added on retry")
 
     if failed_retries:
         print(f"{len(failed_retries)} datapoints still failed after retry")
 ```
+
+1. Fix the underlying issues (e.g., correct file paths) before retrying. This adds the previously failed datapoints back to the dataset.
 
 ### Strategy 3: Retrieve and Use After Exception (If Not Caught)
 
@@ -192,12 +195,11 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Retrieve the order using its ID (from the exception message or UI)
-order = client.order.get_order_by_id(order_id)
-
-# Run the order with the successfully uploaded datapoints
+order = client.order.get_order_by_id(order_id) # (1)!
 order.run()
 ```
+
+1. Retrieve the order using its ID (from the exception message or the [Rapidata Dashboard](https://app.rapidata.ai)).
 
 **For Job Definitions:**
 ```python
@@ -205,9 +207,8 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Retrieve the job definition using its ID (from the exception message or UI)
-job_def = client.job.get_job_definition_by_id(job_definition_id)
-
-# Use the job definition normally (e.g., assign it to an audience)
+job_def = client.job.get_job_definition_by_id(job_definition_id) # (1)!
 audience.assign_job(job_def)
 ```
+
+1. Retrieve the job definition using its ID (from the exception message or the [Rapidata Dashboard](https://app.rapidata.ai)).

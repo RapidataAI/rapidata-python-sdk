@@ -16,7 +16,8 @@ A **curated audience** is a pre-existing pool of labelers trained on a specific 
 
 A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to the most accurate results.
 
-> **Note**: You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+!!! note
+    You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 ## Creating a Custom Audience
 
@@ -26,14 +27,17 @@ A **custom audience** filters labelers through qualification examples before the
 from rapidata import RapidataClient
 
 client = RapidataClient()
-audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
+audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
 ```
+
+1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next.
 
 ### Step 2: Add Qualification Examples
 
 Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.
 
-> **Important:** Every qualification example with its associated truth must be manually and thoroughly reviewed before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting your quality control. Always verify that each example has a clear, unambiguous correct answer.
+!!! warning "Review your qualification examples carefully"
+    Every qualification example with its associated truth must be manually and thoroughly reviewed before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting your quality control. Always verify that each example has a clear, unambiguous correct answer.
 
 ```py
 DATAPOINTS = [
@@ -60,19 +64,18 @@ PROMPTS = [
 for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
     audience.add_compare_example(
         instruction="Which image follows the prompt more accurately?",
-        datapoint=datapoint,
-        truth=datapoint[0],
-        context=prompt
+        datapoint=datapoint, # (1)!
+        truth=datapoint[0], # (2)!
+        context=prompt # (3)!
     )
 ```
-> **Note**: In practice you'd want to add more examples to the audience to improve the quality of the results.
 
-**Parameters:**
+1. The items to compare — a list of URLs, local paths, or text strings.
+2. The correct answer — must match one of the datapoint items exactly.
+3. Additional context shown alongside the comparison (optional).
 
-- `instruction`: The question shown to labelers
-- `datapoint`: The items to compare (list of URLs, local paths or text)
-- `truth`: The correct answer (must match one of the datapoint items exactly)
-- `context`: Additional context shown alongside the comparison (optional)
+!!! note
+    In practice you'd want to add more examples to the audience to improve the quality of the results.
 
 ### Step 3: Create and Assign a Job
 
@@ -106,10 +109,8 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create audience
 audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
 
-# Add qualification examples
 DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
     ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
@@ -139,7 +140,6 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
         context=prompt
     )
 
-# Create and assign job
 job_definition = client.job.create_compare_job_definition(
     name="Prompt Alignment Job",
     instruction="Which image follows the prompt more accurately?",
@@ -163,13 +163,9 @@ print(results)
 Once created, you can reuse your audience for multiple jobs:
 
 ```py
-# Find existing audiences by name
 audiences = client.audience.find_audiences("Custom Prompt Alignment Audience")
-
-# Or get by ID
 audience = client.audience.get_audience_by_id("audience_id")
 
-# Assign new jobs to the same audience
 job = audience.assign_job(new_job_definition)
 ```
 

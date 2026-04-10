@@ -1,35 +1,35 @@
-# Rapidata Python SDK Documentation
+# Rapidata Python SDK
 
 ## Guides
 
-- [👀 Overview](https://docs.rapidata.ai/3.x/starting_page/index.md)
-- [🚀 Quick Start](https://docs.rapidata.ai/3.x/quickstart/index.md)
-- [👥 Custom Audiences](https://docs.rapidata.ai/3.x/audiences/index.md)
-- [📖 Parameter Reference](https://docs.rapidata.ai/3.x/job_definition_parameters/index.md)
-- [📊 Understanding Results](https://docs.rapidata.ai/3.x/understanding_the_results/index.md)
-- [❌ Error Handling](https://docs.rapidata.ai/3.x/error_handling/index.md)
-- [🛑 Confidence Stopping](https://docs.rapidata.ai/3.x/confidence_stopping/index.md)
-- [💡 Human Prompting](https://docs.rapidata.ai/3.x/human_prompting/index.md)
-- [📝 Logging & Config](https://docs.rapidata.ai/3.x/config/index.md)
+- [Overview](https://docs.rapidata.ai/3.x/starting_page/index.md)
+- [Quick Start](https://docs.rapidata.ai/3.x/quickstart/index.md)
+- [Custom Audiences](https://docs.rapidata.ai/3.x/audiences/index.md)
+- [Parameter Reference](https://docs.rapidata.ai/3.x/job_definition_parameters/index.md)
+- [Understanding Results](https://docs.rapidata.ai/3.x/understanding_the_results/index.md)
+- [Error Handling](https://docs.rapidata.ai/3.x/error_handling/index.md)
+- [Early Stopping](https://docs.rapidata.ai/3.x/confidence_stopping/index.md)
+- [Instruction Design](https://docs.rapidata.ai/3.x/human_prompting/index.md)
+- [Logging & Config](https://docs.rapidata.ai/3.x/config/index.md)
 
 ## Examples
 
-- [🏷️ Classification](https://docs.rapidata.ai/3.x/examples/classify_job/index.md)
-- [⚖️ Compare](https://docs.rapidata.ai/3.x/examples/compare_job/index.md)
+- [Classification](https://docs.rapidata.ai/3.x/examples/classify_job/index.md)
+- [Comparison](https://docs.rapidata.ai/3.x/examples/compare_job/index.md)
 
 ## Benchmarks
 
-- [🧠 Model Ranking Insights](https://docs.rapidata.ai/3.x/mri/index.md)
-- [🔭 Model Ranking Insights Advanced](https://docs.rapidata.ai/3.x/mri_advanced/index.md)
+- [Getting Started](https://docs.rapidata.ai/3.x/mri/index.md)
+- [Advanced](https://docs.rapidata.ai/3.x/mri_advanced/index.md)
 
 ## Flows
 
-- [Overview](https://docs.rapidata.ai/3.x/flows/index.md)
+- [Ranking Flows](https://docs.rapidata.ai/3.x/flows/index.md)
 
 ## Claude Code
 
-- [🤖 Claude Code Plugin](https://docs.rapidata.ai/3.x/claude_code/index.md)
+- [Claude Code](https://docs.rapidata.ai/3.x/claude_code/index.md)
 
 ## Migration
 
-- [🔄 Migration Guide](https://docs.rapidata.ai/3.x/migration_guide/index.md)
+- [Migration Guide](https://docs.rapidata.ai/3.x/migration_guide/index.md)
