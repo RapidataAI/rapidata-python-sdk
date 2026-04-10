@@ -1,10 +1,11 @@
 /* ==========================================================================
-   Font
+   Fonts
    ========================================================================== */
 
 :root {
-    --md-text-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --md-code-font: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --md-text-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --md-code-font: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 }
 
 body {
@@ -12,12 +13,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+
 /* ==========================================================================
-   Color primitives & semantic tokens
+   Color tokens
    ========================================================================== */
 
 :root {
-    /* primitives */
     --primitive-white: oklch(100% 0 0);
     --primitive-black: oklch(0% 0 0);
 
@@ -25,6 +26,7 @@ body {
     --primitive-brand-dark: oklch(0.48 0.1674 258.22);
     --primitive-brand-light: oklch(0.707 0.165 254.624);
     --color-blue-400: oklch(0.707 0.165 254.624);
+    --color-blue-dim: oklch(0.50 0.10 254);
 
     --primitive-gold: oklch(0.8238 0.1678 90.3);
     --primitive-brand-secondary: oklch(83.92% 0.165058 170.6089);
@@ -35,6 +37,7 @@ body {
     --primitive-gray-250: oklch(0.25 0.0099 268.28);
     --primitive-gray-300: oklch(20.27% 0.0118 254.1);
     --primitive-gray-400: oklch(16.34% 0.0091 264.28);
+    --primitive-gray-500: oklch(12% 0.006 264);
 
     --primitive-red-100: oklch(58.02% 0.2043 24.84);
     --primitive-green-100: oklch(57.77% 0.1309 147.68);
@@ -45,17 +48,18 @@ body {
     --color-chart-4: #e8c468;
     --color-chart-5: #f4a462;
 
-    /* semantic */
     --color-background: var(--primitive-gray-400);
     --color-background-secondary: var(--primitive-gray-300);
     --color-background-tertiary: var(--primitive-gray-200);
     --color-background-tertiary-dark: var(--primitive-gray-250);
+    --color-background-deep: var(--primitive-gray-500);
     --color-background-error: var(--primitive-red-100);
     --color-background-success: var(--primitive-green-100);
 
     --color-border-primary: var(--primitive-gray-200);
     --color-border-secondary: var(--primitive-gray-300);
     --color-border-success: var(--primitive-green-100);
+    --color-border-subtle: hsla(225, 15%, 90%, 0.07);
 
     --color-text-primary: var(--primitive-gray-100);
     --color-text-secondary: var(--primitive-gray-150);
@@ -80,14 +84,12 @@ body {
    ========================================================================== */
 
 :root > * {
-    /* Primary */
     --md-primary-fg-color:             var(--color-background);
     --md-primary-fg-color--light:      var(--color-background);
     --md-primary-fg-color--dark:       var(--color-background);
     --md-primary-bg-color:             hsla(0, 0%, 100%, 1);
     --md-primary-bg-color--light:      hsla(0, 0%, 100%, 0.7);
 
-    /* Accent */
     --md-accent-fg-color:              var(--color-blue-400);
     --md-accent-fg-color--transparent: var(--color-background-secondary);
     --md-accent-bg-color:              hsla(0, 0%, 100%, 1);
@@ -95,23 +97,19 @@ body {
 
     --md-hue: 225deg;
 
-    /* Foreground */
     --md-default-fg-color:           hsla(var(--md-hue), 15%, 90%, 0.82);
     --md-default-fg-color--light:    hsla(var(--md-hue), 15%, 90%, 0.56);
-    --md-default-fg-color--lighter:  hsla(var(--md-hue), 15%, 90%, 0.32);
-    --md-default-fg-color--lightest: hsla(var(--md-hue), 15%, 90%, 0.12);
+    --md-default-fg-color--lighter:  hsla(var(--md-hue), 15%, 90%, 0.28);
+    --md-default-fg-color--lightest: hsla(var(--md-hue), 15%, 90%, 0.10);
 
-    /* Background */
     --md-default-bg-color:           var(--color-background);
     --md-default-bg-color--light:    var(--color-background);
     --md-default-bg-color--lighter:  var(--color-background-secondary);
     --md-default-bg-color--lightest: var(--color-background-secondary);
 
-    /* Code */
-    --md-code-fg-color:              hsla(var(--md-hue), 18%, 86%, 0.82);
-    --md-code-bg-color:              hsla(var(--md-hue), 15%, 15%, 1);
+    --md-code-fg-color:              hsla(var(--md-hue), 18%, 86%, 0.87);
+    --md-code-bg-color:              var(--color-background-deep);
 
-    /* Syntax highlighting */
     --md-code-hl-number-color:       hsla(6, 74%, 63%, 1);
     --md-code-hl-special-color:      hsla(340, 83%, 66%, 1);
     --md-code-hl-function-color:     hsla(291, 57%, 65%, 1);
@@ -121,56 +119,45 @@ body {
     --md-code-hl-name-color:         var(--md-code-fg-color);
     --md-code-hl-operator-color:     var(--md-default-fg-color--light);
     --md-code-hl-punctuation-color:  var(--md-default-fg-color--light);
-    --md-code-hl-comment-color:      var(--md-default-fg-color--light);
+    --md-code-hl-comment-color:      var(--md-default-fg-color--lighter);
     --md-code-hl-generic-color:      var(--md-default-fg-color--light);
     --md-code-hl-variable-color:     var(--md-default-fg-color--light);
 
-    /* Typeset */
     --md-typeset-color:              var(--color-text-primary);
     --md-typeset-a-color:            var(--color-blue-400);
     --md-typeset-kbd-color:          hsla(var(--md-hue), 15%, 90%, 0.12);
     --md-typeset-kbd-accent-color:   hsla(var(--md-hue), 15%, 90%, 0.2);
     --md-typeset-kbd-border-color:   hsla(var(--md-hue), 15%, 14%, 1);
-
-    /* Tables */
     --md-typeset-table-color:        hsla(var(--md-hue), 15%, 95%, 0.12);
     --md-typeset-table-color--light: hsla(var(--md-hue), 15%, 95%, 0.035);
 
-    /* Admonitions */
     --md-admonition-fg-color:        var(--md-default-fg-color);
     --md-admonition-bg-color:        var(--md-default-bg-color);
 
-    /* Footer */
-    --md-footer-bg-color:            hsla(var(--md-hue), 15%, 10%, 0.87);
-    --md-footer-bg-color--dark:      hsla(var(--md-hue), 15%, 8%, 1);
+    --md-footer-bg-color:            var(--color-background-deep);
+    --md-footer-bg-color--dark:      var(--color-background-deep);
 
-    /* Shadows */
-    --md-shadow-z1:
-        0 0.25rem 0.625rem hsla(0, 0%, 0%, 0.05),
-        0 0 0.0625rem hsla(0, 0%, 0%, 0.1);
-    --md-shadow-z2:
-        0 0.25rem 0.625rem hsla(0, 0%, 0%, 0.2),
-        0 0 0.0625rem hsla(0, 0%, 0%, 0.2);
-    --md-shadow-z3:
-        0 0.25rem 0.625rem hsla(0, 0%, 0%, 0.35),
-        0 0 0.0625rem hsla(0, 0%, 0%, 0.3);
+    --md-shadow-z1: none;
+    --md-shadow-z2: none;
+    --md-shadow-z3: none;
 }
 
 
 /* ==========================================================================
-   Header / tabs
+   Header & tabs
    ========================================================================== */
 
 .md-header {
-    backdrop-filter: blur(8px);
-    background-color: hsla(var(--md-hue), 15%, 10%, 0.85);
+    background: var(--color-background);
+    border-bottom: 1px solid var(--color-border-subtle);
+    box-shadow: none;
 }
 
 .md-tabs {
-    background-color: transparent;
+    background: transparent;
+    border-bottom: 1px solid var(--color-border-subtle);
 }
 
-/* Active tab indicator uses brand color */
 .md-tabs__link--active,
 .md-tabs__link:hover {
     color: var(--color-blue-400);
@@ -182,27 +169,35 @@ body {
    ========================================================================== */
 
 .md-typeset h1 {
+    font-family: var(--font-mono);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--color-text-primary);
+    letter-spacing: -0.025em;
 }
 
 .md-typeset h2 {
+    font-family: var(--font-mono);
     font-weight: 600;
-    letter-spacing: -0.01em;
-    margin-top: 2.4em;
-    padding-bottom: 0.4em;
-    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+    letter-spacing: -0.02em;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .md-typeset h3 {
+    font-family: var(--font-mono);
     font-weight: 600;
-    margin-top: 1.8em;
 }
 
-/* Tighter line height for body text */
-.md-typeset {
-    line-height: 1.7;
+.md-typeset h4 {
+    font-family: var(--font-mono);
+    font-weight: 500;
+}
+
+.md-typeset a {
+    text-decoration: none;
+}
+
+.md-typeset a:hover {
+    text-decoration: underline;
 }
 
 
@@ -210,74 +205,34 @@ body {
    Navigation (sidebar)
    ========================================================================== */
 
-/* Nav link base */
 .md-nav__link {
-    border-radius: 0.25rem;
-    transition: background-color 0.15s ease, color 0.15s ease;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.82rem;
+    border-radius: 0.2rem;
+    transition: color 0.1s ease, background-color 0.1s ease;
 }
 
 .md-nav__link:hover {
-    background-color: var(--md-accent-fg-color--transparent);
+    background: var(--md-accent-fg-color--transparent);
 }
 
-/* Active state */
 .md-nav__link--active {
-    background-color: var(--color-background-secondary);
-    font-weight: 500;
     color: var(--color-blue-400);
+    font-weight: 500;
 }
 
-/* Section titles in sidebar */
+/* Section headers */
 .md-nav__item--section > .md-nav__link {
+    font-family: var(--font-mono);
     font-weight: 600;
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--md-default-fg-color--light);
-    margin-top: 1.2rem;
+    letter-spacing: 0.08em;
+    color: var(--md-default-fg-color--lighter);
 }
 
-.md-nav__item--section:first-child > .md-nav__link {
-    margin-top: 0;
-}
-
-/* Subtle left border for expanded sections */
-.md-nav__toggle:checked ~ .md-nav__list {
-    border-left: 2px solid var(--md-default-fg-color--lightest);
-    margin-left: 0.5rem;
-    padding-left: 0.75rem;
-}
-
-/* Sidebar border */
-.md-sidebar--primary .md-sidebar__scrollwrap {
-    border-right: 1px solid var(--md-default-fg-color--lightest);
-}
-
-
-/* ==========================================================================
-   Table of contents (right sidebar)
-   ========================================================================== */
-
-.md-sidebar--secondary .md-nav__link {
-    font-size: 0.75rem;
-}
-
+/* Right sidebar TOC */
 .md-sidebar--secondary .md-nav__link--active {
     color: var(--color-blue-400);
     background: none;
-    font-weight: 500;
-}
-
-
-/* ==========================================================================
-   Breadcrumbs
-   ========================================================================== */
-
-.md-path {
-    font-size: 0.72rem;
-    opacity: 0.6;
 }
 
 
@@ -285,25 +240,48 @@ body {
    Code blocks
    ========================================================================== */
 
+/* Inline code */
 .md-typeset code {
-    border-radius: 0.25rem;
-    padding: 0.1em 0.35em;
-    font-size: 0.82em;
+    border-radius: 0.2rem;
+    background: var(--color-background-deep);
+    border: 1px solid var(--color-border-subtle);
 }
 
+/* Block code */
 .md-typeset pre {
-    border-radius: 0.5rem;
-    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 0.3rem;
+    border: 1px solid var(--color-border-subtle);
+    position: relative;
 }
 
 .md-typeset pre > code {
-    font-size: 0.8rem;
-    line-height: 1.6;
+    border: none;
+    background: none;
+}
+
+/* Blue left accent */
+.md-typeset pre::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-blue-dim);
+    border-radius: 0.3rem 0 0 0.3rem;
+}
+
+.md-clipboard {
+    color: var(--md-default-fg-color--lighter);
+}
+
+.md-clipboard:hover {
+    color: var(--color-blue-400);
 }
 
 
 /* ==========================================================================
-   Tabs (code examples)
+   Tabs
    ========================================================================== */
 
 .tabbed-set .tabbed-content {
@@ -314,41 +292,84 @@ body {
     padding-top: 0.5rem;
 }
 
+.tabbed-labels > label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
 
 /* ==========================================================================
    Tables
    ========================================================================== */
 
 .md-typeset table:not([class]) {
-    border-radius: 0.5rem;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.3rem;
     overflow: hidden;
-    border: 1px solid var(--md-default-fg-color--lightest);
-    font-size: 0.82rem;
 }
 
 .md-typeset table:not([class]) th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.68rem;
     letter-spacing: 0.04em;
-    background-color: var(--color-background-secondary);
+    text-transform: uppercase;
+    background-color: var(--color-background-deep);
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.md-typeset table:not([class]) td {
+    border-bottom: 1px solid var(--color-border-subtle);
 }
 
 
 /* ==========================================================================
-   Blockquotes / admonitions
+   Blockquotes
    ========================================================================== */
 
 .md-typeset blockquote {
-    border-left: 3px solid var(--color-blue-400);
-    background: var(--color-background-secondary);
-    padding: 0.8rem 1rem;
-    border-radius: 0 0.25rem 0.25rem 0;
+    border-left: 2px solid var(--md-default-fg-color--lighter);
+    background: none;
     color: var(--md-default-fg-color--light);
 }
 
-.md-typeset blockquote p {
-    margin: 0;
+
+/* ==========================================================================
+   Horizontal rules
+   ========================================================================== */
+
+.md-typeset hr {
+    border: none;
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.md-footer {
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+
+/* ==========================================================================
+   Progress bar
+   ========================================================================== */
+
+.md-progress {
+    background: var(--color-blue-400);
+}
+
+
+/* ==========================================================================
+   Search
+   ========================================================================== */
+
+.md-search__form {
+    border-radius: 0.25rem;
+    background: var(--color-background-secondary);
 }
 
 
@@ -359,13 +380,13 @@ body {
 .login-button {
     background: linear-gradient(150.81deg, #00ECBB -29.74%, #0077FF 62.28%);
     color: white;
-    box-shadow: 0 0 #0000, 0 0 #0000, 0 4px 4px 0 #0D111A40;
-    padding: 0.3rem 0.85rem;
-    border-radius: 0.25rem;
-    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.2rem;
+    font-size: 0.65rem;
     font-weight: 500;
     letter-spacing: 0.02em;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.1s ease;
+    box-shadow: none;
 
     @media screen and (min-width: 1024px) {
         margin-left: 2rem;
@@ -373,61 +394,19 @@ body {
 }
 
 .login-button:hover {
-    opacity: 0.9;
+    opacity: 0.85;
 }
 
 
 /* ==========================================================================
-   Image switch (light/dark mode)
+   Image switch (light/dark)
    ========================================================================== */
 
-.image-switch {
-    display: block;
-}
-
-.image-switch img {
-    max-width: 100%;
-    height: auto;
-}
-
-.image-switch img.dark {
-    display: none;
-}
-
-[data-md-color-scheme="slate"] .image-switch img.light {
-    display: none;
-}
-
-[data-md-color-scheme="slate"] .image-switch img.dark {
-    display: block;
-}
-
-
-/* ==========================================================================
-   Landing page cards
-   ========================================================================== */
-
-.md-typeset .grid.cards > ul > li,
-.md-typeset .grid > .card {
-    border: 1px solid var(--md-default-fg-color--lightest);
-    border-radius: 0.5rem;
-    background: var(--color-background-secondary);
-    transition: border-color 0.15s ease;
-}
-
-.md-typeset .grid.cards > ul > li:hover,
-.md-typeset .grid > .card:hover {
-    border-color: var(--md-default-fg-color--lighter);
-}
-
-
-/* ==========================================================================
-   Instant loading progress bar
-   ========================================================================== */
-
-.md-progress {
-    background: var(--color-blue-400);
-}
+.image-switch { display: block; }
+.image-switch img { max-width: 100%; height: auto; }
+.image-switch img.dark { display: none; }
+[data-md-color-scheme="slate"] .image-switch img.light { display: none; }
+[data-md-color-scheme="slate"] .image-switch img.dark { display: block; }
 
 
 /* ==========================================================================
@@ -445,22 +424,22 @@ body {
 
 #llms-copy-button button {
     background: transparent !important;
-    border: 1px solid var(--md-default-fg-color--lightest) !important;
-    border-radius: 0.25rem !important;
-    padding: 0.35rem 0.6rem !important;
+    border: 1px solid var(--color-border-subtle) !important;
+    border-radius: 0.2rem !important;
+    padding: 0.3rem 0.55rem !important;
     line-height: 1 !important;
     box-shadow: none !important;
-    transition: all 0.15s ease !important;
+    transition: color 0.1s ease !important;
     cursor: pointer;
-    color: var(--color-text-secondary) !important;
+    color: var(--md-default-fg-color--lighter) !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem !important;
+    font-size: 0.65rem !important;
+    font-family: var(--font-mono) !important;
 }
 
 #llms-copy-button button:hover {
-    background: var(--color-background-secondary) !important;
     color: var(--color-text-primary) !important;
     border-color: var(--md-default-fg-color--lighter) !important;
 }
@@ -474,7 +453,6 @@ body {
     color: var(--color-text-error) !important;
 }
 
-/* Tooltip */
 #llms-copy-button button::after {
     content: "Copy for AI Agent";
     position: absolute;
@@ -483,29 +461,15 @@ body {
     transform: translateY(-50%);
     background: var(--color-background-tertiary);
     color: var(--color-text-primary);
-    padding: 0.3rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.65rem;
+    padding: 0.25rem 0.45rem;
+    border-radius: 0.2rem;
+    font-size: 0.62rem;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.1s ease;
     border: 1px solid var(--color-border-primary);
 }
 
-#llms-copy-button button:hover::after {
-    opacity: 1;
-}
-
-#llms-copy-button button.copied::after {
-    opacity: 0 !important;
-}
-
-
-/* ==========================================================================
-   Search
-   ========================================================================== */
-
-.md-search__form {
-    border-radius: 0.375rem;
-}
+#llms-copy-button button:hover::after { opacity: 1; }
+#llms-copy-button button.copied::after { opacity: 0 !important; }

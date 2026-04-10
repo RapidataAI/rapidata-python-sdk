@@ -7,7 +7,7 @@ extra_javascript:
   - js/login.js
   - js/ai-copy-button.js
 extra_css:
-  - https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap
+  - https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap
   - stylesheets/extra.css
 
 hooks:
@@ -116,20 +116,19 @@ nav:
       - Custom Audiences: audiences.md
       - Parameter Reference: job_definition_parameters.md
       - Understanding Results: understanding_the_results.md
-      - Error Handling: error_handling.md
       - Early Stopping: confidence_stopping.md
       - Instruction Design: human_prompting.md
+      - Error Handling: error_handling.md
       - Logging & Config: config.md
     - Examples:
       - Classification: examples/classify_job.md
       - Comparison: examples/compare_job.md
-    - Ranking Flows:
-      - Overview: flows.md
+    - Ranking Flows: flows.md
     - Model Ranking:
       - Getting Started: mri.md
-      - Advanced Features: mri_advanced.md
+      - Advanced: mri_advanced.md
     - Resources:
-      - Claude Code Plugin: claude_code.md
+      - Claude Code: claude_code.md
       - Migration Guide: migration_guide.md
 
 theme:
@@ -154,7 +153,5 @@ theme:
     - navigation.top
     - navigation.tracking
     - navigation.indexes
-    - navigation.path
     - toc.follow
-    - search.share
     - search.suggest
