@@ -109,10 +109,8 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create audience
 audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
 
-# Add qualification examples
 DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
     ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
@@ -142,7 +140,6 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
         context=prompt
     )
 
-# Create and assign job
 job_definition = client.job.create_compare_job_definition(
     name="Prompt Alignment Job",
     instruction="Which image follows the prompt more accurately?",
@@ -166,13 +163,9 @@ print(results)
 Once created, you can reuse your audience for multiple jobs:
 
 ```py
-# Find existing audiences by name
 audiences = client.audience.find_audiences("Custom Prompt Alignment Audience")
-
-# Or get by ID
 audience = client.audience.get_audience_by_id("audience_id")
 
-# Assign new jobs to the same audience
 job = audience.assign_job(new_job_definition)
 ```
 

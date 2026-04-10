@@ -1,5 +1,5 @@
 // AI Agent copy button enhancements
-document.addEventListener('DOMContentLoaded', function() {
+function initCopyButton() {
     const copyButton = document.getElementById('llms-copy-button');
     if (!copyButton) return;
 
@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
     button.innerHTML = copyIcon;
 
     // Override the click handler to show checkmark
-    const originalOnclick = button.onclick;
     button.onclick = async function(e) {
         try {
             const currentPath = window.location.pathname;
@@ -53,4 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000);
         }
     };
-});
+}
+
+// Run on initial page load
+document.addEventListener('DOMContentLoaded', initCopyButton);
+
+// Re-run after instant navigation (Material for MkDocs)
+document.addEventListener('DOMContentSwitch', initCopyButton);

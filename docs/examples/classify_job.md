@@ -17,7 +17,6 @@ CONTEXTS = ["A t-shirt with the text 'Running on caffeine & dreams'"] * len(IMAG
 
 client = RapidataClient()
 
-# Create audience with qualification example
 audience = client.audience.create_audience(name="Likert Scale Audience")
 audience.add_classification_example(
     instruction="How well does the image match the description?",
@@ -27,7 +26,6 @@ audience.add_classification_example(
     context="A t-shirt with the text 'Running on caffeine & dreams'"
 )
 
-# Create job definition
 job_definition = client.job.create_classification_job_definition(
     name="Likert Scale Example",
     instruction="How well does the image match the description?",
@@ -35,15 +33,15 @@ job_definition = client.job.create_classification_job_definition(
     contexts=CONTEXTS,
     datapoints=IMAGE_URLS,
     responses_per_datapoint=25,
-    settings=[NoShuffleSetting()]
+    settings=[NoShuffleSetting()] # (1)!
 )
 
-# Preview the job definition
 job_definition.preview()
 
-# Assign to audience and get results
 job = audience.assign_job(job_definition)
 job.display_progress_bar()
 results = job.get_results()
 print(results)
 ```
+
+1. Keeps the answer options in their specified order. Without this, options are randomized to reduce bias — but for Likert scales you want them ordered.

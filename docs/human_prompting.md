@@ -70,7 +70,6 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create audience with clear qualification example
 audience = client.audience.create_audience(name="Image Coherence Audience")
 audience.add_compare_example(
     instruction="Which image has more glitches and is more likely to be AI generated?",
@@ -81,7 +80,6 @@ audience.add_compare_example(
     truth="https://assets.rapidata.ai/bad_ai_generated_image.png"
 )
 
-# Create job definition with clear instruction
 job_definition = client.job.create_compare_job_definition(
     name="Image Coherence Comparison",
     instruction="Which image has more glitches and is more likely to be AI generated?",
@@ -91,7 +89,6 @@ job_definition = client.job.create_compare_job_definition(
     ]
 )
 
-# Preview before running
 job_definition.preview()
 ```
 
