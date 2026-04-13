@@ -19,6 +19,19 @@ Pick your agent. One command. Done.
 
 Install once. Works in every session after that. That's it.
 
+??? note "No install — just the raw SKILL.md"
+
+    If your framework doesn't match any of the above, drop the raw file into your agent's context:
+
+    [**SKILL.md on GitHub**](https://github.com/RapidataAI/skills/blob/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md)
+
+    Raw URL for fetching:
+
+    ```
+    https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md
+    ```
+
+
 ## Usage
 
 ### Automatic
@@ -47,20 +60,24 @@ On Claude Code, invoke the skill directly:
 
 Other agents follow their own conventions — Cursor rules, Copilot instructions, etc. The skill activates whenever the file is loaded into context.
 
-??? note "No install — just the raw SKILL.md"
+## Keeping the skill up to date
 
-    If your framework doesn't match any of the above, drop the raw file into your agent's context:
+The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. Pull the latest version so your agent stays in sync.
 
-    [**SKILL.md on GitHub**](https://github.com/RapidataAI/skills/blob/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md)
+**Claude Code:**
 
-    Raw URL for fetching:
+```
+/plugin marketplace update
+```
 
-    ```
-    https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md
-    ```
+**Everything else:**
 
-    Common integration patterns:
+```bash
+npx skills update rapidata
+```
 
-    - **Custom agent / SDK**: Load the file into your system prompt when the agent detects Rapidata-related work.
-    - **RAG / knowledge base**: Index it alongside your other docs and retrieve on Rapidata-related queries.
-    - **Anthropic Agent SDK**: Register it as a skill — the file already has the required frontmatter.
+Or update every skill you've installed at once:
+
+```bash
+npx skills update
+```
