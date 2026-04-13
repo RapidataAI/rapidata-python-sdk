@@ -175,4 +175,4 @@ print(results)
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
 - Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
-- Migrating from Orders? See the [Migration Guide](migration_guide.md)
+- Let your [AI agent](ai_agents.md) write the integration code for you — one-line install for Claude Code, Cursor, Copilot, and many more

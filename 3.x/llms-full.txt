@@ -318,7 +318,7 @@ print(results)
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
 - Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
-- Migrating from Orders? See the [Migration Guide](migration_guide.md)
+- Let your [AI agent](ai_agents.md) write the integration code for you — one-line install for Claude Code, Cursor, Copilot, and many more
 
 
 ## Custom Audiences
@@ -2365,37 +2365,49 @@ flow.delete()
 ```
 
 
-# Claude Code
+# AI Agents
 
-## Claude Code
+## AI Agents
 
-# Using Rapidata with Claude Code
+# Rapidata in your AI agent
 
-The Rapidata SDK has an official [Claude Code](https://claude.com/product/claude-code) plugin that teaches Claude how to use the SDK. Once installed, Claude can help you write Rapidata integration code, create labeling jobs, set up audiences, and more - either automatically when it detects you're working with Rapidata, or on demand via the `/rapidata` command.
+Let your coding agent write the Rapidata integration for you. The official Rapidata skill teaches agents how to use the SDK — create labeling jobs, configure audiences, run benchmarks, and more — so you can just describe what you want in plain English.
 
-## Installation
+## Install
 
-### 1. Add the marketplace
+Pick your agent. One command. Done.
 
-In Claude Code, run:
+| Agent | Install |
+|-------|---------|
+| **Claude Code** | `claude plugin marketplace add RapidataAI/skills && claude plugin install rapidata-sdk-plugin@rapidata-sdk-marketplace` |
+| **Cursor** | `npx skills add RapidataAI/skills -a cursor` |
+| **Windsurf** | `npx skills add RapidataAI/skills -a windsurf` |
+| **Copilot** | `npx skills add RapidataAI/skills -a github-copilot` |
+| **Cline** | `npx skills add RapidataAI/skills -a cline` |
+| **Codex** | `npx skills add RapidataAI/skills -a codex` |
+| **Gemini CLI** | `npx skills add RapidataAI/skills -a gemini-cli` |
+| **Any other** | `npx skills add RapidataAI/skills` |
 
-```
-/plugin marketplace add rapidataAI/skills
-```
+Install once. Works in every session after that. That's it.
 
-### 2. Install the plugin
+??? note "No install — just the raw SKILL.md"
 
-```
-/plugin install rapidata-sdk-plugin@rapidata-sdk-marketplace
-```
+    If your framework doesn't match any of the above, drop the raw file into your agent's context:
 
-That's it. The `/rapidata` skill is now available.
+    [**SKILL.md on GitHub**](https://github.com/RapidataAI/skills/blob/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md)
+
+    Raw URL for fetching:
+
+    ```
+    https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md
+    ```
+
 
 ## Usage
 
 ### Automatic
 
-Claude will automatically use its knowledge of the Rapidata SDK when it detects you're working with Rapidata code. Just ask naturally:
+The agent loads the skill when it sees Rapidata-related work. Just ask naturally:
 
 ```
 Create a comparison job that evaluates image quality between two models
@@ -2407,174 +2419,36 @@ Set up a custom audience with 3 qualification examples for prompt adherence
 
 ### Manual
 
-Invoke the skill directly for SDK guidance:
+On Claude Code, invoke the skill directly:
 
 ```
 /rapidata
 ```
 
-Or with a specific question:
-
 ```
 /rapidata How do I set up early stopping with a confidence threshold?
 ```
 
-## What the plugin provides
+Other agents follow their own conventions — Cursor rules, Copilot instructions, etc. The skill activates whenever the file is loaded into context.
 
-The plugin gives Claude detailed knowledge of:
+## Keeping the skill up to date
 
-- **Classification, comparison, and ranking jobs** — creating job definitions, configuring parameters, and interpreting results
-- **Audiences** — finding curated audiences, creating custom audiences with qualification examples, applying demographic filters
-- **Flows** — continuous ranking without full job setup
-- **MRI / Benchmarks** — comparing and ranking AI models on leaderboards
-- **Settings** — `NoShuffleSetting`, `AllowNeitherBothSetting`, `MarkdownSetting`, and other display options
-- **Error handling** — working with `FailedUploadException` for partial upload failures
-- **Legacy order API** — backwards-compatible order creation
+The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. Pull the latest version so your agent stays in sync.
 
-## Keeping the plugin up to date
+**Claude Code**:
 
-To pull the latest version of the plugin:
-
-```
-/plugin marketplace update
+```bash
+claude plugin marketplace update
 ```
 
-## Adding the plugin to your project
+**Everything else**:
 
-To make the plugin available to all contributors of a project automatically, add this to your project's `.claude/settings.json`:
-
-```json
-{
-    "extraKnownMarketplaces": {
-        "rapidata-sdk-marketplace": {
-            "source": {
-                "source": "github",
-                "repo": "rapidataAI/skills"
-            }
-        }
-    },
-    "enabledPlugins": {
-        "rapidata-sdk-plugin@rapidata-sdk-marketplace": true
-    }
-}
+```bash
+npx skills update rapidata
 ```
 
-Contributors will be prompted to install the marketplace and plugin when they open the project.
+Or update every skill you've installed at once:
 
-
-# Migration
-
-## Migration Guide
-
-# Migration Guide: Orders to Audiences
-
-This guide helps you migrate from the legacy Order API to the recommended Audience & Job API.
-
-!!! note
-    The Order and Validation APIs (`client.order`, `client.validation`) remain available for backwards compatibility in the near term.
-
-We observe higher quality responses when first curating an audience that is vetted on your specific task. While it was possible to do this with the previous Order API, the new Audience & Job API puts the recommended workflow front and center. The new paradigm revolves around two steps:
-
-1. **Curate an Audience**: Out of the millions of people available through Rapidata, select an audience that performs especially well on your task. This audience is curated by giving people validation examples and only accepting high performers.
-
-2. **Define the Job**: Define the annotation task in a Job Definition, which can then be assigned to an audience for processing.
-
-## Side-by-Side Comparison
-
-### Legacy: Orders
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-# Step 1: Create validation set with quality control examples
-validation_set = client.validation.create_compare_set(
-    name="Image Comparison Validation",
-    instruction="Which image follows the prompt better?",
-    datapoints=[["good_example.jpg", "bad_example.jpg"]],
-    truths=["good_example.jpg"],
-    contexts=["A sign that says 'Diffusion'."]
-)
-
-# Step 2: Create order with validation set reference
-order = client.order.create_compare_order(
-    name="Prompt Alignment Comparison",
-    instruction="Which image follows the prompt better?",
-    datapoints=[
-        ["flux_image.jpg", "midjourney_image.jpg"],
-        ["flux_image2.jpg", "midjourney_image2.jpg"]
-    ],
-    contexts=["A cat on a chair", "A sunset over mountains"],
-    validation_set_id=validation_set.id,
-    responses_per_datapoint=10
-)
-
-# Step 3: Run and get results
-order.run()
-results = order.get_results()
+```bash
+npx skills update
 ```
-
-### New: Audiences & Jobs
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-# Step 1: Create audience with qualification examples built-in
-audience = client.audience.create_audience(name="Prompt Alignment Judges")
-audience.add_compare_example(
-    instruction="Which image follows the prompt better?",
-    datapoint=["good_example.jpg", "bad_example.jpg"],
-    truth="good_example.jpg",
-    context="A sign that says 'Diffusion'."
-)
-
-# Step 2: Create job definition
-job_definition = client.job.create_compare_job_definition(
-    name="Prompt Alignment Comparison",
-    instruction="Which image follows the prompt better?",
-    datapoints=[
-        ["flux_image.jpg", "midjourney_image.jpg"],
-        ["flux_image2.jpg", "midjourney_image2.jpg"]
-    ],
-    contexts=["A cat on a chair", "A sunset over mountains"],
-    responses_per_datapoint=10
-)
-
-# Step 3: Assign and get results
-job = audience.assign_job(job_definition)
-results = job.get_results()
-```
-
-## What Changed
-
-| Legacy | Recommended | Notes |
-|--------|-------------|-------|
-| `client.order.create_*_order()` | `client.job.create_*_job_definition()` | Same parameters |
-| `client.validation.create_*_set()` | `audience.add_*_example()` | Simpler API |
-| `validation_set_id` parameter | Not needed | Built into audience |
-| `filters` parameter | `filters` on audience creation | Applied at audience level |
-| `order.run()` | `audience.assign_job(job_def)` | Automatic |
-
-## Key Benefits
-
-- **Simpler**: No separate validation set management
-- **Reusable**: One audience can run multiple jobs or a job on multiple audiences
-- **Previewable & Editable**: `job_definition.preview()` before assigning
-- **Result Alignment**: The labelers in an audience are filtered according to your examples, improving the quality of the results
-
-## Quick Reference
-
-**Classification:**
-
-- `create_classification_order()` → `create_classification_job_definition()`
-- `create_classification_set()` → `audience.add_classification_example()`
-
-**Compare:**
-
-- `create_compare_order()` → `create_compare_job_definition()`
-- `create_compare_set()` → `audience.add_compare_example()`
-
-Results work the same way: `results.to_pandas()`, `results.to_json()`

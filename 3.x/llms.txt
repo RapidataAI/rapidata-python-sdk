@@ -26,10 +26,6 @@
 
 - [Ranking Flows](https://docs.rapidata.ai/3.x/flows/index.md)
 
-## Claude Code
+## AI Agents
 
-- [Claude Code](https://docs.rapidata.ai/3.x/claude_code/index.md)
-
-## Migration
-
-- [Migration Guide](https://docs.rapidata.ai/3.x/migration_guide/index.md)
+- [AI Agents](https://docs.rapidata.ai/3.x/ai_agents/index.md)
