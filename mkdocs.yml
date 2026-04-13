@@ -72,10 +72,8 @@ plugins:
           - mri_advanced.md
         Flows:
           - flows.md
-        Claude Code:
-          - claude_code.md
-        Migration:
-          - migration_guide.md
+        AI Agents:
+          - ai_agents.md
       enable_markdown_urls: true
       enable_llms_txt: true
       enable_llms_full: true
@@ -129,9 +127,7 @@ nav:
     - Model Ranking:
       - Getting Started: mri.md
       - Advanced: mri_advanced.md
-    - Resources:
-      - Claude Code: claude_code.md
-      - Migration Guide: migration_guide.md
+    - AI Agents: ai_agents.md
 
 theme:
   name: material
