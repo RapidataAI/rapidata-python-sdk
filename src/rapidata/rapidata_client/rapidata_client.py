@@ -30,6 +30,7 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
 from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
+from rapidata.rapidata_client.api.rapidata_api_client import optional_api_call
 
 
 class RapidataClient:
@@ -130,7 +131,7 @@ class RapidataClient:
 
     def _check_beta_features(self):
         """Enable beta features for the client."""
-        try:
+        with optional_api_call("check beta features"):
             with tracer.start_as_current_span("RapidataClient.check_beta_features"):
                 result: dict[str, Any] = json.loads(
                     self._openapi_service.api_client.call_api(
@@ -154,11 +155,9 @@ class RapidataClient:
 
                 logger.debug("User is an admin, enabling beta features")
                 rapidata_config.enableBetaFeatures = True
-        except Exception as e:
-            logger.debug("Failed to check beta features: %s", e)
 
     def _check_version(self):
-        try:
+        with optional_api_call("version check"):
             response = requests.get(
                 "https://api.github.com/repos/RapidataAI/rapidata-python-sdk/releases/latest",
                 headers={"Accept": "application/vnd.github.v3+json"},
@@ -175,8 +174,6 @@ Your current version is: {__version__}"""
                     logger.debug(
                         "Current version is up to date. Version: %s", __version__
                     )
-        except Exception as e:
-            logger.debug("Failed to check for updates: %s", e)
 
     def __str__(self) -> str:
         return f"RapidataClient(environment={self._openapi_service.environment})"

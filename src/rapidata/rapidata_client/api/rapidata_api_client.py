@@ -36,6 +36,26 @@ def _should_suppress_error_logging() -> bool:
     return getattr(_thread_local, "suppress_error_logging", False)
 
 
+@contextmanager
+def optional_api_call(description: str):
+    """Mark a block as non-critical / best-effort.
+
+    Inside the block:
+      - RapidataApiClient errors are logged at DEBUG instead of ERROR
+        (via suppress_rapidata_error_logging).
+      - Any exception that escapes the block is caught and logged at
+        DEBUG as well. The caller never sees it.
+
+    Use for best-effort calls like version checks, telemetry, or
+    feature-flag lookups where failure must not impact the user.
+    """
+    with suppress_rapidata_error_logging():
+        try:
+            yield
+        except Exception as e:
+            logger.debug("Optional call '%s' failed: %s", description, e)
+
+
 class RapidataApiClient(ApiClient):
     """Custom API client that wraps errors in RapidataError."""
 
