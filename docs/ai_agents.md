@@ -64,13 +64,13 @@ Other agents follow their own conventions — Cursor rules, Copilot instructions
 
 The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. Pull the latest version so your agent stays in sync.
 
-**Claude Code:**
+**Claude Code**:
 
-```
-/plugin marketplace update
+```bash
+claude plugin marketplace update
 ```
 
-**Everything else:**
+**Everything else**:
 
 ```bash
 npx skills update rapidata
