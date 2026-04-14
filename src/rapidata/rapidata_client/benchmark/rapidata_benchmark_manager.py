@@ -3,7 +3,7 @@ from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchm
 from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.pagination import Pagination
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
@@ -202,7 +202,7 @@ class RapidataBenchmarkManager:
             benchmark_result = (
                 self.__openapi_service.leaderboard.benchmark_api.benchmarks_get(
                     QueryModel(
-                        page=PageInfo(index=page, size=amount),
+                        page=Pagination(index=page, size=amount),
                         filter=RootFilter(
                             filters=[
                                 Filter(
