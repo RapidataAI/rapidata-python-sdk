@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class DistillingRetrievalMode(str, Enum):
     """
-    DistillingRetrievalMode
+    The retrieval mode used by the distilling campaign to select rapids for users.  Defaults to Shuffled.
     """
 
     """

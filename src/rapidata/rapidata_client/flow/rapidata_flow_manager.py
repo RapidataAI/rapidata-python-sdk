@@ -116,8 +116,8 @@ class RapidataFlowManager:
             list[RapidataFlow]: A list of RapidataFlow instances.
         """
         with tracer.start_as_current_span("RapidataFlowManager.find_flows"):
-            from rapidata.api_client.models.campaigns_get_id_parameter import (
-                CampaignsGetIdParameter,
+            from rapidata.api_client.models.audiences_get_name_parameter import (
+                AudiencesGetNameParameter,
             )
             from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
 
@@ -127,7 +127,7 @@ class RapidataFlowManager:
                 page=page,
                 page_size=amount,
                 sort=["-created_at"],
-                name=CampaignsGetIdParameter(contains=name),
+                name=AudiencesGetNameParameter(contains=name),
             )
 
             return [

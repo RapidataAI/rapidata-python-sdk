@@ -84,7 +84,7 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
 *AudienceApi* | [**audience_audience_id_boost_config_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_boost_config_patch) | **PATCH** /audience/{audienceId}/boost-config | Updates the boost configuration for the specified audience.
 *AudienceApi* | [**audience_audience_id_delete**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_delete) | **DELETE** /audience/{audienceId} | Deletes the specified audience.
-*AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
+*AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Returns the audience with the specified id.
 *AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | Queries jobs for the specified audience.
 *AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
 *AudienceApi* | [**audience_audience_id_pause_distillation_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_pause_distillation_post) | **POST** /audience/{audienceId}/pause-distillation | Pauses the distillation campaign for the specified audience.
@@ -94,7 +94,7 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_audience_id_resume_distillation_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_resume_distillation_post) | **POST** /audience/{audienceId}/resume-distillation | Resumes the distillation campaign for the specified audience.
 *AudienceApi* | [**audience_audience_id_user_metrics_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_user_metrics_get) | **GET** /audience/{audienceId}/user-metrics | Gets the count of users in each state for the specified audience.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
-*AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all available audiences.
+*AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all audiences visible to the caller.
 *BatchUploadApi* | [**asset_batch_upload_batch_upload_id_abort_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_abort_post) | **POST** /asset/batch-upload/{batchUploadId}/abort | Aborts the specified batch upload.
 *BatchUploadApi* | [**asset_batch_upload_batch_upload_id_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_get) | **GET** /asset/batch-upload/{batchUploadId} | Gets the full result of a batch upload including all items.
 *BatchUploadApi* | [**asset_batch_upload_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_post) | **POST** /asset/batch-upload | Creates a batch upload and queues processing for each URL.
@@ -120,6 +120,7 @@ Class | Method | HTTP request | Description
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
 *CampaignApi* | [**campaign_boost_global_level_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_global_level_put) | **PUT** /campaign/boost/global-level | Sets or clears the manual global boost level.
 *CampaignApi* | [**campaign_boost_insights_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_insights_get) | **GET** /campaign/boost/insights | Returns an attributed view of the aggregated boosting profile.
+*CampaignApi* | [**campaign_boost_preheat_post**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_preheat_post) | **POST** /campaign/boost/preheat | 
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Returns the current boost status including active and inactive campaigns.
 *CampaignApi* | [**campaign_campaign_id_get**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_get) | **GET** /campaign/{campaignId} | Retrieves the details of a specific campaign.
 *CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates the specified campaign&#39;s properties.
@@ -246,7 +247,6 @@ Class | Method | HTTP request | Description
 *RankingWorkflowApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/RankingWorkflowApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Get the result overview for a ranking workflow.
 *RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a completed rapid, marking its results as invalid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
-*RapidsApi* | [**audience_audience_id_rapid_rapid_id_patch**](rapidata/api_client/docs/RapidsApi.md#audience_audience_id_rapid_rapid_id_patch) | **PATCH** /audience/{audienceId}/rapid/{rapidId} | Updates a rapid&#39;s validation properties within an audience.
 *SampleApi* | [**benchmark_sample_sample_id_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_get) | **GET** /benchmark-sample/{sampleId} | Gets a sample by its Id.
 *SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Get the result overview for a simple workflow.
 *SurveyApi* | [**identity_survey_post**](rapidata/api_client/docs/SurveyApi.md#identity_survey_post) | **POST** /identity/survey | Sends a survey.
@@ -279,7 +279,6 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [AddExampleToAudienceEndpointInput](rapidata/api_client/docs/AddExampleToAudienceEndpointInput.md)
- - [AddRapidToAudienceModel](rapidata/api_client/docs/AddRapidToAudienceModel.md)
  - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AgeUserFilterModelAgeGroup](rapidata/api_client/docs/AgeUserFilterModelAgeGroup.md)
@@ -290,6 +289,7 @@ Class | Method | HTTP request | Description
  - [AudienceBoostModel2](rapidata/api_client/docs/AudienceBoostModel2.md)
  - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
+ - [AudiencesGetNameParameter](rapidata/api_client/docs/AudiencesGetNameParameter.md)
  - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
  - [BatchUploadUrlStatus](rapidata/api_client/docs/BatchUploadUrlStatus.md)
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
@@ -301,7 +301,6 @@ Class | Method | HTTP request | Description
  - [BoostingProfileModel](rapidata/api_client/docs/BoostingProfileModel.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
  - [CampaignStatusModel](rapidata/api_client/docs/CampaignStatusModel.md)
- - [CampaignsGetIdParameter](rapidata/api_client/docs/CampaignsGetIdParameter.md)
  - [ChangeBoostEndpointInput](rapidata/api_client/docs/ChangeBoostEndpointInput.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
  - [ClassifyPayloadCategory](rapidata/api_client/docs/ClassifyPayloadCategory.md)
@@ -313,8 +312,8 @@ Class | Method | HTTP request | Description
  - [CompressionLibrary](rapidata/api_client/docs/CompressionLibrary.md)
  - [ConditionalValidationSelectionValidationChance](rapidata/api_client/docs/ConditionalValidationSelectionValidationChance.md)
  - [ConfidenceInterval](rapidata/api_client/docs/ConfidenceInterval.md)
- - [CreateAudienceRequest](rapidata/api_client/docs/CreateAudienceRequest.md)
- - [CreateAudienceResult](rapidata/api_client/docs/CreateAudienceResult.md)
+ - [CreateAudienceEndpointInput](rapidata/api_client/docs/CreateAudienceEndpointInput.md)
+ - [CreateAudienceEndpointOutput](rapidata/api_client/docs/CreateAudienceEndpointOutput.md)
  - [CreateBatchUploadEndpointInput](rapidata/api_client/docs/CreateBatchUploadEndpointInput.md)
  - [CreateBatchUploadEndpointOutput](rapidata/api_client/docs/CreateBatchUploadEndpointOutput.md)
  - [CreateBenchmarkModel](rapidata/api_client/docs/CreateBenchmarkModel.md)
@@ -371,7 +370,7 @@ Class | Method | HTTP request | Description
  - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
  - [GenderUserFilterModelGender](rapidata/api_client/docs/GenderUserFilterModelGender.md)
- - [GetAudienceByIdResult](rapidata/api_client/docs/GetAudienceByIdResult.md)
+ - [GetAudienceByIdEndpointOutput](rapidata/api_client/docs/GetAudienceByIdEndpointOutput.md)
  - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
  - [GetBatchUploadResultEndpointOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointOutput.md)
@@ -706,7 +705,6 @@ Class | Method | HTTP request | Description
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
- - [PageInfo](rapidata/api_client/docs/PageInfo.md)
  - [PagedResultOfBenchmarkQueryResult](rapidata/api_client/docs/PagedResultOfBenchmarkQueryResult.md)
  - [PagedResultOfClientsQueryResult](rapidata/api_client/docs/PagedResultOfClientsQueryResult.md)
  - [PagedResultOfGetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/PagedResultOfGetGroupedRankingWorkflowResultsResult.md)
@@ -717,18 +715,17 @@ Class | Method | HTTP request | Description
  - [PagedResultOfLeaderboardsQueryResult](rapidata/api_client/docs/PagedResultOfLeaderboardsQueryResult.md)
  - [PagedResultOfParticipantByBenchmark](rapidata/api_client/docs/PagedResultOfParticipantByBenchmark.md)
  - [PagedResultOfPromptByBenchmarkResult](rapidata/api_client/docs/PagedResultOfPromptByBenchmarkResult.md)
- - [PagedResultOfQueryAudiencesResult](rapidata/api_client/docs/PagedResultOfQueryAudiencesResult.md)
  - [PagedResultOfQueryDatapointsByDatasetIdResult](rapidata/api_client/docs/PagedResultOfQueryDatapointsByDatasetIdResult.md)
  - [PagedResultOfQueryJobDefinitionsResult](rapidata/api_client/docs/PagedResultOfQueryJobDefinitionsResult.md)
  - [PagedResultOfQueryJobRevisionsResult](rapidata/api_client/docs/PagedResultOfQueryJobRevisionsResult.md)
  - [PagedResultOfQueryJobsResult](rapidata/api_client/docs/PagedResultOfQueryJobsResult.md)
- - [PagedResultOfQueryRapidsOutput](rapidata/api_client/docs/PagedResultOfQueryRapidsOutput.md)
  - [PagedResultOfQueryValidationRapidEligibilityResult](rapidata/api_client/docs/PagedResultOfQueryValidationRapidEligibilityResult.md)
  - [PagedResultOfRapidModel](rapidata/api_client/docs/PagedResultOfRapidModel.md)
  - [PagedResultOfRunsByLeaderboardResult](rapidata/api_client/docs/PagedResultOfRunsByLeaderboardResult.md)
  - [PagedResultOfSampleByIdentifier](rapidata/api_client/docs/PagedResultOfSampleByIdentifier.md)
  - [PagedResultOfStandingByLeaderboard](rapidata/api_client/docs/PagedResultOfStandingByLeaderboard.md)
  - [PagedResultOfValidationSetModel](rapidata/api_client/docs/PagedResultOfValidationSetModel.md)
+ - [Pagination](rapidata/api_client/docs/Pagination.md)
  - [ParticipantByBenchmark](rapidata/api_client/docs/ParticipantByBenchmark.md)
  - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
  - [PidBatchMode](rapidata/api_client/docs/PidBatchMode.md)
@@ -740,7 +737,8 @@ Class | Method | HTTP request | Description
  - [PromptByBenchmarkResult](rapidata/api_client/docs/PromptByBenchmarkResult.md)
  - [QueryAggregatedOrdersEndpointOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointOutput.md)
  - [QueryAggregatedOrdersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointPagedResultOfOutput.md)
- - [QueryAudiencesResult](rapidata/api_client/docs/QueryAudiencesResult.md)
+ - [QueryAudiencesEndpointOutput](rapidata/api_client/docs/QueryAudiencesEndpointOutput.md)
+ - [QueryAudiencesEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAudiencesEndpointPagedResultOfOutput.md)
  - [QueryCampaignsEndpointOutput](rapidata/api_client/docs/QueryCampaignsEndpointOutput.md)
  - [QueryCampaignsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCampaignsEndpointPagedResultOfOutput.md)
  - [QueryCustomersEndpointOutput](rapidata/api_client/docs/QueryCustomersEndpointOutput.md)
@@ -762,7 +760,6 @@ Class | Method | HTTP request | Description
  - [QueryOrdersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryOrdersEndpointPagedResultOfOutput.md)
  - [QueryOrganizationsEndpointOutput](rapidata/api_client/docs/QueryOrganizationsEndpointOutput.md)
  - [QueryOrganizationsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryOrganizationsEndpointPagedResultOfOutput.md)
- - [QueryRapidsOutput](rapidata/api_client/docs/QueryRapidsOutput.md)
  - [QueryValidationFeedbacksEndpointOutput](rapidata/api_client/docs/QueryValidationFeedbacksEndpointOutput.md)
  - [QueryValidationFeedbacksEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryValidationFeedbacksEndpointPagedResultOfOutput.md)
  - [QueryValidationRapidEligibilityModelQueryValidationModel](rapidata/api_client/docs/QueryValidationRapidEligibilityModelQueryValidationModel.md)
@@ -784,6 +781,7 @@ Class | Method | HTTP request | Description
  - [SendSurveyModel](rapidata/api_client/docs/SendSurveyModel.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
+ - [SortCriteria](rapidata/api_client/docs/SortCriteria.md)
  - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
  - [StandingByBenchmark](rapidata/api_client/docs/StandingByBenchmark.md)
@@ -802,9 +800,8 @@ Class | Method | HTTP request | Description
  - [TranscriptionWord](rapidata/api_client/docs/TranscriptionWord.md)
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
  - [UnlockOrderEndpointOutput](rapidata/api_client/docs/UnlockOrderEndpointOutput.md)
+ - [UpdateAudienceEndpointInput](rapidata/api_client/docs/UpdateAudienceEndpointInput.md)
  - [UpdateAudienceExampleEndpointInput](rapidata/api_client/docs/UpdateAudienceExampleEndpointInput.md)
- - [UpdateAudienceRapidEndpointInput](rapidata/api_client/docs/UpdateAudienceRapidEndpointInput.md)
- - [UpdateAudienceRequest](rapidata/api_client/docs/UpdateAudienceRequest.md)
  - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
  - [UpdateBoostConfigEndpointInput](rapidata/api_client/docs/UpdateBoostConfigEndpointInput.md)

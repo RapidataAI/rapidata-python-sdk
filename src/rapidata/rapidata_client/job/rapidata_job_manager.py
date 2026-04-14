@@ -652,7 +652,7 @@ class RapidataJobManager:
             list[JobDefinition]: A list of JobDefinition instances.
         """
         with tracer.start_as_current_span("JobManager.find_job_definitions"):
-            from rapidata.api_client.models.page_info import PageInfo
+            from rapidata.api_client.models.pagination import Pagination
             from rapidata.api_client.models.query_model import QueryModel
             from rapidata.api_client.models.root_filter import RootFilter
             from rapidata.api_client.models.filter import Filter
@@ -663,7 +663,7 @@ class RapidataJobManager:
             job_definition_page_result = (
                 self._openapi_service.order.job_api.job_definitions_get(
                     request=QueryModel(
-                        page=PageInfo(index=page, size=amount),
+                        page=Pagination(index=page, size=amount),
                         filter=RootFilter(
                             filters=[
                                 Filter(
@@ -735,14 +735,14 @@ class RapidataJobManager:
             from rapidata.api_client.models.root_filter import RootFilter
             from rapidata.api_client.models.filter import Filter
             from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.page_info import PageInfo
+            from rapidata.api_client.models.pagination import Pagination
             from rapidata.api_client.models.sort_criterion import SortCriterion
             from rapidata.api_client.models.sort_direction import SortDirection
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
             response = self._openapi_service.order.job_api.jobs_get(
                 request=QueryModel(
-                    page=PageInfo(index=page, size=amount),
+                    page=Pagination(index=page, size=amount),
                     filter=RootFilter(
                         filters=[
                             Filter(

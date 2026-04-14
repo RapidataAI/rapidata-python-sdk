@@ -62,7 +62,6 @@ _API_IMPORTS = {
     "RankingWorkflowApi": "rapidata.api_client.api.ranking_workflow_api",
     "RapidApi": "rapidata.api_client.api.rapid_api",
     "RapidataIdentityAPIApi": "rapidata.api_client.api.rapidata_identity_api_api",
-    "RapidsApi": "rapidata.api_client.api.rapids_api",
     "SampleApi": "rapidata.api_client.api.sample_api",
     "SimpleWorkflowApi": "rapidata.api_client.api.simple_workflow_api",
     "SurveyApi": "rapidata.api_client.api.survey_api",

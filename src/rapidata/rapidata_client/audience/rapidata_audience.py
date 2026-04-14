@@ -72,14 +72,14 @@ class RapidataAudience:
             RapidataAudience: The updated audience instance (self) for method chaining.
         """
         with tracer.start_as_current_span("RapidataAudience.update_filters"):
-            from rapidata.api_client.models.update_audience_request import (
-                UpdateAudienceRequest,
+            from rapidata.api_client.models.update_audience_endpoint_input import (
+                UpdateAudienceEndpointInput,
             )
 
             logger.debug(f"Updating filters for audience: {self.id} to {filters}")
             self._openapi_service.audience.audience_api.audience_audience_id_patch(
                 audience_id=self.id,
-                update_audience_request=UpdateAudienceRequest(
+                update_audience_endpoint_input=UpdateAudienceEndpointInput(
                     filters=[filter._to_audience_model() for filter in filters],
                 ),
             )
@@ -96,14 +96,14 @@ class RapidataAudience:
             RapidataAudience: The updated audience instance (self) for method chaining.
         """
         with tracer.start_as_current_span("RapidataAudience.update_name"):
-            from rapidata.api_client.models.update_audience_request import (
-                UpdateAudienceRequest,
+            from rapidata.api_client.models.update_audience_endpoint_input import (
+                UpdateAudienceEndpointInput,
             )
 
             logger.debug(f"Updating name for audience: {self.id} to {name}")
             self._openapi_service.audience.audience_api.audience_audience_id_patch(
                 audience_id=self.id,
-                update_audience_request=UpdateAudienceRequest(name=name),
+                update_audience_endpoint_input=UpdateAudienceEndpointInput(name=name),
             )
             self._name = name
             return self
@@ -255,13 +255,13 @@ class RapidataAudience:
             from rapidata.api_client.models.root_filter import RootFilter
             from rapidata.api_client.models.filter import Filter
             from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.page_info import PageInfo
+            from rapidata.api_client.models.pagination import Pagination
             from rapidata.api_client.models.sort_criterion import SortCriterion
             from rapidata.api_client.models.sort_direction import SortDirection
 
             response = self._openapi_service.order.job_api.jobs_get(
                 request=QueryModel(
-                    page=PageInfo(index=page, size=amount),
+                    page=Pagination(index=page, size=amount),
                     filter=RootFilter(
                         filters=[
                             Filter(

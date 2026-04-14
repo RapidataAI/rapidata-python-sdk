@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.pagination import Pagination
 from rapidata.api_client.models.root_filter import RootFilter
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +28,7 @@ class QueryValidationRapidEligibilityModelQueryValidationModel(BaseModel):
     """
     The Query Model specific to the validation rapid eligibility query.
     """ # noqa: E501
-    page: Optional[PageInfo] = Field(default=None, description="pagination information")
+    page: Optional[Pagination] = Field(default=None, description="pagination information")
     filter: Optional[RootFilter] = Field(default=None, description="filter information")
     __properties: ClassVar[List[str]] = ["page", "filter"]
 
@@ -89,7 +89,7 @@ class QueryValidationRapidEligibilityModelQueryValidationModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "page": Pagination.from_dict(obj["page"]) if obj.get("page") is not None else None,
             "filter": RootFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None
         })
         return _obj

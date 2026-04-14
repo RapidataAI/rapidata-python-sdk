@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.campaigns_get_id_parameter import CampaignsGetIdParameter
+from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
 from rapidata.api_client.models.create_validation_feedback_endpoint_input import CreateValidationFeedbackEndpointInput
 from rapidata.api_client.models.query_validation_feedbacks_endpoint_paged_result_of_output import QueryValidationFeedbacksEndpointPagedResultOfOutput
 
@@ -48,9 +48,9 @@ class ValidationFeedbackApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        user_id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by user_id.")] = None,
-        feedback: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by feedback.")] = None,
-        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
+        user_id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by user_id.")] = None,
+        feedback: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by feedback.")] = None,
+        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -76,11 +76,11 @@ class ValidationFeedbackApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param user_id: Filter by user_id.
-        :type user_id: CampaignsGetIdParameter
+        :type user_id: AudiencesGetNameParameter
         :param feedback: Filter by feedback.
-        :type feedback: CampaignsGetIdParameter
+        :type feedback: AudiencesGetNameParameter
         :param created_at: Filter by created_at.
-        :type created_at: CampaignsGetIdParameter
+        :type created_at: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -141,9 +141,9 @@ class ValidationFeedbackApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        user_id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by user_id.")] = None,
-        feedback: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by feedback.")] = None,
-        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
+        user_id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by user_id.")] = None,
+        feedback: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by feedback.")] = None,
+        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -169,11 +169,11 @@ class ValidationFeedbackApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param user_id: Filter by user_id.
-        :type user_id: CampaignsGetIdParameter
+        :type user_id: AudiencesGetNameParameter
         :param feedback: Filter by feedback.
-        :type feedback: CampaignsGetIdParameter
+        :type feedback: AudiencesGetNameParameter
         :param created_at: Filter by created_at.
-        :type created_at: CampaignsGetIdParameter
+        :type created_at: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -234,9 +234,9 @@ class ValidationFeedbackApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        user_id: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by user_id.")] = None,
-        feedback: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by feedback.")] = None,
-        created_at: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by created_at.")] = None,
+        user_id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by user_id.")] = None,
+        feedback: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by feedback.")] = None,
+        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -262,11 +262,11 @@ class ValidationFeedbackApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param user_id: Filter by user_id.
-        :type user_id: CampaignsGetIdParameter
+        :type user_id: AudiencesGetNameParameter
         :param feedback: Filter by feedback.
-        :type feedback: CampaignsGetIdParameter
+        :type feedback: AudiencesGetNameParameter
         :param created_at: Filter by created_at.
-        :type created_at: CampaignsGetIdParameter
+        :type created_at: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

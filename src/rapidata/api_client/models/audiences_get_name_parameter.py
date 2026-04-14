@@ -17,22 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.pagination import Pagination
-from rapidata.api_client.models.rapid_state import RapidState
-from rapidata.api_client.models.sort_criteria import SortCriteria
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetSimpleWorkflowResultsModel(BaseModel):
+class AudiencesGetNameParameter(BaseModel):
     """
-    Model for getting the overview of a simple workflow result.
+    AudiencesGetNameParameter
     """ # noqa: E501
-    page: Optional[Pagination] = Field(default=None, description="The size of the page and the page number to display.")
-    states: Optional[List[RapidState]] = None
-    sort_criteria: Optional[SortCriteria] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
-    __properties: ClassVar[List[str]] = ["page", "states", "sortCriteria"]
+    eq: Optional[StrictStr] = None
+    neq: Optional[StrictStr] = None
+    gt: Optional[StrictStr] = None
+    gte: Optional[StrictStr] = None
+    lt: Optional[StrictStr] = None
+    lte: Optional[StrictStr] = None
+    contains: Optional[StrictStr] = None
+    starts_with: Optional[StrictStr] = None
+    ends_with: Optional[StrictStr] = None
+    var_in: Optional[StrictStr] = Field(default=None, alias="in")
+    not_contains: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["eq", "neq", "gt", "gte", "lt", "lte", "contains", "starts_with", "ends_with", "in", "not_contains"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +57,7 @@ class GetSimpleWorkflowResultsModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetSimpleWorkflowResultsModel from a JSON string"""
+        """Create an instance of AudiencesGetNameParameter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,22 +78,11 @@ class GetSimpleWorkflowResultsModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of page
-        if self.page:
-            _dict['page'] = self.page.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of sort_criteria
-        if self.sort_criteria:
-            _dict['sortCriteria'] = self.sort_criteria.to_dict()
-        # set to None if states (nullable) is None
-        # and model_fields_set contains the field
-        if self.states is None and "states" in self.model_fields_set:
-            _dict['states'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetSimpleWorkflowResultsModel from a dict"""
+        """Create an instance of AudiencesGetNameParameter from a dict"""
         if obj is None:
             return None
 
@@ -96,9 +90,17 @@ class GetSimpleWorkflowResultsModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "page": Pagination.from_dict(obj["page"]) if obj.get("page") is not None else None,
-            "states": obj.get("states"),
-            "sortCriteria": SortCriteria.from_dict(obj["sortCriteria"]) if obj.get("sortCriteria") is not None else None
+            "eq": obj.get("eq"),
+            "neq": obj.get("neq"),
+            "gt": obj.get("gt"),
+            "gte": obj.get("gte"),
+            "lt": obj.get("lt"),
+            "lte": obj.get("lte"),
+            "contains": obj.get("contains"),
+            "starts_with": obj.get("starts_with"),
+            "ends_with": obj.get("ends_with"),
+            "in": obj.get("in"),
+            "not_contains": obj.get("not_contains")
         })
         return _obj
 

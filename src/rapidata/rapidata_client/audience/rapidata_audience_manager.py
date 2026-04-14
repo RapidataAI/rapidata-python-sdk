@@ -39,15 +39,15 @@ class RapidataAudienceManager:
             from rapidata.rapidata_client.audience.rapidata_audience import (
                 RapidataAudience,
             )
-            from rapidata.api_client.models.create_audience_request import (
-                CreateAudienceRequest,
+            from rapidata.api_client.models.create_audience_endpoint_input import (
+                CreateAudienceEndpointInput,
             )
 
             logger.debug(f"Creating audience: {name}")
             if filters is None:
                 filters = []
             response = self._openapi_service.audience.audience_api.audience_post(
-                create_audience_request=CreateAudienceRequest(
+                create_audience_endpoint_input=CreateAudienceEndpointInput(
                     name=name,
                     filters=[filter._to_audience_model() for filter in filters],
                 ),
@@ -110,36 +110,19 @@ class RapidataAudienceManager:
             from rapidata.rapidata_client.filter._backend_filter_mapper import (
                 BackendFilterMapper,
             )
-            from rapidata.api_client.models.page_info import PageInfo
-            from rapidata.api_client.models.query_model import QueryModel
-            from rapidata.api_client.models.root_filter import RootFilter
-            from rapidata.api_client.models.filter import Filter
-            from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.sort_criterion import SortCriterion
-            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.audiences_get_name_parameter import (
+                AudiencesGetNameParameter,
+            )
             from rapidata.rapidata_client.audience.rapidata_audience import (
                 RapidataAudience,
             )
 
             logger.debug(f"Finding audiences: {name}, {amount}")
             response = self._openapi_service.audience.audience_api.audiences_get(
-                request=QueryModel(
-                    page=PageInfo(index=page, size=amount),
-                    filter=RootFilter(
-                        filters=[
-                            Filter(
-                                field="Name",
-                                operator=FilterOperator.CONTAINS,
-                                value=name,
-                            )
-                        ]
-                    ),
-                    sortCriteria=[
-                        SortCriterion(
-                            direction=SortDirection.DESC, propertyName="CreatedAt"
-                        )
-                    ],
-                )
+                page=page,
+                page_size=amount,
+                name=AudiencesGetNameParameter(contains=name),
+                sort=["-created_at"],
             )
             audiences = []
             for item in response.items:

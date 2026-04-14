@@ -906,14 +906,14 @@ class RapidataOrderManager:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
         with tracer.start_as_current_span("RapidataOrderManager.find_orders"):
-            from rapidata.api_client.models.campaigns_get_id_parameter import (
-                CampaignsGetIdParameter,
+            from rapidata.api_client.models.audiences_get_name_parameter import (
+                AudiencesGetNameParameter,
             )
 
             order_page_result = self.__openapi_service.order.order_api.orders_get(
                 page=page,
                 page_size=amount,
-                order_name=CampaignsGetIdParameter(contains=name),
+                order_name=AudiencesGetNameParameter(contains=name),
                 sort=["-order_date"],
             )
 

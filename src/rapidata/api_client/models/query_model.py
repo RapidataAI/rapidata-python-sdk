@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.pagination import Pagination
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class QueryModel(BaseModel):
     """
     QueryModel
     """ # noqa: E501
-    page: Optional[PageInfo] = None
+    page: Optional[Pagination] = None
     filter: Optional[RootFilter] = None
     sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
     __properties: ClassVar[List[str]] = ["page", "filter", "sortCriteria"]
@@ -113,7 +113,7 @@ class QueryModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "page": Pagination.from_dict(obj["page"]) if obj.get("page") is not None else None,
             "filter": RootFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
             "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
         })

@@ -28,7 +28,7 @@ class RootFilter(BaseModel):
     """
     RootFilter
     """ # noqa: E501
-    filters: Optional[List[Filter]] = None
+    filters: List[Filter]
     logic: Optional[LogicOperator] = None
     __properties: ClassVar[List[str]] = ["filters", "logic"]
 

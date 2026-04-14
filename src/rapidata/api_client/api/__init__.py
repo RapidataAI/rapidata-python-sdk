@@ -34,7 +34,6 @@ from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
 from rapidata.api_client.api.ranking_workflow_api import RankingWorkflowApi
 from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
-from rapidata.api_client.api.rapids_api import RapidsApi
 from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.survey_api import SurveyApi

@@ -807,7 +807,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Filter"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -2203,7 +2204,7 @@
           }
         }
       },
-      "PageInfo": {
+      "Pagination": {
         "type": "object",
         "properties": {
           "index": {
@@ -2261,7 +2262,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ]
           },
@@ -2315,6 +2316,9 @@
         ]
       },
       "RootFilter": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "filters": {
@@ -2347,8 +2351,7 @@
       },
       "SortCriterion": {
         "required": [
-          "propertyName",
-          "direction"
+          "propertyName"
         ],
         "type": "object",
         "properties": {
