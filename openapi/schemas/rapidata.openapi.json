@@ -28,10 +28,6 @@
       "x-displayName": "Examples"
     },
     {
-      "name": "Rapids",
-      "x-displayName": "Rapids"
-    },
-    {
       "name": "Cache",
       "x-displayName": "Cache"
     },
@@ -728,6 +724,68 @@
         ]
       }
     },
+    "/audience": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Creates a new empty audience.",
+        "requestBody": {
+          "description": "The properties of the audience to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAudienceEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAudienceEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/audience/{audienceId}": {
       "delete": {
         "tags": [
@@ -786,12 +844,12 @@
         "tags": [
           "Audience"
         ],
-        "summary": "Gets an audience by its Id.",
+        "summary": "Returns the audience with the specified id.",
         "parameters": [
           {
             "name": "audienceId",
             "in": "path",
-            "description": "The id of the audience to get.",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -802,22 +860,28 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                  "$ref": "#/components/schemas/GetAudienceByIdEndpoint_Output"
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -845,6 +909,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -852,20 +917,11 @@
           }
         ],
         "requestBody": {
+          "description": "The audience properties to update.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
+                "$ref": "#/components/schemas/UpdateAudienceEndpoint_Input"
               }
             }
           },
@@ -874,6 +930,22 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -1034,6 +1106,375 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/audiences": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Queries all audiences visible to the caller.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at",
+                  "status",
+                  "-status",
+                  "qualified_user_count",
+                  "-qualified_user_count"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_distilling",
+            "in": "query",
+            "description": "Filter by is_distilling.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryAudiencesEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -1646,331 +2087,6 @@
         ]
       }
     },
-    "/audience/{audienceId}/rapid/{rapidId}": {
-      "patch": {
-        "tags": [
-          "Rapids"
-        ],
-        "summary": "Updates a rapid's validation properties within an audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "description": "The unique identifier of the audience.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The unique identifier of the rapid to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The rapid validation properties to update.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRapidEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
-    "/audiences": {
-      "get": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Queries all available audiences.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryAudiencesResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryAudiencesResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryAudiencesResult"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
-    "/audience": {
-      "post": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Creates a new empty audience.",
-        "description": "An audience is a group of users that are trained to solve particular tasks.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAudienceRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAudienceRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAudienceRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateAudienceResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateAudienceResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateAudienceResult"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
-    "/audience/{audienceId}/rapid": {
-      "post": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Adds a new rapid to be used to train users for the specified audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRapidToAudienceModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRapidToAudienceModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRapidToAudienceModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true,
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
-    "/audience/{audienceId}/rapids": {
-      "get": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Queries all rapids for the specified audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsOutput"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsOutput"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsOutput"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true,
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
     "/campaign/cache/campaigns": {
       "get": {
         "tags": [
@@ -2410,6 +2526,49 @@
               "type": "string"
             }
           }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/boost/preheat": {
+      "post": {
+        "tags": [
+          "Campaign"
         ],
         "responses": {
           "204": {
@@ -15738,81 +15897,6 @@
         },
         "description": "Input model for adding an example to an audience."
       },
-      "AddRapidToAudienceModel": {
-        "required": [
-          "asset",
-          "payload",
-          "randomCorrectProbability"
-        ],
-        "type": "object",
-        "properties": {
-          "asset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              }
-            ],
-            "description": "The asset to use for the rapid."
-          },
-          "payload": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IRapidPayload"
-              }
-            ],
-            "description": "The payload to use for the rapid."
-          },
-          "truth": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IValidationTruth"
-              }
-            ],
-            "description": "The ground truth for the rapid."
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "description": "The probability for an answer to be correct when randomly guessing.",
-            "format": "double"
-          },
-          "explanation": {
-            "type": "string",
-            "description": "An explanation for the users if they answer the rapid incorrectly.",
-            "nullable": true
-          },
-          "context": {
-            "type": "string",
-            "description": "An optional textual context that provides additional information to the user about the rapid.",
-            "nullable": true
-          },
-          "contextAsset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              }
-            ],
-            "description": "An optional asset that provides additional context to the user about the rapid."
-          },
-          "featureFlags": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/FeatureFlag"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "The feature flags to enable for the rapid."
-          },
-          "isCommonSense": {
-            "type": "boolean",
-            "description": "Whether this rapid should be treated as commonsense validation.",
-            "nullable": true
-          }
-        },
-        "description": "The model for adding a validation rapid with asset in JSON body."
-      },
       "AudienceJobState": {
         "enum": [
           "Running",
@@ -15826,7 +15910,8 @@
           "Pending",
           "Recruiting",
           "Ready"
-        ]
+        ],
+        "description": "The current status of the audience."
       },
       "BoostLevel": {
         "enum": [
@@ -15834,45 +15919,10 @@
           "Stable",
           "Distilling",
           "Global"
-        ]
-      },
-      "BoxShape": {
-        "type": "object",
-        "properties": {
-          "xMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "xMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMax": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "ClassifyPayload_Category": {
-        "required": [
-          "label",
-          "value"
         ],
-        "type": "object",
-        "properties": {
-          "label": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
-        }
+        "description": "The current boost level applied to the audience."
       },
-      "CreateAudienceRequest": {
+      "CreateAudienceEndpoint_Input": {
         "required": [
           "name"
         ],
@@ -15937,24 +15987,6 @@
             "description": "Score floor - users below this score exit the distilling campaign\n (only after completing DropMinResponses).\n Defaults to 0.2. Set to null to disable this exit condition.",
             "format": "double"
           },
-          "minimumUserScore": {
-            "type": "number",
-            "description": "Use instead.",
-            "format": "double",
-            "deprecated": true
-          },
-          "minDistillingScoreFloor": {
-            "type": "number",
-            "description": "Use instead.",
-            "format": "double",
-            "deprecated": true
-          },
-          "minDistillingResponses": {
-            "type": "integer",
-            "description": "Use instead.",
-            "format": "uint32",
-            "deprecated": true
-          },
           "isDistillingCampaignSticky": {
             "type": "boolean",
             "description": "Whether the distilling campaign should be sticky (users stay until filters don't match).\n Defaults to true (Temporary sticky)."
@@ -15997,17 +16029,17 @@
             "description": "Minimum graduated users before disabling distilling boost.\n Defaults to 100. Admin-only override.",
             "format": "int32"
           }
-        },
-        "description": "The body request to create an audience."
+        }
       },
-      "CreateAudienceResult": {
+      "CreateAudienceEndpoint_Output": {
         "required": [
           "audienceId"
         ],
         "type": "object",
         "properties": {
           "audienceId": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the newly created audience."
           }
         }
       },
@@ -16016,7 +16048,8 @@
           "Random",
           "Shuffled",
           "Sequential"
-        ]
+        ],
+        "description": "The retrieval mode used by the distilling campaign to select rapids for users.\n Defaults to Shuffled."
       },
       "ExampleCategory": {
         "required": [
@@ -16073,44 +16106,7 @@
           }
         }
       },
-      "Filter": {
-        "type": "object",
-        "properties": {
-          "field": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": {},
-          "operator": {
-            "$ref": "#/components/schemas/FilterOperator"
-          },
-          "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          }
-        }
-      },
-      "FilterOperator": {
-        "enum": [
-          "Eq",
-          "Neq",
-          "Gt",
-          "Gte",
-          "Lt",
-          "Lte",
-          "Contains",
-          "StartsWith",
-          "EndsWith",
-          "In",
-          "NotContains"
-        ]
-      },
-      "GetAudienceByIdResult": {
+      "GetAudienceByIdEndpoint_Output": {
         "required": [
           "id",
           "name",
@@ -16129,13 +16125,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the audience."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the audience."
           },
           "description": {
             "type": "string",
+            "description": "The markdown-supported description of the audience.",
             "nullable": true
           },
           "status": {
@@ -16143,117 +16142,130 @@
           },
           "qualifiedUserCount": {
             "type": "integer",
+            "description": "The number of users that have qualified for this audience.",
             "format": "int64"
           },
           "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IAudienceFilter"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IAudienceFilter"
+                }
+              }
+            ],
+            "description": "The filters applied to this audience."
           },
           "logo": {
             "type": "string",
+            "description": "The URL of the audience logo, if any.",
             "nullable": true
           },
           "createdAt": {
             "type": "string",
+            "description": "The timestamp when the audience was created.",
             "format": "date-time"
           },
           "ownerMail": {
-            "type": "string"
+            "type": "string",
+            "description": "The email of the audience owner."
           },
           "isPublic": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the audience is publicly visible."
           },
           "isDistilling": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the audience is currently distilling users."
           },
           "distillingCampaignId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the distilling campaign associated with the audience."
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
+            "description": "Minimum graduated users before disabling distilling boost.",
             "format": "int32"
           },
           "minDistillingForGlobalBoost": {
             "type": "integer",
+            "description": "Minimum distilling users before disabling global boost.",
             "format": "int32"
           },
           "graduationScore": {
             "type": "number",
+            "description": "The score used to determine whether a user graduates from the distilling campaign.",
             "format": "double"
           },
           "demotionScore": {
             "type": "number",
+            "description": "Score below which a graduated user is demoted back to distilling.",
             "format": "double"
           },
           "maxDistillingResponses": {
             "type": "integer",
+            "description": "Maximum responses before user exits the distilling campaign.",
             "format": "uint32"
           },
           "dropMinResponses": {
             "type": "integer",
+            "description": "Minimum responses before the drop score check applies.",
             "format": "uint32"
           },
           "dropScore": {
             "type": "number",
+            "description": "Score floor - users below this score exit the distilling campaign.",
             "format": "double"
           },
           "maxDistillingSessions": {
             "type": "integer",
+            "description": "Maximum sessions before user exits the distilling campaign.",
             "format": "uint32"
           },
           "inactivityDropDays": {
             "type": "integer",
+            "description": "Number of days of inactivity before a distilling user is dropped.",
             "format": "uint32"
           },
           "minSubmissionRate": {
             "type": "number",
+            "description": "Minimum submission rate before a user is dropped.",
             "format": "double"
           },
           "minSessionsForSubmissionRate": {
             "type": "integer",
+            "description": "Minimum number of sessions before the submission rate check applies.",
             "format": "uint32"
           },
           "minSubmissionRateGraduated": {
             "type": "number",
+            "description": "Minimum submission rate for graduated users.",
             "format": "double"
           },
           "distillingRetrievalMode": {
             "$ref": "#/components/schemas/DistillingRetrievalMode"
-          },
-          "minimumUserScore": {
-            "type": "number",
-            "format": "double",
-            "deprecated": true
-          },
-          "minDistillingScoreFloor": {
-            "type": "number",
-            "format": "double",
-            "deprecated": true
-          },
-          "minDistillingResponses": {
-            "type": "integer",
-            "format": "uint32",
-            "deprecated": true
           },
           "boostLevel": {
             "$ref": "#/components/schemas/BoostLevel"
           },
           "randomAdmissionProbability": {
             "type": "number",
+            "description": "The probability of admitting a random user to the audience.",
             "format": "double"
           },
           "health": {
             "type": "number",
+            "description": "The health score of the audience.",
             "format": "double"
           },
           "graduated": {
             "type": "integer",
+            "description": "The number of graduated users.",
             "format": "int64"
           },
           "dropped": {
             "type": "integer",
+            "description": "The number of dropped users.",
             "format": "int64"
           }
         }
@@ -17055,900 +17067,6 @@
           }
         }
       },
-      "IRapidPayload": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
-            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
-            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
-            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
-            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
-          }
-        }
-      },
-      "IRapidPayloadBoundingBoxPayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadClassifyPayload": {
-        "required": [
-          "categories",
-          "title",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassifyPayload"
-            ],
-            "type": "string"
-          },
-          "categories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
-            }
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadComparePayload": {
-        "required": [
-          "criteria",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ComparePayload"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadFreeTextPayload": {
-        "required": [
-          "question",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FreeTextPayload"
-            ],
-            "type": "string"
-          },
-          "question": {
-            "type": "string"
-          },
-          "shouldValidateResponse": {
-            "type": "boolean"
-          },
-          "validationSystemPrompt": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "IRapidPayloadLinePayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LinePayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadLocatePayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocatePayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadNamedEntityPayload": {
-        "required": [
-          "target",
-          "classes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          },
-          "classes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IRapidPayloadPolygonPayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadScrubPayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadTranscriptionPayload": {
-        "required": [
-          "title",
-          "transcription",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionPayload"
-            ],
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "transcription": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
-            }
-          }
-        }
-      },
-      "IValidationTruth": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationTruthTranscriptionTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthScrubTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthPolygonTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthNamedEntityTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLocateBoxTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLineTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthEmptyValidationTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthMultiCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthSkipTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthAttachCategoryTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "TranscriptionTruth": "#/components/schemas/IValidationTruthTranscriptionTruth",
-            "ScrubTruth": "#/components/schemas/IValidationTruthScrubTruth",
-            "PolygonTruth": "#/components/schemas/IValidationTruthPolygonTruth",
-            "NamedEntityTruth": "#/components/schemas/IValidationTruthNamedEntityTruth",
-            "LocateBoxTruth": "#/components/schemas/IValidationTruthLocateBoxTruth",
-            "LineTruth": "#/components/schemas/IValidationTruthLineTruth",
-            "EmptyValidationTruth": "#/components/schemas/IValidationTruthEmptyValidationTruth",
-            "CompareTruth": "#/components/schemas/IValidationTruthCompareTruth",
-            "MultiCompareTruth": "#/components/schemas/IValidationTruthMultiCompareTruth",
-            "SkipTruth": "#/components/schemas/IValidationTruthSkipTruth",
-            "AttachCategoryTruth": "#/components/schemas/IValidationTruthAttachCategoryTruth",
-            "BoundingBoxTruth": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        }
-      },
-      "IValidationTruthAttachCategoryTruth": {
-        "required": [
-          "correctCategories",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AttachCategoryTruth"
-            ],
-            "type": "string"
-          },
-          "correctCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IValidationTruthBoundingBoxTruth": {
-        "required": [
-          "xMin",
-          "yMin",
-          "xMax",
-          "yMax",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxTruth"
-            ],
-            "type": "string"
-          },
-          "xMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "xMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMax": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthCompareTruth": {
-        "required": [
-          "winnerId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareTruth"
-            ],
-            "type": "string"
-          },
-          "winnerId": {
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthEmptyValidationTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "EmptyValidationTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthLineTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LineTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthLocateBoxTruth": {
-        "required": [
-          "boundingBoxes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocateBoxTruth"
-            ],
-            "type": "string"
-          },
-          "boundingBoxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BoxShape"
-            }
-          },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelClassifyTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelCompareTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelLineTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelPolygonTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelScrubTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelSkipTruthModel"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "AttachCategoryTruth": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel",
-            "BoundingBoxTruth": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel",
-            "ClassifyTruth": "#/components/schemas/IValidationTruthModelClassifyTruthModel",
-            "CompareTruth": "#/components/schemas/IValidationTruthModelCompareTruthModel",
-            "EmptyValidationTruth": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel",
-            "LineTruth": "#/components/schemas/IValidationTruthModelLineTruthModel",
-            "LocateBoxTruth": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel",
-            "MultiCompareTruth": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel",
-            "NamedEntityTruth": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel",
-            "PolygonTruth": "#/components/schemas/IValidationTruthModelPolygonTruthModel",
-            "ScrubTruth": "#/components/schemas/IValidationTruthModelScrubTruthModel",
-            "SkipTruth": "#/components/schemas/IValidationTruthModelSkipTruthModel",
-            "TranscriptionTruth": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
-          }
-        }
-      },
-      "IValidationTruthModelAttachCategoryTruthModel": {
-        "required": [
-          "correctCategories",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AttachCategoryTruth"
-            ],
-            "type": "string"
-          },
-          "correctCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IValidationTruthModelBoundingBoxTruthModel": {
-        "required": [
-          "xMin",
-          "yMin",
-          "xMax",
-          "yMax",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxTruth"
-            ],
-            "type": "string"
-          },
-          "xMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "xMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMax": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthModelClassifyTruthModel": {
-        "required": [
-          "correctCategories",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassifyTruth"
-            ],
-            "type": "string"
-          },
-          "correctCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IValidationTruthModelCompareTruthModel": {
-        "required": [
-          "winnerId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareTruth"
-            ],
-            "type": "string"
-          },
-          "winnerId": {
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthModelEmptyValidationTruthModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "EmptyValidationTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthModelLineTruthModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LineTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthModelLocateBoxTruthModel": {
-        "required": [
-          "boundingBoxes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocateBoxTruth"
-            ],
-            "type": "string"
-          },
-          "boundingBoxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BoxShape"
-            }
-          },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthModelMultiCompareTruthModel": {
-        "required": [
-          "correctCombinations",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiCompareTruth"
-            ],
-            "type": "string"
-          },
-          "correctCombinations": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "IValidationTruthModelNamedEntityTruthModel": {
-        "required": [
-          "classifications",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityTruth"
-            ],
-            "type": "string"
-          },
-          "classifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NamedClassification"
-            }
-          }
-        }
-      },
-      "IValidationTruthModelPolygonTruthModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthModelScrubTruthModel": {
-        "required": [
-          "validRanges",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubTruth"
-            ],
-            "type": "string"
-          },
-          "validRanges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScrubRange"
-            }
-          }
-        }
-      },
-      "IValidationTruthModelSkipTruthModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SkipTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthModelTranscriptionTruthModel": {
-        "required": [
-          "correctWords",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionTruth"
-            ],
-            "type": "string"
-          },
-          "correctWords": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
-            }
-          },
-          "strictGrading": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthMultiCompareTruth": {
-        "required": [
-          "correctCombinations",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiCompareTruth"
-            ],
-            "type": "string"
-          },
-          "correctCombinations": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "IValidationTruthNamedEntityTruth": {
-        "required": [
-          "classifications",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityTruth"
-            ],
-            "type": "string"
-          },
-          "classifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NamedClassification"
-            }
-          }
-        }
-      },
-      "IValidationTruthPolygonTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthScrubTruth": {
-        "required": [
-          "validRanges",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubTruth"
-            ],
-            "type": "string"
-          },
-          "validRanges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScrubRange"
-            }
-          }
-        }
-      },
-      "IValidationTruthSkipTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SkipTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthTranscriptionTruth": {
-        "required": [
-          "correctWords",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionTruth"
-            ],
-            "type": "string"
-          },
-          "correctWords": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
-            }
-          },
-          "strictGrading": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "LogicOperator": {
-        "enum": [
-          "And",
-          "Or",
-          "Not"
-        ]
-      },
       "MetadataInputCollection": {
         "type": "object",
         "additionalProperties": {
@@ -17959,60 +17077,6 @@
         "type": "object",
         "additionalProperties": {
           "$ref": "#/components/schemas/IMetadataModel"
-        }
-      },
-      "NamedClassification": {
-        "required": [
-          "start",
-          "end",
-          "classification"
-        ],
-        "type": "object",
-        "properties": {
-          "start": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "end": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "classification": {
-            "type": "string"
-          }
-        }
-      },
-      "PagedResultOfQueryAudiencesResult": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QueryAudiencesResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
         }
       },
       "PagedResultOfQueryJobsResult": {
@@ -18048,7 +17112,97 @@
           }
         }
       },
-      "PagedResultOfQueryRapidsOutput": {
+      "QueryAudiencesEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "qualifiedUserCount",
+          "filters",
+          "createdAt",
+          "ownerMail",
+          "isPublic",
+          "isDistilling"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the audience."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "description": {
+            "type": "string",
+            "description": "The markdown-supported description of the audience.",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/AudienceStatus"
+          },
+          "qualifiedUserCount": {
+            "type": "integer",
+            "description": "The number of users that have qualified for this audience.",
+            "format": "int64"
+          },
+          "filters": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IAudienceFilter"
+                }
+              }
+            ],
+            "description": "The filters applied to this audience."
+          },
+          "logo": {
+            "type": "string",
+            "description": "The URL of the audience logo, if any.",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the audience was created.",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the audience owner."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the audience is publicly visible."
+          },
+          "isDistilling": {
+            "type": "boolean",
+            "description": "Whether the audience is currently distilling users."
+          },
+          "randomAdmissionProbability": {
+            "type": "number",
+            "description": "The probability of admitting a random user to the audience.",
+            "format": "double"
+          },
+          "health": {
+            "type": "number",
+            "description": "The health score of the audience.",
+            "format": "double"
+          },
+          "graduated": {
+            "type": "integer",
+            "description": "The number of graduated users.",
+            "format": "int64"
+          },
+          "dropped": {
+            "type": "integer",
+            "description": "The number of dropped users.",
+            "format": "int64"
+          }
+        }
+      },
+      "QueryAudiencesEndpoint_PagedResultOfOutput": {
         "required": [
           "total",
           "page",
@@ -18072,97 +17226,12 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/QueryRapidsOutput"
+              "$ref": "#/components/schemas/QueryAudiencesEndpoint_Output"
             }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "PageInfo": {
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "QueryAudiencesResult": {
-        "required": [
-          "id",
-          "name",
-          "status",
-          "qualifiedUserCount",
-          "filters",
-          "createdAt",
-          "ownerMail",
-          "isPublic",
-          "isDistilling"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/AudienceStatus"
-          },
-          "qualifiedUserCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IAudienceFilter"
-            }
-          },
-          "logo": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ownerMail": {
-            "type": "string"
-          },
-          "isPublic": {
-            "type": "boolean"
-          },
-          "isDistilling": {
-            "type": "boolean"
-          },
-          "randomAdmissionProbability": {
-            "type": "number",
-            "format": "double"
-          },
-          "health": {
-            "type": "number",
-            "format": "double"
-          },
-          "graduated": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "dropped": {
-            "type": "integer",
-            "format": "int64"
           }
         }
       },
@@ -18328,130 +17397,6 @@
           }
         }
       },
-      "QueryModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/PageInfo"
-              }
-            ]
-          },
-          "filter": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/RootFilter"
-              }
-            ]
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "nullable": true
-          }
-        }
-      },
-      "QueryRapidsOutput": {
-        "required": [
-          "id",
-          "type",
-          "asset",
-          "payload",
-          "correctValidationCount",
-          "invalidValidationCount",
-          "state",
-          "isCommonSense"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
-          },
-          "correctValidationCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "invalidValidationCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "state": {
-            "$ref": "#/components/schemas/RapidState"
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IValidationTruth"
-              }
-            ]
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "explanation": {
-            "type": "string",
-            "nullable": true
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "format": "double"
-          },
-          "isCommonSense": {
-            "type": "boolean"
-          }
-        },
-        "description": "Output model for the backwards-compatible rapids query."
-      },
-      "RapidState": {
-        "enum": [
-          "Labeling",
-          "Paused",
-          "Incomplete",
-          "Flagged",
-          "Done",
-          "None",
-          "Rejected"
-        ]
-      },
       "RecreateExternalAudiencesEndpoint_Input": {
         "required": [
           "recreateAll"
@@ -18464,179 +17409,7 @@
           }
         }
       },
-      "RootFilter": {
-        "type": "object",
-        "properties": {
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
-          }
-        }
-      },
-      "ScrubRange": {
-        "required": [
-          "start",
-          "end"
-        ],
-        "type": "object",
-        "properties": {
-          "start": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "end": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "SortCriterion": {
-        "required": [
-          "propertyName",
-          "direction"
-        ],
-        "type": "object",
-        "properties": {
-          "propertyName": {
-            "type": "string"
-          },
-          "direction": {
-            "$ref": "#/components/schemas/SortDirection"
-          }
-        }
-      },
-      "SortDirection": {
-        "enum": [
-          "Asc",
-          "Desc"
-        ]
-      },
-      "TranscriptionWord": {
-        "required": [
-          "word",
-          "wordIndex"
-        ],
-        "type": "object",
-        "properties": {
-          "word": {
-            "type": "string"
-          },
-          "wordIndex": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "UpdateAudienceExampleEndpoint_Input": {
-        "type": "object",
-        "properties": {
-          "truth": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/IExampleTruth"
-              },
-              {
-                "nullable": true
-              }
-            ],
-            "description": "The truth for the example."
-          },
-          "explanation": {
-            "type": "string",
-            "description": "The optional explanation that will be shown to the user when answering wrong.",
-            "nullable": true
-          },
-          "context": {
-            "type": "string",
-            "description": "An optional text context that will be shown to the user.",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              },
-              {
-                "nullable": true
-              }
-            ],
-            "description": "An optional asset that will be used as context to show to the user."
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "description": "The probability that if the user answers at random that they'll be correct.",
-            "format": "double",
-            "nullable": true
-          },
-          "isCommonSense": {
-            "type": "boolean",
-            "description": "Whether this example should be treated as commonsense validation.",
-            "nullable": true
-          },
-          "sortIndex": {
-            "type": "integer",
-            "description": "The sort index that controls the serving order of this example.",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "description": "Input model for updating an audience example."
-      },
-      "UpdateAudienceRapidEndpoint_Input": {
-        "type": "object",
-        "properties": {
-          "truth": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/IValidationTruthModel"
-              },
-              {
-                "nullable": true
-              }
-            ],
-            "description": "The truth for the validation rapid."
-          },
-          "explanation": {
-            "type": "string",
-            "description": "The optional explanation that will be shown to the user when answering wrong.",
-            "nullable": true
-          },
-          "context": {
-            "type": "string",
-            "description": "An optional text context that will be shown to the user.",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              },
-              {
-                "nullable": true
-              }
-            ],
-            "description": "An optional asset that will be used as context to show to the user."
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "description": "The probability that if the user answers at random that they'll be correct.",
-            "format": "double",
-            "nullable": true
-          },
-          "isCommonSense": {
-            "type": "boolean",
-            "description": "Whether this rapid should be treated as commonsense validation.",
-            "nullable": true
-          }
-        },
-        "description": "Input model for updating an audience rapid."
-      },
-      "UpdateAudienceRequest": {
+      "UpdateAudienceEndpoint_Input": {
         "type": "object",
         "properties": {
           "name": {
@@ -18753,30 +17526,63 @@
               "Sequential"
             ],
             "description": "The retrieval mode used by the distilling campaign to select rapids for users."
+          }
+        }
+      },
+      "UpdateAudienceExampleEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IExampleTruth"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The truth for the example."
           },
-          "minimumUserScore": {
+          "explanation": {
+            "type": "string",
+            "description": "The optional explanation that will be shown to the user when answering wrong.",
+            "nullable": true
+          },
+          "context": {
+            "type": "string",
+            "description": "An optional text context that will be shown to the user.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "An optional asset that will be used as context to show to the user."
+          },
+          "randomCorrectProbability": {
             "type": "number",
-            "description": "Use instead.",
+            "description": "The probability that if the user answers at random that they'll be correct.",
             "format": "double",
-            "nullable": true,
-            "deprecated": true
+            "nullable": true
           },
-          "minDistillingScoreFloor": {
-            "type": "number",
-            "description": "Use instead.",
-            "format": "double",
-            "nullable": true,
-            "deprecated": true
+          "isCommonSense": {
+            "type": "boolean",
+            "description": "Whether this example should be treated as commonsense validation.",
+            "nullable": true
           },
-          "minDistillingResponses": {
+          "sortIndex": {
             "type": "integer",
-            "description": "Use instead.",
-            "format": "uint32",
-            "nullable": true,
-            "deprecated": true
+            "description": "The sort index that controls the serving order of this example.",
+            "format": "int32",
+            "nullable": true
           }
         },
-        "description": "The body request to update an audience."
+        "description": "Input model for updating an audience example."
       },
       "UpdateBoostConfigEndpoint_Input": {
         "type": "object",
@@ -20504,6 +19310,44 @@
           "Failed"
         ]
       },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {},
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "In",
+          "NotContains"
+        ]
+      },
       "GetDatapointByIdResult": {
         "required": [
           "id",
@@ -20618,6 +19462,13 @@
           }
         }
       },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ]
+      },
       "PagedResultOfQueryDatapointsByDatasetIdResult": {
         "required": [
           "total",
@@ -20651,6 +19502,19 @@
           }
         }
       },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "QueryDatapointsByDatasetIdResult": {
         "required": [
           "id",
@@ -20669,6 +19533,75 @@
             "$ref": "#/components/schemas/IAssetModel"
           }
         }
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/Pagination"
+              }
+            ]
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RootFilter"
+              }
+            ]
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "RootFilter": {
+        "required": [
+          "filters"
+        ],
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "SortCriterion": {
+        "required": [
+          "propertyName"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        }
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ]
       },
       "UpdateDatasetNameModel": {
         "required": [
@@ -25520,7 +24453,9 @@
           "definitionId",
           "name",
           "definitionType",
-          "createdAt"
+          "createdAt",
+          "ownerId",
+          "ownerMail"
         ],
         "type": "object",
         "properties": {
@@ -25539,6 +24474,15 @@
             "type": "string",
             "description": "The creation timestamp.",
             "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the job definition's owner.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the job definition's owner."
           }
         },
         "description": "The result when a job definition has been retrieved."
@@ -27179,7 +26123,9 @@
           "name",
           "definitionType",
           "createdAt",
-          "revisionCount"
+          "revisionCount",
+          "ownerId",
+          "ownerMail"
         ],
         "type": "object",
         "properties": {
@@ -27199,6 +26145,13 @@
           "revisionCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
           }
         }
       },
@@ -28259,6 +27212,27 @@
           }
         }
       },
+      "BoxShape": {
+        "type": "object",
+        "properties": {
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "ClassifyPayload": {
         "required": [
           "categories",
@@ -28273,6 +27247,21 @@
             }
           },
           "title": {
+            "type": "string"
+          }
+        }
+      },
+      "ClassifyPayload_Category": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
             "type": "string"
           }
         }
@@ -28475,6 +27464,257 @@
           "dump": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "IRapidPayload": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
+            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
+            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
+            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+          }
+        }
+      },
+      "IRapidPayloadBoundingBoxPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadClassifyPayload": {
+        "required": [
+          "categories",
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyPayload"
+            ],
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadComparePayload": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ComparePayload"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadFreeTextPayload": {
+        "required": [
+          "question",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextPayload"
+            ],
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IRapidPayloadLinePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LinePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadLocatePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocatePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadNamedEntityPayload": {
+        "required": [
+          "target",
+          "classes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidPayloadPolygonPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadScrubPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadTranscriptionPayload": {
+        "required": [
+          "title",
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionPayload"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "transcription": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
           }
         }
       },
@@ -28895,6 +28135,642 @@
           }
         }
       },
+      "IValidationTruth": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IValidationTruthTranscriptionTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthScrubTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthPolygonTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthNamedEntityTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthLocateBoxTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthLineTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthEmptyValidationTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthCompareTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthMultiCompareTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthSkipTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthAttachCategoryTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthBoundingBoxTruth"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TranscriptionTruth": "#/components/schemas/IValidationTruthTranscriptionTruth",
+            "ScrubTruth": "#/components/schemas/IValidationTruthScrubTruth",
+            "PolygonTruth": "#/components/schemas/IValidationTruthPolygonTruth",
+            "NamedEntityTruth": "#/components/schemas/IValidationTruthNamedEntityTruth",
+            "LocateBoxTruth": "#/components/schemas/IValidationTruthLocateBoxTruth",
+            "LineTruth": "#/components/schemas/IValidationTruthLineTruth",
+            "EmptyValidationTruth": "#/components/schemas/IValidationTruthEmptyValidationTruth",
+            "CompareTruth": "#/components/schemas/IValidationTruthCompareTruth",
+            "MultiCompareTruth": "#/components/schemas/IValidationTruthMultiCompareTruth",
+            "SkipTruth": "#/components/schemas/IValidationTruthSkipTruth",
+            "AttachCategoryTruth": "#/components/schemas/IValidationTruthAttachCategoryTruth",
+            "BoundingBoxTruth": "#/components/schemas/IValidationTruthBoundingBoxTruth"
+          }
+        }
+      },
+      "IValidationTruthAttachCategoryTruth": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IValidationTruthBoundingBoxTruth": {
+        "required": [
+          "xMin",
+          "yMin",
+          "xMax",
+          "yMax",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxTruth"
+            ],
+            "type": "string"
+          },
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthCompareTruth": {
+        "required": [
+          "winnerId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareTruth"
+            ],
+            "type": "string"
+          },
+          "winnerId": {
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthEmptyValidationTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EmptyValidationTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthLineTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthLocateBoxTruth": {
+        "required": [
+          "boundingBoxes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBoxTruth"
+            ],
+            "type": "string"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelClassifyTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelCompareTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelLineTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelPolygonTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelScrubTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelSkipTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AttachCategoryTruth": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel",
+            "BoundingBoxTruth": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel",
+            "ClassifyTruth": "#/components/schemas/IValidationTruthModelClassifyTruthModel",
+            "CompareTruth": "#/components/schemas/IValidationTruthModelCompareTruthModel",
+            "EmptyValidationTruth": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel",
+            "LineTruth": "#/components/schemas/IValidationTruthModelLineTruthModel",
+            "LocateBoxTruth": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel",
+            "MultiCompareTruth": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel",
+            "NamedEntityTruth": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel",
+            "PolygonTruth": "#/components/schemas/IValidationTruthModelPolygonTruthModel",
+            "ScrubTruth": "#/components/schemas/IValidationTruthModelScrubTruthModel",
+            "SkipTruth": "#/components/schemas/IValidationTruthModelSkipTruthModel",
+            "TranscriptionTruth": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
+          }
+        }
+      },
+      "IValidationTruthModelAttachCategoryTruthModel": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IValidationTruthModelBoundingBoxTruthModel": {
+        "required": [
+          "xMin",
+          "yMin",
+          "xMax",
+          "yMax",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxTruth"
+            ],
+            "type": "string"
+          },
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthModelClassifyTruthModel": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IValidationTruthModelCompareTruthModel": {
+        "required": [
+          "winnerId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareTruth"
+            ],
+            "type": "string"
+          },
+          "winnerId": {
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelEmptyValidationTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EmptyValidationTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelLineTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelLocateBoxTruthModel": {
+        "required": [
+          "boundingBoxes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBoxTruth"
+            ],
+            "type": "string"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthModelMultiCompareTruthModel": {
+        "required": [
+          "correctCombinations",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiCompareTruth"
+            ],
+            "type": "string"
+          },
+          "correctCombinations": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "IValidationTruthModelNamedEntityTruthModel": {
+        "required": [
+          "classifications",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityTruth"
+            ],
+            "type": "string"
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
+          }
+        }
+      },
+      "IValidationTruthModelPolygonTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelScrubTruthModel": {
+        "required": [
+          "validRanges",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubTruth"
+            ],
+            "type": "string"
+          },
+          "validRanges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
+          }
+        }
+      },
+      "IValidationTruthModelSkipTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelTranscriptionTruthModel": {
+        "required": [
+          "correctWords",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionTruth"
+            ],
+            "type": "string"
+          },
+          "correctWords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
+          },
+          "strictGrading": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthMultiCompareTruth": {
+        "required": [
+          "correctCombinations",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiCompareTruth"
+            ],
+            "type": "string"
+          },
+          "correctCombinations": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "IValidationTruthNamedEntityTruth": {
+        "required": [
+          "classifications",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityTruth"
+            ],
+            "type": "string"
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
+          }
+        }
+      },
+      "IValidationTruthPolygonTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthScrubTruth": {
+        "required": [
+          "validRanges",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubTruth"
+            ],
+            "type": "string"
+          },
+          "validRanges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScrubRange"
+            }
+          }
+        }
+      },
+      "IValidationTruthSkipTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthTranscriptionTruth": {
+        "required": [
+          "correctWords",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionTruth"
+            ],
+            "type": "string"
+          },
+          "correctWords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
+          },
+          "strictGrading": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "LineResult_Line": {
         "required": [
           "size",
@@ -28945,6 +28821,27 @@
           "y": {
             "type": "number",
             "format": "double"
+          }
+        }
+      },
+      "NamedClassification": {
+        "required": [
+          "start",
+          "end",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "classification": {
+            "type": "string"
           }
         }
       },
@@ -29117,7 +29014,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "pagination information"
@@ -29293,6 +29190,17 @@
         },
         "description": "The model for a Rapid skipped."
       },
+      "RapidState": {
+        "enum": [
+          "Labeling",
+          "Paused",
+          "Incomplete",
+          "Flagged",
+          "Done",
+          "None",
+          "Rejected"
+        ]
+      },
       "ReportModel": {
         "required": [
           "issue"
@@ -29319,6 +29227,39 @@
           }
         },
         "description": "The model for reporting an issue with a rapid."
+      },
+      "ScrubRange": {
+        "required": [
+          "start",
+          "end"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
       },
       "TranslatedString": {
         "required": [
@@ -29909,7 +29850,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -29929,11 +29870,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -29970,7 +29907,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -29978,11 +29915,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -30111,7 +30044,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ],
             "description": "The size of the page and the page number to display."
@@ -30131,11 +30064,7 @@
           "sortCriteria": {
             "allOf": [
               {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortCriterion"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/SortCriteria"
               }
             ],
             "description": "A list of criteria to sort the results by."
@@ -30666,6 +30595,18 @@
           }
         }
       },
+      "SortCriteria": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "nullable": true
+          }
+        }
+      },
       "WorkflowState": {
         "enum": [
           "Created",
@@ -30719,8 +30660,7 @@
       "name": "Rapidata Audience API",
       "tags": [
         "Audience",
-        "Examples",
-        "Rapids"
+        "Examples"
       ]
     },
     {

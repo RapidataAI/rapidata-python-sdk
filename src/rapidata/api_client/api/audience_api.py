@@ -16,18 +16,18 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
-from typing import Optional
+from pydantic import Field, StrictInt, StrictStr, field_validator
+from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.create_audience_request import CreateAudienceRequest
-from rapidata.api_client.models.create_audience_result import CreateAudienceResult
-from rapidata.api_client.models.get_audience_by_id_result import GetAudienceByIdResult
+from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
+from rapidata.api_client.models.create_audience_endpoint_input import CreateAudienceEndpointInput
+from rapidata.api_client.models.create_audience_endpoint_output import CreateAudienceEndpointOutput
+from rapidata.api_client.models.get_audience_by_id_endpoint_output import GetAudienceByIdEndpointOutput
 from rapidata.api_client.models.get_audience_user_state_metrics_result import GetAudienceUserStateMetricsResult
-from rapidata.api_client.models.paged_result_of_query_audiences_result import PagedResultOfQueryAudiencesResult
 from rapidata.api_client.models.paged_result_of_query_jobs_result import PagedResultOfQueryJobsResult
-from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.query_audiences_endpoint_paged_result_of_output import QueryAudiencesEndpointPagedResultOfOutput
 from rapidata.api_client.models.recreate_external_audiences_endpoint_input import RecreateExternalAudiencesEndpointInput
-from rapidata.api_client.models.update_audience_request import UpdateAudienceRequest
+from rapidata.api_client.models.update_audience_endpoint_input import UpdateAudienceEndpointInput
 from rapidata.api_client.models.update_boost_config_endpoint_input import UpdateBoostConfigEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -617,7 +617,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_get(
         self,
-        audience_id: Annotated[StrictStr, Field(description="The id of the audience to get.")],
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -630,11 +630,11 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetAudienceByIdResult:
-        """Gets an audience by its Id.
+    ) -> GetAudienceByIdEndpointOutput:
+        """Returns the audience with the specified id.
 
 
-        :param audience_id: The id of the audience to get. (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -667,7 +667,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAudienceByIdResult",
+            '200': "GetAudienceByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -683,7 +686,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_get_with_http_info(
         self,
-        audience_id: Annotated[StrictStr, Field(description="The id of the audience to get.")],
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -696,11 +699,11 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetAudienceByIdResult]:
-        """Gets an audience by its Id.
+    ) -> ApiResponse[GetAudienceByIdEndpointOutput]:
+        """Returns the audience with the specified id.
 
 
-        :param audience_id: The id of the audience to get. (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -733,7 +736,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAudienceByIdResult",
+            '200': "GetAudienceByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -749,7 +755,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_get_without_preload_content(
         self,
-        audience_id: Annotated[StrictStr, Field(description="The id of the audience to get.")],
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -763,10 +769,10 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets an audience by its Id.
+        """Returns the audience with the specified id.
 
 
-        :param audience_id: The id of the audience to get. (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -799,7 +805,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAudienceByIdResult",
+            '200': "GetAudienceByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -844,9 +853,7 @@ class AudienceApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1148,8 +1155,8 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_patch(
         self,
-        audience_id: StrictStr,
-        update_audience_request: UpdateAudienceRequest,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience to update.")],
+        update_audience_endpoint_input: Annotated[UpdateAudienceEndpointInput, Field(description="The audience properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1166,10 +1173,10 @@ class AudienceApi:
         """Patches an existing audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience to update. (required)
         :type audience_id: str
-        :param update_audience_request: (required)
-        :type update_audience_request: UpdateAudienceRequest
+        :param update_audience_endpoint_input: The audience properties to update. (required)
+        :type update_audience_endpoint_input: UpdateAudienceEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1194,7 +1201,7 @@ class AudienceApi:
 
         _param = self._audience_audience_id_patch_serialize(
             audience_id=audience_id,
-            update_audience_request=update_audience_request,
+            update_audience_endpoint_input=update_audience_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1203,6 +1210,9 @@ class AudienceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1218,8 +1228,8 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_patch_with_http_info(
         self,
-        audience_id: StrictStr,
-        update_audience_request: UpdateAudienceRequest,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience to update.")],
+        update_audience_endpoint_input: Annotated[UpdateAudienceEndpointInput, Field(description="The audience properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1236,10 +1246,10 @@ class AudienceApi:
         """Patches an existing audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience to update. (required)
         :type audience_id: str
-        :param update_audience_request: (required)
-        :type update_audience_request: UpdateAudienceRequest
+        :param update_audience_endpoint_input: The audience properties to update. (required)
+        :type update_audience_endpoint_input: UpdateAudienceEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1264,7 +1274,7 @@ class AudienceApi:
 
         _param = self._audience_audience_id_patch_serialize(
             audience_id=audience_id,
-            update_audience_request=update_audience_request,
+            update_audience_endpoint_input=update_audience_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1273,6 +1283,9 @@ class AudienceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1288,8 +1301,8 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_patch_without_preload_content(
         self,
-        audience_id: StrictStr,
-        update_audience_request: UpdateAudienceRequest,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience to update.")],
+        update_audience_endpoint_input: Annotated[UpdateAudienceEndpointInput, Field(description="The audience properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1306,10 +1319,10 @@ class AudienceApi:
         """Patches an existing audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience to update. (required)
         :type audience_id: str
-        :param update_audience_request: (required)
-        :type update_audience_request: UpdateAudienceRequest
+        :param update_audience_endpoint_input: The audience properties to update. (required)
+        :type update_audience_endpoint_input: UpdateAudienceEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1334,7 +1347,7 @@ class AudienceApi:
 
         _param = self._audience_audience_id_patch_serialize(
             audience_id=audience_id,
-            update_audience_request=update_audience_request,
+            update_audience_endpoint_input=update_audience_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1343,6 +1356,9 @@ class AudienceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1354,7 +1370,7 @@ class AudienceApi:
     def _audience_audience_id_patch_serialize(
         self,
         audience_id,
-        update_audience_request,
+        update_audience_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1382,10 +1398,17 @@ class AudienceApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_audience_request is not None:
-            _body_params = update_audience_request
+        if update_audience_endpoint_input is not None:
+            _body_params = update_audience_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -1394,9 +1417,7 @@ class AudienceApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -3076,7 +3097,7 @@ class AudienceApi:
     @validate_call
     def audience_post(
         self,
-        create_audience_request: CreateAudienceRequest,
+        create_audience_endpoint_input: Annotated[CreateAudienceEndpointInput, Field(description="The properties of the audience to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3089,13 +3110,12 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateAudienceResult:
+    ) -> CreateAudienceEndpointOutput:
         """Creates a new empty audience.
 
-        An audience is a group of users that are trained to solve particular tasks.
 
-        :param create_audience_request: (required)
-        :type create_audience_request: CreateAudienceRequest
+        :param create_audience_endpoint_input: The properties of the audience to create. (required)
+        :type create_audience_endpoint_input: CreateAudienceEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3119,7 +3139,7 @@ class AudienceApi:
         """ # noqa: E501
 
         _param = self._audience_post_serialize(
-            create_audience_request=create_audience_request,
+            create_audience_endpoint_input=create_audience_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3127,7 +3147,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateAudienceResult",
+            '200': "CreateAudienceEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3143,7 +3166,7 @@ class AudienceApi:
     @validate_call
     def audience_post_with_http_info(
         self,
-        create_audience_request: CreateAudienceRequest,
+        create_audience_endpoint_input: Annotated[CreateAudienceEndpointInput, Field(description="The properties of the audience to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3156,13 +3179,12 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateAudienceResult]:
+    ) -> ApiResponse[CreateAudienceEndpointOutput]:
         """Creates a new empty audience.
 
-        An audience is a group of users that are trained to solve particular tasks.
 
-        :param create_audience_request: (required)
-        :type create_audience_request: CreateAudienceRequest
+        :param create_audience_endpoint_input: The properties of the audience to create. (required)
+        :type create_audience_endpoint_input: CreateAudienceEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3186,7 +3208,7 @@ class AudienceApi:
         """ # noqa: E501
 
         _param = self._audience_post_serialize(
-            create_audience_request=create_audience_request,
+            create_audience_endpoint_input=create_audience_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3194,7 +3216,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateAudienceResult",
+            '200': "CreateAudienceEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3210,7 +3235,7 @@ class AudienceApi:
     @validate_call
     def audience_post_without_preload_content(
         self,
-        create_audience_request: CreateAudienceRequest,
+        create_audience_endpoint_input: Annotated[CreateAudienceEndpointInput, Field(description="The properties of the audience to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3226,10 +3251,9 @@ class AudienceApi:
     ) -> RESTResponseType:
         """Creates a new empty audience.
 
-        An audience is a group of users that are trained to solve particular tasks.
 
-        :param create_audience_request: (required)
-        :type create_audience_request: CreateAudienceRequest
+        :param create_audience_endpoint_input: The properties of the audience to create. (required)
+        :type create_audience_endpoint_input: CreateAudienceEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3253,7 +3277,7 @@ class AudienceApi:
         """ # noqa: E501
 
         _param = self._audience_post_serialize(
-            create_audience_request=create_audience_request,
+            create_audience_endpoint_input=create_audience_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3261,7 +3285,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateAudienceResult",
+            '200': "CreateAudienceEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3272,7 +3299,7 @@ class AudienceApi:
 
     def _audience_post_serialize(
         self,
-        create_audience_request,
+        create_audience_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -3298,17 +3325,15 @@ class AudienceApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_audience_request is not None:
-            _body_params = create_audience_request
+        if create_audience_endpoint_input is not None:
+            _body_params = create_audience_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -3319,9 +3344,7 @@ class AudienceApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -3356,7 +3379,15 @@ class AudienceApi:
     @validate_call
     def audiences_get(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by status.")] = None,
+        is_public: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_public.")] = None,
+        is_distilling: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_distilling.")] = None,
+        owner_mail: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3369,12 +3400,28 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfQueryAudiencesResult:
-        """Queries all available audiences.
+    ) -> QueryAudiencesEndpointPagedResultOfOutput:
+        """Queries all audiences visible to the caller.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param name: Filter by name.
+        :type name: AudiencesGetNameParameter
+        :param status: Filter by status.
+        :type status: AudiencesGetNameParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudiencesGetNameParameter
+        :param is_distilling: Filter by is_distilling.
+        :type is_distilling: AudiencesGetNameParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudiencesGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3398,7 +3445,15 @@ class AudienceApi:
         """ # noqa: E501
 
         _param = self._audiences_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            name=name,
+            status=status,
+            is_public=is_public,
+            is_distilling=is_distilling,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3406,7 +3461,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryAudiencesResult",
+            '200': "QueryAudiencesEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3422,7 +3480,15 @@ class AudienceApi:
     @validate_call
     def audiences_get_with_http_info(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by status.")] = None,
+        is_public: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_public.")] = None,
+        is_distilling: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_distilling.")] = None,
+        owner_mail: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3435,12 +3501,28 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfQueryAudiencesResult]:
-        """Queries all available audiences.
+    ) -> ApiResponse[QueryAudiencesEndpointPagedResultOfOutput]:
+        """Queries all audiences visible to the caller.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param name: Filter by name.
+        :type name: AudiencesGetNameParameter
+        :param status: Filter by status.
+        :type status: AudiencesGetNameParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudiencesGetNameParameter
+        :param is_distilling: Filter by is_distilling.
+        :type is_distilling: AudiencesGetNameParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudiencesGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3464,7 +3546,15 @@ class AudienceApi:
         """ # noqa: E501
 
         _param = self._audiences_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            name=name,
+            status=status,
+            is_public=is_public,
+            is_distilling=is_distilling,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3472,7 +3562,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryAudiencesResult",
+            '200': "QueryAudiencesEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3488,7 +3581,15 @@ class AudienceApi:
     @validate_call
     def audiences_get_without_preload_content(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by status.")] = None,
+        is_public: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_public.")] = None,
+        is_distilling: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_distilling.")] = None,
+        owner_mail: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3502,11 +3603,27 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all available audiences.
+        """Queries all audiences visible to the caller.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param name: Filter by name.
+        :type name: AudiencesGetNameParameter
+        :param status: Filter by status.
+        :type status: AudiencesGetNameParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudiencesGetNameParameter
+        :param is_distilling: Filter by is_distilling.
+        :type is_distilling: AudiencesGetNameParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudiencesGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3530,7 +3647,15 @@ class AudienceApi:
         """ # noqa: E501
 
         _param = self._audiences_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            name=name,
+            status=status,
+            is_public=is_public,
+            is_distilling=is_distilling,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3538,7 +3663,10 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryAudiencesResult",
+            '200': "QueryAudiencesEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3549,7 +3677,15 @@ class AudienceApi:
 
     def _audiences_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        name,
+        status,
+        is_public,
+        is_distilling,
+        owner_mail,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -3559,6 +3695,7 @@ class AudienceApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -3572,10 +3709,66 @@ class AudienceApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if status is not None:
+            _param_val = status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('status[' + _k + ']', _v))
+        if is_public is not None:
+            _param_val = is_public
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('is_public[' + _k + ']', _v))
+        if is_distilling is not None:
+            _param_val = is_distilling
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('is_distilling[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -3585,9 +3778,7 @@ class AudienceApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

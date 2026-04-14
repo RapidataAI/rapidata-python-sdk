@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.campaigns_get_id_parameter import CampaignsGetIdParameter
+from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
 from rapidata.api_client.models.query_organizations_endpoint_paged_result_of_output import QueryOrganizationsEndpointPagedResultOfOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -46,9 +46,9 @@ class OrganizationApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
-        domain: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by domain.")] = None,
-        owner: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by owner.")] = None,
+        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
+        domain: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by domain.")] = None,
+        owner: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by owner.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -72,11 +72,11 @@ class OrganizationApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: CampaignsGetIdParameter
+        :type name: AudiencesGetNameParameter
         :param domain: Filter by domain.
-        :type domain: CampaignsGetIdParameter
+        :type domain: AudiencesGetNameParameter
         :param owner: Filter by owner.
-        :type owner: CampaignsGetIdParameter
+        :type owner: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -135,9 +135,9 @@ class OrganizationApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
-        domain: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by domain.")] = None,
-        owner: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by owner.")] = None,
+        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
+        domain: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by domain.")] = None,
+        owner: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by owner.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -161,11 +161,11 @@ class OrganizationApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: CampaignsGetIdParameter
+        :type name: AudiencesGetNameParameter
         :param domain: Filter by domain.
-        :type domain: CampaignsGetIdParameter
+        :type domain: AudiencesGetNameParameter
         :param owner: Filter by owner.
-        :type owner: CampaignsGetIdParameter
+        :type owner: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -224,9 +224,9 @@ class OrganizationApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by name.")] = None,
-        domain: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by domain.")] = None,
-        owner: Annotated[Optional[CampaignsGetIdParameter], Field(description="Filter by owner.")] = None,
+        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
+        domain: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by domain.")] = None,
+        owner: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by owner.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -250,11 +250,11 @@ class OrganizationApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: CampaignsGetIdParameter
+        :type name: AudiencesGetNameParameter
         :param domain: Filter by domain.
-        :type domain: CampaignsGetIdParameter
+        :type domain: AudiencesGetNameParameter
         :param owner: Filter by owner.
-        :type owner: CampaignsGetIdParameter
+        :type owner: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

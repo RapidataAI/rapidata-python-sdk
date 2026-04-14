@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class AudienceStatus(str, Enum):
     """
-    AudienceStatus
+    The current status of the audience.
     """
 
     """

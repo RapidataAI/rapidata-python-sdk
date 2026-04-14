@@ -32,7 +32,9 @@ class GetJobDefinitionByIdEndpointOutput(BaseModel):
     name: StrictStr = Field(description="The name of the job definition.")
     definition_type: DefinitionType = Field(alias="definitionType")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "createdAt"]
+    owner_id: StrictStr = Field(description="The id of the job definition's owner.", alias="ownerId")
+    owner_mail: StrictStr = Field(description="The email of the job definition's owner.", alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "createdAt", "ownerId", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,7 +90,9 @@ class GetJobDefinitionByIdEndpointOutput(BaseModel):
             "definitionId": obj.get("definitionId"),
             "name": obj.get("name"),
             "definitionType": obj.get("definitionType"),
-            "createdAt": obj.get("createdAt")
+            "createdAt": obj.get("createdAt"),
+            "ownerId": obj.get("ownerId"),
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 

@@ -2858,7 +2858,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Filter"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -2972,7 +2973,9 @@
           "definitionId",
           "name",
           "definitionType",
-          "createdAt"
+          "createdAt",
+          "ownerId",
+          "ownerMail"
         ],
         "type": "object",
         "properties": {
@@ -2991,6 +2994,15 @@
             "type": "string",
             "description": "The creation timestamp.",
             "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the job definition's owner.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the job definition's owner."
           }
         },
         "description": "The result when a job definition has been retrieved."
@@ -5092,7 +5104,7 @@
           }
         }
       },
-      "PageInfo": {
+      "Pagination": {
         "type": "object",
         "properties": {
           "index": {
@@ -5194,7 +5206,9 @@
           "name",
           "definitionType",
           "createdAt",
-          "revisionCount"
+          "revisionCount",
+          "ownerId",
+          "ownerMail"
         ],
         "type": "object",
         "properties": {
@@ -5214,6 +5228,13 @@
           "revisionCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
           }
         }
       },
@@ -5292,7 +5313,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/PageInfo"
+                "$ref": "#/components/schemas/Pagination"
               }
             ]
           },
@@ -5404,6 +5425,9 @@
         ]
       },
       "RootFilter": {
+        "required": [
+          "filters"
+        ],
         "type": "object",
         "properties": {
           "filters": {
@@ -5419,8 +5443,7 @@
       },
       "SortCriterion": {
         "required": [
-          "propertyName",
-          "direction"
+          "propertyName"
         ],
         "type": "object",
         "properties": {

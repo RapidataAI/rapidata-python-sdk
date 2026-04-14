@@ -33,7 +33,9 @@ class QueryJobDefinitionsResult(BaseModel):
     definition_type: DefinitionType = Field(alias="definitionType")
     created_at: datetime = Field(alias="createdAt")
     revision_count: StrictInt = Field(alias="revisionCount")
-    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "createdAt", "revisionCount"]
+    owner_id: StrictStr = Field(alias="ownerId")
+    owner_mail: StrictStr = Field(alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "createdAt", "revisionCount", "ownerId", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,7 +92,9 @@ class QueryJobDefinitionsResult(BaseModel):
             "name": obj.get("name"),
             "definitionType": obj.get("definitionType"),
             "createdAt": obj.get("createdAt"),
-            "revisionCount": obj.get("revisionCount")
+            "revisionCount": obj.get("revisionCount"),
+            "ownerId": obj.get("ownerId"),
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 
