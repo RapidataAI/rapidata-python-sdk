@@ -20246,16 +20246,6 @@
         },
         "description": "The model user for submitting a survey"
       },
-      "AgeUserFilterModel_AgeGroup": {
-        "enum": [
-          "0-17",
-          "18-29",
-          "30-39",
-          "40-49",
-          "50-64",
-          "65+"
-        ]
-      },
       "BenchmarkQueryResult": {
         "required": [
           "id",
@@ -20441,27 +20431,10 @@
             "type": "boolean",
             "description": "If the results should be inversed, meaning people should select the worse model."
           },
-          "validationSetId": {
-            "type": "string",
-            "description": "The Validation set that should be attached to every run.",
-            "nullable": true
-          },
           "audienceId": {
             "type": "string",
-            "description": "Optional audience ID. When provided, the leaderboard will target users who have\n graduated from the audience (i.e., users with a score at or above the audience's minimum threshold).\n Cannot be specified together with Filters.",
+            "description": "Optional audience ID. When provided, evaluations run on the specified audience.\n Defaults to the global audience when not specified.",
             "nullable": true
-          },
-          "filters": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IUserFilterModel"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "The filters will be applied on every order that is created by this leaderboard.\n Cannot be specified together with AudienceId."
           },
           "featureFlags": {
             "allOf": [
@@ -20547,13 +20520,6 @@
             "type": "string"
           }
         }
-      },
-      "GenderUserFilterModel_Gender": {
-        "enum": [
-          "Male",
-          "Female",
-          "Other"
-        ]
       },
       "GetBenchmarkByIdResult": {
         "required": [
@@ -20830,17 +20796,13 @@
           "isInversed",
           "responseBudget",
           "minResponses",
-          "filters",
+          "audienceId",
           "featureFlags"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
-          },
-          "orderId": {
-            "type": "string",
-            "nullable": true
           },
           "name": {
             "type": "string"
@@ -20865,15 +20827,12 @@
             "type": "integer",
             "format": "int32"
           },
-          "validationSetId": {
+          "audienceId": {
+            "type": "string"
+          },
+          "jobDefinitionId": {
             "type": "string",
             "nullable": true
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICampaignFilter"
-            }
           },
           "featureFlags": {
             "type": "array",
@@ -20986,428 +20945,6 @@
           },
           "isDisabled": {
             "type": "boolean"
-          }
-        }
-      },
-      "ICampaignFilter": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ICampaignFilterAndFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterAudienceStateFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterCountryFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterDemographicFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterDeviceFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterNewUserFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterNotFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterOrFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterResponseCountFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserScoreFilter"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
-            "AudienceStateFilter": "#/components/schemas/ICampaignFilterAudienceStateFilter",
-            "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
-            "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter",
-            "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
-            "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
-            "DeviceFilter": "#/components/schemas/ICampaignFilterDeviceFilter",
-            "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
-            "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
-            "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
-            "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
-            "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
-            "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
-            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter"
-          }
-        }
-      },
-      "ICampaignFilterAndFilter": {
-        "required": [
-          "filters",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AndFilter"
-            ],
-            "type": "string"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICampaignFilter"
-            }
-          },
-          "innerFilters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICampaignFilter"
-            },
-            "nullable": true
-          }
-        }
-      },
-      "ICampaignFilterAudienceStateFilter": {
-        "required": [
-          "audienceId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AudienceStateFilter"
-            ],
-            "type": "string"
-          },
-          "audienceId": {
-            "type": "string"
-          },
-          "allowedStates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SimplifiedAudienceUserState"
-            }
-          },
-          "includeUnknownState": {
-            "type": "boolean"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterCampaignFilter": {
-        "required": [
-          "campaignIds",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CampaignFilter"
-            ],
-            "type": "string"
-          },
-          "campaignIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterCampaignSessionCountFilter": {
-        "required": [
-          "sessionCount",
-          "operator",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CampaignSessionCountFilter"
-            ],
-            "type": "string"
-          },
-          "sessionCount": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "operator": {
-            "$ref": "#/components/schemas/ComparisonOperator"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterCountryFilter": {
-        "required": [
-          "countries",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CountryFilter"
-            ],
-            "type": "string"
-          },
-          "countries": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterDemographicFilter": {
-        "required": [
-          "identifier",
-          "values",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "DemographicFilter"
-            ],
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterDeviceFilter": {
-        "required": [
-          "deviceTypes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "DeviceFilter"
-            ],
-            "type": "string"
-          },
-          "deviceTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DeviceType"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterLanguageFilter": {
-        "required": [
-          "languages",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LanguageFilter"
-            ],
-            "type": "string"
-          },
-          "languages": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterNewUserFilter": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NewUserFilter"
-            ],
-            "type": "string"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterNotFilter": {
-        "required": [
-          "filter",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NotFilter"
-            ],
-            "type": "string"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/ICampaignFilter"
-          },
-          "innerFilters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICampaignFilter"
-            }
-          }
-        }
-      },
-      "ICampaignFilterOrFilter": {
-        "required": [
-          "filters",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "OrFilter"
-            ],
-            "type": "string"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICampaignFilter"
-            }
-          },
-          "innerFilters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICampaignFilter"
-            }
-          }
-        }
-      },
-      "ICampaignFilterResponseCountFilter": {
-        "required": [
-          "responseCount",
-          "dimension",
-          "operator",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ResponseCountFilter"
-            ],
-            "type": "string"
-          },
-          "responseCount": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "dimension": {
-            "type": "string"
-          },
-          "operator": {
-            "$ref": "#/components/schemas/ComparisonOperator"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterUserActionRestrictionFilter": {
-        "required": [
-          "requiredActions",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserActionRestrictionFilter"
-            ],
-            "type": "string"
-          },
-          "requiredActions": {},
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterUserScoreFilter": {
-        "required": [
-          "lowerbound",
-          "upperbound",
-          "dimension",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserScoreFilter"
-            ],
-            "type": "string"
-          },
-          "lowerbound": {
-            "type": "number",
-            "format": "double"
-          },
-          "upperbound": {
-            "type": "number",
-            "format": "double"
-          },
-          "dimension": {
-            "type": "string"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
           }
         }
       },
@@ -21528,336 +21065,6 @@
           }
         }
       },
-      "IUserFilterModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IUserFilterModelAgeUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelAndUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelCampaignUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelCountryUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelDeviceUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelLanguageUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelNewUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelNotUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelOrUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel"
-          },
-          {
-            "$ref": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "AgeFilter": "#/components/schemas/IUserFilterModelAgeUserFilterModel",
-            "AndFilter": "#/components/schemas/IUserFilterModelAndUserFilterModel",
-            "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
-            "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
-            "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
-            "DeviceFilter": "#/components/schemas/IUserFilterModelDeviceUserFilterModel",
-            "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
-            "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
-            "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
-            "NotFilter": "#/components/schemas/IUserFilterModelNotUserFilterModel",
-            "OrFilter": "#/components/schemas/IUserFilterModelOrUserFilterModel",
-            "ResponseCountFilter": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel",
-            "UserScoreFilter": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
-          }
-        }
-      },
-      "IUserFilterModelAgeUserFilterModel": {
-        "required": [
-          "ageGroups",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AgeFilter"
-            ],
-            "type": "string"
-          },
-          "ageGroups": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AgeUserFilterModel_AgeGroup"
-            }
-          }
-        }
-      },
-      "IUserFilterModelAndUserFilterModel": {
-        "required": [
-          "filters",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AndFilter"
-            ],
-            "type": "string"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IUserFilterModel"
-            }
-          }
-        }
-      },
-      "IUserFilterModelCampaignUserFilterModel": {
-        "required": [
-          "campaignIds",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CampaignFilter"
-            ],
-            "type": "string"
-          },
-          "campaignIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IUserFilterModelCountryUserFilterModel": {
-        "required": [
-          "countries",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CountryFilter"
-            ],
-            "type": "string"
-          },
-          "countries": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IUserFilterModelCustomUserFilterModel": {
-        "required": [
-          "identifier",
-          "values",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CustomFilter"
-            ],
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IUserFilterModelDeviceUserFilterModel": {
-        "required": [
-          "deviceTypes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "DeviceFilter"
-            ],
-            "type": "string"
-          },
-          "deviceTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DeviceType"
-            }
-          }
-        }
-      },
-      "IUserFilterModelGenderUserFilterModel": {
-        "required": [
-          "genders",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "GenderFilter"
-            ],
-            "type": "string"
-          },
-          "genders": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GenderUserFilterModel_Gender"
-            }
-          }
-        }
-      },
-      "IUserFilterModelLanguageUserFilterModel": {
-        "required": [
-          "languages",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LanguageFilter"
-            ],
-            "type": "string"
-          },
-          "languages": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IUserFilterModelNewUserFilterModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NewUserFilter"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IUserFilterModelNotUserFilterModel": {
-        "required": [
-          "filter",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NotFilter"
-            ],
-            "type": "string"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/IUserFilterModel"
-          }
-        }
-      },
-      "IUserFilterModelOrUserFilterModel": {
-        "required": [
-          "filters",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "OrFilter"
-            ],
-            "type": "string"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IUserFilterModel"
-            }
-          }
-        }
-      },
-      "IUserFilterModelResponseCountUserFilterModel": {
-        "required": [
-          "responseCount",
-          "dimension",
-          "operator",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ResponseCountFilter"
-            ],
-            "type": "string"
-          },
-          "responseCount": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "dimension": {
-            "type": "string"
-          },
-          "operator": {
-            "$ref": "#/components/schemas/ComparisonOperator"
-          }
-        }
-      },
-      "IUserFilterModelUserScoreUserFilterModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserScoreFilter"
-            ],
-            "type": "string"
-          },
-          "lowerbound": {
-            "type": "number",
-            "format": "double"
-          },
-          "upperbound": {
-            "type": "number",
-            "format": "double"
-          },
-          "dimension": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
       "LeaderboardsQueryResult": {
         "required": [
           "id",
@@ -21868,17 +21075,13 @@
           "isInversed",
           "responseBudget",
           "minResponses",
-          "filters",
+          "audienceId",
           "featureFlags"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
-          },
-          "orderId": {
-            "type": "string",
-            "nullable": true
           },
           "name": {
             "type": "string"
@@ -21903,15 +21106,12 @@
             "type": "integer",
             "format": "int32"
           },
-          "validationSetId": {
+          "audienceId": {
+            "type": "string"
+          },
+          "jobDefinitionId": {
             "type": "string",
             "nullable": true
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICampaignFilter"
-            }
           },
           "featureFlags": {
             "type": "array",
@@ -22726,6 +21926,16 @@
           }
         }
       },
+      "AgeUserFilterModel_AgeGroup": {
+        "enum": [
+          "0-17",
+          "18-29",
+          "30-39",
+          "40-49",
+          "50-64",
+          "65+"
+        ]
+      },
       "AggregatorType": {
         "enum": [
           "NonCommittal",
@@ -23344,6 +22554,13 @@
           }
         },
         "description": "The model for submitting feedback."
+      },
+      "GenderUserFilterModel_Gender": {
+        "enum": [
+          "Male",
+          "Female",
+          "Other"
+        ]
       },
       "GetJobByIdEndpoint_Output": {
         "required": [
@@ -24845,6 +24062,336 @@
           },
           "validationSetId": {
             "type": "string"
+          }
+        }
+      },
+      "IUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IUserFilterModelAgeUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelAndUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCampaignUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCountryUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelDeviceUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelLanguageUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelNewUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelNotUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelOrUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AgeFilter": "#/components/schemas/IUserFilterModelAgeUserFilterModel",
+            "AndFilter": "#/components/schemas/IUserFilterModelAndUserFilterModel",
+            "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
+            "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
+            "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
+            "DeviceFilter": "#/components/schemas/IUserFilterModelDeviceUserFilterModel",
+            "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
+            "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
+            "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
+            "NotFilter": "#/components/schemas/IUserFilterModelNotUserFilterModel",
+            "OrFilter": "#/components/schemas/IUserFilterModelOrUserFilterModel",
+            "ResponseCountFilter": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel",
+            "UserScoreFilter": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelAgeUserFilterModel": {
+        "required": [
+          "ageGroups",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AgeFilter"
+            ],
+            "type": "string"
+          },
+          "ageGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgeUserFilterModel_AgeGroup"
+            }
+          }
+        }
+      },
+      "IUserFilterModelAndUserFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUserFilterModel"
+            }
+          }
+        }
+      },
+      "IUserFilterModelCampaignUserFilterModel": {
+        "required": [
+          "campaignIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignFilter"
+            ],
+            "type": "string"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelCountryUserFilterModel": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelCustomUserFilterModel": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CustomFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelDeviceUserFilterModel": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceType"
+            }
+          }
+        }
+      },
+      "IUserFilterModelGenderUserFilterModel": {
+        "required": [
+          "genders",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "GenderFilter"
+            ],
+            "type": "string"
+          },
+          "genders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GenderUserFilterModel_Gender"
+            }
+          }
+        }
+      },
+      "IUserFilterModelLanguageUserFilterModel": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelNewUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IUserFilterModelNotUserFilterModel": {
+        "required": [
+          "filter",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/IUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelOrUserFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUserFilterModel"
+            }
+          }
+        }
+      },
+      "IUserFilterModelResponseCountUserFilterModel": {
+        "required": [
+          "responseCount",
+          "dimension",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
+      "IUserFilterModelUserScoreUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string"
+          },
+          "lowerbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "dimension": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
