@@ -2346,6 +2346,16 @@ flow.update_config(
     This config will only affect new flow items and not modify existing ones.
 
 
+### Preheating
+
+If you need low-latency responses for upcoming flow items, you can preheat the system beforehand:
+
+```python
+client.flow.preheat()
+```
+
+This warms up internal resources so that subsequent flow batches are processed faster. Call it before submitting time-sensitive batches.
+
 ### Retrieving Existing Flows
 
 You can retrieve flows by ID or list your recent flows:

@@ -981,6 +981,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#preheating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preheating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#retrieving-existing-flows" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1257,6 +1268,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#preheating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preheating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#retrieving-existing-flows" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1394,16 +1416,21 @@
 <p class="admonition-title">Note</p>
 <p>This config will only affect new flow items and not modify existing ones.</p>
 </div>
+<h3 id="preheating">Preheating<a class="headerlink" href="#preheating" title="Permanent link">#</a></h3>
+<p>If you need low-latency responses for upcoming flow items, you can preheat the system beforehand:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">preheat</span><span class="p">()</span>
+</span></code></pre></div>
+<p>This warms up internal resources so that subsequent flow batches are processed faster. Call it before submitting time-sensitive batches.</p>
 <h3 id="retrieving-existing-flows">Retrieving Existing Flows<a class="headerlink" href="#retrieving-existing-flows" title="Permanent link">#</a></h3>
 <p>You can retrieve flows by ID or list your recent flows:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get a specific flow by ID</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">get_flow_by_id</span><span class="p">(</span><span class="s2">"flow_id_here"</span><span class="p">)</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># List recent flows</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">recent_flows</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">find_flows</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Get a specific flow by ID</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">get_flow_by_id</span><span class="p">(</span><span class="s2">"flow_id_here"</span><span class="p">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List recent flows</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">recent_flows</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">find_flows</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="deleting-a-flow">Deleting a Flow<a class="headerlink" href="#deleting-a-flow" title="Permanent link">#</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">flow</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">flow</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </span></code></pre></div>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
