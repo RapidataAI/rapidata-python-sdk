@@ -139,6 +139,12 @@ class RapidataFlowManager:
                 for flow in response.items
             ]
 
+    def preheat(self) -> None:
+        """Preheat the boost system to reduce latency for upcoming flow items."""
+        with tracer.start_as_current_span("RapidataFlowManager.preheat"):
+            logger.debug("Preheating boost")
+            self._openapi_service.campaign.campaign_api.campaign_boost_preheat_post()
+
     def __str__(self) -> str:
         return "RapidataFlowManager"
 
