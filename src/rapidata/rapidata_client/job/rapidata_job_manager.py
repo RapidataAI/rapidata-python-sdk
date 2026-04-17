@@ -363,7 +363,7 @@ class RapidataJobManager:
                     instruction=instruction,
                     comparison_budget_per_ranking=comparison_budget_per_ranking,
                     random_comparisons_ratio=random_comparisons_ratio,
-                    group_sizes=[len(group) for group in datapoints],
+                    max_group_size=max(len(group) for group in datapoints),
                 ),
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,

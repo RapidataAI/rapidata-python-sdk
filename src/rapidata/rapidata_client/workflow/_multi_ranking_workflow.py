@@ -21,7 +21,7 @@ class MultiRankingWorkflow(Workflow):
         instruction: str,
         comparison_budget_per_ranking: int,
         random_comparisons_ratio: float,
-        group_sizes: list[int],
+        max_group_size: int,
     ):
         from rapidata.api_client.models.i_pair_maker_config_model import (
             IPairMakerConfigModel,
@@ -44,11 +44,9 @@ class MultiRankingWorkflow(Workflow):
         self.instruction = instruction
         self.comparison_budget_per_ranking = comparison_budget_per_ranking
         self.random_comparisons_ratio = random_comparisons_ratio
-        self.group_sizes = group_sizes
+        self.max_group_size = max_group_size
 
-        if group_sizes and all(
-            size <= FULL_PERMUTATION_GROUP_SIZE_THRESHOLD for size in group_sizes
-        ):
+        if max_group_size <= FULL_PERMUTATION_GROUP_SIZE_THRESHOLD:
             self.pair_maker_config = IPairMakerConfigModel(
                 actual_instance=IPairMakerConfigModelFullPermutationPairMakerConfigModel(
                     _t="FullPermutationPairMaker",
@@ -94,4 +92,4 @@ class MultiRankingWorkflow(Workflow):
         return f"MultiRankingWorkflow(instruction='{self.instruction}')"
 
     def __repr__(self) -> str:
-        return f"MultiRankingWorkflow(instruction={self.instruction!r}, comparison_budget_per_ranking={self.comparison_budget_per_ranking!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, group_sizes={self.group_sizes!r})"
+        return f"MultiRankingWorkflow(instruction={self.instruction!r}, comparison_budget_per_ranking={self.comparison_budget_per_ranking!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, max_group_size={self.max_group_size!r})"
