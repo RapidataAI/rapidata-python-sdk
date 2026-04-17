@@ -329,9 +329,6 @@ def write_if_changed(path: Path, content: str, check_mode: bool) -> bool:
         if path.name in HANDWRITTEN_FILES:
             print(f"ERROR: Refusing to overwrite hand-written file: {path.name}")
             sys.exit(1)
-        if path.exists() and not existing.startswith("# This file is auto-generated"):
-            # File exists but isn't marked as generated - check if it's a known file we're replacing
-            pass
 
     if check_mode:
         return True
