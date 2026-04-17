@@ -7,12 +7,12 @@ from __future__ import annotations
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class DoNotTranslateSetting(RapidataSetting):
+class OriginalLanguageOnlySetting(RapidataSetting):
     """
-    Do not translate the content. Hides the language switch UI from users.
+    Display the content in the original language only. Hides the language switch UI from users.
 
     Args:
-        value (bool, optional): Whether to force original language display. Defaults to True.
+        value (bool, optional): Whether to display the content in the original language only. Defaults to True.
     """
 
     def __init__(self, value: bool = True):

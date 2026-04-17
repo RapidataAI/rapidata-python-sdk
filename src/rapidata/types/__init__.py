@@ -65,7 +65,7 @@ from rapidata.rapidata_client.settings.swap_context_instruction import SwapConte
 from rapidata.rapidata_client.settings.play_percentage_video import PlayPercentageVideoSetting
 from rapidata.rapidata_client.settings.markdown import MarkdownSetting
 from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting
-from rapidata.rapidata_client.settings.do_not_translate import DoNotTranslateSetting
+from rapidata.rapidata_client.settings.original_language_only import OriginalLanguageOnlySetting
 from rapidata.rapidata_client.settings.no_mistake_option import NoMistakeOptionSetting
 from rapidata.rapidata_client.settings.disable_autoloop import DisableAutoloopSetting
 from rapidata.rapidata_client.settings.no_instruction_display import NoInstructionDisplaySetting
@@ -144,7 +144,7 @@ __all__ = [
     "PlayPercentageVideoSetting",
     "MarkdownSetting",
     "AllowNeitherBothSetting",
-    "DoNotTranslateSetting",
+    "OriginalLanguageOnlySetting",
     "NoMistakeOptionSetting",
     "DisableAutoloopSetting",
     "NoInstructionDisplaySetting",

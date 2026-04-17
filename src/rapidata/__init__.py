@@ -32,7 +32,7 @@ from .rapidata_client import (
     PlayPercentageVideoSetting,
     MarkdownSetting,
     AllowNeitherBothSetting,
-    DoNotTranslateSetting,
+    OriginalLanguageOnlySetting,
     NoMistakeOptionSetting,
     DisableAutoloopSetting,
     NoInstructionDisplaySetting,

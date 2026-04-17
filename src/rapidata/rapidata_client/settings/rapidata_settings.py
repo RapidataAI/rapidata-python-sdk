@@ -10,7 +10,7 @@ from rapidata.rapidata_client.settings.swap_context_instruction import SwapConte
 from rapidata.rapidata_client.settings.play_percentage_video import PlayPercentageVideoSetting
 from rapidata.rapidata_client.settings.markdown import MarkdownSetting
 from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting
-from rapidata.rapidata_client.settings.do_not_translate import DoNotTranslateSetting
+from rapidata.rapidata_client.settings.original_language_only import OriginalLanguageOnlySetting
 from rapidata.rapidata_client.settings.no_mistake_option import NoMistakeOptionSetting
 from rapidata.rapidata_client.settings.disable_autoloop import DisableAutoloopSetting
 from rapidata.rapidata_client.settings.no_instruction_display import NoInstructionDisplaySetting
@@ -36,7 +36,7 @@ class RapidataSettings:
         PlayPercentageVideo (PlayPercentageVideoSetting): Requires users to watch a certain percentage of the video before they can submit their answer.
         Markdown (MarkdownSetting): Enables limited markdown rendering for text datapoints.
         AllowNeitherBoth (AllowNeitherBothSetting): Only for compare tasks. Enables an "Unsure" button that allows users to select neither or both options.
-        DoNotTranslate (DoNotTranslateSetting): Do not translate the content. Hides the language switch UI from users.
+        OriginalLanguageOnly (OriginalLanguageOnlySetting): Display the content in the original language only. Hides the language switch UI from users.
         NoMistakeOption (NoMistakeOptionSetting): Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.
         DisableAutoloop (DisableAutoloopSetting): Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.
         NoInstructionDisplay (NoInstructionDisplaySetting): Hides the instruction text in the UI. Only the context will be shown.
@@ -63,7 +63,7 @@ class RapidataSettings:
     PlayPercentageVideo = PlayPercentageVideoSetting
     Markdown = MarkdownSetting
     AllowNeitherBoth = AllowNeitherBothSetting
-    DoNotTranslate = DoNotTranslateSetting
+    OriginalLanguageOnly = OriginalLanguageOnlySetting
     NoMistakeOption = NoMistakeOptionSetting
     DisableAutoloop = DisableAutoloopSetting
     NoInstructionDisplay = NoInstructionDisplaySetting

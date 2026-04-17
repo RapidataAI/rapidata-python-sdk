@@ -35,7 +35,7 @@ from .settings import (
     PlayPercentageVideoSetting,
     MarkdownSetting,
     AllowNeitherBothSetting,
-    DoNotTranslateSetting,
+    OriginalLanguageOnlySetting,
     NoMistakeOptionSetting,
     DisableAutoloopSetting,
     NoInstructionDisplaySetting,
