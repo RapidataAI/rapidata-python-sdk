@@ -7,17 +7,16 @@ from __future__ import annotations
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class MarkdownSetting(RapidataSetting):
+class NoMistakeOptionSetting(RapidataSetting):
     """
-    Enables limited markdown rendering for text datapoints.
-    Useful when comparing formatted text like LLM outputs.
+    Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.
 
     Args:
-        value (bool, optional): Whether to enable markdown rendering. Defaults to True.
+        value (bool, optional): Whether to enable the no mistakes button. Defaults to True.
     """
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):
             raise ValueError("The value must be a boolean.")
 
-        super().__init__(key="use_main_text_markdown", value=value)
+        super().__init__(key="no_mistake", value=value)

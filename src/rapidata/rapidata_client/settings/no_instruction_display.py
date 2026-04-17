@@ -7,17 +7,18 @@ from __future__ import annotations
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class MarkdownSetting(RapidataSetting):
+class NoInstructionDisplaySetting(RapidataSetting):
     """
-    Enables limited markdown rendering for text datapoints.
-    Useful when comparing formatted text like LLM outputs.
+    Hides the instruction text in the UI. Only the context will be shown.
+
+    Note: If SwapContextInstructionSetting is also applied, this will hide the context instead, since the positions are swapped.
 
     Args:
-        value (bool, optional): Whether to enable markdown rendering. Defaults to True.
+        value (bool, optional): Whether to hide the instruction display. Defaults to True.
     """
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):
             raise ValueError("The value must be a boolean.")
 
-        super().__init__(key="use_main_text_markdown", value=value)
+        super().__init__(key="no_aux_text", value=value)

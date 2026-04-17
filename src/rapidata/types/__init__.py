@@ -55,21 +55,28 @@ from rapidata.rapidata_client.filter.user_score_filter import UserScoreFilter
 from rapidata.rapidata_client.filter.models.age_group import AgeGroup
 from rapidata.rapidata_client.filter.models.gender import Gender
 
+# --- GENERATED SETTINGS IMPORTS START ---
 # Settings Types
-from rapidata.rapidata_client.settings.alert_on_fast_response import AlertOnFastResponseSetting, AlertOnFastResponse
-from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting, AllowNeitherBoth
-from rapidata.rapidata_client.settings.custom_setting import CustomSetting
-from rapidata.rapidata_client.settings.free_text_minimum_characters import (
-    FreeTextMinimumCharactersSetting, FreeTextMinimumCharacters,
-)
-from rapidata.rapidata_client.settings.no_shuffle import NoShuffleSetting, NoShuffle
+from rapidata.rapidata_client.settings.no_shuffle import NoShuffleSetting
+from rapidata.rapidata_client.settings.mute_video import MuteVideoSetting
+from rapidata.rapidata_client.settings.free_text_minimum_characters import FreeTextMinimumCharactersSetting
+from rapidata.rapidata_client.settings.free_text_max_characters import FreeTextMaxCharactersSetting
+from rapidata.rapidata_client.settings.swap_context_instruction import SwapContextInstructionSetting
 from rapidata.rapidata_client.settings.play_percentage_video import PlayPercentageVideoSetting
-from rapidata.rapidata_client.settings.markdown import MarkdownSetting, Markdown
+from rapidata.rapidata_client.settings.markdown import MarkdownSetting
+from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting
+from rapidata.rapidata_client.settings.original_language_only import OriginalLanguageOnlySetting
+from rapidata.rapidata_client.settings.no_mistake_option import NoMistakeOptionSetting
+from rapidata.rapidata_client.settings.disable_autoloop import DisableAutoloopSetting
+from rapidata.rapidata_client.settings.no_instruction_display import NoInstructionDisplaySetting
+from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSetting
+from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsSetting
+from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
+from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
+from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
+from rapidata.rapidata_client.settings.custom_setting import CustomSetting
 from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings
-from rapidata.rapidata_client.settings.translation_behaviour import TranslationBehaviourSetting, TranslationBehaviour
-from rapidata.rapidata_client.settings.models.translation_behaviour_options import (
-    TranslationBehaviourOptions,
-)
+# --- GENERATED SETTINGS IMPORTS END ---
 
 
 # Configuration Types
@@ -127,23 +134,28 @@ __all__ = [
     # Filter Model Types
     "AgeGroup",
     "Gender",
+    # --- GENERATED SETTINGS ALL START ---
     # Settings Types
-    "AlertOnFastResponseSetting",
-    "AlertOnFastResponse",
-    "AllowNeitherBothSetting",
-    "AllowNeitherBoth",
-    "CustomSetting",
-    "FreeTextMinimumCharactersSetting",
-    "FreeTextMinimumCharacters",
     "NoShuffleSetting",
-    "NoShuffle",
+    "MuteVideoSetting",
+    "FreeTextMinimumCharactersSetting",
+    "FreeTextMaxCharactersSetting",
+    "SwapContextInstructionSetting",
     "PlayPercentageVideoSetting",
     "MarkdownSetting",
-    "Markdown",
+    "AllowNeitherBothSetting",
+    "OriginalLanguageOnlySetting",
+    "NoMistakeOptionSetting",
+    "DisableAutoloopSetting",
+    "NoInstructionDisplaySetting",
+    "KeyboardNumericSetting",
+    "LocateMaxPointsSetting",
+    "LocateMinPointsSetting",
+    "ComparePanoramaSetting",
+    "CompareEquirectangularSetting",
+    "CustomSetting",
     "RapidataSettings",
-    "TranslationBehaviourSetting",
-    "TranslationBehaviour",
-    "TranslationBehaviourOptions",
+# --- GENERATED SETTINGS ALL END ---
     # Configuration Types
     "UploadConfig",
     "RapidataConfig",
