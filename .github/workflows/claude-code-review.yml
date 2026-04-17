@@ -12,7 +12,7 @@ on:
 
 jobs:
   claude-review:
-    if: ${{ !startsWith(github.head_ref, 'openapi-generation-') }}
+    if: ${{ !startsWith(github.head_ref, 'openapi-generation-') && github.head_ref != 'settings-generation' }}
 
     runs-on: ubuntu-latest
     permissions:
