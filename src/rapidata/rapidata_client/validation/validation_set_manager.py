@@ -15,7 +15,7 @@ from rapidata.api_client.models.create_validation_set_model import (
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 
-from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.pagination import Pagination
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
@@ -676,7 +676,7 @@ class ValidationSetManager:
             validation_page_result = (
                 self._openapi_service.validation.validation_api.validation_sets_get(
                     QueryModel(
-                        page=PageInfo(index=page, size=amount),
+                        page=Pagination(index=page, size=amount),
                         filter=RootFilter(
                             filters=[
                                 Filter(
