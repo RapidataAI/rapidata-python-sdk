@@ -46,7 +46,7 @@ class FreeTextWorkflow(Workflow):
         return {
             **super()._to_dict(),
             "blueprint": {
-                "_t": "FreeTextBlueprint",
+                "_t": "FreeTextRapidBlueprint",
                 "question": self._instruction,
                 "validationSystemPrompt": self._validation_system_prompt,
             },
@@ -54,7 +54,7 @@ class FreeTextWorkflow(Workflow):
 
     def _to_model(self) -> IOrderWorkflowModel:
         blueprint = IRapidBlueprintFreeTextRapidBlueprint(
-            _t="FreeTextBlueprint",
+            _t="FreeTextRapidBlueprint",
             question=self._instruction,
             validationSystemPrompt=self._validation_system_prompt,
         )

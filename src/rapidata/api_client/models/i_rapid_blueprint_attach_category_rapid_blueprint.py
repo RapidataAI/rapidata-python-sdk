@@ -36,8 +36,8 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['ClassifyBlueprint']):
-            raise ValueError("must be one of enum values ('ClassifyBlueprint')")
+        if value not in set(['AttachCategoryRapidBlueprint']):
+            raise ValueError("must be one of enum values ('AttachCategoryRapidBlueprint')")
         return value
 
     model_config = ConfigDict(

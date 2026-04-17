@@ -27,7 +27,7 @@ class LocateWorkflow(Workflow):
 
     def _to_model(self) -> IOrderWorkflowModel:
         blueprint = IRapidBlueprintLocateRapidBlueprint(
-            _t="LocateBlueprint", target=self._target
+            _t="LocateRapidBlueprint", target=self._target
         )
 
         return IOrderWorkflowModel(
