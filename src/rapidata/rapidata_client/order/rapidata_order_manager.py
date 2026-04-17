@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, Optional, Sequence, get_args, TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, Optional, Sequence, get_args
 
 from opentelemetry import trace
 
@@ -22,6 +22,7 @@ if TYPE_CHECKING:
         StickyStateLiteral,
     )
     from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
+    from rapidata.rapidata_client.referee._base_referee import Referee
     from rapidata.rapidata_client.selection._base_selection import RapidataSelection
     from rapidata.rapidata_client.workflow import (
         Workflow,
@@ -63,6 +64,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
+        referee: Optional["Referee"] = None,
     ) -> RapidataOrder:
         if filters is None:
             filters = []
@@ -76,7 +78,9 @@ class RapidataOrderManager:
                 "Cannot set both confidence_threshold and quorum_threshold. Choose one stopping strategy."
             )
 
-        if confidence_threshold is None and quorum_threshold is None:
+        if referee is not None:
+            pass  # use the provided referee as-is
+        elif confidence_threshold is None and quorum_threshold is None:
             from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 
             referee = NaiveReferee(responses=responses_per_datapoint)
@@ -492,16 +496,27 @@ class RapidataOrderManager:
                         )
                     )
 
+            workflow = MultiRankingWorkflow(
+                instruction=instruction,
+                comparison_budget_per_ranking=comparison_budget_per_ranking,
+                random_comparisons_ratio=random_comparisons_ratio,
+                group_sizes=[len(group) for group in datapoints],
+            )
+
+            # FullPermutationPairMaker requires BudgetReferee (not NaiveReferee)
+            if workflow.uses_full_permutation:
+                from rapidata.rapidata_client.referee._budget_referee import BudgetReferee
+
+                referee_override: Optional["Referee"] = BudgetReferee(budget=comparison_budget_per_ranking)
+            else:
+                referee_override = None
+
             return self._create_general_order(
                 name=name,
-                workflow=MultiRankingWorkflow(
-                    instruction=instruction,
-                    comparison_budget_per_ranking=comparison_budget_per_ranking,
-                    random_comparisons_ratio=random_comparisons_ratio,
-                    group_sizes=[len(group) for group in datapoints],
-                ),
+                workflow=workflow,
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,
+                referee=referee_override,
                 validation_set_id=validation_set_id,
                 filters=filters,
                 selections=selections,

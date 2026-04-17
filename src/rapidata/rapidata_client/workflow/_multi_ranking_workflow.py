@@ -45,10 +45,12 @@ class MultiRankingWorkflow(Workflow):
         self.comparison_budget_per_ranking = comparison_budget_per_ranking
         self.random_comparisons_ratio = random_comparisons_ratio
         self.group_sizes = group_sizes
+        self.uses_full_permutation = bool(
+            group_sizes
+            and all(size <= FULL_PERMUTATION_GROUP_SIZE_THRESHOLD for size in group_sizes)
+        )
 
-        if group_sizes and all(
-            size <= FULL_PERMUTATION_GROUP_SIZE_THRESHOLD for size in group_sizes
-        ):
+        if self.uses_full_permutation:
             self.pair_maker_config = IPairMakerConfigModel(
                 actual_instance=IPairMakerConfigModelFullPermutationPairMakerConfigModel(
                     _t="FullPermutationPairMaker",
