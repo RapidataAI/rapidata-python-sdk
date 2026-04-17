@@ -33,8 +33,8 @@ class IRapidBlueprintScrubRapidBlueprint(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['ScrubBlueprint']):
-            raise ValueError("must be one of enum values ('ScrubBlueprint')")
+        if value not in set(['ScrubRapidBlueprint']):
+            raise ValueError("must be one of enum values ('ScrubRapidBlueprint')")
         return value
 
     model_config = ConfigDict(

@@ -40,7 +40,7 @@ class TimestampWorkflow(Workflow):
 
     def _to_model(self) -> IOrderWorkflowModel:
         blueprint = IRapidBlueprintScrubRapidBlueprint(
-            _t="ScrubBlueprint", target=self._instruction
+            _t="ScrubRapidBlueprint", target=self._instruction
         )
 
         return IOrderWorkflowModel(

@@ -49,7 +49,7 @@ class CompareWorkflow(Workflow):
 
     def _to_model(self) -> IOrderWorkflowModel:
         blueprint = IRapidBlueprintCompareRapidBlueprint(
-            _t="CompareBlueprint",
+            _t="CompareRapidBlueprint",
             criteria=self._instruction,
             indexIdentifiers=self._a_b_names,
         )

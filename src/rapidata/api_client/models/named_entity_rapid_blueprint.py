@@ -26,7 +26,7 @@ class NamedEntityRapidBlueprint(BaseModel):
     """
     NamedEntityRapidBlueprint
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for NamedEntityBlueprint", alias="_t")
+    t: StrictStr = Field(description="Discriminator value for NamedEntityRapidBlueprint", alias="_t")
     target: StrictStr
     classes: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "target", "classes"]
@@ -34,8 +34,8 @@ class NamedEntityRapidBlueprint(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['NamedEntityBlueprint']):
-            raise ValueError("must be one of enum values ('NamedEntityBlueprint')")
+        if value not in set(['NamedEntityRapidBlueprint']):
+            raise ValueError("must be one of enum values ('NamedEntityRapidBlueprint')")
         return value
 
     model_config = ConfigDict(
@@ -89,7 +89,7 @@ class NamedEntityRapidBlueprint(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'NamedEntityBlueprint',
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'NamedEntityRapidBlueprint',
             "target": obj.get("target"),
             "classes": obj.get("classes")
         })

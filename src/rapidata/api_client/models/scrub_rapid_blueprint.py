@@ -26,15 +26,15 @@ class ScrubRapidBlueprint(BaseModel):
     """
     ScrubRapidBlueprint
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for ScrubBlueprint", alias="_t")
+    t: StrictStr = Field(description="Discriminator value for ScrubRapidBlueprint", alias="_t")
     target: StrictStr
     __properties: ClassVar[List[str]] = ["_t", "target"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['ScrubBlueprint']):
-            raise ValueError("must be one of enum values ('ScrubBlueprint')")
+        if value not in set(['ScrubRapidBlueprint']):
+            raise ValueError("must be one of enum values ('ScrubRapidBlueprint')")
         return value
 
     model_config = ConfigDict(
@@ -88,7 +88,7 @@ class ScrubRapidBlueprint(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'ScrubBlueprint',
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ScrubRapidBlueprint',
             "target": obj.get("target")
         })
         return _obj

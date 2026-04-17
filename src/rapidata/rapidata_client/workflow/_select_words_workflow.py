@@ -41,7 +41,7 @@ class SelectWordsWorkflow(Workflow):
 
     def _to_model(self) -> IOrderWorkflowModel:
         blueprint = IRapidBlueprintTranscriptionRapidBlueprint(
-            _t="TranscriptionBlueprint", title=self._instruction
+            _t="TranscriptionRapidBlueprint", title=self._instruction
         )
 
         return IOrderWorkflowModel(

@@ -50,7 +50,7 @@ class ClassifyWorkflow(Workflow):
         return {
             **super()._to_dict(),
             "blueprint": {
-                "_t": "ClassifyBlueprint",
+                "_t": "AttachCategoryRapidBlueprint",
                 "title": self._instruction,
                 "possibleCategories": self._answer_options,
             },
@@ -58,7 +58,7 @@ class ClassifyWorkflow(Workflow):
 
     def _to_model(self) -> IOrderWorkflowModel:
         blueprint = IRapidBlueprintAttachCategoryRapidBlueprint(
-            _t="ClassifyBlueprint",
+            _t="AttachCategoryRapidBlueprint",
             title=self._instruction,
             categories=[
                 AttachCategoryRapidBlueprintCategory(label=option, value=option)

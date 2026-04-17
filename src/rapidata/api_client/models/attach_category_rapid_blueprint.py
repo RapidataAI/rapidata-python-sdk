@@ -27,7 +27,7 @@ class AttachCategoryRapidBlueprint(BaseModel):
     """
     AttachCategoryRapidBlueprint
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for ClassifyBlueprint", alias="_t")
+    t: StrictStr = Field(description="Discriminator value for AttachCategoryRapidBlueprint", alias="_t")
     possible_categories: Optional[List[StrictStr]] = Field(default=None, alias="possibleCategories")
     categories: Optional[List[AttachCategoryRapidBlueprintCategory]] = None
     title: StrictStr
@@ -36,8 +36,8 @@ class AttachCategoryRapidBlueprint(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['ClassifyBlueprint']):
-            raise ValueError("must be one of enum values ('ClassifyBlueprint')")
+        if value not in set(['AttachCategoryRapidBlueprint']):
+            raise ValueError("must be one of enum values ('AttachCategoryRapidBlueprint')")
         return value
 
     model_config = ConfigDict(
@@ -98,7 +98,7 @@ class AttachCategoryRapidBlueprint(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'ClassifyBlueprint',
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'AttachCategoryRapidBlueprint',
             "possibleCategories": obj.get("possibleCategories"),
             "categories": [AttachCategoryRapidBlueprintCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "title": obj.get("title")

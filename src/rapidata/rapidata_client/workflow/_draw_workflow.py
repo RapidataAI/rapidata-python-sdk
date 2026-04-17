@@ -27,7 +27,7 @@ class DrawWorkflow(Workflow):
 
     def _to_model(self) -> IOrderWorkflowModel:
         blueprint = IRapidBlueprintLineRapidBlueprint(
-            _t="LineBlueprint", target=self._target
+            _t="LineRapidBlueprint", target=self._target
         )
 
         return IOrderWorkflowModel(

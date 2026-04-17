@@ -26,7 +26,7 @@ class FreeTextRapidBlueprint(BaseModel):
     """
     FreeTextRapidBlueprint
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for FreeTextBlueprint", alias="_t")
+    t: StrictStr = Field(description="Discriminator value for FreeTextRapidBlueprint", alias="_t")
     question: StrictStr
     validation_system_prompt: Optional[StrictStr] = Field(default=None, alias="validationSystemPrompt")
     __properties: ClassVar[List[str]] = ["_t", "question", "validationSystemPrompt"]
@@ -34,8 +34,8 @@ class FreeTextRapidBlueprint(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['FreeTextBlueprint']):
-            raise ValueError("must be one of enum values ('FreeTextBlueprint')")
+        if value not in set(['FreeTextRapidBlueprint']):
+            raise ValueError("must be one of enum values ('FreeTextRapidBlueprint')")
         return value
 
     model_config = ConfigDict(
@@ -94,7 +94,7 @@ class FreeTextRapidBlueprint(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'FreeTextBlueprint',
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'FreeTextRapidBlueprint',
             "question": obj.get("question"),
             "validationSystemPrompt": obj.get("validationSystemPrompt")
         })

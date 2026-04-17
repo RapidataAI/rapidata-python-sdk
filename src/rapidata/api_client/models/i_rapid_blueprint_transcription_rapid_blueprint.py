@@ -33,8 +33,8 @@ class IRapidBlueprintTranscriptionRapidBlueprint(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['TranscriptionBlueprint']):
-            raise ValueError("must be one of enum values ('TranscriptionBlueprint')")
+        if value not in set(['TranscriptionRapidBlueprint']):
+            raise ValueError("must be one of enum values ('TranscriptionRapidBlueprint')")
         return value
 
     model_config = ConfigDict(

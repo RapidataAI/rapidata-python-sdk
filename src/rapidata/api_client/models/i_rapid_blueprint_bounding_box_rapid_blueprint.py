@@ -33,8 +33,8 @@ class IRapidBlueprintBoundingBoxRapidBlueprint(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['BoundingBoxBlueprint']):
-            raise ValueError("must be one of enum values ('BoundingBoxBlueprint')")
+        if value not in set(['BoundingBoxRapidBlueprint']):
+            raise ValueError("must be one of enum values ('BoundingBoxRapidBlueprint')")
         return value
 
     model_config = ConfigDict(
