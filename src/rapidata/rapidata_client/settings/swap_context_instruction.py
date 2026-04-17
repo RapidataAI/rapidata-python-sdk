@@ -11,7 +11,7 @@ class SwapContextInstructionSetting(RapidataSetting):
     """
     Swap the place of the context and instruction.
 
-    If set to true, the instruction will be shown on top and the context below. if collapsed, only the instruction will be shown.
+    If set to true, the instruction will be shown on top and the context below. If collapsed, only the instruction will be shown.
 
     By default, the context will be shown on top and the instruction below.
 
