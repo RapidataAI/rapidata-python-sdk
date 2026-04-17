@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/free_text_minimum_characters/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/disable_autoloop/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Free text minimum characters - Rapidata Python SDK</title>
+        <title>Disable autoloop - Rapidata Python SDK</title>
       
     
     
@@ -109,7 +109,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.settings.free_text_minimum_characters" class="md-skip">
+        <a href="#rapidata.rapidata_client.settings.disable_autoloop" class="md-skip">
           Skip to content
         </a>
       
@@ -148,7 +148,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Free text minimum characters
+              Disable autoloop
             
           </span>
         </div>
@@ -1041,10 +1041,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.settings.free_text_minimum_characters" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.settings.disable_autoloop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        free_text_minimum_characters
+        disable_autoloop
       
     </span>
   </a>
@@ -1052,10 +1052,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.settings.disable_autoloop.DisableAutoloopSetting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        FreeTextMinimumCharactersSetting
+        DisableAutoloopSetting
       
     </span>
   </a>
@@ -1082,13 +1082,13 @@
   
 
 
-  <h1>Free text minimum characters</h1>
+  <h1>Disable autoloop</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.settings.free_text_minimum_characters"></a>
+<a id="rapidata.rapidata_client.settings.disable_autoloop"></a>
     <div class="doc doc-contents first">
 
 
@@ -1114,12 +1114,12 @@
 
 
 
-<h2 id="rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">FreeTextMinimumCharactersSetting</span>
+<h2 id="rapidata.rapidata_client.settings.disable_autoloop.DisableAutoloopSetting" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">DisableAutoloopSetting</span>
 
 
-<a href="#rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">FreeTextMinimumCharactersSetting</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">)</span>
+<a href="#rapidata.rapidata_client.settings.disable_autoloop.DisableAutoloopSetting" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">DisableAutoloopSetting</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1128,7 +1128,7 @@
 
 
 
-        <p>Set the minimum number of characters a user has to type.</p>
+        <p>Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1147,15 +1147,15 @@
                 <code>value</code>
             </td>
             <td>
-                  <code><span title="int">int</span></code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The minimum number of characters for free text.</p>
+                <p>Whether to disable video autoloop. Defaults to True.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>True</code>
             </td>
           </tr>
       </tbody>
@@ -1169,26 +1169,16 @@
 
 
                   <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/rapidata/rapidata_client/settings/free_text_minimum_characters.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-19">19</a></span>
+                    <summary>Source code in <code>src/rapidata/rapidata_client/settings/disable_autoloop.py</code></summary>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#__codelineno-0-24">24</a></span>
-<span class="normal"><a href="#__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>            <span class="s2">"The minimum number of characters must be greater than or equal to 1."</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>        <span class="p">)</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">:</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a>        <span class="n">managed_print</span><span class="p">(</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a>            <span class="sa">f</span><span class="s2">"Warning: Are you sure you want to set the minimum number of characters at </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">?"</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>        <span class="p">)</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">"free_text_minimum_characters"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The value must be a boolean."</span><span class="p">)</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">"disable_autoloop"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 

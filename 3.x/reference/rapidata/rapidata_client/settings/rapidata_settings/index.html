@@ -1140,39 +1140,6 @@
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.AlertOnFastResponse">AlertOnFastResponse</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="AlertOnFastResponseSetting (rapidata.rapidata_client.settings.alert_on_fast_response.AlertOnFastResponseSetting)" href="../alert_on_fast_response/#rapidata.rapidata_client.settings.alert_on_fast_response.AlertOnFastResponseSetting">AlertOnFastResponseSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Gives an alert as a pop up on the UI when the response time is less than the milliseconds.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.TranslationBehaviour">TranslationBehaviour</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="TranslationBehaviourSetting (rapidata.rapidata_client.settings.translation_behaviour.TranslationBehaviourSetting)" href="../translation_behaviour/#rapidata.rapidata_client.settings.translation_behaviour.TranslationBehaviourSetting">TranslationBehaviourSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Defines what's the behaviour of the translation in the UI.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.FreeTextMinimumCharacters">FreeTextMinimumCharacters</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="FreeTextMinimumCharactersSetting (rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting)" href="../free_text_minimum_characters/#rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting">FreeTextMinimumCharactersSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Only for free text tasks. Set the minimum number of characters a user has to type.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
             <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.NoShuffle">NoShuffle</span></code></td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="NoShuffleSetting (rapidata.rapidata_client.settings.no_shuffle.NoShuffleSetting)" href="../no_shuffle/#rapidata.rapidata_client.settings.no_shuffle.NoShuffleSetting">NoShuffleSetting</a></code>
@@ -1184,24 +1151,35 @@
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.PlayPercentageVideo">PlayPercentageVideo</span></code></td>
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.MuteVideo">MuteVideo</span></code></td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="PlayPercentageVideoSetting (rapidata.rapidata_client.settings.play_percentage_video.PlayPercentageVideoSetting)" href="../play_percentage_video/#rapidata.rapidata_client.settings.play_percentage_video.PlayPercentageVideoSetting">PlayPercentageVideoSetting</a></code>
+                  <code><a class="autorefs autorefs-internal" title="MuteVideoSetting (rapidata.rapidata_client.settings.mute_video.MuteVideoSetting)" href="../mute_video/#rapidata.rapidata_client.settings.mute_video.MuteVideoSetting">MuteVideoSetting</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Requires users to watch a certain percentage of the video before they can submit their answer.</p>
+                <p>Mute the video. If this setting is not supplied, the video will not be muted.</p>
               </div>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.AllowNeitherBoth">AllowNeitherBoth</span></code></td>
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.FreeTextMinimumCharacters">FreeTextMinimumCharacters</span></code></td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="AllowNeitherBothSetting (rapidata.rapidata_client.settings.allow_neither_both.AllowNeitherBothSetting)" href="../allow_neither_both/#rapidata.rapidata_client.settings.allow_neither_both.AllowNeitherBothSetting">AllowNeitherBothSetting</a></code>
+                  <code><a class="autorefs autorefs-internal" title="FreeTextMinimumCharactersSetting (rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting)" href="../free_text_minimum_characters/#rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting">FreeTextMinimumCharactersSetting</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Only for compare tasks. If true, the users will be able to select neither or both instead of exclusively one of the options.</p>
+                <p>Set the minimum number of characters a user has to type.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.FreeTextMaxCharacters">FreeTextMaxCharacters</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="FreeTextMaxCharactersSetting (rapidata.rapidata_client.settings.free_text_max_characters.FreeTextMaxCharactersSetting)" href="../free_text_max_characters/#rapidata.rapidata_client.settings.free_text_max_characters.FreeTextMaxCharactersSetting">FreeTextMaxCharactersSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Set the maximum number of characters allowed in a free text answer.</p>
               </div>
             </td>
           </tr>
@@ -1217,13 +1195,13 @@
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.MuteVideo">MuteVideo</span></code></td>
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.PlayPercentageVideo">PlayPercentageVideo</span></code></td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="MuteVideoSetting (rapidata.rapidata_client.settings.mute_video.MuteVideoSetting)" href="../mute_video/#rapidata.rapidata_client.settings.mute_video.MuteVideoSetting">MuteVideoSetting</a></code>
+                  <code><a class="autorefs autorefs-internal" title="PlayPercentageVideoSetting (rapidata.rapidata_client.settings.play_percentage_video.PlayPercentageVideoSetting)" href="../play_percentage_video/#rapidata.rapidata_client.settings.play_percentage_video.PlayPercentageVideoSetting">PlayPercentageVideoSetting</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Mute the video.</p>
+                <p>Requires users to watch a certain percentage of the video before they can submit their answer.</p>
               </div>
             </td>
           </tr>
@@ -1238,16 +1216,126 @@
               </div>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.AllowNeitherBoth">AllowNeitherBoth</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="AllowNeitherBothSetting (rapidata.rapidata_client.settings.allow_neither_both.AllowNeitherBothSetting)" href="../allow_neither_both/#rapidata.rapidata_client.settings.allow_neither_both.AllowNeitherBothSetting">AllowNeitherBothSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Only for compare tasks. Enables an "Unsure" button that allows users to select neither or both options.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.OriginalLanguageOnly">OriginalLanguageOnly</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="OriginalLanguageOnlySetting (rapidata.rapidata_client.settings.original_language_only.OriginalLanguageOnlySetting)" href="../original_language_only/#rapidata.rapidata_client.settings.original_language_only.OriginalLanguageOnlySetting">OriginalLanguageOnlySetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Display the content in the original language only. Hides the language switch UI from users.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.NoMistakeOption">NoMistakeOption</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="NoMistakeOptionSetting (rapidata.rapidata_client.settings.no_mistake_option.NoMistakeOptionSetting)" href="../no_mistake_option/#rapidata.rapidata_client.settings.no_mistake_option.NoMistakeOptionSetting">NoMistakeOptionSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.DisableAutoloop">DisableAutoloop</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="DisableAutoloopSetting (rapidata.rapidata_client.settings.disable_autoloop.DisableAutoloopSetting)" href="../disable_autoloop/#rapidata.rapidata_client.settings.disable_autoloop.DisableAutoloopSetting">DisableAutoloopSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.NoInstructionDisplay">NoInstructionDisplay</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="NoInstructionDisplaySetting (rapidata.rapidata_client.settings.no_instruction_display.NoInstructionDisplaySetting)" href="../no_instruction_display/#rapidata.rapidata_client.settings.no_instruction_display.NoInstructionDisplaySetting">NoInstructionDisplaySetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Hides the instruction text in the UI. Only the context will be shown.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.KeyboardNumeric">KeyboardNumeric</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="KeyboardNumericSetting (rapidata.rapidata_client.settings.keyboard_numeric.KeyboardNumericSetting)" href="../keyboard_numeric/#rapidata.rapidata_client.settings.keyboard_numeric.KeyboardNumericSetting">KeyboardNumericSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.LocateMaxPoints">LocateMaxPoints</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="LocateMaxPointsSetting (rapidata.rapidata_client.settings.locate_max_points.LocateMaxPointsSetting)" href="../locate_max_points/#rapidata.rapidata_client.settings.locate_max_points.LocateMaxPointsSetting">LocateMaxPointsSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Sets the maximum number of points a user can place on a locate task. Once the limit is reached, no more points can be added.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.LocateMinPoints">LocateMinPoints</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="LocateMinPointsSetting (rapidata.rapidata_client.settings.locate_min_points.LocateMinPointsSetting)" href="../locate_min_points/#rapidata.rapidata_client.settings.locate_min_points.LocateMinPointsSetting">LocateMinPointsSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Sets the minimum number of points required for a valid locate submission. The submit button is disabled until enough points are placed.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.ComparePanorama">ComparePanorama</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ComparePanoramaSetting (rapidata.rapidata_client.settings.compare_panorama.ComparePanoramaSetting)" href="../compare_panorama/#rapidata.rapidata_client.settings.compare_panorama.ComparePanoramaSetting">ComparePanoramaSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.CompareEquirectangular">CompareEquirectangular</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="CompareEquirectangularSetting (rapidata.rapidata_client.settings.compare_equirectangular.CompareEquirectangularSetting)" href="../compare_equirectangular/#rapidata.rapidata_client.settings.compare_equirectangular.CompareEquirectangularSetting">CompareEquirectangularSetting</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.</p>
+              </div>
+            </td>
+          </tr>
       </tbody>
     </table>
 
 
 <details class="example" open>
   <summary>Example</summary>
-  <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">FreeTextMinimumCharactersSetting</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">FreeTextMinimumCharactersSetting</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoShuffleSetting</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">NoShuffleSetting</span><span class="p">()]</span>
 </span></code></pre></div>
-<p>This can be used in a free text order to set the minimum number of characters required to submit the task.</p>
+<p>This can be used in an order to disable shuffling of categories.</p>
 </details>
 
 
