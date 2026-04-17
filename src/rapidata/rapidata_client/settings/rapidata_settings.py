@@ -10,8 +10,8 @@ from rapidata.rapidata_client.settings.swap_context_instruction import SwapConte
 from rapidata.rapidata_client.settings.play_percentage_video import PlayPercentageVideoSetting
 from rapidata.rapidata_client.settings.markdown import MarkdownSetting
 from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting
-from rapidata.rapidata_client.settings.force_original_language import ForceOriginalLanguageSetting
-from rapidata.rapidata_client.settings.no_mistake import NoMistakeSetting
+from rapidata.rapidata_client.settings.do_not_translate import DoNotTranslateSetting
+from rapidata.rapidata_client.settings.no_mistake_option import NoMistakeOptionSetting
 from rapidata.rapidata_client.settings.disable_autoloop import DisableAutoloopSetting
 from rapidata.rapidata_client.settings.no_instruction_display import NoInstructionDisplaySetting
 from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSetting
@@ -36,8 +36,8 @@ class RapidataSettings:
         PlayPercentageVideo (PlayPercentageVideoSetting): Requires users to watch a certain percentage of the video before they can submit their answer.
         Markdown (MarkdownSetting): Enables limited markdown rendering for text datapoints.
         AllowNeitherBoth (AllowNeitherBothSetting): Only for compare tasks. Enables an "Unsure" button that allows users to select neither or both options.
-        ForceOriginalLanguage (ForceOriginalLanguageSetting): Force display of content in the original language instead of translated versions.
-        NoMistake (NoMistakeSetting): Enables a "No mistakes" button that allows users to skip validation by confirming they found no errors in the media.
+        DoNotTranslate (DoNotTranslateSetting): Do not translate the content. Hides the language switch UI from users.
+        NoMistakeOption (NoMistakeOptionSetting): Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.
         DisableAutoloop (DisableAutoloopSetting): Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.
         NoInstructionDisplay (NoInstructionDisplaySetting): Hides the instruction text in the UI. Only the context will be shown.
         KeyboardNumeric (KeyboardNumericSetting): Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.
@@ -63,8 +63,8 @@ class RapidataSettings:
     PlayPercentageVideo = PlayPercentageVideoSetting
     Markdown = MarkdownSetting
     AllowNeitherBoth = AllowNeitherBothSetting
-    ForceOriginalLanguage = ForceOriginalLanguageSetting
-    NoMistake = NoMistakeSetting
+    DoNotTranslate = DoNotTranslateSetting
+    NoMistakeOption = NoMistakeOptionSetting
     DisableAutoloop = DisableAutoloopSetting
     NoInstructionDisplay = NoInstructionDisplaySetting
     KeyboardNumeric = KeyboardNumericSetting

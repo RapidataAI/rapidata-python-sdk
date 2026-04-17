@@ -55,6 +55,7 @@ from rapidata.rapidata_client.filter.user_score_filter import UserScoreFilter
 from rapidata.rapidata_client.filter.models.age_group import AgeGroup
 from rapidata.rapidata_client.filter.models.gender import Gender
 
+# --- GENERATED SETTINGS IMPORTS START ---
 # Settings Types
 from rapidata.rapidata_client.settings.no_shuffle import NoShuffleSetting
 from rapidata.rapidata_client.settings.mute_video import MuteVideoSetting
@@ -64,8 +65,8 @@ from rapidata.rapidata_client.settings.swap_context_instruction import SwapConte
 from rapidata.rapidata_client.settings.play_percentage_video import PlayPercentageVideoSetting
 from rapidata.rapidata_client.settings.markdown import MarkdownSetting
 from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting
-from rapidata.rapidata_client.settings.force_original_language import ForceOriginalLanguageSetting
-from rapidata.rapidata_client.settings.no_mistake import NoMistakeSetting
+from rapidata.rapidata_client.settings.do_not_translate import DoNotTranslateSetting
+from rapidata.rapidata_client.settings.no_mistake_option import NoMistakeOptionSetting
 from rapidata.rapidata_client.settings.disable_autoloop import DisableAutoloopSetting
 from rapidata.rapidata_client.settings.no_instruction_display import NoInstructionDisplaySetting
 from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSetting
@@ -75,6 +76,7 @@ from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSe
 from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
 from rapidata.rapidata_client.settings.custom_setting import CustomSetting
 from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings
+# --- GENERATED SETTINGS IMPORTS END ---
 
 
 # Configuration Types
@@ -132,6 +134,7 @@ __all__ = [
     # Filter Model Types
     "AgeGroup",
     "Gender",
+    # --- GENERATED SETTINGS ALL START ---
     # Settings Types
     "NoShuffleSetting",
     "MuteVideoSetting",
@@ -141,8 +144,8 @@ __all__ = [
     "PlayPercentageVideoSetting",
     "MarkdownSetting",
     "AllowNeitherBothSetting",
-    "ForceOriginalLanguageSetting",
-    "NoMistakeSetting",
+    "DoNotTranslateSetting",
+    "NoMistakeOptionSetting",
     "DisableAutoloopSetting",
     "NoInstructionDisplaySetting",
     "KeyboardNumericSetting",
@@ -152,6 +155,7 @@ __all__ = [
     "CompareEquirectangularSetting",
     "CustomSetting",
     "RapidataSettings",
+# --- GENERATED SETTINGS ALL END ---
     # Configuration Types
     "UploadConfig",
     "RapidataConfig",

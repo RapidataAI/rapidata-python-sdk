@@ -7,17 +7,16 @@ from __future__ import annotations
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class ForceOriginalLanguageSetting(RapidataSetting):
+class NoMistakeOptionSetting(RapidataSetting):
     """
-    Force display of content in the original language instead of translated versions.
-    Hides the language switch UI from users.
+    Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.
 
     Args:
-        value (bool, optional): Whether to force original language display. Defaults to True.
+        value (bool, optional): Whether to enable the no mistakes button. Defaults to True.
     """
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):
             raise ValueError("The value must be a boolean.")
 
-        super().__init__(key="force_original_language", value=value)
+        super().__init__(key="no_mistake", value=value)

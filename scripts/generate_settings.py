@@ -8,6 +8,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -27,10 +28,27 @@ HANDWRITTEN_FILES = {
 }
 
 
+def class_name_to_file_name(class_name: str) -> str:
+    """Convert e.g. 'DoNotTranslateSetting' -> 'do_not_translate'"""
+    name = class_name.removesuffix("Setting")
+    # Insert _ before uppercase letters, then lowercase
+    return re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", name).lower()
+
+
+def class_name_to_container_name(class_name: str) -> str:
+    """Convert e.g. 'DoNotTranslateSetting' -> 'DoNotTranslate'"""
+    return class_name.removesuffix("Setting")
+
+
 def load_settings(settings_json: Path) -> list[dict[str, Any]]:
     with open(settings_json) as f:
         data = json.load(f)
-    return data["settings"]
+    settings = data["settings"]
+    # Derive file_name and container_name from class_name
+    for s in settings:
+        s["file_name"] = class_name_to_file_name(s["class_name"])
+        s["container_name"] = class_name_to_container_name(s["class_name"])
+    return settings
 
 
 def generate_setting_module(s: dict[str, Any]) -> str:
@@ -231,6 +249,76 @@ def generate_rapidata_settings(settings: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def generate_rapidata_client_init_block(settings: list[dict[str, Any]]) -> str:
+    """Generate the settings import block for rapidata_client/__init__.py"""
+    lines: list[str] = []
+    lines.append("from .settings import (")
+    lines.append("    RapidataSettings,")
+    lines.append("    CustomSetting,")
+    for s in settings:
+        lines.append(f"    {s['class_name']},")
+    lines.append(")")
+    return "\n".join(lines)
+
+
+def generate_rapidata_init_block(settings: list[dict[str, Any]]) -> str:
+    """Generate the settings import block for rapidata/__init__.py"""
+    lines: list[str] = []
+    lines.append("    RapidataSettings,")
+    lines.append("    CustomSetting,")
+    for s in settings:
+        lines.append(f"    {s['class_name']},")
+    return "\n".join(lines)
+
+
+def generate_types_imports_block(settings: list[dict[str, Any]]) -> str:
+    """Generate the settings import block for types/__init__.py"""
+    lines: list[str] = []
+    lines.append("# Settings Types")
+    for s in settings:
+        lines.append(
+            f"from rapidata.rapidata_client.settings.{s['file_name']} import {s['class_name']}"
+        )
+    lines.append("from rapidata.rapidata_client.settings.custom_setting import CustomSetting")
+    lines.append("from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings")
+    return "\n".join(lines)
+
+
+def generate_types_all_block(settings: list[dict[str, Any]]) -> str:
+    """Generate the settings __all__ block for types/__init__.py"""
+    lines: list[str] = []
+    lines.append("    # Settings Types")
+    for s in settings:
+        lines.append(f'    "{s["class_name"]}",')
+    lines.append('    "CustomSetting",')
+    lines.append('    "RapidataSettings",')
+    return "\n".join(lines)
+
+
+def replace_between_markers(
+    file_path: Path, start_marker: str, end_marker: str, new_content: str, check_mode: bool
+) -> bool:
+    """Replace content between marker comments. Returns True if changed."""
+    text = file_path.read_text(encoding="utf-8")
+    start_idx = text.find(start_marker)
+    end_idx = text.find(end_marker)
+    if start_idx == -1 or end_idx == -1:
+        print(f"ERROR: Markers not found in {file_path.name}")
+        print(f"  Looking for: {start_marker!r} and {end_marker!r}")
+        sys.exit(1)
+
+    before = text[: start_idx + len(start_marker)]
+    after = text[end_idx:]
+    new_text = before + "\n" + new_content + "\n" + after
+
+    if new_text == text:
+        return False
+
+    if not check_mode:
+        file_path.write_text(new_text, encoding="utf-8")
+    return True
+
+
 def write_if_changed(path: Path, content: str, check_mode: bool) -> bool:
     """Write content to path. Returns True if file changed (or would change in check mode)."""
     if path.exists():
@@ -268,6 +356,7 @@ def main():
     unchanged_files: list[str] = []
 
     # Generate individual setting modules
+    expected_files = {f"{s['file_name']}.py" for s in settings}
     for s in settings:
         content = generate_setting_module(s)
         path = SETTINGS_DIR / f"{s['file_name']}.py"
@@ -275,6 +364,20 @@ def main():
             changed_files.append(str(path.relative_to(REPO_ROOT)))
         else:
             unchanged_files.append(str(path.relative_to(REPO_ROOT)))
+
+    # Clean up stale generated files (renamed/removed settings)
+    managed_files = expected_files | {"__init__.py", "rapidata_settings.py"}
+    for py_file in SETTINGS_DIR.glob("*.py"):
+        if py_file.name in managed_files or py_file.name in HANDWRITTEN_FILES:
+            continue
+        # Only delete files that have the generated header
+        content = py_file.read_text(encoding="utf-8")
+        if content.startswith("# This file is auto-generated"):
+            if check_mode:
+                changed_files.append(f"{py_file.relative_to(REPO_ROOT)} (stale)")
+            else:
+                py_file.unlink()
+                print(f"Deleted stale file: {py_file.relative_to(REPO_ROOT)}")
 
     # Generate __init__.py
     content = generate_init_module(settings)
@@ -291,6 +394,42 @@ def main():
         changed_files.append(str(path.relative_to(REPO_ROOT)))
     else:
         unchanged_files.append(str(path.relative_to(REPO_ROOT)))
+
+    # Update marker-delimited sections in export files
+    IMPORTS_START = "# --- GENERATED SETTINGS IMPORTS START ---"
+    IMPORTS_END = "# --- GENERATED SETTINGS IMPORTS END ---"
+    ALL_START = "# --- GENERATED SETTINGS ALL START ---"
+    ALL_END = "# --- GENERATED SETTINGS ALL END ---"
+
+    # rapidata_client/__init__.py
+    rc_init = REPO_ROOT / "src" / "rapidata" / "rapidata_client" / "__init__.py"
+    block = generate_rapidata_client_init_block(settings)
+    if replace_between_markers(rc_init, IMPORTS_START, IMPORTS_END, block, check_mode):
+        changed_files.append(str(rc_init.relative_to(REPO_ROOT)))
+    else:
+        unchanged_files.append(str(rc_init.relative_to(REPO_ROOT)))
+
+    # rapidata/__init__.py
+    r_init = REPO_ROOT / "src" / "rapidata" / "__init__.py"
+    block = generate_rapidata_init_block(settings)
+    if replace_between_markers(r_init, IMPORTS_START, IMPORTS_END, block, check_mode):
+        changed_files.append(str(r_init.relative_to(REPO_ROOT)))
+    else:
+        unchanged_files.append(str(r_init.relative_to(REPO_ROOT)))
+
+    # types/__init__.py — imports section
+    types_init = REPO_ROOT / "src" / "rapidata" / "types" / "__init__.py"
+    block = generate_types_imports_block(settings)
+    if replace_between_markers(types_init, IMPORTS_START, IMPORTS_END, block, check_mode):
+        changed_files.append(str(types_init.relative_to(REPO_ROOT)))
+    else:
+        unchanged_files.append(str(types_init.relative_to(REPO_ROOT)))
+
+    # types/__init__.py — __all__ section
+    block = generate_types_all_block(settings)
+    if replace_between_markers(types_init, ALL_START, ALL_END, block, check_mode):
+        if str(types_init.relative_to(REPO_ROOT)) not in changed_files:
+            changed_files.append(str(types_init.relative_to(REPO_ROOT)))
 
     if check_mode:
         if changed_files:

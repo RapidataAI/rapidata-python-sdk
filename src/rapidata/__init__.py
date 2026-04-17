@@ -21,6 +21,7 @@ from .rapidata_client import (
     ConditionalValidationSelection,
     CappedSelection,
     ShufflingSelection,
+    # --- GENERATED SETTINGS IMPORTS START ---
     RapidataSettings,
     CustomSetting,
     NoShuffleSetting,
@@ -31,8 +32,8 @@ from .rapidata_client import (
     PlayPercentageVideoSetting,
     MarkdownSetting,
     AllowNeitherBothSetting,
-    ForceOriginalLanguageSetting,
-    NoMistakeSetting,
+    DoNotTranslateSetting,
+    NoMistakeOptionSetting,
     DisableAutoloopSetting,
     NoInstructionDisplaySetting,
     KeyboardNumericSetting,
@@ -40,6 +41,7 @@ from .rapidata_client import (
     LocateMinPointsSetting,
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
+# --- GENERATED SETTINGS IMPORTS END ---
     CountryFilter,
     LanguageFilter,
     NotFilter,

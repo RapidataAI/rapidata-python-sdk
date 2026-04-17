@@ -10,8 +10,8 @@ from .swap_context_instruction import SwapContextInstructionSetting
 from .play_percentage_video import PlayPercentageVideoSetting
 from .markdown import MarkdownSetting
 from .allow_neither_both import AllowNeitherBothSetting
-from .force_original_language import ForceOriginalLanguageSetting
-from .no_mistake import NoMistakeSetting
+from .do_not_translate import DoNotTranslateSetting
+from .no_mistake_option import NoMistakeOptionSetting
 from .disable_autoloop import DisableAutoloopSetting
 from .no_instruction_display import NoInstructionDisplaySetting
 from .keyboard_numeric import KeyboardNumericSetting

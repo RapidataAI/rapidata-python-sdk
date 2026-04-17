@@ -23,6 +23,7 @@ from .datapoints.metadata import (
     PublicTextMetadata,
     SelectWordsMetadata,
 )
+# --- GENERATED SETTINGS IMPORTS START ---
 from .settings import (
     RapidataSettings,
     CustomSetting,
@@ -34,8 +35,8 @@ from .settings import (
     PlayPercentageVideoSetting,
     MarkdownSetting,
     AllowNeitherBothSetting,
-    ForceOriginalLanguageSetting,
-    NoMistakeSetting,
+    DoNotTranslateSetting,
+    NoMistakeOptionSetting,
     DisableAutoloopSetting,
     NoInstructionDisplaySetting,
     KeyboardNumericSetting,
@@ -44,6 +45,7 @@ from .settings import (
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
 )
+# --- GENERATED SETTINGS IMPORTS END ---
 from .filter import (
     CountryFilter,
     LanguageFilter,
