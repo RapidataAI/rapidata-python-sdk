@@ -20,7 +20,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -37,11 +36,9 @@ class CreateLeaderboardModel(BaseModel):
     response_budget: Optional[StrictInt] = Field(default=None, description="Total amount of responses that get collected per run", alias="responseBudget")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
     is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
-    validation_set_id: Optional[StrictStr] = Field(default=None, description="The Validation set that should be attached to every run.", alias="validationSetId")
-    audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the leaderboard will target users who have  graduated from the audience (i.e., users with a score at or above the audience's minimum threshold).  Cannot be specified together with Filters.", alias="audienceId")
-    filters: Optional[List[IUserFilterModel]] = None
+    audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, evaluations run on the specified audience.  Defaults to the global audience when not specified.", alias="audienceId")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "audienceId", "filters", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,13 +79,6 @@ class CreateLeaderboardModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -106,20 +96,10 @@ class CreateLeaderboardModel(BaseModel):
         if self.benchmark_name is None and "benchmark_name" in self.model_fields_set:
             _dict['benchmarkName'] = None
 
-        # set to None if validation_set_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
-            _dict['validationSetId'] = None
-
         # set to None if audience_id (nullable) is None
         # and model_fields_set contains the field
         if self.audience_id is None and "audience_id" in self.model_fields_set:
             _dict['audienceId'] = None
-
-        # set to None if filters (nullable) is None
-        # and model_fields_set contains the field
-        if self.filters is None and "filters" in self.model_fields_set:
-            _dict['filters'] = None
 
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
@@ -147,9 +127,7 @@ class CreateLeaderboardModel(BaseModel):
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed"),
-            "validationSetId": obj.get("validationSetId"),
             "audienceId": obj.get("audienceId"),
-            "filters": [IUserFilterModel.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
