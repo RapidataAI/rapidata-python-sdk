@@ -7,17 +7,17 @@ from __future__ import annotations
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class MarkdownSetting(RapidataSetting):
+class ForceOriginalLanguageSetting(RapidataSetting):
     """
-    Enables limited markdown rendering for text datapoints.
-    Useful when comparing formatted text like LLM outputs.
+    Force display of content in the original language instead of translated versions.
+    Hides the language switch UI from users.
 
     Args:
-        value (bool, optional): Whether to enable markdown rendering. Defaults to True.
+        value (bool, optional): Whether to force original language display. Defaults to True.
     """
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):
             raise ValueError("The value must be a boolean.")
 
-        super().__init__(key="use_main_text_markdown", value=value)
+        super().__init__(key="force_original_language", value=value)

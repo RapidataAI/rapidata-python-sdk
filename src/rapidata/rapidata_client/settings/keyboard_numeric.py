@@ -7,17 +7,16 @@ from __future__ import annotations
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class MarkdownSetting(RapidataSetting):
+class KeyboardNumericSetting(RapidataSetting):
     """
-    Enables limited markdown rendering for text datapoints.
-    Useful when comparing formatted text like LLM outputs.
+    Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.
 
     Args:
-        value (bool, optional): Whether to enable markdown rendering. Defaults to True.
+        value (bool, optional): Whether to show a numeric keyboard. Defaults to True.
     """
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):
             raise ValueError("The value must be a boolean.")
 
-        super().__init__(key="use_main_text_markdown", value=value)
+        super().__init__(key="keyboard_numeric", value=value)

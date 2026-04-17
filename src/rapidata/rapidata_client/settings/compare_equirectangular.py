@@ -7,17 +7,16 @@ from __future__ import annotations
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
-class MarkdownSetting(RapidataSetting):
+class CompareEquirectangularSetting(RapidataSetting):
     """
-    Enables limited markdown rendering for text datapoints.
-    Useful when comparing formatted text like LLM outputs.
+    Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
 
     Args:
-        value (bool, optional): Whether to enable markdown rendering. Defaults to True.
+        value (bool, optional): Whether to enable 360-degree comparison mode. Defaults to True.
     """
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):
             raise ValueError("The value must be a boolean.")
 
-        super().__init__(key="use_main_text_markdown", value=value)
+        super().__init__(key="compare_equirectangular", value=value)
