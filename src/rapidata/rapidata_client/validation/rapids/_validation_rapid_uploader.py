@@ -131,6 +131,4 @@ class ValidationRapidUploader:
         return rapid.truth
 
     def _get_payload(self, rapid: Rapid) -> IRapidPayload:
-        if isinstance(rapid.payload, dict):
-            return IRapidPayload(actual_instance=rapid.payload)
-        return IRapidPayload(actual_instance=rapid.payload.to_dict())
+        return rapid.payload
