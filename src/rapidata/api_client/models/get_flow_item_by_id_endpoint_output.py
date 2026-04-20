@@ -21,10 +21,12 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.flow_item_state import FlowItemState
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetFlowItemByIdEndpointOutput(BaseModel):
+class GetFlowItemByIdEndpointOutput(LazyValidatedModel):
     """
     GetFlowItemByIdEndpointOutput
     """ # noqa: E501
@@ -42,11 +44,7 @@ class GetFlowItemByIdEndpointOutput(BaseModel):
     failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the flow item failed.", alias="failedAt")
     __properties: ClassVar[List[str]] = ["id", "flowId", "datasetId", "workflowId", "state", "context", "failureMessage", "expiresAt", "createdAt", "startedAt", "completedAt", "failedAt"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -127,7 +125,7 @@ class GetFlowItemByIdEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "flowId": obj.get("flowId"),
             "datasetId": obj.get("datasetId"),
@@ -140,7 +138,11 @@ class GetFlowItemByIdEndpointOutput(BaseModel):
             "startedAt": obj.get("startedAt"),
             "completedAt": obj.get("completedAt"),
             "failedAt": obj.get("failedAt")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

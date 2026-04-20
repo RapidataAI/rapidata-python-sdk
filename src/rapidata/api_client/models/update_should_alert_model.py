@@ -19,21 +19,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateShouldAlertModel(BaseModel):
+class UpdateShouldAlertModel(LazyValidatedModel):
     """
     The model for updating the shouldAlert field of all rapids within a validation set.
     """ # noqa: E501
     should_alert: StrictBool = Field(description="A flag indicating whether the users should be alerted if they answer incorrectly.", alias="shouldAlert")
     __properties: ClassVar[List[str]] = ["shouldAlert"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -79,9 +77,13 @@ class UpdateShouldAlertModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "shouldAlert": obj.get("shouldAlert")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

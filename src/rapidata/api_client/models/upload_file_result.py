@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UploadFileResult(BaseModel):
+class UploadFileResult(LazyValidatedModel):
     """
     UploadFileResult
     """ # noqa: E501
@@ -33,11 +35,7 @@ class UploadFileResult(BaseModel):
     final_size_bytes: Optional[StrictInt] = Field(default=None, alias="finalSizeBytes")
     __properties: ClassVar[List[str]] = ["fileName", "warnings", "wasCompressed", "originalSizeBytes", "finalSizeBytes"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -83,13 +81,17 @@ class UploadFileResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "fileName": obj.get("fileName"),
             "warnings": obj.get("warnings"),
             "wasCompressed": obj.get("wasCompressed"),
             "originalSizeBytes": obj.get("originalSizeBytes"),
             "finalSizeBytes": obj.get("finalSizeBytes")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -21,10 +21,12 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.flow_type import FlowType
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryFlowsEndpointOutput(BaseModel):
+class QueryFlowsEndpointOutput(LazyValidatedModel):
     """
     QueryFlowsEndpointOutput
     """ # noqa: E501
@@ -36,11 +38,7 @@ class QueryFlowsEndpointOutput(BaseModel):
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -86,14 +84,18 @@ class QueryFlowsEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "type": obj.get("type"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
             "createdAt": obj.get("createdAt")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

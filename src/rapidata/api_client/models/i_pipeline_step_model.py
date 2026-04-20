@@ -22,12 +22,13 @@ from rapidata.api_client.models.i_pipeline_step_model_send_completion_mail_step_
 from rapidata.api_client.models.i_pipeline_step_model_workflow_aggregation_step_model import IPipelineStepModelWorkflowAggregationStepModel
 from rapidata.api_client.models.i_pipeline_step_model_workflow_labeling_step_model import IPipelineStepModelWorkflowLabelingStepModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IPIPELINESTEPMODEL_ONE_OF_SCHEMAS = ["IPipelineStepModelDatasetEvaluationStepModel", "IPipelineStepModelSendCompletionMailStepModel", "IPipelineStepModelWorkflowAggregationStepModel", "IPipelineStepModelWorkflowLabelingStepModel"]
 
-class IPipelineStepModel(BaseModel):
+class IPipelineStepModel(LazyValidatedModel):
     """
     IPipelineStepModel
     """
@@ -42,10 +43,7 @@ class IPipelineStepModel(BaseModel):
     actual_instance: Optional[Union[IPipelineStepModelDatasetEvaluationStepModel, IPipelineStepModelSendCompletionMailStepModel, IPipelineStepModelWorkflowAggregationStepModel, IPipelineStepModelWorkflowLabelingStepModel]] = None
     one_of_schemas: Set[str] = { "IPipelineStepModelDatasetEvaluationStepModel", "IPipelineStepModelSendCompletionMailStepModel", "IPipelineStepModelWorkflowAggregationStepModel", "IPipelineStepModelWorkflowLabelingStepModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

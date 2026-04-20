@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.attach_category_rapid_blueprint_category import AttachCategoryRapidBlueprintCategory
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IRapidBlueprintAttachCategoryRapidBlueprint(BaseModel):
+class IRapidBlueprintAttachCategoryRapidBlueprint(LazyValidatedModel):
     """
     IRapidBlueprintAttachCategoryRapidBlueprint
     """ # noqa: E501
@@ -40,11 +42,7 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(BaseModel):
             raise ValueError("must be one of enum values ('ClassifyBlueprint')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -97,12 +95,16 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "possibleCategories": obj.get("possibleCategories"),
             "categories": [AttachCategoryRapidBlueprintCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "title": obj.get("title")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

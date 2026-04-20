@@ -22,10 +22,12 @@ from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.get_responses_for_rapid_result_response import GetResponsesForRapidResultResponse
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.rapid_state import RapidState
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetResponsesForRapidResult(BaseModel):
+class GetResponsesForRapidResult(LazyValidatedModel):
     """
     GetResponsesForRapidResult
     """ # noqa: E501
@@ -35,11 +37,7 @@ class GetResponsesForRapidResult(BaseModel):
     state: RapidState
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "state"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -95,12 +93,16 @@ class GetResponsesForRapidResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "rapidId": obj.get("rapidId"),
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "responses": [GetResponsesForRapidResultResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
             "state": obj.get("state")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

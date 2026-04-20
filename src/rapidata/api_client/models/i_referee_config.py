@@ -23,12 +23,13 @@ from rapidata.api_client.models.i_referee_config_never_ending_referee_config imp
 from rapidata.api_client.models.i_referee_config_probabilistic_attach_category_referee_config import IRefereeConfigProbabilisticAttachCategoryRefereeConfig
 from rapidata.api_client.models.i_referee_config_quorum_referee_config import IRefereeConfigQuorumRefereeConfig
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IREFEREECONFIG_ONE_OF_SCHEMAS = ["IRefereeConfigBudgetRefereeConfig", "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig"]
 
-class IRefereeConfig(BaseModel):
+class IRefereeConfig(LazyValidatedModel):
     """
     IRefereeConfig
     """
@@ -45,10 +46,7 @@ class IRefereeConfig(BaseModel):
     actual_instance: Optional[Union[IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig]] = None
     one_of_schemas: Set[str] = { "IRefereeConfigBudgetRefereeConfig", "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

@@ -23,12 +23,13 @@ from rapidata.api_client.models.i_campaign_selection_model_labeling_selection_mo
 from rapidata.api_client.models.i_campaign_selection_model_static_selection_model import ICampaignSelectionModelStaticSelectionModel
 from rapidata.api_client.models.i_campaign_selection_model_validation_selection_model import ICampaignSelectionModelValidationSelectionModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 ICAMPAIGNSELECTIONMODEL_ONE_OF_SCHEMAS = ["ICampaignSelectionModelAbTestSelectionModel", "ICampaignSelectionModelAudienceSelectionModel", "ICampaignSelectionModelCappedSelectionModel", "ICampaignSelectionModelConditionalValidationSelectionModel", "ICampaignSelectionModelDemographicSelectionModel", "ICampaignSelectionModelEnforcingSelectionModel", "ICampaignSelectionModelLabelingSelectionModel", "ICampaignSelectionModelShufflingSelectionModel", "ICampaignSelectionModelStaticSelectionModel", "ICampaignSelectionModelValidationSelectionModel"]
 
-class ICampaignSelectionModel(BaseModel):
+class ICampaignSelectionModel(LazyValidatedModel):
     """
     ICampaignSelectionModel
     """
@@ -55,10 +56,7 @@ class ICampaignSelectionModel(BaseModel):
     actual_instance: Optional[Union[ICampaignSelectionModelAbTestSelectionModel, ICampaignSelectionModelAudienceSelectionModel, ICampaignSelectionModelCappedSelectionModel, ICampaignSelectionModelConditionalValidationSelectionModel, ICampaignSelectionModelDemographicSelectionModel, ICampaignSelectionModelEnforcingSelectionModel, ICampaignSelectionModelLabelingSelectionModel, ICampaignSelectionModelShufflingSelectionModel, ICampaignSelectionModelStaticSelectionModel, ICampaignSelectionModelValidationSelectionModel]] = None
     one_of_schemas: Set[str] = { "ICampaignSelectionModelAbTestSelectionModel", "ICampaignSelectionModelAudienceSelectionModel", "ICampaignSelectionModelCappedSelectionModel", "ICampaignSelectionModelConditionalValidationSelectionModel", "ICampaignSelectionModelDemographicSelectionModel", "ICampaignSelectionModelEnforcingSelectionModel", "ICampaignSelectionModelLabelingSelectionModel", "ICampaignSelectionModelShufflingSelectionModel", "ICampaignSelectionModelStaticSelectionModel", "ICampaignSelectionModelValidationSelectionModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

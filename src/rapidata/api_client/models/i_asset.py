@@ -21,12 +21,13 @@ from rapidata.api_client.models.i_asset_file_asset import IAssetFileAsset
 from rapidata.api_client.models.i_asset_null_asset import IAssetNullAsset
 from rapidata.api_client.models.i_asset_text_asset import IAssetTextAsset
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IASSET_ONE_OF_SCHEMAS = ["IAssetFileAsset", "IAssetMultiAsset", "IAssetNullAsset", "IAssetTextAsset"]
 
-class IAsset(BaseModel):
+class IAsset(LazyValidatedModel):
     """
     IAsset
     """
@@ -41,10 +42,7 @@ class IAsset(BaseModel):
     actual_instance: Optional[Union[IAssetFileAsset, IAssetMultiAsset, IAssetNullAsset, IAssetTextAsset]] = None
     one_of_schemas: Set[str] = { "IAssetFileAsset", "IAssetMultiAsset", "IAssetNullAsset", "IAssetTextAsset" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

@@ -20,10 +20,12 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetValidationSetByIdResult(BaseModel):
+class GetValidationSetByIdResult(LazyValidatedModel):
     """
     GetValidationSetByIdResult
     """ # noqa: E501
@@ -36,11 +38,7 @@ class GetValidationSetByIdResult(BaseModel):
     created_at: datetime = Field(alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "ownerMail", "ownerId", "dimensions", "createdAt"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -86,7 +84,7 @@ class GetValidationSetByIdResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "isPublic": obj.get("isPublic"),
@@ -94,7 +92,11 @@ class GetValidationSetByIdResult(BaseModel):
             "ownerId": obj.get("ownerId"),
             "dimensions": obj.get("dimensions"),
             "createdAt": obj.get("createdAt")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

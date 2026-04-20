@@ -23,12 +23,13 @@ from rapidata.api_client.models.i_artifact_model_file_artifact_model import IArt
 from rapidata.api_client.models.i_artifact_model_workflow_artifact_model import IArtifactModelWorkflowArtifactModel
 from rapidata.api_client.models.i_artifact_model_workflow_config_artifact_model import IArtifactModelWorkflowConfigArtifactModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IARTIFACTMODEL_ONE_OF_SCHEMAS = ["IArtifactModelCampaignArtifactModel", "IArtifactModelDatasetArtifactModel", "IArtifactModelFileArtifactModel", "IArtifactModelWorkflowArtifactModel", "IArtifactModelWorkflowConfigArtifactModel"]
 
-class IArtifactModel(BaseModel):
+class IArtifactModel(LazyValidatedModel):
     """
     IArtifactModel
     """
@@ -45,10 +46,7 @@ class IArtifactModel(BaseModel):
     actual_instance: Optional[Union[IArtifactModelCampaignArtifactModel, IArtifactModelDatasetArtifactModel, IArtifactModelFileArtifactModel, IArtifactModelWorkflowArtifactModel, IArtifactModelWorkflowConfigArtifactModel]] = None
     one_of_schemas: Set[str] = { "IArtifactModelCampaignArtifactModel", "IArtifactModelDatasetArtifactModel", "IArtifactModelFileArtifactModel", "IArtifactModelWorkflowArtifactModel", "IArtifactModelWorkflowConfigArtifactModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

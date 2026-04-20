@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_v
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IOrderWorkflowModelSimpleWorkflowModel(BaseModel):
+class IOrderWorkflowModelSimpleWorkflowModel(LazyValidatedModel):
     """
     IOrderWorkflowModelSimpleWorkflowModel
     """ # noqa: E501
@@ -41,11 +43,7 @@ class IOrderWorkflowModelSimpleWorkflowModel(BaseModel):
             raise ValueError("must be one of enum values ('SimpleWorkflow')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -101,12 +99,16 @@ class IOrderWorkflowModelSimpleWorkflowModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "blueprint": IRapidBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "batchSize": obj.get("batchSize"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

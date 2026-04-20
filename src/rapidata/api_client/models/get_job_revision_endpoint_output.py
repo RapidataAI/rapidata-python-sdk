@@ -25,10 +25,12 @@ from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_referee_model import IRefereeModel
 from rapidata.api_client.models.job_definition_revision_state import JobDefinitionRevisionState
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetJobRevisionEndpointOutput(BaseModel):
+class GetJobRevisionEndpointOutput(LazyValidatedModel):
     """
     The result when a job revision has been retrieved.
     """ # noqa: E501
@@ -46,11 +48,7 @@ class GetJobRevisionEndpointOutput(BaseModel):
     created_by_mail: StrictStr = Field(description="The email of the user who created the revision.", alias="createdByMail")
     __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -114,7 +112,7 @@ class GetJobRevisionEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "definitionId": obj.get("definitionId"),
             "revisionNumber": obj.get("revisionNumber"),
             "state": obj.get("state"),
@@ -127,7 +125,11 @@ class GetJobRevisionEndpointOutput(BaseModel):
             "createdAt": obj.get("createdAt"),
             "createdById": obj.get("createdById"),
             "createdByMail": obj.get("createdByMail")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

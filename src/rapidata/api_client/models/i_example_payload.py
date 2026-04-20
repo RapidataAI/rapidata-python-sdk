@@ -20,12 +20,13 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_example_payload_classify_example_payload import IExamplePayloadClassifyExamplePayload
 from rapidata.api_client.models.i_example_payload_compare_example_payload import IExamplePayloadCompareExamplePayload
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IEXAMPLEPAYLOAD_ONE_OF_SCHEMAS = ["IExamplePayloadClassifyExamplePayload", "IExamplePayloadCompareExamplePayload"]
 
-class IExamplePayload(BaseModel):
+class IExamplePayload(LazyValidatedModel):
     """
     IExamplePayload
     """
@@ -36,10 +37,7 @@ class IExamplePayload(BaseModel):
     actual_instance: Optional[Union[IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload]] = None
     one_of_schemas: Set[str] = { "IExamplePayloadClassifyExamplePayload", "IExamplePayloadCompareExamplePayload" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

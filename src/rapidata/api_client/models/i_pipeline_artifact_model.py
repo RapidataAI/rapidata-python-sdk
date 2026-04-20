@@ -19,12 +19,13 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_pipeline_artifact_model_create_dataset_artifact_model import IPipelineArtifactModelCreateDatasetArtifactModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IPIPELINEARTIFACTMODEL_ONE_OF_SCHEMAS = ["IPipelineArtifactModelCreateDatasetArtifactModel"]
 
-class IPipelineArtifactModel(BaseModel):
+class IPipelineArtifactModel(LazyValidatedModel):
     """
     IPipelineArtifactModel
     """
@@ -33,10 +34,7 @@ class IPipelineArtifactModel(BaseModel):
     actual_instance: Optional[Union[IPipelineArtifactModelCreateDatasetArtifactModel]] = None
     one_of_schemas: Set[str] = { "IPipelineArtifactModelCreateDatasetArtifactModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

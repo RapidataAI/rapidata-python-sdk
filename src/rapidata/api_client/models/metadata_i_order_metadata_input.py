@@ -21,12 +21,13 @@ from rapidata.api_client.models.metadata_i_order_metadata_input_metadata_prompt_
 from rapidata.api_client.models.metadata_i_order_metadata_input_metadata_prompt_metadata_input import MetadataIOrderMetadataInputMetadataPromptMetadataInput
 from rapidata.api_client.models.metadata_i_order_metadata_input_metadata_transcription_metadata_input import MetadataIOrderMetadataInputMetadataTranscriptionMetadataInput
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 METADATAIORDERMETADATAINPUT_ONE_OF_SCHEMAS = ["MetadataIOrderMetadataInputMetadataPromptAssetMetadataInput", "MetadataIOrderMetadataInputMetadataPromptMetadataInput", "MetadataIOrderMetadataInputMetadataTranscriptionMetadataInput"]
 
-class MetadataIOrderMetadataInput(BaseModel):
+class MetadataIOrderMetadataInput(LazyValidatedModel):
     """
     MetadataIOrderMetadataInput
     """
@@ -39,10 +40,7 @@ class MetadataIOrderMetadataInput(BaseModel):
     actual_instance: Optional[Union[MetadataIOrderMetadataInputMetadataPromptAssetMetadataInput, MetadataIOrderMetadataInputMetadataPromptMetadataInput, MetadataIOrderMetadataInputMetadataTranscriptionMetadataInput]] = None
     one_of_schemas: Set[str] = { "MetadataIOrderMetadataInputMetadataPromptAssetMetadataInput", "MetadataIOrderMetadataInputMetadataPromptMetadataInput", "MetadataIOrderMetadataInputMetadataTranscriptionMetadataInput" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

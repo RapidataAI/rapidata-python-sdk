@@ -29,12 +29,13 @@ from rapidata.api_client.models.i_rapid_result_scrub_result import IRapidResultS
 from rapidata.api_client.models.i_rapid_result_skip_result import IRapidResultSkipResult
 from rapidata.api_client.models.i_rapid_result_transcription_result import IRapidResultTranscriptionResult
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IRAPIDRESULT_ONE_OF_SCHEMAS = ["IRapidResultAttachCategoryResult", "IRapidResultBoundingBoxResult", "IRapidResultCompareResult", "IRapidResultFreeTextResult", "IRapidResultLineResult", "IRapidResultLocateResult", "IRapidResultNamedEntityResult", "IRapidResultPolygonResult", "IRapidResultScrubResult", "IRapidResultSkipResult", "IRapidResultTranscriptionResult"]
 
-class IRapidResult(BaseModel):
+class IRapidResult(LazyValidatedModel):
     """
     IRapidResult
     """
@@ -63,10 +64,7 @@ class IRapidResult(BaseModel):
     actual_instance: Optional[Union[IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult]] = None
     one_of_schemas: Set[str] = { "IRapidResultAttachCategoryResult", "IRapidResultBoundingBoxResult", "IRapidResultCompareResult", "IRapidResultFreeTextResult", "IRapidResultLineResult", "IRapidResultLocateResult", "IRapidResultNamedEntityResult", "IRapidResultPolygonResult", "IRapidResultScrubResult", "IRapidResultSkipResult", "IRapidResultTranscriptionResult" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

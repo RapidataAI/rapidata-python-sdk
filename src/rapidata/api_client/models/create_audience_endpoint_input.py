@@ -22,10 +22,12 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.distilling_retrieval_mode import DistillingRetrievalMode
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateAudienceEndpointInput(BaseModel):
+class CreateAudienceEndpointInput(LazyValidatedModel):
     """
     CreateAudienceEndpointInput
     """ # noqa: E501
@@ -50,11 +52,7 @@ class CreateAudienceEndpointInput(BaseModel):
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  Defaults to 100. Admin-only override.", alias="minGraduatedForDistillingBoost")
     __properties: ClassVar[List[str]] = ["name", "description", "filters", "graduationScore", "demotionScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "dropMinResponses", "dropScore", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -120,7 +118,7 @@ class CreateAudienceEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "name": obj.get("name"),
             "description": obj.get("description"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
@@ -140,7 +138,11 @@ class CreateAudienceEndpointInput(BaseModel):
             "distillingRetrievalMode": obj.get("distillingRetrievalMode"),
             "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

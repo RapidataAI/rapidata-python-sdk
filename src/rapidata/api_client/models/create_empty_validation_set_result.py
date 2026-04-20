@@ -19,21 +19,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateEmptyValidationSetResult(BaseModel):
+class CreateEmptyValidationSetResult(LazyValidatedModel):
     """
     CreateEmptyValidationSetResult
     """ # noqa: E501
     validation_set_id: StrictStr = Field(alias="validationSetId")
     __properties: ClassVar[List[str]] = ["validationSetId"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -79,9 +77,13 @@ class CreateEmptyValidationSetResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "validationSetId": obj.get("validationSetId")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

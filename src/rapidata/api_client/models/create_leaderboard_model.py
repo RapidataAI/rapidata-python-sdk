@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateLeaderboardModel(BaseModel):
+class CreateLeaderboardModel(LazyValidatedModel):
     """
     The CreateLeaderboardModel class represents the model for creating a leaderboard.
     """ # noqa: E501
@@ -40,11 +42,7 @@ class CreateLeaderboardModel(BaseModel):
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "featureFlags"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -117,7 +115,7 @@ class CreateLeaderboardModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "benchmarkId": obj.get("benchmarkId"),
             "benchmarkName": obj.get("benchmarkName"),
             "name": obj.get("name"),
@@ -129,7 +127,11 @@ class CreateLeaderboardModel(BaseModel):
             "isInversed": obj.get("isInversed"),
             "audienceId": obj.get("audienceId"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

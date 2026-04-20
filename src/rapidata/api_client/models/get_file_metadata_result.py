@@ -20,21 +20,19 @@ import json
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.i_metadata import IMetadata
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetFileMetadataResult(BaseModel):
+class GetFileMetadataResult(LazyValidatedModel):
     """
     GetFileMetadataResult
     """ # noqa: E501
     metadata: Dict[str, IMetadata]
     __properties: ClassVar[List[str]] = ["metadata"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -87,14 +85,18 @@ class GetFileMetadataResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "metadata": dict(
                 (_k, IMetadata.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
             else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

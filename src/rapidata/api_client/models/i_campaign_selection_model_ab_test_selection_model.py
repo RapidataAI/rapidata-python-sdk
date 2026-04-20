@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignSelectionModelAbTestSelectionModel(BaseModel):
+class ICampaignSelectionModelAbTestSelectionModel(LazyValidatedModel):
     """
     ICampaignSelectionModelAbTestSelectionModel
     """ # noqa: E501
@@ -38,11 +40,7 @@ class ICampaignSelectionModelAbTestSelectionModel(BaseModel):
             raise ValueError("must be one of enum values ('AbTestSelection')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -102,11 +100,15 @@ class ICampaignSelectionModelAbTestSelectionModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "a": [ICampaignSelectionModel.from_dict(_item) for _item in obj["a"]] if obj.get("a") is not None else None,
             "b": [ICampaignSelectionModel.from_dict(_item) for _item in obj["b"]] if obj.get("b") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 from rapidata.api_client.models.i_campaign_selection_model import ICampaignSelectionModel

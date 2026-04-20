@@ -20,12 +20,13 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_audience_filter_country_audience_filter import IAudienceFilterCountryAudienceFilter
 from rapidata.api_client.models.i_audience_filter_language_audience_filter import IAudienceFilterLanguageAudienceFilter
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IAUDIENCEFILTER_ONE_OF_SCHEMAS = ["IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter"]
 
-class IAudienceFilter(BaseModel):
+class IAudienceFilter(LazyValidatedModel):
     """
     IAudienceFilter
     """
@@ -42,10 +43,7 @@ class IAudienceFilter(BaseModel):
     actual_instance: Optional[Union[IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter]] = None
     one_of_schemas: Set[str] = { "IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

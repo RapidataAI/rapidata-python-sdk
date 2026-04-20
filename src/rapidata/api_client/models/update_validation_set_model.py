@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateValidationSetModel(BaseModel):
+class UpdateValidationSetModel(LazyValidatedModel):
     """
     Allows for specific updates to a validation set without needing to provide all properties.
     """ # noqa: E501
@@ -33,11 +35,7 @@ class UpdateValidationSetModel(BaseModel):
     is_flag_overruled: Optional[StrictBool] = Field(default=None, description="If the flag on validation rapids should be overruled", alias="isFlagOverruled")
     __properties: ClassVar[List[str]] = ["name", "dimensions", "shouldAlert", "isPublic", "isFlagOverruled"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -108,13 +106,17 @@ class UpdateValidationSetModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "name": obj.get("name"),
             "dimensions": obj.get("dimensions"),
             "shouldAlert": obj.get("shouldAlert"),
             "isPublic": obj.get("isPublic"),
             "isFlagOverruled": obj.get("isFlagOverruled")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -20,12 +20,13 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_asset_input_existing_asset_input import IAssetInputExistingAssetInput
 from rapidata.api_client.models.i_asset_input_text_asset_input import IAssetInputTextAssetInput
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IASSETINPUT_ONE_OF_SCHEMAS = ["IAssetInputExistingAssetInput", "IAssetInputMultiAssetInput", "IAssetInputTextAssetInput"]
 
-class IAssetInput(BaseModel):
+class IAssetInput(LazyValidatedModel):
     """
     IAssetInput
     """
@@ -38,10 +39,7 @@ class IAssetInput(BaseModel):
     actual_instance: Optional[Union[IAssetInputExistingAssetInput, IAssetInputMultiAssetInput, IAssetInputTextAssetInput]] = None
     one_of_schemas: Set[str] = { "IAssetInputExistingAssetInput", "IAssetInputMultiAssetInput", "IAssetInputTextAssetInput" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

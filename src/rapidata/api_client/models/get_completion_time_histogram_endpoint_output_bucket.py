@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Union
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompletionTimeHistogramEndpointOutputBucket(BaseModel):
+class GetCompletionTimeHistogramEndpointOutputBucket(LazyValidatedModel):
     """
     GetCompletionTimeHistogramEndpointOutputBucket
     """ # noqa: E501
@@ -31,11 +33,7 @@ class GetCompletionTimeHistogramEndpointOutputBucket(BaseModel):
     count: StrictInt
     __properties: ClassVar[List[str]] = ["lowerBound", "upperBound", "count"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -81,11 +79,15 @@ class GetCompletionTimeHistogramEndpointOutputBucket(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "lowerBound": obj.get("lowerBound"),
             "upperBound": obj.get("upperBound"),
             "count": obj.get("count")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

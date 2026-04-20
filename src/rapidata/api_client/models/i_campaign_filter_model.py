@@ -30,12 +30,13 @@ from rapidata.api_client.models.i_campaign_filter_model_response_count_filter_mo
 from rapidata.api_client.models.i_campaign_filter_model_user_action_restriction_filter_model import ICampaignFilterModelUserActionRestrictionFilterModel
 from rapidata.api_client.models.i_campaign_filter_model_user_score_filter_model import ICampaignFilterModelUserScoreFilterModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 ICAMPAIGNFILTERMODEL_ONE_OF_SCHEMAS = ["ICampaignFilterModelAndFilterModel", "ICampaignFilterModelAudienceStateFilterModel", "ICampaignFilterModelCampaignIdFilterModel", "ICampaignFilterModelCampaignSessionCountFilterModel", "ICampaignFilterModelCountryFilterModel", "ICampaignFilterModelDemographicFilterModel", "ICampaignFilterModelDeviceFilterModel", "ICampaignFilterModelLanguageFilterModel", "ICampaignFilterModelNewUserFilterModel", "ICampaignFilterModelNotFilterModel", "ICampaignFilterModelOrFilterModel", "ICampaignFilterModelResponseCountFilterModel", "ICampaignFilterModelUserActionRestrictionFilterModel", "ICampaignFilterModelUserScoreFilterModel"]
 
-class ICampaignFilterModel(BaseModel):
+class ICampaignFilterModel(LazyValidatedModel):
     """
     ICampaignFilterModel
     """
@@ -70,10 +71,7 @@ class ICampaignFilterModel(BaseModel):
     actual_instance: Optional[Union[ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel]] = None
     one_of_schemas: Set[str] = { "ICampaignFilterModelAndFilterModel", "ICampaignFilterModelAudienceStateFilterModel", "ICampaignFilterModelCampaignIdFilterModel", "ICampaignFilterModelCampaignSessionCountFilterModel", "ICampaignFilterModelCountryFilterModel", "ICampaignFilterModelDemographicFilterModel", "ICampaignFilterModelDeviceFilterModel", "ICampaignFilterModelLanguageFilterModel", "ICampaignFilterModelNewUserFilterModel", "ICampaignFilterModelNotFilterModel", "ICampaignFilterModelOrFilterModel", "ICampaignFilterModelResponseCountFilterModel", "ICampaignFilterModelUserActionRestrictionFilterModel", "ICampaignFilterModelUserScoreFilterModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

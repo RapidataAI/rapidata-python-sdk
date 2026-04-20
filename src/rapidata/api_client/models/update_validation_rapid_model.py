@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateValidationRapidModel(BaseModel):
+class UpdateValidationRapidModel(LazyValidatedModel):
     """
     The model for updating a validation rapid.
     """ # noqa: E501
@@ -36,11 +38,7 @@ class UpdateValidationRapidModel(BaseModel):
     sort_index: Optional[StrictInt] = Field(default=None, description="Controls the serving order of rapids within a target group.", alias="sortIndex")
     __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability", "sortIndex"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -122,14 +120,18 @@ class UpdateValidationRapidModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "sortIndex": obj.get("sortIndex")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

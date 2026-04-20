@@ -19,12 +19,13 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_metadata_input_text_metadata_input import IMetadataInputTextMetadataInput
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IMETADATAINPUT_ONE_OF_SCHEMAS = ["IMetadataInputTextMetadataInput"]
 
-class IMetadataInput(BaseModel):
+class IMetadataInput(LazyValidatedModel):
     """
     IMetadataInput
     """
@@ -33,10 +34,7 @@ class IMetadataInput(BaseModel):
     actual_instance: Optional[Union[IMetadataInputTextMetadataInput]] = None
     one_of_schemas: Set[str] = { "IMetadataInputTextMetadataInput" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.i_metadata_model import IMetadataModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IAssetModelFileAssetModel(BaseModel):
+class IAssetModelFileAssetModel(LazyValidatedModel):
     """
     IAssetModelFileAssetModel
     """ # noqa: E501
@@ -40,11 +42,7 @@ class IAssetModelFileAssetModel(BaseModel):
             raise ValueError("must be one of enum values ('FileAsset')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -97,7 +95,7 @@ class IAssetModelFileAssetModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "fileName": obj.get("fileName"),
             "metadata": dict(
@@ -107,7 +105,11 @@ class IAssetModelFileAssetModel(BaseModel):
             if obj.get("metadata") is not None
             else None,
             "identifier": obj.get("identifier")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

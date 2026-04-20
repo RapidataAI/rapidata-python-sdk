@@ -22,12 +22,13 @@ from rapidata.api_client.models.i_workflow_model_grouped_ranking_workflow_model 
 from rapidata.api_client.models.i_workflow_model_ranking_workflow_model import IWorkflowModelRankingWorkflowModel
 from rapidata.api_client.models.i_workflow_model_simple_workflow_model import IWorkflowModelSimpleWorkflowModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IWORKFLOWMODEL_ONE_OF_SCHEMAS = ["IWorkflowModelEvaluationWorkflowModel", "IWorkflowModelGroupedRankingWorkflowModel", "IWorkflowModelRankingWorkflowModel", "IWorkflowModelSimpleWorkflowModel"]
 
-class IWorkflowModel(BaseModel):
+class IWorkflowModel(LazyValidatedModel):
     """
     IWorkflowModel
     """
@@ -42,10 +43,7 @@ class IWorkflowModel(BaseModel):
     actual_instance: Optional[Union[IWorkflowModelEvaluationWorkflowModel, IWorkflowModelGroupedRankingWorkflowModel, IWorkflowModelRankingWorkflowModel, IWorkflowModelSimpleWorkflowModel]] = None
     one_of_schemas: Set[str] = { "IWorkflowModelEvaluationWorkflowModel", "IWorkflowModelGroupedRankingWorkflowModel", "IWorkflowModelRankingWorkflowModel", "IWorkflowModelSimpleWorkflowModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

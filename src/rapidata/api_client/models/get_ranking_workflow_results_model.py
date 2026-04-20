@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.pagination import Pagination
 from rapidata.api_client.models.sort_criteria import SortCriteria
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetRankingWorkflowResultsModel(BaseModel):
+class GetRankingWorkflowResultsModel(LazyValidatedModel):
     """
     Model for getting the overview of a ranking workflow result.
     """ # noqa: E501
@@ -32,11 +34,7 @@ class GetRankingWorkflowResultsModel(BaseModel):
     sort_criteria: Optional[SortCriteria] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
     __properties: ClassVar[List[str]] = ["page", "sortCriteria"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -88,10 +86,14 @@ class GetRankingWorkflowResultsModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "page": Pagination.from_dict(obj["page"]) if obj.get("page") is not None else None,
             "sortCriteria": SortCriteria.from_dict(obj["sortCriteria"]) if obj.get("sortCriteria") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

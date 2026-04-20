@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
 from rapidata.api_client.models.i_rapid_result import IRapidResult
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetResponsesForRapidResultResponse(BaseModel):
+class GetResponsesForRapidResultResponse(LazyValidatedModel):
     """
     GetResponsesForRapidResultResponse
     """ # noqa: E501
@@ -36,11 +38,7 @@ class GetResponsesForRapidResultResponse(BaseModel):
     demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
     __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "userScores", "demographicInformation"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -89,7 +87,7 @@ class GetResponsesForRapidResultResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "userId": obj.get("userId"),
             "country": obj.get("country"),
@@ -97,7 +95,11 @@ class GetResponsesForRapidResultResponse(BaseModel):
             "userScore": obj.get("userScore"),
             "userScores": obj.get("userScores"),
             "demographicInformation": obj.get("demographicInformation")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

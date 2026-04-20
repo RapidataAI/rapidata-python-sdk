@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.sort_direction import SortDirection
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SortCriterion(BaseModel):
+class SortCriterion(LazyValidatedModel):
     """
     SortCriterion
     """ # noqa: E501
@@ -31,11 +33,7 @@ class SortCriterion(BaseModel):
     direction: Optional[SortDirection] = None
     __properties: ClassVar[List[str]] = ["propertyName", "direction"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -81,10 +79,14 @@ class SortCriterion(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "propertyName": obj.get("propertyName"),
             "direction": obj.get("direction")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

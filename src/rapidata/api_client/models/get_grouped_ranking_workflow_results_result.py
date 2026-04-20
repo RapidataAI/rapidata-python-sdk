@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.i_pair_maker_information import IPairMakerInformation
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetGroupedRankingWorkflowResultsResult(BaseModel):
+class GetGroupedRankingWorkflowResultsResult(LazyValidatedModel):
     """
     GetGroupedRankingWorkflowResultsResult
     """ # noqa: E501
@@ -33,11 +35,7 @@ class GetGroupedRankingWorkflowResultsResult(BaseModel):
     pair_maker_information: IPairMakerInformation = Field(alias="pairMakerInformation")
     __properties: ClassVar[List[str]] = ["id", "name", "state", "pairMakerInformation"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -86,12 +84,16 @@ class GetGroupedRankingWorkflowResultsResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "state": obj.get("state"),
             "pairMakerInformation": IPairMakerInformation.from_dict(obj["pairMakerInformation"]) if obj.get("pairMakerInformation") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

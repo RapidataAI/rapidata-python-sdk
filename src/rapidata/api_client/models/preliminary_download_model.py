@@ -19,21 +19,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PreliminaryDownloadModel(BaseModel):
+class PreliminaryDownloadModel(LazyValidatedModel):
     """
     The model for creating a preliminary download.
     """ # noqa: E501
     send_email: Optional[StrictBool] = Field(default=None, description="Whether to email the user when the download is ready.", alias="sendEmail")
     __properties: ClassVar[List[str]] = ["sendEmail"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -79,9 +77,13 @@ class PreliminaryDownloadModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "sendEmail": obj.get("sendEmail")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

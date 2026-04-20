@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_artifact_model import IArtifactModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetPipelineByIdResult(BaseModel):
+class GetPipelineByIdResult(LazyValidatedModel):
     """
     GetPipelineByIdResult
     """ # noqa: E501
@@ -32,11 +34,7 @@ class GetPipelineByIdResult(BaseModel):
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     __properties: ClassVar[List[str]] = ["artifacts", "featureFlags"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -96,7 +94,7 @@ class GetPipelineByIdResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "artifacts": dict(
                 (_k, IArtifactModel.from_dict(_v))
                 for _k, _v in obj["artifacts"].items()
@@ -104,7 +102,11 @@ class GetPipelineByIdResult(BaseModel):
             if obj.get("artifacts") is not None
             else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

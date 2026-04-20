@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateComplexOrderEndpointOutput(BaseModel):
+class CreateComplexOrderEndpointOutput(LazyValidatedModel):
     """
     CreateComplexOrderEndpointOutput
     """ # noqa: E501
@@ -32,11 +34,7 @@ class CreateComplexOrderEndpointOutput(BaseModel):
     pipeline_id: StrictStr = Field(description="The pipeline ID of the created order.", alias="pipelineId")
     __properties: ClassVar[List[str]] = ["datasetId", "orderId", "campaignId", "pipelineId"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -92,12 +90,16 @@ class CreateComplexOrderEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "datasetId": obj.get("datasetId"),
             "orderId": obj.get("orderId"),
             "campaignId": obj.get("campaignId"),
             "pipelineId": obj.get("pipelineId")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

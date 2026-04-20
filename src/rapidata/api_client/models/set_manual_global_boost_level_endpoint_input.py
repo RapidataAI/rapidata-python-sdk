@@ -19,21 +19,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SetManualGlobalBoostLevelEndpointInput(BaseModel):
+class SetManualGlobalBoostLevelEndpointInput(LazyValidatedModel):
     """
     SetManualGlobalBoostLevelEndpointInput
     """ # noqa: E501
     level: Optional[StrictInt] = Field(default=None, description="The global boost level. Null disables manual mode and returns to automatic.")
     __properties: ClassVar[List[str]] = ["level"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -79,9 +77,13 @@ class SetManualGlobalBoostLevelEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "level": obj.get("level")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

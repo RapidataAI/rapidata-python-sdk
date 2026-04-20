@@ -20,12 +20,13 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_pair_maker_information_full_permutation_pair_maker_information import IPairMakerInformationFullPermutationPairMakerInformation
 from rapidata.api_client.models.i_pair_maker_information_online_pair_maker_information import IPairMakerInformationOnlinePairMakerInformation
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IPAIRMAKERINFORMATION_ONE_OF_SCHEMAS = ["IPairMakerInformationFullPermutationPairMakerInformation", "IPairMakerInformationOnlinePairMakerInformation"]
 
-class IPairMakerInformation(BaseModel):
+class IPairMakerInformation(LazyValidatedModel):
     """
     IPairMakerInformation
     """
@@ -36,10 +37,7 @@ class IPairMakerInformation(BaseModel):
     actual_instance: Optional[Union[IPairMakerInformationFullPermutationPairMakerInformation, IPairMakerInformationOnlinePairMakerInformation]] = None
     one_of_schemas: Set[str] = { "IPairMakerInformationFullPermutationPairMakerInformation", "IPairMakerInformationOnlinePairMakerInformation" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

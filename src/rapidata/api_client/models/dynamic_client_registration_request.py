@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.json_web_key_set import JsonWebKeySet
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class DynamicClientRegistrationRequest(BaseModel):
+class DynamicClientRegistrationRequest(LazyValidatedModel):
     """
     The request body for dynamic client registration.
     """ # noqa: E501
@@ -42,11 +44,7 @@ class DynamicClientRegistrationRequest(BaseModel):
     jwks: Optional[JsonWebKeySet] = Field(default=None, description="Client's JSON Web Key Set [RFC7517] document value, which contains the client's public keys.")
     __properties: ClassVar[List[str]] = ["redirect_uris", "grant_types", "response_types", "client_id", "client_name", "client_uri", "logo_uri", "scope", "contacts", "tos_uri", "policy_uri", "jwks_uri", "jwks"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -155,7 +153,7 @@ class DynamicClientRegistrationRequest(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "redirect_uris": obj.get("redirect_uris"),
             "grant_types": obj.get("grant_types"),
             "response_types": obj.get("response_types"),
@@ -169,7 +167,11 @@ class DynamicClientRegistrationRequest(BaseModel):
             "policy_uri": obj.get("policy_uri"),
             "jwks_uri": obj.get("jwks_uri"),
             "jwks": JsonWebKeySet.from_dict(obj["jwks"]) if obj.get("jwks") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -22,12 +22,13 @@ from rapidata.api_client.models.i_referee_model_early_stopping_referee_model imp
 from rapidata.api_client.models.i_referee_model_naive_referee_model import IRefereeModelNaiveRefereeModel
 from rapidata.api_client.models.i_referee_model_quorum_referee_model import IRefereeModelQuorumRefereeModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IREFEREEMODEL_ONE_OF_SCHEMAS = ["IRefereeModelBudgetRefereeModel", "IRefereeModelEarlyStoppingRefereeModel", "IRefereeModelNaiveRefereeModel", "IRefereeModelQuorumRefereeModel"]
 
-class IRefereeModel(BaseModel):
+class IRefereeModel(LazyValidatedModel):
     """
     IRefereeModel
     """
@@ -42,10 +43,7 @@ class IRefereeModel(BaseModel):
     actual_instance: Optional[Union[IRefereeModelBudgetRefereeModel, IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel, IRefereeModelQuorumRefereeModel]] = None
     one_of_schemas: Set[str] = { "IRefereeModelBudgetRefereeModel", "IRefereeModelEarlyStoppingRefereeModel", "IRefereeModelNaiveRefereeModel", "IRefereeModelQuorumRefereeModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {
