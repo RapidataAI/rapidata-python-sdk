@@ -108,7 +108,7 @@ class SpanContextManagerWrapper:
             if self.client_id:
                 span.set_attribute("identity", self.client_id)
             if self.email:
-                span.set_attribute("SDK.user.email", self.email)
+                span.set_attribute("email", self.email)
         return span
 
     def __exit__(self, *args):
@@ -182,9 +182,9 @@ class RapidataTracer:
             if self.session_id:
                 span.set_attribute("SDK.session.id", self.session_id)
             if self.client_id:
-                span.set_attribute("SDK.user.id", self.client_id)
+                span.set_attribute("identity", self.client_id)
             if self.email:
-                span.set_attribute("SDK.user.email", self.email)
+                span.set_attribute("email", self.email)
         return span
 
     def start_span(self, name: str, *args, **kwargs) -> Any:
