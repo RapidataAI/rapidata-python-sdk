@@ -23,10 +23,12 @@ from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_referee_model import IRefereeModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateJobDefinitionEndpointInput(BaseModel):
+class CreateJobDefinitionEndpointInput(LazyValidatedModel):
     """
     The input for the create job definition endpoint.
     """ # noqa: E501
@@ -38,11 +40,7 @@ class CreateJobDefinitionEndpointInput(BaseModel):
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
     __properties: ClassVar[List[str]] = ["definitionName", "workflow", "referee", "datasetId", "featureFlags", "aggregatorType"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -106,14 +104,18 @@ class CreateJobDefinitionEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "definitionName": obj.get("definitionName"),
             "workflow": IOrderWorkflowModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "datasetId": obj.get("datasetId"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "aggregatorType": obj.get("aggregatorType")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

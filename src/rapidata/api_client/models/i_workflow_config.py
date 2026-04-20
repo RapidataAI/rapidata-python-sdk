@@ -22,12 +22,13 @@ from rapidata.api_client.models.i_workflow_config_grouped_ranking_workflow_confi
 from rapidata.api_client.models.i_workflow_config_ranking_workflow_config import IWorkflowConfigRankingWorkflowConfig
 from rapidata.api_client.models.i_workflow_config_simple_workflow_config import IWorkflowConfigSimpleWorkflowConfig
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IWORKFLOWCONFIG_ONE_OF_SCHEMAS = ["IWorkflowConfigEvaluationWorkflowConfig", "IWorkflowConfigGroupedRankingWorkflowConfig", "IWorkflowConfigRankingWorkflowConfig", "IWorkflowConfigSimpleWorkflowConfig"]
 
-class IWorkflowConfig(BaseModel):
+class IWorkflowConfig(LazyValidatedModel):
     """
     IWorkflowConfig
     """
@@ -42,10 +43,7 @@ class IWorkflowConfig(BaseModel):
     actual_instance: Optional[Union[IWorkflowConfigEvaluationWorkflowConfig, IWorkflowConfigGroupedRankingWorkflowConfig, IWorkflowConfigRankingWorkflowConfig, IWorkflowConfigSimpleWorkflowConfig]] = None
     one_of_schemas: Set[str] = { "IWorkflowConfigEvaluationWorkflowConfig", "IWorkflowConfigGroupedRankingWorkflowConfig", "IWorkflowConfigRankingWorkflowConfig", "IWorkflowConfigSimpleWorkflowConfig" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.aggregator_type import AggregatorType
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IPipelineStepModelWorkflowAggregationStepModel(BaseModel):
+class IPipelineStepModelWorkflowAggregationStepModel(LazyValidatedModel):
     """
     IPipelineStepModelWorkflowAggregationStepModel
     """ # noqa: E501
@@ -41,11 +43,7 @@ class IPipelineStepModelWorkflowAggregationStepModel(BaseModel):
             raise ValueError("must be one of enum values ('WorkflowAggregationStepModel')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -91,13 +89,17 @@ class IPipelineStepModelWorkflowAggregationStepModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "campaignArtifactId": obj.get("campaignArtifactId"),
             "workflowArtifactId": obj.get("workflowArtifactId"),
             "fileArtifactId": obj.get("fileArtifactId"),
             "aggregatorType": obj.get("aggregatorType")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

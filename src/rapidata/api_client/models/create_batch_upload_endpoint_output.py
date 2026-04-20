@@ -19,21 +19,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBatchUploadEndpointOutput(BaseModel):
+class CreateBatchUploadEndpointOutput(LazyValidatedModel):
     """
     CreateBatchUploadEndpointOutput
     """ # noqa: E501
     batch_upload_id: StrictStr = Field(description="The identifier of the created batch upload.", alias="batchUploadId")
     __properties: ClassVar[List[str]] = ["batchUploadId"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -79,9 +77,13 @@ class CreateBatchUploadEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "batchUploadId": obj.get("batchUploadId")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

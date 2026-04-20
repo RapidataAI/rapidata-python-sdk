@@ -23,10 +23,12 @@ from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AddValidationRapidModel(BaseModel):
+class AddValidationRapidModel(LazyValidatedModel):
     """
     The model for adding a validation rapid with asset in JSON body.
     """ # noqa: E501
@@ -40,11 +42,7 @@ class AddValidationRapidModel(BaseModel):
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "featureFlags"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -124,7 +122,7 @@ class AddValidationRapidModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
@@ -133,7 +131,11 @@ class AddValidationRapidModel(BaseModel):
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

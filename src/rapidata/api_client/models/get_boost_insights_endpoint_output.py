@@ -23,10 +23,12 @@ from rapidata.api_client.models.boost_mode import BoostMode
 from rapidata.api_client.models.get_boost_insights_endpoint_audience_output import GetBoostInsightsEndpointAudienceOutput
 from rapidata.api_client.models.get_boost_insights_endpoint_global_boost_output import GetBoostInsightsEndpointGlobalBoostOutput
 from rapidata.api_client.models.get_boost_insights_endpoint_leveled_audience_output import GetBoostInsightsEndpointLeveledAudienceOutput
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetBoostInsightsEndpointOutput(BaseModel):
+class GetBoostInsightsEndpointOutput(LazyValidatedModel):
     """
     GetBoostInsightsEndpointOutput
     """ # noqa: E501
@@ -40,11 +42,7 @@ class GetBoostInsightsEndpointOutput(BaseModel):
     labeling_boosts: List[GetBoostInsightsEndpointLeveledAudienceOutput] = Field(alias="labelingBoosts")
     __properties: ClassVar[List[str]] = ["mode", "manualOverrideLevel", "globalBoost", "languageBoosts", "audienceBoosts", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -114,7 +112,7 @@ class GetBoostInsightsEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "mode": obj.get("mode"),
             "manualOverrideLevel": obj.get("manualOverrideLevel"),
             "globalBoost": GetBoostInsightsEndpointGlobalBoostOutput.from_dict(obj["globalBoost"]) if obj.get("globalBoost") is not None else None,
@@ -123,7 +121,11 @@ class GetBoostInsightsEndpointOutput(BaseModel):
             "prospectBlacklist": [GetBoostInsightsEndpointAudienceOutput.from_dict(_item) for _item in obj["prospectBlacklist"]] if obj.get("prospectBlacklist") is not None else None,
             "distillingBoosts": [GetBoostInsightsEndpointLeveledAudienceOutput.from_dict(_item) for _item in obj["distillingBoosts"]] if obj.get("distillingBoosts") is not None else None,
             "labelingBoosts": [GetBoostInsightsEndpointLeveledAudienceOutput.from_dict(_item) for _item in obj["labelingBoosts"]] if obj.get("labelingBoosts") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

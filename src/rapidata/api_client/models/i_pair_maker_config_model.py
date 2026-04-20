@@ -17,29 +17,24 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.i_pair_maker_config_model_full_permutation_pair_maker_config_model import IPairMakerConfigModelFullPermutationPairMakerConfigModel
 from rapidata.api_client.models.i_pair_maker_config_model_online_pair_maker_config_model import IPairMakerConfigModelOnlinePairMakerConfigModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IPAIRMAKERCONFIGMODEL_ONE_OF_SCHEMAS = ["IPairMakerConfigModelFullPermutationPairMakerConfigModel", "IPairMakerConfigModelOnlinePairMakerConfigModel"]
+IPAIRMAKERCONFIGMODEL_ONE_OF_SCHEMAS = ["IPairMakerConfigModelOnlinePairMakerConfigModel"]
 
-class IPairMakerConfigModel(BaseModel):
+class IPairMakerConfigModel(LazyValidatedModel):
     """
     IPairMakerConfigModel
     """
-    # data type: IPairMakerConfigModelFullPermutationPairMakerConfigModel
-    oneof_schema_1_validator: Optional[IPairMakerConfigModelFullPermutationPairMakerConfigModel] = None
     # data type: IPairMakerConfigModelOnlinePairMakerConfigModel
-    oneof_schema_2_validator: Optional[IPairMakerConfigModelOnlinePairMakerConfigModel] = None
-    actual_instance: Optional[Union[IPairMakerConfigModelFullPermutationPairMakerConfigModel, IPairMakerConfigModelOnlinePairMakerConfigModel]] = None
-    one_of_schemas: Set[str] = { "IPairMakerConfigModelFullPermutationPairMakerConfigModel", "IPairMakerConfigModelOnlinePairMakerConfigModel" }
+    oneof_schema_1_validator: Optional[IPairMakerConfigModelOnlinePairMakerConfigModel] = None
+    actual_instance: Optional[Union[IPairMakerConfigModelOnlinePairMakerConfigModel]] = None
+    one_of_schemas: Set[str] = { "IPairMakerConfigModelOnlinePairMakerConfigModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {
@@ -60,11 +55,6 @@ class IPairMakerConfigModel(BaseModel):
         instance = IPairMakerConfigModel.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IPairMakerConfigModelFullPermutationPairMakerConfigModel
-        if not isinstance(v, IPairMakerConfigModelFullPermutationPairMakerConfigModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IPairMakerConfigModelFullPermutationPairMakerConfigModel`")
-        else:
-            match += 1
         # validate data type: IPairMakerConfigModelOnlinePairMakerConfigModel
         if not isinstance(v, IPairMakerConfigModelOnlinePairMakerConfigModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IPairMakerConfigModelOnlinePairMakerConfigModel`")
@@ -72,10 +62,10 @@ class IPairMakerConfigModel(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelFullPermutationPairMakerConfigModel, IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelFullPermutationPairMakerConfigModel, IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -90,12 +80,6 @@ class IPairMakerConfigModel(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IPairMakerConfigModelFullPermutationPairMakerConfigModel
-        try:
-            instance.actual_instance = IPairMakerConfigModelFullPermutationPairMakerConfigModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into IPairMakerConfigModelOnlinePairMakerConfigModel
         try:
             instance.actual_instance = IPairMakerConfigModelOnlinePairMakerConfigModel.from_json(json_str)
@@ -105,10 +89,10 @@ class IPairMakerConfigModel(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelFullPermutationPairMakerConfigModel, IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelFullPermutationPairMakerConfigModel, IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IPairMakerConfigModel with oneOf schemas: IPairMakerConfigModelOnlinePairMakerConfigModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -122,7 +106,7 @@ class IPairMakerConfigModel(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IPairMakerConfigModelFullPermutationPairMakerConfigModel, IPairMakerConfigModelOnlinePairMakerConfigModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IPairMakerConfigModelOnlinePairMakerConfigModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

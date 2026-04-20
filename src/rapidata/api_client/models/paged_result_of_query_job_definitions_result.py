@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.query_job_definitions_result import QueryJobDefinitionsResult
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PagedResultOfQueryJobDefinitionsResult(BaseModel):
+class PagedResultOfQueryJobDefinitionsResult(LazyValidatedModel):
     """
     PagedResultOfQueryJobDefinitionsResult
     """ # noqa: E501
@@ -34,11 +36,7 @@ class PagedResultOfQueryJobDefinitionsResult(BaseModel):
     total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
     __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -91,13 +89,17 @@ class PagedResultOfQueryJobDefinitionsResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "total": obj.get("total"),
             "page": obj.get("page"),
             "pageSize": obj.get("pageSize"),
             "items": [QueryJobDefinitionsResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
             "totalPages": obj.get("totalPages")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

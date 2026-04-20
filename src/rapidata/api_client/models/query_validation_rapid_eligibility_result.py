@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Union
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryValidationRapidEligibilityResult(BaseModel):
+class QueryValidationRapidEligibilityResult(LazyValidatedModel):
     """
     QueryValidationRapidEligibilityResult
     """ # noqa: E501
@@ -35,11 +37,7 @@ class QueryValidationRapidEligibilityResult(BaseModel):
     truth: IValidationTruth
     __properties: ClassVar[List[str]] = ["rapidId", "payload", "responseCount", "confidence", "truth"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -91,13 +89,17 @@ class QueryValidationRapidEligibilityResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "rapidId": obj.get("rapidId"),
             "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "responseCount": obj.get("responseCount"),
             "confidence": obj.get("confidence"),
             "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

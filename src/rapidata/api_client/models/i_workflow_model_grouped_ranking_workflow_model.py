@@ -22,10 +22,12 @@ from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.i_ranking_config import IRankingConfig
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IWorkflowModelGroupedRankingWorkflowModel(BaseModel):
+class IWorkflowModelGroupedRankingWorkflowModel(LazyValidatedModel):
     """
     IWorkflowModelGroupedRankingWorkflowModel
     """ # noqa: E501
@@ -47,11 +49,7 @@ class IWorkflowModelGroupedRankingWorkflowModel(BaseModel):
             raise ValueError("must be one of enum values ('GroupedRankingWorkflowModel')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -116,7 +114,7 @@ class IWorkflowModelGroupedRankingWorkflowModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "id": obj.get("id"),
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
@@ -126,7 +124,11 @@ class IWorkflowModelGroupedRankingWorkflowModel(BaseModel):
             "ownerMail": obj.get("ownerMail"),
             "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
             "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

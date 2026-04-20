@@ -22,10 +22,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.audience_status import AudienceStatus
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryAudiencesEndpointOutput(BaseModel):
+class QueryAudiencesEndpointOutput(LazyValidatedModel):
     """
     QueryAudiencesEndpointOutput
     """ # noqa: E501
@@ -46,11 +48,7 @@ class QueryAudiencesEndpointOutput(BaseModel):
     dropped: Optional[StrictInt] = Field(default=None, description="The number of dropped users.")
     __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "randomAdmissionProbability", "health", "graduated", "dropped"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -113,7 +111,7 @@ class QueryAudiencesEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "description": obj.get("description"),
@@ -129,7 +127,11 @@ class QueryAudiencesEndpointOutput(BaseModel):
             "health": obj.get("health"),
             "graduated": obj.get("graduated"),
             "dropped": obj.get("dropped")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

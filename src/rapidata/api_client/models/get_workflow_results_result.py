@@ -23,10 +23,12 @@ from rapidata.api_client.models.get_workflow_results_result_response import GetW
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.rapid_state import RapidState
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetWorkflowResultsResult(BaseModel):
+class GetWorkflowResultsResult(LazyValidatedModel):
     """
     GetWorkflowResultsResult
     """ # noqa: E501
@@ -40,11 +42,7 @@ class GetWorkflowResultsResult(BaseModel):
     decisiveness: Optional[Union[StrictFloat, StrictInt]] = None
     __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state", "context", "contextAsset", "decisiveness"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -116,7 +114,7 @@ class GetWorkflowResultsResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "rapidId": obj.get("rapidId"),
             "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
@@ -125,7 +123,11 @@ class GetWorkflowResultsResult(BaseModel):
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "decisiveness": obj.get("decisiveness")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

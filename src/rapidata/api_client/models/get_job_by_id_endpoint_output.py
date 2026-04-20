@@ -20,10 +20,12 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetJobByIdEndpointOutput(BaseModel):
+class GetJobByIdEndpointOutput(LazyValidatedModel):
     """
     The result when a job has been retrieved.
     """ # noqa: E501
@@ -43,11 +45,7 @@ class GetJobByIdEndpointOutput(BaseModel):
     owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")
     __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt", "ownerId", "ownerMail"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -113,7 +111,7 @@ class GetJobByIdEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "jobId": obj.get("jobId"),
             "name": obj.get("name"),
             "definitionId": obj.get("definitionId"),
@@ -128,7 +126,11 @@ class GetJobByIdEndpointOutput(BaseModel):
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.confidence_interval import ConfidenceInterval
 from rapidata.api_client.models.standing_status import StandingStatus
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCombinedBenchmarkStandingsEndpointOutputItem(BaseModel):
+class GetCombinedBenchmarkStandingsEndpointOutputItem(LazyValidatedModel):
     """
     GetCombinedBenchmarkStandingsEndpointOutputItem
     """ # noqa: E501
@@ -38,11 +40,7 @@ class GetCombinedBenchmarkStandingsEndpointOutputItem(BaseModel):
     confidence_interval: Optional[ConfidenceInterval] = Field(default=None, alias="confidenceInterval")
     __properties: ClassVar[List[str]] = ["id", "name", "status", "score", "wins", "totalMatches", "isDisabled", "confidenceInterval"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -96,7 +94,7 @@ class GetCombinedBenchmarkStandingsEndpointOutputItem(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "status": obj.get("status"),
@@ -105,7 +103,11 @@ class GetCombinedBenchmarkStandingsEndpointOutputItem(BaseModel):
             "totalMatches": obj.get("totalMatches"),
             "isDisabled": obj.get("isDisabled"),
             "confidenceInterval": ConfidenceInterval.from_dict(obj["confidenceInterval"]) if obj.get("confidenceInterval") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

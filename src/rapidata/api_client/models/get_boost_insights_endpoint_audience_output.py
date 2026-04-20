@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.get_boost_insights_endpoint_contributor_output import GetBoostInsightsEndpointContributorOutput
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetBoostInsightsEndpointAudienceOutput(BaseModel):
+class GetBoostInsightsEndpointAudienceOutput(LazyValidatedModel):
     """
     GetBoostInsightsEndpointAudienceOutput
     """ # noqa: E501
@@ -31,11 +33,7 @@ class GetBoostInsightsEndpointAudienceOutput(BaseModel):
     contributors: List[GetBoostInsightsEndpointContributorOutput]
     __properties: ClassVar[List[str]] = ["externalAudienceId", "contributors"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -88,10 +86,14 @@ class GetBoostInsightsEndpointAudienceOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "externalAudienceId": obj.get("externalAudienceId"),
             "contributors": [GetBoostInsightsEndpointContributorOutput.from_dict(_item) for _item in obj["contributors"]] if obj.get("contributors") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -20,12 +20,13 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_example_truth_classify_example_truth import IExampleTruthClassifyExampleTruth
 from rapidata.api_client.models.i_example_truth_compare_example_truth import IExampleTruthCompareExampleTruth
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IEXAMPLETRUTH_ONE_OF_SCHEMAS = ["IExampleTruthClassifyExampleTruth", "IExampleTruthCompareExampleTruth"]
 
-class IExampleTruth(BaseModel):
+class IExampleTruth(LazyValidatedModel):
     """
     IExampleTruth
     """
@@ -36,10 +37,7 @@ class IExampleTruth(BaseModel):
     actual_instance: Optional[Union[IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth]] = None
     one_of_schemas: Set[str] = { "IExampleTruthClassifyExampleTruth", "IExampleTruthCompareExampleTruth" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

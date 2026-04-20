@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class JsonWebKey(BaseModel):
+class JsonWebKey(LazyValidatedModel):
     """
     JsonWebKey
     """ # noqa: E501
@@ -50,11 +52,7 @@ class JsonWebKey(BaseModel):
     y: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["alg", "crv", "d", "dp", "dq", "e", "k", "key_ops", "kid", "kty", "n", "oth", "p", "q", "qi", "use", "x", "x5c", "x5t", "x5t#S256", "x5u", "y"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -210,7 +208,7 @@ class JsonWebKey(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "alg": obj.get("alg"),
             "crv": obj.get("crv"),
             "d": obj.get("d"),
@@ -233,7 +231,11 @@ class JsonWebKey(BaseModel):
             "x5t#S256": obj.get("x5t#S256"),
             "x5u": obj.get("x5u"),
             "y": obj.get("y")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

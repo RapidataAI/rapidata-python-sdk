@@ -9,6 +9,8 @@ import json
 {{#vendorExtensions.x-py-model-imports}}
 {{{.}}}
 {{/vendorExtensions.x-py-model-imports}}
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -23,7 +25,7 @@ if TYPE_CHECKING:
 
 {{/discriminator}}
 {{/hasChildren}}
-class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}BaseModel{{/parent}}):
+class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}LazyValidatedModel{{/parent}}):
     """
     {{#description}}{{{description}}}{{/description}}{{^description}}{{{classname}}}{{/description}}
     """ # noqa: E501
@@ -86,11 +88,7 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}BaseModel{{/parent}}
     {{/isEnum}}
 {{/vars}}
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
 {{#hasChildren}}
@@ -281,7 +279,7 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}BaseModel{{/parent}}
 
         {{/isAdditionalPropertiesTrue}}
         {{/disallowAdditionalPropertiesIfNotPresent}}
-        _obj = cls.model_validate({
+        _data = {
             {{#allVars}}
             {{#isContainer}}
             {{#isArray}}
@@ -376,7 +374,11 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}BaseModel{{/parent}}
             {{/isPrimitiveType}}
             {{/isContainer}}
             {{/allVars}}
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         {{#isAdditionalPropertiesTrue}}
         # store additional fields in additional_properties
         for _key in obj.keys():

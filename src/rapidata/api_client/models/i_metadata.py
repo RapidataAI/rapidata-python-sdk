@@ -28,12 +28,13 @@ from rapidata.api_client.models.i_metadata_source_url_metadata import IMetadataS
 from rapidata.api_client.models.i_metadata_streams_metadata import IMetadataStreamsMetadata
 from rapidata.api_client.models.i_metadata_text_metadata import IMetadataTextMetadata
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IMETADATA_ONE_OF_SCHEMAS = ["IMetadataClassificationMetadata", "IMetadataCountMetadata", "IMetadataDurationMetadata", "IMetadataFileTypeMetadata", "IMetadataImageDimensionMetadata", "IMetadataLocationMetadata", "IMetadataOriginalFilenameMetadata", "IMetadataSourceUrlMetadata", "IMetadataStreamsMetadata", "IMetadataTextMetadata"]
 
-class IMetadata(BaseModel):
+class IMetadata(LazyValidatedModel):
     """
     IMetadata
     """
@@ -60,10 +61,7 @@ class IMetadata(BaseModel):
     actual_instance: Optional[Union[IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataDurationMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata]] = None
     one_of_schemas: Set[str] = { "IMetadataClassificationMetadata", "IMetadataCountMetadata", "IMetadataDurationMetadata", "IMetadataFileTypeMetadata", "IMetadataImageDimensionMetadata", "IMetadataLocationMetadata", "IMetadataOriginalFilenameMetadata", "IMetadataSourceUrlMetadata", "IMetadataStreamsMetadata", "IMetadataTextMetadata" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

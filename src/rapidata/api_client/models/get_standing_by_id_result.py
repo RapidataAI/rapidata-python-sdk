@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.standing_status import StandingStatus
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetStandingByIdResult(BaseModel):
+class GetStandingByIdResult(LazyValidatedModel):
     """
     GetStandingByIdResult
     """ # noqa: E501
@@ -34,11 +36,7 @@ class GetStandingByIdResult(BaseModel):
     is_disabled: StrictBool = Field(alias="isDisabled")
     __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "isDisabled"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -84,13 +82,17 @@ class GetStandingByIdResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "benchmarkId": obj.get("benchmarkId"),
             "status": obj.get("status"),
             "isDisabled": obj.get("isDisabled")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

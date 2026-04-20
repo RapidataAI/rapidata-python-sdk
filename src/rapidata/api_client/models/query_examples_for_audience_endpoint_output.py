@@ -22,10 +22,12 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_example_payload import IExamplePayload
 from rapidata.api_client.models.i_example_truth import IExampleTruth
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryExamplesForAudienceEndpointOutput(BaseModel):
+class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
     """
     QueryExamplesForAudienceEndpointOutput
     """ # noqa: E501
@@ -44,11 +46,7 @@ class QueryExamplesForAudienceEndpointOutput(BaseModel):
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls serving order.", alias="sortIndex")
     __properties: ClassVar[List[str]] = ["id", "rapidId", "asset", "payload", "correctCount", "incorrectCount", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability", "isCommonSense", "sortIndex"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -126,7 +124,7 @@ class QueryExamplesForAudienceEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "rapidId": obj.get("rapidId"),
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
@@ -140,7 +138,11 @@ class QueryExamplesForAudienceEndpointOutput(BaseModel):
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "isCommonSense": obj.get("isCommonSense"),
             "sortIndex": obj.get("sortIndex")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

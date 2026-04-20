@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryCustomersEndpointOutput(BaseModel):
+class QueryCustomersEndpointOutput(LazyValidatedModel):
     """
     QueryCustomersEndpointOutput
     """ # noqa: E501
@@ -32,11 +34,7 @@ class QueryCustomersEndpointOutput(BaseModel):
     organization_id: Optional[StrictStr] = Field(description="The identifier of the organization this customer belongs to, if any.", alias="organizationId")
     __properties: ClassVar[List[str]] = ["id", "email", "organizationName", "organizationId"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -97,12 +95,16 @@ class QueryCustomersEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "email": obj.get("email"),
             "organizationName": obj.get("organizationName"),
             "organizationId": obj.get("organizationId")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

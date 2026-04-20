@@ -28,12 +28,13 @@ from rapidata.api_client.models.i_rapid_payload_polygon_payload import IRapidPay
 from rapidata.api_client.models.i_rapid_payload_scrub_payload import IRapidPayloadScrubPayload
 from rapidata.api_client.models.i_rapid_payload_transcription_payload import IRapidPayloadTranscriptionPayload
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IRAPIDPAYLOAD_ONE_OF_SCHEMAS = ["IRapidPayloadBoundingBoxPayload", "IRapidPayloadClassifyPayload", "IRapidPayloadComparePayload", "IRapidPayloadFreeTextPayload", "IRapidPayloadLinePayload", "IRapidPayloadLocatePayload", "IRapidPayloadNamedEntityPayload", "IRapidPayloadPolygonPayload", "IRapidPayloadScrubPayload", "IRapidPayloadTranscriptionPayload"]
 
-class IRapidPayload(BaseModel):
+class IRapidPayload(LazyValidatedModel):
     """
     IRapidPayload
     """
@@ -60,10 +61,7 @@ class IRapidPayload(BaseModel):
     actual_instance: Optional[Union[IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload]] = None
     one_of_schemas: Set[str] = { "IRapidPayloadBoundingBoxPayload", "IRapidPayloadClassifyPayload", "IRapidPayloadComparePayload", "IRapidPayloadFreeTextPayload", "IRapidPayloadLinePayload", "IRapidPayloadLocatePayload", "IRapidPayloadNamedEntityPayload", "IRapidPayloadPolygonPayload", "IRapidPayloadScrubPayload", "IRapidPayloadTranscriptionPayload" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

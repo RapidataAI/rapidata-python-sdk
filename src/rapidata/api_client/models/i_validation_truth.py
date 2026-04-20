@@ -30,12 +30,13 @@ from rapidata.api_client.models.i_validation_truth_scrub_truth import IValidatio
 from rapidata.api_client.models.i_validation_truth_skip_truth import IValidationTruthSkipTruth
 from rapidata.api_client.models.i_validation_truth_transcription_truth import IValidationTruthTranscriptionTruth
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IVALIDATIONTRUTH_ONE_OF_SCHEMAS = ["IValidationTruthAttachCategoryTruth", "IValidationTruthBoundingBoxTruth", "IValidationTruthCompareTruth", "IValidationTruthEmptyValidationTruth", "IValidationTruthLineTruth", "IValidationTruthLocateBoxTruth", "IValidationTruthMultiCompareTruth", "IValidationTruthNamedEntityTruth", "IValidationTruthPolygonTruth", "IValidationTruthScrubTruth", "IValidationTruthSkipTruth", "IValidationTruthTranscriptionTruth"]
 
-class IValidationTruth(BaseModel):
+class IValidationTruth(LazyValidatedModel):
     """
     IValidationTruth
     """
@@ -66,10 +67,7 @@ class IValidationTruth(BaseModel):
     actual_instance: Optional[Union[IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth]] = None
     one_of_schemas: Set[str] = { "IValidationTruthAttachCategoryTruth", "IValidationTruthBoundingBoxTruth", "IValidationTruthCompareTruth", "IValidationTruthEmptyValidationTruth", "IValidationTruthLineTruth", "IValidationTruthLocateBoxTruth", "IValidationTruthMultiCompareTruth", "IValidationTruthNamedEntityTruth", "IValidationTruthPolygonTruth", "IValidationTruthScrubTruth", "IValidationTruthSkipTruth", "IValidationTruthTranscriptionTruth" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

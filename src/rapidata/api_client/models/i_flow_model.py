@@ -19,12 +19,13 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_flow_model_ranking_flow_model import IFlowModelRankingFlowModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IFLOWMODEL_ONE_OF_SCHEMAS = ["IFlowModelRankingFlowModel"]
 
-class IFlowModel(BaseModel):
+class IFlowModel(LazyValidatedModel):
     """
     IFlowModel
     """
@@ -33,10 +34,7 @@ class IFlowModel(BaseModel):
     actual_instance: Optional[Union[IFlowModelRankingFlowModel]] = None
     one_of_schemas: Set[str] = { "IFlowModelRankingFlowModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

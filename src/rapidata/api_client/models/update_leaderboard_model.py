@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateLeaderboardModel(BaseModel):
+class UpdateLeaderboardModel(LazyValidatedModel):
     """
     The model used to update a leaderboard.
     """ # noqa: E501
@@ -31,11 +33,7 @@ class UpdateLeaderboardModel(BaseModel):
     min_responses: Optional[StrictInt] = Field(default=None, description="The amount of responses that will be collected as a minimum on each matchup.", alias="minResponses")
     __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -96,11 +94,15 @@ class UpdateLeaderboardModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "name": obj.get("name"),
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

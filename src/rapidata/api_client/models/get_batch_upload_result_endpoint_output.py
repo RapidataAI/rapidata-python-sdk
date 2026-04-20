@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.batch_upload_status import BatchUploadStatus
 from rapidata.api_client.models.get_batch_upload_result_endpoint_url_output import GetBatchUploadResultEndpointUrlOutput
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetBatchUploadResultEndpointOutput(BaseModel):
+class GetBatchUploadResultEndpointOutput(LazyValidatedModel):
     """
     GetBatchUploadResultEndpointOutput
     """ # noqa: E501
@@ -36,11 +38,7 @@ class GetBatchUploadResultEndpointOutput(BaseModel):
     items: List[GetBatchUploadResultEndpointUrlOutput]
     __properties: ClassVar[List[str]] = ["batchUploadId", "status", "totalCount", "completedCount", "failedCount", "items"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -93,14 +91,18 @@ class GetBatchUploadResultEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "batchUploadId": obj.get("batchUploadId"),
             "status": obj.get("status"),
             "totalCount": obj.get("totalCount"),
             "completedCount": obj.get("completedCount"),
             "failedCount": obj.get("failedCount"),
             "items": [GetBatchUploadResultEndpointUrlOutput.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

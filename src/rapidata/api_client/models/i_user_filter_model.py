@@ -28,12 +28,13 @@ from rapidata.api_client.models.i_user_filter_model_new_user_filter_model import
 from rapidata.api_client.models.i_user_filter_model_response_count_user_filter_model import IUserFilterModelResponseCountUserFilterModel
 from rapidata.api_client.models.i_user_filter_model_user_score_user_filter_model import IUserFilterModelUserScoreUserFilterModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IUSERFILTERMODEL_ONE_OF_SCHEMAS = ["IUserFilterModelAgeUserFilterModel", "IUserFilterModelAndUserFilterModel", "IUserFilterModelCampaignUserFilterModel", "IUserFilterModelCountryUserFilterModel", "IUserFilterModelCustomUserFilterModel", "IUserFilterModelDeviceUserFilterModel", "IUserFilterModelGenderUserFilterModel", "IUserFilterModelLanguageUserFilterModel", "IUserFilterModelNewUserFilterModel", "IUserFilterModelNotUserFilterModel", "IUserFilterModelOrUserFilterModel", "IUserFilterModelResponseCountUserFilterModel", "IUserFilterModelUserScoreUserFilterModel"]
 
-class IUserFilterModel(BaseModel):
+class IUserFilterModel(LazyValidatedModel):
     """
     IUserFilterModel
     """
@@ -66,10 +67,7 @@ class IUserFilterModel(BaseModel):
     actual_instance: Optional[Union[IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelDeviceUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel]] = None
     one_of_schemas: Set[str] = { "IUserFilterModelAgeUserFilterModel", "IUserFilterModelAndUserFilterModel", "IUserFilterModelCampaignUserFilterModel", "IUserFilterModelCountryUserFilterModel", "IUserFilterModelCustomUserFilterModel", "IUserFilterModelDeviceUserFilterModel", "IUserFilterModelGenderUserFilterModel", "IUserFilterModelLanguageUserFilterModel", "IUserFilterModelNewUserFilterModel", "IUserFilterModelNotUserFilterModel", "IUserFilterModelOrUserFilterModel", "IUserFilterModelResponseCountUserFilterModel", "IUserFilterModelUserScoreUserFilterModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

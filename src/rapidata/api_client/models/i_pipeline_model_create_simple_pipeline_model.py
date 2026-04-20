@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.i_pipeline_artifact_model import IPipelineArtifactModel
 from rapidata.api_client.models.i_pipeline_step_model import IPipelineStepModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IPipelineModelCreateSimplePipelineModel(BaseModel):
+class IPipelineModelCreateSimplePipelineModel(LazyValidatedModel):
     """
     IPipelineModelCreateSimplePipelineModel
     """ # noqa: E501
@@ -41,11 +43,7 @@ class IPipelineModelCreateSimplePipelineModel(BaseModel):
             raise ValueError("must be one of enum values ('CreateSimplePipelineModel')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -105,12 +103,16 @@ class IPipelineModelCreateSimplePipelineModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "artifacts": [IPipelineArtifactModel.from_dict(_item) for _item in obj["artifacts"]] if obj.get("artifacts") is not None else None,
             "pipelineSteps": [IPipelineStepModel.from_dict(_item) for _item in obj["pipelineSteps"]] if obj.get("pipelineSteps") is not None else None,
             "namePrefix": obj.get("namePrefix")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

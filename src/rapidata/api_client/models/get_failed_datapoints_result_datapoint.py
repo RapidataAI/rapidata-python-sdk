@@ -21,10 +21,12 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.i_asset_model import IAssetModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetFailedDatapointsResultDatapoint(BaseModel):
+class GetFailedDatapointsResultDatapoint(LazyValidatedModel):
     """
     GetFailedDatapointsResultDatapoint
     """ # noqa: E501
@@ -35,11 +37,7 @@ class GetFailedDatapointsResultDatapoint(BaseModel):
     created_at: datetime = Field(alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "datasetId", "sortIndex", "asset", "createdAt"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -88,13 +86,17 @@ class GetFailedDatapointsResultDatapoint(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "sortIndex": obj.get("sortIndex"),
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "createdAt": obj.get("createdAt")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

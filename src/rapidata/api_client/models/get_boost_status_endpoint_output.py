@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.boost_mode import BoostMode
 from rapidata.api_client.models.boost_status_model import BoostStatusModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetBoostStatusEndpointOutput(BaseModel):
+class GetBoostStatusEndpointOutput(LazyValidatedModel):
     """
     GetBoostStatusEndpointOutput
     """ # noqa: E501
@@ -35,11 +37,7 @@ class GetBoostStatusEndpointOutput(BaseModel):
     unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
     __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -85,13 +83,17 @@ class GetBoostStatusEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "status": obj.get("status"),
             "mode": obj.get("mode"),
             "activeCampaigns": obj.get("activeCampaigns"),
             "inactiveCampaigns": obj.get("inactiveCampaigns"),
             "unknownCampaigns": obj.get("unknownCampaigns")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

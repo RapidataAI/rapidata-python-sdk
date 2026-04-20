@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, Strict
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.boosting_control_mode import BoostingControlMode
 from rapidata.api_client.models.campaign_status_model import CampaignStatusModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCampaignCacheEndpointCampaignEntry(BaseModel):
+class GetCampaignCacheEndpointCampaignEntry(LazyValidatedModel):
     """
     GetCampaignCacheEndpointCampaignEntry
     """ # noqa: E501
@@ -41,11 +43,7 @@ class GetCampaignCacheEndpointCampaignEntry(BaseModel):
     boosting_control_mode: BoostingControlMode = Field(alias="boostingControlMode")
     __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "filterCount", "selectionCount", "userScoreDimensionCount", "featureFlagCount", "rateLimitCount", "isPreviewEnabled", "boostingControlMode"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -91,7 +89,7 @@ class GetCampaignCacheEndpointCampaignEntry(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "status": obj.get("status"),
@@ -103,7 +101,11 @@ class GetCampaignCacheEndpointCampaignEntry(BaseModel):
             "rateLimitCount": obj.get("rateLimitCount"),
             "isPreviewEnabled": obj.get("isPreviewEnabled"),
             "boostingControlMode": obj.get("boostingControlMode")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

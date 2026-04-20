@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_pipeline_model import IPipelineModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateComplexOrderEndpointInput(BaseModel):
+class CreateComplexOrderEndpointInput(LazyValidatedModel):
     """
     CreateComplexOrderEndpointInput
     """ # noqa: E501
@@ -33,11 +35,7 @@ class CreateComplexOrderEndpointInput(BaseModel):
     preceding_order_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the order that must complete before this order starts processing.", alias="precedingOrderId")
     __properties: ClassVar[List[str]] = ["orderName", "pipeline", "isDemo", "precedingOrderId"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -91,12 +89,16 @@ class CreateComplexOrderEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "orderName": obj.get("orderName"),
             "pipeline": IPipelineModel.from_dict(obj["pipeline"]) if obj.get("pipeline") is not None else None,
             "isDemo": obj.get("isDemo"),
             "precedingOrderId": obj.get("precedingOrderId")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

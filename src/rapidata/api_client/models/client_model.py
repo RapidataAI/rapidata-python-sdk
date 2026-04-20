@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.json_web_key_set import JsonWebKeySet
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ClientModel(BaseModel):
+class ClientModel(LazyValidatedModel):
     """
     The response containing the id and secret of a dynamically registered client.  Additionally, it contains all registered metadata for the client.
     """ # noqa: E501
@@ -45,11 +47,7 @@ class ClientModel(BaseModel):
     jwks: Optional[JsonWebKeySet]
     __properties: ClassVar[List[str]] = ["client_id", "client_secret", "client_id_issued_at", "client_secret_expires_at", "redirect_uris", "grant_types", "response_types", "client_name", "client_uri", "logo_uri", "scope", "contacts", "tos_uri", "policy_uri", "jwks_uri", "jwks"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -163,7 +161,7 @@ class ClientModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "client_id": obj.get("client_id"),
             "client_secret": obj.get("client_secret"),
             "client_id_issued_at": obj.get("client_id_issued_at"),
@@ -180,7 +178,11 @@ class ClientModel(BaseModel):
             "policy_uri": obj.get("policy_uri"),
             "jwks_uri": obj.get("jwks_uri"),
             "jwks": JsonWebKeySet.from_dict(obj["jwks"]) if obj.get("jwks") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -20,12 +20,13 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_ranking_config_bradley_terry_ranking_config import IRankingConfigBradleyTerryRankingConfig
 from rapidata.api_client.models.i_ranking_config_elo_config import IRankingConfigEloConfig
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IRANKINGCONFIG_ONE_OF_SCHEMAS = ["IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloConfig"]
 
-class IRankingConfig(BaseModel):
+class IRankingConfig(LazyValidatedModel):
     """
     IRankingConfig
     """
@@ -36,10 +37,7 @@ class IRankingConfig(BaseModel):
     actual_instance: Optional[Union[IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig]] = None
     one_of_schemas: Set[str] = { "IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloConfig" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

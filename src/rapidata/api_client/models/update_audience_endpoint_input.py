@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateAudienceEndpointInput(BaseModel):
+class UpdateAudienceEndpointInput(LazyValidatedModel):
     """
     UpdateAudienceEndpointInput
     """ # noqa: E501
@@ -57,11 +59,7 @@ class UpdateAudienceEndpointInput(BaseModel):
             raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -197,7 +195,7 @@ class UpdateAudienceEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "name": obj.get("name"),
             "description": obj.get("description"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
@@ -215,7 +213,11 @@ class UpdateAudienceEndpointInput(BaseModel):
             "minSessionsForSubmissionRate": obj.get("minSessionsForSubmissionRate"),
             "minSubmissionRateGraduated": obj.get("minSubmissionRateGraduated"),
             "distillingRetrievalMode": obj.get("distillingRetrievalMode")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

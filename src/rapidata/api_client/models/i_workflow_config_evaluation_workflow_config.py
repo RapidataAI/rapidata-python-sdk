@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IWorkflowConfigEvaluationWorkflowConfig(BaseModel):
+class IWorkflowConfigEvaluationWorkflowConfig(LazyValidatedModel):
     """
     IWorkflowConfigEvaluationWorkflowConfig
     """ # noqa: E501
@@ -42,11 +44,7 @@ class IWorkflowConfigEvaluationWorkflowConfig(BaseModel):
             raise ValueError("must be one of enum values ('EvaluationWorkflowConfig')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -102,13 +100,17 @@ class IWorkflowConfigEvaluationWorkflowConfig(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "validationSetId": obj.get("validationSetId"),
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

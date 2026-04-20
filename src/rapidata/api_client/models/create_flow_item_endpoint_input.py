@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateFlowItemEndpointInput(BaseModel):
+class CreateFlowItemEndpointInput(LazyValidatedModel):
     """
     CreateFlowItemEndpointInput
     """ # noqa: E501
@@ -32,11 +34,7 @@ class CreateFlowItemEndpointInput(BaseModel):
     drain_duration_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.", alias="drainDurationInSeconds")
     __properties: ClassVar[List[str]] = ["datasetId", "context", "timeToLiveInSeconds", "drainDurationInSeconds"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -87,12 +85,16 @@ class CreateFlowItemEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "datasetId": obj.get("datasetId"),
             "context": obj.get("context"),
             "timeToLiveInSeconds": obj.get("timeToLiveInSeconds"),
             "drainDurationInSeconds": obj.get("drainDurationInSeconds")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

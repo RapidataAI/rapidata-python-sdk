@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IWorkflowModelEvaluationWorkflowModel(BaseModel):
+class IWorkflowModelEvaluationWorkflowModel(LazyValidatedModel):
     """
     IWorkflowModelEvaluationWorkflowModel
     """ # noqa: E501
@@ -43,11 +45,7 @@ class IWorkflowModelEvaluationWorkflowModel(BaseModel):
             raise ValueError("must be one of enum values ('EvaluationWorkflow')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -101,7 +99,7 @@ class IWorkflowModelEvaluationWorkflowModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "id": obj.get("id"),
             "validationSetId": obj.get("validationSetId"),
@@ -109,7 +107,11 @@ class IWorkflowModelEvaluationWorkflowModel(BaseModel):
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

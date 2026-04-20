@@ -23,10 +23,12 @@ from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_example_payload import IExamplePayload
 from rapidata.api_client.models.i_example_truth import IExampleTruth
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AddExampleToAudienceEndpointInput(BaseModel):
+class AddExampleToAudienceEndpointInput(LazyValidatedModel):
     """
     Input model for adding an example to an audience.
     """ # noqa: E501
@@ -42,11 +44,7 @@ class AddExampleToAudienceEndpointInput(BaseModel):
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example should be treated as commonsense validation.  When true, incorrect answers are not accepted and the example affects global score.  When null, AI auto-detection will determine if the example is common sense.", alias="isCommonSense")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "sortIndex", "featureFlags", "isCommonSense"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -131,7 +129,7 @@ class AddExampleToAudienceEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "payload": IExamplePayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "truth": IExampleTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
@@ -142,7 +140,11 @@ class AddExampleToAudienceEndpointInput(BaseModel):
             "sortIndex": obj.get("sortIndex"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "isCommonSense": obj.get("isCommonSense")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

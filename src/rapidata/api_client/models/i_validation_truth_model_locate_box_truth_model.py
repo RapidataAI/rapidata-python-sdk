@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.box_shape import BoxShape
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IValidationTruthModelLocateBoxTruthModel(BaseModel):
+class IValidationTruthModelLocateBoxTruthModel(LazyValidatedModel):
     """
     IValidationTruthModelLocateBoxTruthModel
     """ # noqa: E501
@@ -40,11 +42,7 @@ class IValidationTruthModelLocateBoxTruthModel(BaseModel):
             raise ValueError("must be one of enum values ('LocateBoxTruth')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -97,12 +95,16 @@ class IValidationTruthModelLocateBoxTruthModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
             "requiredPrecision": obj.get("requiredPrecision"),
             "requiredCompleteness": obj.get("requiredCompleteness")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

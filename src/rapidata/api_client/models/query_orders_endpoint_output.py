@@ -21,10 +21,12 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.order_state import OrderState
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryOrdersEndpointOutput(BaseModel):
+class QueryOrdersEndpointOutput(LazyValidatedModel):
     """
     QueryOrdersEndpointOutput
     """ # noqa: E501
@@ -38,11 +40,7 @@ class QueryOrdersEndpointOutput(BaseModel):
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message if the order failed.", alias="failureMessage")
     __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic", "failureMessage"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -98,7 +96,7 @@ class QueryOrdersEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "pipelineId": obj.get("pipelineId"),
             "orderDate": obj.get("orderDate"),
@@ -107,7 +105,11 @@ class QueryOrdersEndpointOutput(BaseModel):
             "orderName": obj.get("orderName"),
             "isPublic": obj.get("isPublic"),
             "failureMessage": obj.get("failureMessage")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

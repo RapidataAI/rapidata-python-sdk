@@ -23,12 +23,13 @@ from rapidata.api_client.models.i_selection_labeling_selection import ISelection
 from rapidata.api_client.models.i_selection_static_selection import ISelectionStaticSelection
 from rapidata.api_client.models.i_selection_validation_selection import ISelectionValidationSelection
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 ISELECTION_ONE_OF_SCHEMAS = ["ISelectionAbTestSelection", "ISelectionCappedSelection", "ISelectionConditionalValidationSelection", "ISelectionDemographicSelection", "ISelectionEffortCappedSelection", "ISelectionLabelingSelection", "ISelectionShufflingSelection", "ISelectionStaticSelection", "ISelectionValidationSelection"]
 
-class ISelection(BaseModel):
+class ISelection(LazyValidatedModel):
     """
     ISelection
     """
@@ -53,10 +54,7 @@ class ISelection(BaseModel):
     actual_instance: Optional[Union[ISelectionAbTestSelection, ISelectionCappedSelection, ISelectionConditionalValidationSelection, ISelectionDemographicSelection, ISelectionEffortCappedSelection, ISelectionLabelingSelection, ISelectionShufflingSelection, ISelectionStaticSelection, ISelectionValidationSelection]] = None
     one_of_schemas: Set[str] = { "ISelectionAbTestSelection", "ISelectionCappedSelection", "ISelectionConditionalValidationSelection", "ISelectionDemographicSelection", "ISelectionEffortCappedSelection", "ISelectionLabelingSelection", "ISelectionShufflingSelection", "ISelectionStaticSelection", "ISelectionValidationSelection" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

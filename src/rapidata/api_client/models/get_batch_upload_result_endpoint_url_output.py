@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.batch_upload_url_status import BatchUploadUrlStatus
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetBatchUploadResultEndpointUrlOutput(BaseModel):
+class GetBatchUploadResultEndpointUrlOutput(LazyValidatedModel):
     """
     GetBatchUploadResultEndpointUrlOutput
     """ # noqa: E501
@@ -33,11 +35,7 @@ class GetBatchUploadResultEndpointUrlOutput(BaseModel):
     error_message: Optional[StrictStr] = Field(default=None, alias="errorMessage")
     __properties: ClassVar[List[str]] = ["url", "fileName", "status", "errorMessage"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -93,12 +91,16 @@ class GetBatchUploadResultEndpointUrlOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "url": obj.get("url"),
             "fileName": obj.get("fileName"),
             "status": obj.get("status"),
             "errorMessage": obj.get("errorMessage")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ConditionalValidationSelectionValidationChance(BaseModel):
+class ConditionalValidationSelectionValidationChance(LazyValidatedModel):
     """
     ConditionalValidationSelectionValidationChance
     """ # noqa: E501
@@ -32,11 +34,7 @@ class ConditionalValidationSelectionValidationChance(BaseModel):
     selections: Optional[List[ISelection]] = None
     __properties: ClassVar[List[str]] = ["userScoreThreshold", "chance", "rapidCount", "selections"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -94,12 +92,16 @@ class ConditionalValidationSelectionValidationChance(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "userScoreThreshold": obj.get("userScoreThreshold"),
             "chance": obj.get("chance"),
             "rapidCount": obj.get("rapidCount"),
             "selections": [ISelection.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 from rapidata.api_client.models.i_selection import ISelection

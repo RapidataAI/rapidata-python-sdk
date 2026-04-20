@@ -24,10 +24,12 @@ from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_pair_maker_information import IPairMakerInformation
 from rapidata.api_client.models.i_ranking_config import IRankingConfig
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IWorkflowModelRankingWorkflowModel(BaseModel):
+class IWorkflowModelRankingWorkflowModel(LazyValidatedModel):
     """
     IWorkflowModelRankingWorkflowModel
     """ # noqa: E501
@@ -52,11 +54,7 @@ class IWorkflowModelRankingWorkflowModel(BaseModel):
             raise ValueError("must be one of enum values ('RankingWorkflowModel')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -137,7 +135,7 @@ class IWorkflowModelRankingWorkflowModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "id": obj.get("id"),
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
@@ -150,7 +148,11 @@ class IWorkflowModelRankingWorkflowModel(BaseModel):
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "ownerMail": obj.get("ownerMail")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

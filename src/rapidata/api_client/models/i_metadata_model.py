@@ -28,12 +28,13 @@ from rapidata.api_client.models.i_metadata_model_streams_metadata_model import I
 from rapidata.api_client.models.i_metadata_model_text_metadata_model import IMetadataModelTextMetadataModel
 from rapidata.api_client.models.i_metadata_model_video_duration_metadata_model import IMetadataModelVideoDurationMetadataModel
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IMETADATAMODEL_ONE_OF_SCHEMAS = ["IMetadataModelClassificationMetadataModel", "IMetadataModelCountMetadataModel", "IMetadataModelFileTypeMetadataModel", "IMetadataModelImageDimensionMetadataModel", "IMetadataModelLocationMetadataModel", "IMetadataModelOriginalFilenameMetadataModel", "IMetadataModelSourceUrlMetadataModel", "IMetadataModelStreamsMetadataModel", "IMetadataModelTextMetadataModel", "IMetadataModelVideoDurationMetadataModel"]
 
-class IMetadataModel(BaseModel):
+class IMetadataModel(LazyValidatedModel):
     """
     IMetadataModel
     """
@@ -60,10 +61,7 @@ class IMetadataModel(BaseModel):
     actual_instance: Optional[Union[IMetadataModelClassificationMetadataModel, IMetadataModelCountMetadataModel, IMetadataModelFileTypeMetadataModel, IMetadataModelImageDimensionMetadataModel, IMetadataModelLocationMetadataModel, IMetadataModelOriginalFilenameMetadataModel, IMetadataModelSourceUrlMetadataModel, IMetadataModelStreamsMetadataModel, IMetadataModelTextMetadataModel, IMetadataModelVideoDurationMetadataModel]] = None
     one_of_schemas: Set[str] = { "IMetadataModelClassificationMetadataModel", "IMetadataModelCountMetadataModel", "IMetadataModelFileTypeMetadataModel", "IMetadataModelImageDimensionMetadataModel", "IMetadataModelLocationMetadataModel", "IMetadataModelOriginalFilenameMetadataModel", "IMetadataModelSourceUrlMetadataModel", "IMetadataModelStreamsMetadataModel", "IMetadataModelTextMetadataModel", "IMetadataModelVideoDurationMetadataModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

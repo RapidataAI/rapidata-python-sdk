@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_example_truth import IExampleTruth
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateAudienceExampleEndpointInput(BaseModel):
+class UpdateAudienceExampleEndpointInput(LazyValidatedModel):
     """
     Input model for updating an audience example.
     """ # noqa: E501
@@ -37,11 +39,7 @@ class UpdateAudienceExampleEndpointInput(BaseModel):
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls the serving order of this example.", alias="sortIndex")
     __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability", "isCommonSense", "sortIndex"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -128,7 +126,7 @@ class UpdateAudienceExampleEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "truth": IExampleTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
@@ -136,7 +134,11 @@ class UpdateAudienceExampleEndpointInput(BaseModel):
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "isCommonSense": obj.get("isCommonSense"),
             "sortIndex": obj.get("sortIndex")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

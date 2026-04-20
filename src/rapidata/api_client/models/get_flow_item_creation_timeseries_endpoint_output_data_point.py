@@ -20,10 +20,12 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictInt
 from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetFlowItemCreationTimeseriesEndpointOutputDataPoint(BaseModel):
+class GetFlowItemCreationTimeseriesEndpointOutputDataPoint(LazyValidatedModel):
     """
     GetFlowItemCreationTimeseriesEndpointOutputDataPoint
     """ # noqa: E501
@@ -31,11 +33,7 @@ class GetFlowItemCreationTimeseriesEndpointOutputDataPoint(BaseModel):
     count: StrictInt
     __properties: ClassVar[List[str]] = ["timestamp", "count"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -81,10 +79,14 @@ class GetFlowItemCreationTimeseriesEndpointOutputDataPoint(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "timestamp": obj.get("timestamp"),
             "count": obj.get("count")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

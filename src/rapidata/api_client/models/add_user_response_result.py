@@ -21,10 +21,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_validation_truth import IValidationTruth
 from rapidata.api_client.models.translated_string import TranslatedString
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AddUserResponseResult(BaseModel):
+class AddUserResponseResult(LazyValidatedModel):
     """
     AddUserResponseResult
     """ # noqa: E501
@@ -34,11 +36,7 @@ class AddUserResponseResult(BaseModel):
     user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
     __properties: ClassVar[List[str]] = ["isAccepted", "validationTruth", "explanation", "userScore"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -100,12 +98,16 @@ class AddUserResponseResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "isAccepted": obj.get("isAccepted"),
             "validationTruth": IValidationTruth.from_dict(obj["validationTruth"]) if obj.get("validationTruth") is not None else None,
             "explanation": TranslatedString.from_dict(obj["explanation"]) if obj.get("explanation") is not None else None,
             "userScore": obj.get("userScore")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

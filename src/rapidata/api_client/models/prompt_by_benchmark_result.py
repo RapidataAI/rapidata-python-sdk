@@ -21,10 +21,12 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_asset_model import IAssetModel
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PromptByBenchmarkResult(BaseModel):
+class PromptByBenchmarkResult(LazyValidatedModel):
     """
     PromptByBenchmarkResult
     """ # noqa: E501
@@ -36,11 +38,7 @@ class PromptByBenchmarkResult(BaseModel):
     tags: List[StrictStr]
     __properties: ClassVar[List[str]] = ["id", "prompt", "promptAsset", "identifier", "createdAt", "tags"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -99,14 +97,18 @@ class PromptByBenchmarkResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "prompt": obj.get("prompt"),
             "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "identifier": obj.get("identifier"),
             "createdAt": obj.get("createdAt"),
             "tags": obj.get("tags")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -22,12 +22,13 @@ from rapidata.api_client.models.i_referee_info_never_ending_referee_info import 
 from rapidata.api_client.models.i_referee_info_probabilistic_attach_category_referee_info import IRefereeInfoProbabilisticAttachCategoryRefereeInfo
 from rapidata.api_client.models.i_referee_info_quorum_referee_info import IRefereeInfoQuorumRefereeInfo
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IREFEREEINFO_ONE_OF_SCHEMAS = ["IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo"]
 
-class IRefereeInfo(BaseModel):
+class IRefereeInfo(LazyValidatedModel):
     """
     IRefereeInfo
     """
@@ -42,10 +43,7 @@ class IRefereeInfo(BaseModel):
     actual_instance: Optional[Union[IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]] = None
     one_of_schemas: Set[str] = { "IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {

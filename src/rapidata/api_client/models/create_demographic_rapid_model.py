@@ -22,10 +22,12 @@ from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.classify_payload import ClassifyPayload
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDemographicRapidModel(BaseModel):
+class CreateDemographicRapidModel(LazyValidatedModel):
     """
     The model for creating a demographic rapid.
     """ # noqa: E501
@@ -37,11 +39,7 @@ class CreateDemographicRapidModel(BaseModel):
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset to use as context to show to the user.", alias="contextAsset")
     __properties: ClassVar[List[str]] = ["key", "payload", "featureFlags", "asset", "context", "contextAsset"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -113,14 +111,18 @@ class CreateDemographicRapidModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "key": obj.get("key"),
             "payload": ClassifyPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

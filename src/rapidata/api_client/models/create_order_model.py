@@ -28,10 +28,12 @@ from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
 from rapidata.api_client.models.retrieval_mode import RetrievalMode
 from rapidata.api_client.models.sticky_config import StickyConfig
 from rapidata.api_client.models.sticky_state import StickyState
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateOrderModel(BaseModel):
+class CreateOrderModel(LazyValidatedModel):
     """
     This model is used to create a simple order
     """ # noqa: E501
@@ -53,11 +55,7 @@ class CreateOrderModel(BaseModel):
     preceding_order_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the order that must complete before this order starts processing.", alias="precedingOrderId")
     __properties: ClassVar[List[str]] = ["orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "stickyState", "stickyConfig", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations", "precedingOrderId"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -183,7 +181,7 @@ class CreateOrderModel(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "orderName": obj.get("orderName"),
             "workflow": IOrderWorkflowModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
@@ -200,7 +198,11 @@ class CreateOrderModel(BaseModel):
             "retrievalMode": obj.get("retrievalMode"),
             "maxIterations": obj.get("maxIterations"),
             "precedingOrderId": obj.get("precedingOrderId")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

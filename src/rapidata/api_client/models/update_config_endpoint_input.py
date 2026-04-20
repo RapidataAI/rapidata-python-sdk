@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateConfigEndpointInput(BaseModel):
+class UpdateConfigEndpointInput(LazyValidatedModel):
     """
     UpdateConfigEndpointInput
     """ # noqa: E501
@@ -56,11 +58,7 @@ class UpdateConfigEndpointInput(BaseModel):
             raise ValueError("must be one of enum values ('Total', 'PerBatch', 'PerBatchTimeWeighted')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -193,7 +191,7 @@ class UpdateConfigEndpointInput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "audienceId": obj.get("audienceId"),
             "criteria": obj.get("criteria"),
             "startingElo": obj.get("startingElo"),
@@ -211,7 +209,11 @@ class UpdateConfigEndpointInput(BaseModel):
             "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
             "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
             "pidBatchMode": obj.get("pidBatchMode")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

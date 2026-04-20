@@ -20,10 +20,12 @@ import json
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Union
 from rapidata.api_client.models.line_result_line_point import LineResultLinePoint
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class LineResultLine(BaseModel):
+class LineResultLine(LazyValidatedModel):
     """
     LineResultLine
     """ # noqa: E501
@@ -31,11 +33,7 @@ class LineResultLine(BaseModel):
     points: List[LineResultLinePoint]
     __properties: ClassVar[List[str]] = ["size", "points"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -88,10 +86,14 @@ class LineResultLine(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "size": obj.get("size"),
             "points": [LineResultLinePoint.from_dict(_item) for _item in obj["points"]] if obj.get("points") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

@@ -21,10 +21,12 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.run_status import RunStatus
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RunsByLeaderboardResult(BaseModel):
+class RunsByLeaderboardResult(LazyValidatedModel):
     """
     RunsByLeaderboardResult
     """ # noqa: E501
@@ -36,11 +38,7 @@ class RunsByLeaderboardResult(BaseModel):
     order_id: Optional[StrictStr] = Field(alias="orderId")
     __properties: ClassVar[List[str]] = ["id", "name", "status", "createdAt", "ownerMail", "orderId"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -91,14 +89,18 @@ class RunsByLeaderboardResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "status": obj.get("status"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail"),
             "orderId": obj.get("orderId")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

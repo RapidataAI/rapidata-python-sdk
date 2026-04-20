@@ -19,10 +19,12 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCombinedBenchmarkMatrixEndpointOutput(BaseModel):
+class GetCombinedBenchmarkMatrixEndpointOutput(LazyValidatedModel):
     """
     Combined benchmark matrix output in pandas split format.
     """ # noqa: E501
@@ -31,11 +33,7 @@ class GetCombinedBenchmarkMatrixEndpointOutput(BaseModel):
     data: List[List[Union[StrictFloat, StrictInt]]]
     __properties: ClassVar[List[str]] = ["index", "columns", "data"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -81,11 +79,15 @@ class GetCombinedBenchmarkMatrixEndpointOutput(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "index": obj.get("index"),
             "columns": obj.get("columns"),
             "data": obj.get("data")
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

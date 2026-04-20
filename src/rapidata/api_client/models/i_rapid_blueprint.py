@@ -28,12 +28,13 @@ from rapidata.api_client.models.i_rapid_blueprint_polygon_rapid_blueprint import
 from rapidata.api_client.models.i_rapid_blueprint_scrub_rapid_blueprint import IRapidBlueprintScrubRapidBlueprint
 from rapidata.api_client.models.i_rapid_blueprint_transcription_rapid_blueprint import IRapidBlueprintTranscriptionRapidBlueprint
 from pydantic import StrictStr, Field
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IRAPIDBLUEPRINT_ONE_OF_SCHEMAS = ["IRapidBlueprintAttachCategoryRapidBlueprint", "IRapidBlueprintBoundingBoxRapidBlueprint", "IRapidBlueprintCompareRapidBlueprint", "IRapidBlueprintFreeTextRapidBlueprint", "IRapidBlueprintLineRapidBlueprint", "IRapidBlueprintLocateRapidBlueprint", "IRapidBlueprintNamedEntityRapidBlueprint", "IRapidBlueprintPolygonRapidBlueprint", "IRapidBlueprintScrubRapidBlueprint", "IRapidBlueprintTranscriptionRapidBlueprint"]
 
-class IRapidBlueprint(BaseModel):
+class IRapidBlueprint(LazyValidatedModel):
     """
     IRapidBlueprint
     """
@@ -60,10 +61,7 @@ class IRapidBlueprint(BaseModel):
     actual_instance: Optional[Union[IRapidBlueprintAttachCategoryRapidBlueprint, IRapidBlueprintBoundingBoxRapidBlueprint, IRapidBlueprintCompareRapidBlueprint, IRapidBlueprintFreeTextRapidBlueprint, IRapidBlueprintLineRapidBlueprint, IRapidBlueprintLocateRapidBlueprint, IRapidBlueprintNamedEntityRapidBlueprint, IRapidBlueprintPolygonRapidBlueprint, IRapidBlueprintScrubRapidBlueprint, IRapidBlueprintTranscriptionRapidBlueprint]] = None
     one_of_schemas: Set[str] = { "IRapidBlueprintAttachCategoryRapidBlueprint", "IRapidBlueprintBoundingBoxRapidBlueprint", "IRapidBlueprintCompareRapidBlueprint", "IRapidBlueprintFreeTextRapidBlueprint", "IRapidBlueprintLineRapidBlueprint", "IRapidBlueprintLocateRapidBlueprint", "IRapidBlueprintNamedEntityRapidBlueprint", "IRapidBlueprintPolygonRapidBlueprint", "IRapidBlueprintScrubRapidBlueprint", "IRapidBlueprintTranscriptionRapidBlueprint" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {
