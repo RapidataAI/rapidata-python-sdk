@@ -13,14 +13,11 @@ read.
 
 from __future__ import annotations
 
-import logging
 from typing import Any, Dict, Union
 
-from opentelemetry import trace
-from opentelemetry.trace import Status, StatusCode
 from pydantic import BaseModel, ConfigDict, ValidationError
 
-logger = logging.getLogger("rapidata")
+from rapidata.rapidata_client.config import logger, tracer
 
 
 class LazyValidatedModel(BaseModel):
@@ -83,14 +80,9 @@ class LazyValidatedModel(BaseModel):
             exc_info=error,
         )
 
-        span = trace.get_current_span()
-        if span.is_recording():
-            span.set_status(
-                Status(
-                    StatusCode.ERROR,
-                    f"Validation failed for {cls.__name__}: {error_fields}",
-                )
-            )
+        tracer.fail_current_span(
+            f"Validation failed for {cls.__name__}: {error_fields}"
+        )
 
         # --- construct without validation ---
         instance = cls.model_construct(**construct_kwargs)
