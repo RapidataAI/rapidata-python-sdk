@@ -73,7 +73,7 @@ class LazyValidatedModel(BaseModel):
 
         # --- observability: log error + fail the trace ---
         error_fields = list(field_errors.keys())
-        logger.error(
+        logger.warning(
             "Validation failed for %s – mismatched fields: %s",
             cls.__name__,
             error_fields,
