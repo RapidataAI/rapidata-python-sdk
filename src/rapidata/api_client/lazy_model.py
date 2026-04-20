@@ -17,6 +17,7 @@ import logging
 from typing import Any, Dict, Union
 
 from opentelemetry import trace
+from opentelemetry.trace import Status, StatusCode
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 logger = logging.getLogger("rapidata")
@@ -73,23 +74,22 @@ class LazyValidatedModel(BaseModel):
                 python_name = alias_to_field.get(alias_key, alias_key)
                 field_errors[python_name] = err
 
-        # --- observability: log + trace event ---
+        # --- observability: log error + fail the trace ---
         error_fields = list(field_errors.keys())
-        logger.warning(
-            "Lazy validation fallback for %s – mismatched fields: %s",
+        logger.error(
+            "Validation failed for %s – mismatched fields: %s",
             cls.__name__,
             error_fields,
+            exc_info=error,
         )
 
         span = trace.get_current_span()
         if span.is_recording():
-            span.add_event(
-                "lazy_validation_fallback",
-                {
-                    "model": cls.__name__,
-                    "mismatched_fields": str(error_fields),
-                    "error_count": len(field_errors),
-                },
+            span.set_status(
+                Status(
+                    StatusCode.ERROR,
+                    f"Validation failed for {cls.__name__}: {error_fields}",
+                )
             )
 
         # --- construct without validation ---
