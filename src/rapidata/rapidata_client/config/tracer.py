@@ -88,7 +88,13 @@ class NoOpTracer:
 class SpanContextManagerWrapper:
     """Wrapper for span context managers to add session_id on enter."""
 
-    def __init__(self, context_manager: Any, session_id: str | None, client_id: str | None = None, email: str | None = None):
+    def __init__(
+        self,
+        context_manager: Any,
+        session_id: str | None,
+        client_id: str | None = None,
+        email: str | None = None,
+    ):
         self._context_manager = context_manager
         self.session_id = session_id
         self.client_id = client_id
@@ -100,9 +106,9 @@ class SpanContextManagerWrapper:
             if self.session_id:
                 span.set_attribute("SDK.session.id", self.session_id)
             if self.client_id:
-                span.set_attribute("SDK.user.id", self.client_id)
+                span.set_attribute("identity", self.client_id)
             if self.email:
-                span.set_attribute("SDK.user.email", self.email)
+                span.set_attribute("email", self.email)
         return span
 
     def __exit__(self, *args):
@@ -176,9 +182,9 @@ class RapidataTracer:
             if self.session_id:
                 span.set_attribute("SDK.session.id", self.session_id)
             if self.client_id:
-                span.set_attribute("SDK.user.id", self.client_id)
+                span.set_attribute("identity", self.client_id)
             if self.email:
-                span.set_attribute("SDK.user.email", self.email)
+                span.set_attribute("email", self.email)
         return span
 
     def start_span(self, name: str, *args, **kwargs) -> Any:
@@ -198,7 +204,9 @@ class RapidataTracer:
                 context_manager = self._real_tracer.start_as_current_span(
                     name, *args, **kwargs
                 )
-                return SpanContextManagerWrapper(context_manager, self.session_id, self.client_id, self.email)
+                return SpanContextManagerWrapper(
+                    context_manager, self.session_id, self.client_id, self.email
+                )
         return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
 
     def set_session_id(self, session_id: str) -> None:
@@ -208,7 +216,9 @@ class RapidataTracer:
     def set_user_info(self, client_id: str, email: str) -> None:
         self.client_id = client_id
         self.email = email
-        logger.debug(f"User info set - client_id: {self.client_id}, email: {self.email}")
+        logger.debug(
+            f"User info set - client_id: {self.client_id}, email: {self.email}"
+        )
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
