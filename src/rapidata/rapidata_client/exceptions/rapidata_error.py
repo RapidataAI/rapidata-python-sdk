@@ -70,4 +70,13 @@ class RapidataError(Exception):
         else:
             error_parts.append("Trace Id: N/A")
 
+        # Lazy import to avoid a module-level cycle between the exceptions
+        # package and the api package.
+        from rapidata.rapidata_client.api.rapidata_api_client import (
+            format_outdated_sdk_note,
+        )
+        note = format_outdated_sdk_note()
+        if note:
+            error_parts.append(note)
+
         return "\n".join(error_parts)
