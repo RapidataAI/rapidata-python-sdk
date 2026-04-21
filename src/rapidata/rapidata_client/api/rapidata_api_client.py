@@ -7,6 +7,7 @@ from rapidata.api_client.api_client import (
 )
 from rapidata.api_client.exceptions import ApiException
 import json
+import os
 import sys
 import threading
 from contextlib import contextmanager
@@ -62,14 +63,38 @@ def _format_outdated_sdk_note() -> Optional[str]:
     )
 
 
+# Path fragment used to detect whether an exception's traceback passes
+# through the rapidata package. Computed from this file's location so it
+# works for editable installs, site-packages installs, and source checkouts.
+# Resolves to .../rapidata/  (three dirs up from rapidata_client/api/rapidata_api_client.py)
+_RAPIDATA_PKG_PATH = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+
+def _traceback_touches_rapidata(exc_traceback) -> bool:
+    """Return True if any frame in the traceback comes from the rapidata package."""
+    tb = exc_traceback
+    while tb is not None:
+        filename = tb.tb_frame.f_code.co_filename
+        try:
+            if os.path.commonpath([os.path.abspath(filename), _RAPIDATA_PKG_PATH]) == _RAPIDATA_PKG_PATH:
+                return True
+        except (ValueError, OSError):
+            # commonpath raises if paths are on different drives (Windows) or invalid
+            pass
+        tb = tb.tb_next
+    return False
+
+
 _excepthook_installed = False
 
 
 def _install_outdated_sdk_excepthook() -> None:
     """Wrap sys.excepthook / threading.excepthook to append the outdated note.
 
-    Idempotent: safe to call multiple times. The previous hooks are preserved
-    and invoked first so IDE / framework customisations keep working.
+    Only appends the note when the exception's traceback actually passes
+    through rapidata code - unrelated errors in the user's program are left
+    alone. Idempotent. Previous hooks are preserved and invoked first so IDE
+    / framework customisations keep working.
     """
     global _excepthook_installed
     if _excepthook_installed:
@@ -81,7 +106,7 @@ def _install_outdated_sdk_excepthook() -> None:
     def _sdk_aware_excepthook(exc_type, exc_value, exc_traceback):
         previous_excepthook(exc_type, exc_value, exc_traceback)
         note = _format_outdated_sdk_note()
-        if note:
+        if note and _traceback_touches_rapidata(exc_traceback):
             try:
                 sys.stderr.write("\n" + note + "\n")
             except Exception:
@@ -94,7 +119,7 @@ def _install_outdated_sdk_excepthook() -> None:
     def _sdk_aware_threading_excepthook(args):
         previous_threading_excepthook(args)
         note = _format_outdated_sdk_note()
-        if note:
+        if note and _traceback_touches_rapidata(args.exc_traceback):
             try:
                 sys.stderr.write("\n" + note + "\n")
             except Exception:
