@@ -7,6 +7,7 @@ from rapidata.api_client.api_client import (
 )
 from rapidata.api_client.exceptions import ApiException
 import json
+import sys
 import threading
 from contextlib import contextmanager
 from rapidata.rapidata_client.config import logger, tracer
@@ -27,17 +28,79 @@ _sdk_outdated_info: Optional[dict[str, str]] = None
 
 
 def mark_sdk_outdated(current_version: str, latest_version: str) -> None:
-    """Record that the installed SDK is behind the latest release."""
+    """Record that the installed SDK is behind the latest release.
+
+    Also installs a process-wide excepthook so that any uncaught exception
+    (not just RapidataError) gets the outdated-SDK note appended after its
+    traceback - many API-caused failures surface as other exception types
+    (validation errors, JSON decode errors, etc.).
+    """
     global _sdk_outdated_info
     _sdk_outdated_info = {
         "current": current_version,
         "latest": latest_version,
     }
+    _install_outdated_sdk_excepthook()
 
 
 def get_sdk_outdated_info() -> Optional[dict[str, str]]:
     """Return the outdated-version info if set, otherwise None."""
     return _sdk_outdated_info
+
+
+def _format_outdated_sdk_note() -> Optional[str]:
+    """Build the human-readable outdated-SDK note, or None if not outdated."""
+    info = _sdk_outdated_info
+    if not info:
+        return None
+    current = info.get("current")
+    latest = info.get("latest")
+    return (
+        f"Note: Your Rapidata SDK is outdated (installed: {current}, "
+        f"latest: {latest}). This error may be caused by the SDK being "
+        f"out of sync with the API - please upgrade and try again."
+    )
+
+
+_excepthook_installed = False
+
+
+def _install_outdated_sdk_excepthook() -> None:
+    """Wrap sys.excepthook / threading.excepthook to append the outdated note.
+
+    Idempotent: safe to call multiple times. The previous hooks are preserved
+    and invoked first so IDE / framework customisations keep working.
+    """
+    global _excepthook_installed
+    if _excepthook_installed:
+        return
+    _excepthook_installed = True
+
+    previous_excepthook = sys.excepthook
+
+    def _sdk_aware_excepthook(exc_type, exc_value, exc_traceback):
+        previous_excepthook(exc_type, exc_value, exc_traceback)
+        note = _format_outdated_sdk_note()
+        if note:
+            try:
+                sys.stderr.write("\n" + note + "\n")
+            except Exception:
+                pass
+
+    sys.excepthook = _sdk_aware_excepthook
+
+    previous_threading_excepthook = threading.excepthook
+
+    def _sdk_aware_threading_excepthook(args):
+        previous_threading_excepthook(args)
+        note = _format_outdated_sdk_note()
+        if note:
+            try:
+                sys.stderr.write("\n" + note + "\n")
+            except Exception:
+                pass
+
+    threading.excepthook = _sdk_aware_threading_excepthook
 
 
 @contextmanager
