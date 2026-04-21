@@ -40,22 +40,21 @@ class LazyValidatedModel(BaseModel):
 
     # ------------------------------------------------------------------
     # Strict fields – any error touching one of these re-raises instead
-    # of lazy-constructing. Discriminator fields like `_t` on oneOf/anyOf
-    # variants declare a custom field_validator that enforces the enum
-    # value (e.g. 'FileArtifactModel'), so they appear here automatically.
-    # This keeps oneOf disambiguation working: a payload that doesn't
-    # match a variant's discriminator raises, while drifted non-strict
-    # fields still fall back to the lazy path.
+    # of lazy-constructing. Only the `_t` discriminator is strict: it's
+    # a structural requirement for oneOf/anyOf disambiguation (the wrong
+    # `_t` means the wrong variant was picked, not that a field drifted).
+    # Every other backend-enforced constraint (enums, regex patterns,
+    # etc.) stays lazy, which is the whole point of this base class.
     # ------------------------------------------------------------------
     @classmethod
     def _strict_field_names(cls) -> set:
-        decorators = getattr(cls, "__pydantic_decorators__", None)
-        if decorators is None:
+        model_fields = getattr(cls, "model_fields", None)
+        if not model_fields:
             return set()
-        strict: set = set()
-        for decorator in getattr(decorators, "field_validators", {}).values():
-            strict.update(getattr(decorator.info, "fields", ()))
-        return strict
+        for field_name, field_info in model_fields.items():
+            if field_info.alias == "_t":
+                return {field_name}
+        return set()
 
     # ------------------------------------------------------------------
     # Fallback construction – called when model_validate raises
@@ -68,11 +67,10 @@ class LazyValidatedModel(BaseModel):
     ) -> "LazyValidatedModel":
         """Build the model via ``model_construct`` and store per-field errors.
 
-        Re-raises the original ``ValidationError`` if any error targets a
-        strict field (a field with a custom ``field_validator``). These are
-        the discriminator/enum fields the backend guarantees never drift —
-        a failure there means the model choice is wrong, not that a field
-        type changed.
+        Re-raises the original ``ValidationError`` if the error targets the
+        `_t` discriminator field. A bad `_t` means oneOf/anyOf disambiguation
+        picked the wrong variant, which is a structural failure — not the
+        kind of backend drift lazy validation is meant to absorb.
         """
 
         # --- alias → python field name mapping ---
