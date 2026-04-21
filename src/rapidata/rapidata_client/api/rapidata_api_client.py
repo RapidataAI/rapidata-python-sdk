@@ -19,6 +19,26 @@ from opentelemetry.sdk.trace.id_generator import RandomIdGenerator
 # Thread-local storage for controlling error logging
 _thread_local = threading.local()
 
+# Module-level state recording whether the installed SDK is outdated.
+# Populated by RapidataClient._check_version and read when formatting
+# API errors so the user sees the outdated-version hint even if they
+# missed the startup notice.
+_sdk_outdated_info: Optional[dict[str, str]] = None
+
+
+def mark_sdk_outdated(current_version: str, latest_version: str) -> None:
+    """Record that the installed SDK is behind the latest release."""
+    global _sdk_outdated_info
+    _sdk_outdated_info = {
+        "current": current_version,
+        "latest": latest_version,
+    }
+
+
+def get_sdk_outdated_info() -> Optional[dict[str, str]]:
+    """Return the outdated-version info if set, otherwise None."""
+    return _sdk_outdated_info
+
 
 @contextmanager
 def suppress_rapidata_error_logging():
@@ -201,6 +221,7 @@ class RapidataApiClient(ApiClient):
                 message=message,
                 original_exception=e,
                 details=details,
+                sdk_outdated_info=get_sdk_outdated_info(),
             )
 
             # Only log error if not suppressed

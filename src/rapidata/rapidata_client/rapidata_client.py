@@ -30,7 +30,10 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
 from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
-from rapidata.rapidata_client.api.rapidata_api_client import optional_api_call
+from rapidata.rapidata_client.api.rapidata_api_client import (
+    optional_api_call,
+    mark_sdk_outdated,
+)
 
 
 class RapidataClient:
@@ -166,6 +169,10 @@ class RapidataClient:
             if response.status_code == 200:
                 latest_version = response.json()["tag_name"].lstrip("v")
                 if version.parse(latest_version) > version.parse(__version__):
+                    mark_sdk_outdated(
+                        current_version=__version__,
+                        latest_version=latest_version,
+                    )
                     managed_print(
                         f"""A new version of the Rapidata SDK is available: {latest_version}
 Your current version is: {__version__}"""

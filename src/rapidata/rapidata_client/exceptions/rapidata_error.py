@@ -11,11 +11,13 @@ class RapidataError(Exception):
         message: str | None = None,
         original_exception: Exception | None = None,
         details: Any = None,
+        sdk_outdated_info: Optional[dict] = None,
     ):
         self.status_code = status_code
         self.message = message
         self.original_exception = original_exception
         self.details = details
+        self.sdk_outdated_info = sdk_outdated_info
 
         # Create a nice error message
         error_msg = "Rapidata API Error"
@@ -69,5 +71,14 @@ class RapidataError(Exception):
             error_parts.append(f"Trace Id: {trace_id}")
         else:
             error_parts.append("Trace Id: N/A")
+
+        if self.sdk_outdated_info:
+            current = self.sdk_outdated_info.get("current")
+            latest = self.sdk_outdated_info.get("latest")
+            error_parts.append(
+                f"Note: Your Rapidata SDK is outdated (installed: {current}, "
+                f"latest: {latest}). This error may be caused by the SDK being "
+                f"out of sync with the API - please upgrade and try again."
+            )
 
         return "\n".join(error_parts)
