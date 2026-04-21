@@ -39,6 +39,25 @@ class LazyValidatedModel(BaseModel):
         object.__setattr__(self, "_field_validation_errors", {})
 
     # ------------------------------------------------------------------
+    # Strict fields – any error touching one of these re-raises instead
+    # of lazy-constructing. Discriminator fields like `_t` on oneOf/anyOf
+    # variants declare a custom field_validator that enforces the enum
+    # value (e.g. 'FileArtifactModel'), so they appear here automatically.
+    # This keeps oneOf disambiguation working: a payload that doesn't
+    # match a variant's discriminator raises, while drifted non-strict
+    # fields still fall back to the lazy path.
+    # ------------------------------------------------------------------
+    @classmethod
+    def _strict_field_names(cls) -> set:
+        decorators = getattr(cls, "__pydantic_decorators__", None)
+        if decorators is None:
+            return set()
+        strict: set = set()
+        for decorator in getattr(decorators, "field_validators", {}).values():
+            strict.update(getattr(decorator.info, "fields", ()))
+        return strict
+
+    # ------------------------------------------------------------------
     # Fallback construction – called when model_validate raises
     # ------------------------------------------------------------------
     @classmethod
@@ -47,7 +66,14 @@ class LazyValidatedModel(BaseModel):
         data: Dict[str, Any],
         error: ValidationError,
     ) -> "LazyValidatedModel":
-        """Build the model via ``model_construct`` and store per-field errors."""
+        """Build the model via ``model_construct`` and store per-field errors.
+
+        Re-raises the original ``ValidationError`` if any error targets a
+        strict field (a field with a custom ``field_validator``). These are
+        the discriminator/enum fields the backend guarantees never drift —
+        a failure there means the model choice is wrong, not that a field
+        type changed.
+        """
 
         # --- alias → python field name mapping ---
         alias_to_field: Dict[str, str] = {}
@@ -55,12 +81,6 @@ class LazyValidatedModel(BaseModel):
             alias = field_info.alias or field_name
             alias_to_field[alias] = field_name
             alias_to_field[field_name] = field_name
-
-        # --- build kwargs with python names for model_construct ---
-        construct_kwargs: Dict[str, Any] = {}
-        for key, value in data.items():
-            python_name = alias_to_field.get(key, key)
-            construct_kwargs[python_name] = value
 
         # --- extract per-field errors keyed by python name ---
         field_errors: Dict[str, Any] = {}
@@ -70,6 +90,18 @@ class LazyValidatedModel(BaseModel):
                 alias_key = str(loc[0])
                 python_name = alias_to_field.get(alias_key, alias_key)
                 field_errors[python_name] = err
+
+        # --- if any strict field failed, the whole model is wrong – re-raise ---
+        strict_fields = cls._strict_field_names()
+        strict_violations = strict_fields & field_errors.keys()
+        if strict_violations:
+            raise error
+
+        # --- build kwargs with python names for model_construct ---
+        construct_kwargs: Dict[str, Any] = {}
+        for key, value in data.items():
+            python_name = alias_to_field.get(key, key)
+            construct_kwargs[python_name] = value
 
         # --- observability: log error + fail the trace ---
         error_fields = list(field_errors.keys())
