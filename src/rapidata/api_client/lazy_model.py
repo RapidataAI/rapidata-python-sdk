@@ -142,8 +142,18 @@ class LazyValidatedModel(BaseModel):
                 errors = None
             if errors and name in errors:
                 err = errors[name]
-                raise TypeError(
+                message = (
                     f"Field '{name}' on {type(self).__name__} has an unexpected "
                     f"type from the backend: {err.get('msg', err)}"
                 )
+                # Imported lazily to avoid pulling the higher SDK layer at
+                # module import time (this base class is imported by every
+                # generated model).
+                from rapidata.rapidata_client.api.rapidata_api_client import (
+                    format_outdated_sdk_note,
+                )
+                note = format_outdated_sdk_note()
+                if note:
+                    message = f"{message}\n{note}"
+                raise TypeError(message)
         return super().__getattribute__(name)

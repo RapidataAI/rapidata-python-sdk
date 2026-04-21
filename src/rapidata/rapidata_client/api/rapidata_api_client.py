@@ -40,8 +40,12 @@ def get_sdk_outdated_info() -> Optional[dict[str, str]]:
     return _sdk_outdated_info
 
 
-def _format_outdated_sdk_note() -> Optional[str]:
-    """Build the human-readable outdated-SDK note, or None if not outdated."""
+def format_outdated_sdk_note() -> Optional[str]:
+    """Build the human-readable outdated-SDK note, or None if not outdated.
+
+    Used by RapidataError and LazyValidatedModel to append the same hint to
+    their error messages when the installed SDK is behind the latest release.
+    """
     info = _sdk_outdated_info
     if not info:
         return None
@@ -52,19 +56,6 @@ def _format_outdated_sdk_note() -> Optional[str]:
         f"latest: {latest}). This error may be caused by the SDK being "
         f"out of sync with the API - please upgrade and try again."
     )
-
-
-def _attach_outdated_note(exc: BaseException) -> None:
-    """Attach the outdated-SDK note to an exception raised from the SDK layer.
-
-    Uses BaseException.add_note (Python 3.11+) so the note renders as part of
-    the traceback without changing the exception type or message. On older
-    Pythons this is a no-op; RapidataError still carries the info via its
-    own message for that case.
-    """
-    note = _format_outdated_sdk_note()
-    if note and hasattr(exc, "add_note"):
-        exc.add_note(note)
 
 
 @contextmanager
@@ -111,25 +102,6 @@ class RapidataApiClient(ApiClient):
         self.id_generator = RandomIdGenerator()
 
     def call_api(
-        self,
-        method,
-        url,
-        header_params=None,
-        body=None,
-        post_params=None,
-        _request_timeout=None,
-    ) -> rest.RESTResponse:
-        try:
-            return self._call_api_impl(
-                method, url, header_params, body, post_params, _request_timeout
-            )
-        except Exception as e:
-            # Any error escaping the API call is eligible for the outdated-SDK
-            # hint, since it originates from the generated client layer.
-            _attach_outdated_note(e)
-            raise
-
-    def _call_api_impl(
         self,
         method,
         url,
@@ -277,10 +249,3 @@ class RapidataApiClient(ApiClient):
                 logger.debug("Suppressed Error: %s", error_formatted)
 
             raise error_formatted from None
-        except Exception as e:
-            # Non-API exceptions from deserialization (e.g. pydantic
-            # ValidationError from a response schema that no longer matches
-            # the API) are a classic symptom of SDK/API drift - attach the
-            # outdated-SDK hint so the user sees it on the traceback.
-            _attach_outdated_note(e)
-            raise
