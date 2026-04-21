@@ -35,11 +35,6 @@ def mark_sdk_outdated(current_version: str, latest_version: str) -> None:
     }
 
 
-def get_sdk_outdated_info() -> Optional[dict[str, str]]:
-    """Return the outdated-version info if set, otherwise None."""
-    return _sdk_outdated_info
-
-
 def format_outdated_sdk_note() -> Optional[str]:
     """Build the human-readable outdated-SDK note, or None if not outdated.
 
@@ -239,7 +234,6 @@ class RapidataApiClient(ApiClient):
                 message=message,
                 original_exception=e,
                 details=details,
-                sdk_outdated_info=get_sdk_outdated_info(),
             )
 
             # Only log error if not suppressed
