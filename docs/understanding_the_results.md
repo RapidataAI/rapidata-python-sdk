@@ -136,9 +136,10 @@ Here's an example of the results you might receive when running a COMPARE task (
             - `language`: Language in which the labeler viewed the task
             - `userScores`: A score representing the labeler's reliability across different dimensions
                 - `global`: The global userScore of the labeler, which is a measure of their overall reliability
-            - `age`: Age group of the labeler
-            - `gender`: The gender of the labeler
-            - `occupation`: The occupation of the labeler
+            - `age`: Age group of the labeler (populated when `age` is one of the configured demographic keys)
+            - `gender`: The gender of the labeler (populated when `gender` is one of the configured demographic keys)
+            - `occupation`: The occupation of the labeler (populated when `occupation` is one of the configured demographic keys)
+            - `demographics`: A dict of every demographic value collected for the order, keyed by the demographic key configured via `demographic_keys` on the order. Includes both built-in keys (e.g. `age`, `gender`, `occupation`) and any custom keys registered for the campaign.
 
 ## Understanding the User Scores
 

@@ -70,6 +70,7 @@ class RapidataOrderBuilder:
         self._priority: int | None = None
         self._datapoints: list[Datapoint] = []
         self._sticky_state_value: StickyStateLiteral | None = None
+        self._demographic_keys: list[str] | None = None
         self._validation_set_manager: ValidationSetManager = ValidationSetManager(
             self._openapi_service
         )
@@ -119,6 +120,7 @@ class RapidataOrderBuilder:
             ),
             priority=self._priority,
             stickyState=(StickyState(sticky_state) if sticky_state else None),
+            demographicKeys=self._demographic_keys,
         )
 
     def _generate_id(self, length=9):
@@ -348,4 +350,30 @@ class RapidataOrderBuilder:
             )
 
         self._sticky_state_value = sticky_state
+        return self
+
+    def _set_demographic_keys(
+        self, demographic_keys: list[str] | None = None
+    ) -> RapidataOrderBuilder:
+        """
+        Set the demographic keys that should be collected for each annotator and projected
+        into the aggregated results' ``userDetails.demographics`` dict.
+
+        Examples: ``["age", "gender"]`` (platform defaults) or ``["age", "handedness"]`` to
+        include a custom key registered via ``DemographicManager.create_demographic_rapid``.
+        """
+        if demographic_keys is None:
+            self._demographic_keys = None
+            return self
+
+        if not isinstance(demographic_keys, list):
+            raise TypeError("Demographic keys must be provided as a list of strings.")
+
+        for key in demographic_keys:
+            if not isinstance(key, str) or not key:
+                raise TypeError(
+                    "Demographic keys must be non-empty strings."
+                )
+
+        self._demographic_keys = demographic_keys
         return self

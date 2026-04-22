@@ -63,6 +63,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         if filters is None:
             filters = []
@@ -135,6 +136,7 @@ class RapidataOrderManager:
                 ._set_validation_set_id(validation_set_id if not selections else None)
                 ._set_priority(self.__priority)
                 ._set_sticky_state(self.__sticky_state)
+                ._set_demographic_keys(demographic_keys)
                 ._create()
             )
 
@@ -189,6 +191,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a classification order.
 
@@ -218,6 +221,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the classification. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -269,6 +274,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def create_compare_order(
@@ -288,6 +294,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a compare order.
 
@@ -331,6 +338,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the comparison. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -390,6 +399,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def create_ranking_order(
@@ -407,6 +417,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """
         Create a ranking order.
@@ -434,6 +445,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the ranking. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the ranking. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
 
         Example:
             ```python
@@ -506,6 +519,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def create_free_text_order(
@@ -521,6 +535,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a free text order.
 
@@ -543,6 +558,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -583,6 +600,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def create_select_words_order(
@@ -598,6 +616,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a select words order.
 
@@ -619,6 +638,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -661,6 +682,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def create_locate_order(
@@ -676,6 +698,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a locate order.
 
@@ -697,6 +720,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -734,6 +759,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def create_draw_order(
@@ -749,6 +775,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a draw order.
 
@@ -770,6 +797,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -807,6 +836,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def create_timestamp_order(
@@ -822,6 +852,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        demographic_keys: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a timestamp order.
 
@@ -846,6 +877,8 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to []. Decides in what order the tasks should be shown.
+            demographic_keys (list[str], optional): Demographic keys to collect for each annotator and project into the aggregated results under ``userDetails.demographics``.\n
+                Defaults to None, which keeps the platform default of ``["age", "gender", "occupation"]``. Accepts any custom key registered beforehand via the demographic rapid creation endpoint.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -871,6 +904,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                demographic_keys=demographic_keys,
             )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:
