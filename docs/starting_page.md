@@ -10,6 +10,21 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
 ---
 
+## Try it live
+
+This is what an annotator sees when they work on a Rapidata job — rendered here as an embedded preview of a real campaign.
+
+<div style="width: 375px; height: 667px; margin: 0 auto; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+    <iframe src="https://rapids.rapidata.ai/preview/campaign?id=cmp_1HSFCph25U1J22&language=en&userSegment=0&refreshCount=0"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            allow="clipboard-write">
+    </iframe>
+</div>
+
+---
+
 ## Quick example
 
 === "Image"
