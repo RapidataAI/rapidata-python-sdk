@@ -146,6 +146,14 @@ function initAllPreviewEmbeds() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', initAllPreviewEmbeds);
-// Material for MkDocs instant navigation — re-init after each page swap.
-document.addEventListener('DOMContentSwitch', initAllPreviewEmbeds);
+// Material for MkDocs exposes a `document$` RxJS subject that emits the
+// current document on subscribe AND every time instant-navigation swaps
+// the <main> content. Subscribing covers both the initial render and
+// subsequent page navigations — a plain DOMContentLoaded listener would
+// only fire on hard loads, leaving the embed unwired after nav swaps.
+if (typeof window.document$ !== 'undefined'
+    && typeof window.document$.subscribe === 'function') {
+    window.document$.subscribe(initAllPreviewEmbeds);
+} else {
+    document.addEventListener('DOMContentLoaded', initAllPreviewEmbeds);
+}
