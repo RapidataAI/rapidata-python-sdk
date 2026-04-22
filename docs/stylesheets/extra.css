@@ -286,6 +286,9 @@ body {
 
 .phone-preview {
     position: relative;
+    /* Form a local stacking context so the child z-indexes below
+       can't escape and paint over Material's sticky header. */
+    isolation: isolate;
     width: 375px;
     height: 667px;
     margin: 1.5rem auto 0;
