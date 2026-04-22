@@ -74,34 +74,47 @@ def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:
 def _resolve_campaign_id_from_pipeline(
     openapi_service: "OpenAPIService",
     pipeline_id: str,
-    max_retries: int = 5,
-    retry_delay: float = 1.0,
+    max_retries: int = 3,
+    retry_delay: float = 0.5,
 ) -> str | None:
     """Pull the campaign id out of a pipeline's ``campaign-artifact``.
 
     Pipeline artifacts are populated asynchronously after creation, so we
     retry a few times before giving up. Returns ``None`` if the artifact never
     materialises.
+
+    All API calls inside are wrapped in ``suppress_rapidata_error_logging`` so
+    retries and final failures stay at DEBUG level — this is a best-effort
+    convenience feature and should never surface noise to the user.
     """
     from rapidata.api_client.models.campaign_artifact_model import (
         CampaignArtifactModel,
     )
+    from rapidata.rapidata_client.api.rapidata_api_client import (
+        suppress_rapidata_error_logging,
+    )
 
-    last_exc: Exception | None = None
     for attempt in range(max_retries):
         try:
-            pipeline = (
-                openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
-                    pipeline_id
+            with suppress_rapidata_error_logging():
+                pipeline = (
+                    openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
+                        pipeline_id
+                    )
                 )
-            )
-            artifact = pipeline.artifacts.get("campaign-artifact")
-            if artifact is not None:
-                return cast(
-                    CampaignArtifactModel, artifact.actual_instance
-                ).campaign_id
+                artifact = pipeline.artifacts.get("campaign-artifact")
+                if artifact is not None:
+                    return cast(
+                        CampaignArtifactModel, artifact.actual_instance
+                    ).campaign_id
         except Exception as e:
-            last_exc = e
+            logger.debug(
+                "Pipeline '%s' campaign lookup attempt %d/%d failed: %s",
+                pipeline_id,
+                attempt + 1,
+                max_retries,
+                e,
+            )
 
         if attempt < max_retries - 1:
             sleep(retry_delay)
@@ -110,7 +123,6 @@ def _resolve_campaign_id_from_pipeline(
         "Could not resolve campaign id from pipeline '%s' after %d attempts",
         pipeline_id,
         max_retries,
-        exc_info=last_exc,
     )
     return None
 
@@ -120,7 +132,10 @@ def print_campaign_preview_qr_for_pipeline(
 ) -> None:
     """Fetch the campaign id from the given pipeline and print a preview QR code.
 
-    Best-effort: any failure is swallowed with a debug log so callers never
+    Best-effort: the underlying API lookup is wrapped in
+    ``suppress_rapidata_error_logging`` so transient errors (including the
+    pipeline's campaign artifact not yet being populated) stay at DEBUG level,
+    and any remaining exception is swallowed with a debug log so callers never
     need to guard this call. Also a no-op in silent mode.
 
     Args:
@@ -131,10 +146,26 @@ def print_campaign_preview_qr_for_pipeline(
     if rapidata_config.logging.silent_mode:
         return
 
-    campaign_id = _resolve_campaign_id_from_pipeline(openapi_service, pipeline_id)
+    try:
+        campaign_id = _resolve_campaign_id_from_pipeline(openapi_service, pipeline_id)
+    except Exception as e:
+        logger.debug(
+            "Campaign preview QR lookup for pipeline '%s' failed: %s",
+            pipeline_id,
+            e,
+        )
+        return
+
     if not campaign_id:
         return
 
-    print_campaign_preview_qr(
-        environment=openapi_service.environment, campaign_id=campaign_id
-    )
+    try:
+        print_campaign_preview_qr(
+            environment=openapi_service.environment, campaign_id=campaign_id
+        )
+    except Exception as e:
+        logger.debug(
+            "Campaign preview QR render for pipeline '%s' failed: %s",
+            pipeline_id,
+            e,
+        )
