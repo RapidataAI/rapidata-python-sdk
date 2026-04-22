@@ -10,11 +10,10 @@ if TYPE_CHECKING:
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
-from rapidata.rapidata_client.filter import RapidataFilter, UserScoreFilter
+from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.config import (
     logger,
     managed_print,
-    rapidata_config,
     tracer,
 )
 from rapidata.rapidata_client.config._qr_preview import (
@@ -33,15 +32,7 @@ from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.selection import (
-    ConditionalValidationSelection,
-    LabelingSelection,
-    CappedSelection,
-)
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.api.rapidata_api_client import (
-    suppress_rapidata_error_logging,
-)
 
 StickyStateLiteral = Literal["Temporary", "Permanent", "Passive"]
 
