@@ -62,7 +62,33 @@ Other agents follow their own conventions — Cursor rules, Copilot instructions
 
 ## Keeping the skill up to date
 
-The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. Pull the latest version so your agent stays in sync.
+The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. Keep the skill in sync so your agent learns about them.
+
+### Auto-update (Claude Code)
+
+Claude Code can refresh the marketplace and pull the latest plugin version every time it starts. Third-party marketplaces ship with auto-update **disabled by default**, so flip it on once:
+
+1. Run `/plugin` to open the plugin manager
+2. Go to the **Marketplaces** tab
+3. Select `rapidata-sdk-marketplace`
+4. Choose **Enable auto-update**
+
+From then on, Claude Code refreshes the skill at startup. If a new version lands mid-session, Claude Code notifies you — run `/reload-plugins` to pick it up without restarting.
+
+To turn it off later, repeat the steps and choose **Disable auto-update**.
+
+??? note "Disabling auto-update globally"
+
+    Set `DISABLE_AUTOUPDATER=1` in your environment to stop Claude Code from updating itself *and* your plugins at startup. If you only want to pause Claude Code updates but keep plugin updates flowing, pair it with `FORCE_AUTOUPDATE_PLUGINS=1`:
+
+    ```bash
+    export DISABLE_AUTOUPDATER=1
+    export FORCE_AUTOUPDATE_PLUGINS=1
+    ```
+
+### Manual update
+
+If you'd rather pull on demand:
 
 **Claude Code**:
 
