@@ -38,25 +38,6 @@ from rapidata import RapidataClient
 client = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
 ```
 
-You can also provide the client ID and secret through environment variables.
-This is the recommended approach for headless environments such as CI jobs
-or containerised workloads, where opening a browser is not an option:
-
-```bash
-export RAPIDATA_CLIENT_ID="Your client ID"
-export RAPIDATA_CLIENT_SECRET="Your client secret"
-# Optionally override the target environment (defaults to rapidata.ai)
-export RAPIDATA_ENVIRONMENT="rapidata.ai"
-```
-
-```py
-from rapidata import RapidataClient
-client = RapidataClient()  # picks up credentials and environment from the env
-```
-
-Explicit arguments take precedence over environment variables, which in turn
-take precedence over the cached credentials file.
-
 ### Step 1: Get an Audience
 
 The simplest way to get started is with a curated audience:

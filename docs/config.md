@@ -62,6 +62,25 @@ Environment variables are applied at initialization and act as defaults — valu
 2. Environment variables (`RAPIDATA_*`)
 3. Built-in defaults
 
+### Client authentication
+
+The `RapidataClient` constructor also picks up credentials and the target environment from the following variables when the matching constructor arguments are omitted:
+
+| Variable | Maps to | Description |
+|---|---|---|
+| `RAPIDATA_CLIENT_ID` | `client_id` | OAuth client ID |
+| `RAPIDATA_CLIENT_SECRET` | `client_secret` | OAuth client secret |
+| `RAPIDATA_ENVIRONMENT` | `environment` | API endpoint (defaults to `rapidata.ai`) |
+
+Resolution order for these values:
+
+1. Arguments passed to `RapidataClient(...)`.
+2. The environment variables above.
+3. Credentials stored under `~/.config/rapidata/credentials.json`.
+4. Interactive browser login.
+
+Empty strings are treated as unset, so `RAPIDATA_CLIENT_ID=""` falls through to the next layer instead of attempting to authenticate with an empty value.
+
 ### Example `.env` file
 
 ```bash
