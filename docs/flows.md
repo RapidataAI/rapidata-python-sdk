@@ -131,7 +131,7 @@ If you need low-latency responses for upcoming flow items, you can preheat the s
 client.flow.preheat()
 ```
 
-This warms up internal resources so that subsequent flow batches are processed faster. Call it before submitting time-sensitive batches.
+This warms up internal resources so that subsequent flow batches are processed faster. Call it around 5 minutes before submitting time-sensitive batches.
 
 ### Retrieving Existing Flows
 
