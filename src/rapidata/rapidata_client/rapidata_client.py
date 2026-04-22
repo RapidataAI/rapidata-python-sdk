@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Any
 import requests
 from packaging import version
@@ -43,19 +44,38 @@ class RapidataClient:
         self,
         client_id: str | None = None,
         client_secret: str | None = None,
-        environment: str = "rapidata.ai",
+        environment: str | None = None,
         oauth_scope: str = "openid roles email",
         cert_path: str | None = None,
         token: dict | None = None,
         leeway: int = 60,
     ):
-        """Initialize the RapidataClient. If both the client_id and client_secret are None, it will try using your credentials under "~/.config/rapidata/credentials.json".
-        If this is not successful, it will open a browser window and ask you to log in, then save your new credentials in said json file.
+        """Initialize the RapidataClient.
+
+        Credentials are resolved in the following order:
+
+        1. ``client_id`` / ``client_secret`` passed explicitly to this
+           constructor.
+        2. The ``RAPIDATA_CLIENT_ID`` / ``RAPIDATA_CLIENT_SECRET``
+           environment variables (useful for headless / container
+           deployments).
+        3. Credentials stored under ``~/.config/rapidata/credentials.json``.
+        4. Interactive browser login, which then saves credentials to the
+           file above so you don't have to log in again.
+
+        The ``environment`` argument follows the same pattern: when omitted
+        it falls back to the ``RAPIDATA_ENVIRONMENT`` environment variable,
+        and finally to the default ``"rapidata.ai"``.
 
         Args:
-            client_id (str): The client ID for authentication.
-            client_secret (str): The client secret for authentication.
-            environment (str, optional): The API endpoint.
+            client_id (str): The client ID for authentication. Falls back to
+                the ``RAPIDATA_CLIENT_ID`` environment variable when omitted.
+            client_secret (str): The client secret for authentication. Falls
+                back to the ``RAPIDATA_CLIENT_SECRET`` environment variable
+                when omitted.
+            environment (str, optional): The API endpoint. Falls back to the
+                ``RAPIDATA_ENVIRONMENT`` environment variable, and then to
+                ``"rapidata.ai"``.
             oauth_scope (str, optional): The scopes to use for authentication. In general this does not need to be changed.
             cert_path (str, optional): An optional path to a certificate file useful for development.
             token (dict, optional): If you already have a token that the client should use for authentication. Important, if set, this needs to be the complete token object containing the access token, token type and expiration time.
@@ -72,6 +92,17 @@ class RapidataClient:
         tracer.set_session_id(
             uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
         )
+
+        # Fall back to RAPIDATA_CLIENT_ID / RAPIDATA_CLIENT_SECRET /
+        # RAPIDATA_ENVIRONMENT when the caller didn't pass them explicitly.
+        # Empty env vars are treated as unset so we fall through to the
+        # next layer (credential file / browser flow, or the default env).
+        if client_id is None:
+            client_id = os.environ.get("RAPIDATA_CLIENT_ID") or None
+        if client_secret is None:
+            client_secret = os.environ.get("RAPIDATA_CLIENT_SECRET") or None
+        if environment is None:
+            environment = os.environ.get("RAPIDATA_ENVIRONMENT") or "rapidata.ai"
 
         with tracer.start_as_current_span("RapidataClient.__init__"):
             logger.debug("Checking version")
