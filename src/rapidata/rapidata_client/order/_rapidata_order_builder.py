@@ -17,6 +17,7 @@ from rapidata.rapidata_client.config import (
     rapidata_config,
     tracer,
 )
+from rapidata.rapidata_client.config._qr_preview import print_campaign_preview_qr
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
 )
@@ -171,6 +172,12 @@ class RapidataOrderBuilder:
             self._openapi_service.order.order_api.order_order_id_preview_post(order.id)
         except Exception as e:
             logger.error("Failed to set order to preview: %s", e)
+
+        if result.campaign_id:
+            print_campaign_preview_qr(
+                environment=self._openapi_service.environment,
+                campaign_id=result.campaign_id,
+            )
         return order
 
     def _set_workflow(self, workflow: Workflow) -> RapidataOrderBuilder:
