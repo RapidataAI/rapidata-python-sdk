@@ -825,6 +825,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#client-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example-env-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1263,6 +1274,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#client-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example-env-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1460,6 +1482,42 @@
 <li>Environment variables (<code>RAPIDATA_*</code>)</li>
 <li>Built-in defaults</li>
 </ol>
+<h3 id="client-authentication">Client authentication<a class="headerlink" href="#client-authentication" title="Permanent link">#</a></h3>
+<p>The <code>RapidataClient</code> constructor also picks up credentials and the target environment from the following variables when the matching constructor arguments are omitted:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Maps to</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RAPIDATA_CLIENT_ID</code></td>
+<td><code>client_id</code></td>
+<td>OAuth client ID</td>
+</tr>
+<tr>
+<td><code>RAPIDATA_CLIENT_SECRET</code></td>
+<td><code>client_secret</code></td>
+<td>OAuth client secret</td>
+</tr>
+<tr>
+<td><code>RAPIDATA_ENVIRONMENT</code></td>
+<td><code>environment</code></td>
+<td>API endpoint (defaults to <code>rapidata.ai</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Resolution order for these values:</p>
+<ol>
+<li>Arguments passed to <code>RapidataClient(...)</code>.</li>
+<li>The environment variables above.</li>
+<li>Credentials stored under <code>~/.config/rapidata/credentials.json</code>.</li>
+<li>Interactive browser login.</li>
+</ol>
+<p>Empty strings are treated as unset, so <code>RAPIDATA_CLIENT_ID=""</code> falls through to the next layer instead of attempting to authenticate with an empty value.</p>
 <h3 id="example-env-file">Example <code>.env</code> file<a class="headerlink" href="#example-env-file" title="Permanent link">#</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># --- Upload ---</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">RAPIDATA_maxWorkers</span><span class="o">=</span><span class="m">25</span>
