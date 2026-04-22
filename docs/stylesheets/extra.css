@@ -279,6 +279,122 @@ body {
 
 
 /* ==========================================================================
+   Phone preview (embedded rapids campaign iframe)
+   Mirrors PhonePreview in app-frontend:
+   src/components/order/OrderPreview/OrderPreview.tsx
+   ========================================================================== */
+
+.phone-preview {
+    position: relative;
+    width: 375px;
+    height: 667px;
+    margin: 1.5rem auto 0;
+    border-radius: 40px;
+    border: 14px solid var(--color-preview-frame);
+    background: var(--color-preview-frame);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.35),
+        0 8px 10px -6px rgba(0, 0, 0, 0.25);
+}
+
+.phone-preview__notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 148px;
+    height: 7px;
+    background: var(--color-preview-frame);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    z-index: 30;
+}
+
+.phone-preview__btn {
+    position: absolute;
+    width: 3px;
+    background: var(--color-preview-frame);
+    z-index: 30;
+}
+
+.phone-preview__btn--left-top {
+    left: -17px;
+    top: 124px;
+    height: 46px;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+.phone-preview__btn--left-bot {
+    left: -17px;
+    top: 178px;
+    height: 46px;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+.phone-preview__btn--right {
+    right: -17px;
+    top: 142px;
+    height: 64px;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.phone-preview__iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 26px;
+    background: var(--color-background);
+    z-index: 20;
+}
+
+.preview-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0 1.5rem;
+}
+
+.preview-controls button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: color 0.1s ease, border-color 0.1s ease;
+}
+
+.preview-controls button:hover {
+    color: var(--color-text-primary);
+    border-color: var(--md-default-fg-color--lighter);
+}
+
+.preview-controls button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.preview-controls button.is-refreshing svg {
+    animation: preview-refresh-spin 0.6s linear;
+}
+
+@keyframes preview-refresh-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+
+/* ==========================================================================
    AI Agent copy button
    ========================================================================== */
 
