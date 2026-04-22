@@ -60,15 +60,15 @@ def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:
         qr.add_data(url)
         qr.make(fit=True)
 
-        managed_print(f"Preview the campaign ({url}):")
+        managed_print(f"Preview:")
         qr.print_ascii(invert=True)
     except Exception:
-        logger.debug(
-            "Failed to render campaign preview QR code for %s",
+        logger.warning(
+            "Failed to render preview QR code for %s",
             url,
             exc_info=True,
         )
-        managed_print(f"Preview the campaign at: {url}")
+        managed_print(f"Preview at: {url}")
 
 
 def _resolve_campaign_id_from_pipeline(
