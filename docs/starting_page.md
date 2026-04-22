@@ -103,6 +103,9 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
     print(results)
     ```
 
+!!! note
+    The curated/global audiences get you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
+
 <div data-preview-embed
      data-preview-map='{"Image":"cmp_1HSFCph25U1J22","Video":"cmp_1HSMbDk5EaUExL","Audio":"cmp_1HSMsM9Ph3Sn5o","Text":"cmp_1HSN6NhgMo4C9R"}'>
   <div class="phone-preview">
@@ -122,9 +125,6 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
     </button>
   </div>
 </div>
-
-!!! note
-    The curated/global audiences get you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
 
 ---
 
