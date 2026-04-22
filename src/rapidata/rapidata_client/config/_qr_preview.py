@@ -9,6 +9,7 @@ logged at debug level and never raised to the caller, so order / job execution
 is never affected by QR rendering problems.
 """
 
+from time import sleep
 from typing import TYPE_CHECKING, cast
 
 from rapidata.rapidata_client.config.logger import logger
@@ -70,6 +71,50 @@ def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:
         managed_print(f"Preview the campaign at: {url}")
 
 
+def _resolve_campaign_id_from_pipeline(
+    openapi_service: "OpenAPIService",
+    pipeline_id: str,
+    max_retries: int = 5,
+    retry_delay: float = 1.0,
+) -> str | None:
+    """Pull the campaign id out of a pipeline's ``campaign-artifact``.
+
+    Pipeline artifacts are populated asynchronously after creation, so we
+    retry a few times before giving up. Returns ``None`` if the artifact never
+    materialises.
+    """
+    from rapidata.api_client.models.campaign_artifact_model import (
+        CampaignArtifactModel,
+    )
+
+    last_exc: Exception | None = None
+    for attempt in range(max_retries):
+        try:
+            pipeline = (
+                openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
+                    pipeline_id
+                )
+            )
+            artifact = pipeline.artifacts.get("campaign-artifact")
+            if artifact is not None:
+                return cast(
+                    CampaignArtifactModel, artifact.actual_instance
+                ).campaign_id
+        except Exception as e:
+            last_exc = e
+
+        if attempt < max_retries - 1:
+            sleep(retry_delay)
+
+    logger.debug(
+        "Could not resolve campaign id from pipeline '%s' after %d attempts",
+        pipeline_id,
+        max_retries,
+        exc_info=last_exc,
+    )
+    return None
+
+
 def print_campaign_preview_qr_for_pipeline(
     openapi_service: "OpenAPIService", pipeline_id: str
 ) -> None:
@@ -86,24 +131,8 @@ def print_campaign_preview_qr_for_pipeline(
     if rapidata_config.logging.silent_mode:
         return
 
-    try:
-        from rapidata.api_client.models.campaign_artifact_model import (
-            CampaignArtifactModel,
-        )
-
-        pipeline = (
-            openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(pipeline_id)
-        )
-        campaign_id = cast(
-            CampaignArtifactModel,
-            pipeline.artifacts["campaign-artifact"].actual_instance,
-        ).campaign_id
-    except Exception:
-        logger.debug(
-            "Could not resolve campaign id from pipeline '%s' for preview QR",
-            pipeline_id,
-            exc_info=True,
-        )
+    campaign_id = _resolve_campaign_id_from_pipeline(openapi_service, pipeline_id)
+    if not campaign_id:
         return
 
     print_campaign_preview_qr(

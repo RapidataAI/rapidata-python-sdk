@@ -17,7 +17,9 @@ from rapidata.rapidata_client.config import (
     rapidata_config,
     tracer,
 )
-from rapidata.rapidata_client.config._qr_preview import print_campaign_preview_qr
+from rapidata.rapidata_client.config._qr_preview import (
+    print_campaign_preview_qr_for_pipeline,
+)
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
 )
@@ -173,11 +175,13 @@ class RapidataOrderBuilder:
         except Exception as e:
             logger.error("Failed to set order to preview: %s", e)
 
-        if result.campaign_id:
-            print_campaign_preview_qr(
-                environment=self._openapi_service.environment,
-                campaign_id=result.campaign_id,
-            )
+        # The campaign is materialised once the order enters preview, so the
+        # campaign artifact only shows up on the pipeline a moment later — let
+        # the helper poll for it.
+        print_campaign_preview_qr_for_pipeline(
+            openapi_service=self._openapi_service,
+            pipeline_id=result.pipeline_id,
+        )
         return order
 
     def _set_workflow(self, workflow: Workflow) -> RapidataOrderBuilder:
