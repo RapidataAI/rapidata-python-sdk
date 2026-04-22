@@ -1420,7 +1420,7 @@
 <p>If you need low-latency responses for upcoming flow items, you can preheat the system beforehand:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">preheat</span><span class="p">()</span>
 </span></code></pre></div>
-<p>This warms up internal resources so that subsequent flow batches are processed faster. Call it before submitting time-sensitive batches.</p>
+<p>This warms up internal resources so that subsequent flow batches are processed faster. Call it around 5 minutes before submitting time-sensitive batches.</p>
 <h3 id="retrieving-existing-flows">Retrieving Existing Flows<a class="headerlink" href="#retrieving-existing-flows" title="Permanent link">#</a></h3>
 <p>You can retrieve flows by ID or list your recent flows:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Get a specific flow by ID</span>
