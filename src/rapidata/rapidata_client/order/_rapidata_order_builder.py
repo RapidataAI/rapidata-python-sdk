@@ -10,12 +10,14 @@ if TYPE_CHECKING:
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
-from rapidata.rapidata_client.filter import RapidataFilter, UserScoreFilter
+from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.config import (
     logger,
     managed_print,
-    rapidata_config,
     tracer,
+)
+from rapidata.rapidata_client.config._qr_preview import (
+    print_campaign_preview_qr_for_pipeline,
 )
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
@@ -30,15 +32,7 @@ from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.selection import (
-    ConditionalValidationSelection,
-    LabelingSelection,
-    CappedSelection,
-)
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.api.rapidata_api_client import (
-    suppress_rapidata_error_logging,
-)
 
 StickyStateLiteral = Literal["Temporary", "Permanent", "Passive"]
 
@@ -171,6 +165,14 @@ class RapidataOrderBuilder:
             self._openapi_service.order.order_api.order_order_id_preview_post(order.id)
         except Exception as e:
             logger.error("Failed to set order to preview: %s", e)
+
+        # The campaign is materialised once the order enters preview, so the
+        # campaign artifact only shows up on the pipeline a moment later — let
+        # the helper poll for it.
+        print_campaign_preview_qr_for_pipeline(
+            openapi_service=self._openapi_service,
+            pipeline_id=result.pipeline_id,
+        )
         return order
 
     def _set_workflow(self, workflow: Workflow) -> RapidataOrderBuilder:

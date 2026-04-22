@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, tracer
+from rapidata.rapidata_client.config._qr_preview import (
+    print_campaign_preview_qr_for_pipeline,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.settings import RapidataSetting
@@ -123,6 +126,11 @@ class RapidataJobManager:
             raise FailedUploadException(
                 rapidata_dataset, failed_uploads, job_definition=job_model
             )
+
+        print_campaign_preview_qr_for_pipeline(
+            openapi_service=self._openapi_service,
+            pipeline_id=job_definition_response.pipeline_id,
+        )
 
         return job_model
 
