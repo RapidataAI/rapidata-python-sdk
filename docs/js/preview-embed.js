@@ -41,27 +41,47 @@ function labelTextForInput(tabbedSet, input) {
 }
 
 function initPreviewEmbed(wrapper) {
+    // Two modes:
+    //   - data-preview-map='{"Image":"cmp_...",...}' — tab-synced; swap
+    //     iframe when the preceding tabbed-set's active tab changes.
+    //   - data-preview-campaign="cmp_..." — static; just the refresh
+    //     button is wired up.
     const rawMap = wrapper.getAttribute('data-preview-map');
-    if (!rawMap) return;
+    const staticId = wrapper.getAttribute('data-preview-campaign');
 
-    let campaignMap;
-    try {
-        campaignMap = JSON.parse(rawMap);
-    } catch (err) {
-        console.warn('[preview-embed] invalid data-preview-map JSON:', err);
-        return;
+    let campaignMap = null;
+    if (rawMap) {
+        try {
+            campaignMap = JSON.parse(rawMap);
+        } catch (err) {
+            console.warn('[preview-embed] invalid data-preview-map JSON:', err);
+        }
     }
 
-    const tabbedSet = findPrecedingTabbedSet(wrapper);
+    // Only bind to a tabbed-set when we have a mapping to drive.
+    const tabbedSet = campaignMap ? findPrecedingTabbedSet(wrapper) : null;
     const refreshBtn = wrapper.querySelector('[data-preview-refresh]');
     let refreshCount = 0;
 
     function currentCampaignId() {
-        if (!tabbedSet) return null;
-        const checked = tabbedSet.querySelector('input[type="radio"]:checked');
-        if (!checked) return null;
-        const name = labelTextForInput(tabbedSet, checked);
-        return name ? (campaignMap[name] || null) : null;
+        if (tabbedSet && campaignMap) {
+            const checked = tabbedSet.querySelector('input[type="radio"]:checked');
+            if (checked) {
+                const name = labelTextForInput(tabbedSet, checked);
+                if (name && campaignMap[name]) return campaignMap[name];
+            }
+        }
+        if (staticId) return staticId;
+        // Final fallback: whatever id the iframe already has.
+        const iframe = wrapper.querySelector('iframe.phone-preview__iframe');
+        if (iframe && iframe.src) {
+            try {
+                return new URL(iframe.src).searchParams.get('id');
+            } catch (_err) {
+                return null;
+            }
+        }
+        return null;
     }
 
     function attachIframeLoadHandler(iframe) {
