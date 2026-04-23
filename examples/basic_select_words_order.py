@@ -21,7 +21,7 @@ if __name__ == "__main__":
         responses_per_datapoint=15,
         sentences=PROMPTS_WITH_NO_MISTAKES,
         filters=[
-            rapi.order.filters.language(["en"]),
+            rapi.order.filters.Language(["en"]),
         ],
         validation_set_id="6761a86eef7af86285630ea8" # in this example, the validation set has already been created
     ).run()
