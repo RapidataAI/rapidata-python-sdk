@@ -11,6 +11,89 @@
     }
   ],
   "paths": {
+    "/rapid/{rapidId}/responses": {
+      "get": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Gets all responses for a given rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The rapid to get the responses for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponsesForRapidEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapids/flagged": {
+      "get": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Queries all rapids that have been flagged.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryFlaggedRapidsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/rapid/{rapidId}/reject": {
       "post": {
         "tags": [
@@ -316,91 +399,6 @@
           },
           "403": {
             "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/rapids/flagged": {
-      "get": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Allows querying all rapids that have been flagged.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The request to use to filter, sort and page the results",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfRapidModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfRapidModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfRapidModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rapid/{rapidId}/responses": {
-      "get": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Gets all responses for a given rapid.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The rapid to get the responses for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetResponsesForRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetResponsesForRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetResponsesForRapidResult"
-                }
-              }
-            }
           }
         }
       }
@@ -1085,10 +1083,24 @@
           },
           "value": { },
           "operator": {
-            "$ref": "#/components/schemas/FilterOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/FilterOperator"
+              }
+            ]
           },
           "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/LogicOperator"
+              }
+            ]
           },
           "filters": {
             "type": "array",
@@ -1111,7 +1123,8 @@
           "StartsWith",
           "EndsWith",
           "In",
-          "NotContains"
+          "NotContains",
+          null
         ]
       },
       "GetPublicResponsesResult": {
@@ -1159,7 +1172,7 @@
           }
         }
       },
-      "GetResponsesForRapidResult": {
+      "GetResponsesForRapidEndpoint_Output": {
         "required": [
           "rapidId",
           "asset",
@@ -1169,16 +1182,27 @@
         "type": "object",
         "properties": {
           "rapidId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the rapid."
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset of the rapid."
           },
           "responses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
+                }
+              }
+            ],
+            "description": "The list of responses for the rapid."
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
@@ -3130,7 +3154,8 @@
         "enum": [
           "And",
           "Or",
-          "Not"
+          "Not",
+          null
         ]
       },
       "MetadataInputCollection": {
@@ -3213,39 +3238,6 @@
           }
         }
       },
-      "PagedResultOfRapidModel": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RapidModel"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "Pagination": {
         "type": "object",
         "properties": {
@@ -3290,35 +3282,135 @@
           }
         }
       },
-      "QueryModel": {
+      "QueryFlaggedRapidsEndpoint_Output": {
+        "required": [
+          "id",
+          "payload",
+          "referee",
+          "asset",
+          "state",
+          "hasResponses",
+          "shouldAcceptIncorrect",
+          "truth",
+          "explanation",
+          "randomCorrectProbability",
+          "key",
+          "completedAt",
+          "featureFlags"
+        ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the rapid."
+          },
+          "payload": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidPayload"
+              }
+            ],
+            "description": "The payload of the rapid."
+          },
+          "referee": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRefereeInfo"
+              }
+            ],
+            "description": "The referee that created the rapid."
+          },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset associated with the rapid."
+          },
+          "state": {
+            "$ref": "#/components/schemas/RapidState"
+          },
+          "hasResponses": {
+            "type": "boolean",
+            "description": "Whether the rapid has any responses."
+          },
+          "shouldAcceptIncorrect": {
+            "type": "boolean",
+            "description": "Whether the rapid should accept incorrect answers."
+          },
+          "truth": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IValidationTruth"
+              }
+            ],
+            "description": "The optional validation truth of the rapid."
+          },
+          "explanation": {
+            "type": "string",
+            "description": "The optional explanation shown when users answer incorrectly.",
+            "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "The probability of a random correct answer.",
+            "format": "double"
+          },
+          "key": {
+            "type": "string",
+            "description": "An optional key for the rapid.",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "The timestamp when the rapid was completed.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The feature flags enabled for the rapid."
+          }
+        }
+      },
+      "QueryFlaggedRapidsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
           "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/Pagination"
-              }
-            ]
+            "type": "integer",
+            "format": "int32"
           },
-          "filter": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/RootFilter"
-              }
-            ]
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
           },
-          "sortCriteria": {
+          "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "nullable": true
+              "$ref": "#/components/schemas/QueryFlaggedRapidsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3454,80 +3546,6 @@
         ],
         "description": "A streamlined enum representing common issues."
       },
-      "RapidModel": {
-        "required": [
-          "id",
-          "payload",
-          "referee",
-          "asset",
-          "state",
-          "hasResponses",
-          "shouldAcceptIncorrect",
-          "truth",
-          "explanation",
-          "randomCorrectProbability",
-          "key",
-          "completedAt",
-          "featureFlags"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
-          },
-          "referee": {
-            "$ref": "#/components/schemas/IRefereeInfo"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "state": {
-            "$ref": "#/components/schemas/RapidState"
-          },
-          "hasResponses": {
-            "type": "boolean"
-          },
-          "shouldAcceptIncorrect": {
-            "type": "boolean"
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IValidationTruth"
-              }
-            ]
-          },
-          "explanation": {
-            "type": "string",
-            "nullable": true
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "format": "double"
-          },
-          "key": {
-            "type": "string",
-            "nullable": true
-          },
-          "completedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          }
-        }
-      },
       "RapidResultModel": {
         "required": [
           "sessionIndex",
@@ -3579,7 +3597,8 @@
           "Done",
           "None",
           "Rejected"
-        ]
+        ],
+        "description": "The state of the rapid."
       },
       "ReportModel": {
         "required": [
@@ -3610,7 +3629,8 @@
       },
       "RootFilter": {
         "required": [
-          "filters"
+          "filters",
+          "logic"
         ],
         "type": "object",
         "properties": {
@@ -3641,26 +3661,6 @@
             "format": "int32"
           }
         }
-      },
-      "SortCriterion": {
-        "required": [
-          "propertyName"
-        ],
-        "type": "object",
-        "properties": {
-          "propertyName": {
-            "type": "string"
-          },
-          "direction": {
-            "$ref": "#/components/schemas/SortDirection"
-          }
-        }
-      },
-      "SortDirection": {
-        "enum": [
-          "Asc",
-          "Desc"
-        ]
       },
       "TranscriptionWord": {
         "required": [

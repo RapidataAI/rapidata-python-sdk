@@ -21,7 +21,7 @@ from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.get_compare_ab_summary_result import GetCompareAbSummaryResult
 from rapidata.api_client.models.get_responses_result import GetResponsesResult
-from rapidata.api_client.models.get_workflow_by_id_result import GetWorkflowByIdResult
+from rapidata.api_client.models.get_workflow_by_id_endpoint_output import GetWorkflowByIdEndpointOutput
 from rapidata.api_client.models.get_workflow_progress_result import GetWorkflowProgressResult
 from rapidata.api_client.models.paged_result_of_i_workflow_model import PagedResultOfIWorkflowModel
 from rapidata.api_client.models.query_model import QueryModel
@@ -582,7 +582,7 @@ class WorkflowApi:
     @validate_call
     def workflow_workflow_id_get(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get.")],
+        workflow_id: Annotated[StrictStr, Field(description="Identifier of the workflow to fetch.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -595,11 +595,11 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetWorkflowByIdResult:
-        """Get a workflow by its ID.
+    ) -> GetWorkflowByIdEndpointOutput:
+        """Returns the workflow identified by .
 
 
-        :param workflow_id: The ID of the workflow to get. (required)
+        :param workflow_id: Identifier of the workflow to fetch. (required)
         :type workflow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -632,7 +632,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowByIdResult",
+            '200': "GetWorkflowByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -648,7 +651,7 @@ class WorkflowApi:
     @validate_call
     def workflow_workflow_id_get_with_http_info(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get.")],
+        workflow_id: Annotated[StrictStr, Field(description="Identifier of the workflow to fetch.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -661,11 +664,11 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetWorkflowByIdResult]:
-        """Get a workflow by its ID.
+    ) -> ApiResponse[GetWorkflowByIdEndpointOutput]:
+        """Returns the workflow identified by .
 
 
-        :param workflow_id: The ID of the workflow to get. (required)
+        :param workflow_id: Identifier of the workflow to fetch. (required)
         :type workflow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -698,7 +701,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowByIdResult",
+            '200': "GetWorkflowByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -714,7 +720,7 @@ class WorkflowApi:
     @validate_call
     def workflow_workflow_id_get_without_preload_content(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get.")],
+        workflow_id: Annotated[StrictStr, Field(description="Identifier of the workflow to fetch.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -728,10 +734,10 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get a workflow by its ID.
+        """Returns the workflow identified by .
 
 
-        :param workflow_id: The ID of the workflow to get. (required)
+        :param workflow_id: Identifier of the workflow to fetch. (required)
         :type workflow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -764,7 +770,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowByIdResult",
+            '200': "GetWorkflowByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -809,9 +818,7 @@ class WorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

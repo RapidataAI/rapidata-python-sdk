@@ -19,11 +19,11 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.i_asset_model import IAssetModel
-from rapidata.api_client.models.i_pair_maker_information import IPairMakerInformation
-from rapidata.api_client.models.i_ranking_config import IRankingConfig
-from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from rapidata.api_client.models.i_pair_maker_information_model import IPairMakerInformationModel
+from rapidata.api_client.models.i_ranking_config_model import IRankingConfigModel
+from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
+from rapidata.api_client.models.workflow_state_model import WorkflowStateModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -35,17 +35,16 @@ class IWorkflowModelRankingWorkflowModel(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     id: StrictStr
-    referee: IRefereeConfig
-    pair_maker_information: IPairMakerInformation = Field(alias="pairMakerInformation")
-    state: StrictStr
+    referee: IRefereeConfigModel
+    pair_maker_information: IPairMakerInformationModel = Field(alias="pairMakerInformation")
+    state: WorkflowStateModel
     criteria: StrictStr
     name: StrictStr
-    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
-    ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
+    ranking_config: Optional[IRankingConfigModel] = Field(default=None, alias="rankingConfig")
     context: Optional[StrictStr]
     context_asset: Optional[IAssetModel] = Field(alias="contextAsset")
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "eloConfig", "rankingConfig", "context", "contextAsset", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "rankingConfig", "context", "contextAsset", "ownerMail"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,9 +94,6 @@ class IWorkflowModelRankingWorkflowModel(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of pair_maker_information
         if self.pair_maker_information:
             _dict['pairMakerInformation'] = self.pair_maker_information.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of elo_config
-        if self.elo_config:
-            _dict['eloConfig'] = self.elo_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of ranking_config
         if self.ranking_config:
             _dict['rankingConfig'] = self.ranking_config.to_dict()
@@ -138,13 +134,12 @@ class IWorkflowModelRankingWorkflowModel(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "id": obj.get("id"),
-            "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "pairMakerInformation": IPairMakerInformation.from_dict(obj["pairMakerInformation"]) if obj.get("pairMakerInformation") is not None else None,
+            "referee": IRefereeConfigModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "pairMakerInformation": IPairMakerInformationModel.from_dict(obj["pairMakerInformation"]) if obj.get("pairMakerInformation") is not None else None,
             "state": obj.get("state"),
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
-            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
-            "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
+            "rankingConfig": IRankingConfigModel.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "ownerMail": obj.get("ownerMail")

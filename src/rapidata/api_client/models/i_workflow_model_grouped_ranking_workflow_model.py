@@ -19,9 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.elo_config import EloConfig
-from rapidata.api_client.models.i_ranking_config import IRankingConfig
-from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from rapidata.api_client.models.i_ranking_config_model import IRankingConfigModel
+from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
+from rapidata.api_client.models.workflow_state_model import WorkflowStateModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -33,14 +33,13 @@ class IWorkflowModelGroupedRankingWorkflowModel(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     id: StrictStr
-    referee: IRefereeConfig
-    state: StrictStr
+    referee: IRefereeConfigModel
+    state: WorkflowStateModel
     criteria: StrictStr
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
-    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
-    ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "state", "criteria", "name", "ownerMail", "eloConfig", "rankingConfig"]
+    ranking_config: Optional[IRankingConfigModel] = Field(default=None, alias="rankingConfig")
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "state", "criteria", "name", "ownerMail", "rankingConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,9 +86,6 @@ class IWorkflowModelGroupedRankingWorkflowModel(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of elo_config
-        if self.elo_config:
-            _dict['eloConfig'] = self.elo_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of ranking_config
         if self.ranking_config:
             _dict['rankingConfig'] = self.ranking_config.to_dict()
@@ -117,13 +113,12 @@ class IWorkflowModelGroupedRankingWorkflowModel(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "id": obj.get("id"),
-            "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "referee": IRefereeConfigModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "state": obj.get("state"),
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail"),
-            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
-            "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None
+            "rankingConfig": IRankingConfigModel.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

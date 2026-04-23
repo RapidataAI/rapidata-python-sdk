@@ -38,26 +38,26 @@ class IRapidBlueprint(LazyValidatedModel):
     """
     IRapidBlueprint
     """
-    # data type: IRapidBlueprintTranscriptionRapidBlueprint
-    oneof_schema_1_validator: Optional[IRapidBlueprintTranscriptionRapidBlueprint] = None
-    # data type: IRapidBlueprintScrubRapidBlueprint
-    oneof_schema_2_validator: Optional[IRapidBlueprintScrubRapidBlueprint] = None
-    # data type: IRapidBlueprintPolygonRapidBlueprint
-    oneof_schema_3_validator: Optional[IRapidBlueprintPolygonRapidBlueprint] = None
-    # data type: IRapidBlueprintNamedEntityRapidBlueprint
-    oneof_schema_4_validator: Optional[IRapidBlueprintNamedEntityRapidBlueprint] = None
-    # data type: IRapidBlueprintLocateRapidBlueprint
-    oneof_schema_5_validator: Optional[IRapidBlueprintLocateRapidBlueprint] = None
-    # data type: IRapidBlueprintLineRapidBlueprint
-    oneof_schema_6_validator: Optional[IRapidBlueprintLineRapidBlueprint] = None
-    # data type: IRapidBlueprintFreeTextRapidBlueprint
-    oneof_schema_7_validator: Optional[IRapidBlueprintFreeTextRapidBlueprint] = None
-    # data type: IRapidBlueprintCompareRapidBlueprint
-    oneof_schema_8_validator: Optional[IRapidBlueprintCompareRapidBlueprint] = None
     # data type: IRapidBlueprintAttachCategoryRapidBlueprint
-    oneof_schema_9_validator: Optional[IRapidBlueprintAttachCategoryRapidBlueprint] = None
+    oneof_schema_1_validator: Optional[IRapidBlueprintAttachCategoryRapidBlueprint] = None
     # data type: IRapidBlueprintBoundingBoxRapidBlueprint
-    oneof_schema_10_validator: Optional[IRapidBlueprintBoundingBoxRapidBlueprint] = None
+    oneof_schema_2_validator: Optional[IRapidBlueprintBoundingBoxRapidBlueprint] = None
+    # data type: IRapidBlueprintCompareRapidBlueprint
+    oneof_schema_3_validator: Optional[IRapidBlueprintCompareRapidBlueprint] = None
+    # data type: IRapidBlueprintFreeTextRapidBlueprint
+    oneof_schema_4_validator: Optional[IRapidBlueprintFreeTextRapidBlueprint] = None
+    # data type: IRapidBlueprintLineRapidBlueprint
+    oneof_schema_5_validator: Optional[IRapidBlueprintLineRapidBlueprint] = None
+    # data type: IRapidBlueprintLocateRapidBlueprint
+    oneof_schema_6_validator: Optional[IRapidBlueprintLocateRapidBlueprint] = None
+    # data type: IRapidBlueprintNamedEntityRapidBlueprint
+    oneof_schema_7_validator: Optional[IRapidBlueprintNamedEntityRapidBlueprint] = None
+    # data type: IRapidBlueprintPolygonRapidBlueprint
+    oneof_schema_8_validator: Optional[IRapidBlueprintPolygonRapidBlueprint] = None
+    # data type: IRapidBlueprintScrubRapidBlueprint
+    oneof_schema_9_validator: Optional[IRapidBlueprintScrubRapidBlueprint] = None
+    # data type: IRapidBlueprintTranscriptionRapidBlueprint
+    oneof_schema_10_validator: Optional[IRapidBlueprintTranscriptionRapidBlueprint] = None
     actual_instance: Optional[Union[IRapidBlueprintAttachCategoryRapidBlueprint, IRapidBlueprintBoundingBoxRapidBlueprint, IRapidBlueprintCompareRapidBlueprint, IRapidBlueprintFreeTextRapidBlueprint, IRapidBlueprintLineRapidBlueprint, IRapidBlueprintLocateRapidBlueprint, IRapidBlueprintNamedEntityRapidBlueprint, IRapidBlueprintPolygonRapidBlueprint, IRapidBlueprintScrubRapidBlueprint, IRapidBlueprintTranscriptionRapidBlueprint]] = None
     one_of_schemas: Set[str] = { "IRapidBlueprintAttachCategoryRapidBlueprint", "IRapidBlueprintBoundingBoxRapidBlueprint", "IRapidBlueprintCompareRapidBlueprint", "IRapidBlueprintFreeTextRapidBlueprint", "IRapidBlueprintLineRapidBlueprint", "IRapidBlueprintLocateRapidBlueprint", "IRapidBlueprintNamedEntityRapidBlueprint", "IRapidBlueprintPolygonRapidBlueprint", "IRapidBlueprintScrubRapidBlueprint", "IRapidBlueprintTranscriptionRapidBlueprint" }
 
@@ -82,46 +82,6 @@ class IRapidBlueprint(LazyValidatedModel):
         instance = IRapidBlueprint.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IRapidBlueprintTranscriptionRapidBlueprint
-        if not isinstance(v, IRapidBlueprintTranscriptionRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintTranscriptionRapidBlueprint`")
-        else:
-            match += 1
-        # validate data type: IRapidBlueprintScrubRapidBlueprint
-        if not isinstance(v, IRapidBlueprintScrubRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintScrubRapidBlueprint`")
-        else:
-            match += 1
-        # validate data type: IRapidBlueprintPolygonRapidBlueprint
-        if not isinstance(v, IRapidBlueprintPolygonRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintPolygonRapidBlueprint`")
-        else:
-            match += 1
-        # validate data type: IRapidBlueprintNamedEntityRapidBlueprint
-        if not isinstance(v, IRapidBlueprintNamedEntityRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintNamedEntityRapidBlueprint`")
-        else:
-            match += 1
-        # validate data type: IRapidBlueprintLocateRapidBlueprint
-        if not isinstance(v, IRapidBlueprintLocateRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintLocateRapidBlueprint`")
-        else:
-            match += 1
-        # validate data type: IRapidBlueprintLineRapidBlueprint
-        if not isinstance(v, IRapidBlueprintLineRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintLineRapidBlueprint`")
-        else:
-            match += 1
-        # validate data type: IRapidBlueprintFreeTextRapidBlueprint
-        if not isinstance(v, IRapidBlueprintFreeTextRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintFreeTextRapidBlueprint`")
-        else:
-            match += 1
-        # validate data type: IRapidBlueprintCompareRapidBlueprint
-        if not isinstance(v, IRapidBlueprintCompareRapidBlueprint):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintCompareRapidBlueprint`")
-        else:
-            match += 1
         # validate data type: IRapidBlueprintAttachCategoryRapidBlueprint
         if not isinstance(v, IRapidBlueprintAttachCategoryRapidBlueprint):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintAttachCategoryRapidBlueprint`")
@@ -130,6 +90,46 @@ class IRapidBlueprint(LazyValidatedModel):
         # validate data type: IRapidBlueprintBoundingBoxRapidBlueprint
         if not isinstance(v, IRapidBlueprintBoundingBoxRapidBlueprint):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintBoundingBoxRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintCompareRapidBlueprint
+        if not isinstance(v, IRapidBlueprintCompareRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintCompareRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintFreeTextRapidBlueprint
+        if not isinstance(v, IRapidBlueprintFreeTextRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintFreeTextRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintLineRapidBlueprint
+        if not isinstance(v, IRapidBlueprintLineRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintLineRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintLocateRapidBlueprint
+        if not isinstance(v, IRapidBlueprintLocateRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintLocateRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintNamedEntityRapidBlueprint
+        if not isinstance(v, IRapidBlueprintNamedEntityRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintNamedEntityRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintPolygonRapidBlueprint
+        if not isinstance(v, IRapidBlueprintPolygonRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintPolygonRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintScrubRapidBlueprint
+        if not isinstance(v, IRapidBlueprintScrubRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintScrubRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: IRapidBlueprintTranscriptionRapidBlueprint
+        if not isinstance(v, IRapidBlueprintTranscriptionRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidBlueprintTranscriptionRapidBlueprint`")
         else:
             match += 1
         if match > 1:
@@ -152,54 +152,6 @@ class IRapidBlueprint(LazyValidatedModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IRapidBlueprintTranscriptionRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintTranscriptionRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidBlueprintScrubRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintScrubRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidBlueprintPolygonRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintPolygonRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidBlueprintNamedEntityRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintNamedEntityRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidBlueprintLocateRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintLocateRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidBlueprintLineRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintLineRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidBlueprintFreeTextRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintFreeTextRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidBlueprintCompareRapidBlueprint
-        try:
-            instance.actual_instance = IRapidBlueprintCompareRapidBlueprint.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into IRapidBlueprintAttachCategoryRapidBlueprint
         try:
             instance.actual_instance = IRapidBlueprintAttachCategoryRapidBlueprint.from_json(json_str)
@@ -209,6 +161,54 @@ class IRapidBlueprint(LazyValidatedModel):
         # deserialize data into IRapidBlueprintBoundingBoxRapidBlueprint
         try:
             instance.actual_instance = IRapidBlueprintBoundingBoxRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintCompareRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintCompareRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintFreeTextRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintFreeTextRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintLineRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintLineRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintLocateRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintLocateRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintNamedEntityRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintNamedEntityRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintPolygonRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintPolygonRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintScrubRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintScrubRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidBlueprintTranscriptionRapidBlueprint
+        try:
+            instance.actual_instance = IRapidBlueprintTranscriptionRapidBlueprint.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

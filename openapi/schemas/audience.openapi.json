@@ -11,6 +11,57 @@
     }
   ],
   "paths": {
+    "/audience/{audienceId}/owner": {
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Changes the owner of the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The unique identifier of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new owner information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeAudienceOwnerEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/audience": {
       "post": {
         "tags": [
@@ -219,6 +270,65 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/initialize-users": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Uploads a CSV file containing user IDs and scores, then processes it in the background\n to seed the audience with those users.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The unique identifier of the audience to initialize.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "A CSV file with columns: userId, score.",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "$ref": "#/components/schemas/IFormFile"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
           },
           "400": {
             "description": "Bad Request",
@@ -1027,6 +1137,114 @@
               "type": "integer"
             },
             "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "sort_index",
+                  "-sort_index"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "visibility",
+            "in": "query",
+            "description": "Filter by visibility.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_common_sense",
+            "in": "query",
+            "description": "Filter by is_common_sense.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -1198,15 +1416,20 @@
             "type": "boolean",
             "description": "Whether this example should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the example affects global score.\n When null, AI auto-detection will determine if the example is common sense.",
             "nullable": true
+          },
+          "visibility": {
+            "$ref": "#/components/schemas/ExampleVisibility"
           }
         },
         "description": "Input model for adding an example to an audience."
       },
       "AudienceJobState": {
         "enum": [
+          "Submitted",
           "Running",
           "Completed",
-          "Failed"
+          "Failed",
+          "ManualApproval"
         ]
       },
       "AudienceStatus": {
@@ -1226,6 +1449,24 @@
           "Global"
         ],
         "description": "The current boost level applied to the audience."
+      },
+      "ChangeAudienceOwnerEndpoint_Input": {
+        "required": [
+          "ownerId",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "ownerId": {
+            "type": "string",
+            "description": "The unique identifier of the new owner.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email address of the new owner."
+          }
+        }
       },
       "CreateAudienceEndpoint_Input": {
         "required": [
@@ -1356,6 +1597,27 @@
         ],
         "description": "The retrieval mode used by the distilling campaign to select rapids for users.\n Defaults to Shuffled."
       },
+      "ExampleBoxShape": {
+        "type": "object",
+        "properties": {
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "ExampleCategory": {
         "required": [
           "label",
@@ -1370,6 +1632,46 @@
             "type": "string"
           }
         }
+      },
+      "ExampleScrubRange": {
+        "required": [
+          "start",
+          "end"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ExampleTranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ExampleVisibility": {
+        "enum": [
+          "Private",
+          "Public"
+        ],
+        "description": "Controls who can see this example. Public examples are visible to all customers.\n Private examples are only visible to the customer who created them and admins.\n Defaults to Private."
       },
       "ExistingAssetInput": {
         "required": [
@@ -1988,13 +2290,29 @@
           },
           {
             "$ref": "#/components/schemas/IExamplePayloadCompareExamplePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IExamplePayloadLineExamplePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IExamplePayloadLocateExamplePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IExamplePayloadScrubExamplePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IExamplePayloadTranscriptionExamplePayload"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
             "ClassifyExamplePayload": "#/components/schemas/IExamplePayloadClassifyExamplePayload",
-            "CompareExamplePayload": "#/components/schemas/IExamplePayloadCompareExamplePayload"
+            "CompareExamplePayload": "#/components/schemas/IExamplePayloadCompareExamplePayload",
+            "LineExamplePayload": "#/components/schemas/IExamplePayloadLineExamplePayload",
+            "LocateExamplePayload": "#/components/schemas/IExamplePayloadLocateExamplePayload",
+            "ScrubExamplePayload": "#/components/schemas/IExamplePayloadScrubExamplePayload",
+            "TranscriptionExamplePayload": "#/components/schemas/IExamplePayloadTranscriptionExamplePayload"
           }
         }
       },
@@ -2039,6 +2357,81 @@
           }
         }
       },
+      "IExamplePayloadLineExamplePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineExamplePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IExamplePayloadLocateExamplePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateExamplePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IExamplePayloadScrubExamplePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubExamplePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IExamplePayloadTranscriptionExamplePayload": {
+        "required": [
+          "title",
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionExamplePayload"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "transcription": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExampleTranscriptionWord"
+            }
+          }
+        }
+      },
       "IExampleTruth": {
         "required": [
           "_t"
@@ -2050,13 +2443,29 @@
           },
           {
             "$ref": "#/components/schemas/IExampleTruthCompareExampleTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IExampleTruthLineExampleTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IExampleTruthLocateExampleTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IExampleTruthScrubExampleTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IExampleTruthTranscriptionExampleTruth"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
             "ClassifyExampleTruth": "#/components/schemas/IExampleTruthClassifyExampleTruth",
-            "CompareExampleTruth": "#/components/schemas/IExampleTruthCompareExampleTruth"
+            "CompareExampleTruth": "#/components/schemas/IExampleTruthCompareExampleTruth",
+            "LineExampleTruth": "#/components/schemas/IExampleTruthLineExampleTruth",
+            "LocateExampleTruth": "#/components/schemas/IExampleTruthLocateExampleTruth",
+            "ScrubExampleTruth": "#/components/schemas/IExampleTruthScrubExampleTruth",
+            "TranscriptionExampleTruth": "#/components/schemas/IExampleTruthTranscriptionExampleTruth"
           }
         }
       },
@@ -2096,6 +2505,103 @@
             "type": "string"
           }
         }
+      },
+      "IExampleTruthLineExampleTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineExampleTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IExampleTruthLocateExampleTruth": {
+        "required": [
+          "boundingBoxes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateExampleTruth"
+            ],
+            "type": "string"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExampleBoxShape"
+            }
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IExampleTruthScrubExampleTruth": {
+        "required": [
+          "validRanges",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubExampleTruth"
+            ],
+            "type": "string"
+          },
+          "validRanges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExampleScrubRange"
+            }
+          }
+        }
+      },
+      "IExampleTruthTranscriptionExampleTruth": {
+        "required": [
+          "correctWords",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionExampleTruth"
+            ],
+            "type": "string"
+          },
+          "correctWords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExampleTranscriptionWord"
+            }
+          },
+          "strictGrading": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
       },
       "IMetadataInput": {
         "required": [
@@ -2647,6 +3153,9 @@
             "type": "integer",
             "description": "The sort index that controls serving order.",
             "format": "int32"
+          },
+          "visibility": {
+            "$ref": "#/components/schemas/ExampleVisibility"
           }
         }
       },
@@ -2907,6 +3416,13 @@
             "description": "The sort index that controls the serving order of this example.",
             "format": "int32",
             "nullable": true
+          },
+          "visibility": {
+            "enum": [
+              "Private",
+              "Public"
+            ],
+            "description": "Controls who can see this example. Public examples are visible to all customers.\n Private examples are only visible to the customer who created them and admins."
           }
         },
         "description": "Input model for updating an audience example."

@@ -1096,6 +1096,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "minAutoAdjustLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxAutoAdjustLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
           "languageBoosts": {
             "allOf": [
               {
@@ -1686,11 +1694,15 @@
             "format": "int32"
           },
           "scores": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "number",
-              "format": "double"
-            },
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            ],
             "description": "The cached dimension-to-score mappings."
           }
         }
@@ -2569,6 +2581,11 @@
             "format": "int32",
             "nullable": true
           },
+          "requiresBooster": {
+            "type": "boolean",
+            "description": "When true, recomputes the boosting profile from the campaign's current filters\n (via BoostingProfileEvaluator) and ensures any required filtered Kayzen audience\n exists and is populated. When false, clears the boosting profile.\n Use this to toggle boost on/off without having to compute a BoostingProfile client-side.\n Ignored when BoostingProfile is also set (explicit profile wins).",
+            "nullable": true
+          },
           "boostingProfile": {
             "oneOf": [
               {
@@ -2578,7 +2595,7 @@
                 "nullable": true
               }
             ],
-            "description": "The boosting profile configuration."
+            "description": "The boosting profile configuration. Takes precedence over RequiresBooster when both are set.\n Prefer RequiresBooster for the common on/off toggle — it lets the server derive the right\n profile (including filtered-audience creation) from the campaign's filters."
           },
           "stickyConfig": {
             "oneOf": [

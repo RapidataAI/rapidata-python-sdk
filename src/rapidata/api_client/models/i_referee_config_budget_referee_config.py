@@ -29,7 +29,7 @@ class IRefereeConfigBudgetRefereeConfig(LazyValidatedModel):
     IRefereeConfigBudgetRefereeConfig
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    total_budget: StrictInt = Field(alias="totalBudget")
+    total_budget: Optional[StrictInt] = Field(default=None, alias="totalBudget")
     total_serve_budget: Optional[StrictInt] = Field(default=None, alias="totalServeBudget")
     __properties: ClassVar[List[str]] = ["_t", "totalBudget", "totalServeBudget"]
 

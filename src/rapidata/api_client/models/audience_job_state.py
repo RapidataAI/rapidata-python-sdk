@@ -26,9 +26,11 @@ class AudienceJobState(str, Enum):
     """
     allowed enum values
     """
+    SUBMITTED = 'Submitted'
     RUNNING = 'Running'
     COMPLETED = 'Completed'
     FAILED = 'Failed'
+    MANUALAPPROVAL = 'ManualApproval'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

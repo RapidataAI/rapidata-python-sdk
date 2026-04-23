@@ -20,7 +20,7 @@ from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
-from rapidata.api_client.models.paged_result_of_get_workflow_results_result import PagedResultOfGetWorkflowResultsResult
+from rapidata.api_client.models.paged_result_of_simple_workflow_result_output import PagedResultOfSimpleWorkflowResultOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -57,7 +57,7 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfGetWorkflowResultsResult:
+    ) -> PagedResultOfSimpleWorkflowResultOutput:
         """Get the result overview for a simple workflow.
 
 
@@ -97,7 +97,8 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetWorkflowResultsResult",
+            '200': "PagedResultOfSimpleWorkflowResultOutput",
+            '400': "ValidationProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -127,7 +128,7 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfGetWorkflowResultsResult]:
+    ) -> ApiResponse[PagedResultOfSimpleWorkflowResultOutput]:
         """Get the result overview for a simple workflow.
 
 
@@ -167,7 +168,8 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetWorkflowResultsResult",
+            '200': "PagedResultOfSimpleWorkflowResultOutput",
+            '400': "ValidationProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -237,7 +239,8 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetWorkflowResultsResult",
+            '200': "PagedResultOfSimpleWorkflowResultOutput",
+            '400': "ValidationProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -287,9 +290,7 @@ class SimpleWorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

@@ -42,6 +42,7 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     pid_proportional_gain: Union[StrictFloat, StrictInt] = Field(description="PID proportional gain. Controls how strongly the rate reacts to the current error between target and actual response counts.", alias="pidProportionalGain")
     pid_integral_gain: Union[StrictFloat, StrictInt] = Field(description="PID integral gain. Eliminates steady-state error by accumulating error over time. Includes anti-windup clamping.", alias="pidIntegralGain")
     pid_derivative_gain: Union[StrictFloat, StrictInt] = Field(description="PID derivative gain. Provides damping by reacting to the rate of change of the error, helping prevent overshoot.", alias="pidDerivativeGain")
+    pid_output_offset: Union[StrictFloat, StrictInt] = Field(description="Constant offset added to the PID output before clamping, shifting the controller's operating point so the P/I/D terms trim around a non-zero baseline.", alias="pidOutputOffset")
     pid_min_sessions_per_minute: StrictInt = Field(description="Minimum sessions per minute the PID controller can set. Prevents the rate from dropping to zero.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: StrictInt = Field(description="Maximum sessions per minute the PID controller can set. Prevents the rate from exceeding infrastructure capacity.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: PidBatchMode = Field(alias="pidBatchMode")
@@ -62,7 +63,7 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     owner_id: StrictStr = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "id", "type", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "globalBoostLevel", "audienceBoosts", "audienceId", "criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "type", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "globalBoostLevel", "audienceBoosts", "audienceId", "criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -145,6 +146,7 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
             "pidProportionalGain": obj.get("pidProportionalGain"),
             "pidIntegralGain": obj.get("pidIntegralGain"),
             "pidDerivativeGain": obj.get("pidDerivativeGain"),
+            "pidOutputOffset": obj.get("pidOutputOffset"),
             "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
             "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
             "pidBatchMode": obj.get("pidBatchMode"),

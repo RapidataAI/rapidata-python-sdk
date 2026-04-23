@@ -1161,7 +1161,7 @@
           },
           "minResponses": {
             "type": "integer",
-            "description": "Minimum number of responses per comparison. Defaults to 1.",
+            "description": "Minimum number of responses per comparison. Defaults to 20.",
             "format": "int32"
           },
           "responsesRequired": {
@@ -1189,27 +1189,32 @@
           },
           "pidProportionalGain": {
             "type": "number",
-            "description": "PID proportional gain. Defaults to 1.0.",
+            "description": "PID proportional gain. Defaults to 0.",
             "format": "double"
           },
           "pidIntegralGain": {
             "type": "number",
-            "description": "PID integral gain. Defaults to 0.1.",
+            "description": "PID integral gain. Defaults to 0.003.",
             "format": "double"
           },
           "pidDerivativeGain": {
             "type": "number",
-            "description": "PID derivative gain. Defaults to 0.05.",
+            "description": "PID derivative gain. Defaults to 0.",
+            "format": "double"
+          },
+          "pidOutputOffset": {
+            "type": "number",
+            "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point. Defaults to 25.",
             "format": "double"
           },
           "pidMinSessionsPerMinute": {
             "type": "integer",
-            "description": "Minimum sessions per minute the PID can set. Defaults to 10.",
+            "description": "Minimum sessions per minute the PID can set. Defaults to 20.",
             "format": "int32"
           },
           "pidMaxSessionsPerMinute": {
             "type": "integer",
-            "description": "Maximum sessions per minute the PID can set. Defaults to 10000.",
+            "description": "Maximum sessions per minute the PID can set. Defaults to 50.",
             "format": "int32"
           },
           "pidBatchMode": {
@@ -1794,6 +1799,7 @@
           "pidProportionalGain",
           "pidIntegralGain",
           "pidDerivativeGain",
+          "pidOutputOffset",
           "pidMinSessionsPerMinute",
           "pidMaxSessionsPerMinute",
           "pidBatchMode",
@@ -1856,6 +1862,11 @@
           "pidDerivativeGain": {
             "type": "number",
             "description": "PID derivative gain. Provides damping by reacting to the rate of change of the error, helping prevent overshoot.",
+            "format": "double"
+          },
+          "pidOutputOffset": {
+            "type": "number",
+            "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point so the P/I/D terms trim around a non-zero baseline.",
             "format": "double"
           },
           "pidMinSessionsPerMinute": {
@@ -2517,6 +2528,12 @@
           "pidDerivativeGain": {
             "type": "number",
             "description": "PID derivative gain.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidOutputOffset": {
+            "type": "number",
+            "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point.",
             "format": "double",
             "nullable": true
           },

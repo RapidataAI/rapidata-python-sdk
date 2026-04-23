@@ -162,7 +162,7 @@
   },
   "components": {
     "schemas": {
-      "AttachCategoryRapidBlueprint_Category": {
+      "Category": {
         "required": [
           "label",
           "value"
@@ -177,14 +177,10 @@
           }
         }
       },
-      "EloConfig": {
+      "EloRankingConfig": {
         "type": "object",
         "properties": {
           "startingElo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startingScore": {
             "type": "integer",
             "format": "int32"
           },
@@ -564,6 +560,7 @@
       "IMetadataClassificationMetadata": {
         "required": [
           "classification",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -583,6 +580,8 @@
       },
       "IMetadataCountMetadata": {
         "required": [
+          "count",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -603,6 +602,8 @@
       },
       "IMetadataDurationMetadata": {
         "required": [
+          "duration",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -623,6 +624,8 @@
       },
       "IMetadataFileTypeMetadata": {
         "required": [
+          "fileType",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -642,6 +645,9 @@
       },
       "IMetadataImageDimensionMetadata": {
         "required": [
+          "height",
+          "width",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -666,6 +672,9 @@
       },
       "IMetadataLocationMetadata": {
         "required": [
+          "x",
+          "y",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -691,6 +700,7 @@
       "IMetadataOriginalFilenameMetadata": {
         "required": [
           "originalFilename",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -711,6 +721,7 @@
       "IMetadataSourceUrlMetadata": {
         "required": [
           "url",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -730,6 +741,10 @@
       },
       "IMetadataStreamsMetadata": {
         "required": [
+          "hasAudio",
+          "hasVideo",
+          "hasSubtitles",
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -755,6 +770,7 @@
       },
       "IMetadataTextMetadata": {
         "required": [
+          "visibilities",
           "_t"
         ],
         "properties": {
@@ -838,14 +854,14 @@
             "$ref": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig"
           },
           {
-            "$ref": "#/components/schemas/IRankingConfigEloConfig"
+            "$ref": "#/components/schemas/IRankingConfigEloRankingConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
             "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig",
-            "EloConfig": "#/components/schemas/IRankingConfigEloConfig"
+            "EloRankingConfig": "#/components/schemas/IRankingConfigEloRankingConfig"
           }
         }
       },
@@ -866,22 +882,18 @@
           }
         }
       },
-      "IRankingConfigEloConfig": {
+      "IRankingConfigEloRankingConfig": {
         "required": [
           "_t"
         ],
         "properties": {
           "_t": {
             "enum": [
-              "EloConfig"
+              "EloRankingConfig"
             ],
             "type": "string"
           },
           "startingElo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startingScore": {
             "type": "integer",
             "format": "int32"
           },
@@ -902,54 +914,55 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintLineRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
           },
           {
             "$ref": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintLineRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionBlueprint": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint",
-            "ScrubBlueprint": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint",
-            "PolygonBlueprint": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint",
-            "NamedEntityBlueprint": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint",
-            "LocateBlueprint": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint",
-            "LineBlueprint": "#/components/schemas/IRapidBlueprintLineRapidBlueprint",
-            "FreeTextBlueprint": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint",
-            "CompareBlueprint": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint",
             "ClassifyBlueprint": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint",
-            "BoundingBoxBlueprint": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+            "BoundingBoxBlueprint": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint",
+            "CompareBlueprint": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint",
+            "FreeTextBlueprint": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint",
+            "LineBlueprint": "#/components/schemas/IRapidBlueprintLineRapidBlueprint",
+            "LocateBlueprint": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint",
+            "NamedEntityBlueprint": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint",
+            "PolygonBlueprint": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint",
+            "ScrubBlueprint": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint",
+            "TranscriptionBlueprint": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
           }
         }
       },
       "IRapidBlueprintAttachCategoryRapidBlueprint": {
         "required": [
+          "categories",
           "title",
           "_t"
         ],
@@ -960,22 +973,18 @@
             ],
             "type": "string"
           },
-          "possibleCategories": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "deprecated": true
-          },
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+              "$ref": "#/components/schemas/Category"
             }
+          },
+          "possibleCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           },
           "title": {
             "type": "string"
@@ -1018,7 +1027,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -1038,7 +1048,8 @@
             "type": "string"
           },
           "shouldValidateResponse": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "validationSystemPrompt": {
             "type": "string",
@@ -1190,7 +1201,6 @@
       },
       "IRefereeConfigBudgetRefereeConfig": {
         "required": [
-          "totalBudget",
           "_t"
         ],
         "properties": {
@@ -1242,8 +1252,6 @@
       },
       "IRefereeConfigProbabilisticAttachCategoryRefereeConfig": {
         "required": [
-          "threshold",
-          "maxVotes",
           "_t"
         ],
         "properties": {
@@ -1265,8 +1273,6 @@
       },
       "IRefereeConfigQuorumRefereeConfig": {
         "required": [
-          "maxVotes",
-          "threshold",
           "_t"
         ],
         "properties": {
@@ -1319,7 +1325,6 @@
         "required": [
           "validationSetId",
           "referee",
-          "shouldAcceptIncorrect",
           "_t"
         ],
         "properties": {
@@ -1342,7 +1347,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FeatureFlag"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -1351,7 +1357,7 @@
           "criteria",
           "referee",
           "targetCountryCodes",
-          "maxParallelism",
+          "pairMakerConfig",
           "_t"
         ],
         "properties": {
@@ -1360,6 +1366,20 @@
               "GroupedRankingWorkflowConfig"
             ],
             "type": "string"
+          },
+          "contexts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IAsset"
+            },
+            "nullable": true
           },
           "criteria": {
             "type": "string"
@@ -1377,30 +1397,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "contexts": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "nullable": true,
-            "deprecated": true
-          },
-          "contextAssets": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/IAsset"
-            },
-            "nullable": true,
-            "deprecated": true
-          },
-          "eloConfig": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EloConfig"
-              }
-            ],
-            "deprecated": true
-          },
           "rankingConfig": {
             "oneOf": [
               {
@@ -1411,6 +1407,16 @@
               }
             ]
           },
+          "eloConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/EloRankingConfig"
+              }
+            ]
+          },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
           },
@@ -1418,7 +1424,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FeatureFlag"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -1426,6 +1433,7 @@
         "required": [
           "criteria",
           "referee",
+          "pairMakerConfig",
           "_t"
         ],
         "properties": {
@@ -1455,14 +1463,6 @@
               }
             ]
           },
-          "eloConfig": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EloConfig"
-              }
-            ],
-            "deprecated": true
-          },
           "rankingConfig": {
             "oneOf": [
               {
@@ -1473,6 +1473,16 @@
               }
             ]
           },
+          "eloConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/EloRankingConfig"
+              }
+            ]
+          },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
           },
@@ -1480,7 +1490,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FeatureFlag"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -1511,7 +1522,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FeatureFlag"
-            }
+            },
+            "nullable": true
           }
         }
       },

@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.logic_operator import LogicOperator
 from pydantic import ValidationError
@@ -31,7 +31,7 @@ class RootFilter(LazyValidatedModel):
     RootFilter
     """ # noqa: E501
     filters: List[Filter]
-    logic: Optional[LogicOperator] = None
+    logic: LogicOperator
     __properties: ClassVar[List[str]] = ["filters", "logic"]
 
     # model_config is inherited from LazyValidatedModel
