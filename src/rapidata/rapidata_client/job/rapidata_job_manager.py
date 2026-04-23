@@ -103,6 +103,17 @@ class RapidataJobManager:
         with tracer.start_as_current_span("add_datapoints"):
             _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
 
+        rapid_feature_flags = (
+            [s._to_feature_flag() for s in settings if s.target == "rapids"]
+            if settings
+            else None
+        )
+        campaign_feature_flags = (
+            [s._to_feature_flag() for s in settings if s.target == "campaign"]
+            if settings
+            else None
+        )
+
         job_definition_response = (
             self._openapi_service.order.job_api.job_definition_post(
                 create_job_definition_endpoint_input=CreateJobDefinitionEndpointInput(
@@ -110,8 +121,9 @@ class RapidataJobManager:
                     workflow=workflow._to_model(),
                     datasetId=rapidata_dataset.id,
                     referee=referee._to_model(),
-                    featureFlags=(
-                        [s._to_feature_flag() for s in settings] if settings else None
+                    rapidFeatureFlags=rapid_feature_flags if rapid_feature_flags else None,
+                    campaignFeatureFlags=(
+                        campaign_feature_flags if campaign_feature_flags else None
                     ),
                 )
             )

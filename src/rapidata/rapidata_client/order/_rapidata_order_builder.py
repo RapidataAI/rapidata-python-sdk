@@ -95,16 +95,34 @@ class RapidataOrderBuilder:
         from rapidata.api_client.models.create_order_model import CreateOrderModel
         from rapidata.api_client.models.sticky_state import StickyState
 
+        rapid_feature_flags = (
+            [
+                setting._to_feature_flag()
+                for setting in self._settings
+                if setting.target == "rapids"
+            ]
+            if self._settings is not None
+            else None
+        )
+        campaign_feature_flags = (
+            [
+                setting._to_feature_flag()
+                for setting in self._settings
+                if setting.target == "campaign"
+            ]
+            if self._settings is not None
+            else None
+        )
+
         return CreateOrderModel(
             orderName=self._name,
             workflow=self._workflow._to_model(),
             userFilters=[user_filter._to_model() for user_filter in self._user_filters],
             referee=self._referee._to_model(),
             validationSetId=validation_set_id,
-            featureFlags=(
-                [setting._to_feature_flag() for setting in self._settings]
-                if self._settings is not None
-                else None
+            rapidFeatureFlags=rapid_feature_flags if rapid_feature_flags else None,
+            campaignFeatureFlags=(
+                campaign_feature_flags if campaign_feature_flags else None
             ),
             selections=(
                 [selection._to_model() for selection in self._selections]
