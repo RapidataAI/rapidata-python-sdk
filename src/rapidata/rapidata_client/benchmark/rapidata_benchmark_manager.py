@@ -9,6 +9,7 @@ from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
 from rapidata.api_client.models.filter_operator import FilterOperator
+from rapidata.api_client.models.logic_operator import LogicOperator
 from rapidata.rapidata_client.config import logger, tracer
 
 
@@ -210,7 +211,8 @@ class RapidataBenchmarkManager:
                                     operator=FilterOperator.CONTAINS,
                                     value=name,
                                 )
-                            ]
+                            ],
+                            logic=LogicOperator.AND,
                         ),
                         sortCriteria=[
                             SortCriterion(

@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_order_workflow_input_model import (
+    IOrderWorkflowInputModel,
+)
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
@@ -30,7 +32,7 @@ class Workflow(ABC):
         pass
 
     @abstractmethod
-    def _to_model(self) -> IOrderWorkflowModel:
+    def _to_model(self) -> IOrderWorkflowInputModel:
         pass
 
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:

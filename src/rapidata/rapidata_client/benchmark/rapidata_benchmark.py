@@ -49,8 +49,6 @@ class RapidataBenchmark:
 
     def __instantiate_prompts(self) -> None:
         from rapidata.rapidata_client.config import tracer
-        from rapidata.api_client.models.query_model import QueryModel
-        from rapidata.api_client.models.pagination import Pagination
         from rapidata.api_client.models.file_asset_model import FileAssetModel
         from rapidata.api_client.models.source_url_metadata_model import (
             SourceUrlMetadataModel,
@@ -63,7 +61,8 @@ class RapidataBenchmark:
             while True:
                 prompts_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompts_get(
                     benchmark_id=self.id,
-                    request=QueryModel(page=Pagination(index=current_page, size=100)),
+                    page=current_page,
+                    page_size=100,
                 )
 
                 if prompts_result.total_pages is None:

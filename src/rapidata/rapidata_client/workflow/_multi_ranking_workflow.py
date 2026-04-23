@@ -1,7 +1,9 @@
 from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
-from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
-from rapidata.api_client.models.i_order_workflow_model_grouped_ranking_workflow_model import (
-    IOrderWorkflowModelGroupedRankingWorkflowModel,
+from rapidata.api_client.models.i_order_workflow_input_model import (
+    IOrderWorkflowInputModel,
+)
+from rapidata.api_client.models.i_order_workflow_input_model_grouped_ranking_workflow_input_model import (
+    IOrderWorkflowInputModelGroupedRankingWorkflowInputModel,
 )
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_compare_payload import (
@@ -11,6 +13,7 @@ from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 
 FULL_PERMUTATION_GROUP_SIZE_THRESHOLD = 10
+BRADLEY_TERRY_DEFAULT_STARTING_SCORE = 1200
 
 
 class MultiRankingWorkflow(Workflow):
@@ -64,12 +67,13 @@ class MultiRankingWorkflow(Workflow):
         self.ranking_config = IRankingConfigModel(
             actual_instance=IRankingConfigModelBradleyTerryRankingConfigModel(
                 _t="BradleyTerryRankingConfig",
+                startingScore=BRADLEY_TERRY_DEFAULT_STARTING_SCORE,
             ),
         )
 
-    def _to_model(self) -> IOrderWorkflowModel:
-        return IOrderWorkflowModel(
-            actual_instance=IOrderWorkflowModelGroupedRankingWorkflowModel(
+    def _to_model(self) -> IOrderWorkflowInputModel:
+        return IOrderWorkflowInputModel(
+            actual_instance=IOrderWorkflowInputModelGroupedRankingWorkflowInputModel(
                 _t="GroupedRankingWorkflow",
                 criteria=self.instruction,
                 pairMakerConfig=self.pair_maker_config,
