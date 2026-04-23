@@ -30,12 +30,14 @@ class BoostingProfileModel(LazyValidatedModel):
     BoostingProfileModel
     """ # noqa: E501
     global_boost_level: StrictInt = Field(alias="globalBoostLevel")
+    min_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="minAutoAdjustLevel")
+    max_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="maxAutoAdjustLevel")
     language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
     kayzen_audience_ids: Optional[List[StrictInt]] = Field(default=None, alias="kayzenAudienceIds")
     prospect_blacklist: List[StrictInt] = Field(alias="prospectBlacklist")
     distilling_boosts: List[AudienceBoostModel] = Field(alias="distillingBoosts")
     labeling_boosts: List[AudienceBoostModel] = Field(alias="labelingBoosts")
-    __properties: ClassVar[List[str]] = ["globalBoostLevel", "languageBoosts", "kayzenAudienceIds", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
+    __properties: ClassVar[List[str]] = ["globalBoostLevel", "minAutoAdjustLevel", "maxAutoAdjustLevel", "languageBoosts", "kayzenAudienceIds", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -109,6 +111,8 @@ class BoostingProfileModel(LazyValidatedModel):
 
         _data = {
             "globalBoostLevel": obj.get("globalBoostLevel"),
+            "minAutoAdjustLevel": obj.get("minAutoAdjustLevel"),
+            "maxAutoAdjustLevel": obj.get("maxAutoAdjustLevel"),
             "languageBoosts": obj.get("languageBoosts"),
             "kayzenAudienceIds": obj.get("kayzenAudienceIds"),
             "prospectBlacklist": obj.get("prospectBlacklist"),

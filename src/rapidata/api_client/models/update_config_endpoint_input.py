@@ -43,10 +43,11 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
     pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain.", alias="pidProportionalGain")
     pid_integral_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID integral gain.", alias="pidIntegralGain")
     pid_derivative_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID derivative gain.", alias="pidDerivativeGain")
+    pid_output_offset: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Constant offset added to the PID output before clamping, shifting the controller's operating point.", alias="pidOutputOffset")
     pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[StrictStr] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
-    __properties: ClassVar[List[str]] = ["audienceId", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
+    __properties: ClassVar[List[str]] = ["audienceId", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
 
     @field_validator('pid_batch_mode')
     def pid_batch_mode_validate_enum(cls, value):
@@ -170,6 +171,11 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
         if self.pid_derivative_gain is None and "pid_derivative_gain" in self.model_fields_set:
             _dict['pidDerivativeGain'] = None
 
+        # set to None if pid_output_offset (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_output_offset is None and "pid_output_offset" in self.model_fields_set:
+            _dict['pidOutputOffset'] = None
+
         # set to None if pid_min_sessions_per_minute (nullable) is None
         # and model_fields_set contains the field
         if self.pid_min_sessions_per_minute is None and "pid_min_sessions_per_minute" in self.model_fields_set:
@@ -206,6 +212,7 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
             "pidProportionalGain": obj.get("pidProportionalGain"),
             "pidIntegralGain": obj.get("pidIntegralGain"),
             "pidDerivativeGain": obj.get("pidDerivativeGain"),
+            "pidOutputOffset": obj.get("pidOutputOffset"),
             "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
             "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
             "pidBatchMode": obj.get("pidBatchMode")

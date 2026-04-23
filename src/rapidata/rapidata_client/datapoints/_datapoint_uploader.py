@@ -8,7 +8,9 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 
 if TYPE_CHECKING:
-    from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
+    from rapidata.api_client.models.create_datapoint_endpoint_output import (
+        CreateDatapointEndpointOutput,
+    )
     from rapidata.api_client.models.i_asset_input import IAssetInput
 
 
@@ -30,9 +32,9 @@ class DatapointUploader:
 
     def upload_datapoint(
         self, datapoint: Datapoint, dataset_id: str, index: int
-    ) -> CreateDatapointResult:
-        from rapidata.api_client.models.create_datapoint_model import (
-            CreateDatapointModel,
+    ) -> CreateDatapointEndpointOutput:
+        from rapidata.api_client.models.create_datapoint_endpoint_input import (
+            CreateDatapointEndpointInput,
         )
 
         if datapoint.data_type == "media":
@@ -51,9 +53,9 @@ class DatapointUploader:
             )
         )
 
-        return self.openapi_service.dataset.dataset_api.dataset_dataset_id_datapoint_post(
+        return self.openapi_service.dataset.datapoints_api.dataset_dataset_id_datapoint_post(
             dataset_id=dataset_id,
-            create_datapoint_model=CreateDatapointModel(
+            create_datapoint_endpoint_input=CreateDatapointEndpointInput(
                 asset=uploaded_asset,
                 context=context,
                 contextAsset=context_asset,

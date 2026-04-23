@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,8 +29,8 @@ class IRefereeConfigQuorumRefereeConfig(LazyValidatedModel):
     IRefereeConfigQuorumRefereeConfig
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    max_votes: StrictInt = Field(alias="maxVotes")
-    threshold: StrictInt
+    max_votes: Optional[StrictInt] = Field(default=None, alias="maxVotes")
+    threshold: Optional[StrictInt] = None
     __properties: ClassVar[List[str]] = ["_t", "maxVotes", "threshold"]
 
     @field_validator('t')

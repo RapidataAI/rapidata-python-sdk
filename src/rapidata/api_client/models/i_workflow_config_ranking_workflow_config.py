@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.elo_config import EloConfig
+from rapidata.api_client.models.elo_ranking_config import EloRankingConfig
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset import IAsset
 from rapidata.api_client.models.i_pair_maker_config import IPairMakerConfig
@@ -39,11 +39,11 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
     referee: IRefereeConfig
     context: Optional[StrictStr] = None
     context_asset: Optional[IAsset] = Field(default=None, alias="contextAsset")
-    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
     ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
-    pair_maker_config: Optional[IPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
+    elo_config: Optional[EloRankingConfig] = Field(default=None, alias="eloConfig")
+    pair_maker_config: IPairMakerConfig = Field(alias="pairMakerConfig")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "context", "contextAsset", "eloConfig", "rankingConfig", "pairMakerConfig", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "context", "contextAsset", "rankingConfig", "eloConfig", "pairMakerConfig", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -93,12 +93,12 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of elo_config
-        if self.elo_config:
-            _dict['eloConfig'] = self.elo_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of ranking_config
         if self.ranking_config:
             _dict['rankingConfig'] = self.ranking_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of elo_config
+        if self.elo_config:
+            _dict['eloConfig'] = self.elo_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pair_maker_config
         if self.pair_maker_config:
             _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
@@ -124,6 +124,16 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
         if self.ranking_config is None and "ranking_config" in self.model_fields_set:
             _dict['rankingConfig'] = None
 
+        # set to None if elo_config (nullable) is None
+        # and model_fields_set contains the field
+        if self.elo_config is None and "elo_config" in self.model_fields_set:
+            _dict['eloConfig'] = None
+
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
+
         return _dict
 
     @classmethod
@@ -141,8 +151,8 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
             "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
+            "eloConfig": EloRankingConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
             "pairMakerConfig": IPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }

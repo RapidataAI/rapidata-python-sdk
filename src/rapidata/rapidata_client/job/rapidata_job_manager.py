@@ -666,6 +666,7 @@ class RapidataJobManager:
             from rapidata.api_client.models.root_filter import RootFilter
             from rapidata.api_client.models.filter import Filter
             from rapidata.api_client.models.filter_operator import FilterOperator
+            from rapidata.api_client.models.logic_operator import LogicOperator
             from rapidata.api_client.models.sort_criterion import SortCriterion
             from rapidata.api_client.models.sort_direction import SortDirection
 
@@ -680,7 +681,8 @@ class RapidataJobManager:
                                     operator=FilterOperator.CONTAINS,
                                     value=name,
                                 )
-                            ]
+                            ],
+                            logic=LogicOperator.AND,
                         ),
                         sortCriteria=[
                             SortCriterion(
@@ -744,6 +746,7 @@ class RapidataJobManager:
             from rapidata.api_client.models.root_filter import RootFilter
             from rapidata.api_client.models.filter import Filter
             from rapidata.api_client.models.filter_operator import FilterOperator
+            from rapidata.api_client.models.logic_operator import LogicOperator
             from rapidata.api_client.models.pagination import Pagination
             from rapidata.api_client.models.sort_criterion import SortCriterion
             from rapidata.api_client.models.sort_direction import SortDirection
@@ -759,7 +762,8 @@ class RapidataJobManager:
                                 operator=FilterOperator.CONTAINS,
                                 value=name,
                             )
-                        ]
+                        ],
+                        logic=LogicOperator.AND,
                     ),
                     sortCriteria=[
                         SortCriterion(

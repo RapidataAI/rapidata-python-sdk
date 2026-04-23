@@ -2202,7 +2202,16 @@
         ],
         "description": "The aggregator type."
       },
-      "AttachCategoryRapidBlueprint_Category": {
+      "AudienceJobState": {
+        "enum": [
+          "Submitted",
+          "Running",
+          "Completed",
+          "Failed",
+          "ManualApproval"
+        ]
+      },
+      "Category": {
         "required": [
           "label",
           "value"
@@ -2216,13 +2225,6 @@
             "type": "string"
           }
         }
-      },
-      "AudienceJobState": {
-        "enum": [
-          "Running",
-          "Completed",
-          "Failed"
-        ]
       },
       "CloneOrderEndpoint_Input": {
         "required": [
@@ -2365,7 +2367,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
               }
             ],
             "description": "The workflow configuration."
@@ -2385,13 +2387,41 @@
           "featureFlags": {
             "allOf": [
               {
+                "allOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/FeatureFlag"
+                    },
+                    "nullable": true
+                  }
+                ],
+                "deprecated": true
+              }
+            ],
+            "description": "The feature flags. Deprecated: use RapidFeatureFlags instead."
+          },
+          "rapidFeatureFlags": {
+            "allOf": [
+              {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/FeatureFlag"
                 }
               }
             ],
-            "description": "The feature flags."
+            "description": "The feature flags that apply to each rapid created by this definition."
+          },
+          "campaignFeatureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The feature flags that apply to the campaign (session-wide) for this definition."
           },
           "aggregatorType": {
             "oneOf": [
@@ -2481,7 +2511,7 @@
           "workflow": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
               },
               {
                 "nullable": true
@@ -2517,7 +2547,36 @@
                 "nullable": true
               }
             ],
-            "description": "The feature flags. If not provided, inherits from the previous revision."
+            "description": "The feature flags. Deprecated: use RapidFeatureFlags instead.\n If not provided, inherits from the previous revision.",
+            "deprecated": true
+          },
+          "rapidFeatureFlags": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The rapid-level feature flags applied to each rapid created by this revision.\n If not provided, inherits from the previous revision."
+          },
+          "campaignFeatureFlags": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The campaign-level (session-wide) feature flags for this revision.\n If not provided, inherits from the previous revision."
           },
           "aggregatorType": {
             "enum": [
@@ -2603,7 +2662,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
               }
             ],
             "description": "The workflow helps to determine the tasks that need to be completed by the users."
@@ -2629,6 +2688,23 @@
           "featureFlags": {
             "allOf": [
               {
+                "allOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/FeatureFlag"
+                    },
+                    "nullable": true
+                  }
+                ],
+                "deprecated": true
+              }
+            ],
+            "description": "The feature flags are used to enable or disable certain features."
+          },
+          "rapidFeatureFlags": {
+            "allOf": [
+              {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/FeatureFlag"
@@ -2636,7 +2712,19 @@
                 "nullable": true
               }
             ],
-            "description": "The feature flags are used to enable or disable certain features."
+            "description": "The feature flags that apply to each rapid created by this order."
+          },
+          "campaignFeatureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The feature flags that apply to the campaign (session-wide) for this order."
           },
           "priority": {
             "type": "integer",
@@ -2786,9 +2874,14 @@
         ]
       },
       "EloConfigModel": {
+        "required": [
+          "startingScore",
+          "kFactor",
+          "scalingFactor"
+        ],
         "type": "object",
         "properties": {
-          "startingElo": {
+          "startingScore": {
             "type": "integer",
             "format": "int32"
           },
@@ -2849,10 +2942,24 @@
           },
           "value": { },
           "operator": {
-            "$ref": "#/components/schemas/FilterOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/FilterOperator"
+              }
+            ]
           },
           "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/LogicOperator"
+              }
+            ]
           },
           "filters": {
             "type": "array",
@@ -2875,7 +2982,8 @@
           "StartsWith",
           "EndsWith",
           "In",
-          "NotContains"
+          "NotContains",
+          null
         ]
       },
       "GenderUserFilterModel_Gender": {
@@ -3056,7 +3164,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
               }
             ],
             "description": "The workflow configuration. Can be used directly to create a new revision."
@@ -3381,36 +3489,32 @@
           }
         }
       },
-      "IOrderWorkflowModel": {
+      "IOrderWorkflowInputModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel"
+            "$ref": "#/components/schemas/IOrderWorkflowInputModelEvaluationWorkflowInputModel"
           },
           {
-            "$ref": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel"
+            "$ref": "#/components/schemas/IOrderWorkflowInputModelGroupedRankingWorkflowInputModel"
           },
           {
-            "$ref": "#/components/schemas/IOrderWorkflowModelRankingWorkflowModel"
-          },
-          {
-            "$ref": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
+            "$ref": "#/components/schemas/IOrderWorkflowInputModelSimpleWorkflowInputModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "EvaluationWorkflow": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel",
-            "GroupedRankingWorkflow": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel",
-            "RankingWorkflow": "#/components/schemas/IOrderWorkflowModelRankingWorkflowModel",
-            "SimpleWorkflow": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
+            "EvaluationWorkflow": "#/components/schemas/IOrderWorkflowInputModelEvaluationWorkflowInputModel",
+            "GroupedRankingWorkflow": "#/components/schemas/IOrderWorkflowInputModelGroupedRankingWorkflowInputModel",
+            "SimpleWorkflow": "#/components/schemas/IOrderWorkflowInputModelSimpleWorkflowInputModel"
           }
         }
       },
-      "IOrderWorkflowModelEvaluationWorkflowModel": {
+      "IOrderWorkflowInputModelEvaluationWorkflowInputModel": {
         "required": [
           "validationSetId",
           "shouldAcceptIncorrect",
@@ -3437,7 +3541,7 @@
           }
         }
       },
-      "IOrderWorkflowModelGroupedRankingWorkflowModel": {
+      "IOrderWorkflowInputModelGroupedRankingWorkflowInputModel": {
         "required": [
           "criteria",
           "_t"
@@ -3499,77 +3603,7 @@
           }
         }
       },
-      "IOrderWorkflowModelRankingWorkflowModel": {
-        "required": [
-          "criteria",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "RankingWorkflow"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfigModel"
-          },
-          "eloConfig": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EloConfigModel"
-              }
-            ],
-            "deprecated": true
-          },
-          "rankingConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IRankingConfigModel"
-              }
-            ]
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              }
-            ]
-          },
-          "metadata": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
-                },
-                "nullable": true
-              }
-            ],
-            "deprecated": true
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          }
-        }
-      },
-      "IOrderWorkflowModelSimpleWorkflowModel": {
+      "IOrderWorkflowInputModelSimpleWorkflowInputModel": {
         "required": [
           "blueprint",
           "_t"
@@ -3603,13 +3637,30 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IPairMakerConfigModelFullPermutationPairMakerConfigModel"
+          },
+          {
             "$ref": "#/components/schemas/IPairMakerConfigModelOnlinePairMakerConfigModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "FullPermutationPairMaker": "#/components/schemas/IPairMakerConfigModelFullPermutationPairMakerConfigModel",
             "OnlinePairMaker": "#/components/schemas/IPairMakerConfigModelOnlinePairMakerConfigModel"
+          }
+        }
+      },
+      "IPairMakerConfigModelFullPermutationPairMakerConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FullPermutationPairMaker"
+            ],
+            "type": "string"
           }
         }
       },
@@ -3824,6 +3875,13 @@
           },
           "aggregatorType": {
             "$ref": "#/components/schemas/AggregatorType"
+          },
+          "demographicKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           }
         }
       },
@@ -3867,6 +3925,7 @@
       },
       "IRankingConfigModelBradleyTerryRankingConfigModel": {
         "required": [
+          "startingScore",
           "_t"
         ],
         "properties": {
@@ -3884,6 +3943,9 @@
       },
       "IRankingConfigModelEloConfigModel": {
         "required": [
+          "startingScore",
+          "kFactor",
+          "scalingFactor",
           "_t"
         ],
         "properties": {
@@ -3893,7 +3955,7 @@
             ],
             "type": "string"
           },
-          "startingElo": {
+          "startingScore": {
             "type": "integer",
             "format": "int32"
           },
@@ -3914,54 +3976,55 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintLineRapidBlueprint"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
           },
           {
             "$ref": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+            "$ref": "#/components/schemas/IRapidBlueprintLineRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionBlueprint": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint",
-            "ScrubBlueprint": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint",
-            "PolygonBlueprint": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint",
-            "NamedEntityBlueprint": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint",
-            "LocateBlueprint": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint",
-            "LineBlueprint": "#/components/schemas/IRapidBlueprintLineRapidBlueprint",
-            "FreeTextBlueprint": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint",
-            "CompareBlueprint": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint",
             "ClassifyBlueprint": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint",
-            "BoundingBoxBlueprint": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+            "BoundingBoxBlueprint": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint",
+            "CompareBlueprint": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint",
+            "FreeTextBlueprint": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint",
+            "LineBlueprint": "#/components/schemas/IRapidBlueprintLineRapidBlueprint",
+            "LocateBlueprint": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint",
+            "NamedEntityBlueprint": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint",
+            "PolygonBlueprint": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint",
+            "ScrubBlueprint": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint",
+            "TranscriptionBlueprint": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
           }
         }
       },
       "IRapidBlueprintAttachCategoryRapidBlueprint": {
         "required": [
+          "categories",
           "title",
           "_t"
         ],
@@ -3972,22 +4035,18 @@
             ],
             "type": "string"
           },
-          "possibleCategories": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "deprecated": true
-          },
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+              "$ref": "#/components/schemas/Category"
             }
+          },
+          "possibleCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           },
           "title": {
             "type": "string"
@@ -4030,7 +4089,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": true
           }
         }
       },
@@ -4050,7 +4110,8 @@
             "type": "string"
           },
           "shouldValidateResponse": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "validationSystemPrompt": {
             "type": "string",
@@ -4890,84 +4951,9 @@
         "enum": [
           "And",
           "Or",
-          "Not"
+          "Not",
+          null
         ]
-      },
-      "Metadata_IOrderMetadataInput": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptAssetMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_TranscriptionMetadataInput"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "PromptMetadataInput": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptMetadataInput",
-            "PromptAssetMetadataInput": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptAssetMetadataInput",
-            "TranscriptionMetadataInput": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_TranscriptionMetadataInput"
-          }
-        }
-      },
-      "Metadata_IOrderMetadataInputMetadata_PromptAssetMetadataInput": {
-        "required": [
-          "asset",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptAssetMetadataInput"
-            ],
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          }
-        }
-      },
-      "Metadata_IOrderMetadataInputMetadata_PromptMetadataInput": {
-        "required": [
-          "prompt",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadataInput"
-            ],
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string"
-          }
-        }
-      },
-      "Metadata_IOrderMetadataInputMetadata_TranscriptionMetadataInput": {
-        "required": [
-          "transcription",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionMetadataInput"
-            ],
-            "type": "string"
-          },
-          "transcription": {
-            "type": "string"
-          }
-        }
       },
       "MetadataInputCollection": {
         "type": "object",
@@ -5426,7 +5412,8 @@
       },
       "RootFilter": {
         "required": [
-          "filters"
+          "filters",
+          "logic"
         ],
         "type": "object",
         "properties": {
@@ -5443,7 +5430,8 @@
       },
       "SortCriterion": {
         "required": [
-          "propertyName"
+          "propertyName",
+          "direction"
         ],
         "type": "object",
         "properties": {
@@ -5509,10 +5497,14 @@
         "type": "object",
         "properties": {
           "datasetIds": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            ],
             "description": "The dataset IDs created by unlocking the order."
           }
         }

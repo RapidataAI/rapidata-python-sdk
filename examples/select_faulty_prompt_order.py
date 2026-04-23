@@ -29,7 +29,7 @@ def new_select_words_order(rapi: RapidataClient):
         responses_per_datapoint=15,
         sentences=prompts_with_no_mistakes,
         filters=[
-            rapi.order.filters.language(["en"]),
+            rapi.order.filters.Language(["en"]),
         ],
         validation_set_id="6761a86eef7af86285630ea8" # in this example, the validation set has already been created
     ).run()

@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,10 +29,10 @@ class IMetadataStreamsMetadata(LazyValidatedModel):
     IMetadataStreamsMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    has_audio: Optional[StrictBool] = Field(default=None, alias="hasAudio")
-    has_video: Optional[StrictBool] = Field(default=None, alias="hasVideo")
-    has_subtitles: Optional[StrictBool] = Field(default=None, alias="hasSubtitles")
-    visibilities: Optional[List[StrictStr]] = None
+    has_audio: StrictBool = Field(alias="hasAudio")
+    has_video: StrictBool = Field(alias="hasVideo")
+    has_subtitles: StrictBool = Field(alias="hasSubtitles")
+    visibilities: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "hasAudio", "hasVideo", "hasSubtitles", "visibilities"]
 
     @field_validator('t')
@@ -45,9 +45,6 @@ class IMetadataStreamsMetadata(LazyValidatedModel):
     @field_validator('visibilities')
     def visibilities_validate_enum(cls, value):
         """Validates the enum"""
-        if value is None:
-            return value
-
         for i in value:
             if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
                 raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")

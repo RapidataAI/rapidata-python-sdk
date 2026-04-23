@@ -25,7 +25,7 @@ def new_select_words_order(rapi: RapidataClient, validation_set_id: str):
         validation_set_id=validation_set_id,
         responses_per_datapoint=25,
         filters=[
-            rapi.order.filters.language(["en"])
+            rapi.order.filters.Language(["en"])
         ]
     ).run()
     

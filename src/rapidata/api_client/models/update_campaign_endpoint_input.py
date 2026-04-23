@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.boosting_profile_model import BoostingProfileModel
 from rapidata.api_client.models.feature_flag import FeatureFlag
@@ -35,12 +35,13 @@ class UpdateCampaignEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     name: Optional[StrictStr] = Field(default=None, description="The new name for the campaign.")
     priority: Optional[StrictInt] = Field(default=None, description="The new priority value for the campaign.")
+    requires_booster: Optional[StrictBool] = Field(default=None, description="When true, recomputes the boosting profile from the campaign's current filters  (via BoostingProfileEvaluator) and ensures any required filtered Kayzen audience  exists and is populated. When false, clears the boosting profile.  Use this to toggle boost on/off without having to compute a BoostingProfile client-side.  Ignored when BoostingProfile is also set (explicit profile wins).", alias="requiresBooster")
     boosting_profile: Optional[BoostingProfileModel] = Field(default=None, alias="boostingProfile")
     sticky_config: Optional[StickyConfigModel] = Field(default=None, alias="stickyConfig")
     filters: Optional[List[ICampaignFilterModel]] = None
     selections: Optional[List[ICampaignSelectionModel]] = None
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["name", "priority", "boostingProfile", "stickyConfig", "filters", "selections", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["name", "priority", "requiresBooster", "boostingProfile", "stickyConfig", "filters", "selections", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -114,6 +115,11 @@ class UpdateCampaignEndpointInput(LazyValidatedModel):
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
 
+        # set to None if requires_booster (nullable) is None
+        # and model_fields_set contains the field
+        if self.requires_booster is None and "requires_booster" in self.model_fields_set:
+            _dict['requiresBooster'] = None
+
         # set to None if boosting_profile (nullable) is None
         # and model_fields_set contains the field
         if self.boosting_profile is None and "boosting_profile" in self.model_fields_set:
@@ -153,6 +159,7 @@ class UpdateCampaignEndpointInput(LazyValidatedModel):
         _data = {
             "name": obj.get("name"),
             "priority": obj.get("priority"),
+            "requiresBooster": obj.get("requiresBooster"),
             "boostingProfile": BoostingProfileModel.from_dict(obj["boostingProfile"]) if obj.get("boostingProfile") is not None else None,
             "stickyConfig": StickyConfigModel.from_dict(obj["stickyConfig"]) if obj.get("stickyConfig") is not None else None,
             "filters": [ICampaignFilterModel.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,

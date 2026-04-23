@@ -7,7 +7,6 @@ from rapidata import (
     LabelingSelection,
     ConditionalValidationSelection,
 )
-from rapidata.rapidata_client.assets._media_asset import MediaAsset
 
 
 def new_cond_validation_rapid_order(rapi: RapidataClient):

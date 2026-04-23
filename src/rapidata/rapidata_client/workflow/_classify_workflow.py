@@ -1,12 +1,12 @@
 from typing import Any
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
-from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
-from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model import (
-    IOrderWorkflowModelSimpleWorkflowModel,
+from rapidata.api_client.models.i_order_workflow_input_model import (
+    IOrderWorkflowInputModel,
 )
-from rapidata.api_client.models.attach_category_rapid_blueprint_category import (
-    AttachCategoryRapidBlueprintCategory,
+from rapidata.api_client.models.i_order_workflow_input_model_simple_workflow_input_model import (
+    IOrderWorkflowInputModelSimpleWorkflowInputModel,
 )
+from rapidata.api_client.models.category import Category
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_classify_payload import (
@@ -56,18 +56,18 @@ class ClassifyWorkflow(Workflow):
             },
         }
 
-    def _to_model(self) -> IOrderWorkflowModel:
+    def _to_model(self) -> IOrderWorkflowInputModel:
         blueprint = IRapidBlueprintAttachCategoryRapidBlueprint(
             _t="ClassifyBlueprint",
             title=self._instruction,
             categories=[
-                AttachCategoryRapidBlueprintCategory(label=option, value=option)
+                Category(label=option, value=option)
                 for option in self._answer_options
             ],
         )
 
-        return IOrderWorkflowModel(
-            actual_instance=IOrderWorkflowModelSimpleWorkflowModel(
+        return IOrderWorkflowInputModel(
+            actual_instance=IOrderWorkflowInputModelSimpleWorkflowInputModel(
                 _t="SimpleWorkflow",
                 blueprint=IRapidBlueprint(actual_instance=blueprint),
             )

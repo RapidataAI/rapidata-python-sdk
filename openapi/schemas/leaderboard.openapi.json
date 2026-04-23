@@ -228,6 +228,181 @@
         }
       }
     },
+    "/benchmark/{benchmarkId}/prompts": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the paged prompts of a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to query.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptsByBenchmarkEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/leaderboard/combined-matrix": {
       "get": {
         "tags": [
@@ -400,6 +575,165 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/VoteMatrixResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmark-sample/{sampleId}": {
+      "get": {
+        "tags": [
+          "Sample"
+        ],
+        "summary": "Gets a benchmark sample by its id.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "The id of the sample to be retrieved.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/samples/{identifier}": {
+      "get": {
+        "tags": [
+          "Sample"
+        ],
+        "summary": "Returns the paged samples of a benchmark filtered by an identifier.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to query.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "description": "The identifier to filter all samples for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSamplesByIdentifierEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/samples": {
+      "get": {
+        "tags": [
+          "Sample"
+        ],
+        "summary": "Queries all samples of a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to query samples for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fillMissing",
+            "in": "query",
+            "description": "Whether to fill missing samples with placeholders.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSamplesByParticipantEndpoint_PagedResultOfISampleOutput"
                 }
               }
             }
@@ -998,121 +1332,6 @@
         }
       }
     },
-    "/benchmark/{benchmarkId}/prompts": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Returns the paged prompts of a benchmark by its ID.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/benchmark/{benchmarkId}/samples/{identifier}": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Returns the paged prompts of a benchmark by its ID.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "The id of the benchmark to query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "identifier",
-            "in": "path",
-            "description": "The identifier to filter all samples for",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "description": "additional query settings",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByIdentifier"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByIdentifier"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSampleByIdentifier"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/benchmark/{benchmarkId}/prompt": {
       "post": {
         "tags": [
@@ -1561,58 +1780,6 @@
       }
     },
     "/leaderboard/{leaderboardId}/prompts": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "returns the paged prompts of a leaderboard by its ID.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      },
       "post": {
         "tags": [
           "Leaderboard"
@@ -2427,67 +2594,6 @@
         }
       }
     },
-    "/participant/{participantId}/samples": {
-      "get": {
-        "tags": [
-          "Participant"
-        ],
-        "summary": "Queries all samples of a participant.",
-        "parameters": [
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          },
-          {
-            "name": "fillMissing",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfISampleByParticipant"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/participant/{participantId}/disable": {
       "post": {
         "tags": [
@@ -2553,47 +2659,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/benchmark-sample/{sampleId}": {
-      "get": {
-        "tags": [
-          "Sample"
-        ],
-        "summary": "Gets a sample by its Id.",
-        "parameters": [
-          {
-            "name": "sampleId",
-            "in": "path",
-            "description": "The Id of the sample to be retrieved",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSampleByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSampleByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSampleByIdResult"
-                }
-              }
-            }
           }
         }
       }
@@ -2897,10 +2962,24 @@
           },
           "value": { },
           "operator": {
-            "$ref": "#/components/schemas/FilterOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/FilterOperator"
+              }
+            ]
           },
           "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/LogicOperator"
+              }
+            ]
           },
           "filters": {
             "type": "array",
@@ -2923,7 +3002,8 @@
           "StartsWith",
           "EndsWith",
           "In",
-          "NotContains"
+          "NotContains",
+          null
         ]
       },
       "ForkBenchmarkResult": {
@@ -3277,7 +3357,88 @@
           }
         }
       },
-      "GetSampleByIdResult": {
+      "GetPromptsByBenchmarkEndpoint_Output": {
+        "required": [
+          "id",
+          "identifier",
+          "createdAt",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the prompt."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The prompt text.",
+            "nullable": true
+          },
+          "promptAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The optional asset associated with the prompt."
+          },
+          "identifier": {
+            "type": "string",
+            "description": "The identifier associated with the prompt."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the prompt was created.",
+            "format": "date-time"
+          },
+          "tags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The tags associated with the prompt."
+          }
+        }
+      },
+      "GetPromptsByBenchmarkEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetPromptsByBenchmarkEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetSampleByIdEndpoint_Output": {
         "required": [
           "id",
           "identifier",
@@ -3290,50 +3451,345 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the sample."
           },
           "identifier": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
           },
           "participantId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the participant that owns the sample."
           },
           "participantName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the participant that owns the sample."
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "description": "The asset associated with the sample."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "An optional prompt associated with the sample.",
+            "nullable": true
+          },
+          "promptAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "An optional prompt asset associated with the sample."
           },
           "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The tags associated with the sample."
           },
           "createdAt": {
             "type": "string",
+            "description": "The timestamp when the sample was created.",
             "format": "date-time"
           },
           "ownerId": {
             "type": "string",
+            "description": "The id of the customer that owns the sample.",
             "format": "uuid"
           },
           "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer that owns the sample."
+          }
+        }
+      },
+      "GetSamplesByIdentifierEndpoint_Output": {
+        "required": [
+          "id",
+          "identifier",
+          "participantId",
+          "participantName",
+          "asset",
+          "tags",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the sample."
+          },
+          "identifier": {
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
+          },
+          "participantId": {
+            "type": "string",
+            "description": "The id of the participant that owns the sample."
+          },
+          "participantName": {
+            "type": "string",
+            "description": "The name of the participant that owns the sample."
+          },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset associated with the sample."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "An optional prompt associated with the sample.",
+            "nullable": true
+          },
+          "promptAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "An optional prompt asset associated with the sample."
+          },
+          "tags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The tags associated with the sample."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the sample was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer that owns the sample.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer that owns the sample."
+          }
+        }
+      },
+      "GetSamplesByIdentifierEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetSamplesByIdentifierEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetSamplesByParticipantEndpoint_ISampleOutput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/GetSamplesByParticipantEndpoint_ISampleOutputGetSamplesByParticipantEndpoint_SampleOutput"
+          },
+          {
+            "$ref": "#/components/schemas/GetSamplesByParticipantEndpoint_ISampleOutputGetSamplesByParticipantEndpoint_PlaceholderSampleOutput"
+          }
+        ],
+        "description": "Represents a sample returned for a participant.",
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "SampleOutput": "#/components/schemas/GetSamplesByParticipantEndpoint_ISampleOutputGetSamplesByParticipantEndpoint_SampleOutput",
+            "PlaceholderSampleOutput": "#/components/schemas/GetSamplesByParticipantEndpoint_ISampleOutputGetSamplesByParticipantEndpoint_PlaceholderSampleOutput"
+          }
+        }
+      },
+      "GetSamplesByParticipantEndpoint_ISampleOutputGetSamplesByParticipantEndpoint_PlaceholderSampleOutput": {
+        "required": [
+          "identifier",
+          "tags",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PlaceholderSampleOutput"
+            ],
             "type": "string"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "An optional prompt associated with the sample.",
+            "nullable": true
+          },
+          "promptAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "An optional prompt asset associated with the sample."
+          },
+          "tags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The tags associated with the sample."
+          }
+        }
+      },
+      "GetSamplesByParticipantEndpoint_ISampleOutputGetSamplesByParticipantEndpoint_SampleOutput": {
+        "required": [
+          "id",
+          "identifier",
+          "asset",
+          "tags",
+          "ownerMail",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SampleOutput"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the sample."
+          },
+          "identifier": {
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
+          },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset associated with the sample."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "An optional prompt associated with the sample.",
+            "nullable": true
+          },
+          "promptAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "An optional prompt asset associated with the sample."
+          },
+          "tags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The tags associated with the sample."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the sample was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer that owns the sample.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer that owns the sample."
+          }
+        }
+      },
+      "GetSamplesByParticipantEndpoint_PagedResultOfISampleOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetSamplesByParticipantEndpoint_ISampleOutput"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3896,123 +4352,6 @@
           }
         }
       },
-      "ISampleByParticipant": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ISampleByParticipantPlaceholderSampleByParticipant"
-          },
-          {
-            "$ref": "#/components/schemas/ISampleByParticipantSampleByParticipant"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "PlaceholderSampleByParticipant": "#/components/schemas/ISampleByParticipantPlaceholderSampleByParticipant",
-            "SampleByParticipant": "#/components/schemas/ISampleByParticipantSampleByParticipant"
-          }
-        }
-      },
-      "ISampleByParticipantPlaceholderSampleByParticipant": {
-        "required": [
-          "identifier",
-          "tags",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PlaceholderSampleByParticipant"
-            ],
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "ISampleByParticipantSampleByParticipant": {
-        "required": [
-          "id",
-          "identifier",
-          "asset",
-          "tags",
-          "ownerMail",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SampleByParticipant"
-            ],
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ownerId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ownerMail": {
-            "type": "string"
-          }
-        }
-      },
       "LeaderboardsQueryResult": {
         "required": [
           "id",
@@ -4073,7 +4412,8 @@
         "enum": [
           "And",
           "Or",
-          "Not"
+          "Not",
+          null
         ]
       },
       "MetadataInputCollection": {
@@ -4127,39 +4467,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BenchmarkQueryResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResultOfISampleByParticipant": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ISampleByParticipant"
             }
           },
           "totalPages": {
@@ -4234,39 +4541,6 @@
           }
         }
       },
-      "PagedResultOfPromptByBenchmarkResult": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PromptByBenchmarkResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "PagedResultOfRunsByLeaderboardResult": {
         "required": [
           "total",
@@ -4292,39 +4566,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/RunsByLeaderboardResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResultOfSampleByIdentifier": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SampleByIdentifier"
             }
           },
           "totalPages": {
@@ -4409,47 +4650,6 @@
           "Disabled"
         ]
       },
-      "PromptByBenchmarkResult": {
-        "required": [
-          "id",
-          "identifier",
-          "createdAt",
-          "tags"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
       "QueryModel": {
         "type": "object",
         "properties": {
@@ -4484,7 +4684,8 @@
       },
       "RootFilter": {
         "required": [
-          "filters"
+          "filters",
+          "logic"
         ],
         "type": "object",
         "properties": {
@@ -4540,69 +4741,10 @@
           "Failed"
         ]
       },
-      "SampleByIdentifier": {
-        "required": [
-          "id",
-          "identifier",
-          "participantId",
-          "participantName",
-          "asset",
-          "tags",
-          "ownerMail"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "participantId": {
-            "type": "string"
-          },
-          "participantName": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ]
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ownerId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ownerMail": {
-            "type": "string"
-          }
-        }
-      },
       "SortCriterion": {
         "required": [
-          "propertyName"
+          "propertyName",
+          "direction"
         ],
         "type": "object",
         "properties": {
@@ -5081,9 +5223,6 @@
     },
     {
       "name": "Prompt"
-    },
-    {
-      "name": "Sample"
     }
   ]
 }

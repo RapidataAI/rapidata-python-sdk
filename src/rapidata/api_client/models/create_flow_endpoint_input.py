@@ -39,18 +39,19 @@ class CreateFlowEndpointInput(LazyValidatedModel):
     serve_responses: Optional[StrictInt] = Field(default=None, description="Number of accepted responses per rapid at which to stop serving. When set, must be less than or equal to MaxResponses. Null defaults to MaxResponses.", alias="serveResponses")
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.", alias="serveToResponseRatio")
     serve_timeout_seconds: Optional[StrictInt] = Field(default=None, description="Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.", alias="serveTimeoutSeconds")
-    min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 1.", alias="minResponses")
+    min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 20.", alias="minResponses")
     responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Enables PID control when set.", alias="targetResponseCount")
-    pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain. Defaults to 1.0.", alias="pidProportionalGain")
-    pid_integral_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID integral gain. Defaults to 0.1.", alias="pidIntegralGain")
-    pid_derivative_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID derivative gain. Defaults to 0.05.", alias="pidDerivativeGain")
-    pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set. Defaults to 10.", alias="pidMinSessionsPerMinute")
-    pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 10000.", alias="pidMaxSessionsPerMinute")
+    pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain. Defaults to 0.", alias="pidProportionalGain")
+    pid_integral_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID integral gain. Defaults to 0.003.", alias="pidIntegralGain")
+    pid_derivative_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID derivative gain. Defaults to 0.", alias="pidDerivativeGain")
+    pid_output_offset: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Constant offset added to the PID output before clamping, shifting the controller's operating point. Defaults to 25.", alias="pidOutputOffset")
+    pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set. Defaults to 20.", alias="pidMinSessionsPerMinute")
+    pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 50.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[PidBatchMode] = Field(default=None, alias="pidBatchMode")
     drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
+    __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -142,6 +143,7 @@ class CreateFlowEndpointInput(LazyValidatedModel):
             "pidProportionalGain": obj.get("pidProportionalGain"),
             "pidIntegralGain": obj.get("pidIntegralGain"),
             "pidDerivativeGain": obj.get("pidDerivativeGain"),
+            "pidOutputOffset": obj.get("pidOutputOffset"),
             "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
             "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
             "pidBatchMode": obj.get("pidBatchMode"),

@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.attach_category_rapid_blueprint_category import AttachCategoryRapidBlueprintCategory
+from rapidata.api_client.models.category import Category
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,10 +30,10 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(LazyValidatedModel):
     IRapidBlueprintAttachCategoryRapidBlueprint
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
+    categories: List[Category]
     possible_categories: Optional[List[StrictStr]] = Field(default=None, alias="possibleCategories")
-    categories: Optional[List[AttachCategoryRapidBlueprintCategory]] = None
     title: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "possibleCategories", "categories", "title"]
+    __properties: ClassVar[List[str]] = ["_t", "categories", "possibleCategories", "title"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -84,6 +84,11 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(LazyValidatedModel):
                 if _item_categories:
                     _items.append(_item_categories.to_dict())
             _dict['categories'] = _items
+        # set to None if possible_categories (nullable) is None
+        # and model_fields_set contains the field
+        if self.possible_categories is None and "possible_categories" in self.model_fields_set:
+            _dict['possibleCategories'] = None
+
         return _dict
 
     @classmethod
@@ -97,8 +102,8 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
+            "categories": [Category.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "possibleCategories": obj.get("possibleCategories"),
-            "categories": [AttachCategoryRapidBlueprintCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "title": obj.get("title")
         }
         try:

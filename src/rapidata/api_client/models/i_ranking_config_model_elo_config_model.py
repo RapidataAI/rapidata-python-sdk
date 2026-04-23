@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,10 +29,10 @@ class IRankingConfigModelEloConfigModel(LazyValidatedModel):
     IRankingConfigModelEloConfigModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["_t", "startingElo", "kFactor", "scalingFactor"]
+    starting_score: StrictInt = Field(alias="startingScore")
+    k_factor: StrictInt = Field(alias="kFactor")
+    scaling_factor: StrictInt = Field(alias="scalingFactor")
+    __properties: ClassVar[List[str]] = ["_t", "startingScore", "kFactor", "scalingFactor"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +89,7 @@ class IRankingConfigModelEloConfigModel(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "startingElo": obj.get("startingElo"),
+            "startingScore": obj.get("startingScore"),
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor")
         }

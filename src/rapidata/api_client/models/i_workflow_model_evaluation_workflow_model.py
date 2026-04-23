@@ -19,7 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
+from rapidata.api_client.models.workflow_state_model import WorkflowStateModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,8 +33,8 @@ class IWorkflowModelEvaluationWorkflowModel(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     id: StrictStr
     validation_set_id: StrictStr = Field(alias="validationSetId")
-    state: StrictStr
-    referee: IRefereeConfig
+    state: WorkflowStateModel
+    referee: IRefereeConfigModel
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
     __properties: ClassVar[List[str]] = ["_t", "id", "validationSetId", "state", "referee", "name", "ownerMail"]
@@ -104,7 +105,7 @@ class IWorkflowModelEvaluationWorkflowModel(LazyValidatedModel):
             "id": obj.get("id"),
             "validationSetId": obj.get("validationSetId"),
             "state": obj.get("state"),
-            "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "referee": IRefereeConfigModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail")
         }

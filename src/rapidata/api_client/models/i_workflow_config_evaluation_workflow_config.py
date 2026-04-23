@@ -33,7 +33,7 @@ class IWorkflowConfigEvaluationWorkflowConfig(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     validation_set_id: StrictStr = Field(alias="validationSetId")
     referee: IRefereeConfig
-    should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
+    should_accept_incorrect: Optional[StrictBool] = Field(default=None, alias="shouldAcceptIncorrect")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "validationSetId", "referee", "shouldAcceptIncorrect", "featureFlags"]
 
@@ -89,6 +89,11 @@ class IWorkflowConfigEvaluationWorkflowConfig(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
+
         return _dict
 
     @classmethod

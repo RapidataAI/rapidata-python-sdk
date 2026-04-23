@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.sort_direction import SortDirection
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -30,7 +30,7 @@ class SortCriterion(LazyValidatedModel):
     SortCriterion
     """ # noqa: E501
     property_name: StrictStr = Field(alias="propertyName")
-    direction: Optional[SortDirection] = None
+    direction: SortDirection
     __properties: ClassVar[List[str]] = ["propertyName", "direction"]
 
     # model_config is inherited from LazyValidatedModel
