@@ -1,7 +1,9 @@
 from typing import Any
-from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
-from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model import (
-    IOrderWorkflowModelSimpleWorkflowModel,
+from rapidata.api_client.models.i_order_workflow_input_model import (
+    IOrderWorkflowInputModel,
+)
+from rapidata.api_client.models.i_order_workflow_input_model_simple_workflow_input_model import (
+    IOrderWorkflowInputModelSimpleWorkflowInputModel,
 )
 from rapidata.api_client.models.i_rapid_blueprint_compare_rapid_blueprint import (
     IRapidBlueprintCompareRapidBlueprint,
@@ -47,15 +49,15 @@ class CompareWorkflow(Workflow):
             "indexIdentifiers": self._a_b_names,
         }
 
-    def _to_model(self) -> IOrderWorkflowModel:
+    def _to_model(self) -> IOrderWorkflowInputModel:
         blueprint = IRapidBlueprintCompareRapidBlueprint(
             _t="CompareBlueprint",
             criteria=self._instruction,
             indexIdentifiers=self._a_b_names,
         )
 
-        return IOrderWorkflowModel(
-            actual_instance=IOrderWorkflowModelSimpleWorkflowModel(
+        return IOrderWorkflowInputModel(
+            actual_instance=IOrderWorkflowInputModelSimpleWorkflowInputModel(
                 _t="SimpleWorkflow",
                 blueprint=IRapidBlueprint(actual_instance=blueprint),
             )

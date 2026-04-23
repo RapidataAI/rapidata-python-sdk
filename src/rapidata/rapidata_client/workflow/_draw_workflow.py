@@ -1,7 +1,9 @@
 from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
-from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
-from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model import (
-    IOrderWorkflowModelSimpleWorkflowModel,
+from rapidata.api_client.models.i_order_workflow_input_model import (
+    IOrderWorkflowInputModel,
+)
+from rapidata.api_client.models.i_order_workflow_input_model_simple_workflow_input_model import (
+    IOrderWorkflowInputModelSimpleWorkflowInputModel,
 )
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
 from rapidata.api_client.models.i_rapid_blueprint_line_rapid_blueprint import (
@@ -25,13 +27,13 @@ class DrawWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self._target
 
-    def _to_model(self) -> IOrderWorkflowModel:
+    def _to_model(self) -> IOrderWorkflowInputModel:
         blueprint = IRapidBlueprintLineRapidBlueprint(
             _t="LineBlueprint", target=self._target
         )
 
-        return IOrderWorkflowModel(
-            actual_instance=IOrderWorkflowModelSimpleWorkflowModel(
+        return IOrderWorkflowInputModel(
+            actual_instance=IOrderWorkflowInputModelSimpleWorkflowInputModel(
                 _t="SimpleWorkflow",
                 blueprint=IRapidBlueprint(actual_instance=blueprint),
             )
