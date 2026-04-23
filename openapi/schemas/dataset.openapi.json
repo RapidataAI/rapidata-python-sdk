@@ -11,6 +11,372 @@
     }
   ],
   "paths": {
+    "/dataset/{datasetId}/datapoint": {
+      "post": {
+        "tags": [
+          "Datapoints"
+        ],
+        "summary": "Creates a new datapoint in the specified dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to create the datapoint in.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The datapoint model containing asset, metadata, and sort index.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatapointEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/datapoint/{datapointId}": {
+      "delete": {
+        "tags": [
+          "Datapoints"
+        ],
+        "summary": "Deletes the specified datapoint.",
+        "parameters": [
+          {
+            "name": "datapointId",
+            "in": "path",
+            "description": "The unique identifier of the datapoint to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Datapoints"
+        ],
+        "summary": "Gets the details of a datapoint by its id.",
+        "parameters": [
+          {
+            "name": "datapointId",
+            "in": "path",
+            "description": "The id of the datapoint to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatapointEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/datapoints/failed": {
+      "get": {
+        "tags": [
+          "Datapoints"
+        ],
+        "summary": "Gets a list of all datapoints that failed to upload.",
+        "description": "A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL\n and the URL is not accessible.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the failed datapoints of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/datapoints": {
+      "get": {
+        "tags": [
+          "Datapoints"
+        ],
+        "summary": "Queries all datapoints of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the datapoints of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryDatapointsByDatasetIdEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/dataset": {
       "post": {
         "tags": [
@@ -109,69 +475,6 @@
         }
       }
     },
-    "/datapoint/{datapointId}": {
-      "get": {
-        "tags": [
-          "Datapoint"
-        ],
-        "summary": "Gets a datapoint by its id.",
-        "parameters": [
-          {
-            "name": "datapointId",
-            "in": "path",
-            "description": "The id of the datapoint to get.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointByIdResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Datapoint"
-        ],
-        "summary": "Deletes a datapoint by its id.",
-        "parameters": [
-          {
-            "name": "datapointId",
-            "in": "path",
-            "description": "The id of the datapoint to delete.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
     "/dataset/{datasetId}": {
       "get": {
         "tags": [
@@ -213,59 +516,6 @@
         }
       }
     },
-    "/dataset/{datasetId}/datapoints": {
-      "get": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Gets all datapoints of a dataset.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to get the datapoints of.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The query model to filter, sort, and paginate the results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryDatapointsByDatasetIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryDatapointsByDatasetIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryDatapointsByDatasetIdResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/dataset/{datasetId}/progress": {
       "get": {
         "tags": [
@@ -300,110 +550,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetDatasetProgressResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dataset/{datasetId}/datapoints/failed": {
-      "get": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Gets a list of all datapoints that failed to upload.",
-        "description": "A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL\n and the URL is not accessible.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to get the failed datapoints of.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dataset/{datasetId}/datapoint": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates a datapoint with JSON body.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to create the datapoint in.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The datapoint model containing asset, metadata, and sort index.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
                 }
               }
             }
@@ -459,7 +605,7 @@
   },
   "components": {
     "schemas": {
-      "CreateDatapointModel": {
+      "CreateDatapointEndpoint_Input": {
         "required": [
           "asset"
         ],
@@ -471,7 +617,7 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "The asset within the datapoint"
+            "description": "The asset within the datapoint."
           },
           "context": {
             "type": "string",
@@ -484,11 +630,11 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "ContextAsset"
+            "description": "An optional asset context for the datapoint."
           },
           "sortIndex": {
             "type": "integer",
-            "description": "The sort index represents the order of the datapoint in the dataset",
+            "description": "The sort index represents the order of the datapoint in the dataset.",
             "format": "int64"
           },
           "group": {
@@ -502,24 +648,29 @@
             "nullable": true
           },
           "privateMetadata": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Private metadata for internal tracking. Not displayed to users.",
-            "nullable": true
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Private metadata for internal tracking. Not displayed to users."
           }
         },
-        "description": "The body request for creating a new datapoint"
+        "description": "The body request for creating a new datapoint."
       },
-      "CreateDatapointResult": {
+      "CreateDatapointEndpoint_Output": {
         "required": [
           "datapointId"
         ],
         "type": "object",
         "properties": {
           "datapointId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the created datapoint."
           }
         }
       },
@@ -579,7 +730,8 @@
           "Ready",
           "Pending",
           "Failed"
-        ]
+        ],
+        "description": "The current state of the datapoint."
       },
       "FileType": {
         "enum": [
@@ -589,73 +741,43 @@
           "Audio"
         ]
       },
-      "Filter": {
-        "type": "object",
-        "properties": {
-          "field": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": { },
-          "operator": {
-            "$ref": "#/components/schemas/FilterOperator"
-          },
-          "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            },
-            "nullable": true
-          }
-        }
-      },
-      "FilterOperator": {
-        "enum": [
-          "Eq",
-          "Neq",
-          "Gt",
-          "Gte",
-          "Lt",
-          "Lte",
-          "Contains",
-          "StartsWith",
-          "EndsWith",
-          "In",
-          "NotContains"
-        ]
-      },
-      "GetDatapointByIdResult": {
+      "GetDatapointEndpoint_Output": {
         "required": [
           "id",
           "datasetId",
           "state",
-          "sortIndex",
           "asset",
           "createdAt"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the datapoint."
           },
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the dataset this datapoint belongs to."
           },
           "state": {
             "$ref": "#/components/schemas/DatapointState"
           },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset that will be displayed to the users."
+          },
           "sortIndex": {
             "type": "integer",
+            "description": "An optional upload index used to force a certain order.",
             "format": "int64"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
           },
           "createdAt": {
             "type": "string",
+            "description": "The timestamp when the datapoint was created.",
             "format": "date-time"
           }
         }
@@ -698,21 +820,7 @@
           }
         }
       },
-      "GetFailedDatapointsResult": {
-        "required": [
-          "datapoints"
-        ],
-        "type": "object",
-        "properties": {
-          "datapoints": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
-            }
-          }
-        }
-      },
-      "GetFailedDatapointsResult_Datapoint": {
+      "GetFailedDatapointsEndpoint_Datapoint": {
         "required": [
           "id",
           "datasetId",
@@ -738,6 +846,25 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "GetFailedDatapointsEndpoint_Output": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsEndpoint_Datapoint"
+                }
+              }
+            ],
+            "description": "The list of failed datapoints."
           }
         }
       },
@@ -1273,13 +1400,6 @@
           }
         }
       },
-      "LogicOperator": {
-        "enum": [
-          "And",
-          "Or",
-          "Not"
-        ]
-      },
       "MetadataInputCollection": {
         "type": "object",
         "additionalProperties": {
@@ -1306,7 +1426,33 @@
           "type": "string"
         }
       },
-      "PagedResultOfQueryDatapointsByDatasetIdResult": {
+      "QueryDatapointsByDatasetIdEndpoint_Output": {
+        "required": [
+          "id",
+          "datasetId",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the datapoint."
+          },
+          "datasetId": {
+            "type": "string",
+            "description": "The id of the dataset this datapoint belongs to."
+          },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset that will be displayed to the users."
+          }
+        }
+      },
+      "QueryDatapointsByDatasetIdEndpoint_PagedResultOfOutput": {
         "required": [
           "total",
           "page",
@@ -1330,7 +1476,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/QueryDatapointsByDatasetIdResult"
+              "$ref": "#/components/schemas/QueryDatapointsByDatasetIdEndpoint_Output"
             }
           },
           "totalPages": {
@@ -1338,107 +1484,6 @@
             "format": "int32"
           }
         }
-      },
-      "Pagination": {
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "QueryDatapointsByDatasetIdResult": {
-        "required": [
-          "id",
-          "datasetId",
-          "asset"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "datasetId": {
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
-          }
-        }
-      },
-      "QueryModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/Pagination"
-              }
-            ]
-          },
-          "filter": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/RootFilter"
-              }
-            ]
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "nullable": true
-          }
-        }
-      },
-      "RootFilter": {
-        "required": [
-          "filters"
-        ],
-        "type": "object",
-        "properties": {
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
-          }
-        }
-      },
-      "SortCriterion": {
-        "required": [
-          "propertyName"
-        ],
-        "type": "object",
-        "properties": {
-          "propertyName": {
-            "type": "string"
-          },
-          "direction": {
-            "$ref": "#/components/schemas/SortDirection"
-          }
-        }
-      },
-      "SortDirection": {
-        "enum": [
-          "Asc",
-          "Desc"
-        ]
       },
       "UpdateDatasetNameModel": {
         "required": [
@@ -1534,9 +1579,6 @@
     }
   ],
   "tags": [
-    {
-      "name": "Datapoint"
-    },
     {
       "name": "Dataset"
     }

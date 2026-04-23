@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class RapidState(str, Enum):
     """
-    RapidState
+    The state of the rapid.
     """
 
     """

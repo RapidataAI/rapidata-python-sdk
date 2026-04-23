@@ -34,7 +34,8 @@ class IPipelineStepModelWorkflowAggregationStepModel(LazyValidatedModel):
     workflow_artifact_id: StrictStr = Field(alias="workflowArtifactId")
     file_artifact_id: StrictStr = Field(alias="fileArtifactId")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
-    __properties: ClassVar[List[str]] = ["_t", "campaignArtifactId", "workflowArtifactId", "fileArtifactId", "aggregatorType"]
+    demographic_keys: Optional[List[StrictStr]] = Field(default=None, alias="demographicKeys")
+    __properties: ClassVar[List[str]] = ["_t", "campaignArtifactId", "workflowArtifactId", "fileArtifactId", "aggregatorType", "demographicKeys"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -78,6 +79,11 @@ class IPipelineStepModelWorkflowAggregationStepModel(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if demographic_keys (nullable) is None
+        # and model_fields_set contains the field
+        if self.demographic_keys is None and "demographic_keys" in self.model_fields_set:
+            _dict['demographicKeys'] = None
+
         return _dict
 
     @classmethod
@@ -94,7 +100,8 @@ class IPipelineStepModelWorkflowAggregationStepModel(LazyValidatedModel):
             "campaignArtifactId": obj.get("campaignArtifactId"),
             "workflowArtifactId": obj.get("workflowArtifactId"),
             "fileArtifactId": obj.get("fileArtifactId"),
-            "aggregatorType": obj.get("aggregatorType")
+            "aggregatorType": obj.get("aggregatorType"),
+            "demographicKeys": obj.get("demographicKeys")
         }
         try:
             _obj = cls.model_validate(_data)

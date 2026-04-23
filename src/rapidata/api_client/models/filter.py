@@ -89,6 +89,16 @@ class Filter(LazyValidatedModel):
         if self.value is None and "value" in self.model_fields_set:
             _dict['value'] = None
 
+        # set to None if operator (nullable) is None
+        # and model_fields_set contains the field
+        if self.operator is None and "operator" in self.model_fields_set:
+            _dict['operator'] = None
+
+        # set to None if logic (nullable) is None
+        # and model_fields_set contains the field
+        if self.logic is None and "logic" in self.model_fields_set:
+            _dict['logic'] = None
+
         # set to None if filters (nullable) is None
         # and model_fields_set contains the field
         if self.filters is None and "filters" in self.model_fields_set:

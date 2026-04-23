@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class IRankingConfigModelBradleyTerryRankingConfigModel(LazyValidatedModel):
     IRankingConfigModelBradleyTerryRankingConfigModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    starting_score: Optional[StrictInt] = Field(default=None, alias="startingScore")
+    starting_score: StrictInt = Field(alias="startingScore")
     __properties: ClassVar[List[str]] = ["_t", "startingScore"]
 
     @field_validator('t')

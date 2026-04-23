@@ -18,13 +18,13 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_ranking_config_bradley_terry_ranking_config import IRankingConfigBradleyTerryRankingConfig
-from rapidata.api_client.models.i_ranking_config_elo_config import IRankingConfigEloConfig
+from rapidata.api_client.models.i_ranking_config_elo_ranking_config import IRankingConfigEloRankingConfig
 from pydantic import StrictStr, Field
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IRANKINGCONFIG_ONE_OF_SCHEMAS = ["IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloConfig"]
+IRANKINGCONFIG_ONE_OF_SCHEMAS = ["IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloRankingConfig"]
 
 class IRankingConfig(LazyValidatedModel):
     """
@@ -32,10 +32,10 @@ class IRankingConfig(LazyValidatedModel):
     """
     # data type: IRankingConfigBradleyTerryRankingConfig
     oneof_schema_1_validator: Optional[IRankingConfigBradleyTerryRankingConfig] = None
-    # data type: IRankingConfigEloConfig
-    oneof_schema_2_validator: Optional[IRankingConfigEloConfig] = None
-    actual_instance: Optional[Union[IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig]] = None
-    one_of_schemas: Set[str] = { "IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloConfig" }
+    # data type: IRankingConfigEloRankingConfig
+    oneof_schema_2_validator: Optional[IRankingConfigEloRankingConfig] = None
+    actual_instance: Optional[Union[IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloRankingConfig]] = None
+    one_of_schemas: Set[str] = { "IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloRankingConfig" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -63,17 +63,17 @@ class IRankingConfig(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRankingConfigBradleyTerryRankingConfig`")
         else:
             match += 1
-        # validate data type: IRankingConfigEloConfig
-        if not isinstance(v, IRankingConfigEloConfig):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRankingConfigEloConfig`")
+        # validate data type: IRankingConfigEloRankingConfig
+        if not isinstance(v, IRankingConfigEloRankingConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRankingConfigEloRankingConfig`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloRankingConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloRankingConfig. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -94,19 +94,19 @@ class IRankingConfig(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into IRankingConfigEloConfig
+        # deserialize data into IRankingConfigEloRankingConfig
         try:
-            instance.actual_instance = IRankingConfigEloConfig.from_json(json_str)
+            instance.actual_instance = IRankingConfigEloRankingConfig.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloRankingConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloRankingConfig. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -120,7 +120,7 @@ class IRankingConfig(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloRankingConfig]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

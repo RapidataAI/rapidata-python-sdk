@@ -32,11 +32,12 @@ class GetWorkflowResultsResultResponse(LazyValidatedModel):
     id: StrictStr
     user_id: StrictStr = Field(alias="userId")
     country: StrictStr
+    language: StrictStr
     result: IRapidResult
     user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
     user_scores: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="userScores")
     demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
-    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "userScores", "demographicInformation"]
+    __properties: ClassVar[List[str]] = ["id", "userId", "country", "language", "result", "userScore", "userScores", "demographicInformation"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -91,6 +92,7 @@ class GetWorkflowResultsResultResponse(LazyValidatedModel):
             "id": obj.get("id"),
             "userId": obj.get("userId"),
             "country": obj.get("country"),
+            "language": obj.get("language"),
             "result": IRapidResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
             "userScore": obj.get("userScore"),
             "userScores": obj.get("userScores"),

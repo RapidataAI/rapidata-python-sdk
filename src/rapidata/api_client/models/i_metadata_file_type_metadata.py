@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.file_type import FileType
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -30,8 +30,8 @@ class IMetadataFileTypeMetadata(LazyValidatedModel):
     IMetadataFileTypeMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    file_type: Optional[FileType] = Field(default=None, alias="fileType")
-    visibilities: Optional[List[StrictStr]] = None
+    file_type: FileType = Field(alias="fileType")
+    visibilities: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "fileType", "visibilities"]
 
     @field_validator('t')
@@ -44,9 +44,6 @@ class IMetadataFileTypeMetadata(LazyValidatedModel):
     @field_validator('visibilities')
     def visibilities_validate_enum(cls, value):
         """Validates the enum"""
-        if value is None:
-            return value
-
         for i in value:
             if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
                 raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")

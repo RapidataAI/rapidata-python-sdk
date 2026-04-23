@@ -24,8 +24,8 @@ from rapidata.api_client.models.create_empty_validation_set_result import Create
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
 from rapidata.api_client.models.get_recommended_validation_set_result import GetRecommendedValidationSetResult
+from rapidata.api_client.models.get_validation_rapids_endpoint_paged_result_of_output import GetValidationRapidsEndpointPagedResultOfOutput
 from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
-from rapidata.api_client.models.paged_result_of_get_validation_rapids_result import PagedResultOfGetValidationRapidsResult
 from rapidata.api_client.models.paged_result_of_validation_set_model import PagedResultOfValidationSetModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.update_validation_set_model import UpdateValidationSetModel
@@ -1996,7 +1996,6 @@ class ValidationSetApi:
     def validation_set_validation_set_id_rapids_get(
         self,
         validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a JSON in the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2009,14 +2008,12 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfGetValidationRapidsResult:
+    ) -> GetValidationRapidsEndpointPagedResultOfOutput:
         """Queries the validation rapids for a specific validation set.
 
 
         :param validation_set_id: The validation set to query. (required)
         :type validation_set_id: str
-        :param model: The request formatted as a JSON in the query parameters.
-        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2041,7 +2038,6 @@ class ValidationSetApi:
 
         _param = self._validation_set_validation_set_id_rapids_get_serialize(
             validation_set_id=validation_set_id,
-            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2049,7 +2045,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetValidationRapidsResult",
+            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2066,7 +2065,6 @@ class ValidationSetApi:
     def validation_set_validation_set_id_rapids_get_with_http_info(
         self,
         validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a JSON in the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2079,14 +2077,12 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfGetValidationRapidsResult]:
+    ) -> ApiResponse[GetValidationRapidsEndpointPagedResultOfOutput]:
         """Queries the validation rapids for a specific validation set.
 
 
         :param validation_set_id: The validation set to query. (required)
         :type validation_set_id: str
-        :param model: The request formatted as a JSON in the query parameters.
-        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2111,7 +2107,6 @@ class ValidationSetApi:
 
         _param = self._validation_set_validation_set_id_rapids_get_serialize(
             validation_set_id=validation_set_id,
-            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2119,7 +2114,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetValidationRapidsResult",
+            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2136,7 +2134,6 @@ class ValidationSetApi:
     def validation_set_validation_set_id_rapids_get_without_preload_content(
         self,
         validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a JSON in the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2155,8 +2152,6 @@ class ValidationSetApi:
 
         :param validation_set_id: The validation set to query. (required)
         :type validation_set_id: str
-        :param model: The request formatted as a JSON in the query parameters.
-        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2181,7 +2176,6 @@ class ValidationSetApi:
 
         _param = self._validation_set_validation_set_id_rapids_get_serialize(
             validation_set_id=validation_set_id,
-            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2189,7 +2183,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetValidationRapidsResult",
+            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2201,7 +2198,6 @@ class ValidationSetApi:
     def _validation_set_validation_set_id_rapids_get_serialize(
         self,
         validation_set_id,
-        model,
         _request_auth,
         _content_type,
         _headers,
@@ -2226,10 +2222,6 @@ class ValidationSetApi:
         if validation_set_id is not None:
             _path_params['validationSetId'] = validation_set_id
         # process the query parameters
-        if model is not None:
-            
-            _query_params.append(('model', model))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -2239,9 +2231,7 @@ class ValidationSetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

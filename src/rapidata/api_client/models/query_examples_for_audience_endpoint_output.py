@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.example_visibility import ExampleVisibility
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_example_payload import IExamplePayload
 from rapidata.api_client.models.i_example_truth import IExampleTruth
@@ -44,7 +45,8 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of a random correct answer.", alias="randomCorrectProbability")
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example is common sense.", alias="isCommonSense")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls serving order.", alias="sortIndex")
-    __properties: ClassVar[List[str]] = ["id", "rapidId", "asset", "payload", "correctCount", "incorrectCount", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability", "isCommonSense", "sortIndex"]
+    visibility: Optional[ExampleVisibility] = None
+    __properties: ClassVar[List[str]] = ["id", "rapidId", "asset", "payload", "correctCount", "incorrectCount", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability", "isCommonSense", "sortIndex", "visibility"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -137,7 +139,8 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
             "explanation": obj.get("explanation"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "isCommonSense": obj.get("isCommonSense"),
-            "sortIndex": obj.get("sortIndex")
+            "sortIndex": obj.get("sortIndex"),
+            "visibility": obj.get("visibility")
         }
         try:
             _obj = cls.model_validate(_data)

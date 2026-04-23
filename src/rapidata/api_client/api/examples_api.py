@@ -16,10 +16,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
-from typing import Optional
+from pydantic import Field, StrictInt, StrictStr, field_validator
+from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.add_example_to_audience_endpoint_input import AddExampleToAudienceEndpointInput
+from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
 from rapidata.api_client.models.query_examples_for_audience_endpoint_paged_result_of_output import QueryExamplesForAudienceEndpointPagedResultOfOutput
 from rapidata.api_client.models.update_audience_example_endpoint_input import UpdateAudienceExampleEndpointInput
 
@@ -656,6 +657,9 @@ class ExamplesApi:
         audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        visibility: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by visibility.")] = None,
+        is_common_sense: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_common_sense.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -678,6 +682,12 @@ class ExamplesApi:
         :type page: int
         :param page_size: The number of items per page.
         :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param visibility: Filter by visibility.
+        :type visibility: AudiencesGetNameParameter
+        :param is_common_sense: Filter by is_common_sense.
+        :type is_common_sense: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -704,6 +714,9 @@ class ExamplesApi:
             audience_id=audience_id,
             page=page,
             page_size=page_size,
+            sort=sort,
+            visibility=visibility,
+            is_common_sense=is_common_sense,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -733,6 +746,9 @@ class ExamplesApi:
         audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        visibility: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by visibility.")] = None,
+        is_common_sense: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_common_sense.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -755,6 +771,12 @@ class ExamplesApi:
         :type page: int
         :param page_size: The number of items per page.
         :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param visibility: Filter by visibility.
+        :type visibility: AudiencesGetNameParameter
+        :param is_common_sense: Filter by is_common_sense.
+        :type is_common_sense: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -781,6 +803,9 @@ class ExamplesApi:
             audience_id=audience_id,
             page=page,
             page_size=page_size,
+            sort=sort,
+            visibility=visibility,
+            is_common_sense=is_common_sense,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -810,6 +835,9 @@ class ExamplesApi:
         audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        visibility: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by visibility.")] = None,
+        is_common_sense: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_common_sense.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -832,6 +860,12 @@ class ExamplesApi:
         :type page: int
         :param page_size: The number of items per page.
         :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param visibility: Filter by visibility.
+        :type visibility: AudiencesGetNameParameter
+        :param is_common_sense: Filter by is_common_sense.
+        :type is_common_sense: AudiencesGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -858,6 +892,9 @@ class ExamplesApi:
             audience_id=audience_id,
             page=page,
             page_size=page_size,
+            sort=sort,
+            visibility=visibility,
+            is_common_sense=is_common_sense,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -882,6 +919,9 @@ class ExamplesApi:
         audience_id,
         page,
         page_size,
+        sort,
+        visibility,
+        is_common_sense,
         _request_auth,
         _content_type,
         _headers,
@@ -891,6 +931,7 @@ class ExamplesApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -914,6 +955,26 @@ class ExamplesApi:
             
             _query_params.append(('page_size', page_size))
             
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if visibility is not None:
+            _param_val = visibility
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('visibility[' + _k + ']', _v))
+        if is_common_sense is not None:
+            _param_val = is_common_sense
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('is_common_sense[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter

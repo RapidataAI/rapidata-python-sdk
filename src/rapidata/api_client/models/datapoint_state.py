@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class DatapointState(str, Enum):
     """
-    DatapointState
+    The current state of the datapoint.
     """
 
     """

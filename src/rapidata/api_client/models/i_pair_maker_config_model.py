@@ -20,13 +20,13 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_pair_maker_config_model_full_permutation_pair_maker_config_model import IPairMakerConfigModelFullPermutationPairMakerConfigModel
 from rapidata.api_client.models.i_pair_maker_config_model_online_pair_maker_config_model import IPairMakerConfigModelOnlinePairMakerConfigModel
 from pydantic import StrictStr, Field
-
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 IPAIRMAKERCONFIGMODEL_ONE_OF_SCHEMAS = ["IPairMakerConfigModelFullPermutationPairMakerConfigModel", "IPairMakerConfigModelOnlinePairMakerConfigModel"]
 
-class IPairMakerConfigModel(BaseModel):
+class IPairMakerConfigModel(LazyValidatedModel):
     """
     IPairMakerConfigModel
     """
@@ -37,10 +37,7 @@ class IPairMakerConfigModel(BaseModel):
     actual_instance: Optional[Union[IPairMakerConfigModelFullPermutationPairMakerConfigModel, IPairMakerConfigModelOnlinePairMakerConfigModel]] = None
     one_of_schemas: Set[str] = { "IPairMakerConfigModelFullPermutationPairMakerConfigModel", "IPairMakerConfigModelOnlinePairMakerConfigModel" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     discriminator_value_class_map: Dict[str, str] = {
@@ -137,3 +134,5 @@ class IPairMakerConfigModel(BaseModel):
     def to_str(self) -> str:
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
+
+

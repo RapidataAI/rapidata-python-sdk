@@ -20,8 +20,8 @@ from pydantic import Field, StrictBytes, StrictInt, StrictStr
 from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.compression_library import CompressionLibrary
-from rapidata.api_client.models.get_file_metadata_result import GetFileMetadataResult
-from rapidata.api_client.models.upload_file_result import UploadFileResult
+from rapidata.api_client.models.upload_file_endpoint_output import UploadFileEndpointOutput
+from rapidata.api_client.models.upload_file_from_url_endpoint_output import UploadFileFromUrlEndpointOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -379,277 +379,9 @@ class AssetApi:
 
 
     @validate_call
-    def asset_file_name_metadata_get(
-        self,
-        file_name: Annotated[StrictStr, Field(description="The name of the file to retrieve metadata for.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetFileMetadataResult:
-        """Gets the metadata for an asset by file name.
-
-        This endpoint retrieves metadata information for an asset stored in S3.  The metadata includes details such as content type, size, creation date, and custom metadata fields.
-
-        :param file_name: The name of the file to retrieve metadata for. (required)
-        :type file_name: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._asset_file_name_metadata_get_serialize(
-            file_name=file_name,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetFileMetadataResult",
-            '404': "ProblemDetails",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def asset_file_name_metadata_get_with_http_info(
-        self,
-        file_name: Annotated[StrictStr, Field(description="The name of the file to retrieve metadata for.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetFileMetadataResult]:
-        """Gets the metadata for an asset by file name.
-
-        This endpoint retrieves metadata information for an asset stored in S3.  The metadata includes details such as content type, size, creation date, and custom metadata fields.
-
-        :param file_name: The name of the file to retrieve metadata for. (required)
-        :type file_name: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._asset_file_name_metadata_get_serialize(
-            file_name=file_name,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetFileMetadataResult",
-            '404': "ProblemDetails",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def asset_file_name_metadata_get_without_preload_content(
-        self,
-        file_name: Annotated[StrictStr, Field(description="The name of the file to retrieve metadata for.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Gets the metadata for an asset by file name.
-
-        This endpoint retrieves metadata information for an asset stored in S3.  The metadata includes details such as content type, size, creation date, and custom metadata fields.
-
-        :param file_name: The name of the file to retrieve metadata for. (required)
-        :type file_name: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._asset_file_name_metadata_get_serialize(
-            file_name=file_name,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetFileMetadataResult",
-            '404': "ProblemDetails",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _asset_file_name_metadata_get_serialize(
-        self,
-        file_name,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if file_name is not None:
-            _path_params['fileName'] = file_name
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/asset/{fileName}/metadata',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def asset_file_post(
         self,
-        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -662,12 +394,11 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadFileResult:
-        """Uploads a single asset to S3 and returns the asset details.
+    ) -> UploadFileEndpointOutput:
+        """Uploads a file to our system and returns the new file name used internally.
 
-        This endpoint allows uploading a single file to S3 storage with the asset creator.  The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
 
-        :param file:
+        :param file: (required)
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -700,7 +431,10 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFileResult",
+            '200': "UploadFileEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -716,7 +450,7 @@ class AssetApi:
     @validate_call
     def asset_file_post_with_http_info(
         self,
-        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -729,12 +463,11 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadFileResult]:
-        """Uploads a single asset to S3 and returns the asset details.
+    ) -> ApiResponse[UploadFileEndpointOutput]:
+        """Uploads a file to our system and returns the new file name used internally.
 
-        This endpoint allows uploading a single file to S3 storage with the asset creator.  The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
 
-        :param file:
+        :param file: (required)
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -767,7 +500,10 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFileResult",
+            '200': "UploadFileEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -783,7 +519,7 @@ class AssetApi:
     @validate_call
     def asset_file_post_without_preload_content(
         self,
-        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -797,11 +533,10 @@ class AssetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Uploads a single asset to S3 and returns the asset details.
+        """Uploads a file to our system and returns the new file name used internally.
 
-        This endpoint allows uploading a single file to S3 storage with the asset creator.  The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
 
-        :param file:
+        :param file: (required)
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -834,7 +569,10 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFileResult",
+            '200': "UploadFileEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -879,9 +617,7 @@ class AssetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -927,7 +663,7 @@ class AssetApi:
     @validate_call
     def asset_url_post(
         self,
-        url: Annotated[Optional[StrictStr], Field(description="The url of the file to upload to S3.")] = None,
+        url: Annotated[StrictStr, Field(description="The url of the file to upload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -940,12 +676,11 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadFileResult:
-        """Uploads a single asset to S3 and returns the asset details.
+    ) -> UploadFileFromUrlEndpointOutput:
+        """Downloads a file from the provided URL, stores it in our system and returns the new file name used internally.
 
-        This endpoint allows uploading a single file to S3 storage with the asset creator.  The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
 
-        :param url: The url of the file to upload to S3.
+        :param url: The url of the file to upload. (required)
         :type url: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -978,7 +713,10 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFileResult",
+            '200': "UploadFileFromUrlEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -994,7 +732,7 @@ class AssetApi:
     @validate_call
     def asset_url_post_with_http_info(
         self,
-        url: Annotated[Optional[StrictStr], Field(description="The url of the file to upload to S3.")] = None,
+        url: Annotated[StrictStr, Field(description="The url of the file to upload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1007,12 +745,11 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadFileResult]:
-        """Uploads a single asset to S3 and returns the asset details.
+    ) -> ApiResponse[UploadFileFromUrlEndpointOutput]:
+        """Downloads a file from the provided URL, stores it in our system and returns the new file name used internally.
 
-        This endpoint allows uploading a single file to S3 storage with the asset creator.  The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
 
-        :param url: The url of the file to upload to S3.
+        :param url: The url of the file to upload. (required)
         :type url: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1045,7 +782,10 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFileResult",
+            '200': "UploadFileFromUrlEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1061,7 +801,7 @@ class AssetApi:
     @validate_call
     def asset_url_post_without_preload_content(
         self,
-        url: Annotated[Optional[StrictStr], Field(description="The url of the file to upload to S3.")] = None,
+        url: Annotated[StrictStr, Field(description="The url of the file to upload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1075,11 +815,10 @@ class AssetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Uploads a single asset to S3 and returns the asset details.
+        """Downloads a file from the provided URL, stores it in our system and returns the new file name used internally.
 
-        This endpoint allows uploading a single file to S3 storage with the asset creator.  The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
 
-        :param url: The url of the file to upload to S3.
+        :param url: The url of the file to upload. (required)
         :type url: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1112,7 +851,10 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFileResult",
+            '200': "UploadFileFromUrlEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1159,9 +901,7 @@ class AssetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

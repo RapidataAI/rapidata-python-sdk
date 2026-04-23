@@ -1235,10 +1235,24 @@
           },
           "value": { },
           "operator": {
-            "$ref": "#/components/schemas/FilterOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/FilterOperator"
+              }
+            ]
           },
           "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/LogicOperator"
+              }
+            ]
           },
           "filters": {
             "type": "array",
@@ -1261,7 +1275,8 @@
           "StartsWith",
           "EndsWith",
           "In",
-          "NotContains"
+          "NotContains",
+          null
         ]
       },
       "GoogleOneTapLoginModel": {
@@ -1395,7 +1410,8 @@
         "enum": [
           "And",
           "Or",
-          "Not"
+          "Not",
+          null
         ]
       },
       "NewsletterModel": {
@@ -1665,7 +1681,8 @@
       },
       "RootFilter": {
         "required": [
-          "filters"
+          "filters",
+          "logic"
         ],
         "type": "object",
         "properties": {
@@ -1687,10 +1704,14 @@
         "type": "object",
         "properties": {
           "fields": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            ],
             "description": "The fields of the survey"
           }
         },
@@ -1698,7 +1719,8 @@
       },
       "SortCriterion": {
         "required": [
-          "propertyName"
+          "propertyName",
+          "direction"
         ],
         "type": "object",
         "properties": {

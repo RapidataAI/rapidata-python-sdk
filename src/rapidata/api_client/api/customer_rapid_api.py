@@ -22,10 +22,9 @@ from typing_extensions import Annotated
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.create_rapid_result import CreateRapidResult
 from rapidata.api_client.models.get_public_responses_result import GetPublicResponsesResult
-from rapidata.api_client.models.get_responses_for_rapid_result import GetResponsesForRapidResult
+from rapidata.api_client.models.get_responses_for_rapid_endpoint_output import GetResponsesForRapidEndpointOutput
 from rapidata.api_client.models.paged_result_of_query_validation_rapid_eligibility_result import PagedResultOfQueryValidationRapidEligibilityResult
-from rapidata.api_client.models.paged_result_of_rapid_model import PagedResultOfRapidModel
-from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.query_flagged_rapids_endpoint_paged_result_of_output import QueryFlaggedRapidsEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_validation_rapid_eligibility_model_query_validation_model import QueryValidationRapidEligibilityModelQueryValidationModel
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 
@@ -1170,7 +1169,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetResponsesForRapidResult:
+    ) -> GetResponsesForRapidEndpointOutput:
         """Gets all responses for a given rapid.
 
 
@@ -1207,7 +1206,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetResponsesForRapidResult",
+            '200': "GetResponsesForRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1236,7 +1238,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetResponsesForRapidResult]:
+    ) -> ApiResponse[GetResponsesForRapidEndpointOutput]:
         """Gets all responses for a given rapid.
 
 
@@ -1273,7 +1275,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetResponsesForRapidResult",
+            '200': "GetResponsesForRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1339,7 +1344,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetResponsesForRapidResult",
+            '200': "GetResponsesForRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1384,9 +1392,7 @@ class CustomerRapidApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1955,7 +1961,6 @@ class CustomerRapidApi:
     @validate_call
     def rapids_flagged_get(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The request to use to filter, sort and page the results")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1968,12 +1973,10 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfRapidModel:
-        """Allows querying all rapids that have been flagged.
+    ) -> QueryFlaggedRapidsEndpointPagedResultOfOutput:
+        """Queries all rapids that have been flagged.
 
 
-        :param request: The request to use to filter, sort and page the results
-        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1997,7 +2000,6 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapids_flagged_get_serialize(
-            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2005,7 +2007,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfRapidModel",
+            '200': "QueryFlaggedRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2021,7 +2026,6 @@ class CustomerRapidApi:
     @validate_call
     def rapids_flagged_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The request to use to filter, sort and page the results")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2034,12 +2038,10 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfRapidModel]:
-        """Allows querying all rapids that have been flagged.
+    ) -> ApiResponse[QueryFlaggedRapidsEndpointPagedResultOfOutput]:
+        """Queries all rapids that have been flagged.
 
 
-        :param request: The request to use to filter, sort and page the results
-        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2063,7 +2065,6 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapids_flagged_get_serialize(
-            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2071,7 +2072,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfRapidModel",
+            '200': "QueryFlaggedRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2087,7 +2091,6 @@ class CustomerRapidApi:
     @validate_call
     def rapids_flagged_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The request to use to filter, sort and page the results")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2101,11 +2104,9 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Allows querying all rapids that have been flagged.
+        """Queries all rapids that have been flagged.
 
 
-        :param request: The request to use to filter, sort and page the results
-        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2129,7 +2130,6 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapids_flagged_get_serialize(
-            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2137,7 +2137,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfRapidModel",
+            '200': "QueryFlaggedRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2148,7 +2151,6 @@ class CustomerRapidApi:
 
     def _rapids_flagged_get_serialize(
         self,
-        request,
         _request_auth,
         _content_type,
         _headers,
@@ -2171,10 +2173,6 @@ class CustomerRapidApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
-            
-            _query_params.append(('request', request))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -2184,9 +2182,7 @@ class CustomerRapidApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
