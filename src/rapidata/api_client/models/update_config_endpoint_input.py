@@ -17,9 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.pid_batch_mode import PidBatchMode
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -46,18 +47,8 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
     pid_output_offset: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Constant offset added to the PID output before clamping, shifting the controller's operating point.", alias="pidOutputOffset")
     pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set.", alias="pidMaxSessionsPerMinute")
-    pid_batch_mode: Optional[StrictStr] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
+    pid_batch_mode: Optional[PidBatchMode] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
     __properties: ClassVar[List[str]] = ["audienceId", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
-
-    @field_validator('pid_batch_mode')
-    def pid_batch_mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['Total', 'PerBatch', 'PerBatchTimeWeighted']):
-            raise ValueError("must be one of enum values ('Total', 'PerBatch', 'PerBatchTimeWeighted')")
-        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -106,26 +97,6 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
         if self.audience_id is None and "audience_id" in self.model_fields_set:
             _dict['audienceId'] = None
 
-        # set to None if criteria (nullable) is None
-        # and model_fields_set contains the field
-        if self.criteria is None and "criteria" in self.model_fields_set:
-            _dict['criteria'] = None
-
-        # set to None if starting_elo (nullable) is None
-        # and model_fields_set contains the field
-        if self.starting_elo is None and "starting_elo" in self.model_fields_set:
-            _dict['startingElo'] = None
-
-        # set to None if min_responses (nullable) is None
-        # and model_fields_set contains the field
-        if self.min_responses is None and "min_responses" in self.model_fields_set:
-            _dict['minResponses'] = None
-
-        # set to None if max_responses (nullable) is None
-        # and model_fields_set contains the field
-        if self.max_responses is None and "max_responses" in self.model_fields_set:
-            _dict['maxResponses'] = None
-
         # set to None if serve_responses (nullable) is None
         # and model_fields_set contains the field
         if self.serve_responses is None and "serve_responses" in self.model_fields_set:
@@ -141,50 +112,10 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
         if self.serve_timeout_seconds is None and "serve_timeout_seconds" in self.model_fields_set:
             _dict['serveTimeoutSeconds'] = None
 
-        # set to None if responses_required (nullable) is None
-        # and model_fields_set contains the field
-        if self.responses_required is None and "responses_required" in self.model_fields_set:
-            _dict['responsesRequired'] = None
-
-        # set to None if feature_flags (nullable) is None
-        # and model_fields_set contains the field
-        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
-            _dict['featureFlags'] = None
-
         # set to None if target_response_count (nullable) is None
         # and model_fields_set contains the field
         if self.target_response_count is None and "target_response_count" in self.model_fields_set:
             _dict['targetResponseCount'] = None
-
-        # set to None if pid_proportional_gain (nullable) is None
-        # and model_fields_set contains the field
-        if self.pid_proportional_gain is None and "pid_proportional_gain" in self.model_fields_set:
-            _dict['pidProportionalGain'] = None
-
-        # set to None if pid_integral_gain (nullable) is None
-        # and model_fields_set contains the field
-        if self.pid_integral_gain is None and "pid_integral_gain" in self.model_fields_set:
-            _dict['pidIntegralGain'] = None
-
-        # set to None if pid_derivative_gain (nullable) is None
-        # and model_fields_set contains the field
-        if self.pid_derivative_gain is None and "pid_derivative_gain" in self.model_fields_set:
-            _dict['pidDerivativeGain'] = None
-
-        # set to None if pid_output_offset (nullable) is None
-        # and model_fields_set contains the field
-        if self.pid_output_offset is None and "pid_output_offset" in self.model_fields_set:
-            _dict['pidOutputOffset'] = None
-
-        # set to None if pid_min_sessions_per_minute (nullable) is None
-        # and model_fields_set contains the field
-        if self.pid_min_sessions_per_minute is None and "pid_min_sessions_per_minute" in self.model_fields_set:
-            _dict['pidMinSessionsPerMinute'] = None
-
-        # set to None if pid_max_sessions_per_minute (nullable) is None
-        # and model_fields_set contains the field
-        if self.pid_max_sessions_per_minute is None and "pid_max_sessions_per_minute" in self.model_fields_set:
-            _dict['pidMaxSessionsPerMinute'] = None
 
         return _dict
 

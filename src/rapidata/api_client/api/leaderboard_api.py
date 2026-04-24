@@ -16,22 +16,29 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictStr
+from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardModel
-from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
-from rapidata.api_client.models.create_leaderboard_result import CreateLeaderboardResult
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
+from rapidata.api_client.models.boost_leaderboard_endpoint_input import BoostLeaderboardEndpointInput
+from rapidata.api_client.models.create_leaderboard_endpoint_input import CreateLeaderboardEndpointInput
+from rapidata.api_client.models.create_leaderboard_endpoint_output import CreateLeaderboardEndpointOutput
+from rapidata.api_client.models.create_leaderboard_participant_endpoint_input import CreateLeaderboardParticipantEndpointInput
+from rapidata.api_client.models.create_leaderboard_participant_endpoint_output import CreateLeaderboardParticipantEndpointOutput
+from rapidata.api_client.models.create_prompt_for_leaderboard_endpoint_output import CreatePromptForLeaderboardEndpointOutput
 from rapidata.api_client.models.get_combined_leaderboard_matrix_endpoint_output import GetCombinedLeaderboardMatrixEndpointOutput
 from rapidata.api_client.models.get_combined_leaderboard_standings_endpoint_output import GetCombinedLeaderboardStandingsEndpointOutput
-from rapidata.api_client.models.get_leaderboard_by_id_result import GetLeaderboardByIdResult
-from rapidata.api_client.models.get_standing_by_id_result import GetStandingByIdResult
-from rapidata.api_client.models.paged_result_of_leaderboards_query_result import PagedResultOfLeaderboardsQueryResult
-from rapidata.api_client.models.paged_result_of_runs_by_leaderboard_result import PagedResultOfRunsByLeaderboardResult
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.standings_by_leaderboard_result import StandingsByLeaderboardResult
-from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
-from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
+from rapidata.api_client.models.get_leaderboard_by_id_endpoint_output import GetLeaderboardByIdEndpointOutput
+from rapidata.api_client.models.get_participant_by_id_obsolete_endpoint_output import GetParticipantByIdObsoleteEndpointOutput
+from rapidata.api_client.models.get_standing_by_id_endpoint_output import GetStandingByIdEndpointOutput
+from rapidata.api_client.models.query_leaderboard_runs_endpoint_paged_result_of_output import QueryLeaderboardRunsEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_leaderboards_endpoint_paged_result_of_output import QueryLeaderboardsEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_participants_obsolete_endpoint_output import QueryParticipantsObsoleteEndpointOutput
+from rapidata.api_client.models.query_standings_endpoint_paged_result_of_output import QueryStandingsEndpointPagedResultOfOutput
+from rapidata.api_client.models.submit_participant_endpoint_output import SubmitParticipantEndpointOutput
+from rapidata.api_client.models.update_leaderboard_endpoint_input import UpdateLeaderboardEndpointInput
+from rapidata.api_client.models.update_leaderboard_name_endpoint_input import UpdateLeaderboardNameEndpointInput
+from rapidata.api_client.models.update_leaderboard_response_config_endpoint_input import UpdateLeaderboardResponseConfigEndpointInput
 from rapidata.api_client.models.vote_matrix_result import VoteMatrixResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -55,8 +62,8 @@ class LeaderboardApi:
     @validate_call
     def benchmark_standing_leaderboard_id_participant_id_get(
         self,
-        leaderboard_id: StrictStr,
-        participant_id: StrictStr,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the standing belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose standing should be retrieved.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,13 +76,13 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetStandingByIdResult:
-        """Gets a standing by leaderboardId and participantId.
+    ) -> GetStandingByIdEndpointOutput:
+        """Gets a standing by leaderboard id and participant id.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard the standing belongs to. (required)
         :type leaderboard_id: str
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant whose standing should be retrieved. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -109,7 +116,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetStandingByIdResult",
+            '200': "GetStandingByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -125,8 +135,8 @@ class LeaderboardApi:
     @validate_call
     def benchmark_standing_leaderboard_id_participant_id_get_with_http_info(
         self,
-        leaderboard_id: StrictStr,
-        participant_id: StrictStr,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the standing belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose standing should be retrieved.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,13 +149,13 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetStandingByIdResult]:
-        """Gets a standing by leaderboardId and participantId.
+    ) -> ApiResponse[GetStandingByIdEndpointOutput]:
+        """Gets a standing by leaderboard id and participant id.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard the standing belongs to. (required)
         :type leaderboard_id: str
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant whose standing should be retrieved. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -179,7 +189,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetStandingByIdResult",
+            '200': "GetStandingByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -195,8 +208,8 @@ class LeaderboardApi:
     @validate_call
     def benchmark_standing_leaderboard_id_participant_id_get_without_preload_content(
         self,
-        leaderboard_id: StrictStr,
-        participant_id: StrictStr,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the standing belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose standing should be retrieved.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -210,12 +223,12 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets a standing by leaderboardId and participantId.
+        """Gets a standing by leaderboard id and participant id.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard the standing belongs to. (required)
         :type leaderboard_id: str
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant whose standing should be retrieved. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -249,7 +262,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetStandingByIdResult",
+            '200': "GetStandingByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -297,9 +313,7 @@ class LeaderboardApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -927,8 +941,8 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_boost_post(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="the leaderboard that should be boosted")],
-        boost_leaderboard_model: BoostLeaderboardModel,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to boost.")],
+        boost_leaderboard_endpoint_input: Annotated[BoostLeaderboardEndpointInput, Field(description="The payload describing the boost to apply.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -941,14 +955,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> SubmitParticipantResult:
+    ) -> None:
         """Boosts a subset of participants within a leaderboard.
 
 
-        :param leaderboard_id: the leaderboard that should be boosted (required)
+        :param leaderboard_id: The id of the leaderboard to boost. (required)
         :type leaderboard_id: str
-        :param boost_leaderboard_model:  (required)
-        :type boost_leaderboard_model: BoostLeaderboardModel
+        :param boost_leaderboard_endpoint_input: The payload describing the boost to apply. (required)
+        :type boost_leaderboard_endpoint_input: BoostLeaderboardEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -973,7 +987,7 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_boost_post_serialize(
             leaderboard_id=leaderboard_id,
-            boost_leaderboard_model=boost_leaderboard_model,
+            boost_leaderboard_endpoint_input=boost_leaderboard_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -981,7 +995,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SubmitParticipantResult",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -997,8 +1014,8 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_boost_post_with_http_info(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="the leaderboard that should be boosted")],
-        boost_leaderboard_model: BoostLeaderboardModel,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to boost.")],
+        boost_leaderboard_endpoint_input: Annotated[BoostLeaderboardEndpointInput, Field(description="The payload describing the boost to apply.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1011,14 +1028,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmitParticipantResult]:
+    ) -> ApiResponse[None]:
         """Boosts a subset of participants within a leaderboard.
 
 
-        :param leaderboard_id: the leaderboard that should be boosted (required)
+        :param leaderboard_id: The id of the leaderboard to boost. (required)
         :type leaderboard_id: str
-        :param boost_leaderboard_model:  (required)
-        :type boost_leaderboard_model: BoostLeaderboardModel
+        :param boost_leaderboard_endpoint_input: The payload describing the boost to apply. (required)
+        :type boost_leaderboard_endpoint_input: BoostLeaderboardEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1043,7 +1060,7 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_boost_post_serialize(
             leaderboard_id=leaderboard_id,
-            boost_leaderboard_model=boost_leaderboard_model,
+            boost_leaderboard_endpoint_input=boost_leaderboard_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1051,7 +1068,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SubmitParticipantResult",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1067,8 +1087,8 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_boost_post_without_preload_content(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="the leaderboard that should be boosted")],
-        boost_leaderboard_model: BoostLeaderboardModel,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to boost.")],
+        boost_leaderboard_endpoint_input: Annotated[BoostLeaderboardEndpointInput, Field(description="The payload describing the boost to apply.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1085,10 +1105,10 @@ class LeaderboardApi:
         """Boosts a subset of participants within a leaderboard.
 
 
-        :param leaderboard_id: the leaderboard that should be boosted (required)
+        :param leaderboard_id: The id of the leaderboard to boost. (required)
         :type leaderboard_id: str
-        :param boost_leaderboard_model:  (required)
-        :type boost_leaderboard_model: BoostLeaderboardModel
+        :param boost_leaderboard_endpoint_input: The payload describing the boost to apply. (required)
+        :type boost_leaderboard_endpoint_input: BoostLeaderboardEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1113,7 +1133,7 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_boost_post_serialize(
             leaderboard_id=leaderboard_id,
-            boost_leaderboard_model=boost_leaderboard_model,
+            boost_leaderboard_endpoint_input=boost_leaderboard_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1121,7 +1141,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SubmitParticipantResult",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1133,7 +1156,7 @@ class LeaderboardApi:
     def _leaderboard_leaderboard_id_boost_post_serialize(
         self,
         leaderboard_id,
-        boost_leaderboard_model,
+        boost_leaderboard_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1161,17 +1184,15 @@ class LeaderboardApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if boost_leaderboard_model is not None:
-            _body_params = boost_leaderboard_model
+        if boost_leaderboard_endpoint_input is not None:
+            _body_params = boost_leaderboard_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1182,9 +1203,7 @@ class LeaderboardApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -1219,7 +1238,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_delete(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard that gets deleted")],
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1233,10 +1252,10 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Deletes a leaderboard by its ID.
+        """Deletes a leaderboard by its id.
 
 
-        :param leaderboard_id: The id of the leaderboard that gets deleted (required)
+        :param leaderboard_id: The id of the leaderboard to delete. (required)
         :type leaderboard_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1270,6 +1289,9 @@ class LeaderboardApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1285,7 +1307,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_delete_with_http_info(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard that gets deleted")],
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1299,10 +1321,10 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Deletes a leaderboard by its ID.
+        """Deletes a leaderboard by its id.
 
 
-        :param leaderboard_id: The id of the leaderboard that gets deleted (required)
+        :param leaderboard_id: The id of the leaderboard to delete. (required)
         :type leaderboard_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1336,6 +1358,9 @@ class LeaderboardApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1351,7 +1376,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_delete_without_preload_content(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard that gets deleted")],
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1365,10 +1390,10 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Deletes a leaderboard by its ID.
+        """Deletes a leaderboard by its id.
 
 
-        :param leaderboard_id: The id of the leaderboard that gets deleted (required)
+        :param leaderboard_id: The id of the leaderboard to delete. (required)
         :type leaderboard_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1402,6 +1427,9 @@ class LeaderboardApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1442,6 +1470,13 @@ class LeaderboardApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1472,7 +1507,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_get(
         self,
-        leaderboard_id: StrictStr,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1485,11 +1520,11 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetLeaderboardByIdResult:
-        """Gets a leaderboard by its ID.
+    ) -> GetLeaderboardByIdEndpointOutput:
+        """Gets a leaderboard by its id.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to retrieve. (required)
         :type leaderboard_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1522,7 +1557,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetLeaderboardByIdResult",
+            '200': "GetLeaderboardByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1538,7 +1576,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_get_with_http_info(
         self,
-        leaderboard_id: StrictStr,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1551,11 +1589,11 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetLeaderboardByIdResult]:
-        """Gets a leaderboard by its ID.
+    ) -> ApiResponse[GetLeaderboardByIdEndpointOutput]:
+        """Gets a leaderboard by its id.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to retrieve. (required)
         :type leaderboard_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1588,7 +1626,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetLeaderboardByIdResult",
+            '200': "GetLeaderboardByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1604,7 +1645,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_get_without_preload_content(
         self,
-        leaderboard_id: StrictStr,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1618,10 +1659,10 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets a leaderboard by its ID.
+        """Gets a leaderboard by its id.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to retrieve. (required)
         :type leaderboard_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1654,7 +1695,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetLeaderboardByIdResult",
+            '200': "GetLeaderboardByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1699,9 +1743,7 @@ class LeaderboardApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -2039,10 +2081,10 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_patch(
+    def leaderboard_leaderboard_id_name_put(
         self,
-        leaderboard_id: StrictStr,
-        update_leaderboard_model: UpdateLeaderboardModel,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_name_endpoint_input: Annotated[UpdateLeaderboardNameEndpointInput, Field(description="The payload describing the new name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2056,13 +2098,13 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates the response config of a leaderboard.
+        """Updates the name of a leaderboard.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to update. (required)
         :type leaderboard_id: str
-        :param update_leaderboard_model:  (required)
-        :type update_leaderboard_model: UpdateLeaderboardModel
+        :param update_leaderboard_name_endpoint_input: The payload describing the new name. (required)
+        :type update_leaderboard_name_endpoint_input: UpdateLeaderboardNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2085,9 +2127,9 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_patch_serialize(
+        _param = self._leaderboard_leaderboard_id_name_put_serialize(
             leaderboard_id=leaderboard_id,
-            update_leaderboard_model=update_leaderboard_model,
+            update_leaderboard_name_endpoint_input=update_leaderboard_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2096,6 +2138,9 @@ class LeaderboardApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2109,10 +2154,10 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_patch_with_http_info(
+    def leaderboard_leaderboard_id_name_put_with_http_info(
         self,
-        leaderboard_id: StrictStr,
-        update_leaderboard_model: UpdateLeaderboardModel,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_name_endpoint_input: Annotated[UpdateLeaderboardNameEndpointInput, Field(description="The payload describing the new name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2126,13 +2171,13 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates the response config of a leaderboard.
+        """Updates the name of a leaderboard.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to update. (required)
         :type leaderboard_id: str
-        :param update_leaderboard_model:  (required)
-        :type update_leaderboard_model: UpdateLeaderboardModel
+        :param update_leaderboard_name_endpoint_input: The payload describing the new name. (required)
+        :type update_leaderboard_name_endpoint_input: UpdateLeaderboardNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2155,9 +2200,9 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_patch_serialize(
+        _param = self._leaderboard_leaderboard_id_name_put_serialize(
             leaderboard_id=leaderboard_id,
-            update_leaderboard_model=update_leaderboard_model,
+            update_leaderboard_name_endpoint_input=update_leaderboard_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2166,6 +2211,9 @@ class LeaderboardApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2179,10 +2227,10 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_patch_without_preload_content(
+    def leaderboard_leaderboard_id_name_put_without_preload_content(
         self,
-        leaderboard_id: StrictStr,
-        update_leaderboard_model: UpdateLeaderboardModel,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_name_endpoint_input: Annotated[UpdateLeaderboardNameEndpointInput, Field(description="The payload describing the new name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2196,13 +2244,13 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates the response config of a leaderboard.
+        """Updates the name of a leaderboard.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to update. (required)
         :type leaderboard_id: str
-        :param update_leaderboard_model:  (required)
-        :type update_leaderboard_model: UpdateLeaderboardModel
+        :param update_leaderboard_name_endpoint_input: The payload describing the new name. (required)
+        :type update_leaderboard_name_endpoint_input: UpdateLeaderboardNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2225,9 +2273,9 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_patch_serialize(
+        _param = self._leaderboard_leaderboard_id_name_put_serialize(
             leaderboard_id=leaderboard_id,
-            update_leaderboard_model=update_leaderboard_model,
+            update_leaderboard_name_endpoint_input=update_leaderboard_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2236,6 +2284,9 @@ class LeaderboardApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2244,10 +2295,10 @@ class LeaderboardApi:
         return response_data.response
 
 
-    def _leaderboard_leaderboard_id_patch_serialize(
+    def _leaderboard_leaderboard_id_name_put_serialize(
         self,
         leaderboard_id,
-        update_leaderboard_model,
+        update_leaderboard_name_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -2275,10 +2326,17 @@ class LeaderboardApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_leaderboard_model is not None:
-            _body_params = update_leaderboard_model
+        if update_leaderboard_name_endpoint_input is not None:
+            _body_params = update_leaderboard_name_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -2287,9 +2345,1438 @@ class LeaderboardApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/leaderboard/{leaderboardId}/name',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participant_participant_id_get(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to retrieve.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetParticipantByIdObsoleteEndpointOutput:
+        """Gets a participant by its id.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant belongs to. (required)
+        :type leaderboard_id: str
+        :param participant_id: The id of the participant to retrieve. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participant_participant_id_get_serialize(
+            leaderboard_id=leaderboard_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetParticipantByIdObsoleteEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participant_participant_id_get_with_http_info(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to retrieve.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetParticipantByIdObsoleteEndpointOutput]:
+        """Gets a participant by its id.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant belongs to. (required)
+        :type leaderboard_id: str
+        :param participant_id: The id of the participant to retrieve. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participant_participant_id_get_serialize(
+            leaderboard_id=leaderboard_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetParticipantByIdObsoleteEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participant_participant_id_get_without_preload_content(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to retrieve.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Gets a participant by its id.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant belongs to. (required)
+        :type leaderboard_id: str
+        :param participant_id: The id of the participant to retrieve. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participant_participant_id_get_serialize(
+            leaderboard_id=leaderboard_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetParticipantByIdObsoleteEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _leaderboard_leaderboard_id_participant_participant_id_get_serialize(
+        self,
+        leaderboard_id,
+        participant_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if leaderboard_id is not None:
+            _path_params['leaderboardId'] = leaderboard_id
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/leaderboard/{leaderboardId}/participant/{participantId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_get(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose participants should be queried.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> QueryParticipantsObsoleteEndpointOutput:
+        """Queries all participants connected to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard whose participants should be queried. (required)
+        :type leaderboard_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_get_serialize(
+            leaderboard_id=leaderboard_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryParticipantsObsoleteEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_get_with_http_info(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose participants should be queried.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[QueryParticipantsObsoleteEndpointOutput]:
+        """Queries all participants connected to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard whose participants should be queried. (required)
+        :type leaderboard_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_get_serialize(
+            leaderboard_id=leaderboard_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryParticipantsObsoleteEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_get_without_preload_content(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose participants should be queried.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Queries all participants connected to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard whose participants should be queried. (required)
+        :type leaderboard_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_get_serialize(
+            leaderboard_id=leaderboard_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryParticipantsObsoleteEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _leaderboard_leaderboard_id_participants_get_serialize(
+        self,
+        leaderboard_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if leaderboard_id is not None:
+            _path_params['leaderboardId'] = leaderboard_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/leaderboard/{leaderboardId}/participants',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_participant_id_submit_post(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> SubmitParticipantEndpointOutput:
+        """Submits a participant to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant belongs to. (required)
+        :type leaderboard_id: str
+        :param participant_id: The id of the participant to submit. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_participant_id_submit_post_serialize(
+            leaderboard_id=leaderboard_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SubmitParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_participant_id_submit_post_with_http_info(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmitParticipantEndpointOutput]:
+        """Submits a participant to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant belongs to. (required)
+        :type leaderboard_id: str
+        :param participant_id: The id of the participant to submit. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_participant_id_submit_post_serialize(
+            leaderboard_id=leaderboard_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SubmitParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_participant_id_submit_post_without_preload_content(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Submits a participant to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant belongs to. (required)
+        :type leaderboard_id: str
+        :param participant_id: The id of the participant to submit. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_participant_id_submit_post_serialize(
+            leaderboard_id=leaderboard_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SubmitParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _leaderboard_leaderboard_id_participants_participant_id_submit_post_serialize(
+        self,
+        leaderboard_id,
+        participant_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if leaderboard_id is not None:
+            _path_params['leaderboardId'] = leaderboard_id
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/leaderboard/{leaderboardId}/participants/{participantId}/submit',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_post(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant will be added to.")],
+        create_leaderboard_participant_endpoint_input: Annotated[CreateLeaderboardParticipantEndpointInput, Field(description="The payload describing the participant to create.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreateLeaderboardParticipantEndpointOutput:
+        """Creates a participant in a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant will be added to. (required)
+        :type leaderboard_id: str
+        :param create_leaderboard_participant_endpoint_input: The payload describing the participant to create. (required)
+        :type create_leaderboard_participant_endpoint_input: CreateLeaderboardParticipantEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_post_serialize(
+            leaderboard_id=leaderboard_id,
+            create_leaderboard_participant_endpoint_input=create_leaderboard_participant_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateLeaderboardParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_post_with_http_info(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant will be added to.")],
+        create_leaderboard_participant_endpoint_input: Annotated[CreateLeaderboardParticipantEndpointInput, Field(description="The payload describing the participant to create.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CreateLeaderboardParticipantEndpointOutput]:
+        """Creates a participant in a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant will be added to. (required)
+        :type leaderboard_id: str
+        :param create_leaderboard_participant_endpoint_input: The payload describing the participant to create. (required)
+        :type create_leaderboard_participant_endpoint_input: CreateLeaderboardParticipantEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_post_serialize(
+            leaderboard_id=leaderboard_id,
+            create_leaderboard_participant_endpoint_input=create_leaderboard_participant_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateLeaderboardParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_participants_post_without_preload_content(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard the participant will be added to.")],
+        create_leaderboard_participant_endpoint_input: Annotated[CreateLeaderboardParticipantEndpointInput, Field(description="The payload describing the participant to create.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Creates a participant in a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard the participant will be added to. (required)
+        :type leaderboard_id: str
+        :param create_leaderboard_participant_endpoint_input: The payload describing the participant to create. (required)
+        :type create_leaderboard_participant_endpoint_input: CreateLeaderboardParticipantEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_participants_post_serialize(
+            leaderboard_id=leaderboard_id,
+            create_leaderboard_participant_endpoint_input=create_leaderboard_participant_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateLeaderboardParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _leaderboard_leaderboard_id_participants_post_serialize(
+        self,
+        leaderboard_id,
+        create_leaderboard_participant_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if leaderboard_id is not None:
+            _path_params['leaderboardId'] = leaderboard_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if create_leaderboard_participant_endpoint_input is not None:
+            _body_params = create_leaderboard_participant_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/leaderboard/{leaderboardId}/participants',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_patch(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_endpoint_input: Annotated[UpdateLeaderboardEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates a leaderboard using patch semantics.
+
+
+        :param leaderboard_id: The id of the leaderboard to update. (required)
+        :type leaderboard_id: str
+        :param update_leaderboard_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_leaderboard_endpoint_input: UpdateLeaderboardEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_patch_serialize(
+            leaderboard_id=leaderboard_id,
+            update_leaderboard_endpoint_input=update_leaderboard_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_patch_with_http_info(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_endpoint_input: Annotated[UpdateLeaderboardEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates a leaderboard using patch semantics.
+
+
+        :param leaderboard_id: The id of the leaderboard to update. (required)
+        :type leaderboard_id: str
+        :param update_leaderboard_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_leaderboard_endpoint_input: UpdateLeaderboardEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_patch_serialize(
+            leaderboard_id=leaderboard_id,
+            update_leaderboard_endpoint_input=update_leaderboard_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_patch_without_preload_content(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_endpoint_input: Annotated[UpdateLeaderboardEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates a leaderboard using patch semantics.
+
+
+        :param leaderboard_id: The id of the leaderboard to update. (required)
+        :type leaderboard_id: str
+        :param update_leaderboard_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_leaderboard_endpoint_input: UpdateLeaderboardEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_patch_serialize(
+            leaderboard_id=leaderboard_id,
+            update_leaderboard_endpoint_input=update_leaderboard_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _leaderboard_leaderboard_id_patch_serialize(
+        self,
+        leaderboard_id,
+        update_leaderboard_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if leaderboard_id is not None:
+            _path_params['leaderboardId'] = leaderboard_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_leaderboard_endpoint_input is not None:
+            _body_params = update_leaderboard_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
                     ]
                 )
             )
@@ -2322,10 +3809,10 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_runs_get(
+    def leaderboard_leaderboard_id_prompts_post(
         self,
-        leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to add the prompt to.")],
+        body: Annotated[StrictStr, Field(description="The prompt text.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2338,14 +3825,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfRunsByLeaderboardResult:
-        """Gets the runs related to a leaderboard
+    ) -> CreatePromptForLeaderboardEndpointOutput:
+        """Adds a new prompt to a leaderboard.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to add the prompt to. (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
+        :param body: The prompt text. (required)
+        :type body: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2368,9 +3855,9 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_runs_get_serialize(
+        _param = self._leaderboard_leaderboard_id_prompts_post_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
+            body=body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2378,7 +3865,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfRunsByLeaderboardResult",
+            '200': "CreatePromptForLeaderboardEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2392,10 +3882,10 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_runs_get_with_http_info(
+    def leaderboard_leaderboard_id_prompts_post_with_http_info(
         self,
-        leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to add the prompt to.")],
+        body: Annotated[StrictStr, Field(description="The prompt text.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2408,14 +3898,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfRunsByLeaderboardResult]:
-        """Gets the runs related to a leaderboard
+    ) -> ApiResponse[CreatePromptForLeaderboardEndpointOutput]:
+        """Adds a new prompt to a leaderboard.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to add the prompt to. (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
+        :param body: The prompt text. (required)
+        :type body: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2438,9 +3928,9 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_runs_get_serialize(
+        _param = self._leaderboard_leaderboard_id_prompts_post_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
+            body=body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2448,7 +3938,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfRunsByLeaderboardResult",
+            '200': "CreatePromptForLeaderboardEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2462,10 +3955,10 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_runs_get_without_preload_content(
+    def leaderboard_leaderboard_id_prompts_post_without_preload_content(
         self,
-        leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to add the prompt to.")],
+        body: Annotated[StrictStr, Field(description="The prompt text.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2479,13 +3972,13 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets the runs related to a leaderboard
+        """Adds a new prompt to a leaderboard.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard to add the prompt to. (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
+        :param body: The prompt text. (required)
+        :type body: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2508,9 +4001,9 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_runs_get_serialize(
+        _param = self._leaderboard_leaderboard_id_prompts_post_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
+            body=body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2518,7 +4011,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfRunsByLeaderboardResult",
+            '200': "CreatePromptForLeaderboardEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2527,10 +4023,10 @@ class LeaderboardApi:
         return response_data.response
 
 
-    def _leaderboard_leaderboard_id_runs_get_serialize(
+    def _leaderboard_leaderboard_id_prompts_post_serialize(
         self,
         leaderboard_id,
-        request,
+        body,
         _request_auth,
         _content_type,
         _headers,
@@ -2555,10 +4051,744 @@ class LeaderboardApi:
         if leaderboard_id is not None:
             _path_params['leaderboardId'] = leaderboard_id
         # process the query parameters
-        if request is not None:
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if body is not None:
+            _body_params = body
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/leaderboard/{leaderboardId}/prompts',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_response_config_put(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_response_config_endpoint_input: Annotated[UpdateLeaderboardResponseConfigEndpointInput, Field(description="The payload describing the new response configuration.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates the response configuration of a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard to update. (required)
+        :type leaderboard_id: str
+        :param update_leaderboard_response_config_endpoint_input: The payload describing the new response configuration. (required)
+        :type update_leaderboard_response_config_endpoint_input: UpdateLeaderboardResponseConfigEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_response_config_put_serialize(
+            leaderboard_id=leaderboard_id,
+            update_leaderboard_response_config_endpoint_input=update_leaderboard_response_config_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_response_config_put_with_http_info(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_response_config_endpoint_input: Annotated[UpdateLeaderboardResponseConfigEndpointInput, Field(description="The payload describing the new response configuration.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates the response configuration of a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard to update. (required)
+        :type leaderboard_id: str
+        :param update_leaderboard_response_config_endpoint_input: The payload describing the new response configuration. (required)
+        :type update_leaderboard_response_config_endpoint_input: UpdateLeaderboardResponseConfigEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_response_config_put_serialize(
+            leaderboard_id=leaderboard_id,
+            update_leaderboard_response_config_endpoint_input=update_leaderboard_response_config_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_response_config_put_without_preload_content(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to update.")],
+        update_leaderboard_response_config_endpoint_input: Annotated[UpdateLeaderboardResponseConfigEndpointInput, Field(description="The payload describing the new response configuration.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates the response configuration of a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard to update. (required)
+        :type leaderboard_id: str
+        :param update_leaderboard_response_config_endpoint_input: The payload describing the new response configuration. (required)
+        :type update_leaderboard_response_config_endpoint_input: UpdateLeaderboardResponseConfigEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_response_config_put_serialize(
+            leaderboard_id=leaderboard_id,
+            update_leaderboard_response_config_endpoint_input=update_leaderboard_response_config_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _leaderboard_leaderboard_id_response_config_put_serialize(
+        self,
+        leaderboard_id,
+        update_leaderboard_response_config_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if leaderboard_id is not None:
+            _path_params['leaderboardId'] = leaderboard_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_leaderboard_response_config_endpoint_input is not None:
+            _body_params = update_leaderboard_response_config_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/leaderboard/{leaderboardId}/response-config',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_runs_get(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose runs should be queried.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> QueryLeaderboardRunsEndpointPagedResultOfOutput:
+        """Queries the runs related to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard whose runs should be queried. (required)
+        :type leaderboard_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_runs_get_serialize(
+            leaderboard_id=leaderboard_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            created_at=created_at,
+            owner_mail=owner_mail,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryLeaderboardRunsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_runs_get_with_http_info(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose runs should be queried.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[QueryLeaderboardRunsEndpointPagedResultOfOutput]:
+        """Queries the runs related to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard whose runs should be queried. (required)
+        :type leaderboard_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_runs_get_serialize(
+            leaderboard_id=leaderboard_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            created_at=created_at,
+            owner_mail=owner_mail,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryLeaderboardRunsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def leaderboard_leaderboard_id_runs_get_without_preload_content(
+        self,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose runs should be queried.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Queries the runs related to a leaderboard.
+
+
+        :param leaderboard_id: The id of the leaderboard whose runs should be queried. (required)
+        :type leaderboard_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._leaderboard_leaderboard_id_runs_get_serialize(
+            leaderboard_id=leaderboard_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            created_at=created_at,
+            owner_mail=owner_mail,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryLeaderboardRunsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _leaderboard_leaderboard_id_runs_get_serialize(
+        self,
+        leaderboard_id,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
+        status,
+        created_at,
+        owner_mail,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if leaderboard_id is not None:
+            _path_params['leaderboardId'] = leaderboard_id
+        # process the query parameters
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if status is not None:
+            _param_val = status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('status[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -2568,9 +4798,7 @@ class LeaderboardApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -2603,10 +4831,10 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose standings should be queried.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2619,17 +4847,17 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> StandingsByLeaderboardResult:
-        """queries all the participants connected to leaderboard by its ID.
+    ) -> QueryStandingsEndpointPagedResultOfOutput:
+        """Queries all standings for a leaderboard by its id.
 
 
-        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
+        :param leaderboard_id: The id of the leaderboard whose standings should be queried. (required)
         :type leaderboard_id: str
-        :param tags: The tags the leaderboard should filter for.
+        :param tags: The tags the standings should be filtered by.
         :type tags: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include the confidence intervals
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2665,7 +4893,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingsByLeaderboardResult",
+            '200': "QueryStandingsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2681,10 +4912,10 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get_with_http_info(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose standings should be queried.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2697,17 +4928,17 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[StandingsByLeaderboardResult]:
-        """queries all the participants connected to leaderboard by its ID.
+    ) -> ApiResponse[QueryStandingsEndpointPagedResultOfOutput]:
+        """Queries all standings for a leaderboard by its id.
 
 
-        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
+        :param leaderboard_id: The id of the leaderboard whose standings should be queried. (required)
         :type leaderboard_id: str
-        :param tags: The tags the leaderboard should filter for.
+        :param tags: The tags the standings should be filtered by.
         :type tags: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include the confidence intervals
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2743,7 +4974,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingsByLeaderboardResult",
+            '200': "QueryStandingsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2759,10 +4993,10 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get_without_preload_content(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose standings should be queried.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2776,16 +5010,16 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """queries all the participants connected to leaderboard by its ID.
+        """Queries all standings for a leaderboard by its id.
 
 
-        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
+        :param leaderboard_id: The id of the leaderboard whose standings should be queried. (required)
         :type leaderboard_id: str
-        :param tags: The tags the leaderboard should filter for.
+        :param tags: The tags the standings should be filtered by.
         :type tags: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include the confidence intervals
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2821,7 +5055,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingsByLeaderboardResult",
+            '200': "QueryStandingsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2882,9 +5119,7 @@ class LeaderboardApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -2917,7 +5152,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_post(
         self,
-        create_leaderboard_model: CreateLeaderboardModel,
+        create_leaderboard_endpoint_input: Annotated[CreateLeaderboardEndpointInput, Field(description="The current HTTP context, used for user claims.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2930,12 +5165,12 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateLeaderboardResult:
-        """Creates a new leaderboard with the specified name and criteria.
+    ) -> CreateLeaderboardEndpointOutput:
+        """Creates a new leaderboard.
 
 
-        :param create_leaderboard_model:  (required)
-        :type create_leaderboard_model: CreateLeaderboardModel
+        :param create_leaderboard_endpoint_input: The current HTTP context, used for user claims. (required)
+        :type create_leaderboard_endpoint_input: CreateLeaderboardEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2959,7 +5194,7 @@ class LeaderboardApi:
         """ # noqa: E501
 
         _param = self._leaderboard_post_serialize(
-            create_leaderboard_model=create_leaderboard_model,
+            create_leaderboard_endpoint_input=create_leaderboard_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2967,7 +5202,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateLeaderboardResult",
+            '200': "CreateLeaderboardEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2983,7 +5221,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_post_with_http_info(
         self,
-        create_leaderboard_model: CreateLeaderboardModel,
+        create_leaderboard_endpoint_input: Annotated[CreateLeaderboardEndpointInput, Field(description="The current HTTP context, used for user claims.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2996,12 +5234,12 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateLeaderboardResult]:
-        """Creates a new leaderboard with the specified name and criteria.
+    ) -> ApiResponse[CreateLeaderboardEndpointOutput]:
+        """Creates a new leaderboard.
 
 
-        :param create_leaderboard_model:  (required)
-        :type create_leaderboard_model: CreateLeaderboardModel
+        :param create_leaderboard_endpoint_input: The current HTTP context, used for user claims. (required)
+        :type create_leaderboard_endpoint_input: CreateLeaderboardEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3025,7 +5263,7 @@ class LeaderboardApi:
         """ # noqa: E501
 
         _param = self._leaderboard_post_serialize(
-            create_leaderboard_model=create_leaderboard_model,
+            create_leaderboard_endpoint_input=create_leaderboard_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3033,7 +5271,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateLeaderboardResult",
+            '200': "CreateLeaderboardEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3049,7 +5290,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_post_without_preload_content(
         self,
-        create_leaderboard_model: CreateLeaderboardModel,
+        create_leaderboard_endpoint_input: Annotated[CreateLeaderboardEndpointInput, Field(description="The current HTTP context, used for user claims.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3063,11 +5304,11 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new leaderboard with the specified name and criteria.
+        """Creates a new leaderboard.
 
 
-        :param create_leaderboard_model:  (required)
-        :type create_leaderboard_model: CreateLeaderboardModel
+        :param create_leaderboard_endpoint_input: The current HTTP context, used for user claims. (required)
+        :type create_leaderboard_endpoint_input: CreateLeaderboardEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3091,7 +5332,7 @@ class LeaderboardApi:
         """ # noqa: E501
 
         _param = self._leaderboard_post_serialize(
-            create_leaderboard_model=create_leaderboard_model,
+            create_leaderboard_endpoint_input=create_leaderboard_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3099,7 +5340,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateLeaderboardResult",
+            '200': "CreateLeaderboardEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3110,7 +5354,7 @@ class LeaderboardApi:
 
     def _leaderboard_post_serialize(
         self,
-        create_leaderboard_model,
+        create_leaderboard_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -3136,17 +5380,15 @@ class LeaderboardApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_leaderboard_model is not None:
-            _body_params = create_leaderboard_model
+        if create_leaderboard_endpoint_input is not None:
+            _body_params = create_leaderboard_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -3157,9 +5399,7 @@ class LeaderboardApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -3194,7 +5434,13 @@ class LeaderboardApi:
     @validate_call
     def leaderboards_get(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        benchmark_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by benchmark_id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3207,12 +5453,24 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfLeaderboardsQueryResult:
-        """Queries all leaderboards for a specific benchmark.
+    ) -> QueryLeaderboardsEndpointPagedResultOfOutput:
+        """Queries all leaderboards accessible to the current user.
 
 
-        :param request: Query parameters
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param benchmark_id: Filter by benchmark_id.
+        :type benchmark_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3236,7 +5494,13 @@ class LeaderboardApi:
         """ # noqa: E501
 
         _param = self._leaderboards_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            benchmark_id=benchmark_id,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3244,7 +5508,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfLeaderboardsQueryResult",
+            '200': "QueryLeaderboardsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3260,7 +5527,13 @@ class LeaderboardApi:
     @validate_call
     def leaderboards_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        benchmark_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by benchmark_id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3273,12 +5546,24 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfLeaderboardsQueryResult]:
-        """Queries all leaderboards for a specific benchmark.
+    ) -> ApiResponse[QueryLeaderboardsEndpointPagedResultOfOutput]:
+        """Queries all leaderboards accessible to the current user.
 
 
-        :param request: Query parameters
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param benchmark_id: Filter by benchmark_id.
+        :type benchmark_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3302,7 +5587,13 @@ class LeaderboardApi:
         """ # noqa: E501
 
         _param = self._leaderboards_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            benchmark_id=benchmark_id,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3310,7 +5601,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfLeaderboardsQueryResult",
+            '200': "QueryLeaderboardsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3326,7 +5620,13 @@ class LeaderboardApi:
     @validate_call
     def leaderboards_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        benchmark_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by benchmark_id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3340,11 +5640,23 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all leaderboards for a specific benchmark.
+        """Queries all leaderboards accessible to the current user.
 
 
-        :param request: Query parameters
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param benchmark_id: Filter by benchmark_id.
+        :type benchmark_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3368,7 +5680,13 @@ class LeaderboardApi:
         """ # noqa: E501
 
         _param = self._leaderboards_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            benchmark_id=benchmark_id,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3376,7 +5694,10 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfLeaderboardsQueryResult",
+            '200': "QueryLeaderboardsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3387,7 +5708,13 @@ class LeaderboardApi:
 
     def _leaderboards_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
+        benchmark_id,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -3397,6 +5724,7 @@ class LeaderboardApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -3410,10 +5738,50 @@ class LeaderboardApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if benchmark_id is not None:
+            _param_val = benchmark_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('benchmark_id[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -3423,9 +5791,7 @@ class LeaderboardApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

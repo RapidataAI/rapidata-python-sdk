@@ -18,12 +18,13 @@ from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from rapidata.api_client.models.add_user_response_result import AddUserResponseResult
-from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
-from rapidata.api_client.models.inspect_report_result import InspectReportResult
-from rapidata.api_client.models.rapid_result_model import RapidResultModel
-from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
-from rapidata.api_client.models.report_model import ReportModel
+from rapidata.api_client.models.add_user_response_endpoint_input import AddUserResponseEndpointInput
+from rapidata.api_client.models.add_user_response_endpoint_output import AddUserResponseEndpointOutput
+from rapidata.api_client.models.inspect_report_endpoint_output import InspectReportEndpointOutput
+from rapidata.api_client.models.is_rapid_bag_valid_endpoint_output import IsRapidBagValidEndpointOutput
+from rapidata.api_client.models.report_rapid_endpoint_input import ReportRapidEndpointInput
+from rapidata.api_client.models.skip_rapid_endpoint_input import SkipRapidEndpointInput
+from rapidata.api_client.models.skip_rapid_endpoint_output import SkipRapidEndpointOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -58,8 +59,8 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> AreRapidsActiveResult:
-        """Validates that the rapids associated with the current user are active.
+    ) -> IsRapidBagValidEndpointOutput:
+        """Returns whether the rapid bag associated with the current user is still valid.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -92,7 +93,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AreRapidsActiveResult",
+            '200': "IsRapidBagValidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -120,8 +124,8 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[AreRapidsActiveResult]:
-        """Validates that the rapids associated with the current user are active.
+    ) -> ApiResponse[IsRapidBagValidEndpointOutput]:
+        """Returns whether the rapid bag associated with the current user is still valid.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -154,7 +158,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AreRapidsActiveResult",
+            '200': "IsRapidBagValidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -183,7 +190,7 @@ class UserRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Validates that the rapids associated with the current user are active.
+        """Returns whether the rapid bag associated with the current user is still valid.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -216,7 +223,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AreRapidsActiveResult",
+            '200': "IsRapidBagValidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -258,9 +268,7 @@ class UserRapidApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -294,7 +302,7 @@ class UserRapidApi:
     def rapid_rapid_id_report_post(
         self,
         rapid_id: Annotated[StrictStr, Field(description="The rapid to report.")],
-        report_model: Annotated[ReportModel, Field(description="The body request.")],
+        report_rapid_endpoint_input: Annotated[ReportRapidEndpointInput, Field(description="The report payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -308,13 +316,13 @@ class UserRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Used to report an issue with a rapid.
+        """Reports an issue with a rapid.
 
 
         :param rapid_id: The rapid to report. (required)
         :type rapid_id: str
-        :param report_model: The body request. (required)
-        :type report_model: ReportModel
+        :param report_rapid_endpoint_input: The report payload. (required)
+        :type report_rapid_endpoint_input: ReportRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -339,7 +347,7 @@ class UserRapidApi:
 
         _param = self._rapid_rapid_id_report_post_serialize(
             rapid_id=rapid_id,
-            report_model=report_model,
+            report_rapid_endpoint_input=report_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -348,6 +356,9 @@ class UserRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -364,7 +375,7 @@ class UserRapidApi:
     def rapid_rapid_id_report_post_with_http_info(
         self,
         rapid_id: Annotated[StrictStr, Field(description="The rapid to report.")],
-        report_model: Annotated[ReportModel, Field(description="The body request.")],
+        report_rapid_endpoint_input: Annotated[ReportRapidEndpointInput, Field(description="The report payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -378,13 +389,13 @@ class UserRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Used to report an issue with a rapid.
+        """Reports an issue with a rapid.
 
 
         :param rapid_id: The rapid to report. (required)
         :type rapid_id: str
-        :param report_model: The body request. (required)
-        :type report_model: ReportModel
+        :param report_rapid_endpoint_input: The report payload. (required)
+        :type report_rapid_endpoint_input: ReportRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -409,7 +420,7 @@ class UserRapidApi:
 
         _param = self._rapid_rapid_id_report_post_serialize(
             rapid_id=rapid_id,
-            report_model=report_model,
+            report_rapid_endpoint_input=report_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -418,6 +429,9 @@ class UserRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -434,7 +448,7 @@ class UserRapidApi:
     def rapid_rapid_id_report_post_without_preload_content(
         self,
         rapid_id: Annotated[StrictStr, Field(description="The rapid to report.")],
-        report_model: Annotated[ReportModel, Field(description="The body request.")],
+        report_rapid_endpoint_input: Annotated[ReportRapidEndpointInput, Field(description="The report payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -448,13 +462,13 @@ class UserRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Used to report an issue with a rapid.
+        """Reports an issue with a rapid.
 
 
         :param rapid_id: The rapid to report. (required)
         :type rapid_id: str
-        :param report_model: The body request. (required)
-        :type report_model: ReportModel
+        :param report_rapid_endpoint_input: The report payload. (required)
+        :type report_rapid_endpoint_input: ReportRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -479,7 +493,7 @@ class UserRapidApi:
 
         _param = self._rapid_rapid_id_report_post_serialize(
             rapid_id=rapid_id,
-            report_model=report_model,
+            report_rapid_endpoint_input=report_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -488,6 +502,9 @@ class UserRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -499,7 +516,7 @@ class UserRapidApi:
     def _rapid_rapid_id_report_post_serialize(
         self,
         rapid_id,
-        report_model,
+        report_rapid_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -527,10 +544,17 @@ class UserRapidApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if report_model is not None:
-            _body_params = report_model
+        if report_rapid_endpoint_input is not None:
+            _body_params = report_rapid_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -539,9 +563,7 @@ class UserRapidApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -576,7 +598,7 @@ class UserRapidApi:
     @validate_call
     def rapid_report_report_id_get(
         self,
-        report_id: Annotated[StrictStr, Field(description="The report id")],
+        report_id: Annotated[StrictStr, Field(description="The id of the report to inspect.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -589,11 +611,11 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> InspectReportResult:
-        """Inspects a report's dump. Can be used to restore zustand state or anything alike.
+    ) -> InspectReportEndpointOutput:
+        """Inspects a report's dump so that it can be replayed or restored.
 
 
-        :param report_id: The report id (required)
+        :param report_id: The id of the report to inspect. (required)
         :type report_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -626,7 +648,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InspectReportResult",
+            '200': "InspectReportEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -642,7 +667,7 @@ class UserRapidApi:
     @validate_call
     def rapid_report_report_id_get_with_http_info(
         self,
-        report_id: Annotated[StrictStr, Field(description="The report id")],
+        report_id: Annotated[StrictStr, Field(description="The id of the report to inspect.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -655,11 +680,11 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[InspectReportResult]:
-        """Inspects a report's dump. Can be used to restore zustand state or anything alike.
+    ) -> ApiResponse[InspectReportEndpointOutput]:
+        """Inspects a report's dump so that it can be replayed or restored.
 
 
-        :param report_id: The report id (required)
+        :param report_id: The id of the report to inspect. (required)
         :type report_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -692,7 +717,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InspectReportResult",
+            '200': "InspectReportEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -708,7 +736,7 @@ class UserRapidApi:
     @validate_call
     def rapid_report_report_id_get_without_preload_content(
         self,
-        report_id: Annotated[StrictStr, Field(description="The report id")],
+        report_id: Annotated[StrictStr, Field(description="The id of the report to inspect.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -722,10 +750,10 @@ class UserRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Inspects a report's dump. Can be used to restore zustand state or anything alike.
+        """Inspects a report's dump so that it can be replayed or restored.
 
 
-        :param report_id: The report id (required)
+        :param report_id: The id of the report to inspect. (required)
         :type report_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -758,7 +786,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InspectReportResult",
+            '200': "InspectReportEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -803,9 +834,7 @@ class UserRapidApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -838,7 +867,7 @@ class UserRapidApi:
     @validate_call
     def rapid_response_post(
         self,
-        rapid_result_model: Annotated[RapidResultModel, Field(description="The model containing the user guess.")],
+        add_user_response_endpoint_input: Annotated[AddUserResponseEndpointInput, Field(description="The submitted result and session index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -851,12 +880,12 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> AddUserResponseResult:
-        """Submits a response for a Rapid.
+    ) -> AddUserResponseEndpointOutput:
+        """Submits a response for a rapid.
 
 
-        :param rapid_result_model: The model containing the user guess. (required)
-        :type rapid_result_model: RapidResultModel
+        :param add_user_response_endpoint_input: The submitted result and session index. (required)
+        :type add_user_response_endpoint_input: AddUserResponseEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -880,7 +909,7 @@ class UserRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_response_post_serialize(
-            rapid_result_model=rapid_result_model,
+            add_user_response_endpoint_input=add_user_response_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -888,7 +917,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddUserResponseResult",
+            '200': "AddUserResponseEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -904,7 +936,7 @@ class UserRapidApi:
     @validate_call
     def rapid_response_post_with_http_info(
         self,
-        rapid_result_model: Annotated[RapidResultModel, Field(description="The model containing the user guess.")],
+        add_user_response_endpoint_input: Annotated[AddUserResponseEndpointInput, Field(description="The submitted result and session index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -917,12 +949,12 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[AddUserResponseResult]:
-        """Submits a response for a Rapid.
+    ) -> ApiResponse[AddUserResponseEndpointOutput]:
+        """Submits a response for a rapid.
 
 
-        :param rapid_result_model: The model containing the user guess. (required)
-        :type rapid_result_model: RapidResultModel
+        :param add_user_response_endpoint_input: The submitted result and session index. (required)
+        :type add_user_response_endpoint_input: AddUserResponseEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -946,7 +978,7 @@ class UserRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_response_post_serialize(
-            rapid_result_model=rapid_result_model,
+            add_user_response_endpoint_input=add_user_response_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -954,7 +986,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddUserResponseResult",
+            '200': "AddUserResponseEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -970,7 +1005,7 @@ class UserRapidApi:
     @validate_call
     def rapid_response_post_without_preload_content(
         self,
-        rapid_result_model: Annotated[RapidResultModel, Field(description="The model containing the user guess.")],
+        add_user_response_endpoint_input: Annotated[AddUserResponseEndpointInput, Field(description="The submitted result and session index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -984,11 +1019,11 @@ class UserRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Submits a response for a Rapid.
+        """Submits a response for a rapid.
 
 
-        :param rapid_result_model: The model containing the user guess. (required)
-        :type rapid_result_model: RapidResultModel
+        :param add_user_response_endpoint_input: The submitted result and session index. (required)
+        :type add_user_response_endpoint_input: AddUserResponseEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1012,7 +1047,7 @@ class UserRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_response_post_serialize(
-            rapid_result_model=rapid_result_model,
+            add_user_response_endpoint_input=add_user_response_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1020,7 +1055,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddUserResponseResult",
+            '200': "AddUserResponseEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1031,7 +1069,7 @@ class UserRapidApi:
 
     def _rapid_response_post_serialize(
         self,
-        rapid_result_model,
+        add_user_response_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1057,17 +1095,15 @@ class UserRapidApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if rapid_result_model is not None:
-            _body_params = rapid_result_model
+        if add_user_response_endpoint_input is not None:
+            _body_params = add_user_response_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1078,9 +1114,7 @@ class UserRapidApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -1115,7 +1149,7 @@ class UserRapidApi:
     @validate_call
     def rapid_skip_post(
         self,
-        rapid_skipped_model: Annotated[RapidSkippedModel, Field(description="The model containing the Rapid to skip.")],
+        skip_rapid_endpoint_input: Annotated[SkipRapidEndpointInput, Field(description="The id of the rapid being skipped and the session index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1128,12 +1162,12 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> AddUserResponseResult:
-        """Skips a Rapid for the user.
+    ) -> SkipRapidEndpointOutput:
+        """Records that the user skipped the specified rapid.
 
 
-        :param rapid_skipped_model: The model containing the Rapid to skip. (required)
-        :type rapid_skipped_model: RapidSkippedModel
+        :param skip_rapid_endpoint_input: The id of the rapid being skipped and the session index. (required)
+        :type skip_rapid_endpoint_input: SkipRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1157,7 +1191,7 @@ class UserRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_skip_post_serialize(
-            rapid_skipped_model=rapid_skipped_model,
+            skip_rapid_endpoint_input=skip_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1165,7 +1199,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddUserResponseResult",
+            '200': "SkipRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1181,7 +1218,7 @@ class UserRapidApi:
     @validate_call
     def rapid_skip_post_with_http_info(
         self,
-        rapid_skipped_model: Annotated[RapidSkippedModel, Field(description="The model containing the Rapid to skip.")],
+        skip_rapid_endpoint_input: Annotated[SkipRapidEndpointInput, Field(description="The id of the rapid being skipped and the session index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1194,12 +1231,12 @@ class UserRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[AddUserResponseResult]:
-        """Skips a Rapid for the user.
+    ) -> ApiResponse[SkipRapidEndpointOutput]:
+        """Records that the user skipped the specified rapid.
 
 
-        :param rapid_skipped_model: The model containing the Rapid to skip. (required)
-        :type rapid_skipped_model: RapidSkippedModel
+        :param skip_rapid_endpoint_input: The id of the rapid being skipped and the session index. (required)
+        :type skip_rapid_endpoint_input: SkipRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1223,7 +1260,7 @@ class UserRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_skip_post_serialize(
-            rapid_skipped_model=rapid_skipped_model,
+            skip_rapid_endpoint_input=skip_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1231,7 +1268,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddUserResponseResult",
+            '200': "SkipRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1247,7 +1287,7 @@ class UserRapidApi:
     @validate_call
     def rapid_skip_post_without_preload_content(
         self,
-        rapid_skipped_model: Annotated[RapidSkippedModel, Field(description="The model containing the Rapid to skip.")],
+        skip_rapid_endpoint_input: Annotated[SkipRapidEndpointInput, Field(description="The id of the rapid being skipped and the session index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1261,11 +1301,11 @@ class UserRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Skips a Rapid for the user.
+        """Records that the user skipped the specified rapid.
 
 
-        :param rapid_skipped_model: The model containing the Rapid to skip. (required)
-        :type rapid_skipped_model: RapidSkippedModel
+        :param skip_rapid_endpoint_input: The id of the rapid being skipped and the session index. (required)
+        :type skip_rapid_endpoint_input: SkipRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1289,7 +1329,7 @@ class UserRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_skip_post_serialize(
-            rapid_skipped_model=rapid_skipped_model,
+            skip_rapid_endpoint_input=skip_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1297,7 +1337,10 @@ class UserRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddUserResponseResult",
+            '200': "SkipRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1308,7 +1351,7 @@ class UserRapidApi:
 
     def _rapid_skip_post_serialize(
         self,
-        rapid_skipped_model,
+        skip_rapid_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1334,17 +1377,15 @@ class UserRapidApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if rapid_skipped_model is not None:
-            _body_params = rapid_skipped_model
+        if skip_rapid_endpoint_input is not None:
+            _body_params = skip_rapid_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1355,9 +1396,7 @@ class UserRapidApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )

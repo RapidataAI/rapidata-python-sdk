@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class AggregatorType(str, Enum):
     """
-    The aggregator type.
+    AggregatorType
     """
 
     """

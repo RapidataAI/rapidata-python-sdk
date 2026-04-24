@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class BoostLevel(str, Enum):
     """
-    The current boost level applied to the audience.
+    BoostLevel
     """
 
     """

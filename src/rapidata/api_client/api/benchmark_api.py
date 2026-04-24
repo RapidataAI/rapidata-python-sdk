@@ -19,25 +19,26 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
-from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
-from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
-from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
-from rapidata.api_client.models.create_benchmark_prompt_result import CreateBenchmarkPromptResult
-from rapidata.api_client.models.create_benchmark_result import CreateBenchmarkResult
-from rapidata.api_client.models.fork_benchmark_result import ForkBenchmarkResult
-from rapidata.api_client.models.get_benchmark_by_id_result import GetBenchmarkByIdResult
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
+from rapidata.api_client.models.create_benchmark_endpoint_input import CreateBenchmarkEndpointInput
+from rapidata.api_client.models.create_benchmark_endpoint_output import CreateBenchmarkEndpointOutput
+from rapidata.api_client.models.create_benchmark_participant_endpoint_input import CreateBenchmarkParticipantEndpointInput
+from rapidata.api_client.models.create_benchmark_participant_endpoint_output import CreateBenchmarkParticipantEndpointOutput
+from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import CreatePromptForBenchmarkEndpointInput
+from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_output import CreatePromptForBenchmarkEndpointOutput
+from rapidata.api_client.models.fork_benchmark_endpoint_output import ForkBenchmarkEndpointOutput
+from rapidata.api_client.models.get_benchmark_by_id_endpoint_output import GetBenchmarkByIdEndpointOutput
 from rapidata.api_client.models.get_combined_benchmark_matrix_endpoint_output import GetCombinedBenchmarkMatrixEndpointOutput
 from rapidata.api_client.models.get_combined_benchmark_standings_endpoint_output import GetCombinedBenchmarkStandingsEndpointOutput
 from rapidata.api_client.models.get_prompts_by_benchmark_endpoint_paged_result_of_output import GetPromptsByBenchmarkEndpointPagedResultOfOutput
-from rapidata.api_client.models.paged_result_of_benchmark_query_result import PagedResultOfBenchmarkQueryResult
-from rapidata.api_client.models.paged_result_of_leaderboards_query_result import PagedResultOfLeaderboardsQueryResult
-from rapidata.api_client.models.paged_result_of_participant_by_benchmark import PagedResultOfParticipantByBenchmark
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.standings_by_benchmark_result import StandingsByBenchmarkResult
-from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
-from rapidata.api_client.models.tags_by_benchmark_result import TagsByBenchmarkResult
-from rapidata.api_client.models.update_benchmark_model import UpdateBenchmarkModel
+from rapidata.api_client.models.query_benchmark_standings_endpoint_paged_result_of_output import QueryBenchmarkStandingsEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_benchmarks_endpoint_paged_result_of_output import QueryBenchmarksEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_leaderboards_by_benchmark_endpoint_paged_result_of_output import QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_participants_by_benchmark_endpoint_paged_result_of_output import QueryParticipantsByBenchmarkEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_tags_by_benchmark_endpoint_output import QueryTagsByBenchmarkEndpointOutput
+from rapidata.api_client.models.submit_participant_by_benchmark_endpoint_output import SubmitParticipantByBenchmarkEndpointOutput
+from rapidata.api_client.models.update_benchmark_endpoint_input import UpdateBenchmarkEndpointInput
+from rapidata.api_client.models.update_benchmark_name_endpoint_input import UpdateBenchmarkNameEndpointInput
 from rapidata.api_client.models.vote_matrix_result import VoteMatrixResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -61,7 +62,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_delete(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -75,10 +76,10 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Deletes a single benchmark.
+        """Deletes a benchmark.
 
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The id of the benchmark to delete. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -112,6 +113,9 @@ class BenchmarkApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -127,7 +131,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_delete_with_http_info(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -141,10 +145,10 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Deletes a single benchmark.
+        """Deletes a benchmark.
 
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The id of the benchmark to delete. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -178,6 +182,9 @@ class BenchmarkApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -193,7 +200,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_delete_without_preload_content(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -207,10 +214,10 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Deletes a single benchmark.
+        """Deletes a benchmark.
 
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The id of the benchmark to delete. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -244,6 +251,9 @@ class BenchmarkApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -284,6 +294,13 @@ class BenchmarkApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -314,7 +331,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_fork_post(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to fork.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -327,11 +344,11 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ForkBenchmarkResult:
-        """Creates a copy of a public benchmark and all of its related entities
+    ) -> ForkBenchmarkEndpointOutput:
+        """Creates a copy of a public benchmark and all of its related entities.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to fork. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -364,7 +381,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ForkBenchmarkResult",
+            '200': "ForkBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -380,7 +400,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_fork_post_with_http_info(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to fork.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -393,11 +413,11 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ForkBenchmarkResult]:
-        """Creates a copy of a public benchmark and all of its related entities
+    ) -> ApiResponse[ForkBenchmarkEndpointOutput]:
+        """Creates a copy of a public benchmark and all of its related entities.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to fork. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -430,7 +450,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ForkBenchmarkResult",
+            '200': "ForkBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -446,7 +469,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_fork_post_without_preload_content(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to fork.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -460,10 +483,10 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a copy of a public benchmark and all of its related entities
+        """Creates a copy of a public benchmark and all of its related entities.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to fork. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -496,7 +519,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ForkBenchmarkResult",
+            '200': "ForkBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -541,9 +567,7 @@ class BenchmarkApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -576,7 +600,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_get(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to load.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -589,11 +613,11 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetBenchmarkByIdResult:
-        """Returns a single benchmark by its ID.
+    ) -> GetBenchmarkByIdEndpointOutput:
+        """Returns a single benchmark by its id.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to load. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -626,7 +650,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBenchmarkByIdResult",
+            '200': "GetBenchmarkByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -642,7 +669,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_get_with_http_info(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to load.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -655,11 +682,11 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetBenchmarkByIdResult]:
-        """Returns a single benchmark by its ID.
+    ) -> ApiResponse[GetBenchmarkByIdEndpointOutput]:
+        """Returns a single benchmark by its id.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to load. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -692,7 +719,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBenchmarkByIdResult",
+            '200': "GetBenchmarkByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -708,7 +738,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_get_without_preload_content(
         self,
-        benchmark_id: StrictStr,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to load.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -722,10 +752,10 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Returns a single benchmark by its ID.
+        """Returns a single benchmark by its id.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to load. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -758,7 +788,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBenchmarkByIdResult",
+            '200': "GetBenchmarkByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -803,9 +836,7 @@ class BenchmarkApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -838,8 +869,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_leaderboards_get(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The Id of the benchmark whoms leaderboards will be returned")],
-        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose leaderboards will be returned.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -852,14 +887,22 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfLeaderboardsQueryResult:
-        """Queries all leaderboards for the current user's benchmarks.
+    ) -> QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput:
+        """Queries all leaderboards for the given benchmark.
 
 
-        :param benchmark_id: The Id of the benchmark whoms leaderboards will be returned (required)
+        :param benchmark_id: The id of the benchmark whose leaderboards will be returned. (required)
         :type benchmark_id: str
-        :param request: Query parameters
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -884,7 +927,11 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_leaderboards_get_serialize(
             benchmark_id=benchmark_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -892,7 +939,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfLeaderboardsQueryResult",
+            '200': "QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -908,8 +958,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_leaderboards_get_with_http_info(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The Id of the benchmark whoms leaderboards will be returned")],
-        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose leaderboards will be returned.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -922,14 +976,22 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfLeaderboardsQueryResult]:
-        """Queries all leaderboards for the current user's benchmarks.
+    ) -> ApiResponse[QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput]:
+        """Queries all leaderboards for the given benchmark.
 
 
-        :param benchmark_id: The Id of the benchmark whoms leaderboards will be returned (required)
+        :param benchmark_id: The id of the benchmark whose leaderboards will be returned. (required)
         :type benchmark_id: str
-        :param request: Query parameters
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -954,7 +1016,11 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_leaderboards_get_serialize(
             benchmark_id=benchmark_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -962,7 +1028,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfLeaderboardsQueryResult",
+            '200': "QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -978,8 +1047,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_leaderboards_get_without_preload_content(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The Id of the benchmark whoms leaderboards will be returned")],
-        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose leaderboards will be returned.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -993,13 +1066,21 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all leaderboards for the current user's benchmarks.
+        """Queries all leaderboards for the given benchmark.
 
 
-        :param benchmark_id: The Id of the benchmark whoms leaderboards will be returned (required)
+        :param benchmark_id: The id of the benchmark whose leaderboards will be returned. (required)
         :type benchmark_id: str
-        :param request: Query parameters
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1024,7 +1105,11 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_leaderboards_get_serialize(
             benchmark_id=benchmark_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1032,7 +1117,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfLeaderboardsQueryResult",
+            '200': "QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1044,7 +1132,11 @@ class BenchmarkApi:
     def _benchmark_benchmark_id_leaderboards_get_serialize(
         self,
         benchmark_id,
-        request,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
         _request_auth,
         _content_type,
         _headers,
@@ -1054,6 +1146,7 @@ class BenchmarkApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1069,10 +1162,34 @@ class BenchmarkApi:
         if benchmark_id is not None:
             _path_params['benchmarkId'] = benchmark_id
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1082,9 +1199,7 @@ class BenchmarkApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1458,10 +1573,10 @@ class BenchmarkApi:
 
 
     @validate_call
-    def benchmark_benchmark_id_participants_get(
+    def benchmark_benchmark_id_name_put(
         self,
-        benchmark_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to update.")],
+        update_benchmark_name_endpoint_input: Annotated[UpdateBenchmarkNameEndpointInput, Field(description="The payload describing the new name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1474,14 +1589,14 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfParticipantByBenchmark:
-        """Query all participants within a benchmark
+    ) -> None:
+        """Updates the name of a benchmark.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to update. (required)
         :type benchmark_id: str
-        :param request: 
-        :type request: QueryModel
+        :param update_benchmark_name_endpoint_input: The payload describing the new name. (required)
+        :type update_benchmark_name_endpoint_input: UpdateBenchmarkNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1504,9 +1619,9 @@ class BenchmarkApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._benchmark_benchmark_id_participants_get_serialize(
+        _param = self._benchmark_benchmark_id_name_put_serialize(
             benchmark_id=benchmark_id,
-            request=request,
+            update_benchmark_name_endpoint_input=update_benchmark_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1514,7 +1629,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfParticipantByBenchmark",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1528,10 +1646,10 @@ class BenchmarkApi:
 
 
     @validate_call
-    def benchmark_benchmark_id_participants_get_with_http_info(
+    def benchmark_benchmark_id_name_put_with_http_info(
         self,
-        benchmark_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to update.")],
+        update_benchmark_name_endpoint_input: Annotated[UpdateBenchmarkNameEndpointInput, Field(description="The payload describing the new name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1544,14 +1662,14 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfParticipantByBenchmark]:
-        """Query all participants within a benchmark
+    ) -> ApiResponse[None]:
+        """Updates the name of a benchmark.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to update. (required)
         :type benchmark_id: str
-        :param request: 
-        :type request: QueryModel
+        :param update_benchmark_name_endpoint_input: The payload describing the new name. (required)
+        :type update_benchmark_name_endpoint_input: UpdateBenchmarkNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1574,9 +1692,9 @@ class BenchmarkApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._benchmark_benchmark_id_participants_get_serialize(
+        _param = self._benchmark_benchmark_id_name_put_serialize(
             benchmark_id=benchmark_id,
-            request=request,
+            update_benchmark_name_endpoint_input=update_benchmark_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1584,7 +1702,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfParticipantByBenchmark",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1598,10 +1719,10 @@ class BenchmarkApi:
 
 
     @validate_call
-    def benchmark_benchmark_id_participants_get_without_preload_content(
+    def benchmark_benchmark_id_name_put_without_preload_content(
         self,
-        benchmark_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to update.")],
+        update_benchmark_name_endpoint_input: Annotated[UpdateBenchmarkNameEndpointInput, Field(description="The payload describing the new name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1615,13 +1736,13 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Query all participants within a benchmark
+        """Updates the name of a benchmark.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to update. (required)
         :type benchmark_id: str
-        :param request: 
-        :type request: QueryModel
+        :param update_benchmark_name_endpoint_input: The payload describing the new name. (required)
+        :type update_benchmark_name_endpoint_input: UpdateBenchmarkNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1644,9 +1765,9 @@ class BenchmarkApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._benchmark_benchmark_id_participants_get_serialize(
+        _param = self._benchmark_benchmark_id_name_put_serialize(
             benchmark_id=benchmark_id,
-            request=request,
+            update_benchmark_name_endpoint_input=update_benchmark_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1654,7 +1775,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfParticipantByBenchmark",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1663,10 +1787,10 @@ class BenchmarkApi:
         return response_data.response
 
 
-    def _benchmark_benchmark_id_participants_get_serialize(
+    def _benchmark_benchmark_id_name_put_serialize(
         self,
         benchmark_id,
-        request,
+        update_benchmark_name_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1691,10 +1815,305 @@ class BenchmarkApi:
         if benchmark_id is not None:
             _path_params['benchmarkId'] = benchmark_id
         # process the query parameters
-        if request is not None:
-            
-            _query_params.append(('request', request))
-            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_benchmark_name_endpoint_input is not None:
+            _body_params = update_benchmark_name_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/benchmark/{benchmarkId}/name',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_participant_participant_id_delete(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Deletes a participant on a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark the participant belongs to. (required)
+        :type benchmark_id: str
+        :param participant_id: The id of the participant to delete. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participant_participant_id_delete_serialize(
+            benchmark_id=benchmark_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_participant_participant_id_delete_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Deletes a participant on a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark the participant belongs to. (required)
+        :type benchmark_id: str
+        :param participant_id: The id of the participant to delete. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participant_participant_id_delete_serialize(
+            benchmark_id=benchmark_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_participant_participant_id_delete_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Deletes a participant on a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark the participant belongs to. (required)
+        :type benchmark_id: str
+        :param participant_id: The id of the participant to delete. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participant_participant_id_delete_serialize(
+            benchmark_id=benchmark_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_participant_participant_id_delete_serialize(
+        self,
+        benchmark_id,
+        participant_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1704,9 +2123,391 @@ class BenchmarkApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/benchmark/{benchmarkId}/participant/{participantId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_participants_get(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose participants will be returned.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> QueryParticipantsByBenchmarkEndpointPagedResultOfOutput:
+        """Queries all participants within a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark whose participants will be returned. (required)
+        :type benchmark_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participants_get_serialize(
+            benchmark_id=benchmark_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryParticipantsByBenchmarkEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_participants_get_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose participants will be returned.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[QueryParticipantsByBenchmarkEndpointPagedResultOfOutput]:
+        """Queries all participants within a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark whose participants will be returned. (required)
+        :type benchmark_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participants_get_serialize(
+            benchmark_id=benchmark_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryParticipantsByBenchmarkEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_participants_get_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose participants will be returned.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Queries all participants within a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark whose participants will be returned. (required)
+        :type benchmark_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participants_get_serialize(
+            benchmark_id=benchmark_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            status=status,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "QueryParticipantsByBenchmarkEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_participants_get_serialize(
+        self,
+        benchmark_id,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
+        status,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if status is not None:
+            _param_val = status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('status[' + _k + ']', _v))
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
                 ]
             )
 
@@ -1737,10 +2538,10 @@ class BenchmarkApi:
 
 
     @validate_call
-    def benchmark_benchmark_id_participants_post(
+    def benchmark_benchmark_id_participants_participant_id_submit_post(
         self,
-        benchmark_id: StrictStr,
-        create_benchmark_participant_model: CreateBenchmarkParticipantModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1753,14 +2554,298 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateBenchmarkParticipantResult:
+    ) -> SubmitParticipantByBenchmarkEndpointOutput:
+        """Submits a participant to a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark the participant belongs to. (required)
+        :type benchmark_id: str
+        :param participant_id: The id of the participant to submit. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participants_participant_id_submit_post_serialize(
+            benchmark_id=benchmark_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SubmitParticipantByBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_participants_participant_id_submit_post_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmitParticipantByBenchmarkEndpointOutput]:
+        """Submits a participant to a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark the participant belongs to. (required)
+        :type benchmark_id: str
+        :param participant_id: The id of the participant to submit. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participants_participant_id_submit_post_serialize(
+            benchmark_id=benchmark_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SubmitParticipantByBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_participants_participant_id_submit_post_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant belongs to.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Submits a participant to a benchmark.
+
+
+        :param benchmark_id: The id of the benchmark the participant belongs to. (required)
+        :type benchmark_id: str
+        :param participant_id: The id of the participant to submit. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_participants_participant_id_submit_post_serialize(
+            benchmark_id=benchmark_id,
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SubmitParticipantByBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_participants_participant_id_submit_post_serialize(
+        self,
+        benchmark_id,
+        participant_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/benchmark/{benchmarkId}/participants/{participantId}/submit',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_participants_post(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant will be added to.")],
+        create_benchmark_participant_endpoint_input: Annotated[CreateBenchmarkParticipantEndpointInput, Field(description="The payload describing the participant to create.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreateBenchmarkParticipantEndpointOutput:
         """Creates a participant in a benchmark.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark the participant will be added to. (required)
         :type benchmark_id: str
-        :param create_benchmark_participant_model:  (required)
-        :type create_benchmark_participant_model: CreateBenchmarkParticipantModel
+        :param create_benchmark_participant_endpoint_input: The payload describing the participant to create. (required)
+        :type create_benchmark_participant_endpoint_input: CreateBenchmarkParticipantEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1785,7 +2870,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_participants_post_serialize(
             benchmark_id=benchmark_id,
-            create_benchmark_participant_model=create_benchmark_participant_model,
+            create_benchmark_participant_endpoint_input=create_benchmark_participant_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1793,7 +2878,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkParticipantResult",
+            '200': "CreateBenchmarkParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1809,8 +2897,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_participants_post_with_http_info(
         self,
-        benchmark_id: StrictStr,
-        create_benchmark_participant_model: CreateBenchmarkParticipantModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant will be added to.")],
+        create_benchmark_participant_endpoint_input: Annotated[CreateBenchmarkParticipantEndpointInput, Field(description="The payload describing the participant to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1823,14 +2911,14 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateBenchmarkParticipantResult]:
+    ) -> ApiResponse[CreateBenchmarkParticipantEndpointOutput]:
         """Creates a participant in a benchmark.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark the participant will be added to. (required)
         :type benchmark_id: str
-        :param create_benchmark_participant_model:  (required)
-        :type create_benchmark_participant_model: CreateBenchmarkParticipantModel
+        :param create_benchmark_participant_endpoint_input: The payload describing the participant to create. (required)
+        :type create_benchmark_participant_endpoint_input: CreateBenchmarkParticipantEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1855,7 +2943,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_participants_post_serialize(
             benchmark_id=benchmark_id,
-            create_benchmark_participant_model=create_benchmark_participant_model,
+            create_benchmark_participant_endpoint_input=create_benchmark_participant_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1863,7 +2951,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkParticipantResult",
+            '200': "CreateBenchmarkParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1879,8 +2970,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_participants_post_without_preload_content(
         self,
-        benchmark_id: StrictStr,
-        create_benchmark_participant_model: CreateBenchmarkParticipantModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the participant will be added to.")],
+        create_benchmark_participant_endpoint_input: Annotated[CreateBenchmarkParticipantEndpointInput, Field(description="The payload describing the participant to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1897,10 +2988,10 @@ class BenchmarkApi:
         """Creates a participant in a benchmark.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark the participant will be added to. (required)
         :type benchmark_id: str
-        :param create_benchmark_participant_model:  (required)
-        :type create_benchmark_participant_model: CreateBenchmarkParticipantModel
+        :param create_benchmark_participant_endpoint_input: The payload describing the participant to create. (required)
+        :type create_benchmark_participant_endpoint_input: CreateBenchmarkParticipantEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1925,7 +3016,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_participants_post_serialize(
             benchmark_id=benchmark_id,
-            create_benchmark_participant_model=create_benchmark_participant_model,
+            create_benchmark_participant_endpoint_input=create_benchmark_participant_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1933,7 +3024,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkParticipantResult",
+            '200': "CreateBenchmarkParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1945,7 +3039,7 @@ class BenchmarkApi:
     def _benchmark_benchmark_id_participants_post_serialize(
         self,
         benchmark_id,
-        create_benchmark_participant_model,
+        create_benchmark_participant_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1973,17 +3067,15 @@ class BenchmarkApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_benchmark_participant_model is not None:
-            _body_params = create_benchmark_participant_model
+        if create_benchmark_participant_endpoint_input is not None:
+            _body_params = create_benchmark_participant_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1994,9 +3086,7 @@ class BenchmarkApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -2031,8 +3121,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_patch(
         self,
-        benchmark_id: StrictStr,
-        update_benchmark_model: UpdateBenchmarkModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to update.")],
+        update_benchmark_endpoint_input: Annotated[UpdateBenchmarkEndpointInput, Field(description="The patch payload describing which fields should change.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2049,10 +3139,10 @@ class BenchmarkApi:
         """Updates a benchmark using patch semantics.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to update. (required)
         :type benchmark_id: str
-        :param update_benchmark_model:  (required)
-        :type update_benchmark_model: UpdateBenchmarkModel
+        :param update_benchmark_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_benchmark_endpoint_input: UpdateBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2077,7 +3167,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_patch_serialize(
             benchmark_id=benchmark_id,
-            update_benchmark_model=update_benchmark_model,
+            update_benchmark_endpoint_input=update_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2086,6 +3176,9 @@ class BenchmarkApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2101,8 +3194,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_patch_with_http_info(
         self,
-        benchmark_id: StrictStr,
-        update_benchmark_model: UpdateBenchmarkModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to update.")],
+        update_benchmark_endpoint_input: Annotated[UpdateBenchmarkEndpointInput, Field(description="The patch payload describing which fields should change.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2119,10 +3212,10 @@ class BenchmarkApi:
         """Updates a benchmark using patch semantics.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to update. (required)
         :type benchmark_id: str
-        :param update_benchmark_model:  (required)
-        :type update_benchmark_model: UpdateBenchmarkModel
+        :param update_benchmark_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_benchmark_endpoint_input: UpdateBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2147,7 +3240,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_patch_serialize(
             benchmark_id=benchmark_id,
-            update_benchmark_model=update_benchmark_model,
+            update_benchmark_endpoint_input=update_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2156,6 +3249,9 @@ class BenchmarkApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2171,8 +3267,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_patch_without_preload_content(
         self,
-        benchmark_id: StrictStr,
-        update_benchmark_model: UpdateBenchmarkModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to update.")],
+        update_benchmark_endpoint_input: Annotated[UpdateBenchmarkEndpointInput, Field(description="The patch payload describing which fields should change.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2189,10 +3285,10 @@ class BenchmarkApi:
         """Updates a benchmark using patch semantics.
 
 
-        :param benchmark_id:  (required)
+        :param benchmark_id: The id of the benchmark to update. (required)
         :type benchmark_id: str
-        :param update_benchmark_model:  (required)
-        :type update_benchmark_model: UpdateBenchmarkModel
+        :param update_benchmark_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_benchmark_endpoint_input: UpdateBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2217,7 +3313,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_patch_serialize(
             benchmark_id=benchmark_id,
-            update_benchmark_model=update_benchmark_model,
+            update_benchmark_endpoint_input=update_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2226,6 +3322,9 @@ class BenchmarkApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2237,7 +3336,7 @@ class BenchmarkApi:
     def _benchmark_benchmark_id_patch_serialize(
         self,
         benchmark_id,
-        update_benchmark_model,
+        update_benchmark_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -2265,10 +3364,17 @@ class BenchmarkApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_benchmark_model is not None:
-            _body_params = update_benchmark_model
+        if update_benchmark_endpoint_input is not None:
+            _body_params = update_benchmark_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -2277,9 +3383,7 @@ class BenchmarkApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -2314,8 +3418,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_prompt_post(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The benchmark id.")],
-        submit_prompt_model: SubmitPromptModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompt to.")],
+        create_prompt_for_benchmark_endpoint_input: Annotated[CreatePromptForBenchmarkEndpointInput, Field(description="The payload describing the prompt to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2328,14 +3432,14 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateBenchmarkPromptResult:
+    ) -> CreatePromptForBenchmarkEndpointOutput:
         """Adds a new prompt to a benchmark.
 
 
-        :param benchmark_id: The benchmark id. (required)
+        :param benchmark_id: The id of the benchmark to add the prompt to. (required)
         :type benchmark_id: str
-        :param submit_prompt_model:  (required)
-        :type submit_prompt_model: SubmitPromptModel
+        :param create_prompt_for_benchmark_endpoint_input: The payload describing the prompt to create. (required)
+        :type create_prompt_for_benchmark_endpoint_input: CreatePromptForBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2360,7 +3464,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_prompt_post_serialize(
             benchmark_id=benchmark_id,
-            submit_prompt_model=submit_prompt_model,
+            create_prompt_for_benchmark_endpoint_input=create_prompt_for_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2368,7 +3472,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkPromptResult",
+            '200': "CreatePromptForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2384,8 +3491,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_prompt_post_with_http_info(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The benchmark id.")],
-        submit_prompt_model: SubmitPromptModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompt to.")],
+        create_prompt_for_benchmark_endpoint_input: Annotated[CreatePromptForBenchmarkEndpointInput, Field(description="The payload describing the prompt to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2398,14 +3505,14 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateBenchmarkPromptResult]:
+    ) -> ApiResponse[CreatePromptForBenchmarkEndpointOutput]:
         """Adds a new prompt to a benchmark.
 
 
-        :param benchmark_id: The benchmark id. (required)
+        :param benchmark_id: The id of the benchmark to add the prompt to. (required)
         :type benchmark_id: str
-        :param submit_prompt_model:  (required)
-        :type submit_prompt_model: SubmitPromptModel
+        :param create_prompt_for_benchmark_endpoint_input: The payload describing the prompt to create. (required)
+        :type create_prompt_for_benchmark_endpoint_input: CreatePromptForBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2430,7 +3537,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_prompt_post_serialize(
             benchmark_id=benchmark_id,
-            submit_prompt_model=submit_prompt_model,
+            create_prompt_for_benchmark_endpoint_input=create_prompt_for_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2438,7 +3545,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkPromptResult",
+            '200': "CreatePromptForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2454,8 +3564,8 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_prompt_post_without_preload_content(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The benchmark id.")],
-        submit_prompt_model: SubmitPromptModel,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompt to.")],
+        create_prompt_for_benchmark_endpoint_input: Annotated[CreatePromptForBenchmarkEndpointInput, Field(description="The payload describing the prompt to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2472,10 +3582,10 @@ class BenchmarkApi:
         """Adds a new prompt to a benchmark.
 
 
-        :param benchmark_id: The benchmark id. (required)
+        :param benchmark_id: The id of the benchmark to add the prompt to. (required)
         :type benchmark_id: str
-        :param submit_prompt_model:  (required)
-        :type submit_prompt_model: SubmitPromptModel
+        :param create_prompt_for_benchmark_endpoint_input: The payload describing the prompt to create. (required)
+        :type create_prompt_for_benchmark_endpoint_input: CreatePromptForBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2500,7 +3610,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_prompt_post_serialize(
             benchmark_id=benchmark_id,
-            submit_prompt_model=submit_prompt_model,
+            create_prompt_for_benchmark_endpoint_input=create_prompt_for_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2508,7 +3618,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkPromptResult",
+            '200': "CreatePromptForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2520,7 +3633,7 @@ class BenchmarkApi:
     def _benchmark_benchmark_id_prompt_post_serialize(
         self,
         benchmark_id,
-        submit_prompt_model,
+        create_prompt_for_benchmark_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -2548,17 +3661,15 @@ class BenchmarkApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if submit_prompt_model is not None:
-            _body_params = submit_prompt_model
+        if create_prompt_for_benchmark_endpoint_input is not None:
+            _body_params = create_prompt_for_benchmark_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -2569,9 +3680,7 @@ class BenchmarkApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -2610,8 +3719,8 @@ class BenchmarkApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by id.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2637,9 +3746,9 @@ class BenchmarkApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: AudiencesGetNameParameter
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2699,8 +3808,8 @@ class BenchmarkApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by id.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2726,9 +3835,9 @@ class BenchmarkApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: AudiencesGetNameParameter
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2788,8 +3897,8 @@ class BenchmarkApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by id.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2815,9 +3924,9 @@ class BenchmarkApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: AudiencesGetNameParameter
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2969,12 +4078,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_standings_get(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
-        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
-        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose standings should be queried.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags to filter the standings by.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The participant ids to filter by; leave empty for no filter.")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The leaderboard ids to filter by; leave empty for no filter.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2987,21 +4096,21 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> StandingsByBenchmarkResult:
-        """Queries all the standings for a benchmark by its ID.
+    ) -> QueryBenchmarkStandingsEndpointPagedResultOfOutput:
+        """Queries all standings for a benchmark.
 
 
-        :param benchmark_id: The id of the benchmark, which standings should be queried (required)
+        :param benchmark_id: The id of the benchmark whose standings should be queried. (required)
         :type benchmark_id: str
-        :param tags: The tags the benchmark should filter for.
+        :param tags: The tags to filter the standings by.
         :type tags: List[str]
-        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
+        :param participant_ids: The participant ids to filter by; leave empty for no filter.
         :type participant_ids: List[str]
-        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
+        :param leaderboard_ids: The leaderboard ids to filter by; leave empty for no filter.
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include the confidence intervals
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3039,7 +4148,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingsByBenchmarkResult",
+            '200': "QueryBenchmarkStandingsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3055,12 +4167,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_standings_get_with_http_info(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
-        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
-        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose standings should be queried.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags to filter the standings by.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The participant ids to filter by; leave empty for no filter.")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The leaderboard ids to filter by; leave empty for no filter.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3073,21 +4185,21 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[StandingsByBenchmarkResult]:
-        """Queries all the standings for a benchmark by its ID.
+    ) -> ApiResponse[QueryBenchmarkStandingsEndpointPagedResultOfOutput]:
+        """Queries all standings for a benchmark.
 
 
-        :param benchmark_id: The id of the benchmark, which standings should be queried (required)
+        :param benchmark_id: The id of the benchmark whose standings should be queried. (required)
         :type benchmark_id: str
-        :param tags: The tags the benchmark should filter for.
+        :param tags: The tags to filter the standings by.
         :type tags: List[str]
-        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
+        :param participant_ids: The participant ids to filter by; leave empty for no filter.
         :type participant_ids: List[str]
-        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
+        :param leaderboard_ids: The leaderboard ids to filter by; leave empty for no filter.
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include the confidence intervals
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3125,7 +4237,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingsByBenchmarkResult",
+            '200': "QueryBenchmarkStandingsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3141,12 +4256,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_standings_get_without_preload_content(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
-        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
-        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose standings should be queried.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags to filter the standings by.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The participant ids to filter by; leave empty for no filter.")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The leaderboard ids to filter by; leave empty for no filter.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3160,20 +4275,20 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all the standings for a benchmark by its ID.
+        """Queries all standings for a benchmark.
 
 
-        :param benchmark_id: The id of the benchmark, which standings should be queried (required)
+        :param benchmark_id: The id of the benchmark whose standings should be queried. (required)
         :type benchmark_id: str
-        :param tags: The tags the benchmark should filter for.
+        :param tags: The tags to filter the standings by.
         :type tags: List[str]
-        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
+        :param participant_ids: The participant ids to filter by; leave empty for no filter.
         :type participant_ids: List[str]
-        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
+        :param leaderboard_ids: The leaderboard ids to filter by; leave empty for no filter.
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include the confidence intervals
+        :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3211,7 +4326,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingsByBenchmarkResult",
+            '200': "QueryBenchmarkStandingsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3284,9 +4402,7 @@ class BenchmarkApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -3319,7 +4435,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_tags_get(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the prompts should be retrieved from")],
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose tags will be returned.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3332,11 +4448,11 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TagsByBenchmarkResult:
-        """Query all tags within a benchmark
+    ) -> QueryTagsByBenchmarkEndpointOutput:
+        """Queries all tags within a benchmark.
 
 
-        :param benchmark_id: The id of the benchmark the prompts should be retrieved from (required)
+        :param benchmark_id: The id of the benchmark whose tags will be returned. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3369,7 +4485,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TagsByBenchmarkResult",
+            '200': "QueryTagsByBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3385,7 +4504,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_tags_get_with_http_info(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the prompts should be retrieved from")],
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose tags will be returned.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3398,11 +4517,11 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TagsByBenchmarkResult]:
-        """Query all tags within a benchmark
+    ) -> ApiResponse[QueryTagsByBenchmarkEndpointOutput]:
+        """Queries all tags within a benchmark.
 
 
-        :param benchmark_id: The id of the benchmark the prompts should be retrieved from (required)
+        :param benchmark_id: The id of the benchmark whose tags will be returned. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3435,7 +4554,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TagsByBenchmarkResult",
+            '200': "QueryTagsByBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3451,7 +4573,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_tags_get_without_preload_content(
         self,
-        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark the prompts should be retrieved from")],
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose tags will be returned.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3465,10 +4587,10 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Query all tags within a benchmark
+        """Queries all tags within a benchmark.
 
 
-        :param benchmark_id: The id of the benchmark the prompts should be retrieved from (required)
+        :param benchmark_id: The id of the benchmark whose tags will be returned. (required)
         :type benchmark_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3501,7 +4623,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TagsByBenchmarkResult",
+            '200': "QueryTagsByBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3546,9 +4671,7 @@ class BenchmarkApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -4176,7 +5299,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_post(
         self,
-        create_benchmark_model: CreateBenchmarkModel,
+        create_benchmark_endpoint_input: Annotated[CreateBenchmarkEndpointInput, Field(description="The payload describing the benchmark to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4189,12 +5312,12 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateBenchmarkResult:
-        """Creates a benchmark
+    ) -> CreateBenchmarkEndpointOutput:
+        """Creates a benchmark.
 
 
-        :param create_benchmark_model: (required)
-        :type create_benchmark_model: CreateBenchmarkModel
+        :param create_benchmark_endpoint_input: The payload describing the benchmark to create. (required)
+        :type create_benchmark_endpoint_input: CreateBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4218,7 +5341,7 @@ class BenchmarkApi:
         """ # noqa: E501
 
         _param = self._benchmark_post_serialize(
-            create_benchmark_model=create_benchmark_model,
+            create_benchmark_endpoint_input=create_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4226,7 +5349,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkResult",
+            '200': "CreateBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4242,7 +5368,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_post_with_http_info(
         self,
-        create_benchmark_model: CreateBenchmarkModel,
+        create_benchmark_endpoint_input: Annotated[CreateBenchmarkEndpointInput, Field(description="The payload describing the benchmark to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4255,12 +5381,12 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateBenchmarkResult]:
-        """Creates a benchmark
+    ) -> ApiResponse[CreateBenchmarkEndpointOutput]:
+        """Creates a benchmark.
 
 
-        :param create_benchmark_model: (required)
-        :type create_benchmark_model: CreateBenchmarkModel
+        :param create_benchmark_endpoint_input: The payload describing the benchmark to create. (required)
+        :type create_benchmark_endpoint_input: CreateBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4284,7 +5410,7 @@ class BenchmarkApi:
         """ # noqa: E501
 
         _param = self._benchmark_post_serialize(
-            create_benchmark_model=create_benchmark_model,
+            create_benchmark_endpoint_input=create_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4292,7 +5418,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkResult",
+            '200': "CreateBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4308,7 +5437,7 @@ class BenchmarkApi:
     @validate_call
     def benchmark_post_without_preload_content(
         self,
-        create_benchmark_model: CreateBenchmarkModel,
+        create_benchmark_endpoint_input: Annotated[CreateBenchmarkEndpointInput, Field(description="The payload describing the benchmark to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4322,11 +5451,11 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a benchmark
+        """Creates a benchmark.
 
 
-        :param create_benchmark_model: (required)
-        :type create_benchmark_model: CreateBenchmarkModel
+        :param create_benchmark_endpoint_input: The payload describing the benchmark to create. (required)
+        :type create_benchmark_endpoint_input: CreateBenchmarkEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4350,7 +5479,7 @@ class BenchmarkApi:
         """ # noqa: E501
 
         _param = self._benchmark_post_serialize(
-            create_benchmark_model=create_benchmark_model,
+            create_benchmark_endpoint_input=create_benchmark_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4358,7 +5487,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBenchmarkResult",
+            '200': "CreateBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4369,7 +5501,7 @@ class BenchmarkApi:
 
     def _benchmark_post_serialize(
         self,
-        create_benchmark_model,
+        create_benchmark_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -4395,17 +5527,15 @@ class BenchmarkApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_benchmark_model is not None:
-            _body_params = create_benchmark_model
+        if create_benchmark_endpoint_input is not None:
+            _body_params = create_benchmark_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -4416,9 +5546,7 @@ class BenchmarkApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -4453,7 +5581,13 @@ class BenchmarkApi:
     @validate_call
     def benchmarks_get(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4466,12 +5600,24 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfBenchmarkQueryResult:
-        """Queries all benchmarks of the user.
+    ) -> QueryBenchmarksEndpointPagedResultOfOutput:
+        """Queries all benchmarks of the current user.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4495,7 +5641,13 @@ class BenchmarkApi:
         """ # noqa: E501
 
         _param = self._benchmarks_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4503,7 +5655,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfBenchmarkQueryResult",
+            '200': "QueryBenchmarksEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4519,7 +5674,13 @@ class BenchmarkApi:
     @validate_call
     def benchmarks_get_with_http_info(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4532,12 +5693,24 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfBenchmarkQueryResult]:
-        """Queries all benchmarks of the user.
+    ) -> ApiResponse[QueryBenchmarksEndpointPagedResultOfOutput]:
+        """Queries all benchmarks of the current user.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4561,7 +5734,13 @@ class BenchmarkApi:
         """ # noqa: E501
 
         _param = self._benchmarks_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4569,7 +5748,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfBenchmarkQueryResult",
+            '200': "QueryBenchmarksEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4585,7 +5767,13 @@ class BenchmarkApi:
     @validate_call
     def benchmarks_get_without_preload_content(
         self,
-        request: Optional[QueryModel] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4599,11 +5787,23 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all benchmarks of the user.
+        """Queries all benchmarks of the current user.
 
 
-        :param request:
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4627,7 +5827,13 @@ class BenchmarkApi:
         """ # noqa: E501
 
         _param = self._benchmarks_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4635,7 +5841,10 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfBenchmarkQueryResult",
+            '200': "QueryBenchmarksEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4646,7 +5855,13 @@ class BenchmarkApi:
 
     def _benchmarks_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
+        owner_mail,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -4656,6 +5871,7 @@ class BenchmarkApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -4669,10 +5885,50 @@ class BenchmarkApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -4682,9 +5938,7 @@ class BenchmarkApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

@@ -20,6 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.audience_boost_model2 import AudienceBoostModel2
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.flow_type import FlowType
 from rapidata.api_client.models.pid_batch_mode import PidBatchMode
@@ -34,7 +35,7 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     id: StrictStr = Field(description="The unique identifier of the flow.")
-    type: Optional[FlowType] = None
+    type: Optional[FlowType] = Field(default=None, description="The type of the flow. Use the _t discriminator instead.")
     name: StrictStr = Field(description="The name of the flow.")
     campaign_id: StrictStr = Field(description="The ID of the campaign associated with this flow.", alias="campaignId")
     flow_item_count: StrictInt = Field(description="The total number of items that have been added to this flow. Incremented atomically on each item creation.", alias="flowItemCount")
@@ -45,12 +46,12 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     pid_output_offset: Union[StrictFloat, StrictInt] = Field(description="Constant offset added to the PID output before clamping, shifting the controller's operating point so the P/I/D terms trim around a non-zero baseline.", alias="pidOutputOffset")
     pid_min_sessions_per_minute: StrictInt = Field(description="Minimum sessions per minute the PID controller can set. Prevents the rate from dropping to zero.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: StrictInt = Field(description="Maximum sessions per minute the PID controller can set. Prevents the rate from exceeding infrastructure capacity.", alias="pidMaxSessionsPerMinute")
-    pid_batch_mode: PidBatchMode = Field(alias="pidBatchMode")
+    pid_batch_mode: PidBatchMode = Field(description="How the PID output maps to the campaign rate. Total: used directly. PerBatch: multiplied by active item count. PerBatchTimeWeighted: multiplied by time-weighted active item count based on remaining TTL.", alias="pidBatchMode")
     serve_timeout_seconds: StrictInt = Field(description="Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.", alias="serveTimeoutSeconds")
     drain_duration_seconds: StrictInt = Field(description="Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.", alias="drainDurationSeconds")
     serve_to_response_ratio: Union[StrictFloat, StrictInt] = Field(description="Ratio of serves to responses used to calculate how many tasks to serve per expected response.", alias="serveToResponseRatio")
     global_boost_level: Optional[StrictInt] = Field(default=None, description="Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.", alias="globalBoostLevel")
-    audience_boosts: Optional[Any] = Field(default=None, description="Audience-specific boost levels that override the global boost for targeted demographics.", alias="audienceBoosts")
+    audience_boosts: Optional[List[AudienceBoostModel2]] = Field(default=None, alias="audienceBoosts")
     audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the flow will only serve items to users in this audience.", alias="audienceId")
     criteria: Optional[StrictStr] = Field(description="The comparison instruction shown to annotators during ranking tasks (e.g. \"Which image is sharper?\").")
     starting_elo: StrictInt = Field(description="The initial Elo rating assigned to new items entering the ranking. Standard default is 1200.", alias="startingElo")
@@ -107,6 +108,13 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in audience_boosts (list)
+        _items = []
+        if self.audience_boosts:
+            for _item_audience_boosts in self.audience_boosts:
+                if _item_audience_boosts:
+                    _items.append(_item_audience_boosts.to_dict())
+            _dict['audienceBoosts'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -114,6 +122,11 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if audience_boosts (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_boosts is None and "audience_boosts" in self.model_fields_set:
+            _dict['audienceBoosts'] = None
+
         # set to None if audience_id (nullable) is None
         # and model_fields_set contains the field
         if self.audience_id is None and "audience_id" in self.model_fields_set:
@@ -154,7 +167,7 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
             "drainDurationSeconds": obj.get("drainDurationSeconds"),
             "serveToResponseRatio": obj.get("serveToResponseRatio"),
             "globalBoostLevel": obj.get("globalBoostLevel"),
-            "audienceBoosts": obj.get("audienceBoosts"),
+            "audienceBoosts": [AudienceBoostModel2.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None,
             "audienceId": obj.get("audienceId"),
             "criteria": obj.get("criteria"),
             "startingElo": obj.get("startingElo"),

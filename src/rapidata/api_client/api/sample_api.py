@@ -16,10 +16,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictStr
-from typing import Optional
+from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
+from typing import List, Optional
 from typing_extensions import Annotated
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
 from rapidata.api_client.models.get_sample_by_id_endpoint_output import GetSampleByIdEndpointOutput
+from rapidata.api_client.models.get_sample_navigation_endpoint_output import GetSampleNavigationEndpointOutput
 from rapidata.api_client.models.get_samples_by_identifier_endpoint_paged_result_of_output import GetSamplesByIdentifierEndpointPagedResultOfOutput
 from rapidata.api_client.models.get_samples_by_participant_endpoint_paged_result_of_i_sample_output import GetSamplesByParticipantEndpointPagedResultOfISampleOutput
 
@@ -46,6 +48,12 @@ class SampleApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to query.")],
         identifier: Annotated[StrictStr, Field(description="The identifier to filter all samples for.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -66,6 +74,18 @@ class SampleApi:
         :type benchmark_id: str
         :param identifier: The identifier to filter all samples for. (required)
         :type identifier: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -91,6 +111,12 @@ class SampleApi:
         _param = self._benchmark_benchmark_id_samples_identifier_get_serialize(
             benchmark_id=benchmark_id,
             identifier=identifier,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            participant_id=participant_id,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -119,6 +145,12 @@ class SampleApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to query.")],
         identifier: Annotated[StrictStr, Field(description="The identifier to filter all samples for.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,6 +171,18 @@ class SampleApi:
         :type benchmark_id: str
         :param identifier: The identifier to filter all samples for. (required)
         :type identifier: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -164,6 +208,12 @@ class SampleApi:
         _param = self._benchmark_benchmark_id_samples_identifier_get_serialize(
             benchmark_id=benchmark_id,
             identifier=identifier,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            participant_id=participant_id,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -192,6 +242,12 @@ class SampleApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to query.")],
         identifier: Annotated[StrictStr, Field(description="The identifier to filter all samples for.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -212,6 +268,18 @@ class SampleApi:
         :type benchmark_id: str
         :param identifier: The identifier to filter all samples for. (required)
         :type identifier: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -237,6 +305,12 @@ class SampleApi:
         _param = self._benchmark_benchmark_id_samples_identifier_get_serialize(
             benchmark_id=benchmark_id,
             identifier=identifier,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            participant_id=participant_id,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -260,6 +334,12 @@ class SampleApi:
         self,
         benchmark_id,
         identifier,
+        page,
+        page_size,
+        sort,
+        id,
+        participant_id,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -269,6 +349,7 @@ class SampleApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -286,6 +367,42 @@ class SampleApi:
         if identifier is not None:
             _path_params['identifier'] = identifier
         # process the query parameters
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if participant_id is not None:
+            _param_val = participant_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('participant_id[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -595,10 +712,284 @@ class SampleApi:
 
 
     @validate_call
+    def benchmark_sample_sample_id_navigation_get(
+        self,
+        sample_id: Annotated[StrictStr, Field(description="The id of the sample to anchor navigation on.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetSampleNavigationEndpointOutput:
+        """Gets navigation context (previous, next, related samples) for a sample.
+
+
+        :param sample_id: The id of the sample to anchor navigation on. (required)
+        :type sample_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_sample_sample_id_navigation_get_serialize(
+            sample_id=sample_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetSampleNavigationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_sample_sample_id_navigation_get_with_http_info(
+        self,
+        sample_id: Annotated[StrictStr, Field(description="The id of the sample to anchor navigation on.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetSampleNavigationEndpointOutput]:
+        """Gets navigation context (previous, next, related samples) for a sample.
+
+
+        :param sample_id: The id of the sample to anchor navigation on. (required)
+        :type sample_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_sample_sample_id_navigation_get_serialize(
+            sample_id=sample_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetSampleNavigationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_sample_sample_id_navigation_get_without_preload_content(
+        self,
+        sample_id: Annotated[StrictStr, Field(description="The id of the sample to anchor navigation on.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Gets navigation context (previous, next, related samples) for a sample.
+
+
+        :param sample_id: The id of the sample to anchor navigation on. (required)
+        :type sample_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_sample_sample_id_navigation_get_serialize(
+            sample_id=sample_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetSampleNavigationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_sample_sample_id_navigation_get_serialize(
+        self,
+        sample_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if sample_id is not None:
+            _path_params['sampleId'] = sample_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/benchmark-sample/{sampleId}/navigation',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def participant_participant_id_samples_get(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to query samples for.")],
         fill_missing: Annotated[Optional[StrictBool], Field(description="Whether to fill missing samples with placeholders.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by identifier.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -619,6 +1010,16 @@ class SampleApi:
         :type participant_id: str
         :param fill_missing: Whether to fill missing samples with placeholders.
         :type fill_missing: bool
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param identifier: Filter by identifier.
+        :type identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -644,6 +1045,11 @@ class SampleApi:
         _param = self._participant_participant_id_samples_get_serialize(
             participant_id=participant_id,
             fill_missing=fill_missing,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            identifier=identifier,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -672,6 +1078,11 @@ class SampleApi:
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to query samples for.")],
         fill_missing: Annotated[Optional[StrictBool], Field(description="Whether to fill missing samples with placeholders.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by identifier.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -692,6 +1103,16 @@ class SampleApi:
         :type participant_id: str
         :param fill_missing: Whether to fill missing samples with placeholders.
         :type fill_missing: bool
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param identifier: Filter by identifier.
+        :type identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -717,6 +1138,11 @@ class SampleApi:
         _param = self._participant_participant_id_samples_get_serialize(
             participant_id=participant_id,
             fill_missing=fill_missing,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            identifier=identifier,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -745,6 +1171,11 @@ class SampleApi:
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to query samples for.")],
         fill_missing: Annotated[Optional[StrictBool], Field(description="Whether to fill missing samples with placeholders.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by identifier.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -765,6 +1196,16 @@ class SampleApi:
         :type participant_id: str
         :param fill_missing: Whether to fill missing samples with placeholders.
         :type fill_missing: bool
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param identifier: Filter by identifier.
+        :type identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -790,6 +1231,11 @@ class SampleApi:
         _param = self._participant_participant_id_samples_get_serialize(
             participant_id=participant_id,
             fill_missing=fill_missing,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            identifier=identifier,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -813,6 +1259,11 @@ class SampleApi:
         self,
         participant_id,
         fill_missing,
+        page,
+        page_size,
+        sort,
+        identifier,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -822,6 +1273,7 @@ class SampleApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -841,6 +1293,34 @@ class SampleApi:
             
             _query_params.append(('fillMissing', fill_missing))
             
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if identifier is not None:
+            _param_val = identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('identifier[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter

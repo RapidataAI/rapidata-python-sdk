@@ -36,10 +36,10 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
     workflow: IOrderWorkflowInputModel = Field(description="The workflow configuration.")
     referee: IRefereeModel = Field(description="The referee configuration.")
     dataset_id: StrictStr = Field(description="The dataset id.", alias="datasetId")
-    feature_flags: Optional[Any] = Field(default=None, description="The feature flags. Deprecated: use RapidFeatureFlags instead.", alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
-    aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
+    aggregator_type: Optional[AggregatorType] = Field(default=None, description="The aggregator type.", alias="aggregatorType")
     __properties: ClassVar[List[str]] = ["definitionName", "workflow", "referee", "datasetId", "featureFlags", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType"]
 
     # model_config is inherited from LazyValidatedModel
@@ -83,6 +83,13 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in rapid_feature_flags (list)
         _items = []
         if self.rapid_feature_flags:
@@ -97,10 +104,10 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
                 if _item_campaign_feature_flags:
                     _items.append(_item_campaign_feature_flags.to_dict())
             _dict['campaignFeatureFlags'] = _items
-        # set to None if aggregator_type (nullable) is None
+        # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
-        if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:
-            _dict['aggregatorType'] = None
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
 
         return _dict
 
@@ -118,7 +125,7 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
             "workflow": IOrderWorkflowInputModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "datasetId": obj.get("datasetId"),
-            "featureFlags": obj.get("featureFlags"),
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
             "aggregatorType": obj.get("aggregatorType")

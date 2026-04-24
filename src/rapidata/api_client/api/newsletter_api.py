@@ -18,7 +18,8 @@ from typing_extensions import Annotated
 
 from pydantic import Field
 from typing_extensions import Annotated
-from rapidata.api_client.models.newsletter_model import NewsletterModel
+from rapidata.api_client.models.subscribe_to_newsletter_endpoint_input import SubscribeToNewsletterEndpointInput
+from rapidata.api_client.models.unsubscribe_from_newsletter_endpoint_input import UnsubscribeFromNewsletterEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -41,7 +42,7 @@ class NewsletterApi:
     @validate_call
     def newsletter_subscribe_post(
         self,
-        newsletter_model: Annotated[NewsletterModel, Field(description="The model containing the email of a user and recaptcha token.")],
+        subscribe_to_newsletter_endpoint_input: Annotated[SubscribeToNewsletterEndpointInput, Field(description="The email to subscribe and a recaptcha token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -55,11 +56,11 @@ class NewsletterApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Signs a user up to the newsletter.
+        """Signs an email address up to the newsletter.
 
 
-        :param newsletter_model: The model containing the email of a user and recaptcha token. (required)
-        :type newsletter_model: NewsletterModel
+        :param subscribe_to_newsletter_endpoint_input: The email to subscribe and a recaptcha token. (required)
+        :type subscribe_to_newsletter_endpoint_input: SubscribeToNewsletterEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -83,7 +84,7 @@ class NewsletterApi:
         """ # noqa: E501
 
         _param = self._newsletter_subscribe_post_serialize(
-            newsletter_model=newsletter_model,
+            subscribe_to_newsletter_endpoint_input=subscribe_to_newsletter_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -92,6 +93,9 @@ class NewsletterApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -107,7 +111,7 @@ class NewsletterApi:
     @validate_call
     def newsletter_subscribe_post_with_http_info(
         self,
-        newsletter_model: Annotated[NewsletterModel, Field(description="The model containing the email of a user and recaptcha token.")],
+        subscribe_to_newsletter_endpoint_input: Annotated[SubscribeToNewsletterEndpointInput, Field(description="The email to subscribe and a recaptcha token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -121,11 +125,11 @@ class NewsletterApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Signs a user up to the newsletter.
+        """Signs an email address up to the newsletter.
 
 
-        :param newsletter_model: The model containing the email of a user and recaptcha token. (required)
-        :type newsletter_model: NewsletterModel
+        :param subscribe_to_newsletter_endpoint_input: The email to subscribe and a recaptcha token. (required)
+        :type subscribe_to_newsletter_endpoint_input: SubscribeToNewsletterEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -149,7 +153,7 @@ class NewsletterApi:
         """ # noqa: E501
 
         _param = self._newsletter_subscribe_post_serialize(
-            newsletter_model=newsletter_model,
+            subscribe_to_newsletter_endpoint_input=subscribe_to_newsletter_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -158,6 +162,9 @@ class NewsletterApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -173,7 +180,7 @@ class NewsletterApi:
     @validate_call
     def newsletter_subscribe_post_without_preload_content(
         self,
-        newsletter_model: Annotated[NewsletterModel, Field(description="The model containing the email of a user and recaptcha token.")],
+        subscribe_to_newsletter_endpoint_input: Annotated[SubscribeToNewsletterEndpointInput, Field(description="The email to subscribe and a recaptcha token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -187,11 +194,11 @@ class NewsletterApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Signs a user up to the newsletter.
+        """Signs an email address up to the newsletter.
 
 
-        :param newsletter_model: The model containing the email of a user and recaptcha token. (required)
-        :type newsletter_model: NewsletterModel
+        :param subscribe_to_newsletter_endpoint_input: The email to subscribe and a recaptcha token. (required)
+        :type subscribe_to_newsletter_endpoint_input: SubscribeToNewsletterEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -215,7 +222,7 @@ class NewsletterApi:
         """ # noqa: E501
 
         _param = self._newsletter_subscribe_post_serialize(
-            newsletter_model=newsletter_model,
+            subscribe_to_newsletter_endpoint_input=subscribe_to_newsletter_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -224,6 +231,9 @@ class NewsletterApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -234,7 +244,7 @@ class NewsletterApi:
 
     def _newsletter_subscribe_post_serialize(
         self,
-        newsletter_model,
+        subscribe_to_newsletter_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -260,10 +270,17 @@ class NewsletterApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if newsletter_model is not None:
-            _body_params = newsletter_model
+        if subscribe_to_newsletter_endpoint_input is not None:
+            _body_params = subscribe_to_newsletter_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -272,9 +289,7 @@ class NewsletterApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -309,7 +324,7 @@ class NewsletterApi:
     @validate_call
     def newsletter_unsubscribe_post(
         self,
-        newsletter_model: Annotated[NewsletterModel, Field(description="The model containing the email of a user and recaptcha token.")],
+        unsubscribe_from_newsletter_endpoint_input: Annotated[UnsubscribeFromNewsletterEndpointInput, Field(description="The email to unsubscribe and a recaptcha token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -323,11 +338,11 @@ class NewsletterApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Unsubscribes a user from the newsletter.
+        """Removes an email address from the newsletter.
 
 
-        :param newsletter_model: The model containing the email of a user and recaptcha token. (required)
-        :type newsletter_model: NewsletterModel
+        :param unsubscribe_from_newsletter_endpoint_input: The email to unsubscribe and a recaptcha token. (required)
+        :type unsubscribe_from_newsletter_endpoint_input: UnsubscribeFromNewsletterEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -351,7 +366,7 @@ class NewsletterApi:
         """ # noqa: E501
 
         _param = self._newsletter_unsubscribe_post_serialize(
-            newsletter_model=newsletter_model,
+            unsubscribe_from_newsletter_endpoint_input=unsubscribe_from_newsletter_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -360,6 +375,9 @@ class NewsletterApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -375,7 +393,7 @@ class NewsletterApi:
     @validate_call
     def newsletter_unsubscribe_post_with_http_info(
         self,
-        newsletter_model: Annotated[NewsletterModel, Field(description="The model containing the email of a user and recaptcha token.")],
+        unsubscribe_from_newsletter_endpoint_input: Annotated[UnsubscribeFromNewsletterEndpointInput, Field(description="The email to unsubscribe and a recaptcha token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -389,11 +407,11 @@ class NewsletterApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Unsubscribes a user from the newsletter.
+        """Removes an email address from the newsletter.
 
 
-        :param newsletter_model: The model containing the email of a user and recaptcha token. (required)
-        :type newsletter_model: NewsletterModel
+        :param unsubscribe_from_newsletter_endpoint_input: The email to unsubscribe and a recaptcha token. (required)
+        :type unsubscribe_from_newsletter_endpoint_input: UnsubscribeFromNewsletterEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -417,7 +435,7 @@ class NewsletterApi:
         """ # noqa: E501
 
         _param = self._newsletter_unsubscribe_post_serialize(
-            newsletter_model=newsletter_model,
+            unsubscribe_from_newsletter_endpoint_input=unsubscribe_from_newsletter_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -426,6 +444,9 @@ class NewsletterApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -441,7 +462,7 @@ class NewsletterApi:
     @validate_call
     def newsletter_unsubscribe_post_without_preload_content(
         self,
-        newsletter_model: Annotated[NewsletterModel, Field(description="The model containing the email of a user and recaptcha token.")],
+        unsubscribe_from_newsletter_endpoint_input: Annotated[UnsubscribeFromNewsletterEndpointInput, Field(description="The email to unsubscribe and a recaptcha token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -455,11 +476,11 @@ class NewsletterApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Unsubscribes a user from the newsletter.
+        """Removes an email address from the newsletter.
 
 
-        :param newsletter_model: The model containing the email of a user and recaptcha token. (required)
-        :type newsletter_model: NewsletterModel
+        :param unsubscribe_from_newsletter_endpoint_input: The email to unsubscribe and a recaptcha token. (required)
+        :type unsubscribe_from_newsletter_endpoint_input: UnsubscribeFromNewsletterEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -483,7 +504,7 @@ class NewsletterApi:
         """ # noqa: E501
 
         _param = self._newsletter_unsubscribe_post_serialize(
-            newsletter_model=newsletter_model,
+            unsubscribe_from_newsletter_endpoint_input=unsubscribe_from_newsletter_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -492,6 +513,9 @@ class NewsletterApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -502,7 +526,7 @@ class NewsletterApi:
 
     def _newsletter_unsubscribe_post_serialize(
         self,
-        newsletter_model,
+        unsubscribe_from_newsletter_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -528,10 +552,17 @@ class NewsletterApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if newsletter_model is not None:
-            _body_params = newsletter_model
+        if unsubscribe_from_newsletter_endpoint_input is not None:
+            _body_params = unsubscribe_from_newsletter_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -540,9 +571,7 @@ class NewsletterApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )

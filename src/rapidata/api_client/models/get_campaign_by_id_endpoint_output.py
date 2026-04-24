@@ -38,10 +38,10 @@ class GetCampaignByIdEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the campaign.")
     name: StrictStr = Field(description="The name of the campaign.")
-    status: CampaignStatusModel
+    status: CampaignStatusModel = Field(description="The current status of the campaign.")
     priority: StrictInt = Field(description="The priority level of the campaign.")
     boosting_profile: BoostingProfileModel = Field(description="The boosting profile configuration.", alias="boostingProfile")
-    boosting_control_mode: BoostingControlMode = Field(alias="boostingControlMode")
+    boosting_control_mode: BoostingControlMode = Field(description="The boosting control mode.", alias="boostingControlMode")
     has_booster: StrictBool = Field(description="Whether the campaign has a booster.", alias="hasBooster")
     requires_booster: Optional[StrictBool] = Field(default=None, description="Whether the campaign requires a booster.", alias="requiresBooster")
     sticky_config: StickyConfigModel = Field(description="The sticky behavior configuration.", alias="stickyConfig")

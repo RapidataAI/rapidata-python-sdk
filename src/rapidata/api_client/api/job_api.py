@@ -16,9 +16,10 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictInt, StrictStr
-from typing import Optional, Tuple, Union
+from pydantic import Field, StrictBytes, StrictInt, StrictStr, field_validator
+from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
 from rapidata.api_client.models.create_job_definition_endpoint_input import CreateJobDefinitionEndpointInput
 from rapidata.api_client.models.create_job_definition_endpoint_output import CreateJobDefinitionEndpointOutput
 from rapidata.api_client.models.create_job_endpoint_input import CreateJobEndpointInput
@@ -28,10 +29,9 @@ from rapidata.api_client.models.create_job_revision_endpoint_output import Creat
 from rapidata.api_client.models.get_job_by_id_endpoint_output import GetJobByIdEndpointOutput
 from rapidata.api_client.models.get_job_definition_by_id_endpoint_output import GetJobDefinitionByIdEndpointOutput
 from rapidata.api_client.models.get_job_revision_endpoint_output import GetJobRevisionEndpointOutput
-from rapidata.api_client.models.paged_result_of_query_job_definitions_result import PagedResultOfQueryJobDefinitionsResult
-from rapidata.api_client.models.paged_result_of_query_job_revisions_result import PagedResultOfQueryJobRevisionsResult
-from rapidata.api_client.models.paged_result_of_query_jobs_result import PagedResultOfQueryJobsResult
-from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.query_job_definitions_endpoint_paged_result_of_output import QueryJobDefinitionsEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_job_revisions_endpoint_paged_result_of_output import QueryJobRevisionsEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_jobs_endpoint_paged_result_of_output import QueryJobsEndpointPagedResultOfOutput
 from rapidata.api_client.models.update_job_definition_endpoint_input import UpdateJobDefinitionEndpointInput
 from rapidata.api_client.models.update_job_endpoint_input import UpdateJobEndpointInput
 
@@ -1744,8 +1744,13 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revisions_get(
         self,
-        definition_id: Annotated[StrictStr, Field(description="The id of the job definition")],
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        revision_number: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by revision_number.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1758,14 +1763,24 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfQueryJobRevisionsResult:
-        """Queries job revisions for a specific definition based on filter, page, and sort criteria.
+    ) -> QueryJobRevisionsEndpointPagedResultOfOutput:
+        """Queries the revisions of a specific job definition.
 
 
-        :param definition_id: The id of the job definition (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param revision_number: Filter by revision_number.
+        :type revision_number: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1790,7 +1805,12 @@ class JobApi:
 
         _param = self._job_definition_definition_id_revisions_get_serialize(
             definition_id=definition_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            revision_number=revision_number,
+            created_at=created_at,
+            state=state,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1798,7 +1818,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobRevisionsResult",
+            '200': "QueryJobRevisionsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1814,8 +1837,13 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revisions_get_with_http_info(
         self,
-        definition_id: Annotated[StrictStr, Field(description="The id of the job definition")],
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        revision_number: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by revision_number.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1828,14 +1856,24 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfQueryJobRevisionsResult]:
-        """Queries job revisions for a specific definition based on filter, page, and sort criteria.
+    ) -> ApiResponse[QueryJobRevisionsEndpointPagedResultOfOutput]:
+        """Queries the revisions of a specific job definition.
 
 
-        :param definition_id: The id of the job definition (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param revision_number: Filter by revision_number.
+        :type revision_number: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1860,7 +1898,12 @@ class JobApi:
 
         _param = self._job_definition_definition_id_revisions_get_serialize(
             definition_id=definition_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            revision_number=revision_number,
+            created_at=created_at,
+            state=state,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1868,7 +1911,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobRevisionsResult",
+            '200': "QueryJobRevisionsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1884,8 +1930,13 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revisions_get_without_preload_content(
         self,
-        definition_id: Annotated[StrictStr, Field(description="The id of the job definition")],
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        revision_number: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by revision_number.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1899,13 +1950,23 @@ class JobApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries job revisions for a specific definition based on filter, page, and sort criteria.
+        """Queries the revisions of a specific job definition.
 
 
-        :param definition_id: The id of the job definition (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param revision_number: Filter by revision_number.
+        :type revision_number: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1930,7 +1991,12 @@ class JobApi:
 
         _param = self._job_definition_definition_id_revisions_get_serialize(
             definition_id=definition_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            revision_number=revision_number,
+            created_at=created_at,
+            state=state,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1938,7 +2004,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobRevisionsResult",
+            '200': "QueryJobRevisionsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1950,7 +2019,12 @@ class JobApi:
     def _job_definition_definition_id_revisions_get_serialize(
         self,
         definition_id,
-        request,
+        page,
+        page_size,
+        sort,
+        revision_number,
+        created_at,
+        state,
         _request_auth,
         _content_type,
         _headers,
@@ -1960,6 +2034,7 @@ class JobApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1975,10 +2050,42 @@ class JobApi:
         if definition_id is not None:
             _path_params['definitionId'] = definition_id
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if revision_number is not None:
+            _param_val = revision_number
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('revision_number[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
+        if state is not None:
+            _param_val = state
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('state[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1988,9 +2095,7 @@ class JobApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -2308,7 +2413,15 @@ class JobApi:
     @validate_call
     def job_definitions_get(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        definition_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_type.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2321,12 +2434,29 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfQueryJobDefinitionsResult:
-        """Queries job definitions based on filter, page, and sort criteria.
+    ) -> QueryJobDefinitionsEndpointPagedResultOfOutput:
+        """Queries job definitions visible to the caller.
 
+        Results are scoped to the caller's customer unless the caller is allowed to view all job definitions.
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param definition_id: Filter by definition_id.
+        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param definition_type: Filter by definition_type.
+        :type definition_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2350,7 +2480,15 @@ class JobApi:
         """ # noqa: E501
 
         _param = self._job_definitions_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            definition_id=definition_id,
+            name=name,
+            definition_type=definition_type,
+            created_at=created_at,
+            owner_id=owner_id,
+            owner_mail=owner_mail,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2358,7 +2496,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobDefinitionsResult",
+            '200': "QueryJobDefinitionsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2374,7 +2515,15 @@ class JobApi:
     @validate_call
     def job_definitions_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        definition_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_type.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2387,12 +2536,29 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfQueryJobDefinitionsResult]:
-        """Queries job definitions based on filter, page, and sort criteria.
+    ) -> ApiResponse[QueryJobDefinitionsEndpointPagedResultOfOutput]:
+        """Queries job definitions visible to the caller.
 
+        Results are scoped to the caller's customer unless the caller is allowed to view all job definitions.
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param definition_id: Filter by definition_id.
+        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param definition_type: Filter by definition_type.
+        :type definition_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2416,7 +2582,15 @@ class JobApi:
         """ # noqa: E501
 
         _param = self._job_definitions_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            definition_id=definition_id,
+            name=name,
+            definition_type=definition_type,
+            created_at=created_at,
+            owner_id=owner_id,
+            owner_mail=owner_mail,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2424,7 +2598,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobDefinitionsResult",
+            '200': "QueryJobDefinitionsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2440,7 +2617,15 @@ class JobApi:
     @validate_call
     def job_definitions_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        definition_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_type.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2454,11 +2639,28 @@ class JobApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries job definitions based on filter, page, and sort criteria.
+        """Queries job definitions visible to the caller.
 
+        Results are scoped to the caller's customer unless the caller is allowed to view all job definitions.
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param definition_id: Filter by definition_id.
+        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param definition_type: Filter by definition_type.
+        :type definition_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2482,7 +2684,15 @@ class JobApi:
         """ # noqa: E501
 
         _param = self._job_definitions_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            definition_id=definition_id,
+            name=name,
+            definition_type=definition_type,
+            created_at=created_at,
+            owner_id=owner_id,
+            owner_mail=owner_mail,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2490,7 +2700,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobDefinitionsResult",
+            '200': "QueryJobDefinitionsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2501,7 +2714,15 @@ class JobApi:
 
     def _job_definitions_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        definition_id,
+        name,
+        definition_type,
+        created_at,
+        owner_id,
+        owner_mail,
         _request_auth,
         _content_type,
         _headers,
@@ -2511,6 +2732,7 @@ class JobApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -2524,10 +2746,66 @@ class JobApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if definition_id is not None:
+            _param_val = definition_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('definition_id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if definition_type is not None:
+            _param_val = definition_type
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('definition_type[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
+        if owner_id is not None:
+            _param_val = owner_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_id[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -2537,9 +2815,7 @@ class JobApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -4227,7 +4503,15 @@ class JobApi:
     @validate_call
     def jobs_get(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        job_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        audience_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by audience_id.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4240,12 +4524,29 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfQueryJobsResult:
-        """Queries jobs based on filter, page, and sort criteria.
+    ) -> QueryJobsEndpointPagedResultOfOutput:
+        """Queries jobs visible to the caller.
 
+        Results are scoped to the caller's customer unless the caller is allowed to view all jobs.
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param job_id: Filter by job_id.
+        :type job_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param definition_id: Filter by definition_id.
+        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param audience_id: Filter by audience_id.
+        :type audience_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4269,7 +4570,15 @@ class JobApi:
         """ # noqa: E501
 
         _param = self._jobs_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            job_id=job_id,
+            name=name,
+            definition_id=definition_id,
+            audience_id=audience_id,
+            status=status,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4277,7 +4586,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobsResult",
+            '200': "QueryJobsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4293,7 +4605,15 @@ class JobApi:
     @validate_call
     def jobs_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        job_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        audience_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by audience_id.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4306,12 +4626,29 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfQueryJobsResult]:
-        """Queries jobs based on filter, page, and sort criteria.
+    ) -> ApiResponse[QueryJobsEndpointPagedResultOfOutput]:
+        """Queries jobs visible to the caller.
 
+        Results are scoped to the caller's customer unless the caller is allowed to view all jobs.
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param job_id: Filter by job_id.
+        :type job_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param definition_id: Filter by definition_id.
+        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param audience_id: Filter by audience_id.
+        :type audience_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4335,7 +4672,15 @@ class JobApi:
         """ # noqa: E501
 
         _param = self._jobs_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            job_id=job_id,
+            name=name,
+            definition_id=definition_id,
+            audience_id=audience_id,
+            status=status,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4343,7 +4688,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobsResult",
+            '200': "QueryJobsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4359,7 +4707,15 @@ class JobApi:
     @validate_call
     def jobs_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        job_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        audience_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by audience_id.")] = None,
+        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4373,11 +4729,28 @@ class JobApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries jobs based on filter, page, and sort criteria.
+        """Queries jobs visible to the caller.
 
+        Results are scoped to the caller's customer unless the caller is allowed to view all jobs.
 
-        :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param job_id: Filter by job_id.
+        :type job_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param definition_id: Filter by definition_id.
+        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param audience_id: Filter by audience_id.
+        :type audience_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param status: Filter by status.
+        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4401,7 +4774,15 @@ class JobApi:
         """ # noqa: E501
 
         _param = self._jobs_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            job_id=job_id,
+            name=name,
+            definition_id=definition_id,
+            audience_id=audience_id,
+            status=status,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4409,7 +4790,10 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobsResult",
+            '200': "QueryJobsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4420,7 +4804,15 @@ class JobApi:
 
     def _jobs_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        job_id,
+        name,
+        definition_id,
+        audience_id,
+        status,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -4430,6 +4822,7 @@ class JobApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -4443,10 +4836,66 @@ class JobApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if job_id is not None:
+            _param_val = job_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('job_id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if definition_id is not None:
+            _param_val = definition_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('definition_id[' + _k + ']', _v))
+        if audience_id is not None:
+            _param_val = audience_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('audience_id[' + _k + ']', _v))
+        if status is not None:
+            _param_val = status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('status[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -4456,9 +4905,7 @@ class JobApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

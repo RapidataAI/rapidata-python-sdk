@@ -16,17 +16,17 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictFloat, StrictInt, StrictStr
-from typing import Optional, Union
+from pydantic import Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import List, Optional, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
-from rapidata.api_client.models.create_rapid_result import CreateRapidResult
-from rapidata.api_client.models.get_public_responses_result import GetPublicResponsesResult
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
+from rapidata.api_client.models.create_demographic_rapid_endpoint_input import CreateDemographicRapidEndpointInput
+from rapidata.api_client.models.create_demographic_rapid_endpoint_output import CreateDemographicRapidEndpointOutput
+from rapidata.api_client.models.get_global_responses_endpoint_output import GetGlobalResponsesEndpointOutput
 from rapidata.api_client.models.get_responses_for_rapid_endpoint_output import GetResponsesForRapidEndpointOutput
-from rapidata.api_client.models.paged_result_of_query_validation_rapid_eligibility_result import PagedResultOfQueryValidationRapidEligibilityResult
 from rapidata.api_client.models.query_flagged_rapids_endpoint_paged_result_of_output import QueryFlaggedRapidsEndpointPagedResultOfOutput
-from rapidata.api_client.models.query_validation_rapid_eligibility_model_query_validation_model import QueryValidationRapidEligibilityModelQueryValidationModel
-from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
+from rapidata.api_client.models.query_validation_rapid_eligibility_endpoint_paged_result_of_output import QueryValidationRapidEligibilityEndpointPagedResultOfOutput
+from rapidata.api_client.models.update_validation_rapid_endpoint_input import UpdateValidationRapidEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -49,11 +49,15 @@ class CustomerRapidApi:
     @validate_call
     def rapid_correlation_id_validation_potential_get(
         self,
-        correlation_id: StrictStr,
-        min_responses: Optional[StrictInt] = None,
-        min_confidence: Optional[Union[StrictFloat, StrictInt]] = None,
-        target_group_id: Optional[StrictStr] = None,
-        request: Optional[QueryValidationRapidEligibilityModelQueryValidationModel] = None,
+        correlation_id: Annotated[StrictStr, Field(description="The correlation id whose rapids should be considered.")],
+        min_responses: Annotated[Optional[StrictInt], Field(description="The minimum response count for a rapid to qualify.")] = None,
+        min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence for a rapid to qualify.")] = None,
+        target_group_id: Annotated[Optional[StrictStr], Field(description="An optional subgroup of rapids to restrict the query to.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        rapid_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by rapid_id.")] = None,
+        response_count: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by response_count.")] = None,
+        confidence: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by confidence.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -66,20 +70,28 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfQueryValidationRapidEligibilityResult:
-        """Queries rapids that are potentially eligible for validation set creation.
+    ) -> QueryValidationRapidEligibilityEndpointPagedResultOfOutput:
+        """Queries rapids that may be eligible for validation-set creation.
 
 
-        :param correlation_id: (required)
+        :param correlation_id: The correlation id whose rapids should be considered. (required)
         :type correlation_id: str
-        :param min_responses:
+        :param min_responses: The minimum response count for a rapid to qualify.
         :type min_responses: int
-        :param min_confidence:
+        :param min_confidence: The minimum confidence for a rapid to qualify.
         :type min_confidence: float
-        :param target_group_id:
+        :param target_group_id: An optional subgroup of rapids to restrict the query to.
         :type target_group_id: str
-        :param request:
-        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param rapid_id: Filter by rapid_id.
+        :type rapid_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param response_count: Filter by response_count.
+        :type response_count: AudienceAudienceIdJobsGetJobIdParameter
+        :param confidence: Filter by confidence.
+        :type confidence: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -107,7 +119,11 @@ class CustomerRapidApi:
             min_responses=min_responses,
             min_confidence=min_confidence,
             target_group_id=target_group_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            rapid_id=rapid_id,
+            response_count=response_count,
+            confidence=confidence,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -115,7 +131,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryValidationRapidEligibilityResult",
+            '200': "QueryValidationRapidEligibilityEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -131,11 +150,15 @@ class CustomerRapidApi:
     @validate_call
     def rapid_correlation_id_validation_potential_get_with_http_info(
         self,
-        correlation_id: StrictStr,
-        min_responses: Optional[StrictInt] = None,
-        min_confidence: Optional[Union[StrictFloat, StrictInt]] = None,
-        target_group_id: Optional[StrictStr] = None,
-        request: Optional[QueryValidationRapidEligibilityModelQueryValidationModel] = None,
+        correlation_id: Annotated[StrictStr, Field(description="The correlation id whose rapids should be considered.")],
+        min_responses: Annotated[Optional[StrictInt], Field(description="The minimum response count for a rapid to qualify.")] = None,
+        min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence for a rapid to qualify.")] = None,
+        target_group_id: Annotated[Optional[StrictStr], Field(description="An optional subgroup of rapids to restrict the query to.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        rapid_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by rapid_id.")] = None,
+        response_count: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by response_count.")] = None,
+        confidence: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by confidence.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -148,20 +171,28 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfQueryValidationRapidEligibilityResult]:
-        """Queries rapids that are potentially eligible for validation set creation.
+    ) -> ApiResponse[QueryValidationRapidEligibilityEndpointPagedResultOfOutput]:
+        """Queries rapids that may be eligible for validation-set creation.
 
 
-        :param correlation_id: (required)
+        :param correlation_id: The correlation id whose rapids should be considered. (required)
         :type correlation_id: str
-        :param min_responses:
+        :param min_responses: The minimum response count for a rapid to qualify.
         :type min_responses: int
-        :param min_confidence:
+        :param min_confidence: The minimum confidence for a rapid to qualify.
         :type min_confidence: float
-        :param target_group_id:
+        :param target_group_id: An optional subgroup of rapids to restrict the query to.
         :type target_group_id: str
-        :param request:
-        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param rapid_id: Filter by rapid_id.
+        :type rapid_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param response_count: Filter by response_count.
+        :type response_count: AudienceAudienceIdJobsGetJobIdParameter
+        :param confidence: Filter by confidence.
+        :type confidence: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -189,7 +220,11 @@ class CustomerRapidApi:
             min_responses=min_responses,
             min_confidence=min_confidence,
             target_group_id=target_group_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            rapid_id=rapid_id,
+            response_count=response_count,
+            confidence=confidence,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -197,7 +232,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryValidationRapidEligibilityResult",
+            '200': "QueryValidationRapidEligibilityEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -213,11 +251,15 @@ class CustomerRapidApi:
     @validate_call
     def rapid_correlation_id_validation_potential_get_without_preload_content(
         self,
-        correlation_id: StrictStr,
-        min_responses: Optional[StrictInt] = None,
-        min_confidence: Optional[Union[StrictFloat, StrictInt]] = None,
-        target_group_id: Optional[StrictStr] = None,
-        request: Optional[QueryValidationRapidEligibilityModelQueryValidationModel] = None,
+        correlation_id: Annotated[StrictStr, Field(description="The correlation id whose rapids should be considered.")],
+        min_responses: Annotated[Optional[StrictInt], Field(description="The minimum response count for a rapid to qualify.")] = None,
+        min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence for a rapid to qualify.")] = None,
+        target_group_id: Annotated[Optional[StrictStr], Field(description="An optional subgroup of rapids to restrict the query to.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        rapid_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by rapid_id.")] = None,
+        response_count: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by response_count.")] = None,
+        confidence: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by confidence.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -231,19 +273,27 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries rapids that are potentially eligible for validation set creation.
+        """Queries rapids that may be eligible for validation-set creation.
 
 
-        :param correlation_id: (required)
+        :param correlation_id: The correlation id whose rapids should be considered. (required)
         :type correlation_id: str
-        :param min_responses:
+        :param min_responses: The minimum response count for a rapid to qualify.
         :type min_responses: int
-        :param min_confidence:
+        :param min_confidence: The minimum confidence for a rapid to qualify.
         :type min_confidence: float
-        :param target_group_id:
+        :param target_group_id: An optional subgroup of rapids to restrict the query to.
         :type target_group_id: str
-        :param request:
-        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param rapid_id: Filter by rapid_id.
+        :type rapid_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param response_count: Filter by response_count.
+        :type response_count: AudienceAudienceIdJobsGetJobIdParameter
+        :param confidence: Filter by confidence.
+        :type confidence: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -271,7 +321,11 @@ class CustomerRapidApi:
             min_responses=min_responses,
             min_confidence=min_confidence,
             target_group_id=target_group_id,
-            request=request,
+            page=page,
+            page_size=page_size,
+            rapid_id=rapid_id,
+            response_count=response_count,
+            confidence=confidence,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -279,7 +333,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryValidationRapidEligibilityResult",
+            '200': "QueryValidationRapidEligibilityEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -294,7 +351,11 @@ class CustomerRapidApi:
         min_responses,
         min_confidence,
         target_group_id,
-        request,
+        page,
+        page_size,
+        rapid_id,
+        response_count,
+        confidence,
         _request_auth,
         _content_type,
         _headers,
@@ -321,20 +382,48 @@ class CustomerRapidApi:
         # process the query parameters
         if min_responses is not None:
             
-            _query_params.append(('MinResponses', min_responses))
+            _query_params.append(('minResponses', min_responses))
             
         if min_confidence is not None:
             
-            _query_params.append(('MinConfidence', min_confidence))
+            _query_params.append(('minConfidence', min_confidence))
             
         if target_group_id is not None:
             
-            _query_params.append(('TargetGroupId', target_group_id))
+            _query_params.append(('targetGroupId', target_group_id))
             
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if rapid_id is not None:
+            _param_val = rapid_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('rapid_id[' + _k + ']', _v))
+        if response_count is not None:
+            _param_val = response_count
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('response_count[' + _k + ']', _v))
+        if confidence is not None:
+            _param_val = confidence
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('confidence[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -344,9 +433,7 @@ class CustomerRapidApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -379,7 +466,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_demographic_post(
         self,
-        create_demographic_rapid_model: Annotated[CreateDemographicRapidModel, Field(description="The model containing the demographic rapid.")],
+        create_demographic_rapid_endpoint_input: Annotated[CreateDemographicRapidEndpointInput, Field(description="The demographic rapid payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -392,12 +479,12 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateRapidResult:
-        """Creates a new Demographic Rapid with JSON body.
+    ) -> CreateDemographicRapidEndpointOutput:
+        """Creates a new demographic rapid.
 
 
-        :param create_demographic_rapid_model: The model containing the demographic rapid. (required)
-        :type create_demographic_rapid_model: CreateDemographicRapidModel
+        :param create_demographic_rapid_endpoint_input: The demographic rapid payload. (required)
+        :type create_demographic_rapid_endpoint_input: CreateDemographicRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -421,7 +508,7 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_demographic_post_serialize(
-            create_demographic_rapid_model=create_demographic_rapid_model,
+            create_demographic_rapid_endpoint_input=create_demographic_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -429,7 +516,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateRapidResult",
+            '200': "CreateDemographicRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -445,7 +535,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_demographic_post_with_http_info(
         self,
-        create_demographic_rapid_model: Annotated[CreateDemographicRapidModel, Field(description="The model containing the demographic rapid.")],
+        create_demographic_rapid_endpoint_input: Annotated[CreateDemographicRapidEndpointInput, Field(description="The demographic rapid payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -458,12 +548,12 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateRapidResult]:
-        """Creates a new Demographic Rapid with JSON body.
+    ) -> ApiResponse[CreateDemographicRapidEndpointOutput]:
+        """Creates a new demographic rapid.
 
 
-        :param create_demographic_rapid_model: The model containing the demographic rapid. (required)
-        :type create_demographic_rapid_model: CreateDemographicRapidModel
+        :param create_demographic_rapid_endpoint_input: The demographic rapid payload. (required)
+        :type create_demographic_rapid_endpoint_input: CreateDemographicRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -487,7 +577,7 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_demographic_post_serialize(
-            create_demographic_rapid_model=create_demographic_rapid_model,
+            create_demographic_rapid_endpoint_input=create_demographic_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -495,7 +585,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateRapidResult",
+            '200': "CreateDemographicRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -511,7 +604,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_demographic_post_without_preload_content(
         self,
-        create_demographic_rapid_model: Annotated[CreateDemographicRapidModel, Field(description="The model containing the demographic rapid.")],
+        create_demographic_rapid_endpoint_input: Annotated[CreateDemographicRapidEndpointInput, Field(description="The demographic rapid payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -525,11 +618,11 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new Demographic Rapid with JSON body.
+        """Creates a new demographic rapid.
 
 
-        :param create_demographic_rapid_model: The model containing the demographic rapid. (required)
-        :type create_demographic_rapid_model: CreateDemographicRapidModel
+        :param create_demographic_rapid_endpoint_input: The demographic rapid payload. (required)
+        :type create_demographic_rapid_endpoint_input: CreateDemographicRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -553,7 +646,7 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapid_demographic_post_serialize(
-            create_demographic_rapid_model=create_demographic_rapid_model,
+            create_demographic_rapid_endpoint_input=create_demographic_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -561,7 +654,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateRapidResult",
+            '200': "CreateDemographicRapidEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -572,7 +668,7 @@ class CustomerRapidApi:
 
     def _rapid_demographic_post_serialize(
         self,
-        create_demographic_rapid_model,
+        create_demographic_rapid_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -598,17 +694,15 @@ class CustomerRapidApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_demographic_rapid_model is not None:
-            _body_params = create_demographic_rapid_model
+        if create_demographic_rapid_endpoint_input is not None:
+            _body_params = create_demographic_rapid_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -619,9 +713,7 @@ class CustomerRapidApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -668,8 +760,8 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetPublicResponsesResult:
-        """A public endpoint to query the most recent responses globally
+    ) -> GetGlobalResponsesEndpointOutput:
+        """Gets the most recent public responses across all customers.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -702,7 +794,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPublicResponsesResult",
+            '200': "GetGlobalResponsesEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -730,8 +825,8 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetPublicResponsesResult]:
-        """A public endpoint to query the most recent responses globally
+    ) -> ApiResponse[GetGlobalResponsesEndpointOutput]:
+        """Gets the most recent public responses across all customers.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -764,7 +859,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPublicResponsesResult",
+            '200': "GetGlobalResponsesEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -793,7 +891,7 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """A public endpoint to query the most recent responses globally
+        """Gets the most recent public responses across all customers.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -826,7 +924,10 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPublicResponsesResult",
+            '200': "GetGlobalResponsesEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -868,9 +969,7 @@ class CustomerRapidApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -903,7 +1002,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_rapid_id_delete(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The rapid to be deleted")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -920,7 +1019,7 @@ class CustomerRapidApi:
         """Deletes a rapid.
 
 
-        :param rapid_id: The rapid to be deleted (required)
+        :param rapid_id: The id of the rapid to delete. (required)
         :type rapid_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -954,6 +1053,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -969,7 +1071,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_rapid_id_delete_with_http_info(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The rapid to be deleted")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -986,7 +1088,7 @@ class CustomerRapidApi:
         """Deletes a rapid.
 
 
-        :param rapid_id: The rapid to be deleted (required)
+        :param rapid_id: The id of the rapid to delete. (required)
         :type rapid_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1020,6 +1122,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1035,7 +1140,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_rapid_id_delete_without_preload_content(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The rapid to be deleted")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1052,7 +1157,7 @@ class CustomerRapidApi:
         """Deletes a rapid.
 
 
-        :param rapid_id: The rapid to be deleted (required)
+        :param rapid_id: The id of the rapid to delete. (required)
         :type rapid_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1086,6 +1191,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1126,6 +1234,13 @@ class CustomerRapidApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1425,7 +1540,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_rapid_id_unflag_post(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to unflag")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to unflag.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1439,10 +1554,11 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Unflags a flagged rapid.  This will add the rapid back to the active labeling pool and prevent it from being flagged again.
+        """Unflags a flagged rapid.
 
+        The rapid is returned to the active labeling pool and cannot be flagged again.
 
-        :param rapid_id: The id of the rapid to unflag (required)
+        :param rapid_id: The id of the rapid to unflag. (required)
         :type rapid_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1476,6 +1592,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1491,7 +1610,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_rapid_id_unflag_post_with_http_info(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to unflag")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to unflag.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1505,10 +1624,11 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Unflags a flagged rapid.  This will add the rapid back to the active labeling pool and prevent it from being flagged again.
+        """Unflags a flagged rapid.
 
+        The rapid is returned to the active labeling pool and cannot be flagged again.
 
-        :param rapid_id: The id of the rapid to unflag (required)
+        :param rapid_id: The id of the rapid to unflag. (required)
         :type rapid_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1542,6 +1662,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1557,7 +1680,7 @@ class CustomerRapidApi:
     @validate_call
     def rapid_rapid_id_unflag_post_without_preload_content(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to unflag")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to unflag.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1571,10 +1694,11 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Unflags a flagged rapid.  This will add the rapid back to the active labeling pool and prevent it from being flagged again.
+        """Unflags a flagged rapid.
 
+        The rapid is returned to the active labeling pool and cannot be flagged again.
 
-        :param rapid_id: The id of the rapid to unflag (required)
+        :param rapid_id: The id of the rapid to unflag. (required)
         :type rapid_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1608,6 +1732,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1648,6 +1775,13 @@ class CustomerRapidApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -1678,8 +1812,8 @@ class CustomerRapidApi:
     @validate_call
     def rapid_validation_rapid_id_patch(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update")],
-        update_validation_rapid_model: Annotated[UpdateValidationRapidModel, Field(description="The body request")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update.")],
+        update_validation_rapid_endpoint_input: Annotated[UpdateValidationRapidEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1693,13 +1827,13 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates the validation information of a Rapid.
+        """Updates the validation information of a rapid.
 
 
-        :param rapid_id: The id of the rapid to update (required)
+        :param rapid_id: The id of the rapid to update. (required)
         :type rapid_id: str
-        :param update_validation_rapid_model: The body request (required)
-        :type update_validation_rapid_model: UpdateValidationRapidModel
+        :param update_validation_rapid_endpoint_input: The fields to update. (required)
+        :type update_validation_rapid_endpoint_input: UpdateValidationRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1724,7 +1858,7 @@ class CustomerRapidApi:
 
         _param = self._rapid_validation_rapid_id_patch_serialize(
             rapid_id=rapid_id,
-            update_validation_rapid_model=update_validation_rapid_model,
+            update_validation_rapid_endpoint_input=update_validation_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1733,6 +1867,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1748,8 +1885,8 @@ class CustomerRapidApi:
     @validate_call
     def rapid_validation_rapid_id_patch_with_http_info(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update")],
-        update_validation_rapid_model: Annotated[UpdateValidationRapidModel, Field(description="The body request")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update.")],
+        update_validation_rapid_endpoint_input: Annotated[UpdateValidationRapidEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1763,13 +1900,13 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates the validation information of a Rapid.
+        """Updates the validation information of a rapid.
 
 
-        :param rapid_id: The id of the rapid to update (required)
+        :param rapid_id: The id of the rapid to update. (required)
         :type rapid_id: str
-        :param update_validation_rapid_model: The body request (required)
-        :type update_validation_rapid_model: UpdateValidationRapidModel
+        :param update_validation_rapid_endpoint_input: The fields to update. (required)
+        :type update_validation_rapid_endpoint_input: UpdateValidationRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1794,7 +1931,7 @@ class CustomerRapidApi:
 
         _param = self._rapid_validation_rapid_id_patch_serialize(
             rapid_id=rapid_id,
-            update_validation_rapid_model=update_validation_rapid_model,
+            update_validation_rapid_endpoint_input=update_validation_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1803,6 +1940,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1818,8 +1958,8 @@ class CustomerRapidApi:
     @validate_call
     def rapid_validation_rapid_id_patch_without_preload_content(
         self,
-        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update")],
-        update_validation_rapid_model: Annotated[UpdateValidationRapidModel, Field(description="The body request")],
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update.")],
+        update_validation_rapid_endpoint_input: Annotated[UpdateValidationRapidEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1833,13 +1973,13 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates the validation information of a Rapid.
+        """Updates the validation information of a rapid.
 
 
-        :param rapid_id: The id of the rapid to update (required)
+        :param rapid_id: The id of the rapid to update. (required)
         :type rapid_id: str
-        :param update_validation_rapid_model: The body request (required)
-        :type update_validation_rapid_model: UpdateValidationRapidModel
+        :param update_validation_rapid_endpoint_input: The fields to update. (required)
+        :type update_validation_rapid_endpoint_input: UpdateValidationRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1864,7 +2004,7 @@ class CustomerRapidApi:
 
         _param = self._rapid_validation_rapid_id_patch_serialize(
             rapid_id=rapid_id,
-            update_validation_rapid_model=update_validation_rapid_model,
+            update_validation_rapid_endpoint_input=update_validation_rapid_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1873,6 +2013,9 @@ class CustomerRapidApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1884,7 +2027,7 @@ class CustomerRapidApi:
     def _rapid_validation_rapid_id_patch_serialize(
         self,
         rapid_id,
-        update_validation_rapid_model,
+        update_validation_rapid_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1912,10 +2055,17 @@ class CustomerRapidApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_validation_rapid_model is not None:
-            _body_params = update_validation_rapid_model
+        if update_validation_rapid_endpoint_input is not None:
+            _body_params = update_validation_rapid_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -1924,9 +2074,7 @@ class CustomerRapidApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -1961,6 +2109,14 @@ class CustomerRapidApi:
     @validate_call
     def rapids_flagged_get(
         self,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        correlation_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by correlation_id.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        key: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by key.")] = None,
+        completed_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by completed_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1977,6 +2133,22 @@ class CustomerRapidApi:
         """Queries all rapids that have been flagged.
 
 
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param correlation_id: Filter by correlation_id.
+        :type correlation_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param key: Filter by key.
+        :type key: AudienceAudienceIdJobsGetJobIdParameter
+        :param completed_at: Filter by completed_at.
+        :type completed_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2000,6 +2172,14 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapids_flagged_get_serialize(
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            correlation_id=correlation_id,
+            owner_id=owner_id,
+            key=key,
+            completed_at=completed_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2026,6 +2206,14 @@ class CustomerRapidApi:
     @validate_call
     def rapids_flagged_get_with_http_info(
         self,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        correlation_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by correlation_id.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        key: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by key.")] = None,
+        completed_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by completed_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2042,6 +2230,22 @@ class CustomerRapidApi:
         """Queries all rapids that have been flagged.
 
 
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param correlation_id: Filter by correlation_id.
+        :type correlation_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param key: Filter by key.
+        :type key: AudienceAudienceIdJobsGetJobIdParameter
+        :param completed_at: Filter by completed_at.
+        :type completed_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2065,6 +2269,14 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapids_flagged_get_serialize(
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            correlation_id=correlation_id,
+            owner_id=owner_id,
+            key=key,
+            completed_at=completed_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2091,6 +2303,14 @@ class CustomerRapidApi:
     @validate_call
     def rapids_flagged_get_without_preload_content(
         self,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        correlation_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by correlation_id.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        key: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by key.")] = None,
+        completed_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by completed_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2107,6 +2327,22 @@ class CustomerRapidApi:
         """Queries all rapids that have been flagged.
 
 
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param correlation_id: Filter by correlation_id.
+        :type correlation_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param key: Filter by key.
+        :type key: AudienceAudienceIdJobsGetJobIdParameter
+        :param completed_at: Filter by completed_at.
+        :type completed_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2130,6 +2366,14 @@ class CustomerRapidApi:
         """ # noqa: E501
 
         _param = self._rapids_flagged_get_serialize(
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            correlation_id=correlation_id,
+            owner_id=owner_id,
+            key=key,
+            completed_at=completed_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2151,6 +2395,14 @@ class CustomerRapidApi:
 
     def _rapids_flagged_get_serialize(
         self,
+        page,
+        page_size,
+        sort,
+        id,
+        correlation_id,
+        owner_id,
+        key,
+        completed_at,
         _request_auth,
         _content_type,
         _headers,
@@ -2160,6 +2412,7 @@ class CustomerRapidApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -2173,6 +2426,58 @@ class CustomerRapidApi:
 
         # process the path parameters
         # process the query parameters
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if correlation_id is not None:
+            _param_val = correlation_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('correlation_id[' + _k + ']', _v))
+        if owner_id is not None:
+            _param_val = owner_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_id[' + _k + ']', _v))
+        if key is not None:
+            _param_val = key
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('key[' + _k + ']', _v))
+        if completed_at is not None:
+            _param_val = completed_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('completed_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter

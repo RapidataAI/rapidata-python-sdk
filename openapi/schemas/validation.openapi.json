@@ -11,6 +11,368 @@
     }
   ],
   "paths": {
+    "/validation-set/{validationSetId}/rapid": {
+      "post": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Adds a new validation rapid to a validation set using a JSON body.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The validation set to add a rapid to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The validation rapid data including asset, payload, and metadata.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationRapidEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/validation-set": {
+      "post": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Creates a new empty validation set.",
+        "requestBody": {
+          "description": "The body describing the validation set to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateValidationSetEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateValidationSetEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}": {
+      "delete": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Deletes a validation set by id.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Gets a validation set by id.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetValidationSetByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates different characteristics of a validation set using patch semantics.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The patch payload describing which fields should change.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationSetEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}/export": {
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Exports all rapids of a validation set to a file.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to export.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/validation-sets/available": {
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Gets the available validation sets for the current user.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableValidationSetsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/validation-set/recommended": {
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Gets a validation set that is available to the user and best matches the provided parameters.",
+        "parameters": [
+          {
+            "name": "assetType",
+            "in": "query",
+            "description": "The types of assets that the validation set should contain.\n An asset type can be an image, video, audio, text, or any combination of these.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.",
+            "schema": {
+              "$ref": "#/components/schemas/AssetType"
+            }
+          },
+          {
+            "name": "modality",
+            "in": "query",
+            "description": "The rapid modalities that the validation set should contain.\n The modality is the type of rapid such as classify, compare, locate, etc.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.",
+            "schema": {
+              "$ref": "#/components/schemas/RapidModality"
+            }
+          },
+          {
+            "name": "promptType",
+            "in": "query",
+            "description": "The prompt types that the validation set should contain.\n A prompt type is the additional information that is presented to the user when solving a rapid.\n For example, a prompt type can be either text or an asset if the context is an image or video.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.",
+            "schema": {
+              "$ref": "#/components/schemas/PromptType"
+            }
+          },
+          {
+            "name": "instruction",
+            "in": "query",
+            "description": "An instruction used to find validation sets that have similar instructions.\n An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRecommendedValidationSetEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/validation-set/{validationSetId}/rapids": {
       "get": {
         "tags": [
@@ -26,6 +388,182 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "correct_validation_count",
+                  "-correct_validation_count",
+                  "invalid_validation_count",
+                  "-invalid_validation_count"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by type.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -66,355 +604,482 @@
         "summary": "Queries available validation sets based on the provided filter, paging and sorting criteria.",
         "parameters": [
           {
-            "name": "model",
+            "name": "page",
             "in": "query",
-            "description": "The model containing the query parameters.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfValidationSetModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfValidationSetModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfValidationSetModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/validation-set/recommended": {
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Gets a validation set that is available to the user and best matches the provided parameters.",
-        "description": "This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.",
-        "parameters": [
-          {
-            "name": "assetType",
-            "in": "query",
-            "description": "The types of assets that the validation set should contain.\n An asset type can be an image, video, audio, text, or any combination of these.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.",
+            "description": "The 1-based page index.",
             "schema": {
-              "$ref": "#/components/schemas/AssetType"
-            }
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "asset_type",
+            "in": "query",
+            "description": "Filter by asset_type.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           },
           {
             "name": "modality",
             "in": "query",
-            "description": "The rapid modalities that the validation set should contain.\n The modality is the type of rapid such as classify, compare, locate, etc.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.",
+            "description": "Filter by modality.",
+            "style": "deepObject",
+            "explode": true,
             "schema": {
-              "$ref": "#/components/schemas/RapidModality"
-            }
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           },
           {
-            "name": "promptType",
+            "name": "prompt_type",
             "in": "query",
-            "description": "The prompt types that the validation set should contain.\n A prompt type is the additional information that is presented to the user when solving a rapid.\n For example, a prompt type can be either text or an asset if the context is an image or video.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.",
+            "description": "Filter by prompt_type.",
+            "style": "deepObject",
+            "explode": true,
             "schema": {
-              "$ref": "#/components/schemas/PromptType"
-            }
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           },
           {
-            "name": "instruction",
+            "name": "is_public",
             "in": "query",
-            "description": "An instruction that can be used to filter for validation sets that have similar instructions.\n An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "description": "Filter by owner_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetRecommendedValidationSetResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetRecommendedValidationSetResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetRecommendedValidationSetResult"
+                  "$ref": "#/components/schemas/QueryValidationSetsEndpoint_PagedResultOfOutput"
                 }
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "400": {
+            "description": "Bad Request",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/validation-set/{validationSetId}": {
-      "delete": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Gets a validation set by the id.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The id of the validation set to get.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Gets a validation set by the id.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The id of the validation set to get.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Updates different characteristics of a validation set.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The Id of the validation set to update the dimensions for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request for updating the shouldAlert property.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationSetModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationSetModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationSetModel"
               }
             }
           },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/validation-sets/available": {
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Gets the available validation sets for the current user.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/validation-set": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Creates a new empty validation set.",
-        "requestBody": {
-          "description": "The body request for creating a new validation set.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateValidationSetModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateValidationSetModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateValidationSetModel"
-              }
-            }
+          "401": {
+            "description": "Unauthenticated"
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateEmptyValidationSetResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateEmptyValidationSetResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateEmptyValidationSetResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/validation-set/{validationSetId}/rapid": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the validation set using JSON body.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The validation set to add a rapid to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The validation rapid data including asset, payload, and metadata.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -425,7 +1090,7 @@
           "ValidationSet"
         ],
         "summary": "Refreshes the labeling hints for a validation set.",
-        "description": "This will sample the rapids in the validation set and update the labeling hints based on the sampled rapids.",
+        "description": "This endpoint is a no-op. Labeling hints are now managed automatically.",
         "parameters": [
           {
             "name": "validationSetId",
@@ -441,8 +1106,109 @@
           "204": {
             "description": "No Content"
           }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}/dimensions": {
+      "patch": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates the dimensions of all rapids within a validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to update the dimensions for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body describing the new dimensions.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationSetDimensionsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
         },
-        "deprecated": true
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}/shouldAlert": {
+      "patch": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates the shouldAlert field on all rapids within a validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body describing the new shouldAlert value.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationSetShouldAlertEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
       }
     },
     "/validation-set/{validationSetId}/visibility": {
@@ -466,6 +1232,7 @@
             "name": "isPublic",
             "in": "query",
             "description": "Whether the validation set should be public or private.",
+            "required": true,
             "schema": {
               "type": "boolean"
             }
@@ -474,139 +1241,22 @@
         "responses": {
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/validation-set/{validationSetId}/dimensions": {
-      "patch": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Updates the dimensions of all rapids within a validation set.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The Id of the validation set to update the dimensions for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request for updating the dimensions.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            }
           },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/validation-set/{validationSetId}/shouldalert": {
-      "patch": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Updates the dimensions of all rapids within a validation set.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The Id of the validation set to update the dimensions for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request for updating the shouldAlert property.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateShouldAlertModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateShouldAlertModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateShouldAlertModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/validation-set/{validationSetId}/export": {
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Exports all rapids of a validation-set to a file.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
+          "400": {
+            "description": "Bad Request",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -614,7 +1264,7 @@
   },
   "components": {
     "schemas": {
-      "AddValidationRapidModel": {
+      "AddValidationRapidEndpoint_Input": {
         "required": [
           "asset",
           "payload"
@@ -652,7 +1302,7 @@
           },
           "explanation": {
             "type": "string",
-            "description": "An explanation for the users if they answer the rapid incorrectly.",
+            "description": "An explanation shown to the users if they answer the rapid incorrectly.",
             "nullable": true
           },
           "context": {
@@ -680,8 +1330,7 @@
             ],
             "description": "The feature flags to enable for the rapid."
           }
-        },
-        "description": "The model for adding a validation rapid with asset in JSON body."
+        }
       },
       "AssetType": {
         "type": "array",
@@ -732,18 +1381,7 @@
           }
         }
       },
-      "CreateEmptyValidationSetResult": {
-        "required": [
-          "validationSetId"
-        ],
-        "type": "object",
-        "properties": {
-          "validationSetId": {
-            "type": "string"
-          }
-        }
-      },
-      "CreateValidationSetModel": {
+      "CreateValidationSetEndpoint_Input": {
         "required": [
           "name"
         ],
@@ -753,8 +1391,19 @@
             "type": "string",
             "description": "The name of the validation set."
           }
-        },
-        "description": "The body request for creating a new validation set."
+        }
+      },
+      "CreateValidationSetEndpoint_Output": {
+        "required": [
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSetId": {
+            "type": "string",
+            "description": "The id of the created validation set."
+          }
+        }
       },
       "FeatureFlag": {
         "required": [
@@ -771,10 +1420,6 @@
           }
         }
       },
-      "FileStreamResult": {
-        "type": "string",
-        "format": "binary"
-      },
       "FileType": {
         "enum": [
           "Unknown",
@@ -783,84 +1428,114 @@
           "Audio"
         ]
       },
-      "Filter": {
+      "GetAvailableValidationSetsEndpoint_Output": {
+        "required": [
+          "validationSets"
+        ],
         "type": "object",
         "properties": {
-          "field": {
+          "validationSets": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetAvailableValidationSetsEndpoint_ValidationSetOverviewOutputModel"
+                }
+              }
+            ],
+            "description": "The validation sets available to the current user."
+          }
+        }
+      },
+      "GetAvailableValidationSetsEndpoint_ValidationSetOverviewOutputModel": {
+        "required": [
+          "id",
+          "name",
+          "ownerId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerId": {
             "type": "string",
-            "nullable": true
-          },
-          "value": { },
-          "operator": {
-            "oneOf": [
+            "format": "uuid"
+          }
+        }
+      },
+      "GetRecommendedValidationSetEndpoint_Output": {
+        "required": [
+          "validationSets"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSets": {
+            "allOf": [
               {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/FilterOperator"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetRecommendedValidationSetEndpoint_ValidationSetOutputModel"
+                }
               }
-            ]
+            ],
+            "description": "The validation sets that best match the provided parameters."
+          }
+        }
+      },
+      "GetRecommendedValidationSetEndpoint_ValidationSetOutputModel": {
+        "required": [
+          "id",
+          "name",
+          "assetType",
+          "modality",
+          "promptType",
+          "dimensions",
+          "isPublic",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
           },
-          "logic": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/LogicOperator"
-              }
-            ]
+          "name": {
+            "type": "string"
           },
-          "filters": {
+          "assetType": {
+            "$ref": "#/components/schemas/AssetType"
+          },
+          "modality": {
+            "$ref": "#/components/schemas/RapidModality"
+          },
+          "promptType": {
+            "$ref": "#/components/schemas/PromptType"
+          },
+          "dimensions": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Filter"
+              "type": "string"
             },
             "nullable": true
-          }
-        }
-      },
-      "FilterOperator": {
-        "enum": [
-          "Eq",
-          "Neq",
-          "Gt",
-          "Gte",
-          "Lt",
-          "Lte",
-          "Contains",
-          "StartsWith",
-          "EndsWith",
-          "In",
-          "NotContains",
-          null
-        ]
-      },
-      "GetAvailableValidationSetsResult": {
-        "required": [
-          "validationSets"
-        ],
-        "type": "object",
-        "properties": {
-          "validationSets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationSetOverviewModel"
-            }
-          }
-        }
-      },
-      "GetRecommendedValidationSetResult": {
-        "required": [
-          "validationSets"
-        ],
-        "type": "object",
-        "properties": {
-          "validationSets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationSetModel"
-            }
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -942,7 +1617,12 @@
             "format": "double"
           },
           "state": {
-            "$ref": "#/components/schemas/RapidState"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            ],
+            "description": "The state of the rapid."
           }
         }
       },
@@ -979,7 +1659,7 @@
           }
         }
       },
-      "GetValidationSetByIdResult": {
+      "GetValidationSetByIdEndpoint_Output": {
         "required": [
           "id",
           "name",
@@ -992,29 +1672,40 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the validation set."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the validation set."
           },
           "isPublic": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the validation set is public."
           },
           "ownerMail": {
-            "type": "string"
+            "type": "string",
+            "description": "The mail of the owning customer."
           },
           "ownerId": {
             "type": "string",
+            "description": "The id of the owning customer.",
             "format": "uuid"
           },
           "dimensions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The dimensions shared across all rapids in the validation set."
           },
           "createdAt": {
             "type": "string",
+            "description": "The time at which the validation set was created.",
             "format": "date-time"
           }
         }
@@ -2132,14 +2823,6 @@
           }
         }
       },
-      "LogicOperator": {
-        "enum": [
-          "And",
-          "Or",
-          "Not",
-          null
-        ]
-      },
       "MetadataInputCollection": {
         "type": "object",
         "additionalProperties": {
@@ -2187,7 +2870,97 @@
           }
         }
       },
-      "PagedResultOfValidationSetModel": {
+      "PromptType": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Text",
+            "Asset"
+          ],
+          "type": "string"
+        }
+      },
+      "QueryValidationSetsEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "assetType",
+          "modality",
+          "promptType",
+          "dimensions",
+          "isPublic",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the validation set."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the validation set."
+          },
+          "assetType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssetType"
+              }
+            ],
+            "description": "The asset types contained in the validation set."
+          },
+          "modality": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidModality"
+              }
+            ],
+            "description": "The rapid modalities contained in the validation set."
+          },
+          "promptType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromptType"
+              }
+            ],
+            "description": "The prompt types contained in the validation set."
+          },
+          "dimensions": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The dimensions shared across all rapids in the validation set."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the validation set is public."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the owning customer.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the owning customer."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The time at which the validation set was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryValidationSetsEndpoint_PagedResultOfOutput": {
         "required": [
           "total",
           "page",
@@ -2211,93 +2984,12 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ValidationSetModel"
+              "$ref": "#/components/schemas/QueryValidationSetsEndpoint_Output"
             }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "Pagination": {
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "PromptType": {
-        "type": "array",
-        "items": {
-          "enum": [
-            "None",
-            "Text",
-            "Asset"
-          ],
-          "type": "string"
-        }
-      },
-      "QueryModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/Pagination"
-              }
-            ]
-          },
-          "filter": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/RootFilter"
-              }
-            ]
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "nullable": true
           }
         }
       },
@@ -2329,26 +3021,7 @@
           "Done",
           "None",
           "Rejected"
-        ],
-        "description": "The state of the rapid."
-      },
-      "RootFilter": {
-        "required": [
-          "filters",
-          "logic"
-        ],
-        "type": "object",
-        "properties": {
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
-          }
-        }
+        ]
       },
       "ScrubRange": {
         "required": [
@@ -2367,27 +3040,6 @@
           }
         }
       },
-      "SortCriterion": {
-        "required": [
-          "propertyName",
-          "direction"
-        ],
-        "type": "object",
-        "properties": {
-          "propertyName": {
-            "type": "string"
-          },
-          "direction": {
-            "$ref": "#/components/schemas/SortDirection"
-          }
-        }
-      },
-      "SortDirection": {
-        "enum": [
-          "Asc",
-          "Desc"
-        ]
-      },
       "TranscriptionWord": {
         "required": [
           "word",
@@ -2404,7 +3056,7 @@
           }
         }
       },
-      "UpdateDimensionsModel": {
+      "UpdateValidationSetDimensionsEndpoint_Input": {
         "required": [
           "dimensions"
         ],
@@ -2421,10 +3073,41 @@
             ],
             "description": "The dimensions to set on all rapids within the validation set."
           }
-        },
-        "description": "The model for updating the dimensions of all rapids within a validation set."
+        }
       },
-      "UpdateShouldAlertModel": {
+      "UpdateValidationSetEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name of the validation set."
+          },
+          "dimensions": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The new dimensions of the validation set."
+          },
+          "shouldAlert": {
+            "type": "boolean",
+            "description": "Whether users should be alerted if they answer incorrectly."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the validation set should be public."
+          },
+          "isFlagOverruled": {
+            "type": "boolean",
+            "description": "Whether flags on validation rapids should be overruled."
+          }
+        }
+      },
+      "UpdateValidationSetShouldAlertEndpoint_Input": {
         "required": [
           "shouldAlert"
         ],
@@ -2432,50 +3115,9 @@
         "properties": {
           "shouldAlert": {
             "type": "boolean",
-            "description": "A flag indicating whether the users should be alerted if they answer incorrectly."
+            "description": "A flag indicating whether users should be alerted if they answer incorrectly."
           }
-        },
-        "description": "The model for updating the shouldAlert field of all rapids within a validation set."
-      },
-      "UpdateValidationSetModel": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the validation set",
-            "nullable": true
-          },
-          "dimensions": {
-            "oneOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              {
-                "nullable": true
-              }
-            ],
-            "description": "The dimensions of the validation set"
-          },
-          "shouldAlert": {
-            "type": "boolean",
-            "description": "If the user should be alerted or not",
-            "nullable": true
-          },
-          "isPublic": {
-            "type": "boolean",
-            "description": "If the validation set is public",
-            "nullable": true
-          },
-          "isFlagOverruled": {
-            "type": "boolean",
-            "description": "If the flag on validation rapids should be overruled",
-            "nullable": true
-          }
-        },
-        "description": "Allows for specific updates to a validation set without needing to provide all properties."
+        }
       },
       "ValidationProblemDetails": {
         "type": "object",
@@ -2508,78 +3150,6 @@
                 "type": "string"
               }
             }
-          }
-        }
-      },
-      "ValidationSetModel": {
-        "required": [
-          "id",
-          "name",
-          "assetType",
-          "modality",
-          "promptType",
-          "isPublic",
-          "ownerId",
-          "ownerMail",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "assetType": {
-            "$ref": "#/components/schemas/AssetType"
-          },
-          "modality": {
-            "$ref": "#/components/schemas/RapidModality"
-          },
-          "promptType": {
-            "$ref": "#/components/schemas/PromptType"
-          },
-          "dimensions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "isPublic": {
-            "type": "boolean"
-          },
-          "ownerId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "ownerMail": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "ValidationSetOverviewModel": {
-        "required": [
-          "id",
-          "name",
-          "ownerId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "ownerId": {
-            "type": "string",
-            "format": "uuid"
           }
         }
       }
@@ -2627,11 +3197,6 @@
         "profile",
         "email"
       ]
-    }
-  ],
-  "tags": [
-    {
-      "name": "ValidationSet"
     }
   ]
 }

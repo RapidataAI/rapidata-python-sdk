@@ -402,8 +402,7 @@
           "Processing",
           "Completed",
           "Aborted"
-        ],
-        "description": "The current status of the batch upload."
+        ]
       },
       "BatchUploadUrlStatus": {
         "enum": [
@@ -471,7 +470,12 @@
             "description": "The identifier of the batch upload."
           },
           "status": {
-            "$ref": "#/components/schemas/BatchUploadStatus"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BatchUploadStatus"
+              }
+            ],
+            "description": "The current status of the batch upload."
           },
           "totalCount": {
             "type": "integer",
@@ -535,7 +539,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/BatchUploadStatus"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BatchUploadStatus"
+              }
+            ],
+            "description": "The aggregated status across all queried batch uploads."
           },
           "totalCount": {
             "type": "integer",

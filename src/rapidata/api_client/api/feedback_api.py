@@ -18,7 +18,7 @@ from typing_extensions import Annotated
 
 from pydantic import Field
 from typing_extensions import Annotated
-from rapidata.api_client.models.feedback_model import FeedbackModel
+from rapidata.api_client.models.submit_feedback_endpoint_input import SubmitFeedbackEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -41,7 +41,7 @@ class FeedbackApi:
     @validate_call
     def feedback_post(
         self,
-        feedback_model: Annotated[FeedbackModel, Field(description="The body content of the request")],
+        submit_feedback_endpoint_input: Annotated[SubmitFeedbackEndpointInput, Field(description="The feedback payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,8 +58,8 @@ class FeedbackApi:
         """Submits feedback about our services.
 
 
-        :param feedback_model: The body content of the request (required)
-        :type feedback_model: FeedbackModel
+        :param submit_feedback_endpoint_input: The feedback payload. (required)
+        :type submit_feedback_endpoint_input: SubmitFeedbackEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -83,7 +83,7 @@ class FeedbackApi:
         """ # noqa: E501
 
         _param = self._feedback_post_serialize(
-            feedback_model=feedback_model,
+            submit_feedback_endpoint_input=submit_feedback_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -92,6 +92,9 @@ class FeedbackApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -107,7 +110,7 @@ class FeedbackApi:
     @validate_call
     def feedback_post_with_http_info(
         self,
-        feedback_model: Annotated[FeedbackModel, Field(description="The body content of the request")],
+        submit_feedback_endpoint_input: Annotated[SubmitFeedbackEndpointInput, Field(description="The feedback payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -124,8 +127,8 @@ class FeedbackApi:
         """Submits feedback about our services.
 
 
-        :param feedback_model: The body content of the request (required)
-        :type feedback_model: FeedbackModel
+        :param submit_feedback_endpoint_input: The feedback payload. (required)
+        :type submit_feedback_endpoint_input: SubmitFeedbackEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -149,7 +152,7 @@ class FeedbackApi:
         """ # noqa: E501
 
         _param = self._feedback_post_serialize(
-            feedback_model=feedback_model,
+            submit_feedback_endpoint_input=submit_feedback_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -158,6 +161,9 @@ class FeedbackApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -173,7 +179,7 @@ class FeedbackApi:
     @validate_call
     def feedback_post_without_preload_content(
         self,
-        feedback_model: Annotated[FeedbackModel, Field(description="The body content of the request")],
+        submit_feedback_endpoint_input: Annotated[SubmitFeedbackEndpointInput, Field(description="The feedback payload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -190,8 +196,8 @@ class FeedbackApi:
         """Submits feedback about our services.
 
 
-        :param feedback_model: The body content of the request (required)
-        :type feedback_model: FeedbackModel
+        :param submit_feedback_endpoint_input: The feedback payload. (required)
+        :type submit_feedback_endpoint_input: SubmitFeedbackEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -215,7 +221,7 @@ class FeedbackApi:
         """ # noqa: E501
 
         _param = self._feedback_post_serialize(
-            feedback_model=feedback_model,
+            submit_feedback_endpoint_input=submit_feedback_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -224,6 +230,9 @@ class FeedbackApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -234,7 +243,7 @@ class FeedbackApi:
 
     def _feedback_post_serialize(
         self,
-        feedback_model,
+        submit_feedback_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -260,10 +269,17 @@ class FeedbackApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if feedback_model is not None:
-            _body_params = feedback_model
+        if submit_feedback_endpoint_input is not None:
+            _body_params = submit_feedback_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -272,9 +288,7 @@ class FeedbackApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )

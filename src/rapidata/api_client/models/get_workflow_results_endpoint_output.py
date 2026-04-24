@@ -36,7 +36,7 @@ class GetWorkflowResultsEndpointOutput(LazyValidatedModel):
     payload: IRapidPayload = Field(description="The payload of the rapid.")
     asset: IAssetModel = Field(description="The asset of the rapid.")
     responses: List[GetWorkflowResultsResultResponse]
-    state: RapidState
+    state: RapidState = Field(description="The state of the rapid.")
     context: Optional[StrictStr] = Field(default=None, description="The optional textual context of the rapid.")
     context_asset: Optional[IAssetModel] = Field(default=None, description="The optional asset shown as context to the user.", alias="contextAsset")
     decisiveness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The decisiveness of the rapid.")

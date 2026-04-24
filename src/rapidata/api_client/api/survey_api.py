@@ -16,7 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from rapidata.api_client.models.send_survey_model import SendSurveyModel
+from pydantic import Field
+from typing_extensions import Annotated
+from rapidata.api_client.models.send_survey_endpoint_input import SendSurveyEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -39,7 +41,7 @@ class SurveyApi:
     @validate_call
     def identity_survey_post(
         self,
-        send_survey_model: SendSurveyModel,
+        send_survey_endpoint_input: Annotated[SendSurveyEndpointInput, Field(description="The survey fields to submit.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -53,11 +55,11 @@ class SurveyApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Sends a survey.
+        """Submits a survey for the calling customer.
 
 
-        :param send_survey_model: (required)
-        :type send_survey_model: SendSurveyModel
+        :param send_survey_endpoint_input: The survey fields to submit. (required)
+        :type send_survey_endpoint_input: SendSurveyEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -81,7 +83,7 @@ class SurveyApi:
         """ # noqa: E501
 
         _param = self._identity_survey_post_serialize(
-            send_survey_model=send_survey_model,
+            send_survey_endpoint_input=send_survey_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -89,7 +91,10 @@ class SurveyApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -105,7 +110,7 @@ class SurveyApi:
     @validate_call
     def identity_survey_post_with_http_info(
         self,
-        send_survey_model: SendSurveyModel,
+        send_survey_endpoint_input: Annotated[SendSurveyEndpointInput, Field(description="The survey fields to submit.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -119,11 +124,11 @@ class SurveyApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Sends a survey.
+        """Submits a survey for the calling customer.
 
 
-        :param send_survey_model: (required)
-        :type send_survey_model: SendSurveyModel
+        :param send_survey_endpoint_input: The survey fields to submit. (required)
+        :type send_survey_endpoint_input: SendSurveyEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -147,7 +152,7 @@ class SurveyApi:
         """ # noqa: E501
 
         _param = self._identity_survey_post_serialize(
-            send_survey_model=send_survey_model,
+            send_survey_endpoint_input=send_survey_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -155,7 +160,10 @@ class SurveyApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -171,7 +179,7 @@ class SurveyApi:
     @validate_call
     def identity_survey_post_without_preload_content(
         self,
-        send_survey_model: SendSurveyModel,
+        send_survey_endpoint_input: Annotated[SendSurveyEndpointInput, Field(description="The survey fields to submit.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -185,11 +193,11 @@ class SurveyApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Sends a survey.
+        """Submits a survey for the calling customer.
 
 
-        :param send_survey_model: (required)
-        :type send_survey_model: SendSurveyModel
+        :param send_survey_endpoint_input: The survey fields to submit. (required)
+        :type send_survey_endpoint_input: SendSurveyEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -213,7 +221,7 @@ class SurveyApi:
         """ # noqa: E501
 
         _param = self._identity_survey_post_serialize(
-            send_survey_model=send_survey_model,
+            send_survey_endpoint_input=send_survey_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -221,7 +229,10 @@ class SurveyApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -232,7 +243,7 @@ class SurveyApi:
 
     def _identity_survey_post_serialize(
         self,
-        send_survey_model,
+        send_survey_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -258,10 +269,17 @@ class SurveyApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if send_survey_model is not None:
-            _body_params = send_survey_model
+        if send_survey_endpoint_input is not None:
+            _body_params = send_survey_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -270,9 +288,7 @@ class SurveyApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )

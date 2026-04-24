@@ -16,19 +16,21 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictBytes, StrictStr, field_validator
-from typing import List, Optional, Tuple, Union
+from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
+from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
-from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
-from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
-from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
-from rapidata.api_client.models.get_recommended_validation_set_result import GetRecommendedValidationSetResult
+from rapidata.api_client.models.add_validation_rapid_endpoint_input import AddValidationRapidEndpointInput
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
+from rapidata.api_client.models.create_validation_set_endpoint_input import CreateValidationSetEndpointInput
+from rapidata.api_client.models.create_validation_set_endpoint_output import CreateValidationSetEndpointOutput
+from rapidata.api_client.models.get_available_validation_sets_endpoint_output import GetAvailableValidationSetsEndpointOutput
+from rapidata.api_client.models.get_recommended_validation_set_endpoint_output import GetRecommendedValidationSetEndpointOutput
 from rapidata.api_client.models.get_validation_rapids_endpoint_paged_result_of_output import GetValidationRapidsEndpointPagedResultOfOutput
-from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
-from rapidata.api_client.models.paged_result_of_validation_set_model import PagedResultOfValidationSetModel
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.update_validation_set_model import UpdateValidationSetModel
+from rapidata.api_client.models.get_validation_set_by_id_endpoint_output import GetValidationSetByIdEndpointOutput
+from rapidata.api_client.models.query_validation_sets_endpoint_paged_result_of_output import QueryValidationSetsEndpointPagedResultOfOutput
+from rapidata.api_client.models.update_validation_set_dimensions_endpoint_input import UpdateValidationSetDimensionsEndpointInput
+from rapidata.api_client.models.update_validation_set_endpoint_input import UpdateValidationSetEndpointInput
+from rapidata.api_client.models.update_validation_set_should_alert_endpoint_input import UpdateValidationSetShouldAlertEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -51,7 +53,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_post(
         self,
-        create_validation_set_model: Annotated[CreateValidationSetModel, Field(description="The body request for creating a new validation set.")],
+        create_validation_set_endpoint_input: Annotated[CreateValidationSetEndpointInput, Field(description="The body describing the validation set to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -64,12 +66,12 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateEmptyValidationSetResult:
+    ) -> CreateValidationSetEndpointOutput:
         """Creates a new empty validation set.
 
 
-        :param create_validation_set_model: The body request for creating a new validation set. (required)
-        :type create_validation_set_model: CreateValidationSetModel
+        :param create_validation_set_endpoint_input: The body describing the validation set to create. (required)
+        :type create_validation_set_endpoint_input: CreateValidationSetEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -93,7 +95,7 @@ class ValidationSetApi:
         """ # noqa: E501
 
         _param = self._validation_set_post_serialize(
-            create_validation_set_model=create_validation_set_model,
+            create_validation_set_endpoint_input=create_validation_set_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -101,7 +103,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateEmptyValidationSetResult",
+            '200': "CreateValidationSetEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -117,7 +122,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_post_with_http_info(
         self,
-        create_validation_set_model: Annotated[CreateValidationSetModel, Field(description="The body request for creating a new validation set.")],
+        create_validation_set_endpoint_input: Annotated[CreateValidationSetEndpointInput, Field(description="The body describing the validation set to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -130,12 +135,12 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateEmptyValidationSetResult]:
+    ) -> ApiResponse[CreateValidationSetEndpointOutput]:
         """Creates a new empty validation set.
 
 
-        :param create_validation_set_model: The body request for creating a new validation set. (required)
-        :type create_validation_set_model: CreateValidationSetModel
+        :param create_validation_set_endpoint_input: The body describing the validation set to create. (required)
+        :type create_validation_set_endpoint_input: CreateValidationSetEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -159,7 +164,7 @@ class ValidationSetApi:
         """ # noqa: E501
 
         _param = self._validation_set_post_serialize(
-            create_validation_set_model=create_validation_set_model,
+            create_validation_set_endpoint_input=create_validation_set_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -167,7 +172,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateEmptyValidationSetResult",
+            '200': "CreateValidationSetEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -183,7 +191,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_post_without_preload_content(
         self,
-        create_validation_set_model: Annotated[CreateValidationSetModel, Field(description="The body request for creating a new validation set.")],
+        create_validation_set_endpoint_input: Annotated[CreateValidationSetEndpointInput, Field(description="The body describing the validation set to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -200,8 +208,8 @@ class ValidationSetApi:
         """Creates a new empty validation set.
 
 
-        :param create_validation_set_model: The body request for creating a new validation set. (required)
-        :type create_validation_set_model: CreateValidationSetModel
+        :param create_validation_set_endpoint_input: The body describing the validation set to create. (required)
+        :type create_validation_set_endpoint_input: CreateValidationSetEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -225,7 +233,7 @@ class ValidationSetApi:
         """ # noqa: E501
 
         _param = self._validation_set_post_serialize(
-            create_validation_set_model=create_validation_set_model,
+            create_validation_set_endpoint_input=create_validation_set_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -233,7 +241,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateEmptyValidationSetResult",
+            '200': "CreateValidationSetEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -244,7 +255,7 @@ class ValidationSetApi:
 
     def _validation_set_post_serialize(
         self,
-        create_validation_set_model,
+        create_validation_set_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -270,17 +281,15 @@ class ValidationSetApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_validation_set_model is not None:
-            _body_params = create_validation_set_model
+        if create_validation_set_endpoint_input is not None:
+            _body_params = create_validation_set_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -291,9 +300,7 @@ class ValidationSetApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -331,7 +338,7 @@ class ValidationSetApi:
         asset_type: Annotated[Optional[List[StrictStr]], Field(description="The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.")] = None,
         modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.")] = None,
         prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.")] = None,
-        instruction: Annotated[Optional[StrictStr], Field(description="An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction used to find validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -344,10 +351,9 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetRecommendedValidationSetResult:
+    ) -> GetRecommendedValidationSetEndpointOutput:
         """Gets a validation set that is available to the user and best matches the provided parameters.
 
-        This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.
 
         :param asset_type: The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.
         :type asset_type: List[str]
@@ -355,7 +361,7 @@ class ValidationSetApi:
         :type modality: List[str]
         :param prompt_type: The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.
         :type prompt_type: List[str]
-        :param instruction: An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
+        :param instruction: An instruction used to find validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -391,8 +397,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetRecommendedValidationSetResult",
-            '404': "ProblemDetails",
+            '200': "GetRecommendedValidationSetEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -411,7 +419,7 @@ class ValidationSetApi:
         asset_type: Annotated[Optional[List[StrictStr]], Field(description="The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.")] = None,
         modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.")] = None,
         prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.")] = None,
-        instruction: Annotated[Optional[StrictStr], Field(description="An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction used to find validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -424,10 +432,9 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetRecommendedValidationSetResult]:
+    ) -> ApiResponse[GetRecommendedValidationSetEndpointOutput]:
         """Gets a validation set that is available to the user and best matches the provided parameters.
 
-        This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.
 
         :param asset_type: The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.
         :type asset_type: List[str]
@@ -435,7 +442,7 @@ class ValidationSetApi:
         :type modality: List[str]
         :param prompt_type: The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.
         :type prompt_type: List[str]
-        :param instruction: An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
+        :param instruction: An instruction used to find validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -471,8 +478,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetRecommendedValidationSetResult",
-            '404': "ProblemDetails",
+            '200': "GetRecommendedValidationSetEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -491,7 +500,7 @@ class ValidationSetApi:
         asset_type: Annotated[Optional[List[StrictStr]], Field(description="The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.")] = None,
         modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.")] = None,
         prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.")] = None,
-        instruction: Annotated[Optional[StrictStr], Field(description="An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction used to find validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -507,7 +516,6 @@ class ValidationSetApi:
     ) -> RESTResponseType:
         """Gets a validation set that is available to the user and best matches the provided parameters.
 
-        This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.
 
         :param asset_type: The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.
         :type asset_type: List[str]
@@ -515,7 +523,7 @@ class ValidationSetApi:
         :type modality: List[str]
         :param prompt_type: The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.
         :type prompt_type: List[str]
-        :param instruction: An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
+        :param instruction: An instruction used to find validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -551,8 +559,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetRecommendedValidationSetResult",
-            '404': "ProblemDetails",
+            '200': "GetRecommendedValidationSetEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -617,9 +627,7 @@ class ValidationSetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -652,7 +660,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_validation_set_id_delete(
         self,
-        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to get.")],
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -666,10 +674,10 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Gets a validation set by the id.
+        """Deletes a validation set by id.
 
 
-        :param validation_set_id: The id of the validation set to get. (required)
+        :param validation_set_id: The id of the validation set to delete. (required)
         :type validation_set_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -703,6 +711,9 @@ class ValidationSetApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -718,7 +729,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_validation_set_id_delete_with_http_info(
         self,
-        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to get.")],
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -732,10 +743,10 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Gets a validation set by the id.
+        """Deletes a validation set by id.
 
 
-        :param validation_set_id: The id of the validation set to get. (required)
+        :param validation_set_id: The id of the validation set to delete. (required)
         :type validation_set_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -769,6 +780,9 @@ class ValidationSetApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -784,7 +798,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_validation_set_id_delete_without_preload_content(
         self,
-        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to get.")],
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -798,10 +812,10 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets a validation set by the id.
+        """Deletes a validation set by id.
 
 
-        :param validation_set_id: The id of the validation set to get. (required)
+        :param validation_set_id: The id of the validation set to delete. (required)
         :type validation_set_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -835,6 +849,9 @@ class ValidationSetApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -875,6 +892,13 @@ class ValidationSetApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -903,9 +927,10 @@ class ValidationSetApi:
 
 
     @validate_call
-    def validation_set_validation_set_id_export_get(
+    def validation_set_validation_set_id_dimensions_patch(
         self,
-        validation_set_id: StrictStr,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the dimensions for.")],
+        update_validation_set_dimensions_endpoint_input: Annotated[UpdateValidationSetDimensionsEndpointInput, Field(description="The body describing the new dimensions.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -918,11 +943,307 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> bytearray:
-        """Exports all rapids of a validation-set to a file.
+    ) -> None:
+        """Updates the dimensions of all rapids within a validation set.
 
 
-        :param validation_set_id:  (required)
+        :param validation_set_id: The id of the validation set to update the dimensions for. (required)
+        :type validation_set_id: str
+        :param update_validation_set_dimensions_endpoint_input: The body describing the new dimensions. (required)
+        :type update_validation_set_dimensions_endpoint_input: UpdateValidationSetDimensionsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_dimensions_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_dimensions_endpoint_input=update_validation_set_dimensions_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_set_validation_set_id_dimensions_patch_with_http_info(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the dimensions for.")],
+        update_validation_set_dimensions_endpoint_input: Annotated[UpdateValidationSetDimensionsEndpointInput, Field(description="The body describing the new dimensions.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates the dimensions of all rapids within a validation set.
+
+
+        :param validation_set_id: The id of the validation set to update the dimensions for. (required)
+        :type validation_set_id: str
+        :param update_validation_set_dimensions_endpoint_input: The body describing the new dimensions. (required)
+        :type update_validation_set_dimensions_endpoint_input: UpdateValidationSetDimensionsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_dimensions_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_dimensions_endpoint_input=update_validation_set_dimensions_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_set_validation_set_id_dimensions_patch_without_preload_content(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the dimensions for.")],
+        update_validation_set_dimensions_endpoint_input: Annotated[UpdateValidationSetDimensionsEndpointInput, Field(description="The body describing the new dimensions.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates the dimensions of all rapids within a validation set.
+
+
+        :param validation_set_id: The id of the validation set to update the dimensions for. (required)
+        :type validation_set_id: str
+        :param update_validation_set_dimensions_endpoint_input: The body describing the new dimensions. (required)
+        :type update_validation_set_dimensions_endpoint_input: UpdateValidationSetDimensionsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_dimensions_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_dimensions_endpoint_input=update_validation_set_dimensions_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_set_validation_set_id_dimensions_patch_serialize(
+        self,
+        validation_set_id,
+        update_validation_set_dimensions_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if validation_set_id is not None:
+            _path_params['validationSetId'] = validation_set_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_validation_set_dimensions_endpoint_input is not None:
+            _body_params = update_validation_set_dimensions_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/validation-set/{validationSetId}/dimensions',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_set_validation_set_id_export_get(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to export.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Exports all rapids of a validation set to a file.
+
+
+        :param validation_set_id: The id of the validation set to export. (required)
         :type validation_set_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -955,7 +1276,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -971,7 +1292,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_validation_set_id_export_get_with_http_info(
         self,
-        validation_set_id: StrictStr,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to export.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -984,11 +1305,11 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[bytearray]:
-        """Exports all rapids of a validation-set to a file.
+    ) -> ApiResponse[None]:
+        """Exports all rapids of a validation set to a file.
 
 
-        :param validation_set_id:  (required)
+        :param validation_set_id: The id of the validation set to export. (required)
         :type validation_set_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1021,7 +1342,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1037,7 +1358,7 @@ class ValidationSetApi:
     @validate_call
     def validation_set_validation_set_id_export_get_without_preload_content(
         self,
-        validation_set_id: StrictStr,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to export.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1051,10 +1372,10 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Exports all rapids of a validation-set to a file.
+        """Exports all rapids of a validation set to a file.
 
 
-        :param validation_set_id:  (required)
+        :param validation_set_id: The id of the validation set to export. (required)
         :type validation_set_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1087,7 +1408,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1128,15 +1449,6 @@ class ValidationSetApi:
         # process the body parameter
 
 
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
 
 
         # authentication setting
@@ -1180,8 +1492,8 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetValidationSetByIdResult:
-        """Gets a validation set by the id.
+    ) -> GetValidationSetByIdEndpointOutput:
+        """Gets a validation set by id.
 
 
         :param validation_set_id: The id of the validation set to get. (required)
@@ -1217,7 +1529,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetValidationSetByIdResult",
+            '200': "GetValidationSetByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1246,8 +1561,8 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetValidationSetByIdResult]:
-        """Gets a validation set by the id.
+    ) -> ApiResponse[GetValidationSetByIdEndpointOutput]:
+        """Gets a validation set by id.
 
 
         :param validation_set_id: The id of the validation set to get. (required)
@@ -1283,7 +1598,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetValidationSetByIdResult",
+            '200': "GetValidationSetByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1313,7 +1631,7 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets a validation set by the id.
+        """Gets a validation set by id.
 
 
         :param validation_set_id: The id of the validation set to get. (required)
@@ -1349,7 +1667,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetValidationSetByIdResult",
+            '200': "GetValidationSetByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1359,843 +1680,6 @@ class ValidationSetApi:
 
 
     def _validation_set_validation_set_id_get_serialize(
-        self,
-        validation_set_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if validation_set_id is not None:
-            _path_params['validationSetId'] = validation_set_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/validation-set/{validationSetId}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def validation_set_validation_set_id_patch(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The Id of the validation set to update the dimensions for.")],
-        update_validation_set_model: Annotated[UpdateValidationSetModel, Field(description="The body request for updating the shouldAlert property.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Updates different characteristics of a validation set.
-
-
-        :param validation_set_id: The Id of the validation set to update the dimensions for. (required)
-        :type validation_set_id: str
-        :param update_validation_set_model: The body request for updating the shouldAlert property. (required)
-        :type update_validation_set_model: UpdateValidationSetModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_patch_serialize(
-            validation_set_id=validation_set_id,
-            update_validation_set_model=update_validation_set_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def validation_set_validation_set_id_patch_with_http_info(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The Id of the validation set to update the dimensions for.")],
-        update_validation_set_model: Annotated[UpdateValidationSetModel, Field(description="The body request for updating the shouldAlert property.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates different characteristics of a validation set.
-
-
-        :param validation_set_id: The Id of the validation set to update the dimensions for. (required)
-        :type validation_set_id: str
-        :param update_validation_set_model: The body request for updating the shouldAlert property. (required)
-        :type update_validation_set_model: UpdateValidationSetModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_patch_serialize(
-            validation_set_id=validation_set_id,
-            update_validation_set_model=update_validation_set_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def validation_set_validation_set_id_patch_without_preload_content(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The Id of the validation set to update the dimensions for.")],
-        update_validation_set_model: Annotated[UpdateValidationSetModel, Field(description="The body request for updating the shouldAlert property.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates different characteristics of a validation set.
-
-
-        :param validation_set_id: The Id of the validation set to update the dimensions for. (required)
-        :type validation_set_id: str
-        :param update_validation_set_model: The body request for updating the shouldAlert property. (required)
-        :type update_validation_set_model: UpdateValidationSetModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_patch_serialize(
-            validation_set_id=validation_set_id,
-            update_validation_set_model=update_validation_set_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _validation_set_validation_set_id_patch_serialize(
-        self,
-        validation_set_id,
-        update_validation_set_model,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if validation_set_id is not None:
-            _path_params['validationSetId'] = validation_set_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if update_validation_set_model is not None:
-            _body_params = update_validation_set_model
-
-
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='PATCH',
-            resource_path='/validation-set/{validationSetId}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def validation_set_validation_set_id_rapid_post(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The validation set to add a rapid to.")],
-        add_validation_rapid_model: Annotated[AddValidationRapidModel, Field(description="The validation rapid data including asset, payload, and metadata.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Adds a new validation rapid to the validation set using JSON body.
-
-
-        :param validation_set_id: The validation set to add a rapid to. (required)
-        :type validation_set_id: str
-        :param add_validation_rapid_model: The validation rapid data including asset, payload, and metadata. (required)
-        :type add_validation_rapid_model: AddValidationRapidModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_rapid_post_serialize(
-            validation_set_id=validation_set_id,
-            add_validation_rapid_model=add_validation_rapid_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def validation_set_validation_set_id_rapid_post_with_http_info(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The validation set to add a rapid to.")],
-        add_validation_rapid_model: Annotated[AddValidationRapidModel, Field(description="The validation rapid data including asset, payload, and metadata.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Adds a new validation rapid to the validation set using JSON body.
-
-
-        :param validation_set_id: The validation set to add a rapid to. (required)
-        :type validation_set_id: str
-        :param add_validation_rapid_model: The validation rapid data including asset, payload, and metadata. (required)
-        :type add_validation_rapid_model: AddValidationRapidModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_rapid_post_serialize(
-            validation_set_id=validation_set_id,
-            add_validation_rapid_model=add_validation_rapid_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def validation_set_validation_set_id_rapid_post_without_preload_content(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The validation set to add a rapid to.")],
-        add_validation_rapid_model: Annotated[AddValidationRapidModel, Field(description="The validation rapid data including asset, payload, and metadata.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Adds a new validation rapid to the validation set using JSON body.
-
-
-        :param validation_set_id: The validation set to add a rapid to. (required)
-        :type validation_set_id: str
-        :param add_validation_rapid_model: The validation rapid data including asset, payload, and metadata. (required)
-        :type add_validation_rapid_model: AddValidationRapidModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_rapid_post_serialize(
-            validation_set_id=validation_set_id,
-            add_validation_rapid_model=add_validation_rapid_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _validation_set_validation_set_id_rapid_post_serialize(
-        self,
-        validation_set_id,
-        add_validation_rapid_model,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if validation_set_id is not None:
-            _path_params['validationSetId'] = validation_set_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if add_validation_rapid_model is not None:
-            _body_params = add_validation_rapid_model
-
-
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/validation-set/{validationSetId}/rapid',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def validation_set_validation_set_id_rapids_get(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetValidationRapidsEndpointPagedResultOfOutput:
-        """Queries the validation rapids for a specific validation set.
-
-
-        :param validation_set_id: The validation set to query. (required)
-        :type validation_set_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_rapids_get_serialize(
-            validation_set_id=validation_set_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def validation_set_validation_set_id_rapids_get_with_http_info(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetValidationRapidsEndpointPagedResultOfOutput]:
-        """Queries the validation rapids for a specific validation set.
-
-
-        :param validation_set_id: The validation set to query. (required)
-        :type validation_set_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_rapids_get_serialize(
-            validation_set_id=validation_set_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def validation_set_validation_set_id_rapids_get_without_preload_content(
-        self,
-        validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Queries the validation rapids for a specific validation set.
-
-
-        :param validation_set_id: The validation set to query. (required)
-        :type validation_set_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._validation_set_validation_set_id_rapids_get_serialize(
-            validation_set_id=validation_set_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _validation_set_validation_set_id_rapids_get_serialize(
         self,
         validation_set_id,
         _request_auth,
@@ -2245,7 +1729,7 @@ class ValidationSetApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/validation-set/{validationSetId}/rapids',
+            resource_path='/validation-set/{validationSetId}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2262,10 +1746,10 @@ class ValidationSetApi:
 
 
     @validate_call
-    def validation_set_validation_set_id_visibility_patch(
+    def validation_set_validation_set_id_patch(
         self,
-        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the visibility for.")],
-        is_public: Annotated[Optional[StrictBool], Field(description="Whether the validation set should be public or private.")] = None,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update.")],
+        update_validation_set_endpoint_input: Annotated[UpdateValidationSetEndpointInput, Field(description="The patch payload describing which fields should change.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2279,14 +1763,13 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates the visibility of a validation set.
+        """Updates different characteristics of a validation set using patch semantics.
 
-        Public validation sets are used to automatically add a validation set to an order if no validation set is specified.
 
-        :param validation_set_id: The id of the validation set to update the visibility for. (required)
+        :param validation_set_id: The id of the validation set to update. (required)
         :type validation_set_id: str
-        :param is_public: Whether the validation set should be public or private.
-        :type is_public: bool
+        :param update_validation_set_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_validation_set_endpoint_input: UpdateValidationSetEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2309,9 +1792,1281 @@ class ValidationSetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._validation_set_validation_set_id_visibility_patch_serialize(
+        _param = self._validation_set_validation_set_id_patch_serialize(
             validation_set_id=validation_set_id,
-            is_public=is_public,
+            update_validation_set_endpoint_input=update_validation_set_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_set_validation_set_id_patch_with_http_info(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update.")],
+        update_validation_set_endpoint_input: Annotated[UpdateValidationSetEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates different characteristics of a validation set using patch semantics.
+
+
+        :param validation_set_id: The id of the validation set to update. (required)
+        :type validation_set_id: str
+        :param update_validation_set_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_validation_set_endpoint_input: UpdateValidationSetEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_endpoint_input=update_validation_set_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_set_validation_set_id_patch_without_preload_content(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update.")],
+        update_validation_set_endpoint_input: Annotated[UpdateValidationSetEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates different characteristics of a validation set using patch semantics.
+
+
+        :param validation_set_id: The id of the validation set to update. (required)
+        :type validation_set_id: str
+        :param update_validation_set_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_validation_set_endpoint_input: UpdateValidationSetEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_endpoint_input=update_validation_set_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_set_validation_set_id_patch_serialize(
+        self,
+        validation_set_id,
+        update_validation_set_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if validation_set_id is not None:
+            _path_params['validationSetId'] = validation_set_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_validation_set_endpoint_input is not None:
+            _body_params = update_validation_set_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/validation-set/{validationSetId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapid_post(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The validation set to add a rapid to.")],
+        add_validation_rapid_endpoint_input: Annotated[AddValidationRapidEndpointInput, Field(description="The validation rapid data including asset, payload, and metadata.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Adds a new validation rapid to a validation set using a JSON body.
+
+
+        :param validation_set_id: The validation set to add a rapid to. (required)
+        :type validation_set_id: str
+        :param add_validation_rapid_endpoint_input: The validation rapid data including asset, payload, and metadata. (required)
+        :type add_validation_rapid_endpoint_input: AddValidationRapidEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapid_post_serialize(
+            validation_set_id=validation_set_id,
+            add_validation_rapid_endpoint_input=add_validation_rapid_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapid_post_with_http_info(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The validation set to add a rapid to.")],
+        add_validation_rapid_endpoint_input: Annotated[AddValidationRapidEndpointInput, Field(description="The validation rapid data including asset, payload, and metadata.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Adds a new validation rapid to a validation set using a JSON body.
+
+
+        :param validation_set_id: The validation set to add a rapid to. (required)
+        :type validation_set_id: str
+        :param add_validation_rapid_endpoint_input: The validation rapid data including asset, payload, and metadata. (required)
+        :type add_validation_rapid_endpoint_input: AddValidationRapidEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapid_post_serialize(
+            validation_set_id=validation_set_id,
+            add_validation_rapid_endpoint_input=add_validation_rapid_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapid_post_without_preload_content(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The validation set to add a rapid to.")],
+        add_validation_rapid_endpoint_input: Annotated[AddValidationRapidEndpointInput, Field(description="The validation rapid data including asset, payload, and metadata.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Adds a new validation rapid to a validation set using a JSON body.
+
+
+        :param validation_set_id: The validation set to add a rapid to. (required)
+        :type validation_set_id: str
+        :param add_validation_rapid_endpoint_input: The validation rapid data including asset, payload, and metadata. (required)
+        :type add_validation_rapid_endpoint_input: AddValidationRapidEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapid_post_serialize(
+            validation_set_id=validation_set_id,
+            add_validation_rapid_endpoint_input=add_validation_rapid_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_set_validation_set_id_rapid_post_serialize(
+        self,
+        validation_set_id,
+        add_validation_rapid_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if validation_set_id is not None:
+            _path_params['validationSetId'] = validation_set_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if add_validation_rapid_endpoint_input is not None:
+            _body_params = add_validation_rapid_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/validation-set/{validationSetId}/rapid',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapids_get(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by type.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetValidationRapidsEndpointPagedResultOfOutput:
+        """Queries the validation rapids for a specific validation set.
+
+
+        :param validation_set_id: The validation set to query. (required)
+        :type validation_set_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param type: Filter by type.
+        :type type: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapids_get_serialize(
+            validation_set_id=validation_set_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            type=type,
+            state=state,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapids_get_with_http_info(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by type.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetValidationRapidsEndpointPagedResultOfOutput]:
+        """Queries the validation rapids for a specific validation set.
+
+
+        :param validation_set_id: The validation set to query. (required)
+        :type validation_set_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param type: Filter by type.
+        :type type: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapids_get_serialize(
+            validation_set_id=validation_set_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            type=type,
+            state=state,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapids_get_without_preload_content(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by type.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Queries the validation rapids for a specific validation set.
+
+
+        :param validation_set_id: The validation set to query. (required)
+        :type validation_set_id: str
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param type: Filter by type.
+        :type type: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapids_get_serialize(
+            validation_set_id=validation_set_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            type=type,
+            state=state,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetValidationRapidsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_set_validation_set_id_rapids_get_serialize(
+        self,
+        validation_set_id,
+        page,
+        page_size,
+        sort,
+        id,
+        type,
+        state,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if validation_set_id is not None:
+            _path_params['validationSetId'] = validation_set_id
+        # process the query parameters
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if type is not None:
+            _param_val = type
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('type[' + _k + ']', _v))
+        if state is not None:
+            _param_val = state
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('state[' + _k + ']', _v))
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/validation-set/{validationSetId}/rapids',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_set_validation_set_id_should_alert_patch(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update.")],
+        update_validation_set_should_alert_endpoint_input: Annotated[UpdateValidationSetShouldAlertEndpointInput, Field(description="The body describing the new shouldAlert value.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates the shouldAlert field on all rapids within a validation set.
+
+
+        :param validation_set_id: The id of the validation set to update. (required)
+        :type validation_set_id: str
+        :param update_validation_set_should_alert_endpoint_input: The body describing the new shouldAlert value. (required)
+        :type update_validation_set_should_alert_endpoint_input: UpdateValidationSetShouldAlertEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_should_alert_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_should_alert_endpoint_input=update_validation_set_should_alert_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_set_validation_set_id_should_alert_patch_with_http_info(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update.")],
+        update_validation_set_should_alert_endpoint_input: Annotated[UpdateValidationSetShouldAlertEndpointInput, Field(description="The body describing the new shouldAlert value.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates the shouldAlert field on all rapids within a validation set.
+
+
+        :param validation_set_id: The id of the validation set to update. (required)
+        :type validation_set_id: str
+        :param update_validation_set_should_alert_endpoint_input: The body describing the new shouldAlert value. (required)
+        :type update_validation_set_should_alert_endpoint_input: UpdateValidationSetShouldAlertEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_should_alert_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_should_alert_endpoint_input=update_validation_set_should_alert_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_set_validation_set_id_should_alert_patch_without_preload_content(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update.")],
+        update_validation_set_should_alert_endpoint_input: Annotated[UpdateValidationSetShouldAlertEndpointInput, Field(description="The body describing the new shouldAlert value.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates the shouldAlert field on all rapids within a validation set.
+
+
+        :param validation_set_id: The id of the validation set to update. (required)
+        :type validation_set_id: str
+        :param update_validation_set_should_alert_endpoint_input: The body describing the new shouldAlert value. (required)
+        :type update_validation_set_should_alert_endpoint_input: UpdateValidationSetShouldAlertEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_should_alert_patch_serialize(
+            validation_set_id=validation_set_id,
+            update_validation_set_should_alert_endpoint_input=update_validation_set_should_alert_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_set_validation_set_id_should_alert_patch_serialize(
+        self,
+        validation_set_id,
+        update_validation_set_should_alert_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if validation_set_id is not None:
+            _path_params['validationSetId'] = validation_set_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_validation_set_should_alert_endpoint_input is not None:
+            _body_params = update_validation_set_should_alert_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/validation-set/{validationSetId}/shouldAlert',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_set_validation_set_id_update_labeling_hints_post(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the labeling hints for.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Refreshes the labeling hints for a validation set.
+
+        This endpoint is a no-op. Labeling hints are now managed automatically.
+
+        :param validation_set_id: The id of the validation set to update the labeling hints for. (required)
+        :type validation_set_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_update_labeling_hints_post_serialize(
+            validation_set_id=validation_set_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2333,10 +3088,9 @@ class ValidationSetApi:
 
 
     @validate_call
-    def validation_set_validation_set_id_visibility_patch_with_http_info(
+    def validation_set_validation_set_id_update_labeling_hints_post_with_http_info(
         self,
-        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the visibility for.")],
-        is_public: Annotated[Optional[StrictBool], Field(description="Whether the validation set should be public or private.")] = None,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the labeling hints for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2350,14 +3104,12 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates the visibility of a validation set.
+        """Refreshes the labeling hints for a validation set.
 
-        Public validation sets are used to automatically add a validation set to an order if no validation set is specified.
+        This endpoint is a no-op. Labeling hints are now managed automatically.
 
-        :param validation_set_id: The id of the validation set to update the visibility for. (required)
+        :param validation_set_id: The id of the validation set to update the labeling hints for. (required)
         :type validation_set_id: str
-        :param is_public: Whether the validation set should be public or private.
-        :type is_public: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2380,9 +3132,8 @@ class ValidationSetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._validation_set_validation_set_id_visibility_patch_serialize(
+        _param = self._validation_set_validation_set_id_update_labeling_hints_post_serialize(
             validation_set_id=validation_set_id,
-            is_public=is_public,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2404,10 +3155,9 @@ class ValidationSetApi:
 
 
     @validate_call
-    def validation_set_validation_set_id_visibility_patch_without_preload_content(
+    def validation_set_validation_set_id_update_labeling_hints_post_without_preload_content(
         self,
-        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the visibility for.")],
-        is_public: Annotated[Optional[StrictBool], Field(description="Whether the validation set should be public or private.")] = None,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the labeling hints for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2421,13 +3171,136 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
+        """Refreshes the labeling hints for a validation set.
+
+        This endpoint is a no-op. Labeling hints are now managed automatically.
+
+        :param validation_set_id: The id of the validation set to update the labeling hints for. (required)
+        :type validation_set_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_update_labeling_hints_post_serialize(
+            validation_set_id=validation_set_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_set_validation_set_id_update_labeling_hints_post_serialize(
+        self,
+        validation_set_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if validation_set_id is not None:
+            _path_params['validationSetId'] = validation_set_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/validation-set/{validationSetId}/update-labeling-hints',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_set_validation_set_id_visibility_patch(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the visibility for.")],
+        is_public: Annotated[StrictBool, Field(description="Whether the validation set should be public or private.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
         """Updates the visibility of a validation set.
 
         Public validation sets are used to automatically add a validation set to an order if no validation set is specified.
 
         :param validation_set_id: The id of the validation set to update the visibility for. (required)
         :type validation_set_id: str
-        :param is_public: Whether the validation set should be public or private.
+        :param is_public: Whether the validation set should be public or private. (required)
         :type is_public: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2462,6 +3335,157 @@ class ValidationSetApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_set_validation_set_id_visibility_patch_with_http_info(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the visibility for.")],
+        is_public: Annotated[StrictBool, Field(description="Whether the validation set should be public or private.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates the visibility of a validation set.
+
+        Public validation sets are used to automatically add a validation set to an order if no validation set is specified.
+
+        :param validation_set_id: The id of the validation set to update the visibility for. (required)
+        :type validation_set_id: str
+        :param is_public: Whether the validation set should be public or private. (required)
+        :type is_public: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_visibility_patch_serialize(
+            validation_set_id=validation_set_id,
+            is_public=is_public,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_set_validation_set_id_visibility_patch_without_preload_content(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set to update the visibility for.")],
+        is_public: Annotated[StrictBool, Field(description="Whether the validation set should be public or private.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates the visibility of a validation set.
+
+        Public validation sets are used to automatically add a validation set to an order if no validation set is specified.
+
+        :param validation_set_id: The id of the validation set to update the visibility for. (required)
+        :type validation_set_id: str
+        :param is_public: Whether the validation set should be public or private. (required)
+        :type is_public: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_visibility_patch_serialize(
+            validation_set_id=validation_set_id,
+            is_public=is_public,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2507,6 +3531,13 @@ class ValidationSetApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
@@ -2549,7 +3580,7 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetAvailableValidationSetsResult:
+    ) -> GetAvailableValidationSetsEndpointOutput:
         """Gets the available validation sets for the current user.
 
 
@@ -2583,7 +3614,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAvailableValidationSetsResult",
+            '200': "GetAvailableValidationSetsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2611,7 +3645,7 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetAvailableValidationSetsResult]:
+    ) -> ApiResponse[GetAvailableValidationSetsEndpointOutput]:
         """Gets the available validation sets for the current user.
 
 
@@ -2645,7 +3679,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAvailableValidationSetsResult",
+            '200': "GetAvailableValidationSetsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2707,7 +3744,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAvailableValidationSetsResult",
+            '200': "GetAvailableValidationSetsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2749,9 +3789,7 @@ class ValidationSetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -2784,7 +3822,18 @@ class ValidationSetApi:
     @validate_call
     def validation_sets_get(
         self,
-        model: Annotated[Optional[QueryModel], Field(description="The model containing the query parameters.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        asset_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by asset_type.")] = None,
+        modality: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by modality.")] = None,
+        prompt_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_type.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2797,12 +3846,34 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfValidationSetModel:
+    ) -> QueryValidationSetsEndpointPagedResultOfOutput:
         """Queries available validation sets based on the provided filter, paging and sorting criteria.
 
 
-        :param model: The model containing the query parameters.
-        :type model: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param asset_type: Filter by asset_type.
+        :type asset_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param modality: Filter by modality.
+        :type modality: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_type: Filter by prompt_type.
+        :type prompt_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2826,7 +3897,18 @@ class ValidationSetApi:
         """ # noqa: E501
 
         _param = self._validation_sets_get_serialize(
-            model=model,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            asset_type=asset_type,
+            modality=modality,
+            prompt_type=prompt_type,
+            is_public=is_public,
+            owner_id=owner_id,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2834,7 +3916,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfValidationSetModel",
+            '200': "QueryValidationSetsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2850,7 +3935,18 @@ class ValidationSetApi:
     @validate_call
     def validation_sets_get_with_http_info(
         self,
-        model: Annotated[Optional[QueryModel], Field(description="The model containing the query parameters.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        asset_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by asset_type.")] = None,
+        modality: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by modality.")] = None,
+        prompt_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_type.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2863,12 +3959,34 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfValidationSetModel]:
+    ) -> ApiResponse[QueryValidationSetsEndpointPagedResultOfOutput]:
         """Queries available validation sets based on the provided filter, paging and sorting criteria.
 
 
-        :param model: The model containing the query parameters.
-        :type model: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param asset_type: Filter by asset_type.
+        :type asset_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param modality: Filter by modality.
+        :type modality: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_type: Filter by prompt_type.
+        :type prompt_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2892,7 +4010,18 @@ class ValidationSetApi:
         """ # noqa: E501
 
         _param = self._validation_sets_get_serialize(
-            model=model,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            asset_type=asset_type,
+            modality=modality,
+            prompt_type=prompt_type,
+            is_public=is_public,
+            owner_id=owner_id,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2900,7 +4029,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfValidationSetModel",
+            '200': "QueryValidationSetsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2916,7 +4048,18 @@ class ValidationSetApi:
     @validate_call
     def validation_sets_get_without_preload_content(
         self,
-        model: Annotated[Optional[QueryModel], Field(description="The model containing the query parameters.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        asset_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by asset_type.")] = None,
+        modality: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by modality.")] = None,
+        prompt_type: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_type.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        owner_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_id.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2933,8 +4076,30 @@ class ValidationSetApi:
         """Queries available validation sets based on the provided filter, paging and sorting criteria.
 
 
-        :param model: The model containing the query parameters.
-        :type model: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param asset_type: Filter by asset_type.
+        :type asset_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param modality: Filter by modality.
+        :type modality: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_type: Filter by prompt_type.
+        :type prompt_type: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_id: Filter by owner_id.
+        :type owner_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param created_at: Filter by created_at.
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2958,7 +4123,18 @@ class ValidationSetApi:
         """ # noqa: E501
 
         _param = self._validation_sets_get_serialize(
-            model=model,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            asset_type=asset_type,
+            modality=modality,
+            prompt_type=prompt_type,
+            is_public=is_public,
+            owner_id=owner_id,
+            owner_mail=owner_mail,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2966,7 +4142,10 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfValidationSetModel",
+            '200': "QueryValidationSetsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2977,7 +4156,18 @@ class ValidationSetApi:
 
     def _validation_sets_get_serialize(
         self,
-        model,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
+        asset_type,
+        modality,
+        prompt_type,
+        is_public,
+        owner_id,
+        owner_mail,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -2987,6 +4177,7 @@ class ValidationSetApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -3000,10 +4191,90 @@ class ValidationSetApi:
 
         # process the path parameters
         # process the query parameters
-        if model is not None:
+        if page is not None:
             
-            _query_params.append(('model', model))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if asset_type is not None:
+            _param_val = asset_type
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('asset_type[' + _k + ']', _v))
+        if modality is not None:
+            _param_val = modality
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('modality[' + _k + ']', _v))
+        if prompt_type is not None:
+            _param_val = prompt_type
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('prompt_type[' + _k + ']', _v))
+        if is_public is not None:
+            _param_val = is_public
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('is_public[' + _k + ']', _v))
+        if owner_id is not None:
+            _param_val = owner_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_id[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
+        if created_at is not None:
+            _param_val = created_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('created_at[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -3013,9 +4284,7 @@ class ValidationSetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

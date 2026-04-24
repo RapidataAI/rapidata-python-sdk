@@ -1154,8 +1154,7 @@
         "enum": [
           "Automatic",
           "Manual"
-        ],
-        "description": "The current boost mode."
+        ]
       },
       "BoostStatusModel": {
         "enum": [
@@ -1163,8 +1162,7 @@
           "Inactive",
           "Partial",
           "Unknown"
-        ],
-        "description": "The current boost status."
+        ]
       },
       "CampaignStatusModel": {
         "enum": [
@@ -1357,7 +1355,12 @@
         "type": "object",
         "properties": {
           "mode": {
-            "$ref": "#/components/schemas/BoostMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostMode"
+              }
+            ],
+            "description": "The current boost mode."
           },
           "manualOverrideLevel": {
             "type": "integer",
@@ -1375,36 +1378,28 @@
           "languageBoosts": {
             "allOf": [
               {
-                "allOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LanguageBoostOutput"
-                    },
-                    "nullable": true
-                  }
-                ],
-                "deprecated": true
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LanguageBoostOutput"
+                },
+                "nullable": true
               }
             ],
-            "description": "Language-specific boost insights."
+            "description": "Language-specific boost insights.",
+            "deprecated": true
           },
           "audienceBoosts": {
             "allOf": [
               {
-                "allOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
-                    },
-                    "nullable": true
-                  }
-                ],
-                "deprecated": true
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
+                },
+                "nullable": true
               }
             ],
-            "description": "Audience boost insights."
+            "description": "Audience boost insights.",
+            "deprecated": true
           },
           "prospectBlacklist": {
             "allOf": [
@@ -1452,10 +1447,20 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/BoostStatusModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostStatusModel"
+              }
+            ],
+            "description": "The current boost status."
           },
           "mode": {
-            "$ref": "#/components/schemas/BoostMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostMode"
+              }
+            ],
+            "description": "The current boost mode."
           },
           "activeCampaigns": {
             "allOf": [
@@ -1520,7 +1525,12 @@
             "description": "The name of the campaign."
           },
           "status": {
-            "$ref": "#/components/schemas/CampaignStatusModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CampaignStatusModel"
+              }
+            ],
+            "description": "The current status of the campaign."
           },
           "priority": {
             "type": "integer",
@@ -1536,7 +1546,12 @@
             "description": "The boosting profile configuration."
           },
           "boostingControlMode": {
-            "$ref": "#/components/schemas/BoostingControlMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingControlMode"
+              }
+            ],
+            "description": "The boosting control mode."
           },
           "hasBooster": {
             "type": "boolean",
@@ -2400,7 +2415,12 @@
             "description": "The name of the campaign."
           },
           "status": {
-            "$ref": "#/components/schemas/CampaignStatusModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CampaignStatusModel"
+              }
+            ],
+            "description": "The current status of the campaign."
           },
           "priority": {
             "type": "integer",
@@ -2572,80 +2592,62 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The new name for the campaign.",
-            "nullable": true
+            "description": "The new name for the campaign."
           },
           "priority": {
             "type": "integer",
             "description": "The new priority value for the campaign.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "requiresBooster": {
             "type": "boolean",
-            "description": "When true, recomputes the boosting profile from the campaign's current filters\n (via BoostingProfileEvaluator) and ensures any required filtered Kayzen audience\n exists and is populated. When false, clears the boosting profile.\n Use this to toggle boost on/off without having to compute a BoostingProfile client-side.\n Ignored when BoostingProfile is also set (explicit profile wins).",
-            "nullable": true
+            "description": "When true, recomputes the boosting profile from the campaign's current filters\n (via BoostingProfileEvaluator) and ensures any required filtered Kayzen audience\n exists and is populated. When false, clears the boosting profile.\n Use this to toggle boost on/off without having to compute a BoostingProfile client-side.\n Ignored when BoostingProfile is also set (explicit profile wins)."
           },
           "boostingProfile": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/BoostingProfileModel"
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "The boosting profile configuration. Takes precedence over RequiresBooster when both are set.\n Prefer RequiresBooster for the common on/off toggle — it lets the server derive the right\n profile (including filtered-audience creation) from the campaign's filters."
           },
           "stickyConfig": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/StickyConfigModel"
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "The sticky behavior configuration."
           },
           "filters": {
-            "oneOf": [
+            "allOf": [
               {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ICampaignFilterModel"
                 }
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "The targeting filters for the campaign."
           },
           "selections": {
-            "oneOf": [
+            "allOf": [
               {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ICampaignSelectionModel"
                 }
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "The rapid selections for the campaign."
           },
           "featureFlags": {
-            "oneOf": [
+            "allOf": [
               {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/FeatureFlag"
                 }
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "The feature flags for the campaign."

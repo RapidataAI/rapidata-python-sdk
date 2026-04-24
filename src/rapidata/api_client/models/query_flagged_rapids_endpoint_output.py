@@ -39,7 +39,7 @@ class QueryFlaggedRapidsEndpointOutput(LazyValidatedModel):
     payload: IRapidPayload = Field(description="The payload of the rapid.")
     referee: IRefereeInfo = Field(description="The referee that created the rapid.")
     asset: IAssetModel = Field(description="The asset associated with the rapid.")
-    state: RapidState
+    state: RapidState = Field(description="The state of the rapid.")
     has_responses: StrictBool = Field(description="Whether the rapid has any responses.", alias="hasResponses")
     should_accept_incorrect: StrictBool = Field(description="Whether the rapid should accept incorrect answers.", alias="shouldAcceptIncorrect")
     truth: IValidationTruth = Field(description="The optional validation truth of the rapid.")

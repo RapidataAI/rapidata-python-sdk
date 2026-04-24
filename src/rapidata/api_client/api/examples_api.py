@@ -20,7 +20,9 @@ from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.add_example_to_audience_endpoint_input import AddExampleToAudienceEndpointInput
-from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
+from rapidata.api_client.models.add_example_to_audience_endpoint_output import AddExampleToAudienceEndpointOutput
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
+from rapidata.api_client.models.delete_audience_example_endpoint_output import DeleteAudienceExampleEndpointOutput
 from rapidata.api_client.models.query_examples_for_audience_endpoint_paged_result_of_output import QueryExamplesForAudienceEndpointPagedResultOfOutput
 from rapidata.api_client.models.update_audience_example_endpoint_input import UpdateAudienceExampleEndpointInput
 
@@ -371,7 +373,7 @@ class ExamplesApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> AddExampleToAudienceEndpointOutput:
         """Adds a new example to an audience.
 
 
@@ -411,7 +413,7 @@ class ExamplesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "AddExampleToAudienceEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -444,7 +446,7 @@ class ExamplesApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[AddExampleToAudienceEndpointOutput]:
         """Adds a new example to an audience.
 
 
@@ -484,7 +486,7 @@ class ExamplesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "AddExampleToAudienceEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -557,7 +559,7 @@ class ExamplesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "AddExampleToAudienceEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -658,8 +660,8 @@ class ExamplesApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        visibility: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by visibility.")] = None,
-        is_common_sense: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_common_sense.")] = None,
+        visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
+        is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -685,9 +687,9 @@ class ExamplesApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param visibility: Filter by visibility.
-        :type visibility: AudiencesGetNameParameter
+        :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
-        :type is_common_sense: AudiencesGetNameParameter
+        :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -747,8 +749,8 @@ class ExamplesApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        visibility: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by visibility.")] = None,
-        is_common_sense: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_common_sense.")] = None,
+        visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
+        is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -774,9 +776,9 @@ class ExamplesApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param visibility: Filter by visibility.
-        :type visibility: AudiencesGetNameParameter
+        :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
-        :type is_common_sense: AudiencesGetNameParameter
+        :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -836,8 +838,8 @@ class ExamplesApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        visibility: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by visibility.")] = None,
-        is_common_sense: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by is_common_sense.")] = None,
+        visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
+        is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -863,9 +865,9 @@ class ExamplesApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param visibility: Filter by visibility.
-        :type visibility: AudiencesGetNameParameter
+        :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
-        :type is_common_sense: AudiencesGetNameParameter
+        :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1030,7 +1032,7 @@ class ExamplesApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> DeleteAudienceExampleEndpointOutput:
         """Deletes the specified audience example.
 
 
@@ -1067,7 +1069,7 @@ class ExamplesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "DeleteAudienceExampleEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1099,7 +1101,7 @@ class ExamplesApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[DeleteAudienceExampleEndpointOutput]:
         """Deletes the specified audience example.
 
 
@@ -1136,7 +1138,7 @@ class ExamplesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "DeleteAudienceExampleEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1205,7 +1207,7 @@ class ExamplesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "DeleteAudienceExampleEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
