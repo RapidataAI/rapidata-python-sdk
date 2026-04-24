@@ -154,7 +154,9 @@ class RapidataOrderManager:
             raise TypeError("Priority must be an integer or None")
 
         if priority is not None and priority < 0:
-            raise ValueError("Priority must be greater than 0 or None")
+            raise ValueError(
+                "Priority must be a non-negative integer or None"
+            )
 
         self.__priority = priority
 
