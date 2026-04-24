@@ -293,8 +293,10 @@ class ApiClient:
         :return: ApiResponse
         """
 
-        msg = "RESTResponse.read() must be called before passing it to response_deserialize()"
-        assert response_data.data is not None, msg
+        if response_data.data is None:
+            raise ApiValueError(
+                "RESTResponse.read() must be called before passing it to response_deserialize()"
+            )
 
         response_type = response_types_map.get(str(response_data.status), None)
         if not response_type and isinstance(response_data.status, int) and 100 <= response_data.status <= 599:
@@ -433,14 +435,20 @@ class ApiClient:
         if isinstance(klass, str):
             if klass.startswith('List['):
                 m = re.match(r'List\[(.*)]', klass)
-                assert m is not None, "Malformed List type definition"
+                if m is None:
+                    raise ApiValueError(
+                        f"Malformed List type definition: {klass!r}"
+                    )
                 sub_kls = m.group(1)
                 return [self.__deserialize(sub_data, sub_kls)
                         for sub_data in data]
 
             if klass.startswith('Dict['):
                 m = re.match(r'Dict\[([^,]*), (.*)]', klass)
-                assert m is not None, "Malformed Dict type definition"
+                if m is None:
+                    raise ApiValueError(
+                        f"Malformed Dict type definition: {klass!r}"
+                    )
                 sub_kls = m.group(2)
                 return {k: self.__deserialize(v, sub_kls)
                         for k, v in data.items()}

@@ -116,7 +116,10 @@ class AssetUploader:
 
     def upload_asset(self, asset: str) -> str:
         logger.debug("Uploading asset: %s", asset)
-        assert isinstance(asset, str), "Asset must be a string"
+        if not isinstance(asset, str):
+            raise TypeError(
+                f"Asset must be a string, got {type(asset).__name__}"
+            )
 
         if re.match(r"^https?://", asset):
             return self._upload_url_asset(asset)
