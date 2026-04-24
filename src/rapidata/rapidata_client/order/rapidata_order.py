@@ -330,6 +330,16 @@ class RapidataOrder:
                 f"Once started, run this method again to display the progress bar."
             )
 
+        # Terminal states that should break the progress-bar loop
+        # regardless of completion_percentage. Without this check a
+        # Failed or Paused order would pin the caller's thread forever.
+        terminal_states = {
+            OrderState.COMPLETED,
+            OrderState.PAUSED,
+            OrderState.FAILED,
+            OrderState.MANUALREVIEW,
+        }
+
         with tqdm(
             total=100,
             desc="Processing order",
@@ -348,6 +358,14 @@ class RapidataOrder:
                     last_percentage = current_percentage
 
                 if current_percentage >= 100:
+                    break
+
+                current_state = self.get_status()
+                if current_state in terminal_states:
+                    logger.info(
+                        "Progress bar exiting early: order is in state %s",
+                        current_state,
+                    )
                     break
 
                 sleep(refresh_rate)
