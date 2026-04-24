@@ -65,10 +65,14 @@ class AssetUploader:
     def get_file_cache_key(self, asset: str) -> str:
         """Generate cache key for a file, including environment."""
         env = self.openapi_service.environment
-        if not os.path.exists(asset):
-            raise FileNotFoundError(f"File not found: {asset}")
-
-        stat = os.stat(asset)
+        # Single `os.stat` call — guards against the TOCTOU window
+        # between an existence check and the stat, and produces a
+        # clearer error whether the file is missing, is a directory,
+        # or the caller lacks permission.
+        try:
+            stat = os.stat(asset)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"File not found: {asset}") from None
         return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
 
     def get_url_cache_key(self, url: str) -> str:
