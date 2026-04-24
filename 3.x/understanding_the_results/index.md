@@ -44,9 +44,7 @@ Here's an example of the results you might receive when running a COMPARE task (
                   "userScores": {
                       "global": 0.4469
                   },
-                  "age": "Unknown",
-                  "gender": "Unknown",
-                  "occupation": "Unknown"
+                  "demographics": {}
               }
           },
           {
@@ -57,9 +55,11 @@ Here's an example of the results you might receive when running a COMPARE task (
                   "userScores": {
                       "global": 0.3923
                   },
-                  "age": "0-17",
-                  "gender": "Other",
-                  "occupation": "Other Employment"
+                  "demographics": {
+                      "age": "0-17",
+                      "gender": "Other",
+                      "occupation": "Other Employment"
+                  }
               }
           },
           {
@@ -70,9 +70,11 @@ Here's an example of the results you might receive when running a COMPARE task (
                   "userScores": {
                       "global": 0.3568
                   },
-                  "age": "0-17",
-                  "gender": "Other",
-                  "occupation": "Healthcare"
+                  "demographics": {
+                      "age": "0-17",
+                      "gender": "Other",
+                      "occupation": "Healthcare"
+                  }
               }
           }
       ]
@@ -136,9 +138,7 @@ Here's an example of the results you might receive when running a COMPARE task (
             - `language`: Language in which the labeler viewed the task
             - `userScores`: A score representing the labeler's reliability across different dimensions
                 - `global`: The global userScore of the labeler, which is a measure of their overall reliability
-            - `age`: Age group of the labeler
-            - `gender`: The gender of the labeler
-            - `occupation`: The occupation of the labeler
+            - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`).
 
 ## Understanding the User Scores
 
