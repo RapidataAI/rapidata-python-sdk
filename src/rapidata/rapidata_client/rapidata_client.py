@@ -5,7 +5,6 @@ import requests
 from packaging import version
 from rapidata import __version__
 import uuid
-import random
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
@@ -89,9 +88,10 @@ class RapidataClient:
             job (JobManager): The JobManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
-        tracer.set_session_id(
-            uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
-        )
+        # Use `uuid4()` — `random.Random()` is Mersenne Twister and
+        # offers nothing over the stdlib UUID factory, which is seeded
+        # from `os.urandom` on every supported platform.
+        tracer.set_session_id(uuid.uuid4().hex)
 
         # Fall back to RAPIDATA_CLIENT_ID / RAPIDATA_CLIENT_SECRET /
         # RAPIDATA_ENVIRONMENT when the caller didn't pass them explicitly.
