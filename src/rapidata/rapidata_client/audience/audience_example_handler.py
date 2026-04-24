@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING, Any, cast
+from typing import Literal, TYPE_CHECKING, Any, Sequence, cast
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+    from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+    from rapidata.api_client.models.feature_flag import FeatureFlag
 
 from rapidata.api_client.models.i_example_truth_classify_example_truth import (
     IExampleTruthClassifyExampleTruth,
@@ -36,6 +38,15 @@ class AudienceExampleHandler:
         self._asset_uploader = AssetUploader(openapi_service)
         self._asset_mapper = AssetMapper()
 
+    @staticmethod
+    def _settings_to_feature_flags(
+        settings: Sequence[RapidataSetting] | None,
+    ) -> list[FeatureFlag] | None:
+        """Convert a sequence of RapidataSettings into the API feature flag list."""
+        if not settings:
+            return None
+        return [setting._to_feature_flag() for setting in settings]
+
     def add_classification_example(
         self,
         instruction: str,
@@ -46,6 +57,7 @@ class AudienceExampleHandler:
         context: str | None = None,
         media_context: str | None = None,
         explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
     ) -> None:
         """add a classification example to the audience
 
@@ -58,6 +70,7 @@ class AudienceExampleHandler:
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``NoShuffleSetting`` to keep the order of answer options). Defaults to None.
         """
         from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
             AddExampleToAudienceEndpointInput,
@@ -107,6 +120,7 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=len(truth) / len(answer_options),
+                featureFlags=self._settings_to_feature_flags(settings),
             ),
         )
 
@@ -119,6 +133,7 @@ class AudienceExampleHandler:
         context: str | None = None,
         media_context: str | None = None,
         explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
     ) -> None:
         """add a compare example to the audience
 
@@ -130,6 +145,7 @@ class AudienceExampleHandler:
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``ComparePanoramaSetting`` to render panoramic images). Defaults to None.
         """
         from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
             AddExampleToAudienceEndpointInput,
@@ -181,6 +197,7 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=0.5,
+                featureFlags=self._settings_to_feature_flags(settings),
             ),
         )
 
@@ -240,6 +257,7 @@ class AudienceExampleHandler:
                 contextAsset=context_asset,
                 explanation=rapid.explanation,
                 randomCorrectProbability=rapid.random_correct_probability or 0.5,
+                featureFlags=self._settings_to_feature_flags(rapid.settings),
             ),
         )
 
