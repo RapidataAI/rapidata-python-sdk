@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 import urllib.parse
+import warnings
 import webbrowser
 from colorama import Fore
 from typing import Literal, TYPE_CHECKING
@@ -39,6 +40,35 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.datapoints._datapoint import Datapoint
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
     from typing import Sequence
+
+
+def _resolve_explanations_kwarg(
+    explanations: list[str | None] | None,
+    legacy_explanation: list[str | None] | None,
+) -> list[str | None] | None:
+    """Accept the deprecated singular ``explanation`` kwarg as an alias for ``explanations``.
+
+    The ``explanation`` parameter on ``create_compare_set``/``create_select_words_set``/
+    ``create_locate_set``/``create_draw_set``/``create_timestamp_set`` was inconsistent
+    with ``create_classification_set``, which used the plural ``explanations``. The
+    plural form is now the canonical name (matching ``datapoints``, ``contexts``,
+    ``media_contexts``, ``truths``, etc.). The singular alias is kept for backwards
+    compatibility and emits a :class:`DeprecationWarning`.
+    """
+    if legacy_explanation is None:
+        return explanations
+    warnings.warn(
+        "'explanation' is deprecated and will be removed in a future release; "
+        "use 'explanations' instead (it is a list of explanations, one per datapoint).",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+    if explanations is not None:
+        raise TypeError(
+            "cannot pass both 'explanations' and the deprecated 'explanation' "
+            "keyword argument; use 'explanations'"
+        )
+    return legacy_explanation
 
 
 class ValidationSetManager:
@@ -160,8 +190,10 @@ class ValidationSetManager:
         data_type: Literal["media", "text"] = "media",
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
-        explanation: list[str | None] | None = None,
+        explanations: list[str | None] | None = None,
         dimensions: list[str] = [],
+        *,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a comparison validation set.
 
@@ -182,8 +214,9 @@ class ValidationSetManager:
             media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            explanation: Deprecated alias for ``explanations``; kept for backwards compatibility.
 
         Example:
             ```python
@@ -193,6 +226,7 @@ class ValidationSetManager:
             ```
             This would mean: first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
         """
+        explanations = _resolve_explanations_kwarg(explanations, explanation)
         with tracer.start_as_current_span("ValidationSetManager.create_compare_set"):
             if not datapoints:
                 raise ValueError("Datapoints cannot be empty")
@@ -211,7 +245,7 @@ class ValidationSetManager:
                     "The number of media contexts and datapoints must be equal"
                 )
 
-            if explanation and len(explanation) != len(datapoints):
+            if explanations and len(explanations) != len(datapoints):
                 raise ValueError(
                     "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
                 )
@@ -225,11 +259,11 @@ class ValidationSetManager:
                         truth=truths[i],
                         datapoint=datapoints[i],
                         data_type=data_type,
-                        context=contexts[i] if contexts != None else None,
+                        context=contexts[i] if contexts is not None else None,
                         media_context=(
-                            media_contexts[i] if media_contexts != None else None
+                            media_contexts[i] if media_contexts is not None else None
                         ),
-                        explanation=explanation[i] if explanation != None else None,
+                        explanation=explanations[i] if explanations is not None else None,
                     )
                 )
 
@@ -245,8 +279,10 @@ class ValidationSetManager:
         sentences: list[str],
         required_precision: float = 1.0,
         required_completeness: float = 1.0,
-        explanation: list[str | None] | None = None,
+        explanations: list[str | None] | None = None,
         dimensions: list[str] = [],
+        *,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a select words validation set.
 
@@ -263,8 +299,9 @@ class ValidationSetManager:
                 Must be the same length as datapoints.
             required_precision (float, optional): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). Defaults to 1.0 (no wrong word can be selected).
             required_completeness (float, optional): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). Defaults to 1.0 (all correct words need to be selected).
-            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            explanation: Deprecated alias for ``explanations``; kept for backwards compatibility.
 
         Example:
             ```python
@@ -274,6 +311,7 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the correct words are "this" and "example", second datapoint is "with"
         """
+        explanations = _resolve_explanations_kwarg(explanations, explanation)
         with tracer.start_as_current_span(
             "ValidationSetManager.create_select_words_set"
         ):
@@ -288,7 +326,7 @@ class ValidationSetManager:
                     "The number of datapoints, truths, and sentences must be equal"
                 )
 
-            if explanation and len(explanation) != len(datapoints):
+            if explanations and len(explanations) != len(datapoints):
                 raise ValueError(
                     "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
                 )
@@ -304,7 +342,7 @@ class ValidationSetManager:
                         sentence=sentences[i],
                         required_precision=required_precision,
                         required_completeness=required_completeness,
-                        explanation=explanation[i] if explanation != None else None,
+                        explanation=explanations[i] if explanations is not None else None,
                     )
                 )
 
@@ -319,8 +357,10 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
-        explanation: list[str | None] | None = None,
+        explanations: list[str | None] | None = None,
         dimensions: list[str] = [],
+        *,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a locate validation set.
 
@@ -336,8 +376,9 @@ class ValidationSetManager:
             media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            explanation: Deprecated alias for ``explanations``; kept for backwards compatibility.
 
         Example:
             ```python
@@ -346,6 +387,7 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
+        explanations = _resolve_explanations_kwarg(explanations, explanation)
         with tracer.start_as_current_span("ValidationSetManager.create_locate_set"):
             if not datapoints:
                 raise ValueError("Datapoints cannot be empty")
@@ -364,7 +406,7 @@ class ValidationSetManager:
                     "The number of media contexts and datapoints must be equal"
                 )
 
-            if explanation and len(explanation) != len(datapoints):
+            if explanations and len(explanations) != len(datapoints):
                 raise ValueError(
                     "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
                 )
@@ -377,11 +419,11 @@ class ValidationSetManager:
                         instruction=instruction,
                         truths=truths[i],
                         datapoint=datapoints[i],
-                        context=contexts[i] if contexts != None else None,
+                        context=contexts[i] if contexts is not None else None,
                         media_context=(
-                            media_contexts[i] if media_contexts != None else None
+                            media_contexts[i] if media_contexts is not None else None
                         ),
-                        explanation=explanation[i] if explanation != None else None,
+                        explanation=explanations[i] if explanations is not None else None,
                     )
                 )
 
@@ -396,8 +438,10 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
-        explanation: list[str | None] | None = None,
+        explanations: list[str | None] | None = None,
         dimensions: list[str] = [],
+        *,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a draw validation set.
 
@@ -413,8 +457,9 @@ class ValidationSetManager:
             media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            explanation: Deprecated alias for ``explanations``; kept for backwards compatibility.
 
         Example:
             ```python
@@ -423,6 +468,7 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
+        explanations = _resolve_explanations_kwarg(explanations, explanation)
         with tracer.start_as_current_span("ValidationSetManager.create_draw_set"):
             if not datapoints:
                 raise ValueError("Datapoints cannot be empty")
@@ -441,7 +487,7 @@ class ValidationSetManager:
                     "The number of media contexts and datapoints must be equal"
                 )
 
-            if explanation and len(explanation) != len(datapoints):
+            if explanations and len(explanations) != len(datapoints):
                 raise ValueError(
                     "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
                 )
@@ -454,11 +500,11 @@ class ValidationSetManager:
                         instruction=instruction,
                         truths=truths[i],
                         datapoint=datapoints[i],
-                        context=contexts[i] if contexts != None else None,
+                        context=contexts[i] if contexts is not None else None,
                         media_context=(
-                            media_contexts[i] if media_contexts != None else None
+                            media_contexts[i] if media_contexts is not None else None
                         ),
-                        explanation=explanation[i] if explanation != None else None,
+                        explanation=explanations[i] if explanations is not None else None,
                     )
                 )
 
@@ -473,8 +519,10 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
-        explanation: list[str | None] | None = None,
+        explanations: list[str | None] | None = None,
         dimensions: list[str] = [],
+        *,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a timestamp validation set.
 
@@ -491,8 +539,9 @@ class ValidationSetManager:
             media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            explanation: Deprecated alias for ``explanations``; kept for backwards compatibility.
 
         Example:
             ```python
@@ -501,6 +550,7 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
         """
+        explanations = _resolve_explanations_kwarg(explanations, explanation)
         with tracer.start_as_current_span("ValidationSetManager.create_timestamp_set"):
             if not datapoints:
                 raise ValueError("Datapoints cannot be empty")
@@ -519,7 +569,7 @@ class ValidationSetManager:
                     "The number of media contexts and datapoints must be equal"
                 )
 
-            if explanation and len(explanation) != len(datapoints):
+            if explanations and len(explanations) != len(datapoints):
                 raise ValueError(
                     "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
                 )
@@ -532,11 +582,11 @@ class ValidationSetManager:
                         instruction=instruction,
                         truths=truths[i],
                         datapoint=datapoints[i],
-                        context=contexts[i] if contexts != None else None,
+                        context=contexts[i] if contexts is not None else None,
                         media_context=(
-                            media_contexts[i] if media_contexts != None else None
+                            media_contexts[i] if media_contexts is not None else None
                         ),
-                        explanation=explanation[i] if explanation != None else None,
+                        explanation=explanations[i] if explanations is not None else None,
                     )
                 )
 
