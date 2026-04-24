@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Sequence
 from rapidata.rapidata_client.config import logger, tracer, managed_print
 from rapidata.rapidata_client.audience.audience_example_handler import (
     AudienceExampleHandler,
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     )
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+    from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
     import pandas as pd
 
 
@@ -155,6 +156,7 @@ class RapidataAudience:
         context: str | None = None,
         media_context: str | None = None,
         explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataAudience:
         """Add a classification training example to this audience.
 
@@ -170,6 +172,7 @@ class RapidataAudience:
             context (str, optional): Additional text context to display with the example. Defaults to None.
             media_context (str, optional): Additional media (URL or path) to display with the example. Defaults to None.
             explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature flags on this example. Use the same ``RapidataSetting`` subclasses available on jobs/orders (e.g. ``NoShuffleSetting``, ``MarkdownSetting``) so the qualification example matches how the actual task will be rendered. Defaults to None.
 
         Returns:
             RapidataAudience: The audience instance (self) for method chaining.
@@ -178,7 +181,7 @@ class RapidataAudience:
             "RapidataAudience.add_classification_example"
         ):
             logger.debug(
-                f"Adding classification example to audience: {self.id} with instruction: {instruction}, answer_options: {answer_options}, datapoint: {datapoint}, truths: {truth}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}"
+                f"Adding classification example to audience: {self.id} with instruction: {instruction}, answer_options: {answer_options}, datapoint: {datapoint}, truths: {truth}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}, settings: {settings}"
             )
             self._example_handler.add_classification_example(
                 instruction,
@@ -189,6 +192,7 @@ class RapidataAudience:
                 context,
                 media_context,
                 explanation,
+                settings,
             )
             self._try_start_recruiting()
             return self
@@ -202,6 +206,7 @@ class RapidataAudience:
         context: str | None = None,
         media_context: str | None = None,
         explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataAudience:
         """Add a comparison training example to this audience.
 
@@ -216,13 +221,14 @@ class RapidataAudience:
             context (str, optional): Additional text context to display with the example. Defaults to None.
             media_context (str, optional): Additional media (URL or path) to display with the example. Defaults to None.
             explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature flags on this example. Use the same ``RapidataSetting`` subclasses available on jobs/orders (e.g. ``AllowNeitherBothSetting``, ``ComparePanoramaSetting``) so the qualification example matches how the actual task will be rendered. Defaults to None.
 
         Returns:
             RapidataAudience: The audience instance (self) for method chaining.
         """
         with tracer.start_as_current_span("RapidataAudience.add_compare_example"):
             logger.debug(
-                f"Adding compare example to audience: {self.id} with instruction: {instruction}, truth: {truth}, datapoint: {datapoint}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}"
+                f"Adding compare example to audience: {self.id} with instruction: {instruction}, truth: {truth}, datapoint: {datapoint}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}, settings: {settings}"
             )
             self._example_handler.add_compare_example(
                 instruction,
@@ -232,6 +238,7 @@ class RapidataAudience:
                 context,
                 media_context,
                 explanation,
+                settings,
             )
             self._try_start_recruiting()
             return self
