@@ -514,10 +514,13 @@ class ApiClient:
             if isinstance(v, dict):
                 v = json.dumps(v)
 
+            encoded_key = quote(str(k))
             if k in collection_formats:
                 collection_format = collection_formats[k]
                 if collection_format == 'multi':
-                    new_params.extend((k, str(value)) for value in v)
+                    new_params.extend(
+                        (encoded_key, quote(str(value))) for value in v
+                    )
                 else:
                     if collection_format == 'ssv':
                         delimiter = ' '
@@ -528,10 +531,10 @@ class ApiClient:
                     else:  # csv is the default
                         delimiter = ','
                     new_params.append(
-                        (k, delimiter.join(quote(str(value)) for value in v))
+                        (encoded_key, delimiter.join(quote(str(value)) for value in v))
                     )
             else:
-                new_params.append((k, quote(str(v))))
+                new_params.append((encoded_key, quote(str(v))))
 
         return "&".join(["=".join(map(str, item)) for item in new_params])
 
