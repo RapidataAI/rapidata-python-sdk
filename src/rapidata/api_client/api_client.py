@@ -700,9 +700,13 @@ class ApiClient:
                 r'filename=[\'"]?([^\'"\s]+)[\'"]?',
                 content_disposition
             )
-            assert m is not None, "Unexpected 'content-disposition' header value"
-            filename = m.group(1)
-            path = os.path.join(os.path.dirname(path), filename)
+            if m is not None:
+                # Strip any directory components from the server-supplied
+                # filename so an attacker-controlled Content-Disposition
+                # header can't escape the temp directory (CWE-22).
+                filename = os.path.basename(m.group(1))
+                if filename and filename not in (".", ".."):
+                    path = os.path.join(os.path.dirname(path), filename)
 
         with open(path, "wb") as f:
             f.write(response.data)
