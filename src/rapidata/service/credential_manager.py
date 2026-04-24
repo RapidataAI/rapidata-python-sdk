@@ -77,7 +77,14 @@ class CredentialManager:
         with open(self.config_path, "w") as f:
             json.dump(data, f, indent=2)
 
-        logger.debug("Credentials written to %s with data: %s", self.config_path, data)
+        # NOTE: do NOT log the credential payload — client_secret values
+        # are long-lived OAuth secrets and must never leave the file.
+        logger.debug(
+            "Credentials written to %s (%d environment(s), %d credential(s))",
+            self.config_path,
+            len(data),
+            sum(len(creds) for creds in data.values()),
+        )
 
         # Ensure file is only readable by the user
         os.chmod(self.config_path, 0o600)
