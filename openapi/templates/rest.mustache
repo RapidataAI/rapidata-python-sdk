@@ -68,9 +68,12 @@ class RESTClientObject:
             self.session.fetch_token()
         except ConnectError as e:
             if self._is_certificate_validation_error(e):
-                exit(self._get_ssl_verify_error_message())
-            else:
-                raise
+                raise ApiException(
+                    status=0,
+                    reason="SSL Certificate Verification Failed\n"
+                    + self._get_ssl_verify_error_message(),
+                ) from e
+            raise
 
     def setup_oauth_with_token(
         self,
