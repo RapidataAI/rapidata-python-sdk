@@ -60,16 +60,24 @@ class Datapoint(BaseModel):
 
     def get_asset_type(self) -> AssetType:
         from rapidata.api_client.models.asset_type import AssetType
+        from urllib.parse import urlparse
 
         if self.data_type == "text":
             return AssetType.TEXT
 
         evaluation_asset = self.asset[0] if isinstance(self.asset, list) else self.asset
-        if any(evaluation_asset.endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS):
+
+        # Compare extensions case-insensitively and ignore URL query /
+        # fragment so `photo.JPG` and `https://x/image.png?v=2` are both
+        # recognised correctly.
+        parsed_path = urlparse(evaluation_asset).path or evaluation_asset
+        lower = parsed_path.lower()
+
+        if any(lower.endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS):
             return AssetType.IMAGE
-        elif any(evaluation_asset.endswith(ext) for ext in ALLOWED_VIDEO_EXTENSIONS):
+        elif any(lower.endswith(ext) for ext in ALLOWED_VIDEO_EXTENSIONS):
             return AssetType.VIDEO
-        elif any(evaluation_asset.endswith(ext) for ext in ALLOWED_AUDIO_EXTENSIONS):
+        elif any(lower.endswith(ext) for ext in ALLOWED_AUDIO_EXTENSIONS):
             return AssetType.AUDIO
         else:
             logger.debug(
