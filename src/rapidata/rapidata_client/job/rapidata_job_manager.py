@@ -673,35 +673,16 @@ class RapidataJobManager:
             list[JobDefinition]: A list of JobDefinition instances.
         """
         with tracer.start_as_current_span("JobManager.find_job_definitions"):
-            from rapidata.api_client.models.pagination import Pagination
-            from rapidata.api_client.models.query_model import QueryModel
-            from rapidata.api_client.models.root_filter import RootFilter
-            from rapidata.api_client.models.filter import Filter
-            from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.logic_operator import LogicOperator
-            from rapidata.api_client.models.sort_criterion import SortCriterion
-            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+                AudienceAudienceIdJobsGetJobIdParameter,
+            )
 
             job_definition_page_result = (
                 self._openapi_service.order.job_api.job_definitions_get(
-                    request=QueryModel(
-                        page=Pagination(index=page, size=amount),
-                        filter=RootFilter(
-                            filters=[
-                                Filter(
-                                    field="Name",
-                                    operator=FilterOperator.CONTAINS,
-                                    value=name,
-                                )
-                            ],
-                            logic=LogicOperator.AND,
-                        ),
-                        sortCriteria=[
-                            SortCriterion(
-                                direction=SortDirection.DESC, propertyName="CreatedAt"
-                            )
-                        ],
-                    ),
+                    page=page,
+                    page_size=amount,
+                    name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                    sort=["-created_at"],
                 )
             )
 
@@ -754,35 +735,16 @@ class RapidataJobManager:
             list[RapidataJob]: A list of RapidataJob instances.
         """
         with tracer.start_as_current_span("JobManager.find_jobs"):
-            from rapidata.api_client.models.query_model import QueryModel
-            from rapidata.api_client.models.root_filter import RootFilter
-            from rapidata.api_client.models.filter import Filter
-            from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.logic_operator import LogicOperator
-            from rapidata.api_client.models.pagination import Pagination
-            from rapidata.api_client.models.sort_criterion import SortCriterion
-            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+                AudienceAudienceIdJobsGetJobIdParameter,
+            )
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
             response = self._openapi_service.order.job_api.jobs_get(
-                request=QueryModel(
-                    page=Pagination(index=page, size=amount),
-                    filter=RootFilter(
-                        filters=[
-                            Filter(
-                                field="Name",
-                                operator=FilterOperator.CONTAINS,
-                                value=name,
-                            )
-                        ],
-                        logic=LogicOperator.AND,
-                    ),
-                    sortCriteria=[
-                        SortCriterion(
-                            direction=SortDirection.DESC, propertyName="CreatedAt"
-                        )
-                    ],
-                ),
+                page=page,
+                page_size=amount,
+                name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                sort=["-created_at"],
             )
             jobs = [
                 RapidataJob(

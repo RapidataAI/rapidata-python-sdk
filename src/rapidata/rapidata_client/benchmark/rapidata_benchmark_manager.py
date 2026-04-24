@@ -1,15 +1,12 @@
 from typing import Optional, cast
 from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchmark
-from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
+from rapidata.api_client.models.create_benchmark_endpoint_input import (
+    CreateBenchmarkEndpointInput,
+)
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+    AudienceAudienceIdJobsGetJobIdParameter,
+)
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.pagination import Pagination
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.sort_criterion import SortCriterion
-from rapidata.api_client.models.sort_direction import SortDirection
-from rapidata.api_client.models.filter_operator import FilterOperator
-from rapidata.api_client.models.logic_operator import LogicOperator
 from rapidata.rapidata_client.config import logger, tracer
 
 
@@ -152,7 +149,7 @@ class RapidataBenchmarkManager:
 
             benchmark_result = (
                 self.__openapi_service.leaderboard.benchmark_api.benchmark_post(
-                    create_benchmark_model=CreateBenchmarkModel(
+                    create_benchmark_endpoint_input=CreateBenchmarkEndpointInput(
                         name=name,
                     )
                 )
@@ -202,24 +199,10 @@ class RapidataBenchmarkManager:
         with tracer.start_as_current_span("RapidataBenchmarkManager.find_benchmarks"):
             benchmark_result = (
                 self.__openapi_service.leaderboard.benchmark_api.benchmarks_get(
-                    QueryModel(
-                        page=Pagination(index=page, size=amount),
-                        filter=RootFilter(
-                            filters=[
-                                Filter(
-                                    field="Name",
-                                    operator=FilterOperator.CONTAINS,
-                                    value=name,
-                                )
-                            ],
-                            logic=LogicOperator.AND,
-                        ),
-                        sortCriteria=[
-                            SortCriterion(
-                                direction=SortDirection.DESC, propertyName="CreatedAt"
-                            )
-                        ],
-                    )
+                    page=page,
+                    page_size=amount,
+                    name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                    sort=["-created_at"],
                 )
             )
             return [

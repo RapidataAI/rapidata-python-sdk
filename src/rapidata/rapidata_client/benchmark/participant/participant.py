@@ -85,7 +85,9 @@ class BenchmarkParticipant:
         Returns:
             tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
         """
-        from rapidata.api_client.models.create_sample_model import CreateSampleModel
+        from rapidata.api_client.models.create_sample_endpoint_input import (
+            CreateSampleEndpointInput,
+        )
 
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
@@ -100,7 +102,7 @@ class BenchmarkParticipant:
                 with suppress_rapidata_error_logging():
                     self._openapi_service.leaderboard.participant_api.participant_participant_id_sample_post(
                         participant_id=self.id,
-                        create_sample_model=CreateSampleModel(
+                        create_sample_endpoint_input=CreateSampleEndpointInput(
                             identifier=identifier,
                             asset=asset_input,
                         ),

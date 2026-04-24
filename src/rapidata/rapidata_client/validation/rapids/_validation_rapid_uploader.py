@@ -1,7 +1,7 @@
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.add_validation_rapid_model import (
-    AddValidationRapidModel,
+from rapidata.api_client.models.add_validation_rapid_endpoint_input import (
+    AddValidationRapidEndpointInput,
 )
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -35,7 +35,7 @@ class ValidationRapidUploader:
 
         self.openapi_service.validation.validation_api.validation_set_validation_set_id_rapid_post(
             validation_set_id=validation_set_id,
-            add_validation_rapid_model=AddValidationRapidModel(
+            add_validation_rapid_endpoint_input=AddValidationRapidEndpointInput(
                 asset=uploaded_asset,
                 payload=self._get_payload(rapid),
                 context=rapid.context,
