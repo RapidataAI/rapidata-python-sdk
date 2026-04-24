@@ -138,7 +138,7 @@ Here's an example of the results you might receive when running a COMPARE task (
             - `language`: Language in which the labeler viewed the task
             - `userScores`: A score representing the labeler's reliability across different dimensions
                 - `global`: The global userScore of the labeler, which is a measure of their overall reliability
-            - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`). Only the keys configured on the order are included, and only when the labeler has actually answered the corresponding question — unanswered keys are omitted, so labelers with no demographic data end up with an empty `demographics` dictionary.
+            - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`).
 
 ## Understanding the User Scores
 
