@@ -47,8 +47,13 @@ class CredentialManager:
         self.config_dir = Path.home() / ".config" / "rapidata"
         self.config_path = self.config_dir / "credentials.json"
 
-        # Ensure config directory exists
+        # Ensure config directory exists and is only user-accessible.
         self.config_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            os.chmod(self.config_dir, 0o700)
+        except OSError as e:
+            # Non-fatal on systems that don't support POSIX perms (e.g. Windows).
+            logger.debug("Could not tighten permissions on %s: %s", self.config_dir, e)
 
     def _read_credentials(self) -> Dict[str, List[ClientCredential]]:
         """Read all stored credentials from the config file."""
@@ -74,22 +79,45 @@ class CredentialManager:
             for env, creds in credentials.items()
         }
 
-        with open(self.config_path, "w") as f:
-            json.dump(data, f, indent=2)
+        # Write via a 0o600 temp file + atomic rename so the credentials
+        # file is never readable by other users, even for a brief window
+        # between open() and the trailing chmod. POSIX file perms are
+        # best-effort on Windows.
+        tmp_path = self.config_path.with_suffix(
+            self.config_path.suffix + f".tmp.{os.getpid()}"
+        )
+        try:
+            flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+            if hasattr(os, "O_NOFOLLOW"):
+                # Avoid following a pre-existing symlink into a location
+                # that's writable by another user.
+                flags |= os.O_NOFOLLOW
+            fd = os.open(tmp_path, flags, 0o600)
+            with os.fdopen(fd, "w") as f:
+                json.dump(data, f, indent=2)
+            # Re-assert perms in case umask or NFS stripped them.
+            try:
+                os.chmod(tmp_path, 0o600)
+            except OSError:
+                pass
+            os.replace(tmp_path, self.config_path)
+        except Exception:
+            # Best-effort cleanup of the temp file on any error.
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
 
         # NOTE: do NOT log the credential payload — client_secret values
         # are long-lived OAuth secrets and must never leave the file.
+        # The atomic rename above already establishes 0o600 from creation,
+        # so no trailing chmod is needed.
         logger.debug(
             "Credentials written to %s (%d environment(s), %d credential(s))",
             self.config_path,
             len(data),
             sum(len(creds) for creds in data.values()),
-        )
-
-        # Ensure file is only readable by the user
-        os.chmod(self.config_path, 0o600)
-        logger.debug(
-            "Set permissions for %s to read/write for user only.", self.config_path
         )
 
     def _store_credential(self, credential: ClientCredential) -> None:
