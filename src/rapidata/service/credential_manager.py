@@ -135,19 +135,32 @@ class CredentialManager:
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""
         logger.debug("Getting bridge tokens")
+        bridge_endpoint = (
+            f"{self.endpoint}/identity/bridge-token?clientId=rapidata-cli"
+        )
         try:
-            bridge_endpoint = (
-                f"{self.endpoint}/identity/bridge-token?clientId=rapidata-cli"
-            )
             response = requests.post(bridge_endpoint, verify=self.cert_path)
             if not response.ok:
                 logger.error("Failed to get bridge tokens: %s", response.status_code)
                 return None
 
             data = response.json()
-            return BridgeToken(read_key=data["readKey"], write_key=data["writeKey"])
         except requests.RequestException as e:
             logger.error("Failed to get bridge tokens: %s", e)
+            return None
+        except ValueError as e:
+            # `response.json()` raises ValueError on malformed bodies.
+            logger.error("Bridge token response was not valid JSON: %s", e)
+            return None
+
+        try:
+            return BridgeToken(read_key=data["readKey"], write_key=data["writeKey"])
+        except (KeyError, TypeError) as e:
+            logger.error(
+                "Bridge token response missing expected keys (got: %s): %s",
+                list(data.keys()) if isinstance(data, dict) else type(data).__name__,
+                e,
+            )
             return None
 
     def _poll_read_key(self, read_key: str) -> Optional[str]:
