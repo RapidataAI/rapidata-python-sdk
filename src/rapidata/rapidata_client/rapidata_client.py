@@ -183,7 +183,20 @@ class RapidataClient:
                 if client_id and email:
                     tracer.set_user_info(client_id=client_id, email=email)
 
-                if "Admin" not in result.get("role", []):
+                # OIDC userinfo returns `role` as a list when there are
+                # multiple, or a bare string when there is exactly one.
+                # A substring check like `"Admin" in result.get("role", [])`
+                # matches `"Administrator"`, `"SuperAdmin"`, etc., so do an
+                # explicit equality check against a normalized list.
+                roles_raw = result.get("role", [])
+                if isinstance(roles_raw, str):
+                    roles = [roles_raw]
+                elif isinstance(roles_raw, list):
+                    roles = roles_raw
+                else:
+                    roles = []
+
+                if "Admin" not in roles:
                     logger.debug("User is not an admin, not enabling beta features")
                     return
 
