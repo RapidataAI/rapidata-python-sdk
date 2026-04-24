@@ -276,11 +276,13 @@ class RESTClientObject:
         if self.configuration.proxy:
             client_kwargs["proxy"] = self.configuration.proxy
 
-            existing_headers = client_kwargs.pop("headers")
             if self.configuration.proxy_headers:
-                for key, value in self.configuration.proxy_headers.items():
-                    existing_headers[key] = value
-            client_kwargs["headers"] = existing_headers
+                # httpx doesn't have a dedicated `proxy_headers` kwarg the way
+                # urllib3 does — merging them into the default request headers
+                # is the closest equivalent.
+                existing_headers = dict(client_kwargs.get("headers") or {})
+                existing_headers.update(self.configuration.proxy_headers)
+                client_kwargs["headers"] = existing_headers
 
         if self.configuration.retries is not None:
             transport = httpx.HTTPTransport(retries=self.configuration.retries, limits=limits)
