@@ -113,6 +113,9 @@ class AssetUploadOrchestrator:
         self._log_upload_results(failed_uploads)
         return failed_uploads
 
+    # Keep the URL scheme check case-insensitive to match AssetUploader.
+    _URL_SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
+
     def _separate_urls_and_files(self, assets: set[str]) -> tuple[set[str], set[str]]:
         """
         Separate assets into URLs and file paths.
@@ -123,8 +126,8 @@ class AssetUploadOrchestrator:
         Returns:
             Tuple of (urls, files).
         """
-        urls = {a for a in assets if re.match(r"^https?://", a)}
-        files = {a for a in assets if not re.match(r"^https?://", a)}
+        urls = {a for a in assets if self._URL_SCHEME_RE.match(a)}
+        files = {a for a in assets if not self._URL_SCHEME_RE.match(a)}
         logger.debug(f"Asset breakdown: {len(urls)} URL(s), {len(files)} file(s)")
         return urls, files
 
@@ -257,7 +260,7 @@ class AssetUploadOrchestrator:
         for asset in assets:
             try:
                 # Try to get cache key using centralized methods
-                if re.match(r"^https?://", asset):
+                if self._URL_SCHEME_RE.match(asset):
                     cache_key = self.asset_uploader.get_url_cache_key(asset)
                 else:
                     cache_key = self.asset_uploader.get_file_cache_key(asset)

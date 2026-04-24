@@ -114,11 +114,15 @@ class AssetUploader:
             self.get_file_cache_key(file_path), upload_file
         )
 
+    # Accept http / https / HTTP / HTTPS / mixed case — people type URLs
+    # by hand or copy them from docs with varying capitalisation.
+    _URL_SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
+
     def upload_asset(self, asset: str) -> str:
         logger.debug("Uploading asset: %s", asset)
         assert isinstance(asset, str), "Asset must be a string"
 
-        if re.match(r"^https?://", asset):
+        if self._URL_SCHEME_RE.match(asset):
             return self._upload_url_asset(asset)
 
         return self._upload_file_asset(asset)
