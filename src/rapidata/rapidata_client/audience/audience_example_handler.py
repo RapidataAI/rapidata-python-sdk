@@ -5,7 +5,6 @@ from typing import Literal, TYPE_CHECKING, Any, Sequence, cast
 if TYPE_CHECKING:
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
-    from rapidata.api_client.models.feature_flag import FeatureFlag
 
 from rapidata.api_client.models.i_example_truth_classify_example_truth import (
     IExampleTruthClassifyExampleTruth,
@@ -37,15 +36,6 @@ class AudienceExampleHandler:
         self._audience_id = audience_id
         self._asset_uploader = AssetUploader(openapi_service)
         self._asset_mapper = AssetMapper()
-
-    @staticmethod
-    def _settings_to_feature_flags(
-        settings: Sequence[RapidataSetting] | None,
-    ) -> list[FeatureFlag] | None:
-        """Convert a sequence of RapidataSettings into the API feature flag list."""
-        if not settings:
-            return None
-        return [setting._to_feature_flag() for setting in settings]
 
     def add_classification_example(
         self,
@@ -120,7 +110,7 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=len(truth) / len(answer_options),
-                featureFlags=self._settings_to_feature_flags(settings),
+                featureFlags=[s._to_feature_flag() for s in settings] if settings else None,
             ),
         )
 
@@ -197,7 +187,7 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=0.5,
-                featureFlags=self._settings_to_feature_flags(settings),
+                featureFlags=[s._to_feature_flag() for s in settings] if settings else None,
             ),
         )
 
@@ -257,7 +247,11 @@ class AudienceExampleHandler:
                 contextAsset=context_asset,
                 explanation=rapid.explanation,
                 randomCorrectProbability=rapid.random_correct_probability or 0.5,
-                featureFlags=self._settings_to_feature_flags(rapid.settings),
+                featureFlags=(
+                    [s._to_feature_flag() for s in rapid.settings]
+                    if rapid.settings
+                    else None
+                ),
             ),
         )
 
