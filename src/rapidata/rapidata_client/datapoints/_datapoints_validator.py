@@ -30,11 +30,14 @@ class DatapointsValidator:
             raise ValueError(
                 "Number of private metadata entries must match number of datapoints"
             )
-        if groups and (
-            len(groups) != len(datapoints) or len(groups) != len(set(groups))
-        ):
+        # `groups` lets multiple datapoints share a group id — that's the
+        # whole point (see `_rapidata_dataset._create_dataset_groups`, which
+        # collects the unique group ids from the datapoints). We only need
+        # to check the list length matches the datapoints list; a uniqueness
+        # check would reject legitimate grouped input.
+        if groups and len(groups) != len(datapoints):
             raise ValueError(
-                "Number of groups must match number of datapoints and must be unique."
+                "Number of groups must match number of datapoints."
             )
 
     @staticmethod
