@@ -32,19 +32,76 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPipelineByIdResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                  "$ref": "#/components/schemas/GetPipelineByIdEndpoint_Output"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/pipeline/preliminary-download/{preliminaryDownloadId}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Streams the preliminary download file when ready.",
+        "description": "Returns 202 while the download is still processing.",
+        "parameters": [
+          {
+            "name": "preliminaryDownloadId",
+            "in": "path",
+            "description": "The id of the preliminary download to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -70,21 +127,11 @@
           }
         ],
         "requestBody": {
-          "description": "The body request.",
+          "description": "Whether to email the caller when the download is ready.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PreliminaryDownloadModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PreliminaryDownloadModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PreliminaryDownloadModel"
+                "$ref": "#/components/schemas/StartPreliminaryDownloadEndpoint_Input"
               }
             }
           },
@@ -94,67 +141,28 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
+                  "$ref": "#/components/schemas/StartPreliminaryDownloadEndpoint_Output"
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/pipeline/preliminary-download/{preliminaryDownloadId}": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Gets the preliminary download.",
-        "description": "If it's still processing the request will return 202 Accepted.",
-        "parameters": [
-          {
-            "name": "preliminaryDownloadId",
-            "in": "path",
-            "description": "The id of the preliminary download to get.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Accepted"
           },
-          "200": {
-            "description": "OK",
+          "400": {
+            "description": "Bad Request",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileStreamResult"
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -209,10 +217,6 @@
           }
         }
       },
-      "FileStreamResult": {
-        "type": "string",
-        "format": "binary"
-      },
       "FileType": {
         "enum": [
           "Unknown",
@@ -221,7 +225,7 @@
           "Audio"
         ]
       },
-      "GetPipelineByIdResult": {
+      "GetPipelineByIdEndpoint_Output": {
         "required": [
           "artifacts",
           "featureFlags"
@@ -229,16 +233,26 @@
         "type": "object",
         "properties": {
           "artifacts": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/IArtifactModel"
-            }
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/IArtifactModel"
+                }
+              }
+            ],
+            "description": "The artifacts attached to the pipeline, keyed by their role."
           },
           "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The feature flags enabled for the pipeline."
           }
         }
       },
@@ -1541,24 +1555,58 @@
           "type": "string"
         }
       },
-      "PreliminaryDownloadModel": {
+      "StartPreliminaryDownloadEndpoint_Input": {
         "type": "object",
         "properties": {
           "sendEmail": {
             "type": "boolean",
             "description": "Whether to email the user when the download is ready."
           }
-        },
-        "description": "The model for creating a preliminary download."
+        }
       },
-      "StartPreliminaryDownloadResult": {
+      "StartPreliminaryDownloadEndpoint_Output": {
         "required": [
           "downloadId"
         ],
         "type": "object",
         "properties": {
           "downloadId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the preliminary download that was initiated."
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -1606,11 +1654,6 @@
         "profile",
         "email"
       ]
-    }
-  ],
-  "tags": [
-    {
-      "name": "Pipeline"
     }
   ]
 }

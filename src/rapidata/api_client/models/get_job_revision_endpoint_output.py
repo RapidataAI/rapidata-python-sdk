@@ -36,10 +36,10 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
     revision_number: StrictInt = Field(description="The revision number.", alias="revisionNumber")
-    state: JobDefinitionRevisionState
+    state: JobDefinitionRevisionState = Field(description="The state of the revision.")
     pipeline_id: StrictStr = Field(description="The pipeline id.", alias="pipelineId")
     dataset_id: StrictStr = Field(description="The dataset id.", alias="datasetId")
-    aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
+    aggregator_type: Optional[AggregatorType] = Field(default=None, description="The aggregator type.", alias="aggregatorType")
     workflow: IOrderWorkflowInputModel = Field(description="The workflow configuration. Can be used directly to create a new revision.")
     referee: IRefereeModel = Field(description="The referee configuration. Can be used directly to create a new revision.")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
@@ -96,11 +96,6 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # set to None if aggregator_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:
-            _dict['aggregatorType'] = None
-
         return _dict
 
     @classmethod

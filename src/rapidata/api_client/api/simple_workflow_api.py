@@ -16,11 +16,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
-from typing import Optional
+from pydantic import Field, StrictInt, StrictStr, field_validator
+from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
-from rapidata.api_client.models.paged_result_of_simple_workflow_result_output import PagedResultOfSimpleWorkflowResultOutput
+from rapidata.api_client.models.get_simple_workflow_results_endpoint_paged_result_of_output import GetSimpleWorkflowResultsEndpointPagedResultOfOutput
+from rapidata.api_client.models.rapid_state import RapidState
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -44,7 +44,10 @@ class SimpleWorkflowApi:
     def workflow_simple_workflow_id_results_get(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        model: Annotated[Optional[GetSimpleWorkflowResultsModel], Field(description="The model for the request.")] = None,
+        states: Annotated[Optional[List[RapidState]], Field(description="Optional list of rapid states to include in the results.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -57,14 +60,20 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfSimpleWorkflowResultOutput:
-        """Get the result overview for a simple workflow.
+    ) -> GetSimpleWorkflowResultsEndpointPagedResultOfOutput:
+        """Gets the result overview for a simple workflow.
 
 
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
-        :param model: The model for the request.
-        :type model: GetSimpleWorkflowResultsModel
+        :param states: Optional list of rapid states to include in the results.
+        :type states: List[RapidState]
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -89,7 +98,10 @@ class SimpleWorkflowApi:
 
         _param = self._workflow_simple_workflow_id_results_get_serialize(
             workflow_id=workflow_id,
-            model=model,
+            states=states,
+            page=page,
+            page_size=page_size,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -97,8 +109,10 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfSimpleWorkflowResultOutput",
+            '200': "GetSimpleWorkflowResultsEndpointPagedResultOfOutput",
             '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -115,7 +129,10 @@ class SimpleWorkflowApi:
     def workflow_simple_workflow_id_results_get_with_http_info(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        model: Annotated[Optional[GetSimpleWorkflowResultsModel], Field(description="The model for the request.")] = None,
+        states: Annotated[Optional[List[RapidState]], Field(description="Optional list of rapid states to include in the results.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -128,14 +145,20 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfSimpleWorkflowResultOutput]:
-        """Get the result overview for a simple workflow.
+    ) -> ApiResponse[GetSimpleWorkflowResultsEndpointPagedResultOfOutput]:
+        """Gets the result overview for a simple workflow.
 
 
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
-        :param model: The model for the request.
-        :type model: GetSimpleWorkflowResultsModel
+        :param states: Optional list of rapid states to include in the results.
+        :type states: List[RapidState]
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -160,7 +183,10 @@ class SimpleWorkflowApi:
 
         _param = self._workflow_simple_workflow_id_results_get_serialize(
             workflow_id=workflow_id,
-            model=model,
+            states=states,
+            page=page,
+            page_size=page_size,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -168,8 +194,10 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfSimpleWorkflowResultOutput",
+            '200': "GetSimpleWorkflowResultsEndpointPagedResultOfOutput",
             '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -186,7 +214,10 @@ class SimpleWorkflowApi:
     def workflow_simple_workflow_id_results_get_without_preload_content(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        model: Annotated[Optional[GetSimpleWorkflowResultsModel], Field(description="The model for the request.")] = None,
+        states: Annotated[Optional[List[RapidState]], Field(description="Optional list of rapid states to include in the results.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -200,13 +231,19 @@ class SimpleWorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get the result overview for a simple workflow.
+        """Gets the result overview for a simple workflow.
 
 
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
-        :param model: The model for the request.
-        :type model: GetSimpleWorkflowResultsModel
+        :param states: Optional list of rapid states to include in the results.
+        :type states: List[RapidState]
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -231,7 +268,10 @@ class SimpleWorkflowApi:
 
         _param = self._workflow_simple_workflow_id_results_get_serialize(
             workflow_id=workflow_id,
-            model=model,
+            states=states,
+            page=page,
+            page_size=page_size,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -239,8 +279,10 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfSimpleWorkflowResultOutput",
+            '200': "GetSimpleWorkflowResultsEndpointPagedResultOfOutput",
             '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -252,7 +294,10 @@ class SimpleWorkflowApi:
     def _workflow_simple_workflow_id_results_get_serialize(
         self,
         workflow_id,
-        model,
+        states,
+        page,
+        page_size,
+        sort,
         _request_auth,
         _content_type,
         _headers,
@@ -262,6 +307,8 @@ class SimpleWorkflowApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'states': 'multi',
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -277,9 +324,21 @@ class SimpleWorkflowApi:
         if workflow_id is not None:
             _path_params['workflowId'] = workflow_id
         # process the query parameters
-        if model is not None:
+        if states is not None:
             
-            _query_params.append(('model', model))
+            _query_params.append(('states', states))
+            
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
             
         # process the header parameters
         # process the form parameters

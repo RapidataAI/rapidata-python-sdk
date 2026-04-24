@@ -258,39 +258,16 @@ class RapidataAudience:
         """
         with tracer.start_as_current_span("RapidataAudience.find_jobs"):
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
-            from rapidata.api_client.models.query_model import QueryModel
-            from rapidata.api_client.models.root_filter import RootFilter
-            from rapidata.api_client.models.filter import Filter
-            from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.logic_operator import LogicOperator
-            from rapidata.api_client.models.pagination import Pagination
-            from rapidata.api_client.models.sort_criterion import SortCriterion
-            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+                AudienceAudienceIdJobsGetJobIdParameter,
+            )
 
             response = self._openapi_service.order.job_api.jobs_get(
-                request=QueryModel(
-                    page=Pagination(index=page, size=amount),
-                    filter=RootFilter(
-                        filters=[
-                            Filter(
-                                field="AudienceId",
-                                operator=FilterOperator.EQ,
-                                value=self.id,
-                            ),
-                            Filter(
-                                field="Name",
-                                operator=FilterOperator.CONTAINS,
-                                value=name,
-                            ),
-                        ],
-                        logic=LogicOperator.AND,
-                    ),
-                    sortCriteria=[
-                        SortCriterion(
-                            direction=SortDirection.DESC, propertyName="CreatedAt"
-                        )
-                    ],
-                ),
+                page=page,
+                page_size=amount,
+                name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                audience_id=AudienceAudienceIdJobsGetJobIdParameter(eq=self.id),
+                sort=["-created_at"],
             )
             return [
                 RapidataJob(

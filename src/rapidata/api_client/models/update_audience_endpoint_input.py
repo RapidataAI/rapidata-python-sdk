@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.distilling_retrieval_mode import DistillingRetrievalMode
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from pydantic import ValidationError
@@ -46,18 +47,8 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
     min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate (responses / sessions) before a user is dropped.  Set to null to disable this exit condition.", alias="minSubmissionRate")
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Set to null to apply from the first session.", alias="minSessionsForSubmissionRate")
     min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.  Set a lower value to be more lenient with graduated users.", alias="minSubmissionRateGraduated")
-    distilling_retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
+    distilling_retrieval_mode: Optional[DistillingRetrievalMode] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
     __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationScore", "demotionScore", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode"]
-
-    @field_validator('distilling_retrieval_mode')
-    def distilling_retrieval_mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['Random', 'Shuffled', 'Sequential']):
-            raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
-        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -104,20 +95,10 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of logo
         if self.logo:
             _dict['logo'] = self.logo.to_dict()
-        # set to None if name (nullable) is None
-        # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
-
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
-
-        # set to None if filters (nullable) is None
-        # and model_fields_set contains the field
-        if self.filters is None and "filters" in self.model_fields_set:
-            _dict['filters'] = None
 
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
@@ -133,11 +114,6 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.min_distilling_for_global_boost is None and "min_distilling_for_global_boost" in self.model_fields_set:
             _dict['minDistillingForGlobalBoost'] = None
-
-        # set to None if graduation_score (nullable) is None
-        # and model_fields_set contains the field
-        if self.graduation_score is None and "graduation_score" in self.model_fields_set:
-            _dict['graduationScore'] = None
 
         # set to None if demotion_score (nullable) is None
         # and model_fields_set contains the field

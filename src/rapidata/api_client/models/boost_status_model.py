@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class BoostStatusModel(str, Enum):
     """
-    The current boost status.
+    BoostStatusModel
     """
 
     """

@@ -34,7 +34,7 @@ class GetResponsesForRapidEndpointOutput(LazyValidatedModel):
     rapid_id: StrictStr = Field(description="The id of the rapid.", alias="rapidId")
     asset: IAssetModel = Field(description="The asset of the rapid.")
     responses: List[GetResponsesForRapidResultResponse]
-    state: RapidState
+    state: RapidState = Field(description="The state of the rapid.")
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "state"]
 
     # model_config is inherited from LazyValidatedModel

@@ -34,7 +34,7 @@ class QueryOrdersEndpointOutput(LazyValidatedModel):
     pipeline_id: StrictStr = Field(description="The ID of the pipeline associated with the order.", alias="pipelineId")
     order_date: Optional[datetime] = Field(description="The date the order was placed.", alias="orderDate")
     customer_mail: StrictStr = Field(description="The email of the customer who placed the order.", alias="customerMail")
-    state: OrderState
+    state: OrderState = Field(description="The current state of the order.")
     order_name: StrictStr = Field(description="The name of the order.", alias="orderName")
     is_public: StrictBool = Field(description="Whether the order is publicly visible.", alias="isPublic")
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message if the order failed.", alias="failureMessage")

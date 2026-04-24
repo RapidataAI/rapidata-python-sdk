@@ -16,12 +16,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictStr
-from typing import Tuple, Union
+from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
-from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
-from rapidata.api_client.models.start_preliminary_download_result import StartPreliminaryDownloadResult
+from rapidata.api_client.models.get_pipeline_by_id_endpoint_output import GetPipelineByIdEndpointOutput
+from rapidata.api_client.models.start_preliminary_download_endpoint_input import StartPreliminaryDownloadEndpointInput
+from rapidata.api_client.models.start_preliminary_download_endpoint_output import StartPreliminaryDownloadEndpointOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -57,7 +56,7 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetPipelineByIdResult:
+    ) -> GetPipelineByIdEndpointOutput:
         """Gets a pipeline by its id.
 
 
@@ -94,7 +93,10 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPipelineByIdResult",
+            '200': "GetPipelineByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -123,7 +125,7 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetPipelineByIdResult]:
+    ) -> ApiResponse[GetPipelineByIdEndpointOutput]:
         """Gets a pipeline by its id.
 
 
@@ -160,7 +162,10 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPipelineByIdResult",
+            '200': "GetPipelineByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -226,7 +231,10 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetPipelineByIdResult",
+            '200': "GetPipelineByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -271,9 +279,7 @@ class PipelineApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -307,7 +313,7 @@ class PipelineApi:
     def pipeline_pipeline_id_preliminary_download_post(
         self,
         pipeline_id: Annotated[StrictStr, Field(description="The id of the pipeline to initiate the download for.")],
-        preliminary_download_model: Annotated[PreliminaryDownloadModel, Field(description="The body request.")],
+        start_preliminary_download_endpoint_input: Annotated[StartPreliminaryDownloadEndpointInput, Field(description="Whether to email the caller when the download is ready.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -320,14 +326,14 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> StartPreliminaryDownloadResult:
+    ) -> StartPreliminaryDownloadEndpointOutput:
         """Initiates a preliminary download of the pipeline.
 
 
         :param pipeline_id: The id of the pipeline to initiate the download for. (required)
         :type pipeline_id: str
-        :param preliminary_download_model: The body request. (required)
-        :type preliminary_download_model: PreliminaryDownloadModel
+        :param start_preliminary_download_endpoint_input: Whether to email the caller when the download is ready. (required)
+        :type start_preliminary_download_endpoint_input: StartPreliminaryDownloadEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -352,7 +358,7 @@ class PipelineApi:
 
         _param = self._pipeline_pipeline_id_preliminary_download_post_serialize(
             pipeline_id=pipeline_id,
-            preliminary_download_model=preliminary_download_model,
+            start_preliminary_download_endpoint_input=start_preliminary_download_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -360,7 +366,10 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StartPreliminaryDownloadResult",
+            '200': "StartPreliminaryDownloadEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -377,7 +386,7 @@ class PipelineApi:
     def pipeline_pipeline_id_preliminary_download_post_with_http_info(
         self,
         pipeline_id: Annotated[StrictStr, Field(description="The id of the pipeline to initiate the download for.")],
-        preliminary_download_model: Annotated[PreliminaryDownloadModel, Field(description="The body request.")],
+        start_preliminary_download_endpoint_input: Annotated[StartPreliminaryDownloadEndpointInput, Field(description="Whether to email the caller when the download is ready.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -390,14 +399,14 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[StartPreliminaryDownloadResult]:
+    ) -> ApiResponse[StartPreliminaryDownloadEndpointOutput]:
         """Initiates a preliminary download of the pipeline.
 
 
         :param pipeline_id: The id of the pipeline to initiate the download for. (required)
         :type pipeline_id: str
-        :param preliminary_download_model: The body request. (required)
-        :type preliminary_download_model: PreliminaryDownloadModel
+        :param start_preliminary_download_endpoint_input: Whether to email the caller when the download is ready. (required)
+        :type start_preliminary_download_endpoint_input: StartPreliminaryDownloadEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -422,7 +431,7 @@ class PipelineApi:
 
         _param = self._pipeline_pipeline_id_preliminary_download_post_serialize(
             pipeline_id=pipeline_id,
-            preliminary_download_model=preliminary_download_model,
+            start_preliminary_download_endpoint_input=start_preliminary_download_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -430,7 +439,10 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StartPreliminaryDownloadResult",
+            '200': "StartPreliminaryDownloadEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -447,7 +459,7 @@ class PipelineApi:
     def pipeline_pipeline_id_preliminary_download_post_without_preload_content(
         self,
         pipeline_id: Annotated[StrictStr, Field(description="The id of the pipeline to initiate the download for.")],
-        preliminary_download_model: Annotated[PreliminaryDownloadModel, Field(description="The body request.")],
+        start_preliminary_download_endpoint_input: Annotated[StartPreliminaryDownloadEndpointInput, Field(description="Whether to email the caller when the download is ready.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -466,8 +478,8 @@ class PipelineApi:
 
         :param pipeline_id: The id of the pipeline to initiate the download for. (required)
         :type pipeline_id: str
-        :param preliminary_download_model: The body request. (required)
-        :type preliminary_download_model: PreliminaryDownloadModel
+        :param start_preliminary_download_endpoint_input: Whether to email the caller when the download is ready. (required)
+        :type start_preliminary_download_endpoint_input: StartPreliminaryDownloadEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -492,7 +504,7 @@ class PipelineApi:
 
         _param = self._pipeline_pipeline_id_preliminary_download_post_serialize(
             pipeline_id=pipeline_id,
-            preliminary_download_model=preliminary_download_model,
+            start_preliminary_download_endpoint_input=start_preliminary_download_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -500,7 +512,10 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StartPreliminaryDownloadResult",
+            '200': "StartPreliminaryDownloadEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -512,7 +527,7 @@ class PipelineApi:
     def _pipeline_pipeline_id_preliminary_download_post_serialize(
         self,
         pipeline_id,
-        preliminary_download_model,
+        start_preliminary_download_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -540,17 +555,15 @@ class PipelineApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if preliminary_download_model is not None:
-            _body_params = preliminary_download_model
+        if start_preliminary_download_endpoint_input is not None:
+            _body_params = start_preliminary_download_endpoint_input
 
 
         # set the HTTP header `Accept`
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -561,9 +574,7 @@ class PipelineApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -611,10 +622,10 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> bytearray:
-        """Gets the preliminary download.
+    ) -> str:
+        """Streams the preliminary download file when ready.
 
-        If it's still processing the request will return 202 Accepted.
+        Returns 202 while the download is still processing.
 
         :param preliminary_download_id: The id of the preliminary download to get. (required)
         :type preliminary_download_id: str
@@ -649,8 +660,11 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "str",
             '202': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -679,10 +693,10 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[bytearray]:
-        """Gets the preliminary download.
+    ) -> ApiResponse[str]:
+        """Streams the preliminary download file when ready.
 
-        If it's still processing the request will return 202 Accepted.
+        Returns 202 while the download is still processing.
 
         :param preliminary_download_id: The id of the preliminary download to get. (required)
         :type preliminary_download_id: str
@@ -717,8 +731,11 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "str",
             '202': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -748,9 +765,9 @@ class PipelineApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets the preliminary download.
+        """Streams the preliminary download file when ready.
 
-        If it's still processing the request will return 202 Accepted.
+        Returns 202 while the download is still processing.
 
         :param preliminary_download_id: The id of the preliminary download to get. (required)
         :type preliminary_download_id: str
@@ -785,8 +802,11 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "str",
             '202': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -831,9 +851,7 @@ class PipelineApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

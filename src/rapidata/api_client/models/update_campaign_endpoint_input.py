@@ -36,8 +36,8 @@ class UpdateCampaignEndpointInput(LazyValidatedModel):
     name: Optional[StrictStr] = Field(default=None, description="The new name for the campaign.")
     priority: Optional[StrictInt] = Field(default=None, description="The new priority value for the campaign.")
     requires_booster: Optional[StrictBool] = Field(default=None, description="When true, recomputes the boosting profile from the campaign's current filters  (via BoostingProfileEvaluator) and ensures any required filtered Kayzen audience  exists and is populated. When false, clears the boosting profile.  Use this to toggle boost on/off without having to compute a BoostingProfile client-side.  Ignored when BoostingProfile is also set (explicit profile wins).", alias="requiresBooster")
-    boosting_profile: Optional[BoostingProfileModel] = Field(default=None, alias="boostingProfile")
-    sticky_config: Optional[StickyConfigModel] = Field(default=None, alias="stickyConfig")
+    boosting_profile: Optional[BoostingProfileModel] = Field(default=None, description="The boosting profile configuration. Takes precedence over RequiresBooster when both are set.  Prefer RequiresBooster for the common on/off toggle — it lets the server derive the right  profile (including filtered-audience creation) from the campaign's filters.", alias="boostingProfile")
+    sticky_config: Optional[StickyConfigModel] = Field(default=None, description="The sticky behavior configuration.", alias="stickyConfig")
     filters: Optional[List[ICampaignFilterModel]] = None
     selections: Optional[List[ICampaignSelectionModel]] = None
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
@@ -105,46 +105,6 @@ class UpdateCampaignEndpointInput(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # set to None if name (nullable) is None
-        # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
-
-        # set to None if priority (nullable) is None
-        # and model_fields_set contains the field
-        if self.priority is None and "priority" in self.model_fields_set:
-            _dict['priority'] = None
-
-        # set to None if requires_booster (nullable) is None
-        # and model_fields_set contains the field
-        if self.requires_booster is None and "requires_booster" in self.model_fields_set:
-            _dict['requiresBooster'] = None
-
-        # set to None if boosting_profile (nullable) is None
-        # and model_fields_set contains the field
-        if self.boosting_profile is None and "boosting_profile" in self.model_fields_set:
-            _dict['boostingProfile'] = None
-
-        # set to None if sticky_config (nullable) is None
-        # and model_fields_set contains the field
-        if self.sticky_config is None and "sticky_config" in self.model_fields_set:
-            _dict['stickyConfig'] = None
-
-        # set to None if filters (nullable) is None
-        # and model_fields_set contains the field
-        if self.filters is None and "filters" in self.model_fields_set:
-            _dict['filters'] = None
-
-        # set to None if selections (nullable) is None
-        # and model_fields_set contains the field
-        if self.selections is None and "selections" in self.model_fields_set:
-            _dict['selections'] = None
-
-        # set to None if feature_flags (nullable) is None
-        # and model_fields_set contains the field
-        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
-            _dict['featureFlags'] = None
-
         return _dict
 
     @classmethod

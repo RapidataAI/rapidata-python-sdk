@@ -43,7 +43,7 @@ class AddExampleToAudienceEndpointInput(LazyValidatedModel):
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls the serving order of this example within the audience.  When null, the next sort index is automatically calculated.", alias="sortIndex")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example should be treated as commonsense validation.  When true, incorrect answers are not accepted and the example affects global score.  When null, AI auto-detection will determine if the example is common sense.", alias="isCommonSense")
-    visibility: Optional[ExampleVisibility] = None
+    visibility: Optional[ExampleVisibility] = Field(default=None, description="Controls who can see this example. Public examples are visible to all customers.  Private examples are only visible to the customer who created them and admins.  Defaults to Private.")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "sortIndex", "featureFlags", "isCommonSense", "visibility"]
 
     # model_config is inherited from LazyValidatedModel

@@ -43,7 +43,7 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
     invalid_validation_count: StrictInt = Field(description="The number of invalid validations received.", alias="invalidValidationCount")
     explanation: Optional[StrictStr] = Field(default=None, description="The explanation shown when users answer incorrectly.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of a random correct answer.", alias="randomCorrectProbability")
-    state: RapidState
+    state: RapidState = Field(description="The state of the rapid.")
     __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "context", "contextAsset", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state"]
 
     # model_config is inherited from LazyValidatedModel

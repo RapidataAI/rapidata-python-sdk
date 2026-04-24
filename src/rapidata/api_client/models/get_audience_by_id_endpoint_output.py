@@ -36,7 +36,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The unique identifier of the audience.")
     name: StrictStr = Field(description="The name of the audience.")
     description: Optional[StrictStr] = Field(default=None, description="The markdown-supported description of the audience.")
-    status: AudienceStatus
+    status: AudienceStatus = Field(description="The current status of the audience.")
     qualified_user_count: StrictInt = Field(description="The number of users that have qualified for this audience.", alias="qualifiedUserCount")
     filters: List[IAudienceFilter]
     logo: Optional[StrictStr] = Field(default=None, description="The URL of the audience logo, if any.")
@@ -57,8 +57,8 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate before a user is dropped.", alias="minSubmissionRate")
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.", alias="minSessionsForSubmissionRate")
     min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users.", alias="minSubmissionRateGraduated")
-    distilling_retrieval_mode: DistillingRetrievalMode = Field(alias="distillingRetrievalMode")
-    boost_level: BoostLevel = Field(alias="boostLevel")
+    distilling_retrieval_mode: DistillingRetrievalMode = Field(description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
+    boost_level: BoostLevel = Field(description="The current boost level applied to the audience.", alias="boostLevel")
     random_admission_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of admitting a random user to the audience.", alias="randomAdmissionProbability")
     health: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The health score of the audience.")
     graduated: Optional[StrictInt] = Field(default=None, description="The number of graduated users.")

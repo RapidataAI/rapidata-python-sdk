@@ -17,11 +17,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
-from typing import Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.create_bridge_token_result import CreateBridgeTokenResult
-from rapidata.api_client.models.google_one_tap_login_model import GoogleOneTapLoginModel
-from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
+from rapidata.api_client.models.create_bridge_token_endpoint_output import CreateBridgeTokenEndpointOutput
+from rapidata.api_client.models.google_one_tap_login_endpoint_input import GoogleOneTapLoginEndpointInput
+from rapidata.api_client.models.google_one_tap_login_endpoint_output import GoogleOneTapLoginEndpointOutput
+from rapidata.api_client.models.read_bridge_token_endpoint_keys_output import ReadBridgeTokenEndpointKeysOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -44,7 +44,7 @@ class IdentityApi:
     @validate_call
     def identity_bridge_token_get(
         self,
-        read_key: Annotated[Optional[StrictStr], Field(description="The read key to read the bridge token keys for.")] = None,
+        read_key: Annotated[StrictStr, Field(description="The read key to read the bridge token keys for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -57,11 +57,12 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ReadBridgeTokenKeysResult:
-        """Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+    ) -> ReadBridgeTokenEndpointKeysOutput:
+        """Reads the bridge token keys for a given read key.
 
+        Returns 200 with the keys when available, 202 when they are not yet available, or 404 when not found.
 
-        :param read_key: The read key to read the bridge token keys for.
+        :param read_key: The read key to read the bridge token keys for. (required)
         :type read_key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -94,8 +95,9 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ReadBridgeTokenKeysResult",
-            '202': "NotAvailableYetResult",
+            '200': "ReadBridgeTokenEndpointKeysOutput",
+            '202': "ReadBridgeTokenEndpointNotAvailableOutput",
+            '404': "str",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -111,7 +113,7 @@ class IdentityApi:
     @validate_call
     def identity_bridge_token_get_with_http_info(
         self,
-        read_key: Annotated[Optional[StrictStr], Field(description="The read key to read the bridge token keys for.")] = None,
+        read_key: Annotated[StrictStr, Field(description="The read key to read the bridge token keys for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -124,11 +126,12 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ReadBridgeTokenKeysResult]:
-        """Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+    ) -> ApiResponse[ReadBridgeTokenEndpointKeysOutput]:
+        """Reads the bridge token keys for a given read key.
 
+        Returns 200 with the keys when available, 202 when they are not yet available, or 404 when not found.
 
-        :param read_key: The read key to read the bridge token keys for.
+        :param read_key: The read key to read the bridge token keys for. (required)
         :type read_key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -161,8 +164,9 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ReadBridgeTokenKeysResult",
-            '202': "NotAvailableYetResult",
+            '200': "ReadBridgeTokenEndpointKeysOutput",
+            '202': "ReadBridgeTokenEndpointNotAvailableOutput",
+            '404': "str",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -178,7 +182,7 @@ class IdentityApi:
     @validate_call
     def identity_bridge_token_get_without_preload_content(
         self,
-        read_key: Annotated[Optional[StrictStr], Field(description="The read key to read the bridge token keys for.")] = None,
+        read_key: Annotated[StrictStr, Field(description="The read key to read the bridge token keys for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -192,10 +196,11 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+        """Reads the bridge token keys for a given read key.
 
+        Returns 200 with the keys when available, 202 when they are not yet available, or 404 when not found.
 
-        :param read_key: The read key to read the bridge token keys for.
+        :param read_key: The read key to read the bridge token keys for. (required)
         :type read_key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -228,8 +233,9 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ReadBridgeTokenKeysResult",
-            '202': "NotAvailableYetResult",
+            '200': "ReadBridgeTokenEndpointKeysOutput",
+            '202': "ReadBridgeTokenEndpointNotAvailableOutput",
+            '404': "str",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -276,9 +282,7 @@ class IdentityApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -311,7 +315,7 @@ class IdentityApi:
     @validate_call
     def identity_bridge_token_post(
         self,
-        client_id: Annotated[Optional[StrictStr], Field(description="The client ID to create the keys for.")] = None,
+        client_id: Annotated[StrictStr, Field(description="The client ID to create the keys for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -324,11 +328,12 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateBridgeTokenResult:
-        """Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+    ) -> CreateBridgeTokenEndpointOutput:
+        """Creates a pair of read and write bridge token keys for a client.
 
+        The write key stores the authentication result and the read key retrieves it.
 
-        :param client_id: The client ID to create the keys for.
+        :param client_id: The client ID to create the keys for. (required)
         :type client_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -361,7 +366,10 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBridgeTokenResult",
+            '200': "CreateBridgeTokenEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -377,7 +385,7 @@ class IdentityApi:
     @validate_call
     def identity_bridge_token_post_with_http_info(
         self,
-        client_id: Annotated[Optional[StrictStr], Field(description="The client ID to create the keys for.")] = None,
+        client_id: Annotated[StrictStr, Field(description="The client ID to create the keys for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -390,11 +398,12 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateBridgeTokenResult]:
-        """Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+    ) -> ApiResponse[CreateBridgeTokenEndpointOutput]:
+        """Creates a pair of read and write bridge token keys for a client.
 
+        The write key stores the authentication result and the read key retrieves it.
 
-        :param client_id: The client ID to create the keys for.
+        :param client_id: The client ID to create the keys for. (required)
         :type client_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -427,7 +436,10 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBridgeTokenResult",
+            '200': "CreateBridgeTokenEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -443,7 +455,7 @@ class IdentityApi:
     @validate_call
     def identity_bridge_token_post_without_preload_content(
         self,
-        client_id: Annotated[Optional[StrictStr], Field(description="The client ID to create the keys for.")] = None,
+        client_id: Annotated[StrictStr, Field(description="The client ID to create the keys for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -457,10 +469,11 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+        """Creates a pair of read and write bridge token keys for a client.
 
+        The write key stores the authentication result and the read key retrieves it.
 
-        :param client_id: The client ID to create the keys for.
+        :param client_id: The client ID to create the keys for. (required)
         :type client_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -493,7 +506,10 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateBridgeTokenResult",
+            '200': "CreateBridgeTokenEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -540,9 +556,7 @@ class IdentityApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -575,7 +589,7 @@ class IdentityApi:
     @validate_call
     def identity_google_one_tap_post(
         self,
-        google_one_tap_login_model: Annotated[GoogleOneTapLoginModel, Field(description="The body of the request containing the id token.")],
+        google_one_tap_login_endpoint_input: Annotated[GoogleOneTapLoginEndpointInput, Field(description="The body of the request containing the id token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -588,12 +602,13 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> GoogleOneTapLoginEndpointOutput:
         """Signs in a user using a token received from Google One Tap.
 
+        Redirects to the register confirmation page when the account requires email confirmation.
 
-        :param google_one_tap_login_model: The body of the request containing the id token. (required)
-        :type google_one_tap_login_model: GoogleOneTapLoginModel
+        :param google_one_tap_login_endpoint_input: The body of the request containing the id token. (required)
+        :type google_one_tap_login_endpoint_input: GoogleOneTapLoginEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -617,7 +632,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_google_one_tap_post_serialize(
-            google_one_tap_login_model=google_one_tap_login_model,
+            google_one_tap_login_endpoint_input=google_one_tap_login_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -625,7 +640,10 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "GoogleOneTapLoginEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -641,7 +659,7 @@ class IdentityApi:
     @validate_call
     def identity_google_one_tap_post_with_http_info(
         self,
-        google_one_tap_login_model: Annotated[GoogleOneTapLoginModel, Field(description="The body of the request containing the id token.")],
+        google_one_tap_login_endpoint_input: Annotated[GoogleOneTapLoginEndpointInput, Field(description="The body of the request containing the id token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -654,12 +672,13 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[GoogleOneTapLoginEndpointOutput]:
         """Signs in a user using a token received from Google One Tap.
 
+        Redirects to the register confirmation page when the account requires email confirmation.
 
-        :param google_one_tap_login_model: The body of the request containing the id token. (required)
-        :type google_one_tap_login_model: GoogleOneTapLoginModel
+        :param google_one_tap_login_endpoint_input: The body of the request containing the id token. (required)
+        :type google_one_tap_login_endpoint_input: GoogleOneTapLoginEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -683,7 +702,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_google_one_tap_post_serialize(
-            google_one_tap_login_model=google_one_tap_login_model,
+            google_one_tap_login_endpoint_input=google_one_tap_login_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -691,7 +710,10 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "GoogleOneTapLoginEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -707,7 +729,7 @@ class IdentityApi:
     @validate_call
     def identity_google_one_tap_post_without_preload_content(
         self,
-        google_one_tap_login_model: Annotated[GoogleOneTapLoginModel, Field(description="The body of the request containing the id token.")],
+        google_one_tap_login_endpoint_input: Annotated[GoogleOneTapLoginEndpointInput, Field(description="The body of the request containing the id token.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -723,9 +745,10 @@ class IdentityApi:
     ) -> RESTResponseType:
         """Signs in a user using a token received from Google One Tap.
 
+        Redirects to the register confirmation page when the account requires email confirmation.
 
-        :param google_one_tap_login_model: The body of the request containing the id token. (required)
-        :type google_one_tap_login_model: GoogleOneTapLoginModel
+        :param google_one_tap_login_endpoint_input: The body of the request containing the id token. (required)
+        :type google_one_tap_login_endpoint_input: GoogleOneTapLoginEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -749,7 +772,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_google_one_tap_post_serialize(
-            google_one_tap_login_model=google_one_tap_login_model,
+            google_one_tap_login_endpoint_input=google_one_tap_login_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -757,7 +780,10 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "GoogleOneTapLoginEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -768,7 +794,7 @@ class IdentityApi:
 
     def _identity_google_one_tap_post_serialize(
         self,
-        google_one_tap_login_model,
+        google_one_tap_login_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -794,10 +820,17 @@ class IdentityApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if google_one_tap_login_model is not None:
-            _body_params = google_one_tap_login_model
+        if google_one_tap_login_endpoint_input is not None:
+            _body_params = google_one_tap_login_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -806,9 +839,7 @@ class IdentityApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -843,7 +874,7 @@ class IdentityApi:
     @validate_call
     def identity_referrer_post(
         self,
-        referrer: Optional[StrictStr] = None,
+        referrer: Annotated[StrictStr, Field(description="The referrer value to store.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -857,10 +888,10 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Sets the referrer for the current customer.
+        """Stores the referrer in a cookie for later use during sign-up.
 
 
-        :param referrer: 
+        :param referrer: The referrer value to store. (required)
         :type referrer: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -909,7 +940,7 @@ class IdentityApi:
     @validate_call
     def identity_referrer_post_with_http_info(
         self,
-        referrer: Optional[StrictStr] = None,
+        referrer: Annotated[StrictStr, Field(description="The referrer value to store.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -923,10 +954,10 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Sets the referrer for the current customer.
+        """Stores the referrer in a cookie for later use during sign-up.
 
 
-        :param referrer: 
+        :param referrer: The referrer value to store. (required)
         :type referrer: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -975,7 +1006,7 @@ class IdentityApi:
     @validate_call
     def identity_referrer_post_without_preload_content(
         self,
-        referrer: Optional[StrictStr] = None,
+        referrer: Annotated[StrictStr, Field(description="The referrer value to store.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -989,10 +1020,10 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Sets the referrer for the current customer.
+        """Stores the referrer in a cookie for later use during sign-up.
 
 
-        :param referrer: 
+        :param referrer: The referrer value to store. (required)
         :type referrer: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

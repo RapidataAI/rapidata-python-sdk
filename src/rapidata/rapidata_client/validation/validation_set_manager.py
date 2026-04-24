@@ -9,8 +9,8 @@ from rapidata.api_client import QueryModel
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
-from rapidata.api_client.models.create_validation_set_model import (
-    CreateValidationSetModel,
+from rapidata.api_client.models.create_validation_set_endpoint_input import (
+    CreateValidationSetEndpointInput,
 )
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
@@ -568,7 +568,7 @@ class ValidationSetManager:
         logger.debug("Creating validation set")
         validation_set_id = (
             self._openapi_service.validation.validation_api.validation_set_post(
-                create_validation_set_model=CreateValidationSetModel(name=name)
+                create_validation_set_endpoint_input=CreateValidationSetEndpointInput(name=name)
             )
         ).validation_set_id
 

@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
 from rapidata.api_client.models.create_datapoint_endpoint_input import CreateDatapointEndpointInput
 from rapidata.api_client.models.create_datapoint_endpoint_output import CreateDatapointEndpointOutput
 from rapidata.api_client.models.get_datapoint_endpoint_output import GetDatapointEndpointOutput
@@ -1158,8 +1158,8 @@ class DatapointsApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by id.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1185,9 +1185,9 @@ class DatapointsApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: AudiencesGetNameParameter
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1247,8 +1247,8 @@ class DatapointsApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by id.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1274,9 +1274,9 @@ class DatapointsApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: AudiencesGetNameParameter
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1336,8 +1336,8 @@ class DatapointsApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        id: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by id.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1363,9 +1363,9 @@ class DatapointsApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param id: Filter by id.
-        :type id: AudiencesGetNameParameter
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

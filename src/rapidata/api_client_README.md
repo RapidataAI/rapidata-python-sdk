@@ -93,29 +93,34 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_audience_id_recreate_external_audiences_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_recreate_external_audiences_post) | **POST** /audience/{audienceId}/recreate-external-audiences | Recreates external audiences for the specified audience.
 *AudienceApi* | [**audience_audience_id_recruit_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_recruit_post) | **POST** /audience/{audienceId}/recruit | Starts recruiting users for the specified audience.
 *AudienceApi* | [**audience_audience_id_resume_distillation_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_resume_distillation_post) | **POST** /audience/{audienceId}/resume-distillation | Resumes the distillation campaign for the specified audience.
+*AudienceApi* | [**audience_audience_id_state_recalculation_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_state_recalculation_get) | **GET** /audience/{audienceId}/state-recalculation | Returns the most recent audience state recalculation for the given audience, regardless of state.
 *AudienceApi* | [**audience_audience_id_user_metrics_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_user_metrics_get) | **GET** /audience/{audienceId}/user-metrics | Gets the count of users in each state for the specified audience.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
+*AudienceApi* | [**audience_state_recalculation_recalculation_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_state_recalculation_recalculation_id_get) | **GET** /audience/state-recalculation/{recalculationId} | Returns the audience state recalculation with the given id.
 *AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all audiences visible to the caller.
 *BatchUploadApi* | [**asset_batch_upload_batch_upload_id_abort_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_abort_post) | **POST** /asset/batch-upload/{batchUploadId}/abort | Aborts the specified batch upload.
 *BatchUploadApi* | [**asset_batch_upload_batch_upload_id_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_get) | **GET** /asset/batch-upload/{batchUploadId} | Gets the full result of a batch upload including all items.
 *BatchUploadApi* | [**asset_batch_upload_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_post) | **POST** /asset/batch-upload | Creates a batch upload and queues processing for each URL.
 *BatchUploadApi* | [**asset_batch_upload_status_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_status_get) | **GET** /asset/batch-upload/status | Gets aggregated status for batch uploads identified by IDs or a correlation ID.
-*BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
-*BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
-*BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
-*BenchmarkApi* | [**benchmark_benchmark_id_leaderboards_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_leaderboards_get) | **GET** /benchmark/{benchmarkId}/leaderboards | Queries all leaderboards for the current user&#39;s benchmarks.
+*BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities.
+*BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its id.
+*BenchmarkApi* | [**benchmark_benchmark_id_leaderboards_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_leaderboards_get) | **GET** /benchmark/{benchmarkId}/leaderboards | Queries all leaderboards for the given benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_matrix_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_matrix_get) | **GET** /benchmark/{benchmarkId}/matrix | Returns the pairwise vote matrix for a benchmark.
-*BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
+*BenchmarkApi* | [**benchmark_benchmark_id_name_put**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_name_put) | **PUT** /benchmark/{benchmarkId}/name | Updates the name of a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_participant_participant_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participant_participant_id_delete) | **DELETE** /benchmark/{benchmarkId}/participant/{participantId} | Deletes a participant on a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Queries all participants within a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_submit_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_submit_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/submit | Submits a participant to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_patch**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_patch) | **PATCH** /benchmark/{benchmarkId} | Updates a benchmark using patch semantics.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark.
-*BenchmarkApi* | [**benchmark_benchmark_id_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_get) | **GET** /benchmark/{benchmarkId}/standings | Queries all the standings for a benchmark by its ID.
-*BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Query all tags within a benchmark
+*BenchmarkApi* | [**benchmark_benchmark_id_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_get) | **GET** /benchmark/{benchmarkId}/standings | Queries all standings for a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Queries all tags within a benchmark.
 *BenchmarkApi* | [**benchmark_combined_matrix_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_combined_matrix_get) | **GET** /benchmark/combined-matrix | Returns the combined pairwise vote matrix for multiple benchmarks.
 *BenchmarkApi* | [**benchmark_combined_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_combined_standings_get) | **GET** /benchmark/combined-standings | Returns the combined standings for multiple benchmarks.
-*BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
-*BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
+*BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark.
+*BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the current user.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
 *CampaignApi* | [**campaign_boost_global_level_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_global_level_put) | **PUT** /campaign/boost/global-level | Sets or clears the manual global boost level.
@@ -128,19 +133,19 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes the specified campaign.
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | 
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries campaigns with optional filtering, sorting, and pagination.
-*ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a customers&#39; client.
-*ClientApi* | [**client_client_id_get**](rapidata/api_client/docs/ClientApi.md#client_client_id_get) | **GET** /client/{clientId} | Gets a specific client by its ID.
+*ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a client.
 *ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
-*ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client dynamically.
-*ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries the clients for the current customer.
+*ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client using the OpenID Connect Dynamic Client Registration protocol.
+*ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries clients for the current customer.
+*ClientApi* | [**identity_get_client**](rapidata/api_client/docs/ClientApi.md#identity_get_client) | **GET** /client/{clientId} | Gets the details of a specific client.
 *CustomerApi* | [**customers_get**](rapidata/api_client/docs/CustomerApi.md#customers_get) | **GET** /customers | Queries customers with filtering and pagination.
-*CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that are potentially eligible for validation set creation.
-*CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid with JSON body.
-*CustomerRapidApi* | [**rapid_global_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_global_responses_get) | **GET** /rapid/global-responses | A public endpoint to query the most recent responses globally
+*CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that may be eligible for validation-set creation.
+*CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new demographic rapid.
+*CustomerRapidApi* | [**rapid_global_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_global_responses_get) | **GET** /rapid/global-responses | Gets the most recent public responses across all customers.
 *CustomerRapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
 *CustomerRapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
-*CustomerRapidApi* | [**rapid_rapid_id_unflag_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_unflag_post) | **POST** /rapid/{rapidId}/unflag | Unflags a flagged rapid.  This will add the rapid back to the active labeling pool and prevent it from being flagged again.
-*CustomerRapidApi* | [**rapid_validation_rapid_id_patch**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_validation_rapid_id_patch) | **PATCH** /rapid/validation/{rapidId} | Updates the validation information of a Rapid.
+*CustomerRapidApi* | [**rapid_rapid_id_unflag_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_unflag_post) | **POST** /rapid/{rapidId}/unflag | Unflags a flagged rapid.
+*CustomerRapidApi* | [**rapid_validation_rapid_id_patch**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_validation_rapid_id_patch) | **PATCH** /rapid/validation/{rapidId} | Updates the validation information of a rapid.
 *CustomerRapidApi* | [**rapids_flagged_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapids_flagged_get) | **GET** /rapids/flagged | Queries all rapids that have been flagged.
 *DatapointsApi* | [**datapoint_datapoint_id_delete**](rapidata/api_client/docs/DatapointsApi.md#datapoint_datapoint_id_delete) | **DELETE** /datapoint/{datapointId} | Deletes the specified datapoint.
 *DatapointsApi* | [**datapoint_datapoint_id_get**](rapidata/api_client/docs/DatapointsApi.md#datapoint_datapoint_id_get) | **GET** /datapoint/{datapointId} | Gets the details of a datapoint by its id.
@@ -168,41 +173,48 @@ Class | Method | HTTP request | Description
 *FlowApi* | [**flow_ranking_flow_id_response_count_histogram_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_histogram_get) | **GET** /flow/ranking/{flowId}/response-count-histogram | Returns the distribution of total votes per completed flow item.
 *FlowApi* | [**flow_ranking_flow_id_response_count_timeseries_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_timeseries_get) | **GET** /flow/ranking/{flowId}/response-count-timeseries | Returns average response counts bucketed over time for completed flow items.
 *FlowItemApi* | [**flow_item_flow_item_id_stop_post**](rapidata/api_client/docs/FlowItemApi.md#flow_item_flow_item_id_stop_post) | **POST** /flow/item/{flowItemId}/stop | Stops the specified flow item and triggers partial result processing.
-*GroupedRankingWorkflowApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingWorkflowApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Get the result overview for a multi ranking workflow.
-*IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
-*IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+*GroupedRankingApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Gets the result overview for a grouped ranking workflow.
+*IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Reads the bridge token keys for a given read key.
+*IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write bridge token keys for a client.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
-*IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
+*IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Stores the referrer in a cookie for later use during sign-up.
 *JobApi* | [**job_definition_definition_id_delete**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_delete) | **DELETE** /job/definition/{definitionId} | Deletes a job definition and all its revisions.
 *JobApi* | [**job_definition_definition_id_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_get) | **GET** /job/definition/{definitionId} | Gets a job definition by its id.
 *JobApi* | [**job_definition_definition_id_patch**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_patch) | **PATCH** /job/definition/{definitionId} | Updates a job definition.
 *JobApi* | [**job_definition_definition_id_revision_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_get) | **GET** /job/definition/{definitionId}/revision | Gets the latest revision for a job definition.
 *JobApi* | [**job_definition_definition_id_revision_post**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_post) | **POST** /job/definition/{definitionId}/revision | Creates a new revision for an existing job definition.
 *JobApi* | [**job_definition_definition_id_revision_revision_number_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_revision_number_get) | **GET** /job/definition/{definitionId}/revision/{revisionNumber} | Gets a specific revision for a job definition.
-*JobApi* | [**job_definition_definition_id_revisions_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revisions_get) | **GET** /job/definition/{definitionId}/revisions | Queries job revisions for a specific definition based on filter, page, and sort criteria.
+*JobApi* | [**job_definition_definition_id_revisions_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revisions_get) | **GET** /job/definition/{definitionId}/revisions | Queries the revisions of a specific job definition.
 *JobApi* | [**job_definition_post**](rapidata/api_client/docs/JobApi.md#job_definition_post) | **POST** /job/definition | Creates a new job definition.
-*JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions based on filter, page, and sort criteria.
+*JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions visible to the caller.
 *JobApi* | [**job_job_id_delete**](rapidata/api_client/docs/JobApi.md#job_job_id_delete) | **DELETE** /job/{jobId} | Deletes a job.
 *JobApi* | [**job_job_id_download_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_download_results_get) | **GET** /job/{jobId}/download-results | Downloads the results of a job as a file attachment.
 *JobApi* | [**job_job_id_get**](rapidata/api_client/docs/JobApi.md#job_job_id_get) | **GET** /job/{jobId} | Gets a job by its id.
 *JobApi* | [**job_job_id_patch**](rapidata/api_client/docs/JobApi.md#job_job_id_patch) | **PATCH** /job/{jobId} | Updates a job.
 *JobApi* | [**job_job_id_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_results_get) | **GET** /job/{jobId}/results | Gets the results of a job as a JSON string.
 *JobApi* | [**job_post**](rapidata/api_client/docs/JobApi.md#job_post) | **POST** /job | Creates a new job from a job definition and audience.
-*JobApi* | [**jobs_get**](rapidata/api_client/docs/JobApi.md#jobs_get) | **GET** /jobs | Queries jobs based on filter, page, and sort criteria.
-*LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboardId and participantId.
+*JobApi* | [**jobs_get**](rapidata/api_client/docs/JobApi.md#jobs_get) | **GET** /jobs | Queries jobs visible to the caller.
+*LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboard id and participant id.
 *LeaderboardApi* | [**leaderboard_combined_matrix_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_combined_matrix_get) | **GET** /leaderboard/combined-matrix | Returns the combined pairwise vote matrix for multiple leaderboards.
 *LeaderboardApi* | [**leaderboard_combined_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_combined_standings_get) | **GET** /leaderboard/combined-standings | Returns the combined standings for multiple leaderboards.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_boost_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_boost_post) | **POST** /leaderboard/{leaderboardId}/boost | Boosts a subset of participants within a leaderboard.
-*LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
-*LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its ID.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its id.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its id.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_matrix_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_matrix_get) | **GET** /leaderboard/{leaderboardId}/matrix | Returns the pairwise vote matrix for a leaderboard.
-*LeaderboardApi* | [**leaderboard_leaderboard_id_patch**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_patch) | **PATCH** /leaderboard/{leaderboardId} | Updates the response config of a leaderboard.
-*LeaderboardApi* | [**leaderboard_leaderboard_id_runs_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_runs_get) | **GET** /leaderboard/{leaderboardId}/runs | Gets the runs related to a leaderboard
-*LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | queries all the participants connected to leaderboard by its ID.
-*LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
-*LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards for a specific benchmark.
-*NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
-*NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Unsubscribes a user from the newsletter.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_name_put**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_name_put) | **PUT** /leaderboard/{leaderboardId}/name | Updates the name of a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participant_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participant_participant_id_get) | **GET** /leaderboard/{leaderboardId}/participant/{participantId} | Gets a participant by its id.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_get) | **GET** /leaderboard/{leaderboardId}/participants | Queries all participants connected to a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_participant_id_submit_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_participant_id_submit_post) | **POST** /leaderboard/{leaderboardId}/participants/{participantId}/submit | Submits a participant to a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_post) | **POST** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_patch**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_patch) | **PATCH** /leaderboard/{leaderboardId} | Updates a leaderboard using patch semantics.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_post) | **POST** /leaderboard/{leaderboardId}/prompts | Adds a new prompt to a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_response_config_put**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_response_config_put) | **PUT** /leaderboard/{leaderboardId}/response-config | Updates the response configuration of a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_runs_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_runs_get) | **GET** /leaderboard/{leaderboardId}/runs | Queries the runs related to a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | Queries all standings for a leaderboard by its id.
+*LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard.
+*LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards accessible to the current user.
+*NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs an email address up to the newsletter.
+*NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Removes an email address from the newsletter.
 *OrderApi* | [**order_complex_post**](rapidata/api_client/docs/OrderApi.md#order_complex_post) | **POST** /order/complex | Creates a new order with a custom pipeline configuration.
 *OrderApi* | [**order_order_id_approve_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_approve_post) | **POST** /order/{orderId}/approve | Approves a submitted order so the pipeline can start processing it.
 *OrderApi* | [**order_order_id_clone_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_clone_post) | **POST** /order/{orderId}/clone | Clones an existing public order.
@@ -225,16 +237,18 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | 
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves all publicly available orders.
 *OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations.
-*ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant on a benchmark.
-*ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
-*ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by it&#39;s Id.
+*ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant.
+*ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | Disables a participant in a benchmark.
+*ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by its id.
+*ParticipantApi* | [**participant_participant_id_name_put**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_name_put) | **PUT** /participant/{participantId}/name | Updates the name of a participant.
 *ParticipantApi* | [**participant_participant_id_patch**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_patch) | **PATCH** /participant/{participantId} | Updates a participant using patch semantics.
+*ParticipantApi* | [**participant_participant_id_sample_new_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_new_post) | **POST** /participant/{participantId}/sample-new | Adds a sample to a participant.
 *ParticipantApi* | [**participant_participant_id_sample_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_post) | **POST** /participant/{participantId}/sample | Adds a sample to a participant.
-*ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a sample.
+*ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a participant sample.
 *ParticipantApi* | [**participants_participant_id_submit_post**](rapidata/api_client/docs/ParticipantApi.md#participants_participant_id_submit_post) | **POST** /participants/{participantId}/submit | Submits a participant to a benchmark.
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
-*PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download.
+*PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Streams the preliminary download file when ready.
 *PromptApi* | [**benchmark_prompt_prompt_id_tags_put**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_tags_put) | **PUT** /benchmark-prompt/{promptId}/tags | Updates the tags associated with a prompt.
 *RankingApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/RankingApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Gets the result overview for a ranking workflow.
 *RankingFlowApi* | [**flow_ranking_flow_id_config_patch**](rapidata/api_client/docs/RankingFlowApi.md#flow_ranking_flow_id_config_patch) | **PATCH** /flow/ranking/{flowId}/config | Updates the configuration of a ranking flow.
@@ -248,53 +262,59 @@ Class | Method | HTTP request | Description
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *SampleApi* | [**benchmark_benchmark_id_samples_identifier_get**](rapidata/api_client/docs/SampleApi.md#benchmark_benchmark_id_samples_identifier_get) | **GET** /benchmark/{benchmarkId}/samples/{identifier} | Returns the paged samples of a benchmark filtered by an identifier.
 *SampleApi* | [**benchmark_sample_sample_id_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_get) | **GET** /benchmark-sample/{sampleId} | Gets a benchmark sample by its id.
+*SampleApi* | [**benchmark_sample_sample_id_navigation_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_navigation_get) | **GET** /benchmark-sample/{sampleId}/navigation | Gets navigation context (previous, next, related samples) for a sample.
 *SampleApi* | [**participant_participant_id_samples_get**](rapidata/api_client/docs/SampleApi.md#participant_participant_id_samples_get) | **GET** /participant/{participantId}/samples | Queries all samples of a participant.
-*SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Get the result overview for a simple workflow.
-*SurveyApi* | [**identity_survey_post**](rapidata/api_client/docs/SurveyApi.md#identity_survey_post) | **POST** /identity/survey | Sends a survey.
-*UserRapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Validates that the rapids associated with the current user are active.
-*UserRapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Used to report an issue with a rapid.
-*UserRapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump. Can be used to restore zustand state or anything alike.
-*UserRapidApi* | [**rapid_response_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_response_post) | **POST** /rapid/response | Submits a response for a Rapid.
-*UserRapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Skips a Rapid for the user.
+*SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Gets the result overview for a simple workflow.
+*SurveyApi* | [**identity_survey_post**](rapidata/api_client/docs/SurveyApi.md#identity_survey_post) | **POST** /identity/survey | Submits a survey for the calling customer.
+*UserRapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Returns whether the rapid bag associated with the current user is still valid.
+*UserRapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Reports an issue with a rapid.
+*UserRapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump so that it can be replayed or restored.
+*UserRapidApi* | [**rapid_response_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_response_post) | **POST** /rapid/response | Submits a response for a rapid.
+*UserRapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Records that the user skipped the specified rapid.
 *ValidationFeedbackApi* | [**rapid_rapid_id_validation_feedback_get**](rapidata/api_client/docs/ValidationFeedbackApi.md#rapid_rapid_id_validation_feedback_get) | **GET** /rapid/{rapidId}/validation-feedback | Queries validation feedbacks for a rapid.
 *ValidationFeedbackApi* | [**rapid_rapid_id_validation_feedback_post**](rapidata/api_client/docs/ValidationFeedbackApi.md#rapid_rapid_id_validation_feedback_post) | **POST** /rapid/{rapidId}/validation-feedback | Submits feedback for a validation rapid outcome.
 *ValidationSetApi* | [**validation_set_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_post) | **POST** /validation-set | Creates a new empty validation set.
 *ValidationSetApi* | [**validation_set_recommended_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_recommended_get) | **GET** /validation-set/recommended | Gets a validation set that is available to the user and best matches the provided parameters.
-*ValidationSetApi* | [**validation_set_validation_set_id_delete**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_delete) | **DELETE** /validation-set/{validationSetId} | Gets a validation set by the id.
-*ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation-set to a file.
-*ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
-*ValidationSetApi* | [**validation_set_validation_set_id_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_patch) | **PATCH** /validation-set/{validationSetId} | Updates different characteristics of a validation set.
-*ValidationSetApi* | [**validation_set_validation_set_id_rapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_post) | **POST** /validation-set/{validationSetId}/rapid | Adds a new validation rapid to the validation set using JSON body.
+*ValidationSetApi* | [**validation_set_validation_set_id_delete**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_delete) | **DELETE** /validation-set/{validationSetId} | Deletes a validation set by id.
+*ValidationSetApi* | [**validation_set_validation_set_id_dimensions_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_patch) | **PATCH** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation set to a file.
+*ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by id.
+*ValidationSetApi* | [**validation_set_validation_set_id_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_patch) | **PATCH** /validation-set/{validationSetId} | Updates different characteristics of a validation set using patch semantics.
+*ValidationSetApi* | [**validation_set_validation_set_id_rapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_post) | **POST** /validation-set/{validationSetId}/rapid | Adds a new validation rapid to a validation set using a JSON body.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapids_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapids_get) | **GET** /validation-set/{validationSetId}/rapids | Queries the validation rapids for a specific validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_should_alert_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_should_alert_patch) | **PATCH** /validation-set/{validationSetId}/shouldAlert | Updates the shouldAlert field on all rapids within a validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_update_labeling_hints_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_update_labeling_hints_post) | **POST** /validation-set/{validationSetId}/update-labeling-hints | Refreshes the labeling hints for a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_visibility_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_visibility_patch) | **PATCH** /validation-set/{validationSetId}/visibility | Updates the visibility of a validation set.
 *ValidationSetApi* | [**validation_sets_available_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_available_get) | **GET** /validation-sets/available | Gets the available validation sets for the current user.
 *ValidationSetApi* | [**validation_sets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_get) | **GET** /validation-sets | Queries available validation sets based on the provided filter, paging and sorting criteria.
-*WorkflowApi* | [**workflow_delete_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_delete_delete) | **DELETE** /workflow/delete | Deletes a workflow.
-*WorkflowApi* | [**workflow_workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_compare_ab_summary_get) | **GET** /workflow/{workflowId}/compare-ab-summary | Calculates a summary of the results for a simple ranking workflow.  The summary includes the number of times an asset at each index was the winner.
+*WorkflowApi* | [**workflow_workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_compare_ab_summary_get) | **GET** /workflow/{workflowId}/compare-ab-summary | Returns the number of times each asset index won across the workflow&#39;s rapids.
+*WorkflowApi* | [**workflow_workflow_id_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_delete) | **DELETE** /workflow/{workflowId} | Deletes a workflow by its id.
 *WorkflowApi* | [**workflow_workflow_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_get) | **GET** /workflow/{workflowId} | Returns the workflow identified by .
-*WorkflowApi* | [**workflow_workflow_id_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_progress_get) | **GET** /workflow/{workflowId}/progress | Get the progress of a workflow.
-*WorkflowApi* | [**workflow_workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_responses_get) | **GET** /workflow/{workflowId}/responses | Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+*WorkflowApi* | [**workflow_workflow_id_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_progress_get) | **GET** /workflow/{workflowId}/progress | Gets the progress of a workflow.
+*WorkflowApi* | [**workflow_workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_responses_get) | **GET** /workflow/{workflowId}/responses | Gets the most recent or oldest responses for a workflow, across any rapid.
 *WorkflowApi* | [**workflows_get**](rapidata/api_client/docs/WorkflowApi.md#workflows_get) | **GET** /workflows | Queries workflows based on the provided filter, page, and sort criteria.
 
 
 ## Documentation For Models
 
  - [AddExampleToAudienceEndpointInput](rapidata/api_client/docs/AddExampleToAudienceEndpointInput.md)
- - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
- - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
+ - [AddExampleToAudienceEndpointOutput](rapidata/api_client/docs/AddExampleToAudienceEndpointOutput.md)
+ - [AddUserResponseEndpointInput](rapidata/api_client/docs/AddUserResponseEndpointInput.md)
+ - [AddUserResponseEndpointOutput](rapidata/api_client/docs/AddUserResponseEndpointOutput.md)
+ - [AddValidationRapidEndpointInput](rapidata/api_client/docs/AddValidationRapidEndpointInput.md)
  - [AgeUserFilterModelAgeGroup](rapidata/api_client/docs/AgeUserFilterModelAgeGroup.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
- - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
  - [AttachCategoryWorkflowRapidBlueprintModelCategory](rapidata/api_client/docs/AttachCategoryWorkflowRapidBlueprintModelCategory.md)
+ - [AudienceAudienceIdJobsGetJobIdParameter](rapidata/api_client/docs/AudienceAudienceIdJobsGetJobIdParameter.md)
  - [AudienceBoostModel](rapidata/api_client/docs/AudienceBoostModel.md)
  - [AudienceBoostModel2](rapidata/api_client/docs/AudienceBoostModel2.md)
  - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
+ - [AudienceStateRecalculationPhase](rapidata/api_client/docs/AudienceStateRecalculationPhase.md)
+ - [AudienceStateRecalculationState](rapidata/api_client/docs/AudienceStateRecalculationState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
- - [AudiencesGetNameParameter](rapidata/api_client/docs/AudiencesGetNameParameter.md)
  - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
  - [BatchUploadUrlStatus](rapidata/api_client/docs/BatchUploadUrlStatus.md)
- - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
- - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
+ - [BoostLeaderboardEndpointInput](rapidata/api_client/docs/BoostLeaderboardEndpointInput.md)
  - [BoostLevel](rapidata/api_client/docs/BoostLevel.md)
  - [BoostMode](rapidata/api_client/docs/BoostMode.md)
  - [BoostStatusModel](rapidata/api_client/docs/BoostStatusModel.md)
@@ -308,7 +328,6 @@ Class | Method | HTTP request | Description
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
  - [ClassifyPayloadCategory](rapidata/api_client/docs/ClassifyPayloadCategory.md)
  - [ClientModel](rapidata/api_client/docs/ClientModel.md)
- - [ClientsQueryResult](rapidata/api_client/docs/ClientsQueryResult.md)
  - [CloneOrderEndpointInput](rapidata/api_client/docs/CloneOrderEndpointInput.md)
  - [CloneOrderEndpointOutput](rapidata/api_client/docs/CloneOrderEndpointOutput.md)
  - [ComparisonOperator](rapidata/api_client/docs/ComparisonOperator.md)
@@ -319,23 +338,22 @@ Class | Method | HTTP request | Description
  - [CreateAudienceEndpointOutput](rapidata/api_client/docs/CreateAudienceEndpointOutput.md)
  - [CreateBatchUploadEndpointInput](rapidata/api_client/docs/CreateBatchUploadEndpointInput.md)
  - [CreateBatchUploadEndpointOutput](rapidata/api_client/docs/CreateBatchUploadEndpointOutput.md)
- - [CreateBenchmarkModel](rapidata/api_client/docs/CreateBenchmarkModel.md)
- - [CreateBenchmarkParticipantModel](rapidata/api_client/docs/CreateBenchmarkParticipantModel.md)
- - [CreateBenchmarkParticipantResult](rapidata/api_client/docs/CreateBenchmarkParticipantResult.md)
- - [CreateBenchmarkPromptResult](rapidata/api_client/docs/CreateBenchmarkPromptResult.md)
- - [CreateBenchmarkResult](rapidata/api_client/docs/CreateBenchmarkResult.md)
- - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
- - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
+ - [CreateBenchmarkEndpointInput](rapidata/api_client/docs/CreateBenchmarkEndpointInput.md)
+ - [CreateBenchmarkEndpointOutput](rapidata/api_client/docs/CreateBenchmarkEndpointOutput.md)
+ - [CreateBenchmarkParticipantEndpointInput](rapidata/api_client/docs/CreateBenchmarkParticipantEndpointInput.md)
+ - [CreateBenchmarkParticipantEndpointOutput](rapidata/api_client/docs/CreateBenchmarkParticipantEndpointOutput.md)
+ - [CreateBridgeTokenEndpointOutput](rapidata/api_client/docs/CreateBridgeTokenEndpointOutput.md)
+ - [CreateClientEndpointInput](rapidata/api_client/docs/CreateClientEndpointInput.md)
+ - [CreateClientEndpointOutput](rapidata/api_client/docs/CreateClientEndpointOutput.md)
  - [CreateComplexOrderEndpointInput](rapidata/api_client/docs/CreateComplexOrderEndpointInput.md)
  - [CreateComplexOrderEndpointOutput](rapidata/api_client/docs/CreateComplexOrderEndpointOutput.md)
- - [CreateCustomerClientResult](rapidata/api_client/docs/CreateCustomerClientResult.md)
  - [CreateDatapointEndpointInput](rapidata/api_client/docs/CreateDatapointEndpointInput.md)
  - [CreateDatapointEndpointOutput](rapidata/api_client/docs/CreateDatapointEndpointOutput.md)
  - [CreateDatasetEndpointInput](rapidata/api_client/docs/CreateDatasetEndpointInput.md)
  - [CreateDatasetEndpointOutput](rapidata/api_client/docs/CreateDatasetEndpointOutput.md)
  - [CreateDatasetGroupEndpointInput](rapidata/api_client/docs/CreateDatasetGroupEndpointInput.md)
- - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
- - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
+ - [CreateDemographicRapidEndpointInput](rapidata/api_client/docs/CreateDemographicRapidEndpointInput.md)
+ - [CreateDemographicRapidEndpointOutput](rapidata/api_client/docs/CreateDemographicRapidEndpointOutput.md)
  - [CreateFlowEndpointInput](rapidata/api_client/docs/CreateFlowEndpointInput.md)
  - [CreateFlowEndpointOutput](rapidata/api_client/docs/CreateFlowEndpointOutput.md)
  - [CreateFlowItemEndpointInput](rapidata/api_client/docs/CreateFlowItemEndpointInput.md)
@@ -346,17 +364,26 @@ Class | Method | HTTP request | Description
  - [CreateJobEndpointOutput](rapidata/api_client/docs/CreateJobEndpointOutput.md)
  - [CreateJobRevisionEndpointInput](rapidata/api_client/docs/CreateJobRevisionEndpointInput.md)
  - [CreateJobRevisionEndpointOutput](rapidata/api_client/docs/CreateJobRevisionEndpointOutput.md)
- - [CreateLeaderboardModel](rapidata/api_client/docs/CreateLeaderboardModel.md)
- - [CreateLeaderboardResult](rapidata/api_client/docs/CreateLeaderboardResult.md)
+ - [CreateLeaderboardEndpointInput](rapidata/api_client/docs/CreateLeaderboardEndpointInput.md)
+ - [CreateLeaderboardEndpointOutput](rapidata/api_client/docs/CreateLeaderboardEndpointOutput.md)
+ - [CreateLeaderboardParticipantEndpointInput](rapidata/api_client/docs/CreateLeaderboardParticipantEndpointInput.md)
+ - [CreateLeaderboardParticipantEndpointOutput](rapidata/api_client/docs/CreateLeaderboardParticipantEndpointOutput.md)
  - [CreateOrderEndpointOutput](rapidata/api_client/docs/CreateOrderEndpointOutput.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
- - [CreateRapidResult](rapidata/api_client/docs/CreateRapidResult.md)
- - [CreateSampleModel](rapidata/api_client/docs/CreateSampleModel.md)
+ - [CreatePromptForBenchmarkEndpointInput](rapidata/api_client/docs/CreatePromptForBenchmarkEndpointInput.md)
+ - [CreatePromptForBenchmarkEndpointOutput](rapidata/api_client/docs/CreatePromptForBenchmarkEndpointOutput.md)
+ - [CreatePromptForLeaderboardEndpointOutput](rapidata/api_client/docs/CreatePromptForLeaderboardEndpointOutput.md)
+ - [CreateSampleEndpointInput](rapidata/api_client/docs/CreateSampleEndpointInput.md)
+ - [CreateSampleEndpointOutput](rapidata/api_client/docs/CreateSampleEndpointOutput.md)
+ - [CreateSampleNewEndpointInput](rapidata/api_client/docs/CreateSampleNewEndpointInput.md)
+ - [CreateSampleNewEndpointOutput](rapidata/api_client/docs/CreateSampleNewEndpointOutput.md)
  - [CreateUnsupportedOrderEndpointInput](rapidata/api_client/docs/CreateUnsupportedOrderEndpointInput.md)
  - [CreateValidationFeedbackEndpointInput](rapidata/api_client/docs/CreateValidationFeedbackEndpointInput.md)
- - [CreateValidationSetModel](rapidata/api_client/docs/CreateValidationSetModel.md)
+ - [CreateValidationSetEndpointInput](rapidata/api_client/docs/CreateValidationSetEndpointInput.md)
+ - [CreateValidationSetEndpointOutput](rapidata/api_client/docs/CreateValidationSetEndpointOutput.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
  - [DefinitionType](rapidata/api_client/docs/DefinitionType.md)
+ - [DeleteAudienceExampleEndpointOutput](rapidata/api_client/docs/DeleteAudienceExampleEndpointOutput.md)
  - [DeviceType](rapidata/api_client/docs/DeviceType.md)
  - [DistillingRetrievalMode](rapidata/api_client/docs/DistillingRetrievalMode.md)
  - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
@@ -369,21 +396,20 @@ Class | Method | HTTP request | Description
  - [ExampleVisibility](rapidata/api_client/docs/ExampleVisibility.md)
  - [ExistingAssetInput](rapidata/api_client/docs/ExistingAssetInput.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
- - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
  - [FileType](rapidata/api_client/docs/FileType.md)
- - [Filter](rapidata/api_client/docs/Filter.md)
- - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
  - [FlowItemState](rapidata/api_client/docs/FlowItemState.md)
  - [FlowType](rapidata/api_client/docs/FlowType.md)
- - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
+ - [ForkBenchmarkEndpointOutput](rapidata/api_client/docs/ForkBenchmarkEndpointOutput.md)
  - [GenderUserFilterModelGender](rapidata/api_client/docs/GenderUserFilterModelGender.md)
  - [GetAudienceByIdEndpointOutput](rapidata/api_client/docs/GetAudienceByIdEndpointOutput.md)
+ - [GetAudienceStateRecalculationByIdEndpointOutput](rapidata/api_client/docs/GetAudienceStateRecalculationByIdEndpointOutput.md)
  - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
- - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
+ - [GetAvailableValidationSetsEndpointOutput](rapidata/api_client/docs/GetAvailableValidationSetsEndpointOutput.md)
+ - [GetAvailableValidationSetsEndpointValidationSetOverviewOutputModel](rapidata/api_client/docs/GetAvailableValidationSetsEndpointValidationSetOverviewOutputModel.md)
  - [GetBatchUploadResultEndpointOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointOutput.md)
  - [GetBatchUploadResultEndpointUrlOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointUrlOutput.md)
  - [GetBatchUploadStatusEndpointOutput](rapidata/api_client/docs/GetBatchUploadStatusEndpointOutput.md)
- - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
+ - [GetBenchmarkByIdEndpointOutput](rapidata/api_client/docs/GetBenchmarkByIdEndpointOutput.md)
  - [GetBoostInsightsEndpointAudienceOutput](rapidata/api_client/docs/GetBoostInsightsEndpointAudienceOutput.md)
  - [GetBoostInsightsEndpointContributorOutput](rapidata/api_client/docs/GetBoostInsightsEndpointContributorOutput.md)
  - [GetBoostInsightsEndpointGlobalBoostOutput](rapidata/api_client/docs/GetBoostInsightsEndpointGlobalBoostOutput.md)
@@ -401,64 +427,72 @@ Class | Method | HTTP request | Description
  - [GetCombinedLeaderboardMatrixEndpointOutput](rapidata/api_client/docs/GetCombinedLeaderboardMatrixEndpointOutput.md)
  - [GetCombinedLeaderboardStandingsEndpointOutput](rapidata/api_client/docs/GetCombinedLeaderboardStandingsEndpointOutput.md)
  - [GetCombinedLeaderboardStandingsEndpointOutputItem](rapidata/api_client/docs/GetCombinedLeaderboardStandingsEndpointOutputItem.md)
- - [GetCompareAbSummaryResult](rapidata/api_client/docs/GetCompareAbSummaryResult.md)
+ - [GetCompareAbSummaryEndpointOutput](rapidata/api_client/docs/GetCompareAbSummaryEndpointOutput.md)
  - [GetCompletionTimeHistogramEndpointOutput](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutput.md)
  - [GetCompletionTimeHistogramEndpointOutputBucket](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutputBucket.md)
  - [GetDatapointEndpointOutput](rapidata/api_client/docs/GetDatapointEndpointOutput.md)
- - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
- - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
+ - [GetDatasetByIdEndpointOutput](rapidata/api_client/docs/GetDatasetByIdEndpointOutput.md)
+ - [GetDatasetProgressEndpointOutput](rapidata/api_client/docs/GetDatasetProgressEndpointOutput.md)
  - [GetFailedDatapointsEndpointDatapoint](rapidata/api_client/docs/GetFailedDatapointsEndpointDatapoint.md)
  - [GetFailedDatapointsEndpointOutput](rapidata/api_client/docs/GetFailedDatapointsEndpointOutput.md)
  - [GetFlowItemByIdEndpointOutput](rapidata/api_client/docs/GetFlowItemByIdEndpointOutput.md)
  - [GetFlowItemCreationTimeseriesEndpointOutput](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutput.md)
  - [GetFlowItemCreationTimeseriesEndpointOutputDataPoint](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutputDataPoint.md)
- - [GetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResult.md)
+ - [GetGlobalResponsesEndpointOutput](rapidata/api_client/docs/GetGlobalResponsesEndpointOutput.md)
+ - [GetGlobalResponsesEndpointResponse](rapidata/api_client/docs/GetGlobalResponsesEndpointResponse.md)
+ - [GetGroupedRankingWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsEndpointOutput.md)
+ - [GetGroupedRankingWorkflowResultsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsEndpointPagedResultOfOutput.md)
  - [GetJobByIdEndpointOutput](rapidata/api_client/docs/GetJobByIdEndpointOutput.md)
  - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
  - [GetJobRevisionEndpointOutput](rapidata/api_client/docs/GetJobRevisionEndpointOutput.md)
- - [GetLeaderboardByIdResult](rapidata/api_client/docs/GetLeaderboardByIdResult.md)
+ - [GetLatestAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/GetLatestAudienceStateRecalculationEndpointOutput.md)
+ - [GetLeaderboardByIdEndpointOutput](rapidata/api_client/docs/GetLeaderboardByIdEndpointOutput.md)
  - [GetOrderByIdEndpointOutput](rapidata/api_client/docs/GetOrderByIdEndpointOutput.md)
- - [GetParticipantByIdResult](rapidata/api_client/docs/GetParticipantByIdResult.md)
- - [GetPipelineByIdResult](rapidata/api_client/docs/GetPipelineByIdResult.md)
+ - [GetParticipantByIdEndpointOutput](rapidata/api_client/docs/GetParticipantByIdEndpointOutput.md)
+ - [GetParticipantByIdObsoleteEndpointOutput](rapidata/api_client/docs/GetParticipantByIdObsoleteEndpointOutput.md)
+ - [GetPipelineByIdEndpointOutput](rapidata/api_client/docs/GetPipelineByIdEndpointOutput.md)
  - [GetPromptsByBenchmarkEndpointOutput](rapidata/api_client/docs/GetPromptsByBenchmarkEndpointOutput.md)
  - [GetPromptsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/GetPromptsByBenchmarkEndpointPagedResultOfOutput.md)
  - [GetPublicOrdersEndpointOrderOutput](rapidata/api_client/docs/GetPublicOrdersEndpointOrderOutput.md)
  - [GetPublicOrdersEndpointOutput](rapidata/api_client/docs/GetPublicOrdersEndpointOutput.md)
- - [GetPublicResponsesResult](rapidata/api_client/docs/GetPublicResponsesResult.md)
- - [GetPublicResponsesResultResponse](rapidata/api_client/docs/GetPublicResponsesResultResponse.md)
  - [GetRankingFlowItemResultsEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemResultsEndpointOutput.md)
  - [GetRankingFlowItemResultsEndpointOutputDatapoint](rapidata/api_client/docs/GetRankingFlowItemResultsEndpointOutputDatapoint.md)
  - [GetRankingFlowItemVoteMatrixEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemVoteMatrixEndpointOutput.md)
  - [GetRankingWorkflowResultsEndpointDatapoint](rapidata/api_client/docs/GetRankingWorkflowResultsEndpointDatapoint.md)
  - [GetRankingWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetRankingWorkflowResultsEndpointOutput.md)
- - [GetRecommendedValidationSetResult](rapidata/api_client/docs/GetRecommendedValidationSetResult.md)
+ - [GetRecommendedValidationSetEndpointOutput](rapidata/api_client/docs/GetRecommendedValidationSetEndpointOutput.md)
+ - [GetRecommendedValidationSetEndpointValidationSetOutputModel](rapidata/api_client/docs/GetRecommendedValidationSetEndpointValidationSetOutputModel.md)
  - [GetResponseCountHistogramEndpointOutput](rapidata/api_client/docs/GetResponseCountHistogramEndpointOutput.md)
  - [GetResponseCountHistogramEndpointOutputBucket](rapidata/api_client/docs/GetResponseCountHistogramEndpointOutputBucket.md)
  - [GetResponseCountTimeseriesEndpointOutput](rapidata/api_client/docs/GetResponseCountTimeseriesEndpointOutput.md)
  - [GetResponseCountTimeseriesEndpointOutputDataPoint](rapidata/api_client/docs/GetResponseCountTimeseriesEndpointOutputDataPoint.md)
  - [GetResponsesForRapidEndpointOutput](rapidata/api_client/docs/GetResponsesForRapidEndpointOutput.md)
  - [GetResponsesForRapidResultResponse](rapidata/api_client/docs/GetResponsesForRapidResultResponse.md)
- - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
- - [GetResponsesResultResponse](rapidata/api_client/docs/GetResponsesResultResponse.md)
  - [GetSampleByIdEndpointOutput](rapidata/api_client/docs/GetSampleByIdEndpointOutput.md)
+ - [GetSampleNavigationEndpointOutput](rapidata/api_client/docs/GetSampleNavigationEndpointOutput.md)
+ - [GetSampleNavigationEndpointSampleModel](rapidata/api_client/docs/GetSampleNavigationEndpointSampleModel.md)
  - [GetSamplesByIdentifierEndpointOutput](rapidata/api_client/docs/GetSamplesByIdentifierEndpointOutput.md)
  - [GetSamplesByIdentifierEndpointPagedResultOfOutput](rapidata/api_client/docs/GetSamplesByIdentifierEndpointPagedResultOfOutput.md)
  - [GetSamplesByParticipantEndpointISampleOutput](rapidata/api_client/docs/GetSamplesByParticipantEndpointISampleOutput.md)
  - [GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointPlaceholderSampleOutput](rapidata/api_client/docs/GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointPlaceholderSampleOutput.md)
  - [GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointSampleOutput](rapidata/api_client/docs/GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointSampleOutput.md)
  - [GetSamplesByParticipantEndpointPagedResultOfISampleOutput](rapidata/api_client/docs/GetSamplesByParticipantEndpointPagedResultOfISampleOutput.md)
- - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
- - [GetStandingByIdResult](rapidata/api_client/docs/GetStandingByIdResult.md)
+ - [GetSimpleWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetSimpleWorkflowResultsEndpointOutput.md)
+ - [GetSimpleWorkflowResultsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetSimpleWorkflowResultsEndpointPagedResultOfOutput.md)
+ - [GetStandingByIdEndpointOutput](rapidata/api_client/docs/GetStandingByIdEndpointOutput.md)
  - [GetUserScoreCacheEndpointOutput](rapidata/api_client/docs/GetUserScoreCacheEndpointOutput.md)
  - [GetValidationRapidsEndpointOutput](rapidata/api_client/docs/GetValidationRapidsEndpointOutput.md)
  - [GetValidationRapidsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetValidationRapidsEndpointPagedResultOfOutput.md)
- - [GetValidationSetByIdResult](rapidata/api_client/docs/GetValidationSetByIdResult.md)
+ - [GetValidationSetByIdEndpointOutput](rapidata/api_client/docs/GetValidationSetByIdEndpointOutput.md)
  - [GetWorkflowByIdEndpointOutput](rapidata/api_client/docs/GetWorkflowByIdEndpointOutput.md)
- - [GetWorkflowProgressResult](rapidata/api_client/docs/GetWorkflowProgressResult.md)
+ - [GetWorkflowProgressEndpointOutput](rapidata/api_client/docs/GetWorkflowProgressEndpointOutput.md)
+ - [GetWorkflowResponsesEndpointOutput](rapidata/api_client/docs/GetWorkflowResponsesEndpointOutput.md)
+ - [GetWorkflowResponsesEndpointResponse](rapidata/api_client/docs/GetWorkflowResponsesEndpointResponse.md)
  - [GetWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetWorkflowResultsEndpointOutput.md)
  - [GetWorkflowResultsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetWorkflowResultsEndpointPagedResultOfOutput.md)
  - [GetWorkflowResultsResultResponse](rapidata/api_client/docs/GetWorkflowResultsResultResponse.md)
- - [GoogleOneTapLoginModel](rapidata/api_client/docs/GoogleOneTapLoginModel.md)
+ - [GoogleOneTapLoginEndpointInput](rapidata/api_client/docs/GoogleOneTapLoginEndpointInput.md)
+ - [GoogleOneTapLoginEndpointOutput](rapidata/api_client/docs/GoogleOneTapLoginEndpointOutput.md)
  - [IArtifactModel](rapidata/api_client/docs/IArtifactModel.md)
  - [IArtifactModelCampaignArtifactModel](rapidata/api_client/docs/IArtifactModelCampaignArtifactModel.md)
  - [IArtifactModelDatasetArtifactModel](rapidata/api_client/docs/IArtifactModelDatasetArtifactModel.md)
@@ -712,48 +746,35 @@ Class | Method | HTTP request | Description
  - [IWorkflowRapidBlueprintModelPolygonWorkflowRapidBlueprintModel](rapidata/api_client/docs/IWorkflowRapidBlueprintModelPolygonWorkflowRapidBlueprintModel.md)
  - [IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel](rapidata/api_client/docs/IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel.md)
  - [IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel](rapidata/api_client/docs/IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel.md)
- - [InspectReportResult](rapidata/api_client/docs/InspectReportResult.md)
+ - [InspectReportEndpointOutput](rapidata/api_client/docs/InspectReportEndpointOutput.md)
+ - [IsRapidBagValidEndpointOutput](rapidata/api_client/docs/IsRapidBagValidEndpointOutput.md)
  - [JobDefinitionRevisionState](rapidata/api_client/docs/JobDefinitionRevisionState.md)
  - [JsonWebKey](rapidata/api_client/docs/JsonWebKey.md)
  - [JsonWebKeySet](rapidata/api_client/docs/JsonWebKeySet.md)
- - [LeaderboardsQueryResult](rapidata/api_client/docs/LeaderboardsQueryResult.md)
  - [LineResultLine](rapidata/api_client/docs/LineResultLine.md)
  - [LineResultLinePoint](rapidata/api_client/docs/LineResultLinePoint.md)
  - [LocateCoordinate](rapidata/api_client/docs/LocateCoordinate.md)
- - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
  - [NamedClassification](rapidata/api_client/docs/NamedClassification.md)
- - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
- - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
- - [PagedResultOfBenchmarkQueryResult](rapidata/api_client/docs/PagedResultOfBenchmarkQueryResult.md)
- - [PagedResultOfClientsQueryResult](rapidata/api_client/docs/PagedResultOfClientsQueryResult.md)
- - [PagedResultOfGetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/PagedResultOfGetGroupedRankingWorkflowResultsResult.md)
- - [PagedResultOfIWorkflowModel](rapidata/api_client/docs/PagedResultOfIWorkflowModel.md)
- - [PagedResultOfLeaderboardsQueryResult](rapidata/api_client/docs/PagedResultOfLeaderboardsQueryResult.md)
- - [PagedResultOfParticipantByBenchmark](rapidata/api_client/docs/PagedResultOfParticipantByBenchmark.md)
- - [PagedResultOfQueryJobDefinitionsResult](rapidata/api_client/docs/PagedResultOfQueryJobDefinitionsResult.md)
- - [PagedResultOfQueryJobRevisionsResult](rapidata/api_client/docs/PagedResultOfQueryJobRevisionsResult.md)
  - [PagedResultOfQueryJobsResult](rapidata/api_client/docs/PagedResultOfQueryJobsResult.md)
- - [PagedResultOfQueryValidationRapidEligibilityResult](rapidata/api_client/docs/PagedResultOfQueryValidationRapidEligibilityResult.md)
- - [PagedResultOfRunsByLeaderboardResult](rapidata/api_client/docs/PagedResultOfRunsByLeaderboardResult.md)
- - [PagedResultOfSimpleWorkflowResultOutput](rapidata/api_client/docs/PagedResultOfSimpleWorkflowResultOutput.md)
- - [PagedResultOfStandingByLeaderboard](rapidata/api_client/docs/PagedResultOfStandingByLeaderboard.md)
- - [PagedResultOfValidationSetModel](rapidata/api_client/docs/PagedResultOfValidationSetModel.md)
- - [Pagination](rapidata/api_client/docs/Pagination.md)
- - [ParticipantByBenchmark](rapidata/api_client/docs/ParticipantByBenchmark.md)
  - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
  - [PidBatchMode](rapidata/api_client/docs/PidBatchMode.md)
  - [PolygonResultCoordinate](rapidata/api_client/docs/PolygonResultCoordinate.md)
  - [PolygonResultShape](rapidata/api_client/docs/PolygonResultShape.md)
- - [PreliminaryDownloadModel](rapidata/api_client/docs/PreliminaryDownloadModel.md)
  - [PreviewOrderEndpointInput](rapidata/api_client/docs/PreviewOrderEndpointInput.md)
  - [ProblemDetails](rapidata/api_client/docs/ProblemDetails.md)
  - [QueryAggregatedOrdersEndpointOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointOutput.md)
  - [QueryAggregatedOrdersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointPagedResultOfOutput.md)
  - [QueryAudiencesEndpointOutput](rapidata/api_client/docs/QueryAudiencesEndpointOutput.md)
  - [QueryAudiencesEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAudiencesEndpointPagedResultOfOutput.md)
+ - [QueryBenchmarkStandingsEndpointOutput](rapidata/api_client/docs/QueryBenchmarkStandingsEndpointOutput.md)
+ - [QueryBenchmarkStandingsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryBenchmarkStandingsEndpointPagedResultOfOutput.md)
+ - [QueryBenchmarksEndpointOutput](rapidata/api_client/docs/QueryBenchmarksEndpointOutput.md)
+ - [QueryBenchmarksEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryBenchmarksEndpointPagedResultOfOutput.md)
  - [QueryCampaignsEndpointOutput](rapidata/api_client/docs/QueryCampaignsEndpointOutput.md)
  - [QueryCampaignsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCampaignsEndpointPagedResultOfOutput.md)
+ - [QueryClientsEndpointOutput](rapidata/api_client/docs/QueryClientsEndpointOutput.md)
+ - [QueryClientsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryClientsEndpointPagedResultOfOutput.md)
  - [QueryCustomersEndpointOutput](rapidata/api_client/docs/QueryCustomersEndpointOutput.md)
  - [QueryCustomersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCustomersEndpointPagedResultOfOutput.md)
  - [QueryDatapointsByDatasetIdEndpointOutput](rapidata/api_client/docs/QueryDatapointsByDatasetIdEndpointOutput.md)
@@ -768,80 +789,95 @@ Class | Method | HTTP request | Description
  - [QueryFlowItemsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryFlowItemsEndpointPagedResultOfOutput.md)
  - [QueryFlowsEndpointOutput](rapidata/api_client/docs/QueryFlowsEndpointOutput.md)
  - [QueryFlowsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryFlowsEndpointPagedResultOfOutput.md)
- - [QueryJobDefinitionsResult](rapidata/api_client/docs/QueryJobDefinitionsResult.md)
- - [QueryJobRevisionsResult](rapidata/api_client/docs/QueryJobRevisionsResult.md)
+ - [QueryJobDefinitionsEndpointOutput](rapidata/api_client/docs/QueryJobDefinitionsEndpointOutput.md)
+ - [QueryJobDefinitionsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryJobDefinitionsEndpointPagedResultOfOutput.md)
+ - [QueryJobRevisionsEndpointOutput](rapidata/api_client/docs/QueryJobRevisionsEndpointOutput.md)
+ - [QueryJobRevisionsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryJobRevisionsEndpointPagedResultOfOutput.md)
+ - [QueryJobsEndpointOutput](rapidata/api_client/docs/QueryJobsEndpointOutput.md)
+ - [QueryJobsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryJobsEndpointPagedResultOfOutput.md)
  - [QueryJobsResult](rapidata/api_client/docs/QueryJobsResult.md)
- - [QueryModel](rapidata/api_client/docs/QueryModel.md)
+ - [QueryLeaderboardRunsEndpointOutput](rapidata/api_client/docs/QueryLeaderboardRunsEndpointOutput.md)
+ - [QueryLeaderboardRunsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryLeaderboardRunsEndpointPagedResultOfOutput.md)
+ - [QueryLeaderboardsByBenchmarkEndpointOutput](rapidata/api_client/docs/QueryLeaderboardsByBenchmarkEndpointOutput.md)
+ - [QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryLeaderboardsByBenchmarkEndpointPagedResultOfOutput.md)
+ - [QueryLeaderboardsEndpointOutput](rapidata/api_client/docs/QueryLeaderboardsEndpointOutput.md)
+ - [QueryLeaderboardsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryLeaderboardsEndpointPagedResultOfOutput.md)
  - [QueryOrdersEndpointOutput](rapidata/api_client/docs/QueryOrdersEndpointOutput.md)
  - [QueryOrdersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryOrdersEndpointPagedResultOfOutput.md)
  - [QueryOrganizationsEndpointOutput](rapidata/api_client/docs/QueryOrganizationsEndpointOutput.md)
  - [QueryOrganizationsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryOrganizationsEndpointPagedResultOfOutput.md)
+ - [QueryParticipantsByBenchmarkEndpointOutput](rapidata/api_client/docs/QueryParticipantsByBenchmarkEndpointOutput.md)
+ - [QueryParticipantsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryParticipantsByBenchmarkEndpointPagedResultOfOutput.md)
+ - [QueryParticipantsObsoleteEndpointOutput](rapidata/api_client/docs/QueryParticipantsObsoleteEndpointOutput.md)
+ - [QueryParticipantsObsoleteEndpointOutputItem](rapidata/api_client/docs/QueryParticipantsObsoleteEndpointOutputItem.md)
+ - [QueryStandingsEndpointOutput](rapidata/api_client/docs/QueryStandingsEndpointOutput.md)
+ - [QueryStandingsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryStandingsEndpointPagedResultOfOutput.md)
+ - [QueryTagsByBenchmarkEndpointOutput](rapidata/api_client/docs/QueryTagsByBenchmarkEndpointOutput.md)
  - [QueryValidationFeedbacksEndpointOutput](rapidata/api_client/docs/QueryValidationFeedbacksEndpointOutput.md)
  - [QueryValidationFeedbacksEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryValidationFeedbacksEndpointPagedResultOfOutput.md)
- - [QueryValidationRapidEligibilityModelQueryValidationModel](rapidata/api_client/docs/QueryValidationRapidEligibilityModelQueryValidationModel.md)
- - [QueryValidationRapidEligibilityResult](rapidata/api_client/docs/QueryValidationRapidEligibilityResult.md)
+ - [QueryValidationRapidEligibilityEndpointOutput](rapidata/api_client/docs/QueryValidationRapidEligibilityEndpointOutput.md)
+ - [QueryValidationRapidEligibilityEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryValidationRapidEligibilityEndpointPagedResultOfOutput.md)
+ - [QueryValidationSetsEndpointOutput](rapidata/api_client/docs/QueryValidationSetsEndpointOutput.md)
+ - [QueryValidationSetsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryValidationSetsEndpointPagedResultOfOutput.md)
+ - [QueryWorkflowsEndpointOutput](rapidata/api_client/docs/QueryWorkflowsEndpointOutput.md)
+ - [QueryWorkflowsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryWorkflowsEndpointPagedResultOfOutput.md)
  - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)
- - [RapidResultModel](rapidata/api_client/docs/RapidResultModel.md)
- - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
  - [RapidState](rapidata/api_client/docs/RapidState.md)
- - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
+ - [ReadBridgeTokenEndpointKeysOutput](rapidata/api_client/docs/ReadBridgeTokenEndpointKeysOutput.md)
+ - [ReadBridgeTokenEndpointNotAvailableOutput](rapidata/api_client/docs/ReadBridgeTokenEndpointNotAvailableOutput.md)
  - [RecreateExternalAudiencesEndpointInput](rapidata/api_client/docs/RecreateExternalAudiencesEndpointInput.md)
- - [ReportModel](rapidata/api_client/docs/ReportModel.md)
+ - [ReportRapidEndpointInput](rapidata/api_client/docs/ReportRapidEndpointInput.md)
  - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
- - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
- - [RunsByLeaderboardResult](rapidata/api_client/docs/RunsByLeaderboardResult.md)
  - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)
- - [SendSurveyModel](rapidata/api_client/docs/SendSurveyModel.md)
+ - [SendSurveyEndpointInput](rapidata/api_client/docs/SendSurveyEndpointInput.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
- - [SimpleWorkflowResultOutput](rapidata/api_client/docs/SimpleWorkflowResultOutput.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
- - [SortCriteria](rapidata/api_client/docs/SortCriteria.md)
- - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)
+ - [SkipRapidEndpointInput](rapidata/api_client/docs/SkipRapidEndpointInput.md)
+ - [SkipRapidEndpointOutput](rapidata/api_client/docs/SkipRapidEndpointOutput.md)
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
- - [StandingByBenchmark](rapidata/api_client/docs/StandingByBenchmark.md)
- - [StandingByLeaderboard](rapidata/api_client/docs/StandingByLeaderboard.md)
  - [StandingStatus](rapidata/api_client/docs/StandingStatus.md)
- - [StandingsByBenchmarkResult](rapidata/api_client/docs/StandingsByBenchmarkResult.md)
- - [StandingsByLeaderboardResult](rapidata/api_client/docs/StandingsByLeaderboardResult.md)
- - [StartPreliminaryDownloadResult](rapidata/api_client/docs/StartPreliminaryDownloadResult.md)
+ - [StartPreliminaryDownloadEndpointInput](rapidata/api_client/docs/StartPreliminaryDownloadEndpointInput.md)
+ - [StartPreliminaryDownloadEndpointOutput](rapidata/api_client/docs/StartPreliminaryDownloadEndpointOutput.md)
  - [StickyConfig](rapidata/api_client/docs/StickyConfig.md)
  - [StickyConfigModel](rapidata/api_client/docs/StickyConfigModel.md)
  - [StickyState](rapidata/api_client/docs/StickyState.md)
+ - [SubmitFeedbackEndpointInput](rapidata/api_client/docs/SubmitFeedbackEndpointInput.md)
  - [SubmitOrderEndpointInput](rapidata/api_client/docs/SubmitOrderEndpointInput.md)
- - [SubmitParticipantResult](rapidata/api_client/docs/SubmitParticipantResult.md)
- - [SubmitPromptModel](rapidata/api_client/docs/SubmitPromptModel.md)
- - [TagsByBenchmarkResult](rapidata/api_client/docs/TagsByBenchmarkResult.md)
+ - [SubmitParticipantByBenchmarkEndpointOutput](rapidata/api_client/docs/SubmitParticipantByBenchmarkEndpointOutput.md)
+ - [SubmitParticipantEndpointOutput](rapidata/api_client/docs/SubmitParticipantEndpointOutput.md)
+ - [SubscribeToNewsletterEndpointInput](rapidata/api_client/docs/SubscribeToNewsletterEndpointInput.md)
  - [TranscriptionWord](rapidata/api_client/docs/TranscriptionWord.md)
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
  - [UnlockOrderEndpointOutput](rapidata/api_client/docs/UnlockOrderEndpointOutput.md)
+ - [UnsubscribeFromNewsletterEndpointInput](rapidata/api_client/docs/UnsubscribeFromNewsletterEndpointInput.md)
  - [UpdateAudienceEndpointInput](rapidata/api_client/docs/UpdateAudienceEndpointInput.md)
+ - [UpdateAudienceEndpointOutput](rapidata/api_client/docs/UpdateAudienceEndpointOutput.md)
  - [UpdateAudienceExampleEndpointInput](rapidata/api_client/docs/UpdateAudienceExampleEndpointInput.md)
- - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
- - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
+ - [UpdateBenchmarkEndpointInput](rapidata/api_client/docs/UpdateBenchmarkEndpointInput.md)
+ - [UpdateBenchmarkNameEndpointInput](rapidata/api_client/docs/UpdateBenchmarkNameEndpointInput.md)
  - [UpdateBoostConfigEndpointInput](rapidata/api_client/docs/UpdateBoostConfigEndpointInput.md)
+ - [UpdateBoostConfigEndpointOutput](rapidata/api_client/docs/UpdateBoostConfigEndpointOutput.md)
  - [UpdateCampaignEndpointInput](rapidata/api_client/docs/UpdateCampaignEndpointInput.md)
  - [UpdateConfigEndpointInput](rapidata/api_client/docs/UpdateConfigEndpointInput.md)
- - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
- - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
+ - [UpdateDatasetNameEndpointInput](rapidata/api_client/docs/UpdateDatasetNameEndpointInput.md)
  - [UpdateJobDefinitionEndpointInput](rapidata/api_client/docs/UpdateJobDefinitionEndpointInput.md)
  - [UpdateJobEndpointInput](rapidata/api_client/docs/UpdateJobEndpointInput.md)
- - [UpdateLeaderboardModel](rapidata/api_client/docs/UpdateLeaderboardModel.md)
- - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
- - [UpdateLeaderboardResponseConfigModel](rapidata/api_client/docs/UpdateLeaderboardResponseConfigModel.md)
+ - [UpdateLeaderboardEndpointInput](rapidata/api_client/docs/UpdateLeaderboardEndpointInput.md)
+ - [UpdateLeaderboardNameEndpointInput](rapidata/api_client/docs/UpdateLeaderboardNameEndpointInput.md)
+ - [UpdateLeaderboardResponseConfigEndpointInput](rapidata/api_client/docs/UpdateLeaderboardResponseConfigEndpointInput.md)
  - [UpdateOrderEndpointInput](rapidata/api_client/docs/UpdateOrderEndpointInput.md)
- - [UpdateParticipantModel](rapidata/api_client/docs/UpdateParticipantModel.md)
- - [UpdateParticipantNameModel](rapidata/api_client/docs/UpdateParticipantNameModel.md)
- - [UpdatePromptTagsModel](rapidata/api_client/docs/UpdatePromptTagsModel.md)
- - [UpdateShouldAlertModel](rapidata/api_client/docs/UpdateShouldAlertModel.md)
- - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
- - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
+ - [UpdateParticipantEndpointInput](rapidata/api_client/docs/UpdateParticipantEndpointInput.md)
+ - [UpdateParticipantNameEndpointInput](rapidata/api_client/docs/UpdateParticipantNameEndpointInput.md)
+ - [UpdatePromptTagsEndpointInput](rapidata/api_client/docs/UpdatePromptTagsEndpointInput.md)
+ - [UpdateValidationRapidEndpointInput](rapidata/api_client/docs/UpdateValidationRapidEndpointInput.md)
+ - [UpdateValidationSetDimensionsEndpointInput](rapidata/api_client/docs/UpdateValidationSetDimensionsEndpointInput.md)
+ - [UpdateValidationSetEndpointInput](rapidata/api_client/docs/UpdateValidationSetEndpointInput.md)
+ - [UpdateValidationSetShouldAlertEndpointInput](rapidata/api_client/docs/UpdateValidationSetShouldAlertEndpointInput.md)
  - [UploadFileEndpointOutput](rapidata/api_client/docs/UploadFileEndpointOutput.md)
  - [UploadFileFromUrlEndpointOutput](rapidata/api_client/docs/UploadFileFromUrlEndpointOutput.md)
  - [ValidationChanceModel](rapidata/api_client/docs/ValidationChanceModel.md)
  - [ValidationProblemDetails](rapidata/api_client/docs/ValidationProblemDetails.md)
- - [ValidationSetModel](rapidata/api_client/docs/ValidationSetModel.md)
- - [ValidationSetOverviewModel](rapidata/api_client/docs/ValidationSetOverviewModel.md)
  - [VoteMatrixResult](rapidata/api_client/docs/VoteMatrixResult.md)
  - [WorkflowState](rapidata/api_client/docs/WorkflowState.md)
  - [WorkflowStateModel](rapidata/api_client/docs/WorkflowStateModel.md)

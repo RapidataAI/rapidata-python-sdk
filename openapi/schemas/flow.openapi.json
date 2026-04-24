@@ -1218,14 +1218,12 @@
             "format": "int32"
           },
           "pidBatchMode": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/PidBatchMode"
               }
-            ]
+            ],
+            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total."
           },
           "drainDurationSeconds": {
             "type": "integer",
@@ -1317,14 +1315,12 @@
           "Stopping",
           "Stopped",
           "Incomplete"
-        ],
-        "description": "The current state of the flow item."
+        ]
       },
       "FlowType": {
         "enum": [
           "Ranking"
         ],
-        "description": "The type of the flow. Use the _t discriminator instead.",
         "deprecated": true
       },
       "GetCompletionTimeHistogramEndpoint_Output": {
@@ -1396,7 +1392,12 @@
             "nullable": true
           },
           "state": {
-            "$ref": "#/components/schemas/FlowItemState"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FlowItemState"
+              }
+            ],
+            "description": "The current state of the flow item."
           },
           "context": {
             "type": "string",
@@ -1829,7 +1830,12 @@
             "description": "The unique identifier of the flow."
           },
           "type": {
-            "$ref": "#/components/schemas/FlowType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FlowType"
+              }
+            ],
+            "description": "The type of the flow. Use the _t discriminator instead."
           },
           "name": {
             "type": "string",
@@ -1880,7 +1886,12 @@
             "format": "int32"
           },
           "pidBatchMode": {
-            "$ref": "#/components/schemas/PidBatchMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PidBatchMode"
+              }
+            ],
+            "description": "How the PID output maps to the campaign rate. Total: used directly. PerBatch: multiplied by active item count. PerBatchTimeWeighted: multiplied by time-weighted active item count based on remaining TTL."
           },
           "serveTimeoutSeconds": {
             "type": "integer",
@@ -1906,19 +1917,15 @@
           "audienceBoosts": {
             "allOf": [
               {
-                "allOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/AudienceBoostModel2"
-                    },
-                    "nullable": true
-                  }
-                ],
-                "deprecated": true
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AudienceBoostModel2"
+                },
+                "nullable": true
               }
             ],
-            "description": "Audience-specific boost levels that override the global boost for targeted demographics."
+            "description": "Audience-specific boost levels that override the global boost for targeted demographics.",
+            "deprecated": true
           },
           "audienceId": {
             "type": "string",
@@ -2245,8 +2252,7 @@
           "Total",
           "PerBatch",
           "PerBatchTimeWeighted"
-        ],
-        "description": "How the PID output maps to the campaign rate. Total: used directly. PerBatch: multiplied by active item count. PerBatchTimeWeighted: multiplied by time-weighted active item count based on remaining TTL."
+        ]
       },
       "ProblemDetails": {
         "type": "object",
@@ -2296,7 +2302,12 @@
             "nullable": true
           },
           "state": {
-            "$ref": "#/components/schemas/FlowItemState"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FlowItemState"
+              }
+            ],
+            "description": "The current state of the flow item."
           },
           "context": {
             "type": "string",
@@ -2386,7 +2397,12 @@
             "description": "The name of the flow."
           },
           "type": {
-            "$ref": "#/components/schemas/FlowType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FlowType"
+              }
+            ],
+            "description": "The type of the flow."
           },
           "ownerId": {
             "type": "string",
@@ -2447,26 +2463,22 @@
           },
           "criteria": {
             "type": "string",
-            "description": "The ranking criteria used to compare items.",
-            "nullable": true
+            "description": "The ranking criteria used to compare items."
           },
           "startingElo": {
             "type": "integer",
             "description": "Initial Elo rating for new items.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "minResponses": {
             "type": "integer",
             "description": "Minimum number of responses per comparison.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses per comparison.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "serveResponses": {
             "type": "integer",
@@ -2490,19 +2502,15 @@
             "type": "integer",
             "description": "Deprecated. Use MaxResponses instead.",
             "format": "int32",
-            "nullable": true,
             "deprecated": true
           },
           "featureFlags": {
-            "oneOf": [
+            "allOf": [
               {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/FeatureFlag"
                 }
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "Feature flags to enable for this flow."
@@ -2516,44 +2524,38 @@
           "pidProportionalGain": {
             "type": "number",
             "description": "PID proportional gain.",
-            "format": "double",
-            "nullable": true
+            "format": "double"
           },
           "pidIntegralGain": {
             "type": "number",
             "description": "PID integral gain.",
-            "format": "double",
-            "nullable": true
+            "format": "double"
           },
           "pidDerivativeGain": {
             "type": "number",
             "description": "PID derivative gain.",
-            "format": "double",
-            "nullable": true
+            "format": "double"
           },
           "pidOutputOffset": {
             "type": "number",
             "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point.",
-            "format": "double",
-            "nullable": true
+            "format": "double"
           },
           "pidMinSessionsPerMinute": {
             "type": "integer",
             "description": "Minimum sessions per minute the PID can set.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pidMaxSessionsPerMinute": {
             "type": "integer",
             "description": "Maximum sessions per minute the PID can set.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pidBatchMode": {
-            "enum": [
-              "Total",
-              "PerBatch",
-              "PerBatchTimeWeighted"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PidBatchMode"
+              }
             ],
             "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count."
           }

@@ -135,8 +135,6 @@ class RapidataBenchmark:
         """
         Returns the leaderboards that are registered for the benchmark.
         """
-        from rapidata.api_client.models.query_model import QueryModel
-        from rapidata.api_client.models.pagination import Pagination
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
             RapidataLeaderboard,
         )
@@ -149,9 +147,8 @@ class RapidataBenchmark:
                 while True:
                     leaderboards_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_leaderboards_get(
                         benchmark_id=self.id,
-                        request=QueryModel(
-                            page=Pagination(index=current_page, size=100),
-                        ),
+                        page=current_page,
+                        page_size=100,
                     )
 
                     if leaderboards_result.total_pages is None:
@@ -227,7 +224,9 @@ class RapidataBenchmark:
             prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
-        from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
+        from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import (
+            CreatePromptForBenchmarkEndpointInput,
+        )
         from rapidata.api_client.models.i_asset_input_existing_asset_input import (
             IAssetInputExistingAssetInput,
         )
@@ -289,7 +288,7 @@ class RapidataBenchmark:
 
             self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
                 benchmark_id=self.id,
-                submit_prompt_model=SubmitPromptModel(
+                create_prompt_for_benchmark_endpoint_input=CreatePromptForBenchmarkEndpointInput(
                     identifier=identifier,
                     prompt=prompt,
                     promptAsset=(
@@ -338,8 +337,8 @@ class RapidataBenchmark:
             audience_id: The id of the audience that should answer the leaderboard. Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
-        from rapidata.api_client.models.create_leaderboard_model import (
-            CreateLeaderboardModel,
+        from rapidata.api_client.models.create_leaderboard_endpoint_input import (
+            CreateLeaderboardEndpointInput,
         )
         from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
@@ -378,7 +377,7 @@ class RapidataBenchmark:
 
             leaderboard_result = (
                 self._openapi_service.leaderboard.leaderboard_api.leaderboard_post(
-                    create_leaderboard_model=CreateLeaderboardModel(
+                    create_leaderboard_endpoint_input=CreateLeaderboardEndpointInput(
                         benchmarkId=self.id,
                         name=name,
                         instruction=instruction,
@@ -475,8 +474,8 @@ class RapidataBenchmark:
         Returns:
             The created BenchmarkParticipant instance.
         """
-        from rapidata.api_client.models.create_benchmark_participant_model import (
-            CreateBenchmarkParticipantModel,
+        from rapidata.api_client.models.create_benchmark_participant_endpoint_input import (
+            CreateBenchmarkParticipantEndpointInput,
         )
         from rapidata.rapidata_client.benchmark.participant.participant import (
             BenchmarkParticipant,
@@ -510,7 +509,7 @@ class RapidataBenchmark:
 
             participant_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_participants_post(
                 benchmark_id=self.id,
-                create_benchmark_participant_model=CreateBenchmarkParticipantModel(
+                create_benchmark_participant_endpoint_input=CreateBenchmarkParticipantEndpointInput(
                     name=name,
                 ),
             )

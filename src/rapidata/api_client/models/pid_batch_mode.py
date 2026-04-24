@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class PidBatchMode(str, Enum):
     """
-    How the PID output maps to the campaign rate. Total: used directly. PerBatch: multiplied by active item count. PerBatchTimeWeighted: multiplied by time-weighted active item count based on remaining TTL.
+    PidBatchMode
     """
 
     """

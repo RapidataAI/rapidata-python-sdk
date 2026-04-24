@@ -20,9 +20,9 @@ from pydantic import Field, StrictStr
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_dataset_endpoint_input import CreateDatasetEndpointInput
 from rapidata.api_client.models.create_dataset_endpoint_output import CreateDatasetEndpointOutput
-from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
-from rapidata.api_client.models.get_dataset_progress_result import GetDatasetProgressResult
-from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
+from rapidata.api_client.models.get_dataset_by_id_endpoint_output import GetDatasetByIdEndpointOutput
+from rapidata.api_client.models.get_dataset_progress_endpoint_output import GetDatasetProgressEndpointOutput
+from rapidata.api_client.models.update_dataset_name_endpoint_input import UpdateDatasetNameEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -58,7 +58,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetDatasetByIdResult:
+    ) -> GetDatasetByIdEndpointOutput:
         """Gets a dataset by its id.
 
 
@@ -95,7 +95,10 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatasetByIdResult",
+            '200': "GetDatasetByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -124,7 +127,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetDatasetByIdResult]:
+    ) -> ApiResponse[GetDatasetByIdEndpointOutput]:
         """Gets a dataset by its id.
 
 
@@ -161,7 +164,10 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatasetByIdResult",
+            '200': "GetDatasetByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -227,7 +233,10 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatasetByIdResult",
+            '200': "GetDatasetByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -272,9 +281,7 @@ class DatasetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -308,7 +315,7 @@ class DatasetApi:
     def dataset_dataset_id_name_patch(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to update.")],
-        update_dataset_name_model: Annotated[UpdateDatasetNameModel, Field(description="The body of the request.")],
+        update_dataset_name_endpoint_input: Annotated[UpdateDatasetNameEndpointInput, Field(description="The new name for the dataset.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -327,8 +334,8 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to update. (required)
         :type dataset_id: str
-        :param update_dataset_name_model: The body of the request. (required)
-        :type update_dataset_name_model: UpdateDatasetNameModel
+        :param update_dataset_name_endpoint_input: The new name for the dataset. (required)
+        :type update_dataset_name_endpoint_input: UpdateDatasetNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -353,7 +360,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_name_patch_serialize(
             dataset_id=dataset_id,
-            update_dataset_name_model=update_dataset_name_model,
+            update_dataset_name_endpoint_input=update_dataset_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -362,6 +369,9 @@ class DatasetApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -378,7 +388,7 @@ class DatasetApi:
     def dataset_dataset_id_name_patch_with_http_info(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to update.")],
-        update_dataset_name_model: Annotated[UpdateDatasetNameModel, Field(description="The body of the request.")],
+        update_dataset_name_endpoint_input: Annotated[UpdateDatasetNameEndpointInput, Field(description="The new name for the dataset.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -397,8 +407,8 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to update. (required)
         :type dataset_id: str
-        :param update_dataset_name_model: The body of the request. (required)
-        :type update_dataset_name_model: UpdateDatasetNameModel
+        :param update_dataset_name_endpoint_input: The new name for the dataset. (required)
+        :type update_dataset_name_endpoint_input: UpdateDatasetNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -423,7 +433,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_name_patch_serialize(
             dataset_id=dataset_id,
-            update_dataset_name_model=update_dataset_name_model,
+            update_dataset_name_endpoint_input=update_dataset_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -432,6 +442,9 @@ class DatasetApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -448,7 +461,7 @@ class DatasetApi:
     def dataset_dataset_id_name_patch_without_preload_content(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to update.")],
-        update_dataset_name_model: Annotated[UpdateDatasetNameModel, Field(description="The body of the request.")],
+        update_dataset_name_endpoint_input: Annotated[UpdateDatasetNameEndpointInput, Field(description="The new name for the dataset.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -467,8 +480,8 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to update. (required)
         :type dataset_id: str
-        :param update_dataset_name_model: The body of the request. (required)
-        :type update_dataset_name_model: UpdateDatasetNameModel
+        :param update_dataset_name_endpoint_input: The new name for the dataset. (required)
+        :type update_dataset_name_endpoint_input: UpdateDatasetNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -493,7 +506,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_name_patch_serialize(
             dataset_id=dataset_id,
-            update_dataset_name_model=update_dataset_name_model,
+            update_dataset_name_endpoint_input=update_dataset_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -502,6 +515,9 @@ class DatasetApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -513,7 +529,7 @@ class DatasetApi:
     def _dataset_dataset_id_name_patch_serialize(
         self,
         dataset_id,
-        update_dataset_name_model,
+        update_dataset_name_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -541,10 +557,17 @@ class DatasetApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_dataset_name_model is not None:
-            _body_params = update_dataset_name_model
+        if update_dataset_name_endpoint_input is not None:
+            _body_params = update_dataset_name_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -553,9 +576,7 @@ class DatasetApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -603,7 +624,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetDatasetProgressResult:
+    ) -> GetDatasetProgressEndpointOutput:
         """Gets the upload progress of a dataset.
 
 
@@ -640,7 +661,10 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatasetProgressResult",
+            '200': "GetDatasetProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -669,7 +693,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetDatasetProgressResult]:
+    ) -> ApiResponse[GetDatasetProgressEndpointOutput]:
         """Gets the upload progress of a dataset.
 
 
@@ -706,7 +730,10 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatasetProgressResult",
+            '200': "GetDatasetProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -772,7 +799,10 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatasetProgressResult",
+            '200': "GetDatasetProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -817,9 +847,7 @@ class DatasetApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

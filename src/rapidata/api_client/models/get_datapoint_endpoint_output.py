@@ -33,7 +33,7 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The id of the datapoint.")
     dataset_id: StrictStr = Field(description="The id of the dataset this datapoint belongs to.", alias="datasetId")
-    state: DatapointState
+    state: DatapointState = Field(description="The current state of the datapoint.")
     asset: IAssetModel = Field(description="The asset that will be displayed to the users.")
     sort_index: Optional[StrictInt] = Field(default=None, description="An optional upload index used to force a certain order.", alias="sortIndex")
     created_at: datetime = Field(description="The timestamp when the datapoint was created.", alias="createdAt")

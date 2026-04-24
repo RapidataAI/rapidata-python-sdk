@@ -16,15 +16,15 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictInt, StrictStr
-from typing import Optional
+from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
+from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.get_compare_ab_summary_result import GetCompareAbSummaryResult
-from rapidata.api_client.models.get_responses_result import GetResponsesResult
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
+from rapidata.api_client.models.get_compare_ab_summary_endpoint_output import GetCompareAbSummaryEndpointOutput
 from rapidata.api_client.models.get_workflow_by_id_endpoint_output import GetWorkflowByIdEndpointOutput
-from rapidata.api_client.models.get_workflow_progress_result import GetWorkflowProgressResult
-from rapidata.api_client.models.paged_result_of_i_workflow_model import PagedResultOfIWorkflowModel
-from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.get_workflow_progress_endpoint_output import GetWorkflowProgressEndpointOutput
+from rapidata.api_client.models.get_workflow_responses_endpoint_output import GetWorkflowResponsesEndpointOutput
+from rapidata.api_client.models.query_workflows_endpoint_paged_result_of_output import QueryWorkflowsEndpointPagedResultOfOutput
 from rapidata.api_client.models.sort_direction import SortDirection
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -46,261 +46,6 @@ class WorkflowApi:
 
 
     @validate_call
-    def workflow_delete_delete(
-        self,
-        id: Annotated[Optional[StrictStr], Field(description="The ID of the workflow to delete.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Deletes a workflow.
-
-
-        :param id: The ID of the workflow to delete.
-        :type id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._workflow_delete_delete_serialize(
-            id=id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def workflow_delete_delete_with_http_info(
-        self,
-        id: Annotated[Optional[StrictStr], Field(description="The ID of the workflow to delete.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Deletes a workflow.
-
-
-        :param id: The ID of the workflow to delete.
-        :type id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._workflow_delete_delete_serialize(
-            id=id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def workflow_delete_delete_without_preload_content(
-        self,
-        id: Annotated[Optional[StrictStr], Field(description="The ID of the workflow to delete.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Deletes a workflow.
-
-
-        :param id: The ID of the workflow to delete.
-        :type id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._workflow_delete_delete_serialize(
-            id=id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _workflow_delete_delete_serialize(
-        self,
-        id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if id is not None:
-            
-            _query_params.append(('id', id))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
-        ]
-
-        return self.api_client.param_serialize(
-            method='DELETE',
-            resource_path='/workflow/delete',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def workflow_workflow_id_compare_ab_summary_get(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the summary for.")],
@@ -317,8 +62,8 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetCompareAbSummaryResult:
-        """Calculates a summary of the results for a simple ranking workflow.  The summary includes the number of times an asset at each index was the winner.
+    ) -> GetCompareAbSummaryEndpointOutput:
+        """Returns the number of times each asset index won across the workflow's rapids.
 
 
         :param workflow_id: The ID of the workflow to get the summary for. (required)
@@ -357,7 +102,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCompareAbSummaryResult",
+            '200': "GetCompareAbSummaryEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -387,8 +135,8 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetCompareAbSummaryResult]:
-        """Calculates a summary of the results for a simple ranking workflow.  The summary includes the number of times an asset at each index was the winner.
+    ) -> ApiResponse[GetCompareAbSummaryEndpointOutput]:
+        """Returns the number of times each asset index won across the workflow's rapids.
 
 
         :param workflow_id: The ID of the workflow to get the summary for. (required)
@@ -427,7 +175,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCompareAbSummaryResult",
+            '200': "GetCompareAbSummaryEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -458,7 +209,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Calculates a summary of the results for a simple ranking workflow.  The summary includes the number of times an asset at each index was the winner.
+        """Returns the number of times each asset index won across the workflow's rapids.
 
 
         :param workflow_id: The ID of the workflow to get the summary for. (required)
@@ -497,7 +248,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCompareAbSummaryResult",
+            '200': "GetCompareAbSummaryEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -547,9 +301,7 @@ class WorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -564,6 +316,275 @@ class WorkflowApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/workflow/{workflowId}/compare-ab-summary',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def workflow_workflow_id_delete(
+        self,
+        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Deletes a workflow by its id.
+
+
+        :param workflow_id: The ID of the workflow to delete. (required)
+        :type workflow_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._workflow_workflow_id_delete_serialize(
+            workflow_id=workflow_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def workflow_workflow_id_delete_with_http_info(
+        self,
+        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Deletes a workflow by its id.
+
+
+        :param workflow_id: The ID of the workflow to delete. (required)
+        :type workflow_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._workflow_workflow_id_delete_serialize(
+            workflow_id=workflow_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def workflow_workflow_id_delete_without_preload_content(
+        self,
+        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Deletes a workflow by its id.
+
+
+        :param workflow_id: The ID of the workflow to delete. (required)
+        :type workflow_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._workflow_workflow_id_delete_serialize(
+            workflow_id=workflow_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _workflow_workflow_id_delete_serialize(
+        self,
+        workflow_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if workflow_id is not None:
+            _path_params['workflowId'] = workflow_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/workflow/{workflowId}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -864,8 +885,8 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetWorkflowProgressResult:
-        """Get the progress of a workflow.
+    ) -> GetWorkflowProgressEndpointOutput:
+        """Gets the progress of a workflow.
 
 
         :param workflow_id: The ID of the workflow to get the progress for. (required)
@@ -901,7 +922,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowProgressResult",
+            '200': "GetWorkflowProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -930,8 +954,8 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetWorkflowProgressResult]:
-        """Get the progress of a workflow.
+    ) -> ApiResponse[GetWorkflowProgressEndpointOutput]:
+        """Gets the progress of a workflow.
 
 
         :param workflow_id: The ID of the workflow to get the progress for. (required)
@@ -967,7 +991,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowProgressResult",
+            '200': "GetWorkflowProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -997,7 +1024,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get the progress of a workflow.
+        """Gets the progress of a workflow.
 
 
         :param workflow_id: The ID of the workflow to get the progress for. (required)
@@ -1033,7 +1060,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowProgressResult",
+            '200': "GetWorkflowProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1078,9 +1108,7 @@ class WorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1114,7 +1142,7 @@ class WorkflowApi:
     def workflow_workflow_id_responses_get(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the responses for.")],
-        limit: Annotated[Optional[StrictInt], Field(description="The number of responses to get.")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="The maximum number of responses to return.")] = None,
         sort: Annotated[Optional[SortDirection], Field(description="Whether the oldest or most recent responses should be returned.")] = None,
         _request_timeout: Union[
             None,
@@ -1128,13 +1156,13 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetResponsesResult:
-        """Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+    ) -> GetWorkflowResponsesEndpointOutput:
+        """Gets the most recent or oldest responses for a workflow, across any rapid.
 
 
         :param workflow_id: The ID of the workflow to get the responses for. (required)
         :type workflow_id: str
-        :param limit: The number of responses to get.
+        :param limit: The maximum number of responses to return.
         :type limit: int
         :param sort: Whether the oldest or most recent responses should be returned.
         :type sort: SortDirection
@@ -1171,7 +1199,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetResponsesResult",
+            '200': "GetWorkflowResponsesEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1188,7 +1219,7 @@ class WorkflowApi:
     def workflow_workflow_id_responses_get_with_http_info(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the responses for.")],
-        limit: Annotated[Optional[StrictInt], Field(description="The number of responses to get.")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="The maximum number of responses to return.")] = None,
         sort: Annotated[Optional[SortDirection], Field(description="Whether the oldest or most recent responses should be returned.")] = None,
         _request_timeout: Union[
             None,
@@ -1202,13 +1233,13 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetResponsesResult]:
-        """Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+    ) -> ApiResponse[GetWorkflowResponsesEndpointOutput]:
+        """Gets the most recent or oldest responses for a workflow, across any rapid.
 
 
         :param workflow_id: The ID of the workflow to get the responses for. (required)
         :type workflow_id: str
-        :param limit: The number of responses to get.
+        :param limit: The maximum number of responses to return.
         :type limit: int
         :param sort: Whether the oldest or most recent responses should be returned.
         :type sort: SortDirection
@@ -1245,7 +1276,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetResponsesResult",
+            '200': "GetWorkflowResponsesEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1262,7 +1296,7 @@ class WorkflowApi:
     def workflow_workflow_id_responses_get_without_preload_content(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the responses for.")],
-        limit: Annotated[Optional[StrictInt], Field(description="The number of responses to get.")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="The maximum number of responses to return.")] = None,
         sort: Annotated[Optional[SortDirection], Field(description="Whether the oldest or most recent responses should be returned.")] = None,
         _request_timeout: Union[
             None,
@@ -1277,12 +1311,12 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+        """Gets the most recent or oldest responses for a workflow, across any rapid.
 
 
         :param workflow_id: The ID of the workflow to get the responses for. (required)
         :type workflow_id: str
-        :param limit: The number of responses to get.
+        :param limit: The maximum number of responses to return.
         :type limit: int
         :param sort: Whether the oldest or most recent responses should be returned.
         :type sort: SortDirection
@@ -1319,7 +1353,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetResponsesResult",
+            '200': "GetWorkflowResponsesEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1374,9 +1411,7 @@ class WorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
@@ -1409,7 +1444,13 @@ class WorkflowApi:
     @validate_call
     def workflows_get(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The model containing the filter, page, and sort criteria.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1422,12 +1463,24 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfIWorkflowModel:
+    ) -> QueryWorkflowsEndpointPagedResultOfOutput:
         """Queries workflows based on the provided filter, page, and sort criteria.
 
 
-        :param request: The model containing the filter, page, and sort criteria.
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1451,7 +1504,13 @@ class WorkflowApi:
         """ # noqa: E501
 
         _param = self._workflows_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            state=state,
+            owner_mail=owner_mail,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1459,7 +1518,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIWorkflowModel",
+            '200': "QueryWorkflowsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1475,7 +1537,13 @@ class WorkflowApi:
     @validate_call
     def workflows_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The model containing the filter, page, and sort criteria.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1488,12 +1556,24 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfIWorkflowModel]:
+    ) -> ApiResponse[QueryWorkflowsEndpointPagedResultOfOutput]:
         """Queries workflows based on the provided filter, page, and sort criteria.
 
 
-        :param request: The model containing the filter, page, and sort criteria.
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1517,7 +1597,13 @@ class WorkflowApi:
         """ # noqa: E501
 
         _param = self._workflows_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            state=state,
+            owner_mail=owner_mail,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1525,7 +1611,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIWorkflowModel",
+            '200': "QueryWorkflowsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1541,7 +1630,13 @@ class WorkflowApi:
     @validate_call
     def workflows_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryModel], Field(description="The model containing the filter, page, and sort criteria.")] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1558,8 +1653,20 @@ class WorkflowApi:
         """Queries workflows based on the provided filter, page, and sort criteria.
 
 
-        :param request: The model containing the filter, page, and sort criteria.
-        :type request: QueryModel
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
+        :param name: Filter by name.
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1583,7 +1690,13 @@ class WorkflowApi:
         """ # noqa: E501
 
         _param = self._workflows_get_serialize(
-            request=request,
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            id=id,
+            name=name,
+            state=state,
+            owner_mail=owner_mail,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1591,7 +1704,10 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIWorkflowModel",
+            '200': "QueryWorkflowsEndpointPagedResultOfOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1602,7 +1718,13 @@ class WorkflowApi:
 
     def _workflows_get_serialize(
         self,
-        request,
+        page,
+        page_size,
+        sort,
+        id,
+        name,
+        state,
+        owner_mail,
         _request_auth,
         _content_type,
         _headers,
@@ -1612,6 +1734,7 @@ class WorkflowApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1625,10 +1748,50 @@ class WorkflowApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
+        if page is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('page', page))
             
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if id is not None:
+            _param_val = id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('id[' + _k + ']', _v))
+        if name is not None:
+            _param_val = name
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('name[' + _k + ']', _v))
+        if state is not None:
+            _param_val = state
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('state[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1638,9 +1801,7 @@ class WorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 

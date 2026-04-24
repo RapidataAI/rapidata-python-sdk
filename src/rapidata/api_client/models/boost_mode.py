@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class BoostMode(str, Enum):
     """
-    The current boost mode.
+    BoostMode
     """
 
     """

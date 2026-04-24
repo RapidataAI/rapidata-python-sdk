@@ -49,7 +49,7 @@ class CreateFlowEndpointInput(LazyValidatedModel):
     pid_output_offset: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Constant offset added to the PID output before clamping, shifting the controller's operating point. Defaults to 25.", alias="pidOutputOffset")
     pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set. Defaults to 20.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 50.", alias="pidMaxSessionsPerMinute")
-    pid_batch_mode: Optional[PidBatchMode] = Field(default=None, alias="pidBatchMode")
+    pid_batch_mode: Optional[PidBatchMode] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total.", alias="pidBatchMode")
     drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
     __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
 
@@ -109,11 +109,6 @@ class CreateFlowEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
             _dict['featureFlags'] = None
-
-        # set to None if pid_batch_mode (nullable) is None
-        # and model_fields_set contains the field
-        if self.pid_batch_mode is None and "pid_batch_mode" in self.model_fields_set:
-            _dict['pidBatchMode'] = None
 
         return _dict
 

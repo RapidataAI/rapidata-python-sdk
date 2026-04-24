@@ -16,8 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
-from rapidata.api_client.models.update_prompt_tags_model import UpdatePromptTagsModel
+from pydantic import Field, StrictStr
+from typing_extensions import Annotated
+from rapidata.api_client.models.update_prompt_tags_endpoint_input import UpdatePromptTagsEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -40,8 +41,8 @@ class PromptApi:
     @validate_call
     def benchmark_prompt_prompt_id_tags_put(
         self,
-        prompt_id: StrictStr,
-        update_prompt_tags_model: UpdatePromptTagsModel,
+        prompt_id: Annotated[StrictStr, Field(description="The id of the prompt to update.")],
+        update_prompt_tags_endpoint_input: Annotated[UpdatePromptTagsEndpointInput, Field(description="The new list of tags.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,10 +59,10 @@ class PromptApi:
         """Updates the tags associated with a prompt.
 
 
-        :param prompt_id:  (required)
+        :param prompt_id: The id of the prompt to update. (required)
         :type prompt_id: str
-        :param update_prompt_tags_model:  (required)
-        :type update_prompt_tags_model: UpdatePromptTagsModel
+        :param update_prompt_tags_endpoint_input: The new list of tags. (required)
+        :type update_prompt_tags_endpoint_input: UpdatePromptTagsEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -86,7 +87,7 @@ class PromptApi:
 
         _param = self._benchmark_prompt_prompt_id_tags_put_serialize(
             prompt_id=prompt_id,
-            update_prompt_tags_model=update_prompt_tags_model,
+            update_prompt_tags_endpoint_input=update_prompt_tags_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -95,6 +96,9 @@ class PromptApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -110,8 +114,8 @@ class PromptApi:
     @validate_call
     def benchmark_prompt_prompt_id_tags_put_with_http_info(
         self,
-        prompt_id: StrictStr,
-        update_prompt_tags_model: UpdatePromptTagsModel,
+        prompt_id: Annotated[StrictStr, Field(description="The id of the prompt to update.")],
+        update_prompt_tags_endpoint_input: Annotated[UpdatePromptTagsEndpointInput, Field(description="The new list of tags.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -128,10 +132,10 @@ class PromptApi:
         """Updates the tags associated with a prompt.
 
 
-        :param prompt_id:  (required)
+        :param prompt_id: The id of the prompt to update. (required)
         :type prompt_id: str
-        :param update_prompt_tags_model:  (required)
-        :type update_prompt_tags_model: UpdatePromptTagsModel
+        :param update_prompt_tags_endpoint_input: The new list of tags. (required)
+        :type update_prompt_tags_endpoint_input: UpdatePromptTagsEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -156,7 +160,7 @@ class PromptApi:
 
         _param = self._benchmark_prompt_prompt_id_tags_put_serialize(
             prompt_id=prompt_id,
-            update_prompt_tags_model=update_prompt_tags_model,
+            update_prompt_tags_endpoint_input=update_prompt_tags_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -165,6 +169,9 @@ class PromptApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -180,8 +187,8 @@ class PromptApi:
     @validate_call
     def benchmark_prompt_prompt_id_tags_put_without_preload_content(
         self,
-        prompt_id: StrictStr,
-        update_prompt_tags_model: UpdatePromptTagsModel,
+        prompt_id: Annotated[StrictStr, Field(description="The id of the prompt to update.")],
+        update_prompt_tags_endpoint_input: Annotated[UpdatePromptTagsEndpointInput, Field(description="The new list of tags.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -198,10 +205,10 @@ class PromptApi:
         """Updates the tags associated with a prompt.
 
 
-        :param prompt_id:  (required)
+        :param prompt_id: The id of the prompt to update. (required)
         :type prompt_id: str
-        :param update_prompt_tags_model:  (required)
-        :type update_prompt_tags_model: UpdatePromptTagsModel
+        :param update_prompt_tags_endpoint_input: The new list of tags. (required)
+        :type update_prompt_tags_endpoint_input: UpdatePromptTagsEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -226,7 +233,7 @@ class PromptApi:
 
         _param = self._benchmark_prompt_prompt_id_tags_put_serialize(
             prompt_id=prompt_id,
-            update_prompt_tags_model=update_prompt_tags_model,
+            update_prompt_tags_endpoint_input=update_prompt_tags_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -235,6 +242,9 @@ class PromptApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -246,7 +256,7 @@ class PromptApi:
     def _benchmark_prompt_prompt_id_tags_put_serialize(
         self,
         prompt_id,
-        update_prompt_tags_model,
+        update_prompt_tags_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -274,10 +284,17 @@ class PromptApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_prompt_tags_model is not None:
-            _body_params = update_prompt_tags_model
+        if update_prompt_tags_endpoint_input is not None:
+            _body_params = update_prompt_tags_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -286,9 +303,7 @@ class PromptApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )

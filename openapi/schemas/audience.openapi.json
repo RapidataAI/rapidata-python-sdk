@@ -221,8 +221,62 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAudienceEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/state-recalculation/{recalculationId}": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Returns the audience state recalculation with the given id.",
+        "parameters": [
+          {
+            "name": "recalculationId",
+            "in": "path",
+            "description": "The unique identifier of the recalculation.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceStateRecalculationByIdEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -267,6 +321,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetAudienceUserStateMetricsResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/state-recalculation": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Returns the most recent audience state recalculation for the given audience, regardless of state.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The unique identifier of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLatestAudienceStateRecalculationEndpoint_Output"
                 }
               }
             }
@@ -404,6 +505,274 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at",
+                  "status",
+                  "-status"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "job_id",
+            "in": "query",
+            "description": "Filter by job_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "definition_id",
+            "in": "query",
+            "description": "Filter by definition_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -991,8 +1360,15 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateBoostConfigEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -1042,8 +1418,15 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddExampleToAudienceEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -1082,8 +1465,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteAudienceExampleEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -1418,10 +1808,25 @@
             "nullable": true
           },
           "visibility": {
-            "$ref": "#/components/schemas/ExampleVisibility"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExampleVisibility"
+              }
+            ],
+            "description": "Controls who can see this example. Public examples are visible to all customers.\n Private examples are only visible to the customer who created them and admins.\n Defaults to Private."
           }
         },
         "description": "Input model for adding an example to an audience."
+      },
+      "AddExampleToAudienceEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "recalculationId": {
+            "type": "string",
+            "description": "The id of the audience state recalculation dispatched as a result of adding this example.\n Null when the example addition cannot transition any user's state (e.g. the audience\n already has more examples than MaxDistillingResponses + 1).",
+            "nullable": true
+          }
+        }
       },
       "AudienceJobState": {
         "enum": [
@@ -1432,14 +1837,29 @@
           "ManualApproval"
         ]
       },
+      "AudienceStateRecalculationPhase": {
+        "enum": [
+          "RecalculatingUsers",
+          "Finalizing",
+          "Done"
+        ]
+      },
+      "AudienceStateRecalculationState": {
+        "enum": [
+          "Pending",
+          "Processing",
+          "Completed",
+          "Failed",
+          "Aborted"
+        ]
+      },
       "AudienceStatus": {
         "enum": [
           "Created",
           "Pending",
           "Recruiting",
           "Ready"
-        ],
-        "description": "The current status of the audience."
+        ]
       },
       "BoostLevel": {
         "enum": [
@@ -1447,8 +1867,7 @@
           "Stable",
           "Distilling",
           "Global"
-        ],
-        "description": "The current boost level applied to the audience."
+        ]
       },
       "ChangeAudienceOwnerEndpoint_Input": {
         "required": [
@@ -1563,7 +1982,12 @@
             "format": "double"
           },
           "distillingRetrievalMode": {
-            "$ref": "#/components/schemas/DistillingRetrievalMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DistillingRetrievalMode"
+              }
+            ],
+            "description": "The retrieval mode used by the distilling campaign to select rapids for users.\n Defaults to Shuffled."
           },
           "minDistillingForGlobalBoost": {
             "type": "integer",
@@ -1589,13 +2013,22 @@
           }
         }
       },
+      "DeleteAudienceExampleEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "recalculationId": {
+            "type": "string",
+            "description": "The id of the audience state recalculation dispatched as a result of this deletion.\n Null when the deletion cannot transition any user's state (e.g. the audience still has\n more examples than MaxDistillingResponses + 1 after the delete).",
+            "nullable": true
+          }
+        }
+      },
       "DistillingRetrievalMode": {
         "enum": [
           "Random",
           "Shuffled",
           "Sequential"
-        ],
-        "description": "The retrieval mode used by the distilling campaign to select rapids for users.\n Defaults to Shuffled."
+        ]
       },
       "ExampleBoxShape": {
         "type": "object",
@@ -1670,8 +2103,7 @@
         "enum": [
           "Private",
           "Public"
-        ],
-        "description": "Controls who can see this example. Public examples are visible to all customers.\n Private examples are only visible to the customer who created them and admins.\n Defaults to Private."
+        ]
       },
       "ExistingAssetInput": {
         "required": [
@@ -1753,7 +2185,12 @@
             "nullable": true
           },
           "status": {
-            "$ref": "#/components/schemas/AudienceStatus"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceStatus"
+              }
+            ],
+            "description": "The current status of the audience."
           },
           "qualifiedUserCount": {
             "type": "integer",
@@ -1858,10 +2295,20 @@
             "format": "double"
           },
           "distillingRetrievalMode": {
-            "$ref": "#/components/schemas/DistillingRetrievalMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DistillingRetrievalMode"
+              }
+            ],
+            "description": "The retrieval mode used by the distilling campaign to select rapids for users."
           },
           "boostLevel": {
-            "$ref": "#/components/schemas/BoostLevel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostLevel"
+              }
+            ],
+            "description": "The current boost level applied to the audience."
           },
           "randomAdmissionProbability": {
             "type": "number",
@@ -1885,6 +2332,87 @@
           }
         }
       },
+      "GetAudienceStateRecalculationByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "audienceId",
+          "state",
+          "phase",
+          "processedCount",
+          "changedCount",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the recalculation."
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience this recalculation belongs to."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceStateRecalculationState"
+              }
+            ],
+            "description": "The current state of the recalculation."
+          },
+          "phase": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceStateRecalculationPhase"
+              }
+            ],
+            "description": "The current phase within the recalculation lifecycle."
+          },
+          "lastProcessedUserId": {
+            "type": "string",
+            "description": "The id of the last user that was processed (progress cursor).",
+            "nullable": true
+          },
+          "processedCount": {
+            "type": "integer",
+            "description": "The number of users processed so far.",
+            "format": "int64"
+          },
+          "changedCount": {
+            "type": "integer",
+            "description": "The number of users whose state was changed by the recalculation.",
+            "format": "int64"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message populated when the recalculation transitioned to Failed.",
+            "nullable": true
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "When the recalculation began processing (null while still Pending).",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastHeartbeatAt": {
+            "type": "string",
+            "description": "Timestamp of the last heartbeat received from the worker.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "When the recalculation reached a terminal state (Completed, Failed, Aborted).",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the recalculation was created.",
+            "format": "date-time"
+          }
+        }
+      },
       "GetAudienceUserStateMetricsResult": {
         "required": [
           "usersPerState"
@@ -1897,6 +2425,87 @@
               "type": "integer",
               "format": "int32"
             }
+          }
+        }
+      },
+      "GetLatestAudienceStateRecalculationEndpoint_Output": {
+        "required": [
+          "id",
+          "audienceId",
+          "state",
+          "phase",
+          "processedCount",
+          "changedCount",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the recalculation."
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience this recalculation belongs to."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceStateRecalculationState"
+              }
+            ],
+            "description": "The current state of the recalculation."
+          },
+          "phase": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceStateRecalculationPhase"
+              }
+            ],
+            "description": "The current phase within the recalculation lifecycle."
+          },
+          "lastProcessedUserId": {
+            "type": "string",
+            "description": "The id of the last user that was processed (progress cursor).",
+            "nullable": true
+          },
+          "processedCount": {
+            "type": "integer",
+            "description": "The number of users processed so far.",
+            "format": "int64"
+          },
+          "changedCount": {
+            "type": "integer",
+            "description": "The number of users whose state was changed by the recalculation.",
+            "format": "int64"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message populated when the recalculation transitioned to Failed.",
+            "nullable": true
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "When the recalculation began processing (null while still Pending).",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastHeartbeatAt": {
+            "type": "string",
+            "description": "Timestamp of the last heartbeat received from the worker.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "When the recalculation reached a terminal state (Completed, Failed, Aborted).",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the recalculation was created.",
+            "format": "date-time"
           }
         }
       },
@@ -2973,7 +3582,12 @@
             "nullable": true
           },
           "status": {
-            "$ref": "#/components/schemas/AudienceStatus"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceStatus"
+              }
+            ],
+            "description": "The current status of the audience."
           },
           "qualifiedUserCount": {
             "type": "integer",
@@ -3155,7 +3769,12 @@
             "format": "int32"
           },
           "visibility": {
-            "$ref": "#/components/schemas/ExampleVisibility"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExampleVisibility"
+              }
+            ],
+            "description": "The visibility of this example. Public examples are visible to all customers."
           }
         }
       },
@@ -3250,8 +3869,7 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The new name to give to this audience.",
-            "nullable": true
+            "description": "The new name to give to this audience."
           },
           "description": {
             "type": "string",
@@ -3259,15 +3877,12 @@
             "nullable": true
           },
           "filters": {
-            "oneOf": [
+            "allOf": [
               {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/IAudienceFilter"
                 }
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "The new filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
@@ -3298,8 +3913,7 @@
           "graduationScore": {
             "type": "number",
             "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double",
-            "nullable": true
+            "format": "double"
           },
           "demotionScore": {
             "type": "number",
@@ -3356,12 +3970,22 @@
             "nullable": true
           },
           "distillingRetrievalMode": {
-            "enum": [
-              "Random",
-              "Shuffled",
-              "Sequential"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DistillingRetrievalMode"
+              }
             ],
             "description": "The retrieval mode used by the distilling campaign to select rapids for users."
+          }
+        }
+      },
+      "UpdateAudienceEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "recalculationId": {
+            "type": "string",
+            "description": "The id of the audience state recalculation that was dispatched as a result of this update.\n Only populated when state-affecting parameters (e.g. graduation score, drop score) changed;\n null when the update only touched descriptive fields or boost configuration.",
+            "nullable": true
           }
         }
       },
@@ -3414,13 +4038,13 @@
           "sortIndex": {
             "type": "integer",
             "description": "The sort index that controls the serving order of this example.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "visibility": {
-            "enum": [
-              "Private",
-              "Public"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExampleVisibility"
+              }
             ],
             "description": "Controls who can see this example. Public examples are visible to all customers.\n Private examples are only visible to the customer who created them and admins."
           }
@@ -3439,6 +4063,16 @@
             "type": "integer",
             "description": "Minimum number of graduated users required to activate distilling boost.",
             "format": "int32"
+          }
+        }
+      },
+      "UpdateBoostConfigEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "recalculationId": {
+            "type": "string",
+            "description": "The id of the audience state recalculation dispatched by this update.\n Boost-only updates do not trigger a recalculation, so this is typically null.",
+            "nullable": true
           }
         }
       },

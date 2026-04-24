@@ -103,6 +103,229 @@
         }
       }
     },
+    "/workflow/grouped-ranking/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "GroupedRanking"
+        ],
+        "summary": "Gets the result overview for a grouped ranking workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "state",
+                  "-state",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/workflow/compare/{workflowId}/results": {
       "get": {
         "tags": [
@@ -186,7 +409,141 @@
         }
       }
     },
+    "/workflow/simple/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "SimpleWorkflow"
+        ],
+        "summary": "Gets the result overview for a simple workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "description": "Optional list of rapid states to include in the results.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "rapid_id",
+                  "-rapid_id",
+                  "state",
+                  "-state",
+                  "decisiveness",
+                  "-decisiveness"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/workflow/{workflowId}": {
+      "delete": {
+        "tags": [
+          "Workflow"
+        ],
+        "summary": "Deletes a workflow by its id.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
       "get": {
         "tags": [
           "Workflow"
@@ -233,203 +590,12 @@
         }
       }
     },
-    "/workflow/grouped-ranking/{workflowId}/results": {
-      "get": {
-        "tags": [
-          "GroupedRankingWorkflow"
-        ],
-        "summary": "Get the result overview for a multi ranking workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "path",
-            "description": "The ID of the workflow to get the results for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "model",
-            "in": "query",
-            "description": "The model for the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfGetGroupedRankingWorkflowResultsResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfGetGroupedRankingWorkflowResultsResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfGetGroupedRankingWorkflowResultsResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/workflow/simple/{workflowId}/results": {
-      "get": {
-        "tags": [
-          "SimpleWorkflow"
-        ],
-        "summary": "Get the result overview for a simple workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "path",
-            "description": "The ID of the workflow to get the results for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "model",
-            "in": "query",
-            "description": "The model for the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfSimpleWorkflowResultOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/workflows": {
-      "get": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Queries workflows based on the provided filter, page, and sort criteria.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The model containing the filter, page, and sort criteria.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfIWorkflowModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfIWorkflowModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfIWorkflowModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/workflow/{workflowId}/progress": {
-      "get": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Get the progress of a workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "path",
-            "description": "The ID of the workflow to get the progress for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowProgressResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowProgressResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowProgressResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/workflow/{workflowId}/compare-ab-summary": {
       "get": {
         "tags": [
           "Workflow"
         ],
-        "summary": "Calculates a summary of the results for a simple ranking workflow.\n The summary includes the number of times an asset at each index was the winner.",
+        "summary": "Returns the number of times each asset index won across the workflow's rapids.",
         "parameters": [
           {
             "name": "workflowId",
@@ -454,22 +620,75 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareAbSummaryResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCompareAbSummaryResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCompareAbSummaryResult"
+                  "$ref": "#/components/schemas/GetCompareAbSummaryEndpoint_Output"
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/workflow/{workflowId}/progress": {
+      "get": {
+        "tags": [
+          "Workflow"
+        ],
+        "summary": "Gets the progress of a workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the progress for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowProgressEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -479,7 +698,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Gets the limit most recent or oldest responses for a workflow.\n The responses are not guaranteed to be of any specific rapid.\n Instead, this endpoint returns all responses to any rapid in the workflow.",
+        "summary": "Gets the most recent or oldest responses for a workflow, across any rapid.",
         "parameters": [
           {
             "name": "workflowId",
@@ -493,7 +712,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "The number of responses to get.",
+            "description": "The maximum number of responses to return.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -513,45 +732,288 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetResponsesResult"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetResponsesResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetResponsesResult"
+                  "$ref": "#/components/schemas/GetWorkflowResponsesEndpoint_Output"
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/workflow/delete": {
-      "delete": {
+    "/workflows": {
+      "get": {
         "tags": [
           "Workflow"
         ],
-        "summary": "Deletes a workflow.",
+        "summary": "Queries workflows based on the provided filter, page, and sort criteria.",
         "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "state",
+                  "-state",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
           {
             "name": "id",
             "in": "query",
-            "description": "The ID of the workflow to delete.",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
             "schema": {
-              "type": "string"
-            }
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryWorkflowsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -618,60 +1080,7 @@
           "Audio"
         ]
       },
-      "Filter": {
-        "type": "object",
-        "properties": {
-          "field": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": { },
-          "operator": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/FilterOperator"
-              }
-            ]
-          },
-          "logic": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/LogicOperator"
-              }
-            ]
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            },
-            "nullable": true
-          }
-        }
-      },
-      "FilterOperator": {
-        "enum": [
-          "Eq",
-          "Neq",
-          "Gt",
-          "Gte",
-          "Lt",
-          "Lte",
-          "Contains",
-          "StartsWith",
-          "EndsWith",
-          "In",
-          "NotContains",
-          null
-        ]
-      },
-      "GetCompareAbSummaryResult": {
+      "GetCompareAbSummaryEndpoint_Output": {
         "required": [
           "winCounter",
           "allTargetGroupsCompleted"
@@ -679,18 +1088,24 @@
         "type": "object",
         "properties": {
           "winCounter": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "number",
-              "format": "double"
-            }
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            ],
+            "description": "The number of times each asset index was the winner."
           },
           "allTargetGroupsCompleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether all target groups for this workflow are completed."
           }
         }
       },
-      "GetGroupedRankingWorkflowResultsResult": {
+      "GetGroupedRankingWorkflowResultsEndpoint_Output": {
         "required": [
           "id",
           "name",
@@ -700,16 +1115,57 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the sub-workflow."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the sub-workflow."
           },
           "state": {
-            "type": "string"
+            "type": "string",
+            "description": "The state of the sub-workflow."
           },
           "pairMakerInformation": {
-            "$ref": "#/components/schemas/IPairMakerInformation"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IPairMakerInformation"
+              }
+            ],
+            "description": "Information about the pair-maker used by the sub-workflow."
+          }
+        }
+      },
+      "GetGroupedRankingWorkflowResultsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -776,21 +1232,178 @@
           }
         }
       },
-      "GetResponsesResult": {
+      "GetSimpleWorkflowResultsEndpoint_Output": {
+        "required": [
+          "rapidId",
+          "payload",
+          "asset",
+          "responses",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string",
+            "description": "The id of the rapid."
+          },
+          "payload": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidPayload"
+              }
+            ],
+            "description": "The payload of the rapid."
+          },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The asset of the rapid."
+          },
+          "responses": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
+                }
+              }
+            ],
+            "description": "The list of responses for the rapid."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            ],
+            "description": "The state of the rapid."
+          },
+          "context": {
+            "type": "string",
+            "description": "The optional textual context of the rapid.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "The optional asset shown as context to the user."
+          },
+          "decisiveness": {
+            "type": "number",
+            "description": "The decisiveness of the rapid.",
+            "format": "double"
+          }
+        }
+      },
+      "GetSimpleWorkflowResultsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetSimpleWorkflowResultsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetWorkflowByIdEndpoint_Output": {
+        "required": [
+          "workflow"
+        ],
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IWorkflowModel"
+              }
+            ],
+            "description": "The workflow."
+          }
+        }
+      },
+      "GetWorkflowProgressEndpoint_Output": {
+        "required": [
+          "completionPercentage",
+          "total",
+          "completed",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "completionPercentage": {
+            "type": "number",
+            "description": "The percentage of workflow datapoints that have been completed.",
+            "format": "double"
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of datapoints in the workflow.",
+            "format": "int64"
+          },
+          "completed": {
+            "type": "integer",
+            "description": "The number of datapoints that have been completed.",
+            "format": "int64"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WorkflowState"
+              }
+            ],
+            "description": "The current state of the workflow."
+          }
+        }
+      },
+      "GetWorkflowResponsesEndpoint_Output": {
         "required": [
           "responses"
         ],
         "type": "object",
         "properties": {
           "responses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetResponsesResult_Response"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetWorkflowResponsesEndpoint_Response"
+                }
+              }
+            ],
+            "description": "The responses for the workflow."
           }
         }
       },
-      "GetResponsesResult_Response": {
+      "GetWorkflowResponsesEndpoint_Response": {
         "required": [
           "id",
           "userId",
@@ -837,82 +1450,6 @@
           }
         }
       },
-      "GetSimpleWorkflowResultsModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Pagination"
-              }
-            ],
-            "description": "The size of the page and the page number to display."
-          },
-          "states": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/RapidState"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "An optional list of states to filter the rapids by."
-          },
-          "sortCriteria": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SortCriteria"
-              }
-            ],
-            "description": "A list of criteria to sort the results by."
-          }
-        },
-        "description": "Model for getting the overview of a simple workflow result."
-      },
-      "GetWorkflowByIdEndpoint_Output": {
-        "required": [
-          "workflow"
-        ],
-        "type": "object",
-        "properties": {
-          "workflow": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IWorkflowModel"
-              }
-            ],
-            "description": "The workflow."
-          }
-        }
-      },
-      "GetWorkflowProgressResult": {
-        "required": [
-          "completionPercentage",
-          "total",
-          "completed",
-          "state"
-        ],
-        "type": "object",
-        "properties": {
-          "completionPercentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "completed": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "state": {
-            "$ref": "#/components/schemas/WorkflowState"
-          }
-        }
-      },
       "GetWorkflowResultsEndpoint_Output": {
         "required": [
           "rapidId",
@@ -955,7 +1492,12 @@
             "description": "The list of responses for the rapid."
           },
           "state": {
-            "$ref": "#/components/schemas/RapidState"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            ],
+            "description": "The state of the rapid."
           },
           "context": {
             "type": "string",
@@ -2834,14 +3376,6 @@
           }
         }
       },
-      "LogicOperator": {
-        "enum": [
-          "And",
-          "Or",
-          "Not",
-          null
-        ]
-      },
       "MetadataModelCollection": {
         "type": "object",
         "additionalProperties": {
@@ -2866,118 +3400,6 @@
           },
           "classification": {
             "type": "string"
-          }
-        }
-      },
-      "PagedResultOfGetGroupedRankingWorkflowResultsResult": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResultOfIWorkflowModel": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IWorkflowModel"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResultOfSimpleWorkflowResultOutput": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SimpleWorkflowResultOutput"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "Pagination": {
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -3012,35 +3434,52 @@
           }
         }
       },
-      "QueryModel": {
+      "QueryWorkflowsEndpoint_Output": {
+        "required": [
+          "workflow"
+        ],
         "type": "object",
         "properties": {
+          "workflow": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IWorkflowModel"
+              }
+            ],
+            "description": "The workflow."
+          }
+        }
+      },
+      "QueryWorkflowsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
           "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/Pagination"
-              }
-            ]
+            "type": "integer",
+            "format": "int32"
           },
-          "filter": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/RootFilter"
-              }
-            ]
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
           },
-          "sortCriteria": {
+          "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "nullable": true
+              "$ref": "#/components/schemas/QueryWorkflowsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3053,118 +3492,7 @@
           "Done",
           "None",
           "Rejected"
-        ],
-        "description": "The state of the rapid."
-      },
-      "RootFilter": {
-        "required": [
-          "filters",
-          "logic"
-        ],
-        "type": "object",
-        "properties": {
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
-          }
-        }
-      },
-      "SimpleWorkflowResultOutput": {
-        "required": [
-          "rapidId",
-          "payload",
-          "asset",
-          "responses",
-          "state"
-        ],
-        "type": "object",
-        "properties": {
-          "rapidId": {
-            "type": "string",
-            "description": "The id of the rapid."
-          },
-          "payload": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IRapidPayload"
-              }
-            ],
-            "description": "The payload of the rapid."
-          },
-          "asset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ],
-            "description": "The asset of the rapid."
-          },
-          "responses": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
-                }
-              }
-            ],
-            "description": "The list of responses for the rapid."
-          },
-          "state": {
-            "$ref": "#/components/schemas/RapidState"
-          },
-          "context": {
-            "type": "string",
-            "description": "The optional textual context of the rapid.",
-            "nullable": true
-          },
-          "contextAsset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAssetModel"
-              }
-            ],
-            "description": "The optional asset shown as context to the user."
-          },
-          "decisiveness": {
-            "type": "number",
-            "description": "The decisiveness of the rapid.",
-            "format": "double"
-          }
-        },
-        "description": "The projected, API-layer shape of a simple-workflow result entry."
-      },
-      "SortCriteria": {
-        "type": "object",
-        "properties": {
-          "criteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "nullable": true
-          }
-        }
-      },
-      "SortCriterion": {
-        "required": [
-          "propertyName",
-          "direction"
-        ],
-        "type": "object",
-        "properties": {
-          "propertyName": {
-            "type": "string"
-          },
-          "direction": {
-            "$ref": "#/components/schemas/SortDirection"
-          }
-        }
+        ]
       },
       "SortDirection": {
         "enum": [
@@ -3286,17 +3614,6 @@
         "profile",
         "email"
       ]
-    }
-  ],
-  "tags": [
-    {
-      "name": "GroupedRankingWorkflow"
-    },
-    {
-      "name": "SimpleWorkflow"
-    },
-    {
-      "name": "Workflow"
     }
   ]
 }

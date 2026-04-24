@@ -28,8 +28,8 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.file_stream_result import FileStreamResult
     from rapidata.api_client.models.order_state import OrderState
     from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
-    from rapidata.api_client.models.get_workflow_progress_result import (
-        GetWorkflowProgressResult,
+    from rapidata.api_client.models.get_workflow_progress_endpoint_output import (
+        GetWorkflowProgressEndpointOutput,
     )
     from rapidata.rapidata_client.results.rapidata_results import RapidataResults
 
@@ -201,7 +201,7 @@ class RapidataOrder:
 
         self._retry_operation(fetch_ids)
 
-    def __get_workflow_progress(self) -> GetWorkflowProgressResult:
+    def __get_workflow_progress(self) -> GetWorkflowProgressEndpointOutput:
         """Gets the workflow progress (internal use only)."""
 
         def get_progress():
@@ -417,8 +417,8 @@ class RapidataOrder:
 
     def _get_preliminary_results(self) -> RapidataResults:
         """Fetches preliminary results for an in-progress order."""
-        from rapidata.api_client.models.preliminary_download_model import (
-            PreliminaryDownloadModel,
+        from rapidata.api_client.models.start_preliminary_download_endpoint_input import (
+            StartPreliminaryDownloadEndpointInput,
         )
         from rapidata.api_client.exceptions import ApiException
         from rapidata.rapidata_client.results.rapidata_results import RapidataResults
@@ -426,7 +426,7 @@ class RapidataOrder:
         try:
             pipeline_id = self.__get_pipeline_id()
             download_id = self._openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
-                pipeline_id, PreliminaryDownloadModel(sendEmail=False)
+                pipeline_id, StartPreliminaryDownloadEndpointInput(sendEmail=False)
             ).download_id
 
             def check_results():

@@ -31,7 +31,7 @@ class GetBatchUploadResultEndpointOutput(LazyValidatedModel):
     GetBatchUploadResultEndpointOutput
     """ # noqa: E501
     batch_upload_id: StrictStr = Field(description="The identifier of the batch upload.", alias="batchUploadId")
-    status: BatchUploadStatus
+    status: BatchUploadStatus = Field(description="The current status of the batch upload.")
     total_count: StrictInt = Field(description="The total number of URLs in the batch.", alias="totalCount")
     completed_count: StrictInt = Field(description="The number of URLs that have been successfully processed.", alias="completedCount")
     failed_count: StrictInt = Field(description="The number of URLs that failed to process.", alias="failedCount")

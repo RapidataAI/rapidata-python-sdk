@@ -32,7 +32,7 @@ class QueryFlowsEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the flow.")
     name: StrictStr = Field(description="The name of the flow.")
-    type: FlowType
+    type: FlowType = Field(description="The type of the flow.")
     owner_id: StrictStr = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")

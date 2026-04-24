@@ -34,7 +34,7 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The unique identifier of the audience.")
     name: StrictStr = Field(description="The name of the audience.")
     description: Optional[StrictStr] = Field(default=None, description="The markdown-supported description of the audience.")
-    status: AudienceStatus
+    status: AudienceStatus = Field(description="The current status of the audience.")
     qualified_user_count: StrictInt = Field(description="The number of users that have qualified for this audience.", alias="qualifiedUserCount")
     filters: List[IAudienceFilter]
     logo: Optional[StrictStr] = Field(default=None, description="The URL of the audience logo, if any.")
