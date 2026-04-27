@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from rapidata.service.services.workflow_service import WorkflowService
     from rapidata.service.services.leaderboard_service import LeaderboardService
     from rapidata.service.services.rapid_service import RapidService
+    from rapidata.service.services.translation_service import TranslationService
 
 
 class OpenAPIService:
@@ -75,6 +76,7 @@ class OpenAPIService:
         self._workflow: WorkflowService | None = None
         self._leaderboard: LeaderboardService | None = None
         self._rapid: RapidService | None = None
+        self._translation: TranslationService | None = None
 
         if token:
             logger.debug("Using token for authentication")
@@ -210,6 +212,19 @@ class OpenAPIService:
             from rapidata.service.services.rapid_service import RapidService
             self._rapid = RapidService(self.api_client)
         return self._rapid
+
+    @property
+    def _translation_service(self) -> TranslationService:
+        """Internal access to the translation service.
+
+        Intentionally not exposed as part of the public OpenAPIService surface yet.
+        Use `_translation_service` rather than `translation` to make the
+        not-yet-public status explicit at the call site.
+        """
+        if self._translation is None:
+            from rapidata.service.services.translation_service import TranslationService
+            self._translation = TranslationService(self.api_client)
+        return self._translation
 
     def _get_rapidata_package_version(self):
         """
