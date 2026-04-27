@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.line_result_line import LineResultLine
+from rapidata.api_client.models.line import Line
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class IRapidResultLineResult(LazyValidatedModel):
     IRapidResultLineResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    lines: List[LineResultLine]
+    lines: List[Line]
     rapid_id: StrictStr = Field(alias="rapidId")
     __properties: ClassVar[List[str]] = ["_t", "lines", "rapidId"]
 
@@ -96,7 +96,7 @@ class IRapidResultLineResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "lines": [LineResultLine.from_dict(_item) for _item in obj["lines"]] if obj.get("lines") is not None else None,
+            "lines": [Line.from_dict(_item) for _item in obj["lines"]] if obj.get("lines") is not None else None,
             "rapidId": obj.get("rapidId")
         }
         try:

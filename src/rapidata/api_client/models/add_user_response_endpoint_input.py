@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_rapid_result import IRapidResult
+from rapidata.api_client.models.i_rapid_result_model import IRapidResultModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class AddUserResponseEndpointInput(LazyValidatedModel):
     AddUserResponseEndpointInput
     """ # noqa: E501
     session_index: StrictInt = Field(description="The index of the session when the result was submitted.", alias="sessionIndex")
-    result: IRapidResult = Field(description="The result submitted by the user.")
+    result: IRapidResultModel = Field(description="The result submitted by the user.")
     __properties: ClassVar[List[str]] = ["sessionIndex", "result"]
 
     # model_config is inherited from LazyValidatedModel
@@ -84,7 +84,7 @@ class AddUserResponseEndpointInput(LazyValidatedModel):
 
         _data = {
             "sessionIndex": obj.get("sessionIndex"),
-            "result": IRapidResult.from_dict(obj["result"]) if obj.get("result") is not None else None
+            "result": IRapidResultModel.from_dict(obj["result"]) if obj.get("result") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

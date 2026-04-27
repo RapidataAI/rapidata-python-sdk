@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from rapidata.api_client.models.translated_string import TranslatedString
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -31,7 +31,7 @@ class SkipRapidEndpointOutput(LazyValidatedModel):
     SkipRapidEndpointOutput
     """ # noqa: E501
     is_accepted: StrictBool = Field(description="Whether the skip was accepted.", alias="isAccepted")
-    validation_truth: Optional[IValidationTruth] = Field(default=None, description="The validation truth applied, if any.", alias="validationTruth")
+    validation_truth: Optional[IValidationTruthModel] = Field(default=None, description="The validation truth applied, if any.", alias="validationTruth")
     explanation: Optional[TranslatedString] = Field(default=None, description="An optional translated explanation for the user.")
     user_score: Union[StrictFloat, StrictInt] = Field(description="The user's score after the skip.", alias="userScore")
     __properties: ClassVar[List[str]] = ["isAccepted", "validationTruth", "explanation", "userScore"]
@@ -90,7 +90,7 @@ class SkipRapidEndpointOutput(LazyValidatedModel):
 
         _data = {
             "isAccepted": obj.get("isAccepted"),
-            "validationTruth": IValidationTruth.from_dict(obj["validationTruth"]) if obj.get("validationTruth") is not None else None,
+            "validationTruth": IValidationTruthModel.from_dict(obj["validationTruth"]) if obj.get("validationTruth") is not None else None,
             "explanation": TranslatedString.from_dict(obj["explanation"]) if obj.get("explanation") is not None else None,
             "userScore": obj.get("userScore")
         }

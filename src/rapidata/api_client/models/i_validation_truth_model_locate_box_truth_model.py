@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.box_shape import BoxShape
+from rapidata.api_client.models.locate_box_truth_model_box import LocateBoxTruthModelBox
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class IValidationTruthModelLocateBoxTruthModel(LazyValidatedModel):
     IValidationTruthModelLocateBoxTruthModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    bounding_boxes: List[BoxShape] = Field(alias="boundingBoxes")
+    bounding_boxes: List[LocateBoxTruthModelBox] = Field(alias="boundingBoxes")
     required_precision: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredPrecision")
     required_completeness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredCompleteness")
     __properties: ClassVar[List[str]] = ["_t", "boundingBoxes", "requiredPrecision", "requiredCompleteness"]
@@ -97,7 +97,7 @@ class IValidationTruthModelLocateBoxTruthModel(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
+            "boundingBoxes": [LocateBoxTruthModelBox.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
             "requiredPrecision": obj.get("requiredPrecision"),
             "requiredCompleteness": obj.get("requiredCompleteness")
         }

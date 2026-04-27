@@ -22,10 +22,10 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_model import IAssetModel
-from rapidata.api_client.models.i_rapid_payload import IRapidPayload
-from rapidata.api_client.models.i_referee_info import IRefereeInfo
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
-from rapidata.api_client.models.rapid_state import RapidState
+from rapidata.api_client.models.i_rapid_payload_model import IRapidPayloadModel
+from rapidata.api_client.models.i_referee_info_model import IRefereeInfoModel
+from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
+from rapidata.api_client.models.rapid_state_model import RapidStateModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -36,13 +36,13 @@ class QueryFlaggedRapidsEndpointOutput(LazyValidatedModel):
     QueryFlaggedRapidsEndpointOutput
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the rapid.")
-    payload: IRapidPayload = Field(description="The payload of the rapid.")
-    referee: IRefereeInfo = Field(description="The referee that created the rapid.")
+    payload: IRapidPayloadModel = Field(description="The payload of the rapid.")
+    referee: IRefereeInfoModel = Field(description="The referee that created the rapid.")
     asset: IAssetModel = Field(description="The asset associated with the rapid.")
-    state: RapidState = Field(description="The state of the rapid.")
+    state: RapidStateModel = Field(description="The state of the rapid.")
     has_responses: StrictBool = Field(description="Whether the rapid has any responses.", alias="hasResponses")
     should_accept_incorrect: StrictBool = Field(description="Whether the rapid should accept incorrect answers.", alias="shouldAcceptIncorrect")
-    truth: IValidationTruth = Field(description="The optional validation truth of the rapid.")
+    truth: IValidationTruthModel = Field(description="The optional validation truth of the rapid.")
     explanation: Optional[StrictStr] = Field(description="The optional explanation shown when users answer incorrectly.")
     random_correct_probability: Union[StrictFloat, StrictInt] = Field(description="The probability of a random correct answer.", alias="randomCorrectProbability")
     key: Optional[StrictStr] = Field(description="An optional key for the rapid.")
@@ -132,13 +132,13 @@ class QueryFlaggedRapidsEndpointOutput(LazyValidatedModel):
 
         _data = {
             "id": obj.get("id"),
-            "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "referee": IRefereeInfo.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "payload": IRapidPayloadModel.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "referee": IRefereeInfoModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "state": obj.get("state"),
             "hasResponses": obj.get("hasResponses"),
             "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect"),
-            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "key": obj.get("key"),

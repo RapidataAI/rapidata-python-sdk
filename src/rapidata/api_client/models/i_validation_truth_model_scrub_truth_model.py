@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.scrub_range import ScrubRange
+from rapidata.api_client.models.scrub_truth_model_scrub_range import ScrubTruthModelScrubRange
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class IValidationTruthModelScrubTruthModel(LazyValidatedModel):
     IValidationTruthModelScrubTruthModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    valid_ranges: List[ScrubRange] = Field(alias="validRanges")
+    valid_ranges: List[ScrubTruthModelScrubRange] = Field(alias="validRanges")
     __properties: ClassVar[List[str]] = ["_t", "validRanges"]
 
     @field_validator('t')
@@ -95,7 +95,7 @@ class IValidationTruthModelScrubTruthModel(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "validRanges": [ScrubRange.from_dict(_item) for _item in obj["validRanges"]] if obj.get("validRanges") is not None else None
+            "validRanges": [ScrubTruthModelScrubRange.from_dict(_item) for _item in obj["validRanges"]] if obj.get("validRanges") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

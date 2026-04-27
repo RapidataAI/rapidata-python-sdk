@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
+from rapidata.api_client.models.classify_category import ClassifyCategory
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class IRapidPayloadClassifyPayload(LazyValidatedModel):
     IRapidPayloadClassifyPayload
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    categories: List[ClassifyPayloadCategory]
+    categories: List[ClassifyCategory]
     title: StrictStr
     __properties: ClassVar[List[str]] = ["_t", "categories", "title"]
 
@@ -96,7 +96,7 @@ class IRapidPayloadClassifyPayload(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "categories": [ClassifyPayloadCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
+            "categories": [ClassifyCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "title": obj.get("title")
         }
         try:

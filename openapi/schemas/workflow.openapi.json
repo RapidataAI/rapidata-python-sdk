@@ -1057,7 +1057,7 @@
           }
         }
       },
-      "ClassifyPayload_Category": {
+      "ClassifyCategory": {
         "required": [
           "label",
           "value"
@@ -2166,49 +2166,49 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
           },
           {
             "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
-            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
-            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
-            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload",
             "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
+            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
+            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
           }
         }
       },
@@ -2245,7 +2245,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
+              "$ref": "#/components/schemas/ClassifyCategory"
             }
           },
           "title": {
@@ -2417,53 +2417,53 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidResultTranscriptionResult"
+            "$ref": "#/components/schemas/IRapidResultAttachCategoryResult"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultScrubResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultPolygonResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultLocateResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultLineResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultFreeTextResult"
+            "$ref": "#/components/schemas/IRapidResultBoundingBoxResult"
           },
           {
             "$ref": "#/components/schemas/IRapidResultCompareResult"
           },
           {
+            "$ref": "#/components/schemas/IRapidResultFreeTextResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultLineResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultLocateResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultPolygonResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultScrubResult"
+          },
+          {
             "$ref": "#/components/schemas/IRapidResultSkipResult"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultAttachCategoryResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultBoundingBoxResult"
+            "$ref": "#/components/schemas/IRapidResultTranscriptionResult"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionResult": "#/components/schemas/IRapidResultTranscriptionResult",
-            "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
-            "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
-            "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
-            "LocateResult": "#/components/schemas/IRapidResultLocateResult",
-            "LineResult": "#/components/schemas/IRapidResultLineResult",
-            "FreeTextResult": "#/components/schemas/IRapidResultFreeTextResult",
-            "CompareResult": "#/components/schemas/IRapidResultCompareResult",
-            "SkipResult": "#/components/schemas/IRapidResultSkipResult",
             "AttachCategoryResult": "#/components/schemas/IRapidResultAttachCategoryResult",
-            "BoundingBoxResult": "#/components/schemas/IRapidResultBoundingBoxResult"
+            "BoundingBoxResult": "#/components/schemas/IRapidResultBoundingBoxResult",
+            "CompareResult": "#/components/schemas/IRapidResultCompareResult",
+            "FreeTextResult": "#/components/schemas/IRapidResultFreeTextResult",
+            "LineResult": "#/components/schemas/IRapidResultLineResult",
+            "LocateResult": "#/components/schemas/IRapidResultLocateResult",
+            "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
+            "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
+            "SkipResult": "#/components/schemas/IRapidResultSkipResult",
+            "TranscriptionResult": "#/components/schemas/IRapidResultTranscriptionResult"
           }
         }
       },
@@ -2514,6 +2514,7 @@
       },
       "IRapidResultCompareResult": {
         "required": [
+          "winners",
           "rapidId",
           "_t"
         ],
@@ -2572,7 +2573,7 @@
           "lines": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LineResult_Line"
+              "$ref": "#/components/schemas/Line"
             }
           },
           "rapidId": {
@@ -2644,7 +2645,7 @@
           "shapes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonResult_Shape"
+              "$ref": "#/components/schemas/PolygonShape"
             }
           },
           "rapidId": {
@@ -3323,9 +3324,8 @@
           }
         }
       },
-      "LineResult_Line": {
+      "Line": {
         "required": [
-          "size",
           "points"
         ],
         "type": "object",
@@ -3337,16 +3337,12 @@
           "points": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LineResult_LinePoint"
+              "$ref": "#/components/schemas/LinePoint"
             }
           }
         }
       },
-      "LineResult_LinePoint": {
-        "required": [
-          "x",
-          "y"
-        ],
+      "LinePoint": {
         "type": "object",
         "properties": {
           "x": {
@@ -3360,10 +3356,6 @@
         }
       },
       "LocateCoordinate": {
-        "required": [
-          "x",
-          "y"
-        ],
         "type": "object",
         "properties": {
           "x": {
@@ -3384,8 +3376,6 @@
       },
       "NamedClassification": {
         "required": [
-          "start",
-          "end",
           "classification"
         ],
         "type": "object",
@@ -3403,11 +3393,7 @@
           }
         }
       },
-      "PolygonResult_Coordinate": {
-        "required": [
-          "x",
-          "y"
-        ],
+      "PolygonCoordinate": {
         "type": "object",
         "properties": {
           "x": {
@@ -3420,7 +3406,7 @@
           }
         }
       },
-      "PolygonResult_Shape": {
+      "PolygonShape": {
         "required": [
           "edges"
         ],
@@ -3429,7 +3415,7 @@
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonResult_Coordinate"
+              "$ref": "#/components/schemas/PolygonCoordinate"
             }
           }
         }
@@ -3502,8 +3488,7 @@
       },
       "TranscriptionWord": {
         "required": [
-          "word",
-          "wordIndex"
+          "word"
         ],
         "type": "object",
         "properties": {

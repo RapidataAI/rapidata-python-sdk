@@ -1282,7 +1282,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidPayload"
+                "$ref": "#/components/schemas/IRapidPayloadModel"
               }
             ],
             "description": "The payload to use for the rapid."
@@ -1345,31 +1345,9 @@
           "type": "string"
         }
       },
-      "BoxShape": {
-        "type": "object",
-        "properties": {
-          "xMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "xMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMax": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "ClassifyPayload_Category": {
+      "ClassifyPayloadModel_Category": {
         "required": [
-          "label",
-          "value"
+          "label"
         ],
         "type": "object",
         "properties": {
@@ -1377,7 +1355,8 @@
             "type": "string"
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1578,7 +1557,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidPayload"
+                "$ref": "#/components/schemas/IRapidPayloadModel"
               }
             ],
             "description": "The payload of the rapid."
@@ -1619,7 +1598,7 @@
           "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidState"
+                "$ref": "#/components/schemas/RapidStateModel"
               }
             ],
             "description": "The state of the rapid."
@@ -2242,60 +2221,60 @@
           }
         }
       },
-      "IRapidPayload": {
+      "IRapidPayloadModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelComparePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelLinePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelLocatePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelScrubPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
-            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
-            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
-            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
-            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel",
+            "ClassifyPayload": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel",
+            "ComparePayload": "#/components/schemas/IRapidPayloadModelComparePayloadModel",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel",
+            "LinePayload": "#/components/schemas/IRapidPayloadModelLinePayloadModel",
+            "LocatePayload": "#/components/schemas/IRapidPayloadModelLocatePayloadModel",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadModelScrubPayloadModel",
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
           }
         }
       },
-      "IRapidPayloadBoundingBoxPayload": {
+      "IRapidPayloadModelBoundingBoxPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2312,7 +2291,7 @@
           }
         }
       },
-      "IRapidPayloadClassifyPayload": {
+      "IRapidPayloadModelClassifyPayloadModel": {
         "required": [
           "categories",
           "title",
@@ -2328,7 +2307,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
+              "$ref": "#/components/schemas/ClassifyPayloadModel_Category"
             }
           },
           "title": {
@@ -2336,7 +2315,7 @@
           }
         }
       },
-      "IRapidPayloadComparePayload": {
+      "IRapidPayloadModelComparePayloadModel": {
         "required": [
           "criteria",
           "_t"
@@ -2353,7 +2332,7 @@
           }
         }
       },
-      "IRapidPayloadFreeTextPayload": {
+      "IRapidPayloadModelFreeTextPayloadModel": {
         "required": [
           "question",
           "_t"
@@ -2377,7 +2356,7 @@
           }
         }
       },
-      "IRapidPayloadLinePayload": {
+      "IRapidPayloadModelLinePayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2394,7 +2373,7 @@
           }
         }
       },
-      "IRapidPayloadLocatePayload": {
+      "IRapidPayloadModelLocatePayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2411,7 +2390,7 @@
           }
         }
       },
-      "IRapidPayloadNamedEntityPayload": {
+      "IRapidPayloadModelNamedEntityPayloadModel": {
         "required": [
           "target",
           "classes",
@@ -2435,7 +2414,7 @@
           }
         }
       },
-      "IRapidPayloadPolygonPayload": {
+      "IRapidPayloadModelPolygonPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2452,7 +2431,7 @@
           }
         }
       },
-      "IRapidPayloadScrubPayload": {
+      "IRapidPayloadModelScrubPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2469,7 +2448,7 @@
           }
         }
       },
-      "IRapidPayloadTranscriptionPayload": {
+      "IRapidPayloadModelTranscriptionPayloadModel": {
         "required": [
           "title",
           "transcription",
@@ -2488,7 +2467,7 @@
           "transcription": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionPayloadModel_TranscriptionWord"
             }
           }
         }
@@ -2689,7 +2668,7 @@
           "boundingBoxes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BoxShape"
+              "$ref": "#/components/schemas/LocateBoxTruthModel_Box"
             }
           },
           "requiredPrecision": {
@@ -2740,7 +2719,7 @@
           "classifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NamedClassification"
+              "$ref": "#/components/schemas/NamedEntityTruthModel_NamedClassification"
             }
           }
         }
@@ -2773,7 +2752,7 @@
           "validRanges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ScrubRange"
+              "$ref": "#/components/schemas/ScrubTruthModel_ScrubRange"
             }
           }
         }
@@ -2806,7 +2785,7 @@
           "correctWords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionTruthModel_TranscriptionWord"
             }
           },
           "strictGrading": {
@@ -2818,6 +2797,27 @@
             "format": "double"
           },
           "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "LocateBoxTruthModel_Box": {
+        "type": "object",
+        "properties": {
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
             "type": "number",
             "format": "double"
           }
@@ -2849,7 +2849,7 @@
           "type": "string"
         }
       },
-      "NamedClassification": {
+      "NamedEntityTruthModel_NamedClassification": {
         "required": [
           "start",
           "end",
@@ -3012,7 +3012,7 @@
           "type": "string"
         }
       },
-      "RapidState": {
+      "RapidStateModel": {
         "enum": [
           "Labeling",
           "Paused",
@@ -3023,7 +3023,7 @@
           "Rejected"
         ]
       },
-      "ScrubRange": {
+      "ScrubTruthModel_ScrubRange": {
         "required": [
           "start",
           "end"
@@ -3040,7 +3040,23 @@
           }
         }
       },
-      "TranscriptionWord": {
+      "TranscriptionPayloadModel_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionTruthModel_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"

@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,8 +28,8 @@ class NamedClassification(LazyValidatedModel):
     """
     NamedClassification
     """ # noqa: E501
-    start: StrictInt
-    end: StrictInt
+    start: Optional[StrictInt] = None
+    end: Optional[StrictInt] = None
     classification: StrictStr
     __properties: ClassVar[List[str]] = ["start", "end", "classification"]
 
