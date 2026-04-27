@@ -296,6 +296,8 @@ class RapidsManager:
         Args:
             instruction (str): The instructions on what the labeler
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be drawing.
+                All boxes are attached as the ground truth — labelers are graded on whether
+                their drawn lines fall within any of these boxes.
             datapoint (str): The asset that the labeler will be drawing the object in.
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
@@ -308,10 +310,13 @@ class RapidsManager:
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
         )
-        from rapidata.api_client.models.i_validation_truth_model_bounding_box_truth_model import (
-            IValidationTruthModelBoundingBoxTruthModel,
+        from rapidata.api_client.models.i_validation_truth_model_locate_box_truth_model import (
+            IValidationTruthModelLocateBoxTruthModel,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+
+        if not truths:
+            raise ValueError("Draw rapid requires at least one truth bounding box")
 
         payload = IRapidPayload(
             actual_instance=IRapidPayloadLinePayload(
@@ -320,12 +325,9 @@ class RapidsManager:
         )
 
         model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelBoundingBoxTruthModel(
-                _t="BoundingBoxTruth",
-                xMax=truths[0].x_max * 100,
-                xMin=truths[0].x_min * 100,
-                yMax=truths[0].y_max * 100,
-                yMin=truths[0].y_min * 100,
+            actual_instance=IValidationTruthModelLocateBoxTruthModel(
+                _t="LocateBoxTruth",
+                boundingBoxes=[truth.to_model() for truth in truths],
             )
         )
 
