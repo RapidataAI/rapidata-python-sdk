@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class TranscriptionWord(LazyValidatedModel):
     TranscriptionWord
     """ # noqa: E501
     word: StrictStr
-    word_index: StrictInt = Field(alias="wordIndex")
+    word_index: Optional[StrictInt] = Field(default=None, alias="wordIndex")
     __properties: ClassVar[List[str]] = ["word", "wordIndex"]
 
     # model_config is inherited from LazyValidatedModel

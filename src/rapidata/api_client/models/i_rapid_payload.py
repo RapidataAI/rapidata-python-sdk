@@ -38,26 +38,26 @@ class IRapidPayload(LazyValidatedModel):
     """
     IRapidPayload
     """
-    # data type: IRapidPayloadTranscriptionPayload
-    oneof_schema_1_validator: Optional[IRapidPayloadTranscriptionPayload] = None
-    # data type: IRapidPayloadScrubPayload
-    oneof_schema_2_validator: Optional[IRapidPayloadScrubPayload] = None
-    # data type: IRapidPayloadPolygonPayload
-    oneof_schema_3_validator: Optional[IRapidPayloadPolygonPayload] = None
-    # data type: IRapidPayloadNamedEntityPayload
-    oneof_schema_4_validator: Optional[IRapidPayloadNamedEntityPayload] = None
-    # data type: IRapidPayloadLocatePayload
-    oneof_schema_5_validator: Optional[IRapidPayloadLocatePayload] = None
-    # data type: IRapidPayloadLinePayload
-    oneof_schema_6_validator: Optional[IRapidPayloadLinePayload] = None
-    # data type: IRapidPayloadFreeTextPayload
-    oneof_schema_7_validator: Optional[IRapidPayloadFreeTextPayload] = None
-    # data type: IRapidPayloadComparePayload
-    oneof_schema_8_validator: Optional[IRapidPayloadComparePayload] = None
-    # data type: IRapidPayloadClassifyPayload
-    oneof_schema_9_validator: Optional[IRapidPayloadClassifyPayload] = None
     # data type: IRapidPayloadBoundingBoxPayload
-    oneof_schema_10_validator: Optional[IRapidPayloadBoundingBoxPayload] = None
+    oneof_schema_1_validator: Optional[IRapidPayloadBoundingBoxPayload] = None
+    # data type: IRapidPayloadClassifyPayload
+    oneof_schema_2_validator: Optional[IRapidPayloadClassifyPayload] = None
+    # data type: IRapidPayloadComparePayload
+    oneof_schema_3_validator: Optional[IRapidPayloadComparePayload] = None
+    # data type: IRapidPayloadFreeTextPayload
+    oneof_schema_4_validator: Optional[IRapidPayloadFreeTextPayload] = None
+    # data type: IRapidPayloadLinePayload
+    oneof_schema_5_validator: Optional[IRapidPayloadLinePayload] = None
+    # data type: IRapidPayloadLocatePayload
+    oneof_schema_6_validator: Optional[IRapidPayloadLocatePayload] = None
+    # data type: IRapidPayloadNamedEntityPayload
+    oneof_schema_7_validator: Optional[IRapidPayloadNamedEntityPayload] = None
+    # data type: IRapidPayloadPolygonPayload
+    oneof_schema_8_validator: Optional[IRapidPayloadPolygonPayload] = None
+    # data type: IRapidPayloadScrubPayload
+    oneof_schema_9_validator: Optional[IRapidPayloadScrubPayload] = None
+    # data type: IRapidPayloadTranscriptionPayload
+    oneof_schema_10_validator: Optional[IRapidPayloadTranscriptionPayload] = None
     actual_instance: Optional[Union[IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload]] = None
     one_of_schemas: Set[str] = { "IRapidPayloadBoundingBoxPayload", "IRapidPayloadClassifyPayload", "IRapidPayloadComparePayload", "IRapidPayloadFreeTextPayload", "IRapidPayloadLinePayload", "IRapidPayloadLocatePayload", "IRapidPayloadNamedEntityPayload", "IRapidPayloadPolygonPayload", "IRapidPayloadScrubPayload", "IRapidPayloadTranscriptionPayload" }
 
@@ -82,44 +82,9 @@ class IRapidPayload(LazyValidatedModel):
         instance = IRapidPayload.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IRapidPayloadTranscriptionPayload
-        if not isinstance(v, IRapidPayloadTranscriptionPayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadTranscriptionPayload`")
-        else:
-            match += 1
-        # validate data type: IRapidPayloadScrubPayload
-        if not isinstance(v, IRapidPayloadScrubPayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadScrubPayload`")
-        else:
-            match += 1
-        # validate data type: IRapidPayloadPolygonPayload
-        if not isinstance(v, IRapidPayloadPolygonPayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadPolygonPayload`")
-        else:
-            match += 1
-        # validate data type: IRapidPayloadNamedEntityPayload
-        if not isinstance(v, IRapidPayloadNamedEntityPayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadNamedEntityPayload`")
-        else:
-            match += 1
-        # validate data type: IRapidPayloadLocatePayload
-        if not isinstance(v, IRapidPayloadLocatePayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadLocatePayload`")
-        else:
-            match += 1
-        # validate data type: IRapidPayloadLinePayload
-        if not isinstance(v, IRapidPayloadLinePayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadLinePayload`")
-        else:
-            match += 1
-        # validate data type: IRapidPayloadFreeTextPayload
-        if not isinstance(v, IRapidPayloadFreeTextPayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadFreeTextPayload`")
-        else:
-            match += 1
-        # validate data type: IRapidPayloadComparePayload
-        if not isinstance(v, IRapidPayloadComparePayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadComparePayload`")
+        # validate data type: IRapidPayloadBoundingBoxPayload
+        if not isinstance(v, IRapidPayloadBoundingBoxPayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadBoundingBoxPayload`")
         else:
             match += 1
         # validate data type: IRapidPayloadClassifyPayload
@@ -127,9 +92,44 @@ class IRapidPayload(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadClassifyPayload`")
         else:
             match += 1
-        # validate data type: IRapidPayloadBoundingBoxPayload
-        if not isinstance(v, IRapidPayloadBoundingBoxPayload):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadBoundingBoxPayload`")
+        # validate data type: IRapidPayloadComparePayload
+        if not isinstance(v, IRapidPayloadComparePayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadComparePayload`")
+        else:
+            match += 1
+        # validate data type: IRapidPayloadFreeTextPayload
+        if not isinstance(v, IRapidPayloadFreeTextPayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadFreeTextPayload`")
+        else:
+            match += 1
+        # validate data type: IRapidPayloadLinePayload
+        if not isinstance(v, IRapidPayloadLinePayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadLinePayload`")
+        else:
+            match += 1
+        # validate data type: IRapidPayloadLocatePayload
+        if not isinstance(v, IRapidPayloadLocatePayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadLocatePayload`")
+        else:
+            match += 1
+        # validate data type: IRapidPayloadNamedEntityPayload
+        if not isinstance(v, IRapidPayloadNamedEntityPayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadNamedEntityPayload`")
+        else:
+            match += 1
+        # validate data type: IRapidPayloadPolygonPayload
+        if not isinstance(v, IRapidPayloadPolygonPayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadPolygonPayload`")
+        else:
+            match += 1
+        # validate data type: IRapidPayloadScrubPayload
+        if not isinstance(v, IRapidPayloadScrubPayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadScrubPayload`")
+        else:
+            match += 1
+        # validate data type: IRapidPayloadTranscriptionPayload
+        if not isinstance(v, IRapidPayloadTranscriptionPayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadTranscriptionPayload`")
         else:
             match += 1
         if match > 1:
@@ -152,51 +152,9 @@ class IRapidPayload(LazyValidatedModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IRapidPayloadTranscriptionPayload
+        # deserialize data into IRapidPayloadBoundingBoxPayload
         try:
-            instance.actual_instance = IRapidPayloadTranscriptionPayload.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidPayloadScrubPayload
-        try:
-            instance.actual_instance = IRapidPayloadScrubPayload.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidPayloadPolygonPayload
-        try:
-            instance.actual_instance = IRapidPayloadPolygonPayload.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidPayloadNamedEntityPayload
-        try:
-            instance.actual_instance = IRapidPayloadNamedEntityPayload.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidPayloadLocatePayload
-        try:
-            instance.actual_instance = IRapidPayloadLocatePayload.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidPayloadLinePayload
-        try:
-            instance.actual_instance = IRapidPayloadLinePayload.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidPayloadFreeTextPayload
-        try:
-            instance.actual_instance = IRapidPayloadFreeTextPayload.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidPayloadComparePayload
-        try:
-            instance.actual_instance = IRapidPayloadComparePayload.from_json(json_str)
+            instance.actual_instance = IRapidPayloadBoundingBoxPayload.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -206,9 +164,51 @@ class IRapidPayload(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into IRapidPayloadBoundingBoxPayload
+        # deserialize data into IRapidPayloadComparePayload
         try:
-            instance.actual_instance = IRapidPayloadBoundingBoxPayload.from_json(json_str)
+            instance.actual_instance = IRapidPayloadComparePayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidPayloadFreeTextPayload
+        try:
+            instance.actual_instance = IRapidPayloadFreeTextPayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidPayloadLinePayload
+        try:
+            instance.actual_instance = IRapidPayloadLinePayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidPayloadLocatePayload
+        try:
+            instance.actual_instance = IRapidPayloadLocatePayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidPayloadNamedEntityPayload
+        try:
+            instance.actual_instance = IRapidPayloadNamedEntityPayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidPayloadPolygonPayload
+        try:
+            instance.actual_instance = IRapidPayloadPolygonPayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidPayloadScrubPayload
+        try:
+            instance.actual_instance = IRapidPayloadScrubPayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidPayloadTranscriptionPayload
+        try:
+            instance.actual_instance = IRapidPayloadTranscriptionPayload.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

@@ -39,28 +39,28 @@ class IRapidResult(LazyValidatedModel):
     """
     IRapidResult
     """
-    # data type: IRapidResultTranscriptionResult
-    oneof_schema_1_validator: Optional[IRapidResultTranscriptionResult] = None
-    # data type: IRapidResultScrubResult
-    oneof_schema_2_validator: Optional[IRapidResultScrubResult] = None
-    # data type: IRapidResultPolygonResult
-    oneof_schema_3_validator: Optional[IRapidResultPolygonResult] = None
-    # data type: IRapidResultNamedEntityResult
-    oneof_schema_4_validator: Optional[IRapidResultNamedEntityResult] = None
-    # data type: IRapidResultLocateResult
-    oneof_schema_5_validator: Optional[IRapidResultLocateResult] = None
-    # data type: IRapidResultLineResult
-    oneof_schema_6_validator: Optional[IRapidResultLineResult] = None
-    # data type: IRapidResultFreeTextResult
-    oneof_schema_7_validator: Optional[IRapidResultFreeTextResult] = None
-    # data type: IRapidResultCompareResult
-    oneof_schema_8_validator: Optional[IRapidResultCompareResult] = None
-    # data type: IRapidResultSkipResult
-    oneof_schema_9_validator: Optional[IRapidResultSkipResult] = None
     # data type: IRapidResultAttachCategoryResult
-    oneof_schema_10_validator: Optional[IRapidResultAttachCategoryResult] = None
+    oneof_schema_1_validator: Optional[IRapidResultAttachCategoryResult] = None
     # data type: IRapidResultBoundingBoxResult
-    oneof_schema_11_validator: Optional[IRapidResultBoundingBoxResult] = None
+    oneof_schema_2_validator: Optional[IRapidResultBoundingBoxResult] = None
+    # data type: IRapidResultCompareResult
+    oneof_schema_3_validator: Optional[IRapidResultCompareResult] = None
+    # data type: IRapidResultFreeTextResult
+    oneof_schema_4_validator: Optional[IRapidResultFreeTextResult] = None
+    # data type: IRapidResultLineResult
+    oneof_schema_5_validator: Optional[IRapidResultLineResult] = None
+    # data type: IRapidResultLocateResult
+    oneof_schema_6_validator: Optional[IRapidResultLocateResult] = None
+    # data type: IRapidResultNamedEntityResult
+    oneof_schema_7_validator: Optional[IRapidResultNamedEntityResult] = None
+    # data type: IRapidResultPolygonResult
+    oneof_schema_8_validator: Optional[IRapidResultPolygonResult] = None
+    # data type: IRapidResultScrubResult
+    oneof_schema_9_validator: Optional[IRapidResultScrubResult] = None
+    # data type: IRapidResultSkipResult
+    oneof_schema_10_validator: Optional[IRapidResultSkipResult] = None
+    # data type: IRapidResultTranscriptionResult
+    oneof_schema_11_validator: Optional[IRapidResultTranscriptionResult] = None
     actual_instance: Optional[Union[IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult]] = None
     one_of_schemas: Set[str] = { "IRapidResultAttachCategoryResult", "IRapidResultBoundingBoxResult", "IRapidResultCompareResult", "IRapidResultFreeTextResult", "IRapidResultLineResult", "IRapidResultLocateResult", "IRapidResultNamedEntityResult", "IRapidResultPolygonResult", "IRapidResultScrubResult", "IRapidResultSkipResult", "IRapidResultTranscriptionResult" }
 
@@ -85,51 +85,6 @@ class IRapidResult(LazyValidatedModel):
         instance = IRapidResult.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IRapidResultTranscriptionResult
-        if not isinstance(v, IRapidResultTranscriptionResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultTranscriptionResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultScrubResult
-        if not isinstance(v, IRapidResultScrubResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultScrubResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultPolygonResult
-        if not isinstance(v, IRapidResultPolygonResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultPolygonResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultNamedEntityResult
-        if not isinstance(v, IRapidResultNamedEntityResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultNamedEntityResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultLocateResult
-        if not isinstance(v, IRapidResultLocateResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultLocateResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultLineResult
-        if not isinstance(v, IRapidResultLineResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultLineResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultFreeTextResult
-        if not isinstance(v, IRapidResultFreeTextResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultFreeTextResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultCompareResult
-        if not isinstance(v, IRapidResultCompareResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultCompareResult`")
-        else:
-            match += 1
-        # validate data type: IRapidResultSkipResult
-        if not isinstance(v, IRapidResultSkipResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultSkipResult`")
-        else:
-            match += 1
         # validate data type: IRapidResultAttachCategoryResult
         if not isinstance(v, IRapidResultAttachCategoryResult):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultAttachCategoryResult`")
@@ -138,6 +93,51 @@ class IRapidResult(LazyValidatedModel):
         # validate data type: IRapidResultBoundingBoxResult
         if not isinstance(v, IRapidResultBoundingBoxResult):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultBoundingBoxResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultCompareResult
+        if not isinstance(v, IRapidResultCompareResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultCompareResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultFreeTextResult
+        if not isinstance(v, IRapidResultFreeTextResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultFreeTextResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultLineResult
+        if not isinstance(v, IRapidResultLineResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultLineResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultLocateResult
+        if not isinstance(v, IRapidResultLocateResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultLocateResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultNamedEntityResult
+        if not isinstance(v, IRapidResultNamedEntityResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultNamedEntityResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultPolygonResult
+        if not isinstance(v, IRapidResultPolygonResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultPolygonResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultScrubResult
+        if not isinstance(v, IRapidResultScrubResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultScrubResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultSkipResult
+        if not isinstance(v, IRapidResultSkipResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultSkipResult`")
+        else:
+            match += 1
+        # validate data type: IRapidResultTranscriptionResult
+        if not isinstance(v, IRapidResultTranscriptionResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultTranscriptionResult`")
         else:
             match += 1
         if match > 1:
@@ -160,60 +160,6 @@ class IRapidResult(LazyValidatedModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IRapidResultTranscriptionResult
-        try:
-            instance.actual_instance = IRapidResultTranscriptionResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultScrubResult
-        try:
-            instance.actual_instance = IRapidResultScrubResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultPolygonResult
-        try:
-            instance.actual_instance = IRapidResultPolygonResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultNamedEntityResult
-        try:
-            instance.actual_instance = IRapidResultNamedEntityResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultLocateResult
-        try:
-            instance.actual_instance = IRapidResultLocateResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultLineResult
-        try:
-            instance.actual_instance = IRapidResultLineResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultFreeTextResult
-        try:
-            instance.actual_instance = IRapidResultFreeTextResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultCompareResult
-        try:
-            instance.actual_instance = IRapidResultCompareResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRapidResultSkipResult
-        try:
-            instance.actual_instance = IRapidResultSkipResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into IRapidResultAttachCategoryResult
         try:
             instance.actual_instance = IRapidResultAttachCategoryResult.from_json(json_str)
@@ -223,6 +169,60 @@ class IRapidResult(LazyValidatedModel):
         # deserialize data into IRapidResultBoundingBoxResult
         try:
             instance.actual_instance = IRapidResultBoundingBoxResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultCompareResult
+        try:
+            instance.actual_instance = IRapidResultCompareResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultFreeTextResult
+        try:
+            instance.actual_instance = IRapidResultFreeTextResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultLineResult
+        try:
+            instance.actual_instance = IRapidResultLineResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultLocateResult
+        try:
+            instance.actual_instance = IRapidResultLocateResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultNamedEntityResult
+        try:
+            instance.actual_instance = IRapidResultNamedEntityResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultPolygonResult
+        try:
+            instance.actual_instance = IRapidResultPolygonResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultScrubResult
+        try:
+            instance.actual_instance = IRapidResultScrubResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultSkipResult
+        try:
+            instance.actual_instance = IRapidResultSkipResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRapidResultTranscriptionResult
+        try:
+            instance.actual_instance = IRapidResultTranscriptionResult.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

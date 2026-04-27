@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_global_responses_endpoint_response import GetGlobalResponsesEndpointResponse
+from rapidata.api_client.models.get_global_responses_endpoint_output_response import GetGlobalResponsesEndpointOutputResponse
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class GetGlobalResponsesEndpointOutput(LazyValidatedModel):
     """
     GetGlobalResponsesEndpointOutput
     """ # noqa: E501
-    responses: List[GetGlobalResponsesEndpointResponse]
+    responses: List[GetGlobalResponsesEndpointOutputResponse]
     __properties: ClassVar[List[str]] = ["responses"]
 
     # model_config is inherited from LazyValidatedModel
@@ -86,7 +86,7 @@ class GetGlobalResponsesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "responses": [GetGlobalResponsesEndpointResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
+            "responses": [GetGlobalResponsesEndpointOutputResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

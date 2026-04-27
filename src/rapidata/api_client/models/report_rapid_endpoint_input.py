@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.rapid_issue import RapidIssue
+from rapidata.api_client.models.rapid_issue_model import RapidIssueModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class ReportRapidEndpointInput(LazyValidatedModel):
     """
     ReportRapidEndpointInput
     """ # noqa: E501
-    issue: RapidIssue = Field(description="A streamlined enum representing common issues.")
+    issue: RapidIssueModel = Field(description="A streamlined enum representing common issues.")
     message: Optional[StrictStr] = Field(default=None, description="An optional message typed by the user.")
     dump: Optional[StrictStr] = Field(default=None, description="A dump that the frontend defines and can read again.")
     source: Optional[StrictStr] = Field(default=None, description="An optional identifier where the report originated from.")
