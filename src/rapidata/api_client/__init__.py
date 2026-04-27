@@ -65,6 +65,7 @@ _API_IMPORTS = {
     "SampleApi": "rapidata.api_client.api.sample_api",
     "SimpleWorkflowApi": "rapidata.api_client.api.simple_workflow_api",
     "SurveyApi": "rapidata.api_client.api.survey_api",
+    "TranslationApi": "rapidata.api_client.api.translation_api",
     "UserRapidApi": "rapidata.api_client.api.user_rapid_api",
     "ValidationFeedbackApi": "rapidata.api_client.api.validation_feedback_api",
     "ValidationSetApi": "rapidata.api_client.api.validation_set_api",

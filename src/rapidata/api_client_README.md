@@ -266,6 +266,8 @@ Class | Method | HTTP request | Description
 *SampleApi* | [**participant_participant_id_samples_get**](rapidata/api_client/docs/SampleApi.md#participant_participant_id_samples_get) | **GET** /participant/{participantId}/samples | Queries all samples of a participant.
 *SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Gets the result overview for a simple workflow.
 *SurveyApi* | [**identity_survey_post**](rapidata/api_client/docs/SurveyApi.md#identity_survey_post) | **POST** /identity/survey | Submits a survey for the calling customer.
+*TranslationApi* | [**translation_ensure_english_post**](rapidata/api_client/docs/TranslationApi.md#translation_ensure_english_post) | **POST** /translation/ensure-english | Ensures the provided text is in English, returning a suggested English text when it isn&#39;t.
+*TranslationApi* | [**translation_post**](rapidata/api_client/docs/TranslationApi.md#translation_post) | **POST** /translation | Translates text from one language to another using the specified translator.
 *UserRapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Returns whether the rapid bag associated with the current user is still valid.
 *UserRapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Reports an issue with a rapid.
 *UserRapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump so that it can be replayed or restored.
@@ -389,6 +391,8 @@ Class | Method | HTTP request | Description
  - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
  - [EloConfigModel](rapidata/api_client/docs/EloConfigModel.md)
  - [EloRankingConfig](rapidata/api_client/docs/EloRankingConfig.md)
+ - [EnsureEnglishEndpointInput](rapidata/api_client/docs/EnsureEnglishEndpointInput.md)
+ - [EnsureEnglishEndpointOutput](rapidata/api_client/docs/EnsureEnglishEndpointOutput.md)
  - [ExampleBoxShape](rapidata/api_client/docs/ExampleBoxShape.md)
  - [ExampleCategory](rapidata/api_client/docs/ExampleCategory.md)
  - [ExampleScrubRange](rapidata/api_client/docs/ExampleScrubRange.md)
@@ -848,7 +852,10 @@ Class | Method | HTTP request | Description
  - [SubmitParticipantEndpointOutput](rapidata/api_client/docs/SubmitParticipantEndpointOutput.md)
  - [SubscribeToNewsletterEndpointInput](rapidata/api_client/docs/SubscribeToNewsletterEndpointInput.md)
  - [TranscriptionWord](rapidata/api_client/docs/TranscriptionWord.md)
+ - [TranslateEndpointInput](rapidata/api_client/docs/TranslateEndpointInput.md)
+ - [TranslateEndpointOutput](rapidata/api_client/docs/TranslateEndpointOutput.md)
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
+ - [TranslatorType](rapidata/api_client/docs/TranslatorType.md)
  - [UnlockOrderEndpointOutput](rapidata/api_client/docs/UnlockOrderEndpointOutput.md)
  - [UnsubscribeFromNewsletterEndpointInput](rapidata/api_client/docs/UnsubscribeFromNewsletterEndpointInput.md)
  - [UpdateAudienceEndpointInput](rapidata/api_client/docs/UpdateAudienceEndpointInput.md)
