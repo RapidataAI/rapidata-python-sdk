@@ -214,13 +214,7 @@ class OpenAPIService:
         return self._rapid
 
     @property
-    def _translation_service(self) -> TranslationService:
-        """Internal access to the translation service.
-
-        Intentionally not exposed as part of the public OpenAPIService surface yet.
-        Use `_translation_service` rather than `translation` to make the
-        not-yet-public status explicit at the call site.
-        """
+    def translation(self) -> TranslationService:
         if self._translation is None:
             from rapidata.service.services.translation_service import TranslationService
             self._translation = TranslationService(self.api_client)
