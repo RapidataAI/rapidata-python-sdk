@@ -62,6 +62,7 @@ validation
 workflow
 leaderboard
 flow
+translation
 "
 
 download() {
