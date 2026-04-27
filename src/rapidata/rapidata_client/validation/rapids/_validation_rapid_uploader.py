@@ -4,7 +4,7 @@ from rapidata.api_client.models.add_validation_rapid_endpoint_input import (
     AddValidationRapidEndpointInput,
 )
 from rapidata.api_client.models.i_asset_input import IAssetInput
-from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_rapid_payload_model import IRapidPayloadModel
 from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from rapidata.api_client.models.i_validation_truth_model_compare_truth_model import (
     IValidationTruthModelCompareTruthModel,
@@ -130,7 +130,12 @@ class ValidationRapidUploader:
 
         return rapid.truth
 
-    def _get_payload(self, rapid: Rapid) -> IRapidPayload:
+    def _get_payload(self, rapid: Rapid) -> IRapidPayloadModel:
         if isinstance(rapid.payload, dict):
-            return IRapidPayload(actual_instance=rapid.payload)
-        return IRapidPayload(actual_instance=rapid.payload.to_dict())
+            return IRapidPayloadModel.from_dict(rapid.payload)
+        payload_dict = rapid.payload.to_dict()
+        if not isinstance(payload_dict, dict):
+            raise ValueError(
+                f"Expected payload to serialise to a dict, got {type(payload_dict).__name__}"
+            )
+        return IRapidPayloadModel.from_dict(payload_dict)

@@ -44,8 +44,8 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_classify_payload import (
             IRapidPayloadClassifyPayload,
         )
-        from rapidata.api_client.models.classify_payload_category import (
-            ClassifyPayloadCategory,
+        from rapidata.api_client.models.classify_category import (
+            ClassifyCategory,
         )
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
@@ -65,7 +65,7 @@ class RapidsManager:
             actual_instance=IRapidPayloadClassifyPayload(
                 _t="ClassifyPayload",
                 categories=[
-                    ClassifyPayloadCategory(label=option, value=option)
+                    ClassifyCategory(label=option, value=option)
                     for option in answer_options
                 ],
                 title=instruction,
@@ -178,6 +178,9 @@ class RapidsManager:
             IRapidPayloadTranscriptionPayload,
         )
         from rapidata.api_client.models.transcription_word import TranscriptionWord
+        from rapidata.api_client.models.transcription_truth_model_transcription_word import (
+            TranscriptionTruthModelTranscriptionWord,
+        )
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
         )
@@ -191,10 +194,12 @@ class RapidsManager:
             for i, word in enumerate(sentence.split(" "))
         ]
 
-        correct_transcription_words: list[TranscriptionWord] = []
+        correct_transcription_words: list[TranscriptionTruthModelTranscriptionWord] = []
         for index in truths:
             correct_transcription_words.append(
-                TranscriptionWord(word=transcription_words[index].word, wordIndex=index)
+                TranscriptionTruthModelTranscriptionWord(
+                    word=transcription_words[index].word, wordIndex=index
+                )
             )
 
         payload = IRapidPayload(
@@ -369,7 +374,9 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
             IRapidPayloadScrubPayload,
         )
-        from rapidata.api_client.models.scrub_range import ScrubRange
+        from rapidata.api_client.models.scrub_truth_model_scrub_range import (
+            ScrubTruthModelScrubRange,
+        )
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
         )
@@ -398,7 +405,8 @@ class RapidsManager:
             actual_instance=IValidationTruthModelScrubTruthModel(
                 _t="ScrubTruth",
                 validRanges=[
-                    ScrubRange(start=truth[0], end=truth[1]) for truth in truths
+                    ScrubTruthModelScrubRange(start=truth[0], end=truth[1])
+                    for truth in truths
                 ],
             )
         )

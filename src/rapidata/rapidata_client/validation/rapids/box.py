@@ -1,4 +1,6 @@
-from rapidata.api_client.models.box_shape import BoxShape
+from rapidata.api_client.models.locate_box_truth_model_box import (
+    LocateBoxTruthModelBox,
+)
 from pydantic import BaseModel, field_validator, model_validator
 
 
@@ -33,8 +35,8 @@ class Box(BaseModel):
             raise ValueError("y_min must be less than y_max")
         return self
 
-    def to_model(self) -> BoxShape:
-        return BoxShape(
+    def to_model(self) -> LocateBoxTruthModelBox:
+        return LocateBoxTruthModelBox(
             xMin=self.x_min * 100,
             yMin=self.y_min * 100,
             xMax=self.x_max * 100,
