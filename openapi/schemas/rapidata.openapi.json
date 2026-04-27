@@ -21963,6 +21963,21 @@
               "LineExampleTruth"
             ],
             "type": "string"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExampleBoxShape"
+            },
+            "nullable": true
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
