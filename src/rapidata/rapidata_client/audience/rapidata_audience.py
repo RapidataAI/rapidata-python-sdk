@@ -6,6 +6,30 @@ from rapidata.rapidata_client.audience.audience_example_handler import (
     AudienceExampleHandler,
 )
 
+
+def _coerce_media_context(
+    media_context: str | list[str] | None,
+) -> list[str] | None:
+    """Normalize a singular ``media_context`` argument to ``list[str] | None``.
+
+    Accepts ``str`` for backward compatibility — emits a deprecation warning
+    and wraps it in a single-element list so downstream code only ever has to
+    deal with ``list[str]``.
+    """
+    if media_context is None:
+        return None
+    if isinstance(media_context, str):
+        if media_context == "":
+            raise ValueError(
+                "media_context cannot be an empty string. If not needed, set to None."
+            )
+        logger.warning(
+            "Passing a string for media_context is deprecated; pass a list of strings instead. "
+            "Wrapping the value in a single-element list."
+        )
+        return [media_context]
+    return media_context
+
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
     from rapidata.rapidata_client.filter import RapidataFilter
@@ -154,7 +178,7 @@ class RapidataAudience:
         truth: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | list[str] | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataAudience:
@@ -170,13 +194,14 @@ class RapidataAudience:
             truth (list[str]): The correct answer(s) for this training example.
             data_type (Literal["media", "text"], optional): The data type of the datapoint. Defaults to "media".
             context (str, optional): Additional text context to display with the example. Defaults to None.
-            media_context (str | list[str], optional): Additional media (URL or path) to display with the example. Pass a list to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): Additional media (URLs or paths) to display with the example. Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
             explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
             settings (Sequence[RapidataSetting], optional): Settings applied as feature flags on this example. Use the same ``RapidataSetting`` subclasses available on jobs/orders (e.g. ``NoShuffleSetting``, ``MarkdownSetting``) so the qualification example matches how the actual task will be rendered. Defaults to None.
 
         Returns:
             RapidataAudience: The audience instance (self) for method chaining.
         """
+        media_context = _coerce_media_context(media_context)
         with tracer.start_as_current_span(
             "RapidataAudience.add_classification_example"
         ):
@@ -204,7 +229,7 @@ class RapidataAudience:
         datapoint: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | list[str] | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataAudience:
@@ -219,13 +244,14 @@ class RapidataAudience:
             datapoint (list[str]): A list of exactly two datapoints (URLs or paths) to compare.
             data_type (Literal["media", "text"], optional): The data type of the datapoints. Defaults to "media".
             context (str, optional): Additional text context to display with the example. Defaults to None.
-            media_context (str | list[str], optional): Additional media (URL or path) to display with the example. Pass a list to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): Additional media (URLs or paths) to display with the example. Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
             explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
             settings (Sequence[RapidataSetting], optional): Settings applied as feature flags on this example. Use the same ``RapidataSetting`` subclasses available on jobs/orders (e.g. ``AllowNeitherBothSetting``, ``ComparePanoramaSetting``) so the qualification example matches how the actual task will be rendered. Defaults to None.
 
         Returns:
             RapidataAudience: The audience instance (self) for method chaining.
         """
+        media_context = _coerce_media_context(media_context)
         with tracer.start_as_current_span("RapidataAudience.add_compare_example"):
             logger.debug(
                 f"Adding compare example to audience: {self.id} with instruction: {instruction}, truth: {truth}, datapoint: {datapoint}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}, settings: {settings}"

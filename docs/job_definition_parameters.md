@@ -165,18 +165,18 @@ contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 
 | Property | Value |
 |----------|-------|
-| **Type** | `Optional[list[str] \| list[list[str]]]` |
+| **Type** | `Optional[list[list[str]]]` |
 | **Required** | No |
 | **Default** | `None` |
 
 Media URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images / videos alongside the item being evaluated.
 
-**Constraints:** If provided, must have the same length as `datapoints`. Pass a flat list (one media context per datapoint) **or** a list of lists (multiple media contexts per datapoint) — the two shapes cannot be mixed inside the same call.
+**Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of media URLs / paths. Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos.
 
 ```python
-# One reference image per datapoint
+# One reference image per datapoint (each inner list has one entry)
 datapoints=["edited1.jpg", "edited2.jpg"],
-media_contexts=["original1.jpg", "original2.jpg"]
+media_contexts=[["original1.jpg"], ["original2.jpg"]]
 
 # Multiple reference images per datapoint
 datapoints=["edited1.jpg", "edited2.jpg"],
@@ -185,6 +185,8 @@ media_contexts=[
     ["original2_a.jpg", "original2_b.jpg"],
 ]
 ```
+
+> A flat `list[str]` is still accepted for backward compatibility — it triggers a deprecation warning and each string is automatically wrapped in a single-element list.
 
 ---
 

@@ -31,21 +31,20 @@ class DatapointUploader:
             return self.asset_mapper.create_existing_asset_input(uploaded_name)
 
     def _upload_and_map_media_context(
-        self, media_context: str | list[str]
+        self, media_context: list[str]
     ) -> IAssetInput:
         """Upload media context asset(s) and map to IAssetInput.
 
-        Accepts either a single string (one image per datapoint) or a list of
-        strings (multiple images per datapoint, all shown as media context).
+        ``media_context`` is always a list. A single-element list is sent as a
+        plain ``ExistingAssetInput`` (preserving the legacy single-image
+        rendering); two or more entries are bundled into a ``MultiAssetInput``.
         """
-        if isinstance(media_context, list):
-            uploaded_names = [
-                self.asset_uploader.upload_asset(mc) for mc in media_context
-            ]
-            return self.asset_mapper.create_existing_asset_input(uploaded_names)
-        else:
-            uploaded_name = self.asset_uploader.upload_asset(media_context)
-            return self.asset_mapper.create_existing_asset_input(uploaded_name)
+        uploaded_names = [
+            self.asset_uploader.upload_asset(mc) for mc in media_context
+        ]
+        if len(uploaded_names) == 1:
+            return self.asset_mapper.create_existing_asset_input(uploaded_names[0])
+        return self.asset_mapper.create_existing_asset_input(uploaded_names)
 
     def upload_datapoint(
         self, datapoint: Datapoint, dataset_id: str, index: int

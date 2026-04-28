@@ -46,7 +46,7 @@ class AudienceExampleHandler:
         truth: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | list[str] | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> None:
@@ -59,7 +59,7 @@ class AudienceExampleHandler:
             truth (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str | list[str], optional): The media context is a link to an image / video (or a list of links) that will be shown in addition to the instruction (can be combined with context). Pass a list to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
             settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``NoShuffleSetting`` to keep the order of answer options). Defaults to None.
         """
@@ -120,7 +120,7 @@ class AudienceExampleHandler:
         datapoint: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | list[str] | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> None:
@@ -132,7 +132,7 @@ class AudienceExampleHandler:
             datapoint (list[str]): The two assets that the labeler will be comparing.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str | list[str], optional): The media context is a link to an image / video (or a list of links) that will be shown in addition to the instruction (can be combined with context). Pass a list to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
             settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``ComparePanoramaSetting`` to render panoramic images). Defaults to None.
         """
@@ -189,21 +189,20 @@ class AudienceExampleHandler:
         )
 
     def _upload_and_map_media_context(
-        self, media_context: str | list[str]
+        self, media_context: list[str]
     ) -> "IAssetInput":
         """Upload media context asset(s) and map to IAssetInput.
 
-        Accepts either a single string (one image) or a list of strings
-        (multiple images shown as media context).
+        ``media_context`` is always a list. A single-element list is sent as a
+        plain ``ExistingAssetInput``; two or more entries are bundled into a
+        ``MultiAssetInput``.
         """
-        if isinstance(media_context, list):
-            uploaded_names = [
-                self._asset_uploader.upload_asset(mc) for mc in media_context
-            ]
-            return self._asset_mapper.create_existing_asset_input(uploaded_names)
-        else:
-            uploaded_name = self._asset_uploader.upload_asset(media_context)
-            return self._asset_mapper.create_existing_asset_input(uploaded_name)
+        uploaded_names = [
+            self._asset_uploader.upload_asset(mc) for mc in media_context
+        ]
+        if len(uploaded_names) == 1:
+            return self._asset_mapper.create_existing_asset_input(uploaded_names[0])
+        return self._asset_mapper.create_existing_asset_input(uploaded_names)
 
     def _add_rapid_example(self, rapid: Rapid) -> None:
         """Add a rapid example to the audience (private method).

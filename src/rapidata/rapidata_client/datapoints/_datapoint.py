@@ -20,7 +20,7 @@ class Datapoint(BaseModel):
     asset: str | list[str]
     data_type: Literal["text", "media"]
     context: str | None = None
-    media_context: str | list[str] | None = None
+    media_context: list[str] | None = None
     sentence: str | None = None
     private_metadata: dict[str, str] | None = None
     group: str | None = None
@@ -34,29 +34,40 @@ class Datapoint(BaseModel):
             )
         return v
 
-    @field_validator("media_context")
+    @field_validator("media_context", mode="before")
     @classmethod
-    def media_context_not_empty(
-        cls, v: str | list[str] | None
-    ) -> str | list[str] | None:
+    def media_context_normalize(cls, v: object) -> list[str] | None:
+        """Always store media_context as a list of strings.
+
+        Accepts ``str`` for backward compatibility — emits a deprecation
+        warning and wraps it in a single-element list so the rest of the
+        SDK only ever has to deal with ``list[str]``.
+        """
         if v is None:
-            return v
+            return None
         if isinstance(v, str):
             if v == "":
                 raise ValueError(
                     "media_context cannot be an empty string. If not needed, set to None."
                 )
+            logger.warning(
+                "Passing a string for media_context is deprecated; pass a list of strings instead. "
+                "Wrapping the value in a single-element list."
+            )
+            return [v]
+        if isinstance(v, list):
+            if len(v) == 0:
+                raise ValueError(
+                    "media_context cannot be an empty list. If not needed, set to None."
+                )
+            if any(not isinstance(item, str) or item == "" for item in v):
+                raise ValueError(
+                    "Every entry in a media_context list must be a non-empty string."
+                )
             return v
-        # list[str] case
-        if len(v) == 0:
-            raise ValueError(
-                "media_context cannot be an empty list. If not needed, set to None."
-            )
-        if any(not isinstance(item, str) or item == "" for item in v):
-            raise ValueError(
-                "Every entry in a media_context list must be a non-empty string."
-            )
-        return v
+        raise ValueError(
+            f"media_context must be a list of strings or None, got {type(v).__name__}."
+        )
 
     @field_validator("sentence")
     @classmethod
