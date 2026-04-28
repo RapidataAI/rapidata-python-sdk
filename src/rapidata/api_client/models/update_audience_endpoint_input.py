@@ -19,9 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.distilling_retrieval_mode import DistillingRetrievalMode
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+from rapidata.api_client.models.retrieval_mode import RetrievalMode
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -47,7 +47,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
     min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate (responses / sessions) before a user is dropped.  Set to null to disable this exit condition.", alias="minSubmissionRate")
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Set to null to apply from the first session.", alias="minSessionsForSubmissionRate")
     min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.  Set a lower value to be more lenient with graduated users.", alias="minSubmissionRateGraduated")
-    distilling_retrieval_mode: Optional[DistillingRetrievalMode] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
+    distilling_retrieval_mode: Optional[RetrievalMode] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
     __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationScore", "demotionScore", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode"]
 
     # model_config is inherited from LazyValidatedModel

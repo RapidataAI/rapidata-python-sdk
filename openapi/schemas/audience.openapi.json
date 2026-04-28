@@ -1984,7 +1984,7 @@
           "distillingRetrievalMode": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/DistillingRetrievalMode"
+                "$ref": "#/components/schemas/RetrievalMode"
               }
             ],
             "description": "The retrieval mode used by the distilling campaign to select rapids for users.\n Defaults to Shuffled."
@@ -2022,13 +2022,6 @@
             "nullable": true
           }
         }
-      },
-      "DistillingRetrievalMode": {
-        "enum": [
-          "Random",
-          "Shuffled",
-          "Sequential"
-        ]
       },
       "ExampleBoxShape": {
         "type": "object",
@@ -2297,7 +2290,7 @@
           "distillingRetrievalMode": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/DistillingRetrievalMode"
+                "$ref": "#/components/schemas/RetrievalMode"
               }
             ],
             "description": "The retrieval mode used by the distilling campaign to select rapids for users."
@@ -3879,6 +3872,13 @@
           }
         }
       },
+      "RetrievalMode": {
+        "enum": [
+          "Random",
+          "Shuffled",
+          "Sequential"
+        ]
+      },
       "UpdateAudienceEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -3987,7 +3987,7 @@
           "distillingRetrievalMode": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/DistillingRetrievalMode"
+                "$ref": "#/components/schemas/RetrievalMode"
               }
             ],
             "description": "The retrieval mode used by the distilling campaign to select rapids for users."
