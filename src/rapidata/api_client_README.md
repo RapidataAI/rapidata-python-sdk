@@ -389,7 +389,6 @@ Class | Method | HTTP request | Description
  - [DefinitionType](rapidata/api_client/docs/DefinitionType.md)
  - [DeleteAudienceExampleEndpointOutput](rapidata/api_client/docs/DeleteAudienceExampleEndpointOutput.md)
  - [DeviceType](rapidata/api_client/docs/DeviceType.md)
- - [DistillingRetrievalMode](rapidata/api_client/docs/DistillingRetrievalMode.md)
  - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
  - [EloConfigModel](rapidata/api_client/docs/EloConfigModel.md)
  - [EloRankingConfig](rapidata/api_client/docs/EloRankingConfig.md)

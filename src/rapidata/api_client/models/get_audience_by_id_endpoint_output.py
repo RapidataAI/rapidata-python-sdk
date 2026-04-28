@@ -22,8 +22,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.audience_status import AudienceStatus
 from rapidata.api_client.models.boost_level import BoostLevel
-from rapidata.api_client.models.distilling_retrieval_mode import DistillingRetrievalMode
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+from rapidata.api_client.models.retrieval_mode import RetrievalMode
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -57,7 +57,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     min_submission_rate: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate before a user is dropped.", alias="minSubmissionRate")
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.", alias="minSessionsForSubmissionRate")
     min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users.", alias="minSubmissionRateGraduated")
-    distilling_retrieval_mode: DistillingRetrievalMode = Field(description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
+    distilling_retrieval_mode: RetrievalMode = Field(description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
     boost_level: BoostLevel = Field(description="The current boost level applied to the audience.", alias="boostLevel")
     random_admission_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of admitting a random user to the audience.", alias="randomAdmissionProbability")
     health: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The health score of the audience.")
