@@ -5,7 +5,6 @@ from typing import Literal, TYPE_CHECKING, Any, Sequence, cast
 if TYPE_CHECKING:
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
-    from rapidata.api_client.models.i_asset_input import IAssetInput
 
 from rapidata.api_client.models.i_example_truth_classify_example_truth import (
     IExampleTruthClassifyExampleTruth,
@@ -37,19 +36,6 @@ class AudienceExampleHandler:
         self._audience_id = audience_id
         self._asset_uploader = AssetUploader(openapi_service)
         self._asset_mapper = AssetMapper()
-
-    def _upload_and_map_asset(self, asset: str | list[str]) -> "IAssetInput":
-        """Upload asset(s) and map to IAssetInput.
-
-        Used both for the main example asset and for ``media_context``. A
-        single string is sent as a plain ``ExistingAssetInput``; a list is
-        bundled into a ``MultiAssetInput``.
-        """
-        if isinstance(asset, list):
-            uploaded_names = [self._asset_uploader.upload_asset(a) for a in asset]
-            return self._asset_mapper.create_existing_asset_input(uploaded_names)
-        uploaded_name = self._asset_uploader.upload_asset(asset)
-        return self._asset_mapper.create_existing_asset_input(uploaded_name)
 
     def add_classification_example(
         self,
@@ -87,7 +73,7 @@ class AudienceExampleHandler:
             raise ValueError("Truth must be part of the answer options")
 
         if data_type == "media":
-            asset_input = self._upload_and_map_asset(datapoint)
+            asset_input = self._asset_uploader.upload_and_map_asset(datapoint)
         else:
             asset_input = self._asset_mapper.create_text_input(datapoint)
 
@@ -115,7 +101,7 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._upload_and_map_asset(media_context)
+                    self._asset_uploader.upload_and_map_asset(media_context)
                     if media_context
                     else None
                 ),
@@ -190,7 +176,7 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._upload_and_map_asset(media_context)
+                    self._asset_uploader.upload_and_map_asset(media_context)
                     if media_context
                     else None
                 ),
@@ -212,14 +198,14 @@ class AudienceExampleHandler:
 
         # Handle asset uploading based on data type
         if rapid.data_type == "media":
-            asset_input = self._upload_and_map_asset(rapid.asset)
+            asset_input = self._asset_uploader.upload_and_map_asset(rapid.asset)
         else:
             asset_input = self._asset_mapper.create_text_input(rapid.asset)
 
         # Handle media context if present
         context_asset = None
         if rapid.media_context:
-            context_asset = self._upload_and_map_asset(rapid.media_context)
+            context_asset = self._asset_uploader.upload_and_map_asset(rapid.media_context)
 
         # Convert IValidationTruthModel to IExampleTruth
         # Both types are structurally identical (same JSON schema), differing only in class names

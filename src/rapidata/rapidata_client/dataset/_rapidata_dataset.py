@@ -434,8 +434,10 @@ class RapidataDataset:
                 # coerces). The shared upload+map helper bundles it into a
                 # MultiAssetInput (or ExistingAssetInput if a bare string slips
                 # through).
-                context_asset = self.datapoint_uploader._upload_and_map_asset(
-                    media_context
+                context_asset = (
+                    self.datapoint_uploader.asset_uploader.upload_and_map_asset(
+                        media_context
+                    )
                 )
 
             self.openapi_service.dataset.dataset_group_api.dataset_dataset_id_group_post(

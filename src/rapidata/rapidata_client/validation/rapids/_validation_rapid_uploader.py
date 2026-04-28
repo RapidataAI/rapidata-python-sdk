@@ -3,7 +3,6 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.add_validation_rapid_endpoint_input import (
     AddValidationRapidEndpointInput,
 )
-from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload_model import IRapidPayloadModel
 from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from rapidata.api_client.models.i_validation_truth_model_compare_truth_model import (
@@ -26,18 +25,19 @@ class ValidationRapidUploader:
         asset_to_uploaded: dict[str, str] = {}
 
         if rapid.data_type == "media":
-            uploaded_asset, asset_to_uploaded = self._upload_and_map_asset(rapid.asset)
+            # Compare rapids translate truth IDs through this mapping; other
+            # rapid types ignore it.
+            uploaded_asset, asset_to_uploaded = (
+                self.asset_uploader.upload_and_map_asset_with_mapping(rapid.asset)
+            )
         else:
             uploaded_asset = self.asset_mapper.create_text_input(rapid.asset)
 
         # Translate truth for compare rapids with media assets
         truth = self._translate_compare_truth(rapid, asset_to_uploaded)
 
-        # media_context is always a list[str]; reuse the same upload+map helper
-        # used for the main asset (we don't need the asset->uploaded mapping
-        # part here, so just take the IAssetInput).
         context_asset = (
-            self._upload_and_map_asset(rapid.media_context)[0]
+            self.asset_uploader.upload_and_map_asset(rapid.media_context)
             if rapid.media_context
             else None
         )
@@ -59,28 +59,6 @@ class ValidationRapidUploader:
                 ),
             ),
         )
-
-    def _upload_and_map_asset(
-        self, asset: str | list[str]
-    ) -> tuple[IAssetInput, dict[str, str]]:
-        """Upload asset(s) and map to IAssetInput.
-
-        Returns:
-            Tuple of (IAssetInput, mapping from original asset paths to uploaded names)
-        """
-        if isinstance(asset, list):
-            asset_to_uploaded = {a: self.asset_uploader.upload_asset(a) for a in asset}
-            uploaded_names = list(asset_to_uploaded.values())
-            return (
-                self.asset_mapper.create_existing_asset_input(uploaded_names),
-                asset_to_uploaded,
-            )
-        else:
-            uploaded_name = self.asset_uploader.upload_asset(asset)
-            return (
-                self.asset_mapper.create_existing_asset_input(uploaded_name),
-                {asset: uploaded_name},
-            )
 
     def _translate_compare_truth(
         self, rapid: Rapid, asset_to_uploaded: dict[str, str]

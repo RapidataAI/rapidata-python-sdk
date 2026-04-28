@@ -4,8 +4,10 @@ import re
 import os
 import threading
 
+from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
+from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
 from diskcache import FanoutCache
 
@@ -129,6 +131,43 @@ class AssetUploader:
             return self._upload_url_asset(asset)
 
         return self._upload_file_asset(asset)
+
+    def upload_and_map_asset(self, asset: str | list[str]) -> IAssetInput:
+        """Upload asset(s) and wrap the result in an ``IAssetInput``.
+
+        Used both for main datapoint/example assets and for ``media_context``.
+        A single string is returned as a plain ``ExistingAssetInput``; a list
+        is bundled into a ``MultiAssetInput``.
+
+        Callers that also need to know which uploaded name corresponds to
+        each original path (e.g. compare-rapid truth translation) should use
+        :meth:`upload_and_map_asset_with_mapping` instead.
+        """
+        return self.upload_and_map_asset_with_mapping(asset)[0]
+
+    def upload_and_map_asset_with_mapping(
+        self, asset: str | list[str]
+    ) -> tuple[IAssetInput, dict[str, str]]:
+        """Upload asset(s) and return the ``IAssetInput`` plus a path->name map.
+
+        The second tuple element maps each original asset path to its
+        uploaded name. Callers that translate IDs across the upload boundary
+        (e.g. compare-rapid ``winnerId`` / ``correctCombinations``) need it;
+        most callers can ignore it and use :meth:`upload_and_map_asset`.
+        """
+        if isinstance(asset, list):
+            asset_to_uploaded = {a: self.upload_asset(a) for a in asset}
+            uploaded_names = list(asset_to_uploaded.values())
+            return (
+                AssetMapper.create_existing_asset_input(uploaded_names),
+                asset_to_uploaded,
+            )
+
+        uploaded_name = self.upload_asset(asset)
+        return (
+            AssetMapper.create_existing_asset_input(uploaded_name),
+            {asset: uploaded_name},
+        )
 
     def clear_cache(self) -> None:
         """Clear both URL and file caches."""
