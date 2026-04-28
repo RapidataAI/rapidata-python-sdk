@@ -419,7 +419,7 @@ class RapidataDataset:
         )
 
         # Collect unique groups (first occurrence per group wins for context)
-        groups: dict[str, tuple[str | None, str | None]] = {}
+        groups: dict[str, tuple[str | None, str | list[str] | None]] = {}
         for dp in datapoints:
             if dp.group is not None and dp.group not in groups:
                 groups[dp.group] = (dp.context, dp.media_context)
@@ -433,8 +433,18 @@ class RapidataDataset:
         for group_id, (context, media_context) in groups.items():
             context_asset = None
             if media_context is not None:
-                uploaded_name = asset_uploader.upload_asset(media_context)
-                context_asset = asset_mapper.create_existing_asset_input(uploaded_name)
+                if isinstance(media_context, list):
+                    uploaded_names = [
+                        asset_uploader.upload_asset(mc) for mc in media_context
+                    ]
+                    context_asset = asset_mapper.create_existing_asset_input(
+                        uploaded_names
+                    )
+                else:
+                    uploaded_name = asset_uploader.upload_asset(media_context)
+                    context_asset = asset_mapper.create_existing_asset_input(
+                        uploaded_name
+                    )
 
             self.openapi_service.dataset.dataset_group_api.dataset_dataset_id_group_post(
                 dataset_id=self.id,

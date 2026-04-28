@@ -165,18 +165,25 @@ contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 
 | Property | Value |
 |----------|-------|
-| **Type** | `Optional[list[str]]` |
+| **Type** | `Optional[list[str] \| list[list[str]]]` |
 | **Required** | No |
 | **Default** | `None` |
 
-Media URLs shown as reference context alongside each datapoint. Useful when you need to show a reference image or video alongside the item being evaluated.
+Media URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images / videos alongside the item being evaluated.
 
-**Constraints:** If provided, must have the same length as `datapoints`.
+**Constraints:** If provided, must have the same length as `datapoints`. Pass a flat list (one media context per datapoint) **or** a list of lists (multiple media contexts per datapoint) — the two shapes cannot be mixed inside the same call.
 
 ```python
-# Show original image as context while evaluating edited versions
+# One reference image per datapoint
 datapoints=["edited1.jpg", "edited2.jpg"],
 media_contexts=["original1.jpg", "original2.jpg"]
+
+# Multiple reference images per datapoint
+datapoints=["edited1.jpg", "edited2.jpg"],
+media_contexts=[
+    ["original1_a.jpg", "original1_b.jpg"],
+    ["original2_a.jpg", "original2_b.jpg"],
+]
 ```
 
 ---

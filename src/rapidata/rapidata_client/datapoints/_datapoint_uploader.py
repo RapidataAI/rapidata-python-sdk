@@ -30,6 +30,23 @@ class DatapointUploader:
             uploaded_name = self.asset_uploader.upload_asset(asset)
             return self.asset_mapper.create_existing_asset_input(uploaded_name)
 
+    def _upload_and_map_media_context(
+        self, media_context: str | list[str]
+    ) -> IAssetInput:
+        """Upload media context asset(s) and map to IAssetInput.
+
+        Accepts either a single string (one image per datapoint) or a list of
+        strings (multiple images per datapoint, all shown as media context).
+        """
+        if isinstance(media_context, list):
+            uploaded_names = [
+                self.asset_uploader.upload_asset(mc) for mc in media_context
+            ]
+            return self.asset_mapper.create_existing_asset_input(uploaded_names)
+        else:
+            uploaded_name = self.asset_uploader.upload_asset(media_context)
+            return self.asset_mapper.create_existing_asset_input(uploaded_name)
+
     def upload_datapoint(
         self, datapoint: Datapoint, dataset_id: str, index: int
     ) -> CreateDatapointEndpointOutput:
@@ -48,9 +65,7 @@ class DatapointUploader:
         context_asset = (
             None
             if has_group or not datapoint.media_context
-            else self.asset_mapper.create_existing_asset_input(
-                self.asset_uploader.upload_asset(datapoint.media_context)
-            )
+            else self._upload_and_map_media_context(datapoint.media_context)
         )
 
         return self.openapi_service.dataset.datapoints_api.dataset_dataset_id_datapoint_post(

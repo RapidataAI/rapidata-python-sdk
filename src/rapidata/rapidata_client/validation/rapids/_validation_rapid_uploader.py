@@ -40,9 +40,7 @@ class ValidationRapidUploader:
                 payload=self._get_payload(rapid),
                 context=rapid.context,
                 contextAsset=(
-                    self.asset_mapper.create_existing_asset_input(
-                        self.asset_uploader.upload_asset(rapid.media_context)
-                    )
+                    self._upload_and_map_media_context(rapid.media_context)
                     if rapid.media_context
                     else None
                 ),
@@ -56,6 +54,23 @@ class ValidationRapidUploader:
                 ),
             ),
         )
+
+    def _upload_and_map_media_context(
+        self, media_context: str | list[str]
+    ) -> IAssetInput:
+        """Upload media context asset(s) and map to IAssetInput.
+
+        Accepts either a single string (one image) or a list of strings
+        (multiple images shown as media context).
+        """
+        if isinstance(media_context, list):
+            uploaded_names = [
+                self.asset_uploader.upload_asset(mc) for mc in media_context
+            ]
+            return self.asset_mapper.create_existing_asset_input(uploaded_names)
+        else:
+            uploaded_name = self.asset_uploader.upload_asset(media_context)
+            return self.asset_mapper.create_existing_asset_input(uploaded_name)
 
     def _upload_and_map_asset(
         self, asset: str | list[str]

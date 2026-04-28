@@ -5,6 +5,7 @@ from typing import Literal, TYPE_CHECKING, Any, Sequence, cast
 if TYPE_CHECKING:
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+    from rapidata.api_client.models.i_asset_input import IAssetInput
 
 from rapidata.api_client.models.i_example_truth_classify_example_truth import (
     IExampleTruthClassifyExampleTruth,
@@ -45,7 +46,7 @@ class AudienceExampleHandler:
         truth: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | None = None,
+        media_context: str | list[str] | None = None,
         explanation: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> None:
@@ -58,7 +59,7 @@ class AudienceExampleHandler:
             truth (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            media_context (str | list[str], optional): The media context is a link to an image / video (or a list of links) that will be shown in addition to the instruction (can be combined with context). Pass a list to display multiple images / videos. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
             settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``NoShuffleSetting`` to keep the order of answer options). Defaults to None.
         """
@@ -102,9 +103,7 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._asset_mapper.create_existing_asset_input(
-                        self._asset_uploader.upload_asset(media_context)
-                    )
+                    self._upload_and_map_media_context(media_context)
                     if media_context
                     else None
                 ),
@@ -121,7 +120,7 @@ class AudienceExampleHandler:
         datapoint: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | None = None,
+        media_context: str | list[str] | None = None,
         explanation: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> None:
@@ -133,7 +132,7 @@ class AudienceExampleHandler:
             datapoint (list[str]): The two assets that the labeler will be comparing.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            media_context (str | list[str], optional): The media context is a link to an image / video (or a list of links) that will be shown in addition to the instruction (can be combined with context). Pass a list to display multiple images / videos. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
             settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``ComparePanoramaSetting`` to render panoramic images). Defaults to None.
         """
@@ -179,9 +178,7 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._asset_mapper.create_existing_asset_input(
-                        self._asset_uploader.upload_asset(media_context)
-                    )
+                    self._upload_and_map_media_context(media_context)
                     if media_context
                     else None
                 ),
@@ -190,6 +187,23 @@ class AudienceExampleHandler:
                 featureFlags=[s._to_feature_flag() for s in settings] if settings else None,
             ),
         )
+
+    def _upload_and_map_media_context(
+        self, media_context: str | list[str]
+    ) -> "IAssetInput":
+        """Upload media context asset(s) and map to IAssetInput.
+
+        Accepts either a single string (one image) or a list of strings
+        (multiple images shown as media context).
+        """
+        if isinstance(media_context, list):
+            uploaded_names = [
+                self._asset_uploader.upload_asset(mc) for mc in media_context
+            ]
+            return self._asset_mapper.create_existing_asset_input(uploaded_names)
+        else:
+            uploaded_name = self._asset_uploader.upload_asset(media_context)
+            return self._asset_mapper.create_existing_asset_input(uploaded_name)
 
     def _add_rapid_example(self, rapid: Rapid) -> None:
         """Add a rapid example to the audience (private method).
@@ -221,9 +235,7 @@ class AudienceExampleHandler:
         # Handle media context if present
         context_asset = None
         if rapid.media_context:
-            context_asset = self._asset_mapper.create_existing_asset_input(
-                self._asset_uploader.upload_asset(rapid.media_context)
-            )
+            context_asset = self._upload_and_map_media_context(rapid.media_context)
 
         # Convert IValidationTruthModel to IExampleTruth
         # Both types are structurally identical (same JSON schema), differing only in class names

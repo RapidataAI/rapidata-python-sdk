@@ -13,7 +13,7 @@ class Rapid(BaseModel):
     data_type: Literal["media", "text"] = "media"
     truth: IValidationTruthModel | None = None
     context: str | None = None
-    media_context: str | None = None
+    media_context: str | list[str] | None = None
     sentence: str | None = None
     random_correct_probability: float | None = None
     explanation: str | None = None

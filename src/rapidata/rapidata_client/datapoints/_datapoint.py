@@ -20,7 +20,7 @@ class Datapoint(BaseModel):
     asset: str | list[str]
     data_type: Literal["text", "media"]
     context: str | None = None
-    media_context: str | None = None
+    media_context: str | list[str] | None = None
     sentence: str | None = None
     private_metadata: dict[str, str] | None = None
     group: str | None = None
@@ -36,10 +36,25 @@ class Datapoint(BaseModel):
 
     @field_validator("media_context")
     @classmethod
-    def media_context_not_empty(cls, v: str | None) -> str | None:
-        if v is not None and v == "":
+    def media_context_not_empty(
+        cls, v: str | list[str] | None
+    ) -> str | list[str] | None:
+        if v is None:
+            return v
+        if isinstance(v, str):
+            if v == "":
+                raise ValueError(
+                    "media_context cannot be an empty string. If not needed, set to None."
+                )
+            return v
+        # list[str] case
+        if len(v) == 0:
             raise ValueError(
-                "media_context cannot be an empty string. If not needed, set to None."
+                "media_context cannot be an empty list. If not needed, set to None."
+            )
+        if any(not isinstance(item, str) or item == "" for item in v):
+            raise ValueError(
+                "Every entry in a media_context list must be a non-empty string."
             )
         return v
 
