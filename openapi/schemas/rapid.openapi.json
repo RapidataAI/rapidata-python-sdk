@@ -1361,7 +1361,7 @@
           "result": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidResult"
+                "$ref": "#/components/schemas/IRapidResultModel"
               }
             ],
             "description": "The result submitted by the user."
@@ -1382,7 +1382,7 @@
           "validationTruth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ],
             "description": "The validation truth applied to the response, if any."
@@ -1402,7 +1402,7 @@
           }
         }
       },
-      "BoxShape": {
+      "BoundingBoxResultModel_Box": {
         "type": "object",
         "properties": {
           "xMin": {
@@ -1423,7 +1423,7 @@
           }
         }
       },
-      "ClassifyPayload": {
+      "ClassifyPayloadModel": {
         "required": [
           "categories",
           "title"
@@ -1433,7 +1433,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
+              "$ref": "#/components/schemas/ClassifyPayloadModel_Category"
             }
           },
           "title": {
@@ -1441,10 +1441,9 @@
           }
         }
       },
-      "ClassifyPayload_Category": {
+      "ClassifyPayloadModel_Category": {
         "required": [
-          "label",
-          "value"
+          "label"
         ],
         "type": "object",
         "properties": {
@@ -1452,7 +1451,8 @@
             "type": "string"
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1470,7 +1470,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ClassifyPayload"
+                "$ref": "#/components/schemas/ClassifyPayloadModel"
               }
             ],
             "description": "The payload for the classification."
@@ -1568,7 +1568,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/GetGlobalResponsesEndpoint_Response"
+                  "$ref": "#/components/schemas/GetGlobalResponsesEndpoint_Output_Response"
                 }
               }
             ],
@@ -1576,7 +1576,7 @@
           }
         }
       },
-      "GetGlobalResponsesEndpoint_Response": {
+      "GetGlobalResponsesEndpoint_Output_Response": {
         "required": [
           "id",
           "userId",
@@ -1633,7 +1633,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
+                  "$ref": "#/components/schemas/GetResponsesForRapidEndpoint_Output_Response"
                 }
               }
             ],
@@ -1642,14 +1642,14 @@
           "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidState"
+                "$ref": "#/components/schemas/RapidStateModel"
               }
             ],
             "description": "The state of the rapid."
           }
         }
       },
-      "GetResponsesForRapidResult_Response": {
+      "GetResponsesForRapidEndpoint_Output_Response": {
         "required": [
           "id",
           "userId",
@@ -1671,7 +1671,7 @@
             "type": "string"
           },
           "result": {
-            "$ref": "#/components/schemas/IRapidResult"
+            "$ref": "#/components/schemas/IRapidResultModel"
           },
           "userScore": {
             "type": "number",
@@ -2234,60 +2234,60 @@
           }
         }
       },
-      "IRapidPayload": {
+      "IRapidPayloadModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelComparePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelLinePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelLocatePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelScrubPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
-            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
-            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
-            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
-            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel",
+            "ClassifyPayload": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel",
+            "ComparePayload": "#/components/schemas/IRapidPayloadModelComparePayloadModel",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel",
+            "LinePayload": "#/components/schemas/IRapidPayloadModelLinePayloadModel",
+            "LocatePayload": "#/components/schemas/IRapidPayloadModelLocatePayloadModel",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadModelScrubPayloadModel",
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
           }
         }
       },
-      "IRapidPayloadBoundingBoxPayload": {
+      "IRapidPayloadModelBoundingBoxPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2304,7 +2304,7 @@
           }
         }
       },
-      "IRapidPayloadClassifyPayload": {
+      "IRapidPayloadModelClassifyPayloadModel": {
         "required": [
           "categories",
           "title",
@@ -2320,7 +2320,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
+              "$ref": "#/components/schemas/ClassifyPayloadModel_Category"
             }
           },
           "title": {
@@ -2328,7 +2328,7 @@
           }
         }
       },
-      "IRapidPayloadComparePayload": {
+      "IRapidPayloadModelComparePayloadModel": {
         "required": [
           "criteria",
           "_t"
@@ -2345,7 +2345,7 @@
           }
         }
       },
-      "IRapidPayloadFreeTextPayload": {
+      "IRapidPayloadModelFreeTextPayloadModel": {
         "required": [
           "question",
           "_t"
@@ -2369,7 +2369,7 @@
           }
         }
       },
-      "IRapidPayloadLinePayload": {
+      "IRapidPayloadModelLinePayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2386,7 +2386,7 @@
           }
         }
       },
-      "IRapidPayloadLocatePayload": {
+      "IRapidPayloadModelLocatePayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2403,7 +2403,7 @@
           }
         }
       },
-      "IRapidPayloadNamedEntityPayload": {
+      "IRapidPayloadModelNamedEntityPayloadModel": {
         "required": [
           "target",
           "classes",
@@ -2427,7 +2427,7 @@
           }
         }
       },
-      "IRapidPayloadPolygonPayload": {
+      "IRapidPayloadModelPolygonPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2444,7 +2444,7 @@
           }
         }
       },
-      "IRapidPayloadScrubPayload": {
+      "IRapidPayloadModelScrubPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2461,7 +2461,7 @@
           }
         }
       },
-      "IRapidPayloadTranscriptionPayload": {
+      "IRapidPayloadModelTranscriptionPayloadModel": {
         "required": [
           "title",
           "transcription",
@@ -2480,72 +2480,72 @@
           "transcription": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionPayloadModel_TranscriptionWord"
             }
           }
         }
       },
-      "IRapidResult": {
+      "IRapidResultModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidResultTranscriptionResult"
+            "$ref": "#/components/schemas/IRapidResultModelAttachCategoryResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultScrubResult"
+            "$ref": "#/components/schemas/IRapidResultModelBoundingBoxResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultPolygonResult"
+            "$ref": "#/components/schemas/IRapidResultModelCompareResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
+            "$ref": "#/components/schemas/IRapidResultModelFreeTextResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultLocateResult"
+            "$ref": "#/components/schemas/IRapidResultModelLineResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultLineResult"
+            "$ref": "#/components/schemas/IRapidResultModelLocateResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultFreeTextResult"
+            "$ref": "#/components/schemas/IRapidResultModelNamedEntityResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultCompareResult"
+            "$ref": "#/components/schemas/IRapidResultModelPolygonResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultSkipResult"
+            "$ref": "#/components/schemas/IRapidResultModelScrubResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultAttachCategoryResult"
+            "$ref": "#/components/schemas/IRapidResultModelSkipResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultBoundingBoxResult"
+            "$ref": "#/components/schemas/IRapidResultModelTranscriptionResultModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionResult": "#/components/schemas/IRapidResultTranscriptionResult",
-            "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
-            "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
-            "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
-            "LocateResult": "#/components/schemas/IRapidResultLocateResult",
-            "LineResult": "#/components/schemas/IRapidResultLineResult",
-            "FreeTextResult": "#/components/schemas/IRapidResultFreeTextResult",
-            "CompareResult": "#/components/schemas/IRapidResultCompareResult",
-            "SkipResult": "#/components/schemas/IRapidResultSkipResult",
-            "AttachCategoryResult": "#/components/schemas/IRapidResultAttachCategoryResult",
-            "BoundingBoxResult": "#/components/schemas/IRapidResultBoundingBoxResult"
+            "AttachCategoryResult": "#/components/schemas/IRapidResultModelAttachCategoryResultModel",
+            "BoundingBoxResult": "#/components/schemas/IRapidResultModelBoundingBoxResultModel",
+            "CompareResult": "#/components/schemas/IRapidResultModelCompareResultModel",
+            "FreeTextResult": "#/components/schemas/IRapidResultModelFreeTextResultModel",
+            "LineResult": "#/components/schemas/IRapidResultModelLineResultModel",
+            "LocateResult": "#/components/schemas/IRapidResultModelLocateResultModel",
+            "NamedEntityResult": "#/components/schemas/IRapidResultModelNamedEntityResultModel",
+            "PolygonResult": "#/components/schemas/IRapidResultModelPolygonResultModel",
+            "ScrubResult": "#/components/schemas/IRapidResultModelScrubResultModel",
+            "SkipResult": "#/components/schemas/IRapidResultModelSkipResultModel",
+            "TranscriptionResult": "#/components/schemas/IRapidResultModelTranscriptionResultModel"
           }
         }
       },
-      "IRapidResultAttachCategoryResult": {
+      "IRapidResultModelAttachCategoryResultModel": {
         "required": [
-          "category",
           "rapidId",
+          "category",
           "_t"
         ],
         "properties": {
@@ -2555,18 +2555,18 @@
             ],
             "type": "string"
           },
-          "category": {
+          "rapidId": {
             "type": "string"
           },
-          "rapidId": {
+          "category": {
             "type": "string"
           }
         }
       },
-      "IRapidResultBoundingBoxResult": {
+      "IRapidResultModelBoundingBoxResultModel": {
         "required": [
-          "boundingBoxes",
           "rapidId",
+          "boundingBoxes",
           "_t"
         ],
         "properties": {
@@ -2576,18 +2576,18 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "boundingBoxes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BoxShape"
+              "$ref": "#/components/schemas/BoundingBoxResultModel_Box"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultCompareResult": {
+      "IRapidResultModelCompareResultModel": {
         "required": [
           "rapidId",
           "_t"
@@ -2599,21 +2599,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "winners": {
             "type": "array",
             "items": {
               "type": "string"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultFreeTextResult": {
+      "IRapidResultModelFreeTextResultModel": {
         "required": [
-          "answer",
           "rapidId",
+          "answer",
           "_t"
         ],
         "properties": {
@@ -2623,18 +2623,18 @@
             ],
             "type": "string"
           },
-          "answer": {
+          "rapidId": {
             "type": "string"
           },
-          "rapidId": {
+          "answer": {
             "type": "string"
           }
         }
       },
-      "IRapidResultLineResult": {
+      "IRapidResultModelLineResultModel": {
         "required": [
-          "lines",
           "rapidId",
+          "lines",
           "_t"
         ],
         "properties": {
@@ -2644,21 +2644,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "lines": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LineResult_Line"
+              "$ref": "#/components/schemas/LineResultModel_Line"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultLocateResult": {
+      "IRapidResultModelLocateResultModel": {
         "required": [
-          "coordinates",
           "rapidId",
+          "coordinates",
           "_t"
         ],
         "properties": {
@@ -2668,21 +2668,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "coordinates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LocateCoordinate"
+              "$ref": "#/components/schemas/LocateCoordinateModel"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultNamedEntityResult": {
+      "IRapidResultModelNamedEntityResultModel": {
         "required": [
-          "classifications",
           "rapidId",
+          "classifications",
           "_t"
         ],
         "properties": {
@@ -2692,21 +2692,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "classifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NamedClassification"
+              "$ref": "#/components/schemas/NamedEntityResultModel_NamedClassification"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultPolygonResult": {
+      "IRapidResultModelPolygonResultModel": {
         "required": [
-          "shapes",
           "rapidId",
+          "shapes",
           "_t"
         ],
         "properties": {
@@ -2716,21 +2716,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "shapes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonResult_Shape"
+              "$ref": "#/components/schemas/PolygonResultModel_Shape"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultScrubResult": {
+      "IRapidResultModelScrubResultModel": {
         "required": [
-          "timestamps",
           "rapidId",
+          "timestamps",
           "_t"
         ],
         "properties": {
@@ -2740,19 +2740,19 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "timestamps": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultSkipResult": {
+      "IRapidResultModelSkipResultModel": {
         "required": [
           "rapidId",
           "_t"
@@ -2769,10 +2769,10 @@
           }
         }
       },
-      "IRapidResultTranscriptionResult": {
+      "IRapidResultModelTranscriptionResultModel": {
         "required": [
-          "selectedWords",
           "rapidId",
+          "selectedWords",
           "_t"
         ],
         "properties": {
@@ -2782,47 +2782,47 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "selectedWords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionResultModel_TranscriptionWord"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRefereeInfo": {
+      "IRefereeInfoModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRefereeInfoQuorumRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelNaiveRefereeInfoModel"
           },
           {
-            "$ref": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelNeverEndingRefereeInfoModel"
           },
           {
-            "$ref": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel"
           },
           {
-            "$ref": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelQuorumRefereeInfoModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoQuorumRefereeInfo",
-            "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo",
-            "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo",
-            "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
+            "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoModelNaiveRefereeInfoModel",
+            "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoModelNeverEndingRefereeInfoModel",
+            "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel",
+            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoModelQuorumRefereeInfoModel"
           }
         }
       },
-      "IRefereeInfoNaiveRefereeInfo": {
+      "IRefereeInfoModelNaiveRefereeInfoModel": {
         "required": [
           "_t"
         ],
@@ -2843,7 +2843,7 @@
           }
         }
       },
-      "IRefereeInfoNeverEndingRefereeInfo": {
+      "IRefereeInfoModelNeverEndingRefereeInfoModel": {
         "required": [
           "_t"
         ],
@@ -2856,7 +2856,7 @@
           }
         }
       },
-      "IRefereeInfoProbabilisticAttachCategoryRefereeInfo": {
+      "IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel": {
         "required": [
           "threshold",
           "maxVotes",
@@ -2879,7 +2879,7 @@
           }
         }
       },
-      "IRefereeInfoQuorumRefereeInfo": {
+      "IRefereeInfoModelQuorumRefereeInfoModel": {
         "required": [
           "maxVotes",
           "threshold",
@@ -2911,191 +2911,6 @@
           "isValid": {
             "type": "boolean",
             "description": "Whether the rapid bag is valid."
-          }
-        }
-      },
-      "IValidationTruth": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationTruthTranscriptionTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthScrubTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthPolygonTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthNamedEntityTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLocateBoxTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLineTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthEmptyValidationTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthMultiCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthSkipTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthAttachCategoryTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "TranscriptionTruth": "#/components/schemas/IValidationTruthTranscriptionTruth",
-            "ScrubTruth": "#/components/schemas/IValidationTruthScrubTruth",
-            "PolygonTruth": "#/components/schemas/IValidationTruthPolygonTruth",
-            "NamedEntityTruth": "#/components/schemas/IValidationTruthNamedEntityTruth",
-            "LocateBoxTruth": "#/components/schemas/IValidationTruthLocateBoxTruth",
-            "LineTruth": "#/components/schemas/IValidationTruthLineTruth",
-            "EmptyValidationTruth": "#/components/schemas/IValidationTruthEmptyValidationTruth",
-            "CompareTruth": "#/components/schemas/IValidationTruthCompareTruth",
-            "MultiCompareTruth": "#/components/schemas/IValidationTruthMultiCompareTruth",
-            "SkipTruth": "#/components/schemas/IValidationTruthSkipTruth",
-            "AttachCategoryTruth": "#/components/schemas/IValidationTruthAttachCategoryTruth",
-            "BoundingBoxTruth": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        }
-      },
-      "IValidationTruthAttachCategoryTruth": {
-        "required": [
-          "correctCategories",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AttachCategoryTruth"
-            ],
-            "type": "string"
-          },
-          "correctCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IValidationTruthBoundingBoxTruth": {
-        "required": [
-          "xMin",
-          "yMin",
-          "xMax",
-          "yMax",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxTruth"
-            ],
-            "type": "string"
-          },
-          "xMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "xMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMax": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthCompareTruth": {
-        "required": [
-          "winnerId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareTruth"
-            ],
-            "type": "string"
-          },
-          "winnerId": {
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthEmptyValidationTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "EmptyValidationTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthLineTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LineTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthLocateBoxTruth": {
-        "required": [
-          "boundingBoxes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocateBoxTruth"
-            ],
-            "type": "string"
-          },
-          "boundingBoxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BoxShape"
-            }
-          },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
           }
         }
       },
@@ -3295,7 +3110,7 @@
           "boundingBoxes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BoxShape"
+              "$ref": "#/components/schemas/LocateBoxTruthModel_Box"
             }
           },
           "requiredPrecision": {
@@ -3346,7 +3161,7 @@
           "classifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NamedClassification"
+              "$ref": "#/components/schemas/NamedEntityTruthModel_NamedClassification"
             }
           }
         }
@@ -3379,7 +3194,7 @@
           "validRanges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ScrubRange"
+              "$ref": "#/components/schemas/ScrubTruthModel_ScrubRange"
             }
           }
         }
@@ -3412,7 +3227,7 @@
           "correctWords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionTruthModel_TranscriptionWord"
             }
           },
           "strictGrading": {
@@ -3429,128 +3244,7 @@
           }
         }
       },
-      "IValidationTruthMultiCompareTruth": {
-        "required": [
-          "correctCombinations",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiCompareTruth"
-            ],
-            "type": "string"
-          },
-          "correctCombinations": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "IValidationTruthNamedEntityTruth": {
-        "required": [
-          "classifications",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityTruth"
-            ],
-            "type": "string"
-          },
-          "classifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NamedClassification"
-            }
-          }
-        }
-      },
-      "IValidationTruthPolygonTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthScrubTruth": {
-        "required": [
-          "validRanges",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubTruth"
-            ],
-            "type": "string"
-          },
-          "validRanges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScrubRange"
-            }
-          }
-        }
-      },
-      "IValidationTruthSkipTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SkipTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthTranscriptionTruth": {
-        "required": [
-          "correctWords",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionTruth"
-            ],
-            "type": "string"
-          },
-          "correctWords": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
-            }
-          },
-          "strictGrading": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "LineResult_Line": {
+      "LineResultModel_Line": {
         "required": [
           "size",
           "points"
@@ -3564,12 +3258,12 @@
           "points": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LineResult_LinePoint"
+              "$ref": "#/components/schemas/LineResultModel_LinePoint"
             }
           }
         }
       },
-      "LineResult_LinePoint": {
+      "LineResultModel_LinePoint": {
         "required": [
           "x",
           "y"
@@ -3586,7 +3280,28 @@
           }
         }
       },
-      "LocateCoordinate": {
+      "LocateBoxTruthModel_Box": {
+        "type": "object",
+        "properties": {
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "LocateCoordinateModel": {
         "required": [
           "x",
           "y"
@@ -3629,7 +3344,7 @@
           "type": "string"
         }
       },
-      "NamedClassification": {
+      "NamedEntityResultModel_NamedClassification": {
         "required": [
           "start",
           "end",
@@ -3650,7 +3365,28 @@
           }
         }
       },
-      "PolygonResult_Coordinate": {
+      "NamedEntityTruthModel_NamedClassification": {
+        "required": [
+          "start",
+          "end",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
+      "PolygonResultModel_Coordinate": {
         "required": [
           "x",
           "y"
@@ -3667,7 +3403,7 @@
           }
         }
       },
-      "PolygonResult_Shape": {
+      "PolygonResultModel_Shape": {
         "required": [
           "edges"
         ],
@@ -3676,7 +3412,7 @@
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonResult_Coordinate"
+              "$ref": "#/components/schemas/PolygonResultModel_Coordinate"
             }
           }
         }
@@ -3706,7 +3442,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidPayload"
+                "$ref": "#/components/schemas/IRapidPayloadModel"
               }
             ],
             "description": "The payload of the rapid."
@@ -3714,7 +3450,7 @@
           "referee": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRefereeInfo"
+                "$ref": "#/components/schemas/IRefereeInfoModel"
               }
             ],
             "description": "The referee that created the rapid."
@@ -3730,7 +3466,7 @@
           "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidState"
+                "$ref": "#/components/schemas/RapidStateModel"
               }
             ],
             "description": "The state of the rapid."
@@ -3746,7 +3482,7 @@
           "truth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ],
             "description": "The optional validation truth of the rapid."
@@ -3901,7 +3637,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidPayload"
+                "$ref": "#/components/schemas/IRapidPayloadModel"
               }
             ],
             "description": "The payload of the rapid."
@@ -3919,7 +3655,7 @@
           "truth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ],
             "description": "The derived validation truth for the rapid."
@@ -3959,7 +3695,7 @@
           }
         }
       },
-      "RapidIssue": {
+      "RapidIssueModel": {
         "enum": [
           "Other",
           "CannotSubmit",
@@ -3973,7 +3709,7 @@
           "MyAnswerIsCorrect"
         ]
       },
-      "RapidState": {
+      "RapidStateModel": {
         "enum": [
           "Labeling",
           "Paused",
@@ -3993,7 +3729,7 @@
           "issue": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidIssue"
+                "$ref": "#/components/schemas/RapidIssueModel"
               }
             ],
             "description": "A streamlined enum representing common issues."
@@ -4015,7 +3751,7 @@
           }
         }
       },
-      "ScrubRange": {
+      "ScrubTruthModel_ScrubRange": {
         "required": [
           "start",
           "end"
@@ -4064,7 +3800,7 @@
           "validationTruth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ],
             "description": "The validation truth applied, if any."
@@ -4084,7 +3820,39 @@
           }
         }
       },
-      "TranscriptionWord": {
+      "TranscriptionPayloadModel_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionResultModel_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionTruthModel_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"

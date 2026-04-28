@@ -77,6 +77,42 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
 !!! note
     In practice you'd want to add more examples to the audience to improve the quality of the results.
 
+`add_compare_example` is one of several qualification helpers; pick the one that matches the task the audience will receive:
+
+| Method | Task |
+|---|---|
+| `add_compare_example` | Pick the better of two media items. |
+| `add_classification_example` | Choose the correct label(s) from a list. |
+| `add_locate_example` | Click inside the correct region(s) on an image. |
+| `add_line_example` | Draw a line through a region of an image. |
+| `add_transcription_example` | Pick the correct words out of a transcription of an audio. |
+
+```py
+from rapidata import Box
+
+# Locate — click inside any of the boxes
+audience.add_locate_example(
+    instruction="Click the dog's face",
+    truth=[Box(x_min=0.3, y_min=0.2, x_max=0.55, y_max=0.45)],
+    datapoint="https://assets.rapidata.ai/dog.jpg",
+)
+
+# Line — draw a line through any of the boxes (truth is optional)
+audience.add_line_example(
+    instruction="Trace the horizon line",
+    datapoint="https://assets.rapidata.ai/landscape.jpg",
+    truth=[Box(x_min=0.0, y_min=0.45, x_max=1.0, y_max=0.55)],
+)
+
+# Transcription — pick the correct words from the spoken sentence
+audience.add_transcription_example(
+    instruction="Select the words actually spoken",
+    sentence="the quick brown fox jumps over the lazy dog",
+    truth=[1, 2, 3],  # indices of "quick", "brown", "fox"
+    datapoint="https://assets.rapidata.ai/fox.mp3",
+)
+```
+
 ### Step 3: Create and Assign a Job
 
 Once your audience is set up, create a job definition and assign it to the audience:
@@ -188,8 +224,8 @@ audience.add_classification_example(
 1. Applies the setting as a feature flag on this single example. Use the same
    `RapidataSetting` subclasses you would pass to `settings=` on a job or
    order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
-   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). Both
-   `add_classification_example` and `add_compare_example` accept `settings`.
+   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). All
+   `add_*_example` methods on `Audience` accept `settings`.
 
 ## Reusing Audiences
 

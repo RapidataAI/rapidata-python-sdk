@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.example_box_shape import ExampleBoxShape
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +30,10 @@ class IExampleTruthLineExampleTruth(LazyValidatedModel):
     IExampleTruthLineExampleTruth
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    __properties: ClassVar[List[str]] = ["_t"]
+    bounding_boxes: Optional[List[ExampleBoxShape]] = Field(default=None, alias="boundingBoxes")
+    required_precision: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredPrecision")
+    required_completeness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredCompleteness")
+    __properties: ClassVar[List[str]] = ["_t", "boundingBoxes", "requiredPrecision", "requiredCompleteness"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -73,6 +77,13 @@ class IExampleTruthLineExampleTruth(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in bounding_boxes (list)
+        _items = []
+        if self.bounding_boxes:
+            for _item_bounding_boxes in self.bounding_boxes:
+                if _item_bounding_boxes:
+                    _items.append(_item_bounding_boxes.to_dict())
+            _dict['boundingBoxes'] = _items
         return _dict
 
     @classmethod
@@ -85,7 +96,10 @@ class IExampleTruthLineExampleTruth(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "_t": obj.get("_t")
+            "_t": obj.get("_t"),
+            "boundingBoxes": [ExampleBoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
+            "requiredPrecision": obj.get("requiredPrecision"),
+            "requiredCompleteness": obj.get("requiredCompleteness")
         }
         try:
             _obj = cls.model_validate(_data)

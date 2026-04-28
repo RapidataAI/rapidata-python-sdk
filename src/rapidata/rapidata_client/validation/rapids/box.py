@@ -40,3 +40,60 @@ class Box(BaseModel):
             xMax=self.x_max * 100,
             yMax=self.y_max * 100,
         )
+
+
+def calculate_boxes_coverage(boxes: list[Box]) -> float:
+    """Compute the union area of ``boxes`` as a 0–1 ratio of the asset.
+
+    Used as the ``random_correct_probability`` baseline when boxes are the
+    ground truth (Locate / Line audience examples, Locate / Line rapids).
+
+    Coordinates are in [0, 1] image-ratio space (matching ``Box``); overlaps
+    are not double-counted.
+
+    Args:
+        boxes: Boxes to union. Empty list returns 0.
+
+    Returns:
+        Coverage ratio in [0.0, 1.0].
+    """
+    if not boxes:
+        return 0.0
+
+    events: list[tuple[float, str, int]] = []
+    for i, box in enumerate(boxes):
+        events.append((box.x_min, "start", i))
+        events.append((box.x_max, "end", i))
+
+    events.sort(key=lambda e: (e[0], e[1] == "end"))
+
+    total_area = 0.0
+    active_boxes: set[int] = set()
+    prev_x = 0.0
+
+    for x, event_type, box_id in events:
+        if active_boxes and x > prev_x:
+            y_intervals = [(boxes[i].y_min, boxes[i].y_max) for i in active_boxes]
+            y_intervals.sort()
+
+            merged_intervals: list[tuple[float, float]] = []
+            for start, end in y_intervals:
+                if merged_intervals and start <= merged_intervals[-1][1]:
+                    merged_intervals[-1] = (
+                        merged_intervals[-1][0],
+                        max(merged_intervals[-1][1], end),
+                    )
+                else:
+                    merged_intervals.append((start, end))
+
+            y_coverage = sum(end - start for start, end in merged_intervals)
+            total_area += (x - prev_x) * y_coverage
+
+        if event_type == "start":
+            active_boxes.add(box_id)
+        else:
+            active_boxes.discard(box_id)
+
+        prev_x = x
+
+    return total_area

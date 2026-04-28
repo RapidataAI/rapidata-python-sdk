@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     )
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+    from rapidata.rapidata_client.validation.rapids.box import Box
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
     import pandas as pd
 
@@ -239,6 +240,179 @@ class RapidataAudience:
                 media_context,
                 explanation,
                 settings,
+            )
+            self._try_start_recruiting()
+            return self
+
+    def add_locate_example(
+        self,
+        instruction: str,
+        truth: list[Box],
+        datapoint: str,
+        required_precision: float | None = None,
+        required_completeness: float | None = None,
+        context: str | None = None,
+        media_context: str | None = None,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataAudience:
+        """Add a locate training example to this audience.
+
+        Annotators will be asked to click inside one of the regions described
+        by ``truth``. Their coordinate must fall in at least one of the boxes
+        for the example to be marked correct.
+
+        Args:
+            instruction (str): The instruction for what the labeler should locate.
+            truth (list[Box]): The bounding boxes that mark the correct regions.
+            datapoint (str): The image (URL or path) to use as the example.
+            required_precision (float, optional): Minimum fraction of the labeler's
+                coordinates that must fall inside the boxes. Defaults to None.
+            required_completeness (float, optional): Minimum fraction of boxes that
+                must each contain at least one labeler coordinate. Defaults to None.
+            context (str, optional): Additional text context. Defaults to None.
+            media_context (str, optional): Additional media (URL/path). Defaults to None.
+            explanation (str, optional): An explanation shown if wrong. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature
+                flags. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        with tracer.start_as_current_span("RapidataAudience.add_locate_example"):
+            logger.debug(
+                f"Adding locate example to audience: {self.id} with instruction: {instruction}, truth: {truth}, datapoint: {datapoint}"
+            )
+            self._example_handler.add_locate_example(
+                instruction=instruction,
+                truth=truth,
+                datapoint=datapoint,
+                required_precision=required_precision,
+                required_completeness=required_completeness,
+                context=context,
+                media_context=media_context,
+                explanation=explanation,
+                settings=settings,
+            )
+            self._try_start_recruiting()
+            return self
+
+    def add_line_example(
+        self,
+        instruction: str,
+        datapoint: str,
+        truth: list[Box] | None = None,
+        required_precision: float | None = None,
+        required_completeness: float | None = None,
+        context: str | None = None,
+        media_context: str | None = None,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataAudience:
+        """Add a line (draw-a-line) training example to this audience.
+
+        Annotators will be asked to draw a line through a region of the
+        image. When ``truth`` is omitted, line examples are scored by
+        annotator consensus rather than against a ground truth. When provided,
+        the line points are graded against the union of the boxes (precision +
+        completeness, same as Locate).
+
+        Args:
+            instruction (str): The instruction for what the labeler should draw a line through.
+            datapoint (str): The image (URL or path) to use as the example.
+            truth (list[Box], optional): Optional bounding boxes the line must pass
+                through. Omit (or pass an empty list) to score by consensus only.
+                Defaults to None.
+            required_precision (float, optional): Minimum fraction of line points that
+                must fall inside the boxes. Ignored when ``truth`` is omitted. Defaults
+                to None.
+            required_completeness (float, optional): Minimum fraction of boxes that
+                must each contain at least one line point. Ignored when ``truth`` is
+                omitted. Defaults to None.
+            context (str, optional): Additional text context. Defaults to None.
+            media_context (str, optional): Additional media (URL/path). Defaults to None.
+            explanation (str, optional): An explanation shown if wrong. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature
+                flags. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        with tracer.start_as_current_span("RapidataAudience.add_line_example"):
+            logger.debug(
+                f"Adding line example to audience: {self.id} with instruction: {instruction}, truth: {truth}, datapoint: {datapoint}"
+            )
+            self._example_handler.add_line_example(
+                instruction=instruction,
+                datapoint=datapoint,
+                truth=truth,
+                required_precision=required_precision,
+                required_completeness=required_completeness,
+                context=context,
+                media_context=media_context,
+                explanation=explanation,
+                settings=settings,
+            )
+            self._try_start_recruiting()
+            return self
+
+    def add_transcription_example(
+        self,
+        instruction: str,
+        sentence: str,
+        truth: list[int],
+        datapoint: str,
+        required_precision: float | None = None,
+        required_completeness: float | None = None,
+        strict_grading: bool | None = None,
+        context: str | None = None,
+        media_context: str | None = None,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataAudience:
+        """Add a transcription (select-correct-words) training example to this audience.
+
+        Annotators will be shown the audio and the full transcription, and asked
+        to click the words that must appear in a correct answer.
+
+        Args:
+            instruction (str): The instruction shown to the labeler.
+            sentence (str): The full transcription, split into words on whitespace.
+                Each whitespace-separated token becomes one selectable word.
+            truth (list[int]): Indices of the words (0-based) that must be selected
+                for a correct answer.
+            datapoint (str): The audio asset (URL or path) being transcribed.
+            required_precision (float, optional): Minimum fraction of selected words
+                that must be correct. Defaults to None.
+            required_completeness (float, optional): Minimum fraction of correct words
+                that must be selected. Defaults to None.
+            strict_grading (bool, optional): When True, missing required words are
+                penalised more harshly. Defaults to None.
+            context (str, optional): Additional text context. Defaults to None.
+            media_context (str, optional): Additional media (URL/path). Defaults to None.
+            explanation (str, optional): An explanation shown if wrong. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature
+                flags. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        with tracer.start_as_current_span("RapidataAudience.add_transcription_example"):
+            logger.debug(
+                f"Adding transcription example to audience: {self.id} with instruction: {instruction}, sentence: {sentence}, truth: {truth}, datapoint: {datapoint}"
+            )
+            self._example_handler.add_transcription_example(
+                instruction=instruction,
+                sentence=sentence,
+                truth=truth,
+                datapoint=datapoint,
+                required_precision=required_precision,
+                required_completeness=required_completeness,
+                strict_grading=strict_grading,
+                context=context,
+                media_context=media_context,
+                explanation=explanation,
+                settings=settings,
             )
             self._try_start_recruiting()
             return self
