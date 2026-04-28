@@ -33,17 +33,22 @@ class ValidationRapidUploader:
         # Translate truth for compare rapids with media assets
         truth = self._translate_compare_truth(rapid, asset_to_uploaded)
 
+        # media_context is always a list[str]; reuse the same upload+map helper
+        # used for the main asset (we don't need the asset->uploaded mapping
+        # part here, so just take the IAssetInput).
+        context_asset = (
+            self._upload_and_map_asset(rapid.media_context)[0]
+            if rapid.media_context
+            else None
+        )
+
         self.openapi_service.validation.validation_api.validation_set_validation_set_id_rapid_post(
             validation_set_id=validation_set_id,
             add_validation_rapid_endpoint_input=AddValidationRapidEndpointInput(
                 asset=uploaded_asset,
                 payload=self._get_payload(rapid),
                 context=rapid.context,
-                contextAsset=(
-                    self._upload_and_map_media_context(rapid.media_context)
-                    if rapid.media_context
-                    else None
-                ),
+                contextAsset=context_asset,
                 truth=truth,
                 randomCorrectProbability=rapid.random_correct_probability,
                 explanation=rapid.explanation,
@@ -54,22 +59,6 @@ class ValidationRapidUploader:
                 ),
             ),
         )
-
-    def _upload_and_map_media_context(
-        self, media_context: list[str]
-    ) -> IAssetInput:
-        """Upload media context asset(s) and map to IAssetInput.
-
-        ``media_context`` is always a list. A single-element list is sent as a
-        plain ``ExistingAssetInput``; two or more entries are bundled into a
-        ``MultiAssetInput``.
-        """
-        uploaded_names = [
-            self.asset_uploader.upload_asset(mc) for mc in media_context
-        ]
-        if len(uploaded_names) == 1:
-            return self.asset_mapper.create_existing_asset_input(uploaded_names[0])
-        return self.asset_mapper.create_existing_asset_input(uploaded_names)
 
     def _upload_and_map_asset(
         self, asset: str | list[str]

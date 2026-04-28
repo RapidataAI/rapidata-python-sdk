@@ -37,7 +37,7 @@ class RapidsManager:
             truths (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -106,7 +106,7 @@ class RapidsManager:
             datapoint (list[str]): The two assets that the labeler will be comparing.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -245,7 +245,7 @@ class RapidsManager:
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be locating.
             datapoint (str): The asset that the labeler will be locating the object in.
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -305,7 +305,7 @@ class RapidsManager:
                 their drawn lines fall within any of these boxes.
             datapoint (str): The asset that the labeler will be drawing the object in.
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -367,7 +367,7 @@ class RapidsManager:
                 The first element of the tuple is the start of the interval and the second element is the end of the interval.
             datapoint (str): The asset that the labeler will be timestamping.
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload

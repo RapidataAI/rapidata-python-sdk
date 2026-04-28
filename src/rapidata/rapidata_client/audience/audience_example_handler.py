@@ -38,6 +38,19 @@ class AudienceExampleHandler:
         self._asset_uploader = AssetUploader(openapi_service)
         self._asset_mapper = AssetMapper()
 
+    def _upload_and_map_asset(self, asset: str | list[str]) -> "IAssetInput":
+        """Upload asset(s) and map to IAssetInput.
+
+        Used both for the main example asset and for ``media_context``. A
+        single string is sent as a plain ``ExistingAssetInput``; a list is
+        bundled into a ``MultiAssetInput``.
+        """
+        if isinstance(asset, list):
+            uploaded_names = [self._asset_uploader.upload_asset(a) for a in asset]
+            return self._asset_mapper.create_existing_asset_input(uploaded_names)
+        uploaded_name = self._asset_uploader.upload_asset(asset)
+        return self._asset_mapper.create_existing_asset_input(uploaded_name)
+
     def add_classification_example(
         self,
         instruction: str,
@@ -59,7 +72,7 @@ class AudienceExampleHandler:
             truth (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
             settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``NoShuffleSetting`` to keep the order of answer options). Defaults to None.
         """
@@ -74,8 +87,7 @@ class AudienceExampleHandler:
             raise ValueError("Truth must be part of the answer options")
 
         if data_type == "media":
-            uploaded_name = self._asset_uploader.upload_asset(datapoint)
-            asset_input = self._asset_mapper.create_existing_asset_input(uploaded_name)
+            asset_input = self._upload_and_map_asset(datapoint)
         else:
             asset_input = self._asset_mapper.create_text_input(datapoint)
 
@@ -103,7 +115,7 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._upload_and_map_media_context(media_context)
+                    self._upload_and_map_asset(media_context)
                     if media_context
                     else None
                 ),
@@ -132,7 +144,7 @@ class AudienceExampleHandler:
             datapoint (list[str]): The two assets that the labeler will be comparing.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (list[str], optional): A list of links to images / videos that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one media asset, or multiple to display multiple images / videos. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
             settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler (e.g. ``ComparePanoramaSetting`` to render panoramic images). Defaults to None.
         """
@@ -178,7 +190,7 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._upload_and_map_media_context(media_context)
+                    self._upload_and_map_asset(media_context)
                     if media_context
                     else None
                 ),
@@ -187,22 +199,6 @@ class AudienceExampleHandler:
                 featureFlags=[s._to_feature_flag() for s in settings] if settings else None,
             ),
         )
-
-    def _upload_and_map_media_context(
-        self, media_context: list[str]
-    ) -> "IAssetInput":
-        """Upload media context asset(s) and map to IAssetInput.
-
-        ``media_context`` is always a list. A single-element list is sent as a
-        plain ``ExistingAssetInput``; two or more entries are bundled into a
-        ``MultiAssetInput``.
-        """
-        uploaded_names = [
-            self._asset_uploader.upload_asset(mc) for mc in media_context
-        ]
-        if len(uploaded_names) == 1:
-            return self._asset_mapper.create_existing_asset_input(uploaded_names[0])
-        return self._asset_mapper.create_existing_asset_input(uploaded_names)
 
     def _add_rapid_example(self, rapid: Rapid) -> None:
         """Add a rapid example to the audience (private method).
@@ -216,25 +212,14 @@ class AudienceExampleHandler:
 
         # Handle asset uploading based on data type
         if rapid.data_type == "media":
-            if isinstance(rapid.asset, list):
-                uploaded_names = [
-                    self._asset_uploader.upload_asset(asset) for asset in rapid.asset
-                ]
-                asset_input = self._asset_mapper.create_existing_asset_input(
-                    uploaded_names
-                )
-            else:
-                uploaded_name = self._asset_uploader.upload_asset(rapid.asset)
-                asset_input = self._asset_mapper.create_existing_asset_input(
-                    uploaded_name
-                )
+            asset_input = self._upload_and_map_asset(rapid.asset)
         else:
             asset_input = self._asset_mapper.create_text_input(rapid.asset)
 
         # Handle media context if present
         context_asset = None
         if rapid.media_context:
-            context_asset = self._upload_and_map_media_context(rapid.media_context)
+            context_asset = self._upload_and_map_asset(rapid.media_context)
 
         # Convert IValidationTruthModel to IExampleTruth
         # Both types are structurally identical (same JSON schema), differing only in class names

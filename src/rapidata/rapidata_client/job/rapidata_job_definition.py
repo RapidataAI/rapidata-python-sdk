@@ -64,7 +64,7 @@ class RapidataJobDefinition:
             datapoints (list[str] | list[list[str]]): paths to the datapoints or strings for text datapoints.
             data_type (Literal["text", "media"]): The type of the datapoints.
             contexts (list[str], optional): One text context per datapoint. Defaults to None.
-            media_contexts (list[list[str]], optional): Media contexts shown alongside each datapoint, one inner list per datapoint. Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically. Defaults to None.
+            media_contexts (list[list[str]], optional): Image URLs / paths shown alongside each datapoint, one inner list per datapoint. Use a single-element inner list for one image per datapoint, or multiple entries to display several images. Defaults to None.
             sentences (list[str], optional): The sentences associated with each datapoint (used by select-words workflows). Defaults to None.
             private_metadata (list[dict[str, str]], optional): Key-value pairs attached to each datapoint that will not be shown to labelers. Defaults to None.
         """

@@ -430,10 +430,11 @@ class RapidataDataset:
         for group_id, (context, media_context) in groups.items():
             context_asset = None
             if media_context is not None:
-                # media_context is always a list (Datapoint validator coerces).
-                # A single-element list is sent as ExistingAssetInput; multiple
-                # entries are bundled into a MultiAssetInput by the helper.
-                context_asset = self.datapoint_uploader._upload_and_map_media_context(
+                # media_context is always a list (the Datapoint validator
+                # coerces). The shared upload+map helper bundles it into a
+                # MultiAssetInput (or ExistingAssetInput if a bare string slips
+                # through).
+                context_asset = self.datapoint_uploader._upload_and_map_asset(
                     media_context
                 )
 

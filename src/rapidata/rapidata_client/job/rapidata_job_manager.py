@@ -177,9 +177,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the classification (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the classification (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
@@ -246,10 +246,10 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the comparison (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             a_b_names (list[str], optional): Custom naming for the two opposing models defined by the index in the datapoints list. Defaults to None.\n
                 If provided has to be a list of exactly two strings.
                 example:
@@ -334,10 +334,10 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the ranking. Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the ranking (each inner list is the media URLs / paths shown for that ranking). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the ranking (each inner list is the images shown for that ranking). Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per ranking, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per ranking, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
@@ -347,11 +347,6 @@ class RapidataJobManager:
                 raise ValueError(
                     "Number of contexts must match the number of sets that will be ranked"
                 )
-            from rapidata.rapidata_client.datapoints._datapoints_validator import (
-                _normalize_media_contexts,
-            )
-
-            media_contexts = _normalize_media_contexts(media_contexts)
             if media_contexts and len(media_contexts) != len(datapoints):
                 raise ValueError(
                     "Number of media contexts must match the number of sets that will be ranked"
@@ -425,10 +420,10 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the free text. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the free text (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the free text (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -522,9 +517,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the locate. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the locate (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the locate (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -571,9 +566,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the draw lines (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the draw lines (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -623,9 +618,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the timestamp (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the timestamp (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n

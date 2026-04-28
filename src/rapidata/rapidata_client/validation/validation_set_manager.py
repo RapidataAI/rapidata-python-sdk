@@ -31,9 +31,6 @@ from rapidata.rapidata_client.config import (
     rapidata_config,
     tracer,
 )
-from rapidata.rapidata_client.datapoints._datapoints_validator import (
-    _normalize_media_contexts,
-)
 from tqdm.auto import tqdm
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
@@ -94,10 +91,10 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the comparison (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -124,7 +121,6 @@ class ValidationSetManager:
             if contexts and len(contexts) != len(datapoints):
                 raise ValueError("The number of contexts and datapoints must be equal")
 
-            media_contexts = _normalize_media_contexts(media_contexts)
             if media_contexts and len(media_contexts) != len(datapoints):
                 raise ValueError(
                     "The number of media contexts and datapoints must be equal"
@@ -184,10 +180,10 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of media contexts for the comparison (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -212,7 +208,6 @@ class ValidationSetManager:
             if contexts and len(contexts) != len(datapoints):
                 raise ValueError("The number of contexts and datapoints must be equal")
 
-            media_contexts = _normalize_media_contexts(media_contexts)
             if media_contexts and len(media_contexts) != len(datapoints):
                 raise ValueError(
                     "The number of media contexts and datapoints must be equal"
@@ -340,10 +335,10 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            media_contexts (list[list[str]], optional): The list of media contexts for the comparison (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -367,7 +362,6 @@ class ValidationSetManager:
             if contexts and len(contexts) != len(datapoints):
                 raise ValueError("The number of contexts and datapoints must be equal")
 
-            media_contexts = _normalize_media_contexts(media_contexts)
             if media_contexts and len(media_contexts) != len(datapoints):
                 raise ValueError(
                     "The number of media contexts and datapoints must be equal"
@@ -419,10 +413,10 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            media_contexts (list[list[str]], optional): The list of media contexts for the comparison (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -446,7 +440,6 @@ class ValidationSetManager:
             if contexts and len(contexts) != len(datapoints):
                 raise ValueError("The number of contexts and datapoints must be equal")
 
-            media_contexts = _normalize_media_contexts(media_contexts)
             if media_contexts and len(media_contexts) != len(datapoints):
                 raise ValueError(
                     "The number of media contexts and datapoints must be equal"
@@ -499,10 +492,10 @@ class ValidationSetManager:
                     truths: [[(0, 10)], [(20, 30)]] -> first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            media_contexts (list[list[str]], optional): The list of media contexts for the comparison (each inner list is the media URLs / paths shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-                Use a single-element inner list for one media asset per datapoint, or multiple entries to display several images / videos. Passing a flat ``list[str]`` is still accepted but emits a deprecation warning and is wrapped automatically.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -526,7 +519,6 @@ class ValidationSetManager:
             if contexts and len(contexts) != len(datapoints):
                 raise ValueError("The number of contexts and datapoints must be equal")
 
-            media_contexts = _normalize_media_contexts(media_contexts)
             if media_contexts and len(media_contexts) != len(datapoints):
                 raise ValueError(
                     "The number of media contexts and datapoints must be equal"
