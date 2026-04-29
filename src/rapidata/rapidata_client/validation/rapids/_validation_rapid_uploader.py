@@ -22,19 +22,13 @@ class ValidationRapidUploader:
         self.asset_mapper = AssetMapper()
 
     def upload_rapid(self, rapid: Rapid, validation_set_id: str) -> None:
-        asset_to_uploaded: dict[str, str] = {}
-
         if rapid.data_type == "media":
-            # Compare rapids translate truth IDs through this mapping; other
-            # rapid types ignore it.
-            uploaded_asset, asset_to_uploaded = (
-                self.asset_uploader.upload_and_map_asset_with_mapping(rapid.asset)
-            )
+            uploaded_asset = self.asset_uploader.upload_and_map_asset(rapid.asset)
         else:
             uploaded_asset = self.asset_mapper.create_text_input(rapid.asset)
 
         # Translate truth for compare rapids with media assets
-        truth = self._translate_compare_truth(rapid, asset_to_uploaded)
+        truth = self._translate_compare_truth(rapid)
 
         context_asset = (
             self.asset_uploader.upload_and_map_asset(rapid.media_context)
@@ -60,19 +54,24 @@ class ValidationRapidUploader:
             ),
         )
 
-    def _translate_compare_truth(
-        self, rapid: Rapid, asset_to_uploaded: dict[str, str]
-    ) -> IValidationTruthModel | None:
+    def _translate_compare_truth(self, rapid: Rapid) -> IValidationTruthModel | None:
         """Translate compare rapid truth from original asset paths to uploaded names.
 
-        For compare rapids with media assets, the truth's winnerId or correctCombinations
-        need to be translated from original asset paths to uploaded asset names.
+        For compare rapids with media assets, ``winnerId`` /
+        ``correctCombinations`` reference assets by their original path,
+        but the API expects uploaded names. Re-calling ``upload_asset`` is
+        a cache hit (asset uploads are always cached) so this is just a
+        lookup, not a re-upload.
         """
         if not rapid.truth or rapid.data_type != "media":
             return rapid.truth
 
         if not rapid.truth.actual_instance:
             return rapid.truth
+
+        asset_paths = (
+            set(rapid.asset) if isinstance(rapid.asset, list) else {rapid.asset}
+        )
 
         # Handle CompareTruth
         if isinstance(
@@ -81,9 +80,8 @@ class ValidationRapidUploader:
             compare_truth = rapid.truth.actual_instance
             original_winner_id = compare_truth.winner_id
 
-            # If the winner_id is in our mapping, translate it
-            if original_winner_id in asset_to_uploaded:
-                uploaded_winner_id = asset_to_uploaded[original_winner_id]
+            if original_winner_id in asset_paths:
+                uploaded_winner_id = self.asset_uploader.upload_asset(original_winner_id)
                 return IValidationTruthModel(
                     actual_instance=IValidationTruthModelCompareTruthModel(
                         _t="CompareTruth", winnerId=uploaded_winner_id
@@ -95,13 +93,15 @@ class ValidationRapidUploader:
             rapid.truth.actual_instance, IValidationTruthModelMultiCompareTruthModel
         ):
             multi_compare_truth = rapid.truth.actual_instance
-            translated_combinations = []
-
-            for combination in multi_compare_truth.correct_combinations:
-                translated_combo = [
-                    asset_to_uploaded.get(asset_id, asset_id) for asset_id in combination
+            translated_combinations = [
+                [
+                    self.asset_uploader.upload_asset(asset_id)
+                    if asset_id in asset_paths
+                    else asset_id
+                    for asset_id in combination
                 ]
-                translated_combinations.append(translated_combo)
+                for combination in multi_compare_truth.correct_combinations
+            ]
 
             return IValidationTruthModel(
                 actual_instance=IValidationTruthModelMultiCompareTruthModel(
