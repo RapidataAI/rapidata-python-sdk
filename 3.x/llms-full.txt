@@ -521,6 +521,39 @@ results = job.get_results()
 print(results)
 ```
 
+## Matching the Job UI with Settings
+
+Qualification examples default to the standard UI for their task type. If
+your job uses `settings` to change how the task is rendered (e.g.
+`NoShuffleSetting` to keep answer options in order, `AllowNeitherBothSetting`
+to add an "Unsure" button), pass the same settings to the example so the
+labeler qualifies on the exact UI they will later see.
+
+```py
+from rapidata import NoShuffleSetting
+
+audience.add_classification_example(
+    instruction="How well does the image match the description?",
+    answer_options=[
+        "1: Not at all",
+        "2: A little",
+        "3: Moderately",
+        "4: Very well",
+        "5: Perfectly",
+    ],
+    datapoint="https://assets.rapidata.ai/email-4o.png",
+    truth=["5: Perfectly", "4: Very well"],
+    context="A laptop screen with clearly readable text, addressed to the marketing team.",
+    settings=[NoShuffleSetting()], # (1)!
+)
+```
+
+1. Applies the setting as a feature flag on this single example. Use the same
+   `RapidataSetting` subclasses you would pass to `settings=` on a job or
+   order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
+   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). Both
+   `add_classification_example` and `add_compare_example` accept `settings`.
+
 ## Reusing Audiences
 
 Once created, you can reuse your audience for multiple jobs:
@@ -708,18 +741,25 @@ contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 
 | Property | Value |
 |----------|-------|
-| **Type** | `Optional[list[str]]` |
+| **Type** | `Optional[list[list[str]]]` |
 | **Required** | No |
 | **Default** | `None` |
 
-Media URLs shown as reference context alongside each datapoint. Useful when you need to show a reference image or video alongside the item being evaluated.
+Image URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images alongside the item being evaluated.
 
-**Constraints:** If provided, must have the same length as `datapoints`.
+**Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
 
 ```python
-# Show original image as context while evaluating edited versions
+# One reference image per datapoint (each inner list has one entry)
 datapoints=["edited1.jpg", "edited2.jpg"],
-media_contexts=["original1.jpg", "original2.jpg"]
+media_contexts=[["original1.jpg"], ["original2.jpg"]]
+
+# Multiple reference images per datapoint
+datapoints=["edited1.jpg", "edited2.jpg"],
+media_contexts=[
+    ["original1_a.jpg", "original1_b.jpg"],
+    ["original2_a.jpg", "original2_b.jpg"],
+]
 ```
 
 ---

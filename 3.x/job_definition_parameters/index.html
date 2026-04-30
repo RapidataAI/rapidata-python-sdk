@@ -1960,7 +1960,7 @@
 <tbody>
 <tr>
 <td><strong>Type</strong></td>
-<td><code>Optional[list[str]]</code></td>
+<td><code>Optional[list[list[str]]]</code></td>
 </tr>
 <tr>
 <td><strong>Required</strong></td>
@@ -1972,11 +1972,18 @@
 </tr>
 </tbody>
 </table>
-<p>Media URLs shown as reference context alongside each datapoint. Useful when you need to show a reference image or video alongside the item being evaluated.</p>
-<p><strong>Constraints:</strong> If provided, must have the same length as <code>datapoints</code>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show original image as context while evaluating edited versions</span>
+<p>Image URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images alongside the item being evaluated.</p>
+<p><strong>Constraints:</strong> If provided, must have the same length as <code>datapoints</code>. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># One reference image per datapoint (each inner list has one entry)</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"edited1.jpg"</span><span class="p">,</span> <span class="s2">"edited2.jpg"</span><span class="p">],</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">media_contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"original1.jpg"</span><span class="p">,</span> <span class="s2">"original2.jpg"</span><span class="p">]</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">media_contexts</span><span class="o">=</span><span class="p">[[</span><span class="s2">"original1.jpg"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"original2.jpg"</span><span class="p">]]</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Multiple reference images per datapoint</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"edited1.jpg"</span><span class="p">,</span> <span class="s2">"edited2.jpg"</span><span class="p">],</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">media_contexts</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">[</span><span class="s2">"original1_a.jpg"</span><span class="p">,</span> <span class="s2">"original1_b.jpg"</span><span class="p">],</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="p">[</span><span class="s2">"original2_a.jpg"</span><span class="p">,</span> <span class="s2">"original2_b.jpg"</span><span class="p">],</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">]</span>
 </span></code></pre></div>
 <hr>
 <h2 id="quality-control-parameters">Quality Control Parameters<a class="headerlink" href="#quality-control-parameters" title="Permanent link">#</a></h2>

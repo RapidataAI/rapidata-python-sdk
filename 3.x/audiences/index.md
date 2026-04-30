@@ -158,6 +158,39 @@ results = job.get_results()
 print(results)
 ```
 
+## Matching the Job UI with Settings
+
+Qualification examples default to the standard UI for their task type. If
+your job uses `settings` to change how the task is rendered (e.g.
+`NoShuffleSetting` to keep answer options in order, `AllowNeitherBothSetting`
+to add an "Unsure" button), pass the same settings to the example so the
+labeler qualifies on the exact UI they will later see.
+
+```py
+from rapidata import NoShuffleSetting
+
+audience.add_classification_example(
+    instruction="How well does the image match the description?",
+    answer_options=[
+        "1: Not at all",
+        "2: A little",
+        "3: Moderately",
+        "4: Very well",
+        "5: Perfectly",
+    ],
+    datapoint="https://assets.rapidata.ai/email-4o.png",
+    truth=["5: Perfectly", "4: Very well"],
+    context="A laptop screen with clearly readable text, addressed to the marketing team.",
+    settings=[NoShuffleSetting()], # (1)!
+)
+```
+
+1. Applies the setting as a feature flag on this single example. Use the same
+   `RapidataSetting` subclasses you would pass to `settings=` on a job or
+   order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
+   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). Both
+   `add_classification_example` and `add_compare_example` accept `settings`.
+
 ## Reusing Audiences
 
 Once created, you can reuse your audience for multiple jobs:
