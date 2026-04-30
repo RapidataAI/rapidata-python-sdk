@@ -43,7 +43,9 @@ def extract_assets_from_datapoint(datapoint: Datapoint) -> set[str]:
     # media_context is always a media asset regardless of data_type
     # Skip for grouped datapoints — their context is uploaded at group level
     if datapoint.media_context and datapoint.group is None:
-        assets.add(datapoint.media_context)
+        # media_context is always a list of strings (the model coerces legacy
+        # single strings into a list at validation time).
+        assets.update(datapoint.media_context)
 
     return assets
 

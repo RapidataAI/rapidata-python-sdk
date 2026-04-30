@@ -4,8 +4,10 @@ import re
 import os
 import threading
 
+from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
+from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
 from diskcache import FanoutCache
 
@@ -129,6 +131,19 @@ class AssetUploader:
             return self._upload_url_asset(asset)
 
         return self._upload_file_asset(asset)
+
+    def upload_and_map_asset(self, asset: str | list[str]) -> IAssetInput:
+        """Upload asset(s) and wrap the result in an ``IAssetInput``.
+
+        Used both for main datapoint/example assets and for ``media_context``.
+        A single string is returned as a plain ``ExistingAssetInput``; a list
+        is bundled into a ``MultiAssetInput``.
+        """
+        if isinstance(asset, list):
+            uploaded_names = [self.upload_asset(a) for a in asset]
+            return AssetMapper.create_existing_asset_input(uploaded_names)
+
+        return AssetMapper.create_existing_asset_input(self.upload_asset(asset))
 
     def clear_cache(self) -> None:
         """Clear both URL and file caches."""

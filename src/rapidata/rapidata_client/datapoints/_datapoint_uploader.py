@@ -11,7 +11,6 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.create_datapoint_endpoint_output import (
         CreateDatapointEndpointOutput,
     )
-    from rapidata.api_client.models.i_asset_input import IAssetInput
 
 
 class DatapointUploader:
@@ -19,16 +18,6 @@ class DatapointUploader:
         self.openapi_service = openapi_service
         self.asset_uploader = AssetUploader(openapi_service)
         self.asset_mapper = AssetMapper()
-
-    def _upload_and_map_asset(self, asset: str | list[str]) -> IAssetInput:
-        """Upload asset(s) and map to IAssetInput."""
-
-        if isinstance(asset, list):
-            uploaded_names = [self.asset_uploader.upload_asset(a) for a in asset]
-            return self.asset_mapper.create_existing_asset_input(uploaded_names)
-        else:
-            uploaded_name = self.asset_uploader.upload_asset(asset)
-            return self.asset_mapper.create_existing_asset_input(uploaded_name)
 
     def upload_datapoint(
         self, datapoint: Datapoint, dataset_id: str, index: int
@@ -38,7 +27,7 @@ class DatapointUploader:
         )
 
         if datapoint.data_type == "media":
-            uploaded_asset = self._upload_and_map_asset(datapoint.asset)
+            uploaded_asset = self.asset_uploader.upload_and_map_asset(datapoint.asset)
         else:
             uploaded_asset = self.asset_mapper.create_text_input(datapoint.asset)
 
@@ -48,9 +37,7 @@ class DatapointUploader:
         context_asset = (
             None
             if has_group or not datapoint.media_context
-            else self.asset_mapper.create_existing_asset_input(
-                self.asset_uploader.upload_asset(datapoint.media_context)
-            )
+            else self.asset_uploader.upload_and_map_asset(datapoint.media_context)
         )
 
         return self.openapi_service.dataset.datapoints_api.dataset_dataset_id_datapoint_post(
