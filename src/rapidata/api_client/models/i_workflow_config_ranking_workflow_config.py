@@ -124,11 +124,6 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
         if self.ranking_config is None and "ranking_config" in self.model_fields_set:
             _dict['rankingConfig'] = None
 
-        # set to None if elo_config (nullable) is None
-        # and model_fields_set contains the field
-        if self.elo_config is None and "elo_config" in self.model_fields_set:
-            _dict['eloConfig'] = None
-
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:

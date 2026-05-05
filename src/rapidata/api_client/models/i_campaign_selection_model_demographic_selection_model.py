@@ -76,6 +76,11 @@ class ICampaignSelectionModelDemographicSelectionModel(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.probability is None and "probability" in self.model_fields_set:
+            _dict['probability'] = None
+
         return _dict
 
     @classmethod

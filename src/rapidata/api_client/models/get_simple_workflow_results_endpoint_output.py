@@ -98,6 +98,11 @@ class GetSimpleWorkflowResultsEndpointOutput(LazyValidatedModel):
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
 
+        # set to None if decisiveness (nullable) is None
+        # and model_fields_set contains the field
+        if self.decisiveness is None and "decisiveness" in self.model_fields_set:
+            _dict['decisiveness'] = None
+
         return _dict
 
     @classmethod

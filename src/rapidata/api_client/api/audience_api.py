@@ -27,7 +27,7 @@ from rapidata.api_client.models.get_audience_by_id_endpoint_output import GetAud
 from rapidata.api_client.models.get_audience_state_recalculation_by_id_endpoint_output import GetAudienceStateRecalculationByIdEndpointOutput
 from rapidata.api_client.models.get_audience_user_state_metrics_result import GetAudienceUserStateMetricsResult
 from rapidata.api_client.models.get_latest_audience_state_recalculation_endpoint_output import GetLatestAudienceStateRecalculationEndpointOutput
-from rapidata.api_client.models.paged_result_of_query_jobs_result import PagedResultOfQueryJobsResult
+from rapidata.api_client.models.query_audience_jobs_endpoint_paged_result_of_output import QueryAudienceJobsEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_audiences_endpoint_paged_result_of_output import QueryAudiencesEndpointPagedResultOfOutput
 from rapidata.api_client.models.recreate_external_audiences_endpoint_input import RecreateExternalAudiencesEndpointInput
 from rapidata.api_client.models.update_audience_endpoint_input import UpdateAudienceEndpointInput
@@ -1209,7 +1209,7 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfQueryJobsResult:
+    ) -> QueryAudienceJobsEndpointPagedResultOfOutput:
         """Queries jobs for the specified audience.
 
 
@@ -1270,7 +1270,7 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobsResult",
+            '200': "QueryAudienceJobsEndpointPagedResultOfOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1310,7 +1310,7 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfQueryJobsResult]:
+    ) -> ApiResponse[QueryAudienceJobsEndpointPagedResultOfOutput]:
         """Queries jobs for the specified audience.
 
 
@@ -1371,7 +1371,7 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobsResult",
+            '200': "QueryAudienceJobsEndpointPagedResultOfOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1472,7 +1472,7 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfQueryJobsResult",
+            '200': "QueryAudienceJobsEndpointPagedResultOfOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,

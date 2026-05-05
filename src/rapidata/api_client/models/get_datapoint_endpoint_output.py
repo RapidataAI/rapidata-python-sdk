@@ -77,6 +77,11 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         return _dict
 
     @classmethod

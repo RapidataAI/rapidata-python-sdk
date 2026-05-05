@@ -1137,37 +1137,44 @@
           "startingElo": {
             "type": "integer",
             "description": "Initial Elo rating for new items. Defaults to 1200.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses per comparison.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "serveResponses": {
             "type": "integer",
             "description": "Number of accepted responses per rapid at which to stop serving. When set, must be less than or equal to MaxResponses. Null defaults to MaxResponses.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "serveToResponseRatio": {
             "type": "number",
             "description": "Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "serveTimeoutSeconds": {
             "type": "integer",
             "description": "Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minResponses": {
             "type": "integer",
             "description": "Minimum number of responses per comparison. Defaults to 20.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "responsesRequired": {
             "type": "integer",
             "description": "Deprecated. Use MaxResponses instead.",
             "format": "int32",
+            "nullable": true,
             "deprecated": true
           },
           "featureFlags": {
@@ -1185,37 +1192,44 @@
           "targetResponseCount": {
             "type": "integer",
             "description": "Target average response count per completed item. Enables PID control when set.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidProportionalGain": {
             "type": "number",
             "description": "PID proportional gain. Defaults to 0.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidIntegralGain": {
             "type": "number",
             "description": "PID integral gain. Defaults to 0.003.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidDerivativeGain": {
             "type": "number",
             "description": "PID derivative gain. Defaults to 0.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidOutputOffset": {
             "type": "number",
             "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point. Defaults to 25.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidMinSessionsPerMinute": {
             "type": "integer",
             "description": "Minimum sessions per minute the PID can set. Defaults to 20.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidMaxSessionsPerMinute": {
             "type": "integer",
             "description": "Maximum sessions per minute the PID can set. Defaults to 50.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidBatchMode": {
             "allOf": [
@@ -1228,7 +1242,8 @@
           "drainDurationSeconds": {
             "type": "integer",
             "description": "Duration in seconds for draining flow items. Defaults to 40.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -1262,12 +1277,14 @@
           "timeToLiveInSeconds": {
             "type": "integer",
             "description": "Optional time-to-live in seconds before the flow item expires.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "drainDurationInSeconds": {
             "type": "integer",
             "description": "Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -1783,6 +1800,7 @@
             "$ref": "#/components/schemas/IFlowModelRankingFlowModel"
           }
         ],
+        "description": "A flow definition exposed over the API, identified by a discriminator.\n Implementations describe the flow's type-specific configuration.",
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
@@ -1853,7 +1871,8 @@
           "targetResponseCount": {
             "type": "integer",
             "description": "Target average response count per completed item. Enables PID-based automatic rate control when set. Null disables PID.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidProportionalGain": {
             "type": "number",
@@ -1896,7 +1915,8 @@
           "serveTimeoutSeconds": {
             "type": "integer",
             "description": "Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "drainDurationSeconds": {
             "type": "integer",
@@ -1906,12 +1926,14 @@
           "serveToResponseRatio": {
             "type": "number",
             "description": "Ratio of serves to responses used to calculate how many tasks to serve per expected response.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "globalBoostLevel": {
             "type": "integer",
             "description": "Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.",
             "format": "int32",
+            "nullable": true,
             "deprecated": true
           },
           "audienceBoosts": {
@@ -1963,12 +1985,14 @@
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses a ranking item can receive before being removed from active ranking. Null allows unlimited responses.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "serveResponses": {
             "type": "integer",
             "description": "Number of accepted responses per rapid at which to stop serving. Null defaults to MaxResponses.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "allOf": [
@@ -2267,7 +2291,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",
@@ -2574,7 +2599,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

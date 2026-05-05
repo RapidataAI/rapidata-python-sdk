@@ -88,6 +88,16 @@ class BoostingProfileModel(LazyValidatedModel):
                 if _item_labeling_boosts:
                     _items.append(_item_labeling_boosts.to_dict())
             _dict['labelingBoosts'] = _items
+        # set to None if min_auto_adjust_level (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_auto_adjust_level is None and "min_auto_adjust_level" in self.model_fields_set:
+            _dict['minAutoAdjustLevel'] = None
+
+        # set to None if max_auto_adjust_level (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_auto_adjust_level is None and "max_auto_adjust_level" in self.model_fields_set:
+            _dict['maxAutoAdjustLevel'] = None
+
         # set to None if language_boosts (nullable) is None
         # and model_fields_set contains the field
         if self.language_boosts is None and "language_boosts" in self.model_fields_set:

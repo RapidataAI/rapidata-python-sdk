@@ -781,7 +781,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                  "$ref": "#/components/schemas/QueryAudienceJobsEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -1788,7 +1788,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "The sort index that controls the serving order of this example within the audience.\n When null, the next sort index is automatically calculated.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "allOf": [
@@ -1828,7 +1829,7 @@
           }
         }
       },
-      "AudienceJobState": {
+      "AudienceJobStatus": {
         "enum": [
           "Submitted",
           "Running",
@@ -1917,17 +1918,20 @@
           "graduationScore": {
             "type": "number",
             "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "demotionScore": {
             "type": "number",
             "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Defaults to null (uses GraduationScore).",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "minimumSizeForActivation": {
             "type": "integer",
             "description": "The minimum number of users required for an audience to be activated.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "logo": {
             "allOf": [
@@ -1940,17 +1944,26 @@
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Defaults to 10. Set to null to disable this exit condition.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
+          },
+          "minResponsesToGraduate": {
+            "type": "integer",
+            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Defaults to null (no minimum — users graduate as soon as the score is reached).",
+            "format": "uint32",
+            "nullable": true
           },
           "dropMinResponses": {
             "type": "integer",
             "description": "Minimum responses before the drop score check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Defaults to 3. Set to null to apply drop score check from the first response.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "dropScore": {
             "type": "number",
             "description": "Score floor - users below this score exit the distilling campaign\n (only after completing DropMinResponses).\n Defaults to 0.2. Set to null to disable this exit condition.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "isDistillingCampaignSticky": {
             "type": "boolean",
@@ -1959,27 +1972,32 @@
           "maxDistillingSessions": {
             "type": "integer",
             "description": "Maximum sessions (rapid retrievals) before user exits the distilling campaign.\n Defaults to null (disabled). Set to a value to enable session-based exit condition.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "inactivityDropDays": {
             "type": "integer",
             "description": "Number of days of inactivity before a distilling user is dropped.\n Defaults to null (disabled).",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRate": {
             "type": "number",
             "description": "Minimum submission rate (responses / sessions) before a user is dropped.\n Defaults to null (disabled).",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "minSessionsForSubmissionRate": {
             "type": "integer",
             "description": "Minimum number of sessions before the submission rate check applies.\n Defaults to null (applies from first session).",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRateGraduated": {
             "type": "number",
             "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "distillingRetrievalMode": {
             "allOf": [
@@ -1992,12 +2010,14 @@
           "minDistillingForGlobalBoost": {
             "type": "integer",
             "description": "Minimum distilling users before disabling global boost.\n Defaults to 200. Admin-only override.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "description": "Minimum graduated users before disabling distilling boost.\n Defaults to 100. Admin-only override.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -2028,19 +2048,23 @@
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -2230,12 +2254,14 @@
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "description": "Minimum graduated users before disabling distilling boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minDistillingForGlobalBoost": {
             "type": "integer",
             "description": "Minimum distilling users before disabling global boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "graduationScore": {
             "type": "number",
@@ -2245,47 +2271,56 @@
           "demotionScore": {
             "type": "number",
             "description": "Score below which a graduated user is demoted back to distilling.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "dropMinResponses": {
             "type": "integer",
             "description": "Minimum responses before the drop score check applies.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "dropScore": {
             "type": "number",
             "description": "Score floor - users below this score exit the distilling campaign.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "maxDistillingSessions": {
             "type": "integer",
             "description": "Maximum sessions before user exits the distilling campaign.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "inactivityDropDays": {
             "type": "integer",
             "description": "Number of days of inactivity before a distilling user is dropped.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRate": {
             "type": "number",
             "description": "Minimum submission rate before a user is dropped.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "minSessionsForSubmissionRate": {
             "type": "integer",
             "description": "Minimum number of sessions before the submission rate check applies.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRateGraduated": {
             "type": "number",
             "description": "Minimum submission rate for graduated users.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "distillingRetrievalMode": {
             "allOf": [
@@ -2306,12 +2341,14 @@
           "randomAdmissionProbability": {
             "type": "number",
             "description": "The probability of admitting a random user to the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "health": {
             "type": "number",
             "description": "The health score of the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "graduated": {
             "type": "integer",
@@ -2764,6 +2801,9 @@
             "$ref": "#/components/schemas/IAudienceFilterCountryAudienceFilter"
           },
           {
+            "$ref": "#/components/schemas/IAudienceFilterDemographicAudienceFilter"
+          },
+          {
             "$ref": "#/components/schemas/IAudienceFilterLanguageAudienceFilter"
           },
           {
@@ -2778,6 +2818,7 @@
           "mapping": {
             "AndFilter": "#/components/schemas/IAudienceFilterAndAudienceFilter",
             "CountryFilter": "#/components/schemas/IAudienceFilterCountryAudienceFilter",
+            "DemographicFilter": "#/components/schemas/IAudienceFilterDemographicAudienceFilter",
             "LanguageFilter": "#/components/schemas/IAudienceFilterLanguageAudienceFilter",
             "NotFilter": "#/components/schemas/IAudienceFilterNotAudienceFilter",
             "OrFilter": "#/components/schemas/IAudienceFilterOrAudienceFilter"
@@ -2817,6 +2858,30 @@
             "type": "string"
           },
           "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IAudienceFilterDemographicAudienceFilter": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
             "type": "array",
             "items": {
               "type": "string"
@@ -3128,11 +3193,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -3156,11 +3223,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -3208,11 +3277,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -3529,7 +3600,60 @@
           "type": "string"
         }
       },
-      "PagedResultOfQueryJobsResult": {
+      "QueryAudienceJobsEndpoint_Output": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The unique identifier of the job."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the job."
+          },
+          "definitionId": {
+            "type": "string",
+            "description": "The identifier of the job definition."
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The identifier of the audience the job belongs to."
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "description": "The revision number of the job definition.",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The identifier of the pipeline executing the job."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobStatus"
+              }
+            ],
+            "description": "The current status of the job."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the job was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryAudienceJobsEndpoint_PagedResultOfOutput": {
         "required": [
           "total",
           "page",
@@ -3553,7 +3677,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/QueryJobsResult"
+              "$ref": "#/components/schemas/QueryAudienceJobsEndpoint_Output"
             }
           },
           "totalPages": {
@@ -3638,12 +3762,14 @@
           "randomAdmissionProbability": {
             "type": "number",
             "description": "The probability of admitting a random user to the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "health": {
             "type": "number",
             "description": "The health score of the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "graduated": {
             "type": "integer",
@@ -3819,47 +3945,6 @@
           }
         }
       },
-      "QueryJobsResult": {
-        "required": [
-          "jobId",
-          "name",
-          "definitionId",
-          "audienceId",
-          "revisionNumber",
-          "pipelineId",
-          "status",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "jobId": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "definitionId": {
-            "type": "string"
-          },
-          "audienceId": {
-            "type": "string"
-          },
-          "revisionNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pipelineId": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/AudienceJobState"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "RecreateExternalAudiencesEndpoint_Input": {
         "required": [
           "recreateAll"
@@ -3939,6 +4024,12 @@
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Set to null to disable this exit condition.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "minResponsesToGraduate": {
+            "type": "integer",
+            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Set to null to allow graduation as soon as the score is reached.",
             "format": "uint32",
             "nullable": true
           },
@@ -4072,12 +4163,14 @@
           "minDistillingForGlobalBoost": {
             "type": "integer",
             "description": "Minimum number of distilling users required to activate global boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "description": "Minimum number of graduated users required to activate distilling boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -4104,7 +4197,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

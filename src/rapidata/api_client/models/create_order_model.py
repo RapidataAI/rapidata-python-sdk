@@ -151,6 +151,11 @@ class CreateOrderModel(LazyValidatedModel):
         if self.campaign_feature_flags is None and "campaign_feature_flags" in self.model_fields_set:
             _dict['campaignFeatureFlags'] = None
 
+        # set to None if priority (nullable) is None
+        # and model_fields_set contains the field
+        if self.priority is None and "priority" in self.model_fields_set:
+            _dict['priority'] = None
+
         # set to None if user_score_dimensions (nullable) is None
         # and model_fields_set contains the field
         if self.user_score_dimensions is None and "user_score_dimensions" in self.model_fields_set:
@@ -175,6 +180,11 @@ class CreateOrderModel(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.selections is None and "selections" in self.model_fields_set:
             _dict['selections'] = None
+
+        # set to None if max_iterations (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_iterations is None and "max_iterations" in self.model_fields_set:
+            _dict['maxIterations'] = None
 
         # set to None if preceding_order_id (nullable) is None
         # and model_fields_set contains the field

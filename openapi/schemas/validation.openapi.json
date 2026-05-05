@@ -1298,7 +1298,8 @@
           "randomCorrectProbability": {
             "type": "number",
             "description": "The probability for an answer to be correct when randomly guessing.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "explanation": {
             "type": "string",
@@ -1593,7 +1594,8 @@
           "randomCorrectProbability": {
             "type": "number",
             "description": "The probability of a random correct answer.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "state": {
             "allOf": [
@@ -2794,11 +2796,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -2807,19 +2811,23 @@
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -3148,7 +3156,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

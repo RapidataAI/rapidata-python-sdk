@@ -297,6 +297,7 @@
         "tags": [
           "Campaign"
         ],
+        "summary": "Exercises the rapid-bag pipeline with a synthetic user profile so the health of\n the campaign monitoring path can be probed externally.",
         "responses": {
           "200": {
             "description": "OK"
@@ -359,6 +360,7 @@
         "tags": [
           "Campaign"
         ],
+        "summary": "Triggers a preheat pass for the boost subsystem so warm caches are ready before\n traffic spikes.",
         "responses": {
           "204": {
             "description": "No Content"
@@ -821,6 +823,7 @@
         "tags": [
           "ExternalAudience"
         ],
+        "summary": "Queries the cached Kayzen external audiences available for targeting.",
         "parameters": [
           {
             "name": "page",
@@ -1034,6 +1037,7 @@
         "tags": [
           "ExternalAudience"
         ],
+        "summary": "Enqueues a background job that synchronises Kayzen external audiences with the cache.",
         "responses": {
           "202": {
             "description": "Accepted"
@@ -1098,11 +1102,13 @@
           },
           "minAutoAdjustLevel": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "maxAutoAdjustLevel": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "languageBoosts": {
             "allOf": [
@@ -1192,7 +1198,8 @@
           "level": {
             "type": "integer",
             "description": "The boost level. Takes precedence over IsActive when set.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -1365,7 +1372,8 @@
           "manualOverrideLevel": {
             "type": "integer",
             "description": "The manual override level, if manual mode is active.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "globalBoost": {
             "allOf": [
@@ -2184,7 +2192,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -2261,7 +2270,8 @@
           },
           "probability": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "maxRapids": {
             "type": "integer",
@@ -2314,7 +2324,8 @@
           },
           "amount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "effortBudget": {
             "type": "integer",
@@ -2325,7 +2336,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -2386,11 +2398,13 @@
           },
           "amount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "effortBudget": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -2499,7 +2513,8 @@
           "count": {
             "type": "integer",
             "description": "The number of users in the audience.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -2549,7 +2564,8 @@
           "level": {
             "type": "integer",
             "description": "The global boost level. Null disables manual mode and returns to automatic.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -2696,7 +2712,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

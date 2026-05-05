@@ -34,7 +34,7 @@ class QueryBenchmarkStandingsEndpointOutput(LazyValidatedModel):
     name: StrictStr = Field(description="The name of the participant.")
     benchmark_id: StrictStr = Field(description="The id of the benchmark this standing belongs to.", alias="benchmarkId")
     status: StandingStatus = Field(description="The status of the standing.")
-    score: Union[StrictFloat, StrictInt] = Field(description="The calculated score, or null if not yet computed.")
+    score: Optional[Union[StrictFloat, StrictInt]] = Field(description="The calculated score, or null if not yet computed.")
     wins: Union[StrictFloat, StrictInt] = Field(description="The number of wins.")
     total_matches: Union[StrictFloat, StrictInt] = Field(description="The total number of matches.", alias="totalMatches")
     is_disabled: StrictBool = Field(description="Whether the participant is disabled.", alias="isDisabled")
@@ -79,6 +79,11 @@ class QueryBenchmarkStandingsEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of confidence_interval
         if self.confidence_interval:
             _dict['confidenceInterval'] = self.confidence_interval.to_dict()
+        # set to None if score (nullable) is None
+        # and model_fields_set contains the field
+        if self.score is None and "score" in self.model_fields_set:
+            _dict['score'] = None
+
         return _dict
 
     @classmethod

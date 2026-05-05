@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,9 +28,9 @@ class EloRankingConfig(LazyValidatedModel):
     """
     EloRankingConfig
     """ # noqa: E501
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
+    starting_elo: StrictInt = Field(alias="startingElo")
+    k_factor: StrictInt = Field(alias="kFactor")
+    scaling_factor: StrictInt = Field(alias="scalingFactor")
     __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
 
     # model_config is inherited from LazyValidatedModel

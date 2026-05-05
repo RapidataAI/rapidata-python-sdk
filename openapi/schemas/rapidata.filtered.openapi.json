@@ -1585,7 +1585,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                  "$ref": "#/components/schemas/QueryAudienceJobsEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -3032,6 +3032,7 @@
         "tags": [
           "Campaign"
         ],
+        "summary": "Exercises the rapid-bag pipeline with a synthetic user profile so the health of\n the campaign monitoring path can be probed externally.",
         "responses": {
           "200": {
             "description": "OK"
@@ -3124,6 +3125,7 @@
         "tags": [
           "Campaign"
         ],
+        "summary": "Triggers a preheat pass for the boost subsystem so warm caches are ready before\n traffic spikes.",
         "responses": {
           "204": {
             "description": "No Content"
@@ -3646,6 +3648,7 @@
         "tags": [
           "ExternalAudience"
         ],
+        "summary": "Queries the cached Kayzen external audiences available for targeting.",
         "parameters": [
           {
             "name": "page",
@@ -3874,6 +3877,7 @@
         "tags": [
           "ExternalAudience"
         ],
+        "summary": "Enqueues a background job that synchronises Kayzen external audiences with the cache.",
         "responses": {
           "202": {
             "description": "Accepted"
@@ -15206,6 +15210,7 @@
         "tags": [
           "Order"
         ],
+        "summary": "Queries orders with filtering and pagination.",
         "parameters": [
           {
             "name": "page",
@@ -20559,12 +20564,14 @@
           "originalSizeBytes": {
             "type": "integer",
             "description": "The original size of the uploaded file in bytes, if available. This may be null if the size could not be determined.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "finalSizeBytes": {
             "type": "integer",
             "description": "The final size of the stored file in bytes after processing (e.g., compression), if available.\n This may be null if the size could not be determined. If compression was applied, this size may be smaller than the original size.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -20598,12 +20605,14 @@
           "originalSizeBytes": {
             "type": "integer",
             "description": "The original size of the uploaded file in bytes, if available. This may be null if the size could not be determined.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "finalSizeBytes": {
             "type": "integer",
             "description": "The final size of the stored file in bytes after processing (e.g., compression), if available.\n This may be smaller than the original size if compression was applied.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -20620,7 +20629,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",
@@ -20699,7 +20709,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "The sort index that controls the serving order of this example within the audience.\n When null, the next sort index is automatically calculated.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "allOf": [
@@ -20739,7 +20750,7 @@
           }
         }
       },
-      "AudienceJobState": {
+      "AudienceJobStatus": {
         "enum": [
           "Submitted",
           "Running",
@@ -20828,17 +20839,20 @@
           "graduationScore": {
             "type": "number",
             "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "demotionScore": {
             "type": "number",
             "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Defaults to null (uses GraduationScore).",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "minimumSizeForActivation": {
             "type": "integer",
             "description": "The minimum number of users required for an audience to be activated.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "logo": {
             "allOf": [
@@ -20851,17 +20865,26 @@
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Defaults to 10. Set to null to disable this exit condition.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
+          },
+          "minResponsesToGraduate": {
+            "type": "integer",
+            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Defaults to null (no minimum — users graduate as soon as the score is reached).",
+            "format": "uint32",
+            "nullable": true
           },
           "dropMinResponses": {
             "type": "integer",
             "description": "Minimum responses before the drop score check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Defaults to 3. Set to null to apply drop score check from the first response.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "dropScore": {
             "type": "number",
             "description": "Score floor - users below this score exit the distilling campaign\n (only after completing DropMinResponses).\n Defaults to 0.2. Set to null to disable this exit condition.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "isDistillingCampaignSticky": {
             "type": "boolean",
@@ -20870,27 +20893,32 @@
           "maxDistillingSessions": {
             "type": "integer",
             "description": "Maximum sessions (rapid retrievals) before user exits the distilling campaign.\n Defaults to null (disabled). Set to a value to enable session-based exit condition.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "inactivityDropDays": {
             "type": "integer",
             "description": "Number of days of inactivity before a distilling user is dropped.\n Defaults to null (disabled).",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRate": {
             "type": "number",
             "description": "Minimum submission rate (responses / sessions) before a user is dropped.\n Defaults to null (disabled).",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "minSessionsForSubmissionRate": {
             "type": "integer",
             "description": "Minimum number of sessions before the submission rate check applies.\n Defaults to null (applies from first session).",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRateGraduated": {
             "type": "number",
             "description": "Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.\n Set a lower value to be more lenient with graduated users.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "distillingRetrievalMode": {
             "allOf": [
@@ -20903,12 +20931,14 @@
           "minDistillingForGlobalBoost": {
             "type": "integer",
             "description": "Minimum distilling users before disabling global boost.\n Defaults to 200. Admin-only override.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "description": "Minimum graduated users before disabling distilling boost.\n Defaults to 100. Admin-only override.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -20939,19 +20969,23 @@
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -21141,12 +21175,14 @@
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "description": "Minimum graduated users before disabling distilling boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minDistillingForGlobalBoost": {
             "type": "integer",
             "description": "Minimum distilling users before disabling global boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "graduationScore": {
             "type": "number",
@@ -21156,47 +21192,56 @@
           "demotionScore": {
             "type": "number",
             "description": "Score below which a graduated user is demoted back to distilling.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "dropMinResponses": {
             "type": "integer",
             "description": "Minimum responses before the drop score check applies.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "dropScore": {
             "type": "number",
             "description": "Score floor - users below this score exit the distilling campaign.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "maxDistillingSessions": {
             "type": "integer",
             "description": "Maximum sessions before user exits the distilling campaign.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "inactivityDropDays": {
             "type": "integer",
             "description": "Number of days of inactivity before a distilling user is dropped.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRate": {
             "type": "number",
             "description": "Minimum submission rate before a user is dropped.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "minSessionsForSubmissionRate": {
             "type": "integer",
             "description": "Minimum number of sessions before the submission rate check applies.",
-            "format": "uint32"
+            "format": "uint32",
+            "nullable": true
           },
           "minSubmissionRateGraduated": {
             "type": "number",
             "description": "Minimum submission rate for graduated users.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "distillingRetrievalMode": {
             "allOf": [
@@ -21217,12 +21262,14 @@
           "randomAdmissionProbability": {
             "type": "number",
             "description": "The probability of admitting a random user to the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "health": {
             "type": "number",
             "description": "The health score of the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "graduated": {
             "type": "integer",
@@ -21675,6 +21722,9 @@
             "$ref": "#/components/schemas/IAudienceFilterCountryAudienceFilter"
           },
           {
+            "$ref": "#/components/schemas/IAudienceFilterDemographicAudienceFilter"
+          },
+          {
             "$ref": "#/components/schemas/IAudienceFilterLanguageAudienceFilter"
           },
           {
@@ -21689,6 +21739,7 @@
           "mapping": {
             "AndFilter": "#/components/schemas/IAudienceFilterAndAudienceFilter",
             "CountryFilter": "#/components/schemas/IAudienceFilterCountryAudienceFilter",
+            "DemographicFilter": "#/components/schemas/IAudienceFilterDemographicAudienceFilter",
             "LanguageFilter": "#/components/schemas/IAudienceFilterLanguageAudienceFilter",
             "NotFilter": "#/components/schemas/IAudienceFilterNotAudienceFilter",
             "OrFilter": "#/components/schemas/IAudienceFilterOrAudienceFilter"
@@ -21728,6 +21779,30 @@
             "type": "string"
           },
           "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IAudienceFilterDemographicAudienceFilter": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
             "type": "array",
             "items": {
               "type": "string"
@@ -22039,11 +22114,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -22067,11 +22144,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -22119,11 +22198,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -22436,7 +22517,60 @@
           "type": "string"
         }
       },
-      "PagedResultOfQueryJobsResult": {
+      "QueryAudienceJobsEndpoint_Output": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The unique identifier of the job."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the job."
+          },
+          "definitionId": {
+            "type": "string",
+            "description": "The identifier of the job definition."
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The identifier of the audience the job belongs to."
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "description": "The revision number of the job definition.",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The identifier of the pipeline executing the job."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobStatus"
+              }
+            ],
+            "description": "The current status of the job."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the job was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryAudienceJobsEndpoint_PagedResultOfOutput": {
         "required": [
           "total",
           "page",
@@ -22460,7 +22594,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/QueryJobsResult"
+              "$ref": "#/components/schemas/QueryAudienceJobsEndpoint_Output"
             }
           },
           "totalPages": {
@@ -22545,12 +22679,14 @@
           "randomAdmissionProbability": {
             "type": "number",
             "description": "The probability of admitting a random user to the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "health": {
             "type": "number",
             "description": "The health score of the audience.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "graduated": {
             "type": "integer",
@@ -22726,47 +22862,6 @@
           }
         }
       },
-      "QueryJobsResult": {
-        "required": [
-          "jobId",
-          "name",
-          "definitionId",
-          "audienceId",
-          "revisionNumber",
-          "pipelineId",
-          "status",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "jobId": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "definitionId": {
-            "type": "string"
-          },
-          "audienceId": {
-            "type": "string"
-          },
-          "revisionNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pipelineId": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/AudienceJobState"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "RecreateExternalAudiencesEndpoint_Input": {
         "required": [
           "recreateAll"
@@ -22846,6 +22941,12 @@
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Set to null to disable this exit condition.",
+            "format": "uint32",
+            "nullable": true
+          },
+          "minResponsesToGraduate": {
+            "type": "integer",
+            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Set to null to allow graduation as soon as the score is reached.",
             "format": "uint32",
             "nullable": true
           },
@@ -22979,12 +23080,14 @@
           "minDistillingForGlobalBoost": {
             "type": "integer",
             "description": "Minimum number of distilling users required to activate global boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
             "description": "Minimum number of graduated users required to activate distilling boost.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -23036,11 +23139,13 @@
           },
           "minAutoAdjustLevel": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "maxAutoAdjustLevel": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "languageBoosts": {
             "allOf": [
@@ -23130,7 +23235,8 @@
           "level": {
             "type": "integer",
             "description": "The boost level. Takes precedence over IsActive when set.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -23288,7 +23394,8 @@
           "manualOverrideLevel": {
             "type": "integer",
             "description": "The manual override level, if manual mode is active.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "globalBoost": {
             "allOf": [
@@ -24107,7 +24214,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -24184,7 +24292,8 @@
           },
           "probability": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "maxRapids": {
             "type": "integer",
@@ -24237,7 +24346,8 @@
           },
           "amount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "effortBudget": {
             "type": "integer",
@@ -24248,7 +24358,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -24309,11 +24420,13 @@
           },
           "amount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "effortBudget": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -24422,7 +24535,8 @@
           "count": {
             "type": "integer",
             "description": "The number of users in the audience.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -24465,7 +24579,8 @@
           "level": {
             "type": "integer",
             "description": "The global boost level. Null disables manual mode and returns to automatic.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -24629,7 +24744,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "The sort index represents the order of the datapoint in the dataset.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "group": {
             "type": "string",
@@ -24763,7 +24879,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "An optional upload index used to force a certain order.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -24833,7 +24950,8 @@
           },
           "sortIndex": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "asset": {
             "$ref": "#/components/schemas/IAssetModel"
@@ -24978,37 +25096,44 @@
           "startingElo": {
             "type": "integer",
             "description": "Initial Elo rating for new items. Defaults to 1200.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses per comparison.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "serveResponses": {
             "type": "integer",
             "description": "Number of accepted responses per rapid at which to stop serving. When set, must be less than or equal to MaxResponses. Null defaults to MaxResponses.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "serveToResponseRatio": {
             "type": "number",
             "description": "Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "serveTimeoutSeconds": {
             "type": "integer",
             "description": "Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minResponses": {
             "type": "integer",
             "description": "Minimum number of responses per comparison. Defaults to 20.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "responsesRequired": {
             "type": "integer",
             "description": "Deprecated. Use MaxResponses instead.",
             "format": "int32",
+            "nullable": true,
             "deprecated": true
           },
           "featureFlags": {
@@ -25026,37 +25151,44 @@
           "targetResponseCount": {
             "type": "integer",
             "description": "Target average response count per completed item. Enables PID control when set.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidProportionalGain": {
             "type": "number",
             "description": "PID proportional gain. Defaults to 0.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidIntegralGain": {
             "type": "number",
             "description": "PID integral gain. Defaults to 0.003.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidDerivativeGain": {
             "type": "number",
             "description": "PID derivative gain. Defaults to 0.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidOutputOffset": {
             "type": "number",
             "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point. Defaults to 25.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "pidMinSessionsPerMinute": {
             "type": "integer",
             "description": "Minimum sessions per minute the PID can set. Defaults to 20.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidMaxSessionsPerMinute": {
             "type": "integer",
             "description": "Maximum sessions per minute the PID can set. Defaults to 50.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidBatchMode": {
             "allOf": [
@@ -25069,7 +25201,8 @@
           "drainDurationSeconds": {
             "type": "integer",
             "description": "Duration in seconds for draining flow items. Defaults to 40.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -25103,12 +25236,14 @@
           "timeToLiveInSeconds": {
             "type": "integer",
             "description": "Optional time-to-live in seconds before the flow item expires.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "drainDurationInSeconds": {
             "type": "integer",
             "description": "Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -25473,6 +25608,7 @@
             "$ref": "#/components/schemas/IFlowModelRankingFlowModel"
           }
         ],
+        "description": "A flow definition exposed over the API, identified by a discriminator.\n Implementations describe the flow's type-specific configuration.",
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
@@ -25543,7 +25679,8 @@
           "targetResponseCount": {
             "type": "integer",
             "description": "Target average response count per completed item. Enables PID-based automatic rate control when set. Null disables PID.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "pidProportionalGain": {
             "type": "number",
@@ -25586,7 +25723,8 @@
           "serveTimeoutSeconds": {
             "type": "integer",
             "description": "Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "drainDurationSeconds": {
             "type": "integer",
@@ -25596,12 +25734,14 @@
           "serveToResponseRatio": {
             "type": "number",
             "description": "Ratio of serves to responses used to calculate how many tasks to serve per expected response.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "globalBoostLevel": {
             "type": "integer",
             "description": "Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.",
             "format": "int32",
+            "nullable": true,
             "deprecated": true
           },
           "audienceBoosts": {
@@ -25653,12 +25793,14 @@
           "maxResponses": {
             "type": "integer",
             "description": "Maximum number of responses a ranking item can receive before being removed from active ranking. Null allows unlimited responses.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "serveResponses": {
             "type": "integer",
             "description": "Number of accepted responses per rapid at which to stop serving. Null defaults to MaxResponses.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "allOf": [
@@ -25707,7 +25849,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",
@@ -26031,11 +26174,13 @@
           },
           "client_id_issued_at": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "client_secret_expires_at": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "redirect_uris": {
             "type": "array",
@@ -26587,7 +26732,8 @@
           "expiresIn": {
             "type": "integer",
             "description": "The lifetime of the access token, in seconds.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "refreshToken": {
             "type": "string",
@@ -26808,12 +26954,14 @@
           "responseBudget": {
             "type": "integer",
             "description": "Total amount of responses that get collected per run.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minResponses": {
             "type": "integer",
             "description": "The minimum amount of responses that need to be collected per comparison.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "isInversed": {
             "type": "boolean",
@@ -27180,7 +27328,8 @@
           },
           "score": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "wins": {
             "type": "number",
@@ -27296,7 +27445,8 @@
           },
           "score": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "wins": {
             "type": "number",
@@ -28148,7 +28298,8 @@
           "score": {
             "type": "number",
             "description": "The calculated score, or null if not yet computed.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "wins": {
             "type": "number",
@@ -28601,7 +28752,8 @@
           },
           "score": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "wins": {
             "type": "number",
@@ -28662,7 +28814,8 @@
           "score": {
             "type": "number",
             "description": "The calculated score, or null if not yet computed.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "wins": {
             "type": "number",
@@ -28969,7 +29122,7 @@
           null
         ]
       },
-      "Category": {
+      "AttachCategoryRapidBlueprint_Category": {
         "required": [
           "label",
           "value"
@@ -28983,6 +29136,15 @@
             "type": "string"
           }
         }
+      },
+      "AudienceJobState": {
+        "enum": [
+          "Submitted",
+          "Running",
+          "Completed",
+          "Failed",
+          "ManualApproval"
+        ]
       },
       "CloneOrderEndpoint_Input": {
         "required": [
@@ -29214,7 +29376,8 @@
           "revisionNumber": {
             "type": "integer",
             "description": "The revision number to use. If not specified, the latest revision will be used.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "name": {
             "type": "string",
@@ -29273,14 +29436,10 @@
           "featureFlags": {
             "allOf": [
               {
-                "allOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/FeatureFlag"
-                    }
-                  }
-                ]
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               }
             ],
             "description": "The feature flags. Deprecated: use RapidFeatureFlags instead.\n If not provided, inherits from the previous revision.",
@@ -29444,7 +29603,8 @@
           "priority": {
             "type": "integer",
             "description": "The priority is used to prioritize over other orders.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "stickyState": {
             "allOf": [
@@ -29526,7 +29686,8 @@
           "maxIterations": {
             "type": "integer",
             "description": "The maximum number of times a user is allowed to see the same rapid.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "precedingOrderId": {
             "type": "string",
@@ -30080,7 +30241,8 @@
           },
           "batchSize": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -30498,7 +30660,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Category"
+              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
             }
           },
           "possibleCategories": {
@@ -30975,7 +31137,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -30992,7 +31155,8 @@
           },
           "amount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "effortBudget": {
             "type": "integer",
@@ -31003,7 +31167,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -31940,6 +32105,11 @@
         }
       },
       "EloRankingConfig": {
+        "required": [
+          "startingElo",
+          "kFactor",
+          "scalingFactor"
+        ],
         "type": "object",
         "properties": {
           "startingElo": {
@@ -32570,6 +32740,8 @@
       },
       "IPairMakerConfigOnlinePairMakerConfig": {
         "required": [
+          "randomMatchesRatio",
+          "totalComparisonBudget",
           "_t"
         ],
         "properties": {
@@ -32612,6 +32784,7 @@
       },
       "IRankingConfigBradleyTerryRankingConfig": {
         "required": [
+          "startingScore",
           "_t"
         ],
         "properties": {
@@ -32629,6 +32802,9 @@
       },
       "IRankingConfigEloRankingConfig": {
         "required": [
+          "startingElo",
+          "kFactor",
+          "scalingFactor",
           "_t"
         ],
         "properties": {
@@ -32687,6 +32863,7 @@
       },
       "IRefereeConfigBudgetRefereeConfig": {
         "required": [
+          "totalBudget",
           "_t"
         ],
         "properties": {
@@ -32702,12 +32879,14 @@
           },
           "totalServeBudget": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
       "IRefereeConfigNaiveRefereeConfig": {
         "required": [
+          "guessesRequired",
           "_t"
         ],
         "properties": {
@@ -32738,6 +32917,8 @@
       },
       "IRefereeConfigProbabilisticAttachCategoryRefereeConfig": {
         "required": [
+          "threshold",
+          "maxVotes",
           "_t"
         ],
         "properties": {
@@ -32759,6 +32940,8 @@
       },
       "IRefereeConfigQuorumRefereeConfig": {
         "required": [
+          "maxVotes",
+          "threshold",
           "_t"
         ],
         "properties": {
@@ -32811,6 +32994,7 @@
         "required": [
           "validationSetId",
           "referee",
+          "shouldAcceptIncorrect",
           "_t"
         ],
         "properties": {
@@ -32843,6 +33027,7 @@
           "criteria",
           "referee",
           "targetCountryCodes",
+          "maxParallelism",
           "pairMakerConfig",
           "_t"
         ],
@@ -32852,20 +33037,6 @@
               "GroupedRankingWorkflowConfig"
             ],
             "type": "string"
-          },
-          "contexts": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "contextAssets": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/IAsset"
-            },
-            "nullable": true
           },
           "criteria": {
             "type": "string"
@@ -32878,6 +33049,22 @@
             "items": {
               "type": "string"
             }
+          },
+          "contexts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "deprecated": true
+          },
+          "contextAssets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IAsset"
+            },
+            "nullable": true,
+            "deprecated": true
           },
           "maxParallelism": {
             "type": "integer",
@@ -32894,14 +33081,12 @@
             ]
           },
           "eloConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/EloRankingConfig"
               }
-            ]
+            ],
+            "deprecated": true
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
@@ -32960,14 +33145,12 @@
             ]
           },
           "eloConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/EloRankingConfig"
               }
-            ]
+            ],
+            "deprecated": true
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
@@ -33002,7 +33185,8 @@
           },
           "batchSize": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -33095,19 +33279,23 @@
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -33972,7 +34160,8 @@
           },
           "serveThreshold": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -34369,11 +34558,13 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -34418,19 +34609,23 @@
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -34502,11 +34697,13 @@
         "properties": {
           "x": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "y": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -34602,7 +34799,8 @@
           "randomCorrectProbability": {
             "type": "number",
             "description": "The probability of a random correct answer.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "key": {
             "type": "string",
@@ -35166,7 +35364,8 @@
           "randomCorrectProbability": {
             "type": "number",
             "description": "The probability for an answer to be correct when randomly guessing.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "explanation": {
             "type": "string",
@@ -35423,7 +35622,8 @@
           "randomCorrectProbability": {
             "type": "number",
             "description": "The probability of a random correct answer.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "state": {
             "allOf": [
@@ -35744,19 +35944,23 @@
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -35992,7 +36196,8 @@
           "decisiveness": {
             "type": "number",
             "description": "The decisiveness of the rapid.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -36210,7 +36415,8 @@
           "decisiveness": {
             "type": "number",
             "description": "The decisiveness of the rapid.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -37026,7 +37232,8 @@
           },
           "totalServeBudget": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -37648,11 +37855,13 @@
         "properties": {
           "x": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "y": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },

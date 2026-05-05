@@ -5483,7 +5483,7 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> QueryOrdersEndpointPagedResultOfOutput:
-        """orders_get
+        """Queries orders with filtering and pagination.
 
 
         :param page: The 1-based page index.
@@ -5580,7 +5580,7 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[QueryOrdersEndpointPagedResultOfOutput]:
-        """orders_get
+        """Queries orders with filtering and pagination.
 
 
         :param page: The 1-based page index.
@@ -5677,7 +5677,7 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """orders_get
+        """Queries orders with filtering and pagination.
 
 
         :param page: The 1-based page index.

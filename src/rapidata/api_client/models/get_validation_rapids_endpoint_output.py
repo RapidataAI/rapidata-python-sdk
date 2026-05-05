@@ -103,6 +103,11 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
 
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
+
         return _dict
 
     @classmethod

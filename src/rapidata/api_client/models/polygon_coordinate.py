@@ -67,6 +67,16 @@ class PolygonCoordinate(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if x (nullable) is None
+        # and model_fields_set contains the field
+        if self.x is None and "x" in self.model_fields_set:
+            _dict['x'] = None
+
+        # set to None if y (nullable) is None
+        # and model_fields_set contains the field
+        if self.y is None and "y" in self.model_fields_set:
+            _dict['y'] = None
+
         return _dict
 
     @classmethod

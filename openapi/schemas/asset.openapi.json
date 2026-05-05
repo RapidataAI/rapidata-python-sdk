@@ -608,12 +608,14 @@
           "originalSizeBytes": {
             "type": "integer",
             "description": "The original size of the uploaded file in bytes, if available. This may be null if the size could not be determined.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "finalSizeBytes": {
             "type": "integer",
             "description": "The final size of the stored file in bytes after processing (e.g., compression), if available.\n This may be null if the size could not be determined. If compression was applied, this size may be smaller than the original size.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -647,12 +649,14 @@
           "originalSizeBytes": {
             "type": "integer",
             "description": "The original size of the uploaded file in bytes, if available. This may be null if the size could not be determined.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "finalSizeBytes": {
             "type": "integer",
             "description": "The final size of the stored file in bytes after processing (e.g., compression), if available.\n This may be smaller than the original size if compression was applied.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -669,7 +673,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

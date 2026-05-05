@@ -1188,11 +1188,13 @@
           },
           "client_id_issued_at": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "client_secret_expires_at": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "redirect_uris": {
             "type": "array",
@@ -1744,7 +1746,8 @@
           "expiresIn": {
             "type": "integer",
             "description": "The lifetime of the access token, in seconds.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "refreshToken": {
             "type": "string",
@@ -1846,7 +1849,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

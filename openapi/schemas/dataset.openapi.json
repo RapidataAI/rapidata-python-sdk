@@ -653,7 +653,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "The sort index represents the order of the datapoint in the dataset.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "group": {
             "type": "string",
@@ -795,7 +796,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "An optional upload index used to force a certain order.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -865,7 +867,8 @@
           },
           "sortIndex": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "asset": {
             "$ref": "#/components/schemas/IAssetModel"
@@ -1537,7 +1540,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

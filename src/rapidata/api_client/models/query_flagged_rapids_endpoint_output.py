@@ -44,7 +44,7 @@ class QueryFlaggedRapidsEndpointOutput(LazyValidatedModel):
     should_accept_incorrect: StrictBool = Field(description="Whether the rapid should accept incorrect answers.", alias="shouldAcceptIncorrect")
     truth: IValidationTruthModel = Field(description="The optional validation truth of the rapid.")
     explanation: Optional[StrictStr] = Field(description="The optional explanation shown when users answer incorrectly.")
-    random_correct_probability: Union[StrictFloat, StrictInt] = Field(description="The probability of a random correct answer.", alias="randomCorrectProbability")
+    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(description="The probability of a random correct answer.", alias="randomCorrectProbability")
     key: Optional[StrictStr] = Field(description="An optional key for the rapid.")
     completed_at: Optional[datetime] = Field(description="The timestamp when the rapid was completed.", alias="completedAt")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
@@ -108,6 +108,11 @@ class QueryFlaggedRapidsEndpointOutput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
+
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
 
         # set to None if key (nullable) is None
         # and model_fields_set contains the field
