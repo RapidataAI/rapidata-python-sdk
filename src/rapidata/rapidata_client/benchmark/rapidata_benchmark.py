@@ -594,9 +594,17 @@ class RapidataBenchmark:
                 + Fore.RESET
             )
 
-    def get_overall_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
+    def get_overall_standings(
+        self,
+        tags: Optional[list[str]] = None,
+        leaderboard_ids: Optional[list[str]] = None,
+    ) -> pd.DataFrame:
         """
         Returns an aggregated elo table of all leaderboards in the benchmark.
+
+        Args:
+            tags: Filter standings by these tags. If None, all tags are considered.
+            leaderboard_ids: Filter to only include matchups from these leaderboards. If None, all leaderboards are considered.
         """
         import pandas as pd
 
@@ -604,6 +612,7 @@ class RapidataBenchmark:
             participants = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_get(
                 benchmark_id=self.id,
                 tags=tags,
+                leaderboard_ids=leaderboard_ids,
             )
 
             standings = []
