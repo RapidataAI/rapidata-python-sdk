@@ -75,6 +75,11 @@ class IRefereeConfigModelBudgetRefereeConfigModel(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if total_serve_budget (nullable) is None
+        # and model_fields_set contains the field
+        if self.total_serve_budget is None and "total_serve_budget" in self.model_fields_set:
+            _dict['totalServeBudget'] = None
+
         return _dict
 
     @classmethod

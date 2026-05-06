@@ -94,6 +94,16 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
         if self.benchmark_name is None and "benchmark_name" in self.model_fields_set:
             _dict['benchmarkName'] = None
 
+        # set to None if response_budget (nullable) is None
+        # and model_fields_set contains the field
+        if self.response_budget is None and "response_budget" in self.model_fields_set:
+            _dict['responseBudget'] = None
+
+        # set to None if min_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_responses is None and "min_responses" in self.model_fields_set:
+            _dict['minResponses'] = None
+
         # set to None if audience_id (nullable) is None
         # and model_fields_set contains the field
         if self.audience_id is None and "audience_id" in self.model_fields_set:

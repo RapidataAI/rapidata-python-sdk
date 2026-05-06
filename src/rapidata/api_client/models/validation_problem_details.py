@@ -81,6 +81,11 @@ class ValidationProblemDetails(LazyValidatedModel):
         if self.title is None and "title" in self.model_fields_set:
             _dict['title'] = None
 
+        # set to None if status (nullable) is None
+        # and model_fields_set contains the field
+        if self.status is None and "status" in self.model_fields_set:
+            _dict['status'] = None
+
         # set to None if detail (nullable) is None
         # and model_fields_set contains the field
         if self.detail is None and "detail" in self.model_fields_set:

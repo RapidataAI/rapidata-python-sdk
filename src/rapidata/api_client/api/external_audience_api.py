@@ -62,7 +62,7 @@ class ExternalAudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> QueryExternalAudiencesEndpointPagedResultOfOutput:
-        """campaign_external_audiences_get
+        """Queries the cached Kayzen external audiences available for targeting.
 
 
         :param page: The 1-based page index.
@@ -151,7 +151,7 @@ class ExternalAudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[QueryExternalAudiencesEndpointPagedResultOfOutput]:
-        """campaign_external_audiences_get
+        """Queries the cached Kayzen external audiences available for targeting.
 
 
         :param page: The 1-based page index.
@@ -240,7 +240,7 @@ class ExternalAudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """campaign_external_audiences_get
+        """Queries the cached Kayzen external audiences available for targeting.
 
 
         :param page: The 1-based page index.
@@ -425,7 +425,7 @@ class ExternalAudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """campaign_external_audiences_sync_post
+        """Enqueues a background job that synchronises Kayzen external audiences with the cache.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -490,7 +490,7 @@ class ExternalAudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """campaign_external_audiences_sync_post
+        """Enqueues a background job that synchronises Kayzen external audiences with the cache.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -555,7 +555,7 @@ class ExternalAudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """campaign_external_audiences_sync_post
+        """Enqueues a background job that synchronises Kayzen external audiences with the cache.
 
 
         :param _request_timeout: timeout setting for this request. If one

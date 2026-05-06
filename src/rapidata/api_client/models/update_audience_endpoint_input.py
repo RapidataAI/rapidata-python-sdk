@@ -40,6 +40,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
     graduation_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The score used to determine whether a user graduates from the distilling campaign.", alias="graduationScore")
     demotion_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Score below which a graduated user is demoted back to distilling.  Must be less than or equal to GraduationScore. Set to null to use GraduationScore.", alias="demotionScore")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Set to null to disable this exit condition.", alias="maxDistillingResponses")
+    min_responses_to_graduate: Optional[StrictInt] = Field(default=None, description="Minimum responses required before a user can graduate into the audience.  Even if the user's score is at or above the graduation threshold, they will  remain in distilling until they have answered at least this many responses.  Must be strictly less than MaxDistillingResponses when both are set.  Set to null to allow graduation as soon as the score is reached.", alias="minResponsesToGraduate")
     drop_min_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the drop score check applies.  Users need at least this many responses before they can be kicked out for low score.  Set to null to apply drop score check from the first response.", alias="dropMinResponses")
     drop_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Score floor - users below this score exit the distilling campaign  (only after completing DropMinResponses).  Set to null to disable this exit condition.", alias="dropScore")
     max_distilling_sessions: Optional[StrictInt] = Field(default=None, description="Maximum sessions (rapid retrievals) before user exits the distilling campaign.  Set to a value to enable session-based exit condition.", alias="maxDistillingSessions")
@@ -48,7 +49,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Set to null to apply from the first session.", alias="minSessionsForSubmissionRate")
     min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.  Set a lower value to be more lenient with graduated users.", alias="minSubmissionRateGraduated")
     distilling_retrieval_mode: Optional[RetrievalMode] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationScore", "demotionScore", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationScore", "demotionScore", "maxDistillingResponses", "minResponsesToGraduate", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -125,6 +126,11 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
         if self.max_distilling_responses is None and "max_distilling_responses" in self.model_fields_set:
             _dict['maxDistillingResponses'] = None
 
+        # set to None if min_responses_to_graduate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_responses_to_graduate is None and "min_responses_to_graduate" in self.model_fields_set:
+            _dict['minResponsesToGraduate'] = None
+
         # set to None if drop_min_responses (nullable) is None
         # and model_fields_set contains the field
         if self.drop_min_responses is None and "drop_min_responses" in self.model_fields_set:
@@ -181,6 +187,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
             "graduationScore": obj.get("graduationScore"),
             "demotionScore": obj.get("demotionScore"),
             "maxDistillingResponses": obj.get("maxDistillingResponses"),
+            "minResponsesToGraduate": obj.get("minResponsesToGraduate"),
             "dropMinResponses": obj.get("dropMinResponses"),
             "dropScore": obj.get("dropScore"),
             "maxDistillingSessions": obj.get("maxDistillingSessions"),

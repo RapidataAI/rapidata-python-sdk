@@ -70,6 +70,16 @@ class UploadFileEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if original_size_bytes (nullable) is None
+        # and model_fields_set contains the field
+        if self.original_size_bytes is None and "original_size_bytes" in self.model_fields_set:
+            _dict['originalSizeBytes'] = None
+
+        # set to None if final_size_bytes (nullable) is None
+        # and model_fields_set contains the field
+        if self.final_size_bytes is None and "final_size_bytes" in self.model_fields_set:
+            _dict['finalSizeBytes'] = None
+
         return _dict
 
     @classmethod

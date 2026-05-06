@@ -33,7 +33,7 @@ class GetCombinedLeaderboardStandingsEndpointOutputItem(LazyValidatedModel):
     id: StrictStr
     name: StrictStr
     status: StandingStatus
-    score: Union[StrictFloat, StrictInt]
+    score: Optional[Union[StrictFloat, StrictInt]]
     wins: Union[StrictFloat, StrictInt]
     total_matches: Union[StrictFloat, StrictInt] = Field(alias="totalMatches")
     is_disabled: StrictBool = Field(alias="isDisabled")
@@ -78,6 +78,11 @@ class GetCombinedLeaderboardStandingsEndpointOutputItem(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of confidence_interval
         if self.confidence_interval:
             _dict['confidenceInterval'] = self.confidence_interval.to_dict()
+        # set to None if score (nullable) is None
+        # and model_fields_set contains the field
+        if self.score is None and "score" in self.model_fields_set:
+            _dict['score'] = None
+
         # set to None if confidence_interval (nullable) is None
         # and model_fields_set contains the field
         if self.confidence_interval is None and "confidence_interval" in self.model_fields_set:

@@ -84,6 +84,11 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
 
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         # set to None if group (nullable) is None
         # and model_fields_set contains the field
         if self.group is None and "group" in self.model_fields_set:

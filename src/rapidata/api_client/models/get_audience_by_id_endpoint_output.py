@@ -117,6 +117,71 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
         if self.logo is None and "logo" in self.model_fields_set:
             _dict['logo'] = None
 
+        # set to None if min_graduated_for_distilling_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_graduated_for_distilling_boost is None and "min_graduated_for_distilling_boost" in self.model_fields_set:
+            _dict['minGraduatedForDistillingBoost'] = None
+
+        # set to None if min_distilling_for_global_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_distilling_for_global_boost is None and "min_distilling_for_global_boost" in self.model_fields_set:
+            _dict['minDistillingForGlobalBoost'] = None
+
+        # set to None if demotion_score (nullable) is None
+        # and model_fields_set contains the field
+        if self.demotion_score is None and "demotion_score" in self.model_fields_set:
+            _dict['demotionScore'] = None
+
+        # set to None if max_distilling_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_distilling_responses is None and "max_distilling_responses" in self.model_fields_set:
+            _dict['maxDistillingResponses'] = None
+
+        # set to None if drop_min_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.drop_min_responses is None and "drop_min_responses" in self.model_fields_set:
+            _dict['dropMinResponses'] = None
+
+        # set to None if drop_score (nullable) is None
+        # and model_fields_set contains the field
+        if self.drop_score is None and "drop_score" in self.model_fields_set:
+            _dict['dropScore'] = None
+
+        # set to None if max_distilling_sessions (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_distilling_sessions is None and "max_distilling_sessions" in self.model_fields_set:
+            _dict['maxDistillingSessions'] = None
+
+        # set to None if inactivity_drop_days (nullable) is None
+        # and model_fields_set contains the field
+        if self.inactivity_drop_days is None and "inactivity_drop_days" in self.model_fields_set:
+            _dict['inactivityDropDays'] = None
+
+        # set to None if min_submission_rate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_submission_rate is None and "min_submission_rate" in self.model_fields_set:
+            _dict['minSubmissionRate'] = None
+
+        # set to None if min_sessions_for_submission_rate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_sessions_for_submission_rate is None and "min_sessions_for_submission_rate" in self.model_fields_set:
+            _dict['minSessionsForSubmissionRate'] = None
+
+        # set to None if min_submission_rate_graduated (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_submission_rate_graduated is None and "min_submission_rate_graduated" in self.model_fields_set:
+            _dict['minSubmissionRateGraduated'] = None
+
+        # set to None if random_admission_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_admission_probability is None and "random_admission_probability" in self.model_fields_set:
+            _dict['randomAdmissionProbability'] = None
+
+        # set to None if health (nullable) is None
+        # and model_fields_set contains the field
+        if self.health is None and "health" in self.model_fields_set:
+            _dict['health'] = None
+
         return _dict
 
     @classmethod

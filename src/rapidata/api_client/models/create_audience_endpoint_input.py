@@ -39,6 +39,7 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, description="The minimum number of users required for an audience to be activated.", alias="minimumSizeForActivation")
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An optional logo image for the audience. Must be an existing image asset.")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Defaults to 10. Set to null to disable this exit condition.", alias="maxDistillingResponses")
+    min_responses_to_graduate: Optional[StrictInt] = Field(default=None, description="Minimum responses required before a user can graduate into the audience.  Even if the user's score is at or above the graduation threshold, they will  remain in distilling until they have answered at least this many responses.  Must be strictly less than MaxDistillingResponses when both are set.  Defaults to null (no minimum — users graduate as soon as the score is reached).", alias="minResponsesToGraduate")
     drop_min_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the drop score check applies.  Users need at least this many responses before they can be kicked out for low score.  Defaults to 3. Set to null to apply drop score check from the first response.", alias="dropMinResponses")
     drop_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Score floor - users below this score exit the distilling campaign  (only after completing DropMinResponses).  Defaults to 0.2. Set to null to disable this exit condition.", alias="dropScore")
     is_distilling_campaign_sticky: Optional[StrictBool] = Field(default=None, description="Whether the distilling campaign should be sticky (users stay until filters don't match).  Defaults to true (Temporary sticky).", alias="isDistillingCampaignSticky")
@@ -50,7 +51,7 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
     distilling_retrieval_mode: Optional[RetrievalMode] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.  Defaults to Shuffled.", alias="distillingRetrievalMode")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  Defaults to 200. Admin-only override.", alias="minDistillingForGlobalBoost")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  Defaults to 100. Admin-only override.", alias="minGraduatedForDistillingBoost")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "graduationScore", "demotionScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "dropMinResponses", "dropScore", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "graduationScore", "demotionScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minResponsesToGraduate", "dropMinResponses", "dropScore", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -107,6 +108,76 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
         if self.filters is None and "filters" in self.model_fields_set:
             _dict['filters'] = None
 
+        # set to None if graduation_score (nullable) is None
+        # and model_fields_set contains the field
+        if self.graduation_score is None and "graduation_score" in self.model_fields_set:
+            _dict['graduationScore'] = None
+
+        # set to None if demotion_score (nullable) is None
+        # and model_fields_set contains the field
+        if self.demotion_score is None and "demotion_score" in self.model_fields_set:
+            _dict['demotionScore'] = None
+
+        # set to None if minimum_size_for_activation (nullable) is None
+        # and model_fields_set contains the field
+        if self.minimum_size_for_activation is None and "minimum_size_for_activation" in self.model_fields_set:
+            _dict['minimumSizeForActivation'] = None
+
+        # set to None if max_distilling_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_distilling_responses is None and "max_distilling_responses" in self.model_fields_set:
+            _dict['maxDistillingResponses'] = None
+
+        # set to None if min_responses_to_graduate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_responses_to_graduate is None and "min_responses_to_graduate" in self.model_fields_set:
+            _dict['minResponsesToGraduate'] = None
+
+        # set to None if drop_min_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.drop_min_responses is None and "drop_min_responses" in self.model_fields_set:
+            _dict['dropMinResponses'] = None
+
+        # set to None if drop_score (nullable) is None
+        # and model_fields_set contains the field
+        if self.drop_score is None and "drop_score" in self.model_fields_set:
+            _dict['dropScore'] = None
+
+        # set to None if max_distilling_sessions (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_distilling_sessions is None and "max_distilling_sessions" in self.model_fields_set:
+            _dict['maxDistillingSessions'] = None
+
+        # set to None if inactivity_drop_days (nullable) is None
+        # and model_fields_set contains the field
+        if self.inactivity_drop_days is None and "inactivity_drop_days" in self.model_fields_set:
+            _dict['inactivityDropDays'] = None
+
+        # set to None if min_submission_rate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_submission_rate is None and "min_submission_rate" in self.model_fields_set:
+            _dict['minSubmissionRate'] = None
+
+        # set to None if min_sessions_for_submission_rate (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_sessions_for_submission_rate is None and "min_sessions_for_submission_rate" in self.model_fields_set:
+            _dict['minSessionsForSubmissionRate'] = None
+
+        # set to None if min_submission_rate_graduated (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_submission_rate_graduated is None and "min_submission_rate_graduated" in self.model_fields_set:
+            _dict['minSubmissionRateGraduated'] = None
+
+        # set to None if min_distilling_for_global_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_distilling_for_global_boost is None and "min_distilling_for_global_boost" in self.model_fields_set:
+            _dict['minDistillingForGlobalBoost'] = None
+
+        # set to None if min_graduated_for_distilling_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_graduated_for_distilling_boost is None and "min_graduated_for_distilling_boost" in self.model_fields_set:
+            _dict['minGraduatedForDistillingBoost'] = None
+
         return _dict
 
     @classmethod
@@ -127,6 +198,7 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
             "minimumSizeForActivation": obj.get("minimumSizeForActivation"),
             "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "maxDistillingResponses": obj.get("maxDistillingResponses"),
+            "minResponsesToGraduate": obj.get("minResponsesToGraduate"),
             "dropMinResponses": obj.get("dropMinResponses"),
             "dropScore": obj.get("dropScore"),
             "isDistillingCampaignSticky": obj.get("isDistillingCampaignSticky"),

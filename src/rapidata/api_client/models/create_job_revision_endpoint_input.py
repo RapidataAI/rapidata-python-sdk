@@ -35,7 +35,7 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
     workflow: Optional[IOrderWorkflowInputModel] = Field(default=None, description="The workflow configuration. If not provided, inherits from the previous revision.  Must be provided together with Referee if either is specified.")
     referee: Optional[IRefereeModel] = Field(default=None, description="The referee configuration. If not provided, inherits from the previous revision.  Must be provided together with Workflow if either is specified.")
     dataset_id: Optional[StrictStr] = Field(default=None, description="The dataset id. If not provided, inherits from the previous revision.", alias="datasetId")
-    feature_flags: Optional[Any] = Field(default=None, description="The feature flags. Deprecated: use RapidFeatureFlags instead.  If not provided, inherits from the previous revision.", alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
@@ -82,6 +82,13 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in rapid_feature_flags (list)
         _items = []
         if self.rapid_feature_flags:
@@ -116,7 +123,7 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
             "workflow": IOrderWorkflowInputModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "datasetId": obj.get("datasetId"),
-            "featureFlags": obj.get("featureFlags"),
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
             "aggregatorType": obj.get("aggregatorType")

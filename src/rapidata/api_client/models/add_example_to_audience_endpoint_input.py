@@ -110,6 +110,11 @@ class AddExampleToAudienceEndpointInput(LazyValidatedModel):
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
 
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:

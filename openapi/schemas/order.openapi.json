@@ -2424,6 +2424,7 @@
         "tags": [
           "Order"
         ],
+        "summary": "Queries orders with filtering and pagination.",
         "parameters": [
           {
             "name": "page",
@@ -2991,16 +2992,7 @@
           null
         ]
       },
-      "AudienceJobState": {
-        "enum": [
-          "Submitted",
-          "Running",
-          "Completed",
-          "Failed",
-          "ManualApproval"
-        ]
-      },
-      "Category": {
+      "AttachCategoryRapidBlueprint_Category": {
         "required": [
           "label",
           "value"
@@ -3014,6 +3006,15 @@
             "type": "string"
           }
         }
+      },
+      "AudienceJobState": {
+        "enum": [
+          "Submitted",
+          "Running",
+          "Completed",
+          "Failed",
+          "ManualApproval"
+        ]
       },
       "CloneOrderEndpoint_Input": {
         "required": [
@@ -3255,7 +3256,8 @@
           "revisionNumber": {
             "type": "integer",
             "description": "The revision number to use. If not specified, the latest revision will be used.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "name": {
             "type": "string",
@@ -3314,14 +3316,10 @@
           "featureFlags": {
             "allOf": [
               {
-                "allOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/FeatureFlag"
-                    }
-                  }
-                ]
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
               }
             ],
             "description": "The feature flags. Deprecated: use RapidFeatureFlags instead.\n If not provided, inherits from the previous revision.",
@@ -3485,7 +3483,8 @@
           "priority": {
             "type": "integer",
             "description": "The priority is used to prioritize over other orders.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "stickyState": {
             "allOf": [
@@ -3567,7 +3566,8 @@
           "maxIterations": {
             "type": "integer",
             "description": "The maximum number of times a user is allowed to see the same rapid.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "precedingOrderId": {
             "type": "string",
@@ -4303,7 +4303,8 @@
           },
           "batchSize": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -4721,7 +4722,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Category"
+              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
             }
           },
           "possibleCategories": {
@@ -5198,7 +5199,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -5215,7 +5217,8 @@
           },
           "amount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "effortBudget": {
             "type": "integer",
@@ -5226,7 +5229,8 @@
           },
           "maxIterations": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -6202,7 +6206,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

@@ -70,6 +70,11 @@ class CreateJobEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if revision_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.revision_number is None and "revision_number" in self.model_fields_set:
+            _dict['revisionNumber'] = None
+
         # set to None if name (nullable) is None
         # and model_fields_set contains the field
         if self.name is None and "name" in self.model_fields_set:

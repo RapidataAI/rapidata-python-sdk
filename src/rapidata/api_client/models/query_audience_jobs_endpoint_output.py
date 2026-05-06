@@ -17,21 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.audience_job_status import AudienceJobStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
+class QueryAudienceJobsEndpointOutput(LazyValidatedModel):
     """
-    QueryExternalAudiencesEndpointOutput
+    QueryAudienceJobsEndpointOutput
     """ # noqa: E501
-    id: StrictInt = Field(description="The external audience identifier.")
-    name: StrictStr = Field(description="The name of the external audience.")
-    count: Optional[StrictInt] = Field(default=None, description="The number of users in the audience.")
-    __properties: ClassVar[List[str]] = ["id", "name", "count"]
+    job_id: StrictStr = Field(description="The unique identifier of the job.", alias="jobId")
+    name: StrictStr = Field(description="The name of the job.")
+    definition_id: StrictStr = Field(description="The identifier of the job definition.", alias="definitionId")
+    audience_id: StrictStr = Field(description="The identifier of the audience the job belongs to.", alias="audienceId")
+    revision_number: StrictInt = Field(description="The revision number of the job definition.", alias="revisionNumber")
+    pipeline_id: StrictStr = Field(description="The identifier of the pipeline executing the job.", alias="pipelineId")
+    status: AudienceJobStatus = Field(description="The current status of the job.")
+    created_at: datetime = Field(description="The timestamp when the job was created.", alias="createdAt")
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +54,7 @@ class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryExternalAudiencesEndpointOutput from a JSON string"""
+        """Create an instance of QueryAudienceJobsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,16 +75,11 @@ class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if count (nullable) is None
-        # and model_fields_set contains the field
-        if self.count is None and "count" in self.model_fields_set:
-            _dict['count'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryExternalAudiencesEndpointOutput from a dict"""
+        """Create an instance of QueryAudienceJobsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -85,9 +87,14 @@ class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
+            "jobId": obj.get("jobId"),
             "name": obj.get("name"),
-            "count": obj.get("count")
+            "definitionId": obj.get("definitionId"),
+            "audienceId": obj.get("audienceId"),
+            "revisionNumber": obj.get("revisionNumber"),
+            "pipelineId": obj.get("pipelineId"),
+            "status": obj.get("status"),
+            "createdAt": obj.get("createdAt")
         }
         try:
             _obj = cls.model_validate(_data)

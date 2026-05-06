@@ -1041,19 +1041,23 @@
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -1297,7 +1301,8 @@
           "decisiveness": {
             "type": "number",
             "description": "The decisiveness of the rapid.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -1515,7 +1520,8 @@
           "decisiveness": {
             "type": "number",
             "description": "The decisiveness of the rapid.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -2770,7 +2776,8 @@
           },
           "totalServeBudget": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -3398,11 +3405,13 @@
         "properties": {
           "x": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "y": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -3514,7 +3523,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

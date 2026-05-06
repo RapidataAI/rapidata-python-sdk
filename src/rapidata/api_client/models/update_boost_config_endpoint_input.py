@@ -67,6 +67,16 @@ class UpdateBoostConfigEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if min_distilling_for_global_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_distilling_for_global_boost is None and "min_distilling_for_global_boost" in self.model_fields_set:
+            _dict['minDistillingForGlobalBoost'] = None
+
+        # set to None if min_graduated_for_distilling_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_graduated_for_distilling_boost is None and "min_graduated_for_distilling_boost" in self.model_fields_set:
+            _dict['minGraduatedForDistillingBoost'] = None
+
         return _dict
 
     @classmethod

@@ -96,6 +96,11 @@ class AddValidationRapidEndpointInput(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
+
         # set to None if explanation (nullable) is None
         # and model_fields_set contains the field
         if self.explanation is None and "explanation" in self.model_fields_set:

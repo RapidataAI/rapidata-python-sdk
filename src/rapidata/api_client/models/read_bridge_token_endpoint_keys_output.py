@@ -29,7 +29,7 @@ class ReadBridgeTokenEndpointKeysOutput(LazyValidatedModel):
     ReadBridgeTokenEndpointKeysOutput
     """ # noqa: E501
     access_token: Optional[StrictStr] = Field(description="The issued access token.", alias="accessToken")
-    expires_in: StrictInt = Field(description="The lifetime of the access token, in seconds.", alias="expiresIn")
+    expires_in: Optional[StrictInt] = Field(description="The lifetime of the access token, in seconds.", alias="expiresIn")
     refresh_token: Optional[StrictStr] = Field(description="The refresh token used to obtain new access tokens.", alias="refreshToken")
     id_token: Optional[StrictStr] = Field(description="The OpenID Connect ID token.", alias="idToken")
     token_type: Optional[StrictStr] = Field(description="The type of the issued token.", alias="tokenType")
@@ -75,6 +75,11 @@ class ReadBridgeTokenEndpointKeysOutput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.access_token is None and "access_token" in self.model_fields_set:
             _dict['accessToken'] = None
+
+        # set to None if expires_in (nullable) is None
+        # and model_fields_set contains the field
+        if self.expires_in is None and "expires_in" in self.model_fields_set:
+            _dict['expiresIn'] = None
 
         # set to None if refresh_token (nullable) is None
         # and model_fields_set contains the field

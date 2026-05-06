@@ -100,6 +100,16 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
         if self.logo is None and "logo" in self.model_fields_set:
             _dict['logo'] = None
 
+        # set to None if random_admission_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_admission_probability is None and "random_admission_probability" in self.model_fields_set:
+            _dict['randomAdmissionProbability'] = None
+
+        # set to None if health (nullable) is None
+        # and model_fields_set contains the field
+        if self.health is None and "health" in self.model_fields_set:
+            _dict['health'] = None
+
         return _dict
 
     @classmethod

@@ -34,7 +34,7 @@ class GetBoostInsightsEndpointOutput(LazyValidatedModel):
     GetBoostInsightsEndpointOutput
     """ # noqa: E501
     mode: BoostMode = Field(description="The current boost mode.")
-    manual_override_level: StrictInt = Field(description="The manual override level, if manual mode is active.", alias="manualOverrideLevel")
+    manual_override_level: Optional[StrictInt] = Field(description="The manual override level, if manual mode is active.", alias="manualOverrideLevel")
     global_boost: GetBoostInsightsEndpointGlobalBoostOutput = Field(description="Global boost insight with contributing campaigns.", alias="globalBoost")
     language_boosts: Optional[List[GetBoostInsightsEndpointLanguageBoostOutput]] = Field(default=None, alias="languageBoosts")
     audience_boosts: Optional[List[GetBoostInsightsEndpointAudienceOutput]] = Field(default=None, alias="audienceBoosts")
@@ -116,6 +116,11 @@ class GetBoostInsightsEndpointOutput(LazyValidatedModel):
                 if _item_labeling_boosts:
                     _items.append(_item_labeling_boosts.to_dict())
             _dict['labelingBoosts'] = _items
+        # set to None if manual_override_level (nullable) is None
+        # and model_fields_set contains the field
+        if self.manual_override_level is None and "manual_override_level" in self.model_fields_set:
+            _dict['manualOverrideLevel'] = None
+
         # set to None if language_boosts (nullable) is None
         # and model_fields_set contains the field
         if self.language_boosts is None and "language_boosts" in self.model_fields_set:

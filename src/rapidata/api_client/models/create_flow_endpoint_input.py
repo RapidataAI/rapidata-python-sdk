@@ -105,10 +105,85 @@ class CreateFlowEndpointInput(LazyValidatedModel):
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
             _dict['validationSetId'] = None
 
+        # set to None if starting_elo (nullable) is None
+        # and model_fields_set contains the field
+        if self.starting_elo is None and "starting_elo" in self.model_fields_set:
+            _dict['startingElo'] = None
+
+        # set to None if max_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_responses is None and "max_responses" in self.model_fields_set:
+            _dict['maxResponses'] = None
+
+        # set to None if serve_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_responses is None and "serve_responses" in self.model_fields_set:
+            _dict['serveResponses'] = None
+
+        # set to None if serve_to_response_ratio (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_to_response_ratio is None and "serve_to_response_ratio" in self.model_fields_set:
+            _dict['serveToResponseRatio'] = None
+
+        # set to None if serve_timeout_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_timeout_seconds is None and "serve_timeout_seconds" in self.model_fields_set:
+            _dict['serveTimeoutSeconds'] = None
+
+        # set to None if min_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_responses is None and "min_responses" in self.model_fields_set:
+            _dict['minResponses'] = None
+
+        # set to None if responses_required (nullable) is None
+        # and model_fields_set contains the field
+        if self.responses_required is None and "responses_required" in self.model_fields_set:
+            _dict['responsesRequired'] = None
+
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
             _dict['featureFlags'] = None
+
+        # set to None if target_response_count (nullable) is None
+        # and model_fields_set contains the field
+        if self.target_response_count is None and "target_response_count" in self.model_fields_set:
+            _dict['targetResponseCount'] = None
+
+        # set to None if pid_proportional_gain (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_proportional_gain is None and "pid_proportional_gain" in self.model_fields_set:
+            _dict['pidProportionalGain'] = None
+
+        # set to None if pid_integral_gain (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_integral_gain is None and "pid_integral_gain" in self.model_fields_set:
+            _dict['pidIntegralGain'] = None
+
+        # set to None if pid_derivative_gain (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_derivative_gain is None and "pid_derivative_gain" in self.model_fields_set:
+            _dict['pidDerivativeGain'] = None
+
+        # set to None if pid_output_offset (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_output_offset is None and "pid_output_offset" in self.model_fields_set:
+            _dict['pidOutputOffset'] = None
+
+        # set to None if pid_min_sessions_per_minute (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_min_sessions_per_minute is None and "pid_min_sessions_per_minute" in self.model_fields_set:
+            _dict['pidMinSessionsPerMinute'] = None
+
+        # set to None if pid_max_sessions_per_minute (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_max_sessions_per_minute is None and "pid_max_sessions_per_minute" in self.model_fields_set:
+            _dict['pidMaxSessionsPerMinute'] = None
+
+        # set to None if drain_duration_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.drain_duration_seconds is None and "drain_duration_seconds" in self.model_fields_set:
+            _dict['drainDurationSeconds'] = None
 
         return _dict
 

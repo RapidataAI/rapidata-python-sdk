@@ -75,6 +75,11 @@ class IRefereeInfoModelNaiveRefereeInfoModel(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if serve_threshold (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_threshold is None and "serve_threshold" in self.model_fields_set:
+            _dict['serveThreshold'] = None
+
         return _dict
 
     @classmethod

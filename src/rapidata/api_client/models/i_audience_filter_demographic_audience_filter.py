@@ -17,21 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
+class IAudienceFilterDemographicAudienceFilter(LazyValidatedModel):
     """
-    QueryExternalAudiencesEndpointOutput
+    IAudienceFilterDemographicAudienceFilter
     """ # noqa: E501
-    id: StrictInt = Field(description="The external audience identifier.")
-    name: StrictStr = Field(description="The name of the external audience.")
-    count: Optional[StrictInt] = Field(default=None, description="The number of users in the audience.")
-    __properties: ClassVar[List[str]] = ["id", "name", "count"]
+    t: StrictStr = Field(alias="_t")
+    identifier: StrictStr
+    values: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "identifier", "values"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['DemographicFilter']):
+            raise ValueError("must be one of enum values ('DemographicFilter')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +54,7 @@ class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryExternalAudiencesEndpointOutput from a JSON string"""
+        """Create an instance of IAudienceFilterDemographicAudienceFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,16 +75,11 @@ class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if count (nullable) is None
-        # and model_fields_set contains the field
-        if self.count is None and "count" in self.model_fields_set:
-            _dict['count'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryExternalAudiencesEndpointOutput from a dict"""
+        """Create an instance of IAudienceFilterDemographicAudienceFilter from a dict"""
         if obj is None:
             return None
 
@@ -85,9 +87,9 @@ class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "count": obj.get("count")
+            "_t": obj.get("_t"),
+            "identifier": obj.get("identifier"),
+            "values": obj.get("values")
         }
         try:
             _obj = cls.model_validate(_data)

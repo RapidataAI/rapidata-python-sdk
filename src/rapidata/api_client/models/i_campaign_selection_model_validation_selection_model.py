@@ -76,6 +76,16 @@ class ICampaignSelectionModelValidationSelectionModel(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if amount (nullable) is None
+        # and model_fields_set contains the field
+        if self.amount is None and "amount" in self.model_fields_set:
+            _dict['amount'] = None
+
+        # set to None if effort_budget (nullable) is None
+        # and model_fields_set contains the field
+        if self.effort_budget is None and "effort_budget" in self.model_fields_set:
+            _dict['effortBudget'] = None
+
         return _dict
 
     @classmethod

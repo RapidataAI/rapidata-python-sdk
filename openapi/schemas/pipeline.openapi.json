@@ -170,7 +170,7 @@
   },
   "components": {
     "schemas": {
-      "Category": {
+      "AttachCategoryRapidBlueprint_Category": {
         "required": [
           "label",
           "value"
@@ -186,6 +186,11 @@
         }
       },
       "EloRankingConfig": {
+        "required": [
+          "startingElo",
+          "kFactor",
+          "scalingFactor"
+        ],
         "type": "object",
         "properties": {
           "startingElo": {
@@ -839,6 +844,8 @@
       },
       "IPairMakerConfigOnlinePairMakerConfig": {
         "required": [
+          "randomMatchesRatio",
+          "totalComparisonBudget",
           "_t"
         ],
         "properties": {
@@ -881,6 +888,7 @@
       },
       "IRankingConfigBradleyTerryRankingConfig": {
         "required": [
+          "startingScore",
           "_t"
         ],
         "properties": {
@@ -898,6 +906,9 @@
       },
       "IRankingConfigEloRankingConfig": {
         "required": [
+          "startingElo",
+          "kFactor",
+          "scalingFactor",
           "_t"
         ],
         "properties": {
@@ -990,7 +1001,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Category"
+              "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
             }
           },
           "possibleCategories": {
@@ -1215,6 +1226,7 @@
       },
       "IRefereeConfigBudgetRefereeConfig": {
         "required": [
+          "totalBudget",
           "_t"
         ],
         "properties": {
@@ -1230,12 +1242,14 @@
           },
           "totalServeBudget": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
       "IRefereeConfigNaiveRefereeConfig": {
         "required": [
+          "guessesRequired",
           "_t"
         ],
         "properties": {
@@ -1266,6 +1280,8 @@
       },
       "IRefereeConfigProbabilisticAttachCategoryRefereeConfig": {
         "required": [
+          "threshold",
+          "maxVotes",
           "_t"
         ],
         "properties": {
@@ -1287,6 +1303,8 @@
       },
       "IRefereeConfigQuorumRefereeConfig": {
         "required": [
+          "maxVotes",
+          "threshold",
           "_t"
         ],
         "properties": {
@@ -1339,6 +1357,7 @@
         "required": [
           "validationSetId",
           "referee",
+          "shouldAcceptIncorrect",
           "_t"
         ],
         "properties": {
@@ -1371,6 +1390,7 @@
           "criteria",
           "referee",
           "targetCountryCodes",
+          "maxParallelism",
           "pairMakerConfig",
           "_t"
         ],
@@ -1380,20 +1400,6 @@
               "GroupedRankingWorkflowConfig"
             ],
             "type": "string"
-          },
-          "contexts": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "contextAssets": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/IAsset"
-            },
-            "nullable": true
           },
           "criteria": {
             "type": "string"
@@ -1406,6 +1412,22 @@
             "items": {
               "type": "string"
             }
+          },
+          "contexts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "deprecated": true
+          },
+          "contextAssets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IAsset"
+            },
+            "nullable": true,
+            "deprecated": true
           },
           "maxParallelism": {
             "type": "integer",
@@ -1422,14 +1444,12 @@
             ]
           },
           "eloConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/EloRankingConfig"
               }
-            ]
+            ],
+            "deprecated": true
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
@@ -1488,14 +1508,12 @@
             ]
           },
           "eloConfig": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/EloRankingConfig"
               }
-            ]
+            ],
+            "deprecated": true
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
@@ -1530,7 +1548,8 @@
           },
           "batchSize": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -1589,7 +1608,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",

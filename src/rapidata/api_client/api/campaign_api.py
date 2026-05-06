@@ -597,7 +597,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """campaign_boost_preheat_post
+        """Triggers a preheat pass for the boost subsystem so warm caches are ready before  traffic spikes.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -662,7 +662,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """campaign_boost_preheat_post
+        """Triggers a preheat pass for the boost subsystem so warm caches are ready before  traffic spikes.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -727,7 +727,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """campaign_boost_preheat_post
+        """Triggers a preheat pass for the boost subsystem so warm caches are ready before  traffic spikes.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -2209,7 +2209,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """campaign_monitor_get
+        """Exercises the rapid-bag pipeline with a synthetic user profile so the health of  the campaign monitoring path can be probed externally.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -2272,7 +2272,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """campaign_monitor_get
+        """Exercises the rapid-bag pipeline with a synthetic user profile so the health of  the campaign monitoring path can be probed externally.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -2335,7 +2335,7 @@ class CampaignApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """campaign_monitor_get
+        """Exercises the rapid-bag pipeline with a synthetic user profile so the health of  the campaign monitoring path can be probed externally.
 
 
         :param _request_timeout: timeout setting for this request. If one
