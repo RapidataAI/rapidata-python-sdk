@@ -254,26 +254,29 @@ class RapidataResults(dict):
                 for i, asset in enumerate(assets):
                     base_row[f"asset_{i + 1}"] = asset
 
-            # Per-metric asset columns. Only dicts that are actually keyed by
-            # asset names count as comparative metrics — this skips fields
-            # like ``privateMetadata``/``summary`` that happen to be dicts but
-            # don't have per-asset values.
+            # Per-metric asset columns. Dicts keyed by asset names are
+            # treated as comparative metrics and split into A_/B_ (compare) or
+            # per-asset (ranking) columns. Other dicts (e.g. ``privateMetadata``
+            # whose keys are arbitrary user data, not asset identifiers) are
+            # flattened with their field name as the prefix so their values
+            # still make it into the dataframe.
             asset_set = set(assets)
             for key, values in result.items():
                 if not isinstance(values, dict) or not values:
                     continue
-                if not asset_set.intersection(values.keys()):
-                    continue
-                if is_compare:
-                    base_row[f"A_{key}"] = values.get(assets[0])
-                    base_row[f"B_{key}"] = values.get(assets[1])
-                    if "Both" in values:
-                        base_row[f"Both_{key}"] = values["Both"]
-                    if "Neither" in values:
-                        base_row[f"Neither_{key}"] = values["Neither"]
+                if asset_set.intersection(values.keys()):
+                    if is_compare:
+                        base_row[f"A_{key}"] = values.get(assets[0])
+                        base_row[f"B_{key}"] = values.get(assets[1])
+                        if "Both" in values:
+                            base_row[f"Both_{key}"] = values["Both"]
+                        if "Neither" in values:
+                            base_row[f"Neither_{key}"] = values["Neither"]
+                    else:
+                        for asset in assets:
+                            base_row[f"{asset}_{key}"] = values.get(asset)
                 else:
-                    for asset in assets:
-                        base_row[f"{asset}_{key}"] = values.get(asset)
+                    base_row.update(self._flatten_dict(values, parent_key=key))
 
             detailed = result.get("detailedResults")
             if split_details and isinstance(detailed, list) and detailed:
