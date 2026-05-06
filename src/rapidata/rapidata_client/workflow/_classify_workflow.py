@@ -6,7 +6,9 @@ from rapidata.api_client.models.i_order_workflow_input_model import (
 from rapidata.api_client.models.i_order_workflow_input_model_simple_workflow_input_model import (
     IOrderWorkflowInputModelSimpleWorkflowInputModel,
 )
-from rapidata.api_client.models.category import Category
+from rapidata.api_client.models.attach_category_rapid_blueprint_category import (
+    AttachCategoryRapidBlueprintCategory,
+)
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_classify_payload import (
@@ -61,7 +63,7 @@ class ClassifyWorkflow(Workflow):
             _t="ClassifyBlueprint",
             title=self._instruction,
             categories=[
-                Category(label=option, value=option)
+                AttachCategoryRapidBlueprintCategory(label=option, value=option)
                 for option in self._answer_options
             ],
         )
