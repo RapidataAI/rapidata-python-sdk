@@ -56,16 +56,18 @@ class CompressionConfig(BaseModel):
 
     def is_set(self) -> bool:
         """Whether any field has been overridden from its default of None."""
-        return any(
-            v is not None
-            for v in (self.enabled, self.quality, self.max_dimension, self.library)
-        )
+        return bool(self.model_dump(exclude_none=True))
 
     def cache_suffix(self) -> str:
         """
         Stable string used as part of the asset upload cache key so that
         the same source asset uploaded under different compression settings
         does not collide on a single cache entry.
+
+        The separator characters ``|``, ``/`` and ``=`` are reserved — none of
+        the existing field types (``bool``, ``int``, ``Literal[fixed strings]``)
+        can produce them, so the suffix round-trips unambiguously. Revisit this
+        if a free-form string field is ever added.
         """
         if not self.is_set():
             return ""

@@ -14,27 +14,6 @@ from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFligh
 from diskcache import FanoutCache
 
 
-def _compression_kwargs(compression: CompressionConfig | None) -> dict[str, Any]:
-    """
-    Build the kwargs dict to pass to the OpenAPI upload methods. Only includes
-    fields the user explicitly set so the call shape is unchanged when
-    compression is disabled — keeping us forward-compatible with older
-    OpenAPI clients that don't yet expose the params.
-    """
-    if compression is None or not compression.is_set():
-        return {}
-    kwargs: dict[str, Any] = {}
-    if compression.enabled is not None:
-        kwargs["compress"] = compression.enabled
-    if compression.quality is not None:
-        kwargs["quality"] = compression.quality
-    if compression.max_dimension is not None:
-        kwargs["maxdim"] = compression.max_dimension
-    if compression.library is not None:
-        kwargs["library"] = compression.library
-    return kwargs
-
-
 class AssetUploader:
     # Class-level caches shared across all instances
     # URL cache: Always in-memory (URLs are lightweight, no benefit to disk caching)
@@ -89,23 +68,55 @@ class AssetUploader:
 
     def get_file_cache_key(self, asset: str) -> str:
         """Generate cache key for a file, including environment and active compression settings."""
+        return self._build_file_cache_key(asset, rapidata_config.upload.compression)
+
+    def get_url_cache_key(self, url: str) -> str:
+        """Generate cache key for a URL, including environment and active compression settings."""
+        return self._build_url_cache_key(url, rapidata_config.upload.compression)
+
+    def _build_file_cache_key(
+        self, asset: str, compression: CompressionConfig | None
+    ) -> str:
         env = self.openapi_service.environment
         try:
             stat = os.stat(asset)
         except FileNotFoundError:
             raise FileNotFoundError(f"File not found: {asset}") from None
-        suffix = self._compression_cache_suffix()
-        return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}{suffix}"
+        return (
+            f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
+            f"{self._compression_cache_suffix(compression)}"
+        )
 
-    def get_url_cache_key(self, url: str) -> str:
-        """Generate cache key for a URL, including environment and active compression settings."""
+    def _build_url_cache_key(
+        self, url: str, compression: CompressionConfig | None
+    ) -> str:
         env = self.openapi_service.environment
-        return f"{env}@{url}{self._compression_cache_suffix()}"
+        return f"{env}@{url}{self._compression_cache_suffix(compression)}"
 
     @staticmethod
-    def _compression_cache_suffix() -> str:
-        compression = rapidata_config.upload.compression
+    def _compression_cache_suffix(compression: CompressionConfig | None) -> str:
         return compression.cache_suffix() if compression is not None else ""
+
+    @staticmethod
+    def _compression_kwargs(compression: CompressionConfig | None) -> dict[str, Any]:
+        """
+        Build the kwargs dict to pass to the OpenAPI upload methods. Only includes
+        fields the user explicitly set so the call shape is unchanged when
+        compression is disabled — keeping us forward-compatible with older
+        OpenAPI clients that don't yet expose the params.
+        """
+        if compression is None or not compression.is_set():
+            return {}
+        kwargs: dict[str, Any] = {}
+        if compression.enabled is not None:
+            kwargs["compress"] = compression.enabled
+        if compression.quality is not None:
+            kwargs["quality"] = compression.quality
+        if compression.max_dimension is not None:
+            kwargs["maxdim"] = compression.max_dimension
+        if compression.library is not None:
+            kwargs["library"] = compression.library
+        return kwargs
 
     def _upload_url_asset(self, url: str) -> str:
         """
@@ -114,8 +125,13 @@ class AssetUploader:
         URLs are always cached in-memory (lightweight, no disk I/O overhead).
         Caching is required for the two-step upload flow and cannot be disabled.
         """
-
-        kwargs = _compression_kwargs(rapidata_config.upload.compression)
+        # Snapshot the compression config once so the kwargs we send and the
+        # cache key we look it up under are guaranteed consistent — without
+        # this, another thread mutating rapidata_config.upload.compression
+        # between the two reads could land mismatched kwargs/cache entries.
+        compression = rapidata_config.upload.compression
+        kwargs = self._compression_kwargs(compression)
+        cache_key = self._build_url_cache_key(url, compression)
 
         def upload_url() -> str:
             response = self.openapi_service.asset.asset_api.asset_url_post(
@@ -126,7 +142,7 @@ class AssetUploader:
             )
             return response.file_name
 
-        return self._url_cache.get_or_fetch(self.get_url_cache_key(url), upload_url)
+        return self._url_cache.get_or_fetch(cache_key, upload_url)
 
     def _upload_file_asset(self, file_path: str) -> str:
         """
@@ -135,8 +151,10 @@ class AssetUploader:
         Caching is always enabled as it's required for the two-step upload flow.
         Use cacheToDisk config to control whether cache is stored to disk or memory.
         """
-
-        kwargs = _compression_kwargs(rapidata_config.upload.compression)
+        # See _upload_url_asset for why this single-snapshot pattern matters.
+        compression = rapidata_config.upload.compression
+        kwargs = self._compression_kwargs(compression)
+        cache_key = self._build_file_cache_key(file_path, compression)
 
         def upload_file() -> str:
             response = self.openapi_service.asset.asset_api.asset_file_post(
@@ -149,9 +167,7 @@ class AssetUploader:
             )
             return response.file_name
 
-        return self._get_file_cache().get_or_fetch(
-            self.get_file_cache_key(file_path), upload_file
-        )
+        return self._get_file_cache().get_or_fetch(cache_key, upload_file)
 
     # Accept http / https / HTTP / HTTPS / mixed case — people type URLs
     # by hand or copy them from docs with varying capitalisation.
