@@ -64,3 +64,4 @@ from .filter import (
 )
 from .exceptions import FailedUploadException, FailedUpload
 from .config import rapidata_config, logger, managed_print
+from .config.upload_config import CompressionConfig
