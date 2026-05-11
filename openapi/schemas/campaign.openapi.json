@@ -292,6 +292,113 @@
         }
       }
     },
+    "/campaign/boost/{externalCampaignId}/fast-bid-multiplier": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Returns the fast bid multiplier currently applied to an external booster campaign.",
+        "description": "Returns the downstream system's default (1.0) if the multiplier has never been set\n for the campaign.",
+        "parameters": [
+          {
+            "name": "externalCampaignId",
+            "in": "path",
+            "description": "The external booster campaign id to read.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFastBidMultiplierEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Sets the fast bid multiplier for a single external booster campaign to an arbitrary value.",
+        "description": "Bypasses the level→multiplier mapping. Intended for live testing and one-off\n operational tweaks. Value must be in [0, 50]; 0 effectively pauses delivery on the\n campaign without changing its status. The response reports the multiplier the\n downstream system confirms is applied.",
+        "parameters": [
+          {
+            "name": "externalCampaignId",
+            "in": "path",
+            "description": "The external booster campaign id to update.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The desired multiplier value.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetFastBidMultiplierEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetFastBidMultiplierEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/campaign/monitor": {
       "get": {
         "tags": [
@@ -823,7 +930,7 @@
         "tags": [
           "ExternalAudience"
         ],
-        "summary": "Queries the cached Kayzen external audiences available for targeting.",
+        "summary": "Queries the cached external audiences available for targeting.",
         "parameters": [
           {
             "name": "page",
@@ -1037,7 +1144,7 @@
         "tags": [
           "ExternalAudience"
         ],
-        "summary": "Enqueues a background job that synchronises Kayzen external audiences with the cache.",
+        "summary": "Enqueues a background job that synchronises external audiences with the cache.",
         "responses": {
           "202": {
             "description": "Accepted"
@@ -1116,19 +1223,6 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                },
-                "nullable": true
-              }
-            ],
-            "deprecated": true
-          },
-          "kayzenAudienceIds": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
                 },
                 "nullable": true
               }
@@ -1515,6 +1609,7 @@
           "boostingProfile",
           "boostingControlMode",
           "hasBooster",
+          "boostLevel",
           "stickyConfig",
           "filters",
           "selections",
@@ -1564,6 +1659,11 @@
           "hasBooster": {
             "type": "boolean",
             "description": "Whether the campaign has a booster."
+          },
+          "boostLevel": {
+            "type": "integer",
+            "description": "The campaign's effective boost level (0-10). 0 when no boost is active.\n Lets clients render and edit the level without unpacking the boosting profile.",
+            "format": "int32"
           },
           "requiresBooster": {
             "type": "boolean",
@@ -1701,6 +1801,25 @@
               }
             ],
             "description": "The list of cached campaign summaries."
+          }
+        }
+      },
+      "GetFastBidMultiplierEndpoint_Output": {
+        "required": [
+          "externalCampaignId",
+          "bidMultiplierValue"
+        ],
+        "type": "object",
+        "properties": {
+          "externalCampaignId": {
+            "type": "integer",
+            "description": "The external campaign id reported by the downstream system.",
+            "format": "int32"
+          },
+          "bidMultiplierValue": {
+            "type": "number",
+            "description": "The current bid multiplier reported for the campaign.",
+            "format": "double"
           }
         }
       },
@@ -2415,6 +2534,8 @@
           "status",
           "priority",
           "hasBooster",
+          "boostLevel",
+          "boostingControlMode",
           "ownerMail",
           "createdAt"
         ],
@@ -2444,6 +2565,19 @@
           "hasBooster": {
             "type": "boolean",
             "description": "Whether the campaign has a booster."
+          },
+          "boostLevel": {
+            "type": "integer",
+            "description": "The campaign's effective boost level (0-10). 0 when no boost is active.\n Lets clients render and edit the level without unpacking the boosting profile.",
+            "format": "int32"
+          },
+          "boostingControlMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingControlMode"
+              }
+            ],
+            "description": "How the campaign's boost is controlled — Manual (user-editable) or Automatic\n (managed by an owning service; boost edits are rejected by the API)."
           },
           "requiresBooster": {
             "type": "boolean",
@@ -2558,6 +2692,38 @@
           "Sequential"
         ]
       },
+      "SetFastBidMultiplierEndpoint_Input": {
+        "required": [
+          "multiplier"
+        ],
+        "type": "object",
+        "properties": {
+          "multiplier": {
+            "type": "number",
+            "description": "The bid multiplier to apply. Must be in [0, 50].",
+            "format": "double"
+          }
+        }
+      },
+      "SetFastBidMultiplierEndpoint_Output": {
+        "required": [
+          "externalCampaignId",
+          "appliedMultiplier"
+        ],
+        "type": "object",
+        "properties": {
+          "externalCampaignId": {
+            "type": "integer",
+            "description": "The external campaign id reported by the downstream system.",
+            "format": "int32"
+          },
+          "appliedMultiplier": {
+            "type": "number",
+            "description": "The bid multiplier the downstream system reports as currently applied.",
+            "format": "double"
+          }
+        }
+      },
       "SetManualGlobalBoostLevelEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -2617,7 +2783,13 @@
           },
           "requiresBooster": {
             "type": "boolean",
-            "description": "When true, recomputes the boosting profile from the campaign's current filters\n (via BoostingProfileEvaluator) and ensures any required filtered Kayzen audience\n exists and is populated. When false, clears the boosting profile.\n Use this to toggle boost on/off without having to compute a BoostingProfile client-side.\n Ignored when BoostingProfile is also set (explicit profile wins)."
+            "description": "Legacy on/off toggle for boosting. Translates server-side to BoostLevel = 3\n when true and BoostLevel = 0 (clear) when false. New clients should send\n BoostLevel directly; this field is kept for backwards compatibility.",
+            "deprecated": true
+          },
+          "boostLevel": {
+            "type": "integer",
+            "description": "The campaign's boost level. Set 1-10 to boost (the audience service decides whether\n the boost manifests as global, distilling, or labeling based on the campaign's\n filters). Set 0 to clear any existing boost. Ignored when BoostingProfile is\n also set (explicit profile wins).",
+            "format": "int32"
           },
           "boostingProfile": {
             "allOf": [
@@ -2625,7 +2797,7 @@
                 "$ref": "#/components/schemas/BoostingProfileModel"
               }
             ],
-            "description": "The boosting profile configuration. Takes precedence over RequiresBooster when both are set.\n Prefer RequiresBooster for the common on/off toggle — it lets the server derive the right\n profile (including filtered-audience creation) from the campaign's filters."
+            "description": "The boosting profile configuration. Takes precedence over BoostLevel and\n RequiresBooster when set. Prefer BoostLevel — it lets the server derive\n the right profile (including filtered-audience creation) from the campaign's filters."
           },
           "stickyConfig": {
             "allOf": [

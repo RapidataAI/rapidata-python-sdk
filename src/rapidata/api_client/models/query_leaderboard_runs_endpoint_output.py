@@ -36,7 +36,9 @@ class QueryLeaderboardRunsEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The timestamp when the run was created.", alias="createdAt")
     owner_mail: StrictStr = Field(description="The mail of the owner of the run.", alias="ownerMail")
     order_id: Optional[StrictStr] = Field(description="The id of the associated order, if any.", alias="orderId")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "createdAt", "ownerMail", "orderId"]
+    job_id: Optional[StrictStr] = Field(description="The id of the associated job, if any.", alias="jobId")
+    audience_id: StrictStr = Field(description="The id of the audience associated with the run.", alias="audienceId")
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "createdAt", "ownerMail", "orderId", "jobId", "audienceId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -78,6 +80,11 @@ class QueryLeaderboardRunsEndpointOutput(LazyValidatedModel):
         if self.order_id is None and "order_id" in self.model_fields_set:
             _dict['orderId'] = None
 
+        # set to None if job_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.job_id is None and "job_id" in self.model_fields_set:
+            _dict['jobId'] = None
+
         return _dict
 
     @classmethod
@@ -95,7 +102,9 @@ class QueryLeaderboardRunsEndpointOutput(LazyValidatedModel):
             "status": obj.get("status"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail"),
-            "orderId": obj.get("orderId")
+            "orderId": obj.get("orderId"),
+            "jobId": obj.get("jobId"),
+            "audienceId": obj.get("audienceId")
         }
         try:
             _obj = cls.model_validate(_data)
