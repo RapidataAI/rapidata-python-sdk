@@ -66,12 +66,21 @@ class AssetUploader:
     def __init__(self, openapi_service: OpenAPIService) -> None:
         self.openapi_service = openapi_service
 
+    # NOTE: the public ``get_*_cache_key`` helpers read
+    # ``rapidata_config.upload.compression`` at call time rather than taking a
+    # snapshot, so the upload-path call sites (which DO snapshot inside
+    # ``_upload_*_asset``) and external probes can drift if another thread
+    # mutates the config between the two reads. That asymmetry is intentional:
+    # external probes only ever cause cache misses (not stale uploads), and
+    # the upload path is the only one that must keep kwargs and cache key in
+    # lockstep — pass a snapshot to ``_build_*_cache_key`` directly when that
+    # consistency matters.
     def get_file_cache_key(self, asset: str) -> str:
-        """Generate cache key for a file, including environment and active compression settings."""
+        """Generate cache key for a file, including environment and current compression settings."""
         return self._build_file_cache_key(asset, rapidata_config.upload.compression)
 
     def get_url_cache_key(self, url: str) -> str:
-        """Generate cache key for a URL, including environment and active compression settings."""
+        """Generate cache key for a URL, including environment and current compression settings."""
         return self._build_url_cache_key(url, rapidata_config.upload.compression)
 
     def _build_file_cache_key(
@@ -104,6 +113,12 @@ class AssetUploader:
         fields the user explicitly set so the call shape is unchanged when
         compression is disabled — keeping us forward-compatible with older
         OpenAPI clients that don't yet expose the params.
+
+        Keys match the wire-format parameter names exposed by the asset service
+        (``compress``, ``quality``, ``maxdim``, ``library``) — note that the
+        Pythonic ``max_dimension`` field on ``CompressionConfig`` is mapped to
+        the lowercase ``maxdim`` query parameter that the backend exposes,
+        matching the existing ``/asset/compress`` endpoint convention.
         """
         if compression is None or not compression.is_set():
             return {}

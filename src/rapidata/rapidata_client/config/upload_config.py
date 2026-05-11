@@ -38,6 +38,9 @@ class CompressionConfig(BaseModel):
     enabled: bool | None = None
     quality: int | None = None
     max_dimension: int | None = None
+    # Mirrors the libraries the asset service currently advertises. Update when
+    # the backend adds a new option — this is intentionally not ``str`` so an
+    # incompatible value fails fast at construction rather than at the wire.
     library: Literal["ImageSharp", "NetVips"] | None = None
 
     @field_validator("quality")
@@ -55,8 +58,15 @@ class CompressionConfig(BaseModel):
         return v
 
     def is_set(self) -> bool:
-        """Whether any field has been overridden from its default of None."""
-        return bool(self.model_dump(exclude_none=True))
+        """
+        Whether any field has been overridden from its default of ``None``.
+        ``enabled=False`` counts as set — it is the explicit "force compression
+        off" request, distinct from "defer to server default".
+        """
+        return any(
+            v is not None
+            for v in (self.enabled, self.quality, self.max_dimension, self.library)
+        )
 
     def cache_suffix(self) -> str:
         """

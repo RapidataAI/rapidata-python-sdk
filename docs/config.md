@@ -49,7 +49,7 @@ logger.info("This will be shown") # (2)!
 | `cacheShards` | `int` | `128` | Number of cache shards for parallel access (immutable) |
 | `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
 | `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
-| `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression override. `None` defers to the server-side defaults; otherwise sets `enabled` / `quality` / `max_dimension` / `library` for every upload through this client. |
+| `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression settings; see [Compression override](#compression-override) below. |
 
 #### Compression override
 
