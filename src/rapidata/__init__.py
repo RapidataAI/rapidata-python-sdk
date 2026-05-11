@@ -43,6 +43,7 @@ from .rapidata_client import (
     CompareEquirectangularSetting,
 # --- GENERATED SETTINGS IMPORTS END ---
     CountryFilter,
+    DemographicFilter,
     LanguageFilter,
     NotFilter,
     OrFilter,

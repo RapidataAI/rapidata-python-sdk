@@ -64,6 +64,72 @@ class RapidataAudience:
             logger.debug("Audience '%s' has been deleted.", self)
             managed_print(f"Audience '{self}' has been deleted.")
 
+    def filter(self, filters: list[RapidataFilter]) -> RapidataAudience:
+        """Derive a filtered audience from this audience.
+
+        Applies the given filters on top of this audience's graduated annotators and returns
+        a lightweight, filtered audience. The filtered audience reuses this audience's pool of
+        qualified annotators — no new recruiting or onboarding takes place. The returned id can
+        be passed to job and leaderboard creation in place of a regular audience id.
+
+        Supported filter types: ``CountryFilter``, ``LanguageFilter``, ``DemographicFilter``,
+        and the combinators ``AndFilter`` / ``OrFilter`` / ``NotFilter`` (also via the
+        ``&`` / ``|`` / ``~`` operators).
+
+        Args:
+            filters (list[RapidataFilter]): One or more filters to apply. Multiple filters are
+                combined with a logical AND. Pass a single ``AndFilter`` / ``OrFilter`` /
+                ``NotFilter`` if you need a different combinator at the top level.
+
+        Returns:
+            RapidataAudience: A new audience instance representing the filtered view. Its
+            ``filters`` property reflects the applied filter tree.
+
+        Example:
+            ```python
+            from rapidata import CountryFilter, DemographicFilter
+
+            base = client.audience.get_audience_by_id("aud_...")
+            us_under_30 = base.filter(
+                [CountryFilter(["US"]), DemographicFilter("age", ["18-29"])]
+            )
+            benchmark.create_leaderboard(
+                name="my-leaderboard",
+                instruction="Pick the better image",
+                audience_id=us_under_30.id,
+            )
+            ```
+        """
+        with tracer.start_as_current_span("RapidataAudience.filter"):
+            from rapidata.api_client.models.create_filtered_audience_endpoint_input import (
+                CreateFilteredAudienceEndpointInput,
+            )
+            from rapidata.rapidata_client.filter.and_filter import AndFilter
+
+            if not filters:
+                raise ValueError("At least one filter must be provided.")
+
+            top_level = filters[0] if len(filters) == 1 else AndFilter(filters)
+
+            logger.debug(
+                f"Creating filtered audience from {self.id} with filters: {filters}"
+            )
+            response = self._openapi_service.audience.audience_api.audience_base_audience_id_filter_post(
+                base_audience_id=self.id,
+                create_filtered_audience_endpoint_input=CreateFilteredAudienceEndpointInput(
+                    filter=top_level._to_audience_model(),
+                ),
+            )
+            logger.info(
+                f"Created filtered audience {response.audience_id} from base {self.id}"
+            )
+            return RapidataAudience(
+                id=response.audience_id,
+                name=self._name,
+                filters=list(filters),
+                openapi_service=self._openapi_service,
+            )
+
     def update_filters(self, filters: list[RapidataFilter]) -> RapidataAudience:
         """Update the filters for this audience.
 
