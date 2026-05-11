@@ -1,4 +1,5 @@
 from rapidata.rapidata_client.filter.country_filter import CountryFilter
+from rapidata.rapidata_client.filter.demographic_filter import DemographicFilter
 from rapidata.rapidata_client.filter.language_filter import LanguageFilter
 from rapidata.rapidata_client.filter.not_filter import NotFilter
 from rapidata.rapidata_client.filter.or_filter import OrFilter
@@ -18,6 +19,7 @@ class RapidataFilters:
     Attributes:
         Country (CountryFilter): Filters for users with a specific country.
         Language (LanguageFilter): Filters for users with a specific language.
+        Demographic (DemographicFilter): Filters audience graduates by a demographic attribute (e.g. age, gender). Only valid when deriving a filtered audience via :py:meth:`RapidataAudience.filter`.
         Not (NotFilter): Inverts the filter.
         Or (OrFilter): Combines multiple filters with a logical OR operation.
         And (AndFilter): Combines multiple filters with a logical AND operation.
@@ -44,6 +46,7 @@ class RapidataFilters:
 
     Country = CountryFilter
     Language = LanguageFilter
+    Demographic = DemographicFilter
     Not = NotFilter
     Or = OrFilter
     And = AndFilter

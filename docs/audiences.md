@@ -202,6 +202,37 @@ audience = client.audience.get_audience_by_id("audience_id")
 job = audience.assign_job(new_job_definition)
 ```
 
+## Filtered Audiences
+
+A filtered audience is a lightweight subset of an existing audience's
+qualified labelers — derived by applying filters on top of the base
+audience. No new qualification or recruiting takes place; the filtered
+audience reuses the same pool. Use it when you want to target a specific
+slice (e.g. by country, language, or demographic) of an audience that you
+have already trained.
+
+```py
+from rapidata import CountryFilter, DemographicFilter
+
+base = client.audience.get_audience_by_id("audience_id")
+
+us_under_30 = base.filter([
+    CountryFilter(["US"]),
+    DemographicFilter("age", ["18-29"]),
+])
+
+job = us_under_30.assign_job(new_job_definition)
+```
+
+The returned object is a regular `RapidataAudience` — its `id` can be
+passed anywhere an audience id is accepted, including `assign_job` and
+[leaderboard creation](mri.md).
+
+Supported filters: `CountryFilter`, `LanguageFilter`, `DemographicFilter`,
+combined with `AndFilter` / `OrFilter` / `NotFilter` (or the `&` / `|` /
+`~` operators). Multiple filters passed in the list are combined with
+logical AND.
+
 ## Next Steps
 
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data

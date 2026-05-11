@@ -34,6 +34,9 @@ class BackendFilterMapper:
         from rapidata.api_client.models.i_audience_filter_country_audience_filter import (
             IAudienceFilterCountryAudienceFilter,
         )
+        from rapidata.api_client.models.i_audience_filter_demographic_audience_filter import (
+            IAudienceFilterDemographicAudienceFilter,
+        )
         from rapidata.api_client.models.i_audience_filter_language_audience_filter import (
             IAudienceFilterLanguageAudienceFilter,
         )
@@ -43,6 +46,7 @@ class BackendFilterMapper:
             "OrAudienceFilter": IAudienceFilterOrAudienceFilter,
             "NotAudienceFilter": IAudienceFilterNotAudienceFilter,
             "CountryAudienceFilter": IAudienceFilterCountryAudienceFilter,
+            "DemographicAudienceFilter": IAudienceFilterDemographicAudienceFilter,
             "LanguageAudienceFilter": IAudienceFilterLanguageAudienceFilter,
         }
 
@@ -54,6 +58,7 @@ class BackendFilterMapper:
 
         from rapidata.rapidata_client.filter.and_filter import AndFilter
         from rapidata.rapidata_client.filter.country_filter import CountryFilter
+        from rapidata.rapidata_client.filter.demographic_filter import DemographicFilter
         from rapidata.rapidata_client.filter.language_filter import LanguageFilter
         from rapidata.rapidata_client.filter.not_filter import NotFilter
         from rapidata.rapidata_client.filter.or_filter import OrFilter
@@ -61,6 +66,7 @@ class BackendFilterMapper:
         cls._imported_client_filters = {
             "AndFilter": AndFilter,
             "CountryFilter": CountryFilter,
+            "DemographicFilter": DemographicFilter,
             "LanguageFilter": LanguageFilter,
             "NotFilter": NotFilter,
             "OrFilter": OrFilter,
@@ -92,6 +98,9 @@ class BackendFilterMapper:
         BackendCountryAudienceFilter = cls._imported_backend_filters[
             "CountryAudienceFilter"
         ]
+        BackendDemographicAudienceFilter = cls._imported_backend_filters[
+            "DemographicAudienceFilter"
+        ]
         BackendLanguageAudienceFilter = cls._imported_backend_filters[
             "LanguageAudienceFilter"
         ]
@@ -101,6 +110,7 @@ class BackendFilterMapper:
         ClientOrFilter = cls._imported_client_filters["OrFilter"]
         ClientNotFilter = cls._imported_client_filters["NotFilter"]
         ClientCountryFilter = cls._imported_client_filters["CountryFilter"]
+        ClientDemographicFilter = cls._imported_client_filters["DemographicFilter"]
         ClientLanguageFilter = cls._imported_client_filters["LanguageFilter"]
 
         # Handle recursive filters (AndFilter, OrFilter, NotFilter)
@@ -126,6 +136,11 @@ class BackendFilterMapper:
         # Handle simple filters with straightforward mappings
         elif isinstance(actual_instance, BackendCountryAudienceFilter):
             return ClientCountryFilter(actual_instance.countries)  # type: ignore[attr-defined]
+        elif isinstance(actual_instance, BackendDemographicAudienceFilter):
+            return ClientDemographicFilter(
+                identifier=actual_instance.identifier,  # type: ignore[attr-defined]
+                values=actual_instance.values,  # type: ignore[attr-defined]
+            )
         elif isinstance(actual_instance, BackendLanguageAudienceFilter):
             return ClientLanguageFilter(actual_instance.languages)  # type: ignore[attr-defined]
 
