@@ -233,6 +233,19 @@ combined with `AndFilter` / `OrFilter` / `NotFilter` (or the `&` / `|` /
 `~` operators). Multiple filters passed in the list are combined with
 logical AND.
 
+### Filtering the global audience
+
+The global audience is the most common base — slicing it by language,
+country, or demographic is enough for most jobs. There's a shortcut
+that skips the `get_audience_by_id("global")` step:
+
+```py
+from rapidata import LanguageFilter
+
+arabic_speakers = client.audience.filter_global([LanguageFilter(["ar"])])
+job = arabic_speakers.assign_job(new_job_definition)
+```
+
 ## Next Steps
 
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data

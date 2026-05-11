@@ -60,6 +60,35 @@ class RapidataAudienceManager:
             )
             return audience
 
+    def filter_global(self, filters: list[RapidataFilter]) -> RapidataAudience:
+        """Derive a filtered audience from the global audience.
+
+        Shortcut for ``get_audience_by_id("global").filter(filters)``. The global
+        audience is the broadest pool of labelers, and most filtered audiences are
+        slices of it (e.g. by country, language, or demographic).
+
+        Supported filter types: ``CountryFilter``, ``LanguageFilter``,
+        ``DemographicFilter``, combined with ``AndFilter`` / ``OrFilter`` /
+        ``NotFilter``. Multiple filters in the list are AND-combined.
+
+        Args:
+            filters (list[RapidataFilter]): One or more filters to apply.
+
+        Returns:
+            RapidataAudience: The filtered audience instance.
+
+        Example:
+            ```python
+            from rapidata import LanguageFilter
+
+            arabic_speakers = client.audience.filter_global([LanguageFilter(["ar"])])
+            job = arabic_speakers.assign_job(job_definition)
+            ```
+        """
+        with tracer.start_as_current_span("RapidataAudienceManager.filter_global"):
+            logger.debug(f"Filtering global audience with filters: {filters}")
+            return self.get_audience_by_id("global").filter(filters)
+
     def get_audience_by_id(self, audience_id: str) -> RapidataAudience:
         """Get an audience by its ID.
 
