@@ -29,7 +29,8 @@ class UpdateAudienceEndpointOutput(LazyValidatedModel):
     UpdateAudienceEndpointOutput
     """ # noqa: E501
     recalculation_id: Optional[StrictStr] = Field(default=None, description="The id of the audience state recalculation that was dispatched as a result of this update.  Only populated when state-affecting parameters (e.g. graduation score, drop score) changed;  null when the update only touched descriptive fields or boost configuration.", alias="recalculationId")
-    __properties: ClassVar[List[str]] = ["recalculationId"]
+    inactivity_sync_id: Optional[StrictStr] = Field(default=None, description="The id of the audience inactivity sync that was dispatched as a result of this update.  Only populated when InactivityDropDays was changed to a non-null value; null otherwise.", alias="inactivitySyncId")
+    __properties: ClassVar[List[str]] = ["recalculationId", "inactivitySyncId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -71,6 +72,11 @@ class UpdateAudienceEndpointOutput(LazyValidatedModel):
         if self.recalculation_id is None and "recalculation_id" in self.model_fields_set:
             _dict['recalculationId'] = None
 
+        # set to None if inactivity_sync_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.inactivity_sync_id is None and "inactivity_sync_id" in self.model_fields_set:
+            _dict['inactivitySyncId'] = None
+
         return _dict
 
     @classmethod
@@ -83,7 +89,8 @@ class UpdateAudienceEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "recalculationId": obj.get("recalculationId")
+            "recalculationId": obj.get("recalculationId"),
+            "inactivitySyncId": obj.get("inactivitySyncId")
         }
         try:
             _obj = cls.model_validate(_data)

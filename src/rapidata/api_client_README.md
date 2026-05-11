@@ -84,6 +84,8 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_audience_id_boost_config_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_boost_config_patch) | **PATCH** /audience/{audienceId}/boost-config | Updates the boost configuration for the specified audience.
 *AudienceApi* | [**audience_audience_id_delete**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_delete) | **DELETE** /audience/{audienceId} | Deletes the specified audience.
 *AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Returns the audience with the specified id.
+*AudienceApi* | [**audience_audience_id_inactivity_sync_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_inactivity_sync_get) | **GET** /audience/{audienceId}/inactivity-sync | Returns the most recent audience inactivity sync for the given audience, regardless of state.
+*AudienceApi* | [**audience_audience_id_inactivity_sync_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_inactivity_sync_post) | **POST** /audience/{audienceId}/inactivity-sync | Starts a new inactivity sync for the given audience.
 *AudienceApi* | [**audience_audience_id_initialize_users_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_initialize_users_post) | **POST** /audience/{audienceId}/initialize-users | Uploads a CSV file containing user IDs and scores, then processes it in the background  to seed the audience with those users.
 *AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | Queries jobs for the specified audience.
 *AudienceApi* | [**audience_audience_id_owner_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_owner_patch) | **PATCH** /audience/{audienceId}/owner | Changes the owner of the specified audience.
@@ -94,7 +96,10 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_audience_id_recruit_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_recruit_post) | **POST** /audience/{audienceId}/recruit | Starts recruiting users for the specified audience.
 *AudienceApi* | [**audience_audience_id_resume_distillation_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_resume_distillation_post) | **POST** /audience/{audienceId}/resume-distillation | Resumes the distillation campaign for the specified audience.
 *AudienceApi* | [**audience_audience_id_state_recalculation_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_state_recalculation_get) | **GET** /audience/{audienceId}/state-recalculation | Returns the most recent audience state recalculation for the given audience, regardless of state.
+*AudienceApi* | [**audience_audience_id_state_recalculation_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_state_recalculation_post) | **POST** /audience/{audienceId}/state-recalculation | Starts a new audience state recalculation for the given audience.
 *AudienceApi* | [**audience_audience_id_user_metrics_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_user_metrics_get) | **GET** /audience/{audienceId}/user-metrics | Gets the count of users in each state for the specified audience.
+*AudienceApi* | [**audience_base_audience_id_filter_post**](rapidata/api_client/docs/AudienceApi.md#audience_base_audience_id_filter_post) | **POST** /audience/{baseAudienceId}/filter | Creates a filtered view on the given base audience by applying a filter on top of its  graduates. Returns an audience id that can be used in job creation just like a regular  audience id; no new onboarding is required.
+*AudienceApi* | [**audience_inactivity_sync_sync_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_inactivity_sync_sync_id_get) | **GET** /audience/inactivity-sync/{syncId} | Returns the audience inactivity sync with the given id.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
 *AudienceApi* | [**audience_state_recalculation_recalculation_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_state_recalculation_recalculation_id_get) | **GET** /audience/state-recalculation/{recalculationId} | Returns the audience state recalculation with the given id.
 *AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all audiences visible to the caller.
@@ -123,6 +128,8 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the current user.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
+*CampaignApi* | [**campaign_boost_external_campaign_id_fast_bid_multiplier_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_external_campaign_id_fast_bid_multiplier_get) | **GET** /campaign/boost/{externalCampaignId}/fast-bid-multiplier | Returns the fast bid multiplier currently applied to an external booster campaign.
+*CampaignApi* | [**campaign_boost_external_campaign_id_fast_bid_multiplier_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_external_campaign_id_fast_bid_multiplier_put) | **PUT** /campaign/boost/{externalCampaignId}/fast-bid-multiplier | Sets the fast bid multiplier for a single external booster campaign to an arbitrary value.
 *CampaignApi* | [**campaign_boost_global_level_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_global_level_put) | **PUT** /campaign/boost/global-level | Sets or clears the manual global boost level.
 *CampaignApi* | [**campaign_boost_insights_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_insights_get) | **GET** /campaign/boost/insights | Returns an attributed view of the aggregated boosting profile.
 *CampaignApi* | [**campaign_boost_preheat_post**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_preheat_post) | **POST** /campaign/boost/preheat | Triggers a preheat pass for the boost subsystem so warm caches are ready before  traffic spikes.
@@ -162,8 +169,8 @@ Class | Method | HTTP request | Description
 *ExamplesApi* | [**audience_audience_id_example_post**](rapidata/api_client/docs/ExamplesApi.md#audience_audience_id_example_post) | **POST** /audience/{audienceId}/example | Adds a new example to an audience.
 *ExamplesApi* | [**audience_audience_id_examples_get**](rapidata/api_client/docs/ExamplesApi.md#audience_audience_id_examples_get) | **GET** /audience/{audienceId}/examples | Queries all examples for the specified audience.
 *ExamplesApi* | [**audience_example_example_id_delete**](rapidata/api_client/docs/ExamplesApi.md#audience_example_example_id_delete) | **DELETE** /audience/example/{exampleId} | Deletes the specified audience example.
-*ExternalAudienceApi* | [**campaign_external_audiences_get**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_get) | **GET** /campaign/external-audiences | Queries the cached Kayzen external audiences available for targeting.
-*ExternalAudienceApi* | [**campaign_external_audiences_sync_post**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_sync_post) | **POST** /campaign/external-audiences/sync | Enqueues a background job that synchronises Kayzen external audiences with the cache.
+*ExternalAudienceApi* | [**campaign_external_audiences_get**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_get) | **GET** /campaign/external-audiences | Queries the cached external audiences available for targeting.
+*ExternalAudienceApi* | [**campaign_external_audiences_sync_post**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_sync_post) | **POST** /campaign/external-audiences/sync | Enqueues a background job that synchronises external audiences with the cache.
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *FlowApi* | [**flow_flow_id_delete**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_delete) | **DELETE** /flow/{flowId} | Deletes a flow.
 *FlowApi* | [**flow_flow_id_get**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_get) | **GET** /flow/{flowId} | Retrieves a flow by its ID.
@@ -311,6 +318,8 @@ Class | Method | HTTP request | Description
  - [AudienceAudienceIdJobsGetJobIdParameter](rapidata/api_client/docs/AudienceAudienceIdJobsGetJobIdParameter.md)
  - [AudienceBoostModel](rapidata/api_client/docs/AudienceBoostModel.md)
  - [AudienceBoostModel2](rapidata/api_client/docs/AudienceBoostModel2.md)
+ - [AudienceInactivitySyncPhase](rapidata/api_client/docs/AudienceInactivitySyncPhase.md)
+ - [AudienceInactivitySyncState](rapidata/api_client/docs/AudienceInactivitySyncState.md)
  - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
  - [AudienceJobStatus](rapidata/api_client/docs/AudienceJobStatus.md)
  - [AudienceStateRecalculationPhase](rapidata/api_client/docs/AudienceStateRecalculationPhase.md)
@@ -359,6 +368,8 @@ Class | Method | HTTP request | Description
  - [CreateDatasetGroupEndpointInput](rapidata/api_client/docs/CreateDatasetGroupEndpointInput.md)
  - [CreateDemographicRapidEndpointInput](rapidata/api_client/docs/CreateDemographicRapidEndpointInput.md)
  - [CreateDemographicRapidEndpointOutput](rapidata/api_client/docs/CreateDemographicRapidEndpointOutput.md)
+ - [CreateFilteredAudienceEndpointInput](rapidata/api_client/docs/CreateFilteredAudienceEndpointInput.md)
+ - [CreateFilteredAudienceEndpointOutput](rapidata/api_client/docs/CreateFilteredAudienceEndpointOutput.md)
  - [CreateFlowEndpointInput](rapidata/api_client/docs/CreateFlowEndpointInput.md)
  - [CreateFlowEndpointOutput](rapidata/api_client/docs/CreateFlowEndpointOutput.md)
  - [CreateFlowItemEndpointInput](rapidata/api_client/docs/CreateFlowItemEndpointInput.md)
@@ -408,6 +419,7 @@ Class | Method | HTTP request | Description
  - [ForkBenchmarkEndpointOutput](rapidata/api_client/docs/ForkBenchmarkEndpointOutput.md)
  - [GenderUserFilterModelGender](rapidata/api_client/docs/GenderUserFilterModelGender.md)
  - [GetAudienceByIdEndpointOutput](rapidata/api_client/docs/GetAudienceByIdEndpointOutput.md)
+ - [GetAudienceInactivitySyncByIdEndpointOutput](rapidata/api_client/docs/GetAudienceInactivitySyncByIdEndpointOutput.md)
  - [GetAudienceStateRecalculationByIdEndpointOutput](rapidata/api_client/docs/GetAudienceStateRecalculationByIdEndpointOutput.md)
  - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
  - [GetAvailableValidationSetsEndpointOutput](rapidata/api_client/docs/GetAvailableValidationSetsEndpointOutput.md)
@@ -441,6 +453,7 @@ Class | Method | HTTP request | Description
  - [GetDatasetProgressEndpointOutput](rapidata/api_client/docs/GetDatasetProgressEndpointOutput.md)
  - [GetFailedDatapointsEndpointDatapoint](rapidata/api_client/docs/GetFailedDatapointsEndpointDatapoint.md)
  - [GetFailedDatapointsEndpointOutput](rapidata/api_client/docs/GetFailedDatapointsEndpointOutput.md)
+ - [GetFastBidMultiplierEndpointOutput](rapidata/api_client/docs/GetFastBidMultiplierEndpointOutput.md)
  - [GetFlowItemByIdEndpointOutput](rapidata/api_client/docs/GetFlowItemByIdEndpointOutput.md)
  - [GetFlowItemCreationTimeseriesEndpointOutput](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutput.md)
  - [GetFlowItemCreationTimeseriesEndpointOutputDataPoint](rapidata/api_client/docs/GetFlowItemCreationTimeseriesEndpointOutputDataPoint.md)
@@ -451,6 +464,7 @@ Class | Method | HTTP request | Description
  - [GetJobByIdEndpointOutput](rapidata/api_client/docs/GetJobByIdEndpointOutput.md)
  - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
  - [GetJobRevisionEndpointOutput](rapidata/api_client/docs/GetJobRevisionEndpointOutput.md)
+ - [GetLatestAudienceInactivitySyncEndpointOutput](rapidata/api_client/docs/GetLatestAudienceInactivitySyncEndpointOutput.md)
  - [GetLatestAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/GetLatestAudienceStateRecalculationEndpointOutput.md)
  - [GetLeaderboardByIdEndpointOutput](rapidata/api_client/docs/GetLeaderboardByIdEndpointOutput.md)
  - [GetOrderByIdEndpointOutput](rapidata/api_client/docs/GetOrderByIdEndpointOutput.md)
@@ -857,12 +871,16 @@ Class | Method | HTTP request | Description
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
  - [ScrubTruthModelScrubRange](rapidata/api_client/docs/ScrubTruthModelScrubRange.md)
  - [SendSurveyEndpointInput](rapidata/api_client/docs/SendSurveyEndpointInput.md)
+ - [SetFastBidMultiplierEndpointInput](rapidata/api_client/docs/SetFastBidMultiplierEndpointInput.md)
+ - [SetFastBidMultiplierEndpointOutput](rapidata/api_client/docs/SetFastBidMultiplierEndpointOutput.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
  - [SkipRapidEndpointInput](rapidata/api_client/docs/SkipRapidEndpointInput.md)
  - [SkipRapidEndpointOutput](rapidata/api_client/docs/SkipRapidEndpointOutput.md)
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
  - [StandingStatus](rapidata/api_client/docs/StandingStatus.md)
+ - [StartAudienceInactivitySyncEndpointOutput](rapidata/api_client/docs/StartAudienceInactivitySyncEndpointOutput.md)
+ - [StartAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/StartAudienceStateRecalculationEndpointOutput.md)
  - [StartPreliminaryDownloadEndpointInput](rapidata/api_client/docs/StartPreliminaryDownloadEndpointInput.md)
  - [StartPreliminaryDownloadEndpointOutput](rapidata/api_client/docs/StartPreliminaryDownloadEndpointOutput.md)
  - [StickyConfig](rapidata/api_client/docs/StickyConfig.md)

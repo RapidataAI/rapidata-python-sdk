@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,8 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
     CreateBenchmarkEndpointInput
     """ # noqa: E501
     name: StrictStr = Field(description="The name of the benchmark.")
-    __properties: ClassVar[List[str]] = ["name"]
+    initial_boost_level: Optional[StrictInt] = Field(default=None, description="Initial boost level applied to the campaign of every run created from this benchmark.  Leave unset to fall back to . Admins  may set any value the validator allows (0-10); non-admins are restricted to  0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns  403 Forbidden via .", alias="initialBoostLevel")
+    __properties: ClassVar[List[str]] = ["name", "initialBoostLevel"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -66,6 +67,11 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if initial_boost_level (nullable) is None
+        # and model_fields_set contains the field
+        if self.initial_boost_level is None and "initial_boost_level" in self.model_fields_set:
+            _dict['initialBoostLevel'] = None
+
         return _dict
 
     @classmethod
@@ -78,7 +84,8 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "name": obj.get("name")
+            "name": obj.get("name"),
+            "initialBoostLevel": obj.get("initialBoostLevel")
         }
         try:
             _obj = cls.model_validate(_data)

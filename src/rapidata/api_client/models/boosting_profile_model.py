@@ -33,11 +33,10 @@ class BoostingProfileModel(LazyValidatedModel):
     min_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="minAutoAdjustLevel")
     max_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="maxAutoAdjustLevel")
     language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
-    kayzen_audience_ids: Optional[List[StrictInt]] = Field(default=None, alias="kayzenAudienceIds")
     prospect_blacklist: List[StrictInt] = Field(alias="prospectBlacklist")
     distilling_boosts: List[AudienceBoostModel] = Field(alias="distillingBoosts")
     labeling_boosts: List[AudienceBoostModel] = Field(alias="labelingBoosts")
-    __properties: ClassVar[List[str]] = ["globalBoostLevel", "minAutoAdjustLevel", "maxAutoAdjustLevel", "languageBoosts", "kayzenAudienceIds", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
+    __properties: ClassVar[List[str]] = ["globalBoostLevel", "minAutoAdjustLevel", "maxAutoAdjustLevel", "languageBoosts", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -103,11 +102,6 @@ class BoostingProfileModel(LazyValidatedModel):
         if self.language_boosts is None and "language_boosts" in self.model_fields_set:
             _dict['languageBoosts'] = None
 
-        # set to None if kayzen_audience_ids (nullable) is None
-        # and model_fields_set contains the field
-        if self.kayzen_audience_ids is None and "kayzen_audience_ids" in self.model_fields_set:
-            _dict['kayzenAudienceIds'] = None
-
         return _dict
 
     @classmethod
@@ -124,7 +118,6 @@ class BoostingProfileModel(LazyValidatedModel):
             "minAutoAdjustLevel": obj.get("minAutoAdjustLevel"),
             "maxAutoAdjustLevel": obj.get("maxAutoAdjustLevel"),
             "languageBoosts": obj.get("languageBoosts"),
-            "kayzenAudienceIds": obj.get("kayzenAudienceIds"),
             "prospectBlacklist": obj.get("prospectBlacklist"),
             "distillingBoosts": [AudienceBoostModel.from_dict(_item) for _item in obj["distillingBoosts"]] if obj.get("distillingBoosts") is not None else None,
             "labelingBoosts": [AudienceBoostModel.from_dict(_item) for _item in obj["labelingBoosts"]] if obj.get("labelingBoosts") is not None else None

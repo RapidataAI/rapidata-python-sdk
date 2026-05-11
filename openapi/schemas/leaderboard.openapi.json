@@ -4254,6 +4254,12 @@
           "name": {
             "type": "string",
             "description": "The name of the benchmark."
+          },
+          "initialBoostLevel": {
+            "type": "integer",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to . Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via .",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -6327,7 +6333,9 @@
           "status",
           "createdAt",
           "ownerMail",
-          "orderId"
+          "orderId",
+          "jobId",
+          "audienceId"
         ],
         "type": "object",
         "properties": {
@@ -6360,6 +6368,15 @@
             "type": "string",
             "description": "The id of the associated order, if any.",
             "nullable": true
+          },
+          "jobId": {
+            "type": "string",
+            "description": "The id of the associated job, if any.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the audience associated with the run."
           }
         }
       },
@@ -6918,6 +6935,12 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark should be public (only admins can change this)."
+          },
+          "initialBoostLevel": {
+            "type": "integer",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0.. and may not clear\n it. Both restrictions are enforced by\n with a 403 on\n violation.",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
