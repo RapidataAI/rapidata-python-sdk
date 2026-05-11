@@ -5,23 +5,17 @@ import urllib.parse
 import webbrowser
 from colorama import Fore
 from typing import Literal, TYPE_CHECKING
-from rapidata.api_client import QueryModel
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
 from rapidata.api_client.models.create_validation_set_endpoint_input import (
     CreateValidationSetEndpointInput,
 )
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+    AudienceAudienceIdJobsGetJobIdParameter,
+)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
-
-from rapidata.api_client.models.pagination import Pagination
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.sort_criterion import SortCriterion
-from rapidata.api_client.models.sort_direction import SortDirection
-from rapidata.api_client.models.filter_operator import FilterOperator
-from rapidata.api_client.models.logic_operator import LogicOperator
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
@@ -681,31 +675,17 @@ class ValidationSetManager:
 
             validation_page_result = (
                 self._openapi_service.validation.validation_api.validation_sets_get(
-                    QueryModel(
-                        page=Pagination(index=page, size=amount),
-                        filter=RootFilter(
-                            filters=[
-                                Filter(
-                                    field="Name",
-                                    operator=FilterOperator.CONTAINS,
-                                    value=name,
-                                )
-                            ],
-                            logic=LogicOperator.AND,
-                        ),
-                        sortCriteria=[
-                            SortCriterion(
-                                direction=SortDirection.DESC, propertyName="CreatedAt"
-                            )
-                        ],
-                    )
+                    page=page,
+                    page_size=amount,
+                    name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                    sort=["-created_at"],
                 )
             )
 
             logger.debug("Validation sets found: %s", validation_page_result.items)
 
             validation_sets = [
-                self.get_validation_set_by_id(str(validation_set.id))
+                self.get_validation_set_by_id(validation_set.id)
                 for validation_set in validation_page_result.items
             ]
             return validation_sets
