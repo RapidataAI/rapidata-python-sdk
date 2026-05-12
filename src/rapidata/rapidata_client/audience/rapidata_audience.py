@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Sequence
-from rapidata.rapidata_client.config import logger, tracer, managed_print
+from rapidata.rapidata_client.config import logger, managed_print, tracer
+from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
 from rapidata.rapidata_client.audience.audience_example_handler import (
     AudienceExampleHandler,
 )
@@ -9,25 +10,22 @@ from rapidata.rapidata_client.datapoints._datapoint import coerce_media_context
 
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
-    from rapidata.rapidata_client.filter import RapidataFilter
-    from rapidata.rapidata_client.job.rapidata_job_definition import (
-        RapidataJobDefinition,
+    from rapidata.rapidata_client.audience.rapidata_filtered_audience import (
+        RapidataFilteredAudience,
     )
-    from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+    from rapidata.rapidata_client.filter import RapidataFilter
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
     import pandas as pd
 
 
-class RapidataAudience:
-    """Represents a Rapidata audience.
+class RapidataAudience(RapidataAudienceBase):
+    """A Rapidata dimension audience.
 
-    An audience is a group of annotators that can be recruited based on example tasks and assigned jobs.
-
-    Attributes:
-        id (str): The unique identifier of the audience.
-        name (str): The name of the audience.
-        filters (list[RapidataFilter]): The list of filters applied to the audience.
+    A dimension audience is a group of annotators recruited via qualification examples
+    and (optionally) recruitment filters. Use :py:meth:`filter` to derive a
+    :class:`RapidataFilteredAudience` — a lightweight slice that reuses the same pool
+    without new recruiting.
     """
 
     def __init__(
@@ -37,22 +35,9 @@ class RapidataAudience:
         filters: list[RapidataFilter],
         openapi_service: OpenAPIService,
     ):
-        self.id = id
-        self._name = name
-        self._filters = filters
-        self._openapi_service = openapi_service
+        super().__init__(id=id, name=name, filters=filters, openapi_service=openapi_service)
         self._example_handler = AudienceExampleHandler(openapi_service, id)
         self._recruiting_started = False
-
-    @property
-    def name(self) -> str:
-        """The name of the audience."""
-        return self._name
-
-    @property
-    def filters(self) -> list[RapidataFilter]:
-        """The list of filters applied to the audience."""
-        return self._filters
 
     def delete(self) -> None:
         """Deletes the audience."""
@@ -64,7 +49,7 @@ class RapidataAudience:
             logger.debug("Audience '%s' has been deleted.", self)
             managed_print(f"Audience '{self}' has been deleted.")
 
-    def filter(self, filters: list[RapidataFilter]) -> RapidataAudience:
+    def filter(self, filters: list[RapidataFilter]) -> RapidataFilteredAudience:
         """Derive a filtered audience from this audience.
 
         Applies the given filters on top of this audience's graduated annotators and returns
@@ -82,8 +67,11 @@ class RapidataAudience:
                 ``NotFilter`` if you need a different combinator at the top level.
 
         Returns:
-            RapidataAudience: A new audience instance representing the filtered view. Its
-            ``filters`` property reflects the applied filter tree.
+            RapidataFilteredAudience: A slim audience handle representing the filtered view.
+            Only exposes operations that make sense for a filtered audience
+            (``assign_job``, ``find_jobs``, ``delete``); methods like
+            ``add_classification_example`` are intentionally absent because the filtered
+            audience reuses the base's qualified pool.
 
         Example:
             ```python
@@ -104,6 +92,9 @@ class RapidataAudience:
             from rapidata.api_client.models.create_filtered_audience_endpoint_input import (
                 CreateFilteredAudienceEndpointInput,
             )
+            from rapidata.rapidata_client.audience.rapidata_filtered_audience import (
+                RapidataFilteredAudience,
+            )
             from rapidata.rapidata_client.filter.and_filter import AndFilter
 
             if not filters:
@@ -123,7 +114,7 @@ class RapidataAudience:
             logger.info(
                 f"Created filtered audience {response.audience_id} from base {self.id}"
             )
-            return RapidataAudience(
+            return RapidataFilteredAudience(
                 id=response.audience_id,
                 name=self._name,
                 filters=list(filters),
@@ -175,43 +166,6 @@ class RapidataAudience:
             )
             self._name = name
             return self
-
-    def assign_job(self, job_definition: RapidataJobDefinition) -> RapidataJob:
-        """Assign a job to this audience.
-
-        Creates a new job instance from the job definition and assigns it to this audience.
-        The job will be executed by the annotators in this audience.
-
-        Args:
-            job_definition (JobDefinition): The job definition to create and assign to the audience.
-
-        Returns:
-            RapidataJob: The created job instance.
-        """
-        with tracer.start_as_current_span("RapidataAudience.assign_job"):
-            from rapidata.api_client.models.create_job_endpoint_input import (
-                CreateJobEndpointInput,
-            )
-            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
-            from datetime import datetime
-
-            logger.debug(f"Assigning job to audience: {self.id}")
-            response = self._openapi_service.order.job_api.job_post(
-                create_job_endpoint_input=CreateJobEndpointInput(
-                    audienceId=self.id,
-                    jobDefinitionId=job_definition.id,
-                ),
-            )
-            job = RapidataJob(
-                job_id=response.job_id,
-                name=job_definition.name,
-                audience_id=self.id,
-                created_at=datetime.now(),
-                definition_id=job_definition.id,
-                openapi_service=self._openapi_service,
-            )
-            logger.info(f"Assigned job to audience: {self.id}")
-            return job
 
     def add_classification_example(
         self,
@@ -312,45 +266,6 @@ class RapidataAudience:
             self._try_start_recruiting()
             return self
 
-    def find_jobs(
-        self, name: str = "", amount: int = 10, page: int = 1
-    ) -> list[RapidataJob]:
-        """Find jobs assigned to this audience.
-
-        Args:
-            name (str, optional): Filter jobs by name (matching jobs will contain this string). Defaults to "" for any job.
-            amount (int, optional): The maximum number of jobs to return. Defaults to 10.
-            page (int, optional): The page of jobs to return. Defaults to 1.
-
-        Returns:
-            list[RapidataJob]: A list of RapidataJob instances assigned to this audience.
-        """
-        with tracer.start_as_current_span("RapidataAudience.find_jobs"):
-            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
-            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
-                AudienceAudienceIdJobsGetJobIdParameter,
-            )
-
-            response = self._openapi_service.order.job_api.jobs_get(
-                page=page,
-                page_size=amount,
-                name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
-                audience_id=AudienceAudienceIdJobsGetJobIdParameter(eq=self.id),
-                sort=["-created_at"],
-            )
-            return [
-                RapidataJob(
-                    job_id=job.job_id,
-                    name=job.name,
-                    audience_id=job.audience_id,
-                    created_at=job.created_at,
-                    definition_id=job.definition_id,
-                    openapi_service=self._openapi_service,
-                    pipeline_id=job.pipeline_id,
-                )
-                for job in response.items
-            ]
-
     def get_examples(
         self,
         amount: int = 10,
@@ -428,9 +343,3 @@ class RapidataAudience:
                     logger.debug(
                         f"Error starting recruiting for audience: {self.id} - {e}"
                     )
-
-    def __str__(self) -> str:
-        return f"RapidataAudience(id={self.id}, name={self._name}, filters={self._filters})"
-
-    def __repr__(self) -> str:
-        return self.__str__()
