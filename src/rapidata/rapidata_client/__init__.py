@@ -1,7 +1,9 @@
 from .rapidata_client import RapidataClient
 from .audience import (
     RapidataAudience,
+    RapidataAudienceBase,
     RapidataAudienceManager,
+    RapidataFilteredAudience,
 )
 from .order import RapidataOrderManager, RapidataOrder
 from .job import RapidataJob, RapidataJobDefinition, RapidataJobManager

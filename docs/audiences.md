@@ -224,9 +224,14 @@ us_under_30 = base.filter([
 job = us_under_30.assign_job(new_job_definition)
 ```
 
-The returned object is a regular `RapidataAudience` — its `id` can be
-passed anywhere an audience id is accepted, including `assign_job` and
-[leaderboard creation](mri.md).
+The returned object is a `RapidataFilteredAudience` — a slim variant that
+exposes only the operations that make sense for a filtered view
+(`assign_job`, `find_jobs`, `delete`, and use as `audience_id` on
+[leaderboard creation](mri.md)). It deliberately does **not** offer
+`add_classification_example`, `update_filters`, or further nested
+`.filter(...)` calls: those would either mutate the base audience's
+qualification pool (which the filtered view shares) or chain filters in
+a way that's better expressed as a single combined filter on the base.
 
 Supported filters: `CountryFilter`, `LanguageFilter`, `DemographicFilter`,
 combined with `AndFilter` / `OrFilter` / `NotFilter` (or the `&` / `|` /
