@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from rapidata.rapidata_client.config import logger, tracer, managed_print
+from rapidata.rapidata_client.config import logger, tracer
 
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
@@ -50,16 +50,6 @@ class RapidataAudienceBase:
     def filters(self) -> list[RapidataFilter]:
         """The filters applied to the audience."""
         return self._filters
-
-    def delete(self) -> None:
-        """Deletes the audience."""
-        with tracer.start_as_current_span(f"{type(self).__name__}.delete"):
-            logger.info("Deleting audience '%s'", self)
-            self._openapi_service.audience.audience_api.audience_audience_id_delete(
-                self.id
-            )
-            logger.debug("Audience '%s' has been deleted.", self)
-            managed_print(f"Audience '{self}' has been deleted.")
 
     def assign_job(self, job_definition: RapidataJobDefinition) -> RapidataJob:
         """Assign a job to this audience.
