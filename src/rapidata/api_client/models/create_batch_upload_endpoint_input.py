@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.compression_override import CompressionOverride
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +31,8 @@ class CreateBatchUploadEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     urls: List[StrictStr]
     correlation_id: Optional[StrictStr] = Field(default=None, description="Optional client-supplied identifier to group related batch uploads.", alias="correlationId")
-    __properties: ClassVar[List[str]] = ["urls", "correlationId"]
+    compression: Optional[CompressionOverride] = Field(default=None, description="Optional per-call override for image compression applied to every URL in the batch.  Null means use the configured defaults.")
+    __properties: ClassVar[List[str]] = ["urls", "correlationId", "compression"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -67,6 +69,9 @@ class CreateBatchUploadEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of compression
+        if self.compression:
+            _dict['compression'] = self.compression.to_dict()
         # set to None if correlation_id (nullable) is None
         # and model_fields_set contains the field
         if self.correlation_id is None and "correlation_id" in self.model_fields_set:
@@ -85,7 +90,8 @@ class CreateBatchUploadEndpointInput(LazyValidatedModel):
 
         _data = {
             "urls": obj.get("urls"),
-            "correlationId": obj.get("correlationId")
+            "correlationId": obj.get("correlationId"),
+            "compression": CompressionOverride.from_dict(obj["compression"]) if obj.get("compression") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
