@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import shutil
-from typing import Any, Literal
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -30,7 +30,6 @@ class CompressionConfig(BaseModel):
         enabled (bool | None): Force compression on or off. ``None`` to defer to the server default.
         quality (int | None): WebP quality (1..100) to use when compression runs.
         max_dimension (int | None): Maximum width or height in pixels when compression runs.
-        library (Literal["ImageSharp", "NetVips"] | None): Image processing library to use.
     """
 
     model_config = ConfigDict(validate_assignment=True)
@@ -38,10 +37,6 @@ class CompressionConfig(BaseModel):
     enabled: bool | None = None
     quality: int | None = None
     max_dimension: int | None = None
-    # Mirrors the libraries the asset service currently advertises. Update when
-    # the backend adds a new option — this is intentionally not ``str`` so an
-    # incompatible value fails fast at construction rather than at the wire.
-    library: Literal["ImageSharp", "NetVips"] | None = None
 
     @field_validator("quality")
     @classmethod
@@ -64,8 +59,7 @@ class CompressionConfig(BaseModel):
         off" request, distinct from "defer to server default".
         """
         return any(
-            v is not None
-            for v in (self.enabled, self.quality, self.max_dimension, self.library)
+            v is not None for v in (self.enabled, self.quality, self.max_dimension)
         )
 
     def cache_suffix(self) -> str:
@@ -75,13 +69,13 @@ class CompressionConfig(BaseModel):
         does not collide on a single cache entry.
 
         The separator characters ``|``, ``/`` and ``=`` are reserved — none of
-        the existing field types (``bool``, ``int``, ``Literal[fixed strings]``)
-        can produce them, so the suffix round-trips unambiguously. Revisit this
-        if a free-form string field is ever added.
+        the existing field types (``bool``, ``int``) can produce them, so the
+        suffix round-trips unambiguously. Revisit this if a free-form string
+        field is ever added.
         """
         if not self.is_set():
             return ""
-        return f"|c={self.enabled}/{self.quality}/{self.max_dimension}/{self.library}"
+        return f"|c={self.enabled}/{self.quality}/{self.max_dimension}"
 
 
 class UploadConfig(BaseModel):

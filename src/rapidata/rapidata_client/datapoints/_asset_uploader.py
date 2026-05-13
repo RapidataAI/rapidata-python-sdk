@@ -115,10 +115,10 @@ class AssetUploader:
         OpenAPI clients that don't yet expose the params.
 
         Keys match the wire-format parameter names exposed by the asset service
-        (``compress``, ``quality``, ``maxdim``, ``library``) — note that the
-        Pythonic ``max_dimension`` field on ``CompressionConfig`` is mapped to
-        the lowercase ``maxdim`` query parameter that the backend exposes,
-        matching the existing ``/asset/compress`` endpoint convention.
+        (``compress``, ``quality``, ``maxdim``) — note that the Pythonic
+        ``max_dimension`` field on ``CompressionConfig`` is mapped to the
+        lowercase ``maxdim`` query parameter, matching the existing
+        ``/asset/compress`` endpoint convention.
         """
         if compression is None or not compression.is_set():
             return {}
@@ -129,8 +129,6 @@ class AssetUploader:
             kwargs["quality"] = compression.quality
         if compression.max_dimension is not None:
             kwargs["maxdim"] = compression.max_dimension
-        if compression.library is not None:
-            kwargs["library"] = compression.library
         return kwargs
 
     def _upload_url_asset(self, url: str) -> str:
