@@ -4359,6 +4359,11 @@
             "description": "Optional audience id; defaults to the global audience when unset.",
             "nullable": true
           },
+          "priority": {
+            "type": "integer",
+            "description": "Optional priority override applied to every run's job. Admin-only.\n When unset, runs use the default leaderboard priority.",
+            "format": "int32"
+          },
           "featureFlags": {
             "allOf": [
               {
@@ -4937,6 +4942,12 @@
           "jobDefinitionId": {
             "type": "string",
             "description": "The id of the associated job definition, if any.",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority override applied to every run's job. Null when no override is set; runs then\n fall back to the default leaderboard priority.",
+            "format": "int32",
             "nullable": true
           },
           "featureFlags": {
@@ -6972,6 +6983,12 @@
             "type": "integer",
             "description": "The minimum responses collected per matchup.",
             "format": "int32"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority override applied to every run's job. Admin-only. Pass null to clear\n the override and fall back to the default leaderboard priority.",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -7115,44 +7132,16 @@
       }
     },
     "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "description": "JWT Authorization header using the Bearer scheme",
-        "scheme": "bearer",
-        "bearerFormat": "Json Web Token"
-      },
       "OpenIdConnect": {
         "type": "openIdConnect",
-        "description": "OpenId Connect connection flow",
+        "description": "OpenID Connect connection flow",
         "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
-      },
-      "OAuth2": {
-        "type": "oauth2",
-        "description": "OAuth2 authorization header using the Bearer scheme",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
-            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
-            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
-            "scopes": {
-              "openid": "OpenID",
-              "profile": "Profile",
-              "email": "Email"
-            }
-          }
-        }
       }
     }
   },
   "security": [
     {
-      "Bearer": [ ],
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email"
-      ],
-      "OAuth2": [
         "openid",
         "profile",
         "email"

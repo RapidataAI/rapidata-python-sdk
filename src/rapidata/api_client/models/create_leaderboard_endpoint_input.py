@@ -39,8 +39,9 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
     is_inversed: Optional[StrictBool] = Field(default=None, description="Whether the results should be inversed, selecting the worse model.", alias="isInversed")
     audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience id; defaults to the global audience when unset.", alias="audienceId")
+    priority: Optional[StrictInt] = Field(default=None, description="Optional priority override applied to every run's job. Admin-only.  When unset, runs use the default leaderboard priority.")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -136,6 +137,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed"),
             "audienceId": obj.get("audienceId"),
+            "priority": obj.get("priority"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }
         try:

@@ -39,8 +39,9 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
     min_responses: StrictInt = Field(description="The minimum responses collected per comparison.", alias="minResponses")
     audience_id: StrictStr = Field(description="The id of the audience that evaluates the leaderboard.", alias="audienceId")
     job_definition_id: Optional[StrictStr] = Field(default=None, description="The id of the associated job definition, if any.", alias="jobDefinitionId")
+    priority: Optional[StrictInt] = Field(default=None, description="Priority override applied to every run's job. Null when no override is set; runs then  fall back to the default leaderboard priority.")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "priority", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -89,6 +90,11 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
         if self.job_definition_id is None and "job_definition_id" in self.model_fields_set:
             _dict['jobDefinitionId'] = None
 
+        # set to None if priority (nullable) is None
+        # and model_fields_set contains the field
+        if self.priority is None and "priority" in self.model_fields_set:
+            _dict['priority'] = None
+
         return _dict
 
     @classmethod
@@ -111,6 +117,7 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
             "minResponses": obj.get("minResponses"),
             "audienceId": obj.get("audienceId"),
             "jobDefinitionId": obj.get("jobDefinitionId"),
+            "priority": obj.get("priority"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }
         try:
