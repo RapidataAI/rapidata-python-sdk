@@ -10,6 +10,74 @@ from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config._env_utils import apply_env_overrides
 
 
+class CompressionConfig(BaseModel):
+    """
+    Per-upload override for the asset service's image-compression behaviour.
+
+    Any field left as ``None`` falls back to the value the asset service has
+    configured globally. Set ``enabled`` to ``True`` (or ``False``) to force the
+    behaviour for this client regardless of the server default. Quality is
+    expected in the 1..100 range and ``max_dimension`` must be at least 1; both
+    are validated server-side.
+
+    Currently applies to single-asset uploads (file paths and individual URLs
+    via the ``/asset/file`` and ``/asset/url`` endpoints). Batched URL uploads
+    via the orchestrator's ``/asset/batch-upload`` path will gain the same
+    override in a follow-up once the SDK's OpenAPI client is regenerated to
+    include the ``compression`` field on the batch input model.
+
+    Attributes:
+        enabled (bool | None): Force compression on or off. ``None`` to defer to the server default.
+        quality (int | None): WebP quality (1..100) to use when compression runs.
+        max_dimension (int | None): Maximum width or height in pixels when compression runs.
+    """
+
+    model_config = ConfigDict(validate_assignment=True)
+
+    enabled: bool | None = None
+    quality: int | None = None
+    max_dimension: int | None = None
+
+    @field_validator("quality")
+    @classmethod
+    def _validate_quality(cls, v: int | None) -> int | None:
+        if v is not None and not 1 <= v <= 100:
+            raise ValueError("quality must be between 1 and 100")
+        return v
+
+    @field_validator("max_dimension")
+    @classmethod
+    def _validate_max_dimension(cls, v: int | None) -> int | None:
+        if v is not None and v < 1:
+            raise ValueError("max_dimension must be at least 1")
+        return v
+
+    def is_set(self) -> bool:
+        """
+        Whether any field has been overridden from its default of ``None``.
+        ``enabled=False`` counts as set — it is the explicit "force compression
+        off" request, distinct from "defer to server default".
+        """
+        return any(
+            v is not None for v in (self.enabled, self.quality, self.max_dimension)
+        )
+
+    def cache_suffix(self) -> str:
+        """
+        Stable string used as part of the asset upload cache key so that
+        the same source asset uploaded under different compression settings
+        does not collide on a single cache entry.
+
+        The separator characters ``|``, ``/`` and ``=`` are reserved — none of
+        the existing field types (``bool``, ``int``) can produce them, so the
+        suffix round-trips unambiguously. Revisit this if a free-form string
+        field is ever added.
+        """
+        if not self.is_set():
+            return ""
+        return f"|c={self.enabled}/{self.quality}/{self.max_dimension}"
+
+
 class UploadConfig(BaseModel):
     """
     Holds the configuration for the upload process.
@@ -29,6 +97,8 @@ class UploadConfig(BaseModel):
         enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
         batchSize (int): Number of URLs per batch (100-5000). Defaults to 1000.
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
+        compression (CompressionConfig | None): Per-upload override for the asset service's
+            image-compression behaviour. Defaults to None (use server-side defaults).
     """
 
     model_config = ConfigDict(validate_assignment=True)
@@ -62,6 +132,10 @@ class UploadConfig(BaseModel):
     batchPollInterval: float = Field(
         default=0.5,
         description="Polling interval in seconds",
+    )
+    compression: CompressionConfig | None = Field(
+        default=None,
+        description="Per-upload override for image compression. None uses server defaults.",
     )
 
     @field_validator("maxWorkers")

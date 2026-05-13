@@ -65,6 +65,7 @@ from .rapidata_client import (
     rapidata_config,
     logger,
     managed_print,
+    CompressionConfig,
 )
 
 from . import types
