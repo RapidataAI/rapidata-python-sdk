@@ -31,11 +31,11 @@ def build_campaign_preview_url(environment: str, campaign_id: str) -> str:
 
 
 def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:
-    """Print a terminal QR code that links to the campaign preview page.
+    """Print the preview URL and a terminal QR code linking to it.
 
-    Respects ``rapidata_config.logging.silent_mode``. If QR rendering fails for
-    any reason we still surface the preview URL via ``managed_print`` so the
-    user can open it manually.
+    Respects ``rapidata_config.logging.silent_mode``. The URL is always
+    printed so the user can copy-paste it; the QR code below is a convenience
+    for opening on a phone. If QR rendering fails the URL stays visible.
 
     Args:
         environment: The Rapidata environment (e.g. ``rapidata.ai``).
@@ -47,6 +47,7 @@ def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:
         return
 
     url = build_campaign_preview_url(environment, campaign_id)
+    managed_print(f"Preview at: {url}")
 
     try:
         import qrcode
@@ -60,7 +61,6 @@ def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:
         qr.add_data(url)
         qr.make(fit=True)
 
-        managed_print(f"Preview:")
         qr.print_ascii(invert=True)
     except Exception:
         logger.warning(
@@ -68,7 +68,6 @@ def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:
             url,
             exc_info=True,
         )
-        managed_print(f"Preview at: {url}")
 
 
 def _resolve_campaign_id_from_pipeline(
