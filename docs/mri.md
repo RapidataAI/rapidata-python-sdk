@@ -58,6 +58,31 @@ leaderboard = benchmark.create_leaderboard(
 
 1. Whether to display the prompt to evaluators. Only include it when the prompt is necessary for the task (e.g., prompt alignment). It adds complexity and cost.
 
+#### Restricting a leaderboard to a specific audience
+
+By default a leaderboard is answered by the global audience. To restrict
+it to a specific group of labelers — for example a [custom
+audience](audiences.md) you have trained, or a demographic slice of one —
+pass `audience_id`:
+
+```python
+from rapidata import CountryFilter, DemographicFilter
+
+base = client.audience.get_audience_by_id("audience_id")
+us_under_30 = base.filter([
+    CountryFilter(["US"]),
+    DemographicFilter("age", ["18-29"]),
+])
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (US, 18-29)",
+    instruction="Which image is more realistic?",
+    audience_id=us_under_30, # (1)!
+)
+```
+
+1. Accepts an id string, a `RapidataAudience`, or a `RapidataFilteredAudience` (derived via [`RapidataAudience.filter()`](audiences.md#filtered-audiences)). Omit to use the global audience.
+
 ### 3. Model Evaluation
 Once your benchmark and leaderboard are set up, you can evaluate models by the following:
 
