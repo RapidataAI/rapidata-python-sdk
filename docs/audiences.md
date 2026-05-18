@@ -208,8 +208,8 @@ A filtered audience is a lightweight subset of an existing audience's
 qualified labelers — derived by applying filters on top of the base
 audience. No new qualification or recruiting takes place; the filtered
 audience reuses the same pool. Use it when you want to target a specific
-slice (e.g. by country, language, or demographic) of an audience that you
-have already trained.
+slice (e.g. by country or language) of an audience that you have already
+trained.
 
 ### Deriving a filtered audience with `.filter()`
 
@@ -219,16 +219,16 @@ that reuses the base audience's qualified pool. Multiple filters in the
 list are combined with logical AND.
 
 ```py
-from rapidata import CountryFilter, DemographicFilter
+from rapidata import CountryFilter, LanguageFilter
 
 base = client.audience.get_audience_by_id("audience_id")
 
-us_under_30 = base.filter([
+us_english_speakers = base.filter([
     CountryFilter(["US"]),
-    DemographicFilter("age", ["18-29"]),
+    LanguageFilter(["en"]),
 ])
 
-job = us_under_30.assign_job(new_job_definition)
+job = us_english_speakers.assign_job(new_job_definition)
 ```
 
 The returned object is a `RapidataFilteredAudience` — a slim variant that
@@ -246,7 +246,6 @@ a way that's better expressed as a single combined filter on the base.
 |---|---|
 | `CountryFilter` | ISO-3166 country code (e.g. `["US", "CA"]`) |
 | `LanguageFilter` | Spoken / device language (e.g. `["en", "de"]`) |
-| `DemographicFilter` | Stored demographic dimension (e.g. `("age", ["18-29"])`) |
 
 ### Combining filters
 
@@ -255,13 +254,12 @@ build a single top-level filter explicitly with `AndFilter` / `OrFilter` /
 `NotFilter`, or use the equivalent `&` / `|` / `~` operators:
 
 ```py
-from rapidata import CountryFilter, LanguageFilter, DemographicFilter
+from rapidata import CountryFilter, LanguageFilter
 
-# "US or Canadian labelers, speaking English, but not aged 18-29"
+# "US or Canadian labelers, but not French speakers"
 audience_slice = base.filter([
     (CountryFilter(["US"]) | CountryFilter(["CA"]))
-    & LanguageFilter(["en"])
-    & ~DemographicFilter("age", ["18-29"]),
+    & ~LanguageFilter(["fr"]),
 ])
 ```
 
@@ -272,15 +270,15 @@ audience id is accepted, including [`benchmark.create_leaderboard`](mri.md).
 Pass the object directly — no need to read `.id` yourself:
 
 ```py
-us_under_30 = base.filter([
+us_english = base.filter([
     CountryFilter(["US"]),
-    DemographicFilter("age", ["18-29"]),
+    LanguageFilter(["en"]),
 ])
 
 leaderboard = benchmark.create_leaderboard(
-    name="Realism (US, 18-29)",
+    name="Realism (US, English)",
     instruction="Which image is more realistic?",
-    audience_id=us_under_30, # (1)!
+    audience_id=us_english, # (1)!
 )
 ```
 

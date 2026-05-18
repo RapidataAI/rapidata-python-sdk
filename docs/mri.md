@@ -62,22 +62,22 @@ leaderboard = benchmark.create_leaderboard(
 
 By default a leaderboard is answered by the global audience. To restrict
 it to a specific group of labelers — for example a [custom
-audience](audiences.md) you have trained, or a demographic slice of one —
-pass `audience_id`:
+audience](audiences.md) you have trained, or a country/language slice of
+one — pass `audience_id`:
 
 ```python
-from rapidata import CountryFilter, DemographicFilter
+from rapidata import CountryFilter, LanguageFilter
 
 base = client.audience.get_audience_by_id("audience_id")
-us_under_30 = base.filter([
+us_english = base.filter([
     CountryFilter(["US"]),
-    DemographicFilter("age", ["18-29"]),
+    LanguageFilter(["en"]),
 ])
 
 leaderboard = benchmark.create_leaderboard(
-    name="Realism (US, 18-29)",
+    name="Realism (US, English)",
     instruction="Which image is more realistic?",
-    audience_id=us_under_30, # (1)!
+    audience_id=us_english, # (1)!
 )
 ```
 
