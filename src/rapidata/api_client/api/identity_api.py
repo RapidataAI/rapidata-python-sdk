@@ -289,9 +289,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -563,9 +561,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -848,9 +844,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -1103,9 +1097,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
