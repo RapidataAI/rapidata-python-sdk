@@ -1,2 +1,4 @@
+from ._audience_base import RapidataAudienceBase
 from .rapidata_audience import RapidataAudience
 from .rapidata_audience_manager import RapidataAudienceManager
+from .rapidata_filtered_audience import RapidataFilteredAudience

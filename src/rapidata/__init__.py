@@ -1,9 +1,11 @@
-__version__ = "3.11.0"
+__version__ = "3.11.4"
 
 from .rapidata_client import (
     RapidataClient,
     RapidataAudience,
+    RapidataAudienceBase,
     RapidataAudienceManager,
+    RapidataFilteredAudience,
     RapidataOrderManager,
     RapidataOrder,
     RapidataJob,
@@ -63,6 +65,7 @@ from .rapidata_client import (
     rapidata_config,
     logger,
     managed_print,
+    CompressionConfig,
 )
 
 from . import types

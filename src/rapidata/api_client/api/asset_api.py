@@ -16,10 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictInt, StrictStr
+from pydantic import Field, StrictBool, StrictBytes, StrictInt, StrictStr
 from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.compression_library import CompressionLibrary
 from rapidata.api_client.models.upload_file_endpoint_output import UploadFileEndpointOutput
 from rapidata.api_client.models.upload_file_from_url_endpoint_output import UploadFileFromUrlEndpointOutput
 
@@ -45,7 +44,6 @@ class AssetApi:
     def asset_compress_post(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
-        library: Annotated[Optional[CompressionLibrary], Field(description="The compression library to use.")] = None,
         quality: Annotated[Optional[StrictInt], Field(description="The compression quality from 1 to 100.")] = None,
         maxdim: Annotated[Optional[StrictInt], Field(description="The maximum dimension (width or height) of the output image.")] = None,
         _request_timeout: Union[
@@ -67,8 +65,6 @@ class AssetApi:
 
         :param file: (required)
         :type file: bytearray
-        :param library: The compression library to use.
-        :type library: CompressionLibrary
         :param quality: The compression quality from 1 to 100.
         :type quality: int
         :param maxdim: The maximum dimension (width or height) of the output image.
@@ -97,7 +93,6 @@ class AssetApi:
 
         _param = self._asset_compress_post_serialize(
             file=file,
-            library=library,
             quality=quality,
             maxdim=maxdim,
             _request_auth=_request_auth,
@@ -127,7 +122,6 @@ class AssetApi:
     def asset_compress_post_with_http_info(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
-        library: Annotated[Optional[CompressionLibrary], Field(description="The compression library to use.")] = None,
         quality: Annotated[Optional[StrictInt], Field(description="The compression quality from 1 to 100.")] = None,
         maxdim: Annotated[Optional[StrictInt], Field(description="The maximum dimension (width or height) of the output image.")] = None,
         _request_timeout: Union[
@@ -149,8 +143,6 @@ class AssetApi:
 
         :param file: (required)
         :type file: bytearray
-        :param library: The compression library to use.
-        :type library: CompressionLibrary
         :param quality: The compression quality from 1 to 100.
         :type quality: int
         :param maxdim: The maximum dimension (width or height) of the output image.
@@ -179,7 +171,6 @@ class AssetApi:
 
         _param = self._asset_compress_post_serialize(
             file=file,
-            library=library,
             quality=quality,
             maxdim=maxdim,
             _request_auth=_request_auth,
@@ -209,7 +200,6 @@ class AssetApi:
     def asset_compress_post_without_preload_content(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
-        library: Annotated[Optional[CompressionLibrary], Field(description="The compression library to use.")] = None,
         quality: Annotated[Optional[StrictInt], Field(description="The compression quality from 1 to 100.")] = None,
         maxdim: Annotated[Optional[StrictInt], Field(description="The maximum dimension (width or height) of the output image.")] = None,
         _request_timeout: Union[
@@ -231,8 +221,6 @@ class AssetApi:
 
         :param file: (required)
         :type file: bytearray
-        :param library: The compression library to use.
-        :type library: CompressionLibrary
         :param quality: The compression quality from 1 to 100.
         :type quality: int
         :param maxdim: The maximum dimension (width or height) of the output image.
@@ -261,7 +249,6 @@ class AssetApi:
 
         _param = self._asset_compress_post_serialize(
             file=file,
-            library=library,
             quality=quality,
             maxdim=maxdim,
             _request_auth=_request_auth,
@@ -286,7 +273,6 @@ class AssetApi:
     def _asset_compress_post_serialize(
         self,
         file,
-        library,
         quality,
         maxdim,
         _request_auth,
@@ -311,10 +297,6 @@ class AssetApi:
 
         # process the path parameters
         # process the query parameters
-        if library is not None:
-            
-            _query_params.append(('library', library.value))
-            
         if quality is not None:
             
             _query_params.append(('quality', quality))
@@ -355,9 +337,7 @@ class AssetApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -382,6 +362,9 @@ class AssetApi:
     def asset_file_post(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
+        compress: Annotated[Optional[StrictBool], Field(description="When set, forces image compression on or off for this upload, overriding the configured default.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="Maximum width or height in pixels when compression runs. Falls back to the configured default when null.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -400,6 +383,12 @@ class AssetApi:
 
         :param file: (required)
         :type file: bytearray
+        :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
+        :type compress: bool
+        :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
+        :type quality: int
+        :param maxdim: Maximum width or height in pixels when compression runs. Falls back to the configured default when null.
+        :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -424,6 +413,9 @@ class AssetApi:
 
         _param = self._asset_file_post_serialize(
             file=file,
+            compress=compress,
+            quality=quality,
+            maxdim=maxdim,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -451,6 +443,9 @@ class AssetApi:
     def asset_file_post_with_http_info(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
+        compress: Annotated[Optional[StrictBool], Field(description="When set, forces image compression on or off for this upload, overriding the configured default.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="Maximum width or height in pixels when compression runs. Falls back to the configured default when null.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -469,6 +464,12 @@ class AssetApi:
 
         :param file: (required)
         :type file: bytearray
+        :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
+        :type compress: bool
+        :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
+        :type quality: int
+        :param maxdim: Maximum width or height in pixels when compression runs. Falls back to the configured default when null.
+        :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -493,6 +494,9 @@ class AssetApi:
 
         _param = self._asset_file_post_serialize(
             file=file,
+            compress=compress,
+            quality=quality,
+            maxdim=maxdim,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -520,6 +524,9 @@ class AssetApi:
     def asset_file_post_without_preload_content(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
+        compress: Annotated[Optional[StrictBool], Field(description="When set, forces image compression on or off for this upload, overriding the configured default.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="Maximum width or height in pixels when compression runs. Falls back to the configured default when null.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -538,6 +545,12 @@ class AssetApi:
 
         :param file: (required)
         :type file: bytearray
+        :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
+        :type compress: bool
+        :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
+        :type quality: int
+        :param maxdim: Maximum width or height in pixels when compression runs. Falls back to the configured default when null.
+        :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -562,6 +575,9 @@ class AssetApi:
 
         _param = self._asset_file_post_serialize(
             file=file,
+            compress=compress,
+            quality=quality,
+            maxdim=maxdim,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -584,6 +600,9 @@ class AssetApi:
     def _asset_file_post_serialize(
         self,
         file,
+        compress,
+        quality,
+        maxdim,
         _request_auth,
         _content_type,
         _headers,
@@ -606,6 +625,18 @@ class AssetApi:
 
         # process the path parameters
         # process the query parameters
+        if compress is not None:
+            
+            _query_params.append(('compress', compress))
+            
+        if quality is not None:
+            
+            _query_params.append(('quality', quality))
+            
+        if maxdim is not None:
+            
+            _query_params.append(('maxdim', maxdim))
+            
         # process the header parameters
         # process the form parameters
         if file is not None:
@@ -637,9 +668,7 @@ class AssetApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -664,6 +693,9 @@ class AssetApi:
     def asset_url_post(
         self,
         url: Annotated[StrictStr, Field(description="The url of the file to upload.")],
+        compress: Annotated[Optional[StrictBool], Field(description="When set, forces image compression on or off for this upload, overriding the configured default.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="Maximum width or height in pixels when compression runs. Falls back to the configured default when null.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -682,6 +714,12 @@ class AssetApi:
 
         :param url: The url of the file to upload. (required)
         :type url: str
+        :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
+        :type compress: bool
+        :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
+        :type quality: int
+        :param maxdim: Maximum width or height in pixels when compression runs. Falls back to the configured default when null.
+        :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -706,6 +744,9 @@ class AssetApi:
 
         _param = self._asset_url_post_serialize(
             url=url,
+            compress=compress,
+            quality=quality,
+            maxdim=maxdim,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -733,6 +774,9 @@ class AssetApi:
     def asset_url_post_with_http_info(
         self,
         url: Annotated[StrictStr, Field(description="The url of the file to upload.")],
+        compress: Annotated[Optional[StrictBool], Field(description="When set, forces image compression on or off for this upload, overriding the configured default.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="Maximum width or height in pixels when compression runs. Falls back to the configured default when null.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -751,6 +795,12 @@ class AssetApi:
 
         :param url: The url of the file to upload. (required)
         :type url: str
+        :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
+        :type compress: bool
+        :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
+        :type quality: int
+        :param maxdim: Maximum width or height in pixels when compression runs. Falls back to the configured default when null.
+        :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -775,6 +825,9 @@ class AssetApi:
 
         _param = self._asset_url_post_serialize(
             url=url,
+            compress=compress,
+            quality=quality,
+            maxdim=maxdim,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -802,6 +855,9 @@ class AssetApi:
     def asset_url_post_without_preload_content(
         self,
         url: Annotated[StrictStr, Field(description="The url of the file to upload.")],
+        compress: Annotated[Optional[StrictBool], Field(description="When set, forces image compression on or off for this upload, overriding the configured default.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="Maximum width or height in pixels when compression runs. Falls back to the configured default when null.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -820,6 +876,12 @@ class AssetApi:
 
         :param url: The url of the file to upload. (required)
         :type url: str
+        :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
+        :type compress: bool
+        :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
+        :type quality: int
+        :param maxdim: Maximum width or height in pixels when compression runs. Falls back to the configured default when null.
+        :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -844,6 +906,9 @@ class AssetApi:
 
         _param = self._asset_url_post_serialize(
             url=url,
+            compress=compress,
+            quality=quality,
+            maxdim=maxdim,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -866,6 +931,9 @@ class AssetApi:
     def _asset_url_post_serialize(
         self,
         url,
+        compress,
+        quality,
+        maxdim,
         _request_auth,
         _content_type,
         _headers,
@@ -892,6 +960,18 @@ class AssetApi:
             
             _query_params.append(('url', url))
             
+        if compress is not None:
+            
+            _query_params.append(('compress', compress))
+            
+        if quality is not None:
+            
+            _query_params.append(('quality', quality))
+            
+        if maxdim is not None:
+            
+            _query_params.append(('maxdim', maxdim))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -908,9 +988,7 @@ class AssetApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(

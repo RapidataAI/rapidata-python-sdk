@@ -17,22 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateLeaderboardEndpointInput(LazyValidatedModel):
+class CompressionOverride(LazyValidatedModel):
     """
-    UpdateLeaderboardEndpointInput
+    CompressionOverride
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(default=None, description="The new name of the leaderboard.")
-    response_budget: Optional[StrictInt] = Field(default=None, description="The response budget collected when onboarding a new participant.", alias="responseBudget")
-    min_responses: Optional[StrictInt] = Field(default=None, description="The minimum responses collected per matchup.", alias="minResponses")
-    priority: Optional[StrictInt] = Field(default=None, description="Priority override applied to every run's job. Admin-only. Pass null to clear  the override and fall back to the default leaderboard priority.")
-    __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses", "priority"]
+    enabled: Optional[StrictBool] = None
+    quality: Optional[StrictInt] = None
+    max_dimension: Optional[StrictInt] = Field(default=None, alias="maxDimension")
+    __properties: ClassVar[List[str]] = ["enabled", "quality", "maxDimension"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -48,7 +47,7 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateLeaderboardEndpointInput from a JSON string"""
+        """Create an instance of CompressionOverride from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,16 +68,26 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if priority (nullable) is None
+        # set to None if enabled (nullable) is None
         # and model_fields_set contains the field
-        if self.priority is None and "priority" in self.model_fields_set:
-            _dict['priority'] = None
+        if self.enabled is None and "enabled" in self.model_fields_set:
+            _dict['enabled'] = None
+
+        # set to None if quality (nullable) is None
+        # and model_fields_set contains the field
+        if self.quality is None and "quality" in self.model_fields_set:
+            _dict['quality'] = None
+
+        # set to None if max_dimension (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_dimension is None and "max_dimension" in self.model_fields_set:
+            _dict['maxDimension'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateLeaderboardEndpointInput from a dict"""
+        """Create an instance of CompressionOverride from a dict"""
         if obj is None:
             return None
 
@@ -86,10 +95,9 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "name": obj.get("name"),
-            "responseBudget": obj.get("responseBudget"),
-            "minResponses": obj.get("minResponses"),
-            "priority": obj.get("priority")
+            "enabled": obj.get("enabled"),
+            "quality": obj.get("quality"),
+            "maxDimension": obj.get("maxDimension")
         }
         try:
             _obj = cls.model_validate(_data)

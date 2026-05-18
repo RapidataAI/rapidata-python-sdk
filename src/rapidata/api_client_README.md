@@ -45,26 +45,18 @@ configuration = rapidata.api_client.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-configuration.access_token = os.environ["ACCESS_TOKEN"]
-
-# Configure Bearer authorization (Json Web Token): Bearer
-configuration = rapidata.api_client.Configuration(
-    access_token = os.environ["BEARER_TOKEN"]
-)
-
 
 # Enter a context with an instance of the API client
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rapidata.api_client.AssetApi(api_client)
     file = None # bytearray | 
-    library = rapidata.api_client.CompressionLibrary() # CompressionLibrary | The compression library to use. (optional)
     quality = 85 # int | The compression quality from 1 to 100. (optional) (default to 85)
     maxdim = 800 # int | The maximum dimension (width or height) of the output image. (optional) (default to 800)
 
     try:
         # Compresses an uploaded image and returns the WebP result.
-        api_response = api_instance.asset_compress_post(file, library=library, quality=quality, maxdim=maxdim)
+        api_response = api_instance.asset_compress_post(file, quality=quality, maxdim=maxdim)
         print("The response of AssetApi->asset_compress_post:\n")
         pprint(api_response)
     except ApiException as e:
@@ -345,7 +337,7 @@ Class | Method | HTTP request | Description
  - [CloneOrderEndpointInput](rapidata/api_client/docs/CloneOrderEndpointInput.md)
  - [CloneOrderEndpointOutput](rapidata/api_client/docs/CloneOrderEndpointOutput.md)
  - [ComparisonOperator](rapidata/api_client/docs/ComparisonOperator.md)
- - [CompressionLibrary](rapidata/api_client/docs/CompressionLibrary.md)
+ - [CompressionOverride](rapidata/api_client/docs/CompressionOverride.md)
  - [ConditionalValidationSelectionValidationChance](rapidata/api_client/docs/ConditionalValidationSelectionValidationChance.md)
  - [ConfidenceInterval](rapidata/api_client/docs/ConfidenceInterval.md)
  - [CreateAudienceEndpointInput](rapidata/api_client/docs/CreateAudienceEndpointInput.md)
@@ -938,25 +930,9 @@ Class | Method | HTTP request | Description
 
 
 Authentication schemes defined for the API:
-<a id="Bearer"></a>
-### Bearer
-
-- **Type**: Bearer authentication (Json Web Token)
-
 <a id="OpenIdConnect"></a>
 ### OpenIdConnect
 
-
-<a id="OAuth2"></a>
-### OAuth2
-
-- **Type**: OAuth
-- **Flow**: accessCode
-- **Authorization URL**: https://auth.rabbitdata.ch/connect/authorize
-- **Scopes**: 
- - **openid**: OpenID
- - **profile**: Profile
- - **email**: Email
 
 
 ## Author

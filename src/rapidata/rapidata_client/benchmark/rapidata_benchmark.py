@@ -8,7 +8,7 @@ from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 
 if TYPE_CHECKING:
     import pandas as pd
-    from rapidata.rapidata_client.audience.rapidata_audience import RapidataAudience
+    from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
     from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
         RapidataLeaderboard,
     )
@@ -321,7 +321,7 @@ class RapidataBenchmark:
         inverse_ranking: bool = False,
         level_of_detail: LevelOfDetail | None = None,
         min_responses_per_matchup: int | None = None,
-        audience_id: str | RapidataAudience | None = None,
+        audience_id: str | RapidataAudienceBase | None = None,
         settings: Sequence["RapidataSetting"] | None = None,
     ) -> RapidataLeaderboard:
         """
@@ -335,13 +335,13 @@ class RapidataBenchmark:
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
             level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
-            audience_id: The audience that should answer the leaderboard. Pass either the audience id or a :class:`RapidataAudience` instance. Accepts both plain dimension audiences and filtered audiences derived via :py:meth:`RapidataAudience.filter`. Defaults to the global audience when not specified.
+            audience_id: The audience that should answer the leaderboard. Pass either the audience id, a :class:`RapidataAudience` (dimension audience), or a :class:`RapidataFilteredAudience` (derived via :py:meth:`RapidataAudience.filter`). Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
         from rapidata.api_client.models.create_leaderboard_endpoint_input import (
             CreateLeaderboardEndpointInput,
         )
-        from rapidata.rapidata_client.audience.rapidata_audience import RapidataAudience
+        from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
         from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
             RapidataLeaderboard,
@@ -366,7 +366,7 @@ class RapidataBenchmark:
 
             resolved_audience_id = (
                 audience_id.id
-                if isinstance(audience_id, RapidataAudience)
+                if isinstance(audience_id, RapidataAudienceBase)
                 else audience_id
             )
 
