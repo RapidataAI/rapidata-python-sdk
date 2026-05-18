@@ -208,20 +208,27 @@ A filtered audience is a lightweight subset of an existing audience's
 qualified labelers — derived by applying filters on top of the base
 audience. No new qualification or recruiting takes place; the filtered
 audience reuses the same pool. Use it when you want to target a specific
-slice (e.g. by country, language, or demographic) of an audience that you
-have already trained.
+slice (e.g. by country or language) of an audience that you have already
+trained.
+
+### Deriving a filtered audience with `.filter()`
+
+Call `.filter(...)` on any `RapidataAudience` with a list of one or more
+filters. The call returns a `RapidataFilteredAudience` — a slim handle
+that reuses the base audience's qualified pool. Multiple filters in the
+list are combined with logical AND.
 
 ```py
-from rapidata import CountryFilter, DemographicFilter
+from rapidata import CountryFilter, LanguageFilter
 
 base = client.audience.get_audience_by_id("audience_id")
 
-us_under_30 = base.filter([
+us_english_speakers = base.filter([
     CountryFilter(["US"]),
-    DemographicFilter("age", ["18-29"]),
+    LanguageFilter(["en"]),
 ])
 
-job = us_under_30.assign_job(new_job_definition)
+job = us_english_speakers.assign_job(new_job_definition)
 ```
 
 The returned object is a `RapidataFilteredAudience` — a slim variant that
@@ -233,10 +240,49 @@ exposes only the operations that make sense for a filtered view
 qualification pool (which the filtered view shares) or chain filters in
 a way that's better expressed as a single combined filter on the base.
 
-Supported filters: `CountryFilter`, `LanguageFilter`, `DemographicFilter`,
-combined with `AndFilter` / `OrFilter` / `NotFilter` (or the `&` / `|` /
-`~` operators). Multiple filters passed in the list are combined with
-logical AND.
+### Supported filters
+
+| Filter | Targets labelers by |
+|---|---|
+| `CountryFilter` | ISO-3166 country code (e.g. `["US", "CA"]`) |
+| `LanguageFilter` | Spoken / device language (e.g. `["en", "de"]`) |
+
+### Combining filters
+
+The list form combines filters with logical AND. For anything richer,
+build a single top-level filter explicitly with `AndFilter` / `OrFilter` /
+`NotFilter`, or use the equivalent `&` / `|` / `~` operators:
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+# "US or Canadian labelers, but not French speakers"
+audience_slice = base.filter([
+    (CountryFilter(["US"]) | CountryFilter(["CA"]))
+    & ~LanguageFilter(["fr"]),
+])
+```
+
+### Using a filtered audience with a leaderboard
+
+`RapidataFilteredAudience` is a valid `audience_id` anywhere a regular
+audience id is accepted, including [`benchmark.create_leaderboard`](mri.md).
+Pass the object directly — no need to read `.id` yourself:
+
+```py
+us_english = base.filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (US, English)",
+    instruction="Which image is more realistic?",
+    audience_id=us_english, # (1)!
+)
+```
+
+1. Accepts an id string, a `RapidataAudience`, or a `RapidataFilteredAudience`. Defaults to the global audience when omitted.
 
 ## Next Steps
 
