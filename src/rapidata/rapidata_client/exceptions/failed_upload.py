@@ -20,6 +20,9 @@ class FailedUpload(Generic[T]):
         error_type: The type of the exception (e.g., "RapidataError").
         timestamp: Optional timestamp when the failure occurred.
         exception: Optional original exception for richer error context.
+        trace_id: Optional backend trace ID, when the failure originated from a
+            RapidataError whose response included a traceId. Used to correlate
+            an SDK-side failure with the backend trace that produced it.
     """
 
     item: T
@@ -27,13 +30,15 @@ class FailedUpload(Generic[T]):
     error_type: str
     timestamp: Optional[datetime] = field(default_factory=datetime.now)
     exception: Optional[Exception] = None
+    trace_id: Optional[str] = None
 
     @classmethod
     def from_exception(cls, item: T, exception: Exception | None) -> FailedUpload[T]:
         """
         Create a FailedUpload from an item and exception.
 
-        For RapidataError exceptions, extracts the clean API error reason.
+        For RapidataError exceptions, extracts the clean API error reason and
+        the backend trace ID (when present in the error response).
         For other exceptions, uses the string representation.
 
         Args:
@@ -54,9 +59,14 @@ class FailedUpload(Generic[T]):
         from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
 
         error_type = type(exception).__name__
+        trace_id: Optional[str] = None
 
         if isinstance(exception, RapidataError):
             error_message = exception.get_reason()
+            if isinstance(exception.details, dict):
+                raw_trace_id = exception.details.get("traceId")
+                if isinstance(raw_trace_id, str) and raw_trace_id:
+                    trace_id = raw_trace_id
         else:
             error_message = str(exception)
 
@@ -65,6 +75,7 @@ class FailedUpload(Generic[T]):
             error_message=error_message,
             error_type=error_type,
             exception=exception,
+            trace_id=trace_id,
         )
 
     def format_error_details(self) -> str:
@@ -79,6 +90,9 @@ class FailedUpload(Generic[T]):
             f"Error Type: {self.error_type}",
             f"Error Message: {self.error_message}",
         ]
+
+        if self.trace_id:
+            details.append(f"Trace Id: {self.trace_id}")
 
         if self.timestamp:
             details.append(f"Timestamp: {self.timestamp.isoformat()}")

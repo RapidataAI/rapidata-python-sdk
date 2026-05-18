@@ -91,7 +91,7 @@ class RapidataDataset:
         executor = ThreadPoolExecutor(max_workers=rapidata_config.upload.maxWorkers)
 
         # 3. Execute uploads and incremental datapoint creation
-        self._execute_incremental_creation(
+        asset_failures = self._execute_incremental_creation(
             datapoints,
             asset_to_datapoints,
             datapoint_pending_count,
@@ -105,7 +105,12 @@ class RapidataDataset:
 
         # 5. Collect and return results
         return self._collect_and_return_results(
-            datapoints, creation_futures, datapoint_pending_count, lock
+            datapoints,
+            creation_futures,
+            datapoint_pending_count,
+            lock,
+            asset_failures,
+            asset_to_datapoints,
         )
 
     def _build_asset_to_datapoint_mapping(
@@ -157,7 +162,7 @@ class RapidataDataset:
         creation_futures: list[tuple[int, Future]],
         lock: threading.Lock,
         executor: ThreadPoolExecutor,
-    ) -> None:
+    ) -> list[FailedUpload[str]]:
         """
         Execute asset uploads and incremental datapoint creation.
 
@@ -168,7 +173,12 @@ class RapidataDataset:
             creation_futures: List to store creation futures.
             lock: Lock protecting shared state.
             executor: Thread pool executor for datapoint creation.
+
+        Returns:
+            Asset-level failures from the upload phase, so callers can map them
+            back to the datapoints they blocked.
         """
+        asset_failures: list[FailedUpload[str]] = []
         # Create progress bar for datapoint creation
         datapoint_pbar = tqdm(
             total=len(datapoints),
@@ -224,6 +234,8 @@ class RapidataDataset:
         finally:
             # Always close progress bar, even on exception
             datapoint_pbar.close()
+
+        return asset_failures
 
     def _create_asset_completion_callback(
         self,
@@ -369,6 +381,8 @@ class RapidataDataset:
         creation_futures: list[tuple[int, Future]],
         datapoint_pending_count: dict[int, int],
         lock: threading.Lock,
+        asset_failures: list[FailedUpload[str]],
+        asset_to_datapoints: dict[str, set[int]],
     ) -> tuple[list[Datapoint], list[FailedUpload[Datapoint]]]:
         """
         Collect results from datapoint creation tasks.
@@ -378,6 +392,10 @@ class RapidataDataset:
             creation_futures: List of creation futures.
             datapoint_pending_count: Datapoints whose assets failed.
             lock: Lock protecting datapoint_pending_count.
+            asset_failures: Asset-level failures from the upload phase, used to
+                attach the underlying error reasons and trace IDs to the
+                datapoint-level FailedUpload entries.
+            asset_to_datapoints: Mapping from asset to datapoint indices.
 
         Returns:
             Tuple of (successful_uploads, failed_uploads).
@@ -395,15 +413,25 @@ class RapidataDataset:
                 # Use from_exception to extract proper error reason from RapidataError
                 failed_uploads.append(FailedUpload.from_exception(datapoints[idx], e))
 
+        # Build reverse mapping: datapoint index -> the asset-level failures
+        # that blocked it. A single datapoint can have multiple required
+        # assets fail, so we accumulate all of them.
+        datapoint_to_asset_failures: dict[int, list[FailedUpload[str]]] = {}
+        for asset_failure in asset_failures:
+            affected = asset_to_datapoints.get(asset_failure.item, set())
+            for dp_idx in affected:
+                datapoint_to_asset_failures.setdefault(dp_idx, []).append(
+                    asset_failure
+                )
+
         # Handle datapoints whose assets failed to upload
         with lock:
             for idx in datapoint_pending_count:
                 logger.warning(f"Datapoint {idx} assets failed to upload")
                 failed_uploads.append(
-                    FailedUpload(
-                        item=datapoints[idx],
-                        error_type="AssetUploadFailed",
-                        error_message="One or more required assets failed to upload",
+                    self._build_asset_failure_for_datapoint(
+                        datapoints[idx],
+                        datapoint_to_asset_failures.get(idx, []),
                     )
                 )
 
@@ -411,6 +439,56 @@ class RapidataDataset:
             f"Datapoint creation complete: {len(successful_uploads)} succeeded, {len(failed_uploads)} failed"
         )
         return successful_uploads, failed_uploads
+
+    @staticmethod
+    def _build_asset_failure_for_datapoint(
+        datapoint: Datapoint,
+        related_asset_failures: list[FailedUpload[str]],
+    ) -> FailedUpload[Datapoint]:
+        """
+        Build a datapoint-level FailedUpload from the asset failures that
+        blocked it.
+
+        The error message reuses the underlying asset errors' reasons so the
+        user sees the real cause (not just "assets failed"), and the trace IDs
+        from any RapidataError-backed failures are aggregated so each blocked
+        datapoint surfaces every backend trace involved.
+        """
+        if not related_asset_failures:
+            return FailedUpload(
+                item=datapoint,
+                error_type="AssetUploadFailed",
+                error_message="One or more required assets failed to upload",
+            )
+
+        # Deduplicate reasons while preserving order so the message is stable.
+        seen_reasons: set[str] = set()
+        unique_reasons: list[str] = []
+        for fu in related_asset_failures:
+            if fu.error_message not in seen_reasons:
+                seen_reasons.add(fu.error_message)
+                unique_reasons.append(fu.error_message)
+
+        if len(unique_reasons) == 1:
+            error_message = f"Asset upload failed: {unique_reasons[0]}"
+        else:
+            error_message = "Asset upload failed: " + "; ".join(unique_reasons)
+
+        seen_trace_ids: set[str] = set()
+        unique_trace_ids: list[str] = []
+        for fu in related_asset_failures:
+            if fu.trace_id and fu.trace_id not in seen_trace_ids:
+                seen_trace_ids.add(fu.trace_id)
+                unique_trace_ids.append(fu.trace_id)
+
+        trace_id = ", ".join(unique_trace_ids) if unique_trace_ids else None
+
+        return FailedUpload(
+            item=datapoint,
+            error_type="AssetUploadFailed",
+            error_message=error_message,
+            trace_id=trace_id,
+        )
 
     def _create_dataset_groups(self, datapoints: list[Datapoint]) -> None:
         """Create dataset groups from datapoints that have a group field."""
