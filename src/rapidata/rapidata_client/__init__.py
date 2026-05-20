@@ -1,4 +1,5 @@
 from .rapidata_client import RapidataClient
+from .signals import SignalsManager, RapidataSignal
 from .audience import (
     RapidataAudience,
     RapidataAudienceBase,

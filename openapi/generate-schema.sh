@@ -63,6 +63,7 @@ workflow
 leaderboard
 flow
 translation
+signals
 "
 
 download() {

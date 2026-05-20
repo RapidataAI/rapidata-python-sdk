@@ -2,6 +2,8 @@ __version__ = "3.11.5"
 
 from .rapidata_client import (
     RapidataClient,
+    SignalsManager,
+    RapidataSignal,
     RapidataAudience,
     RapidataAudienceBase,
     RapidataAudienceManager,

@@ -31,6 +31,7 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
 from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
+from rapidata.rapidata_client.signals.signals_manager import SignalsManager
 from rapidata.rapidata_client.api.rapidata_api_client import (
     optional_api_call,
     mark_sdk_outdated,
@@ -88,6 +89,7 @@ class RapidataClient:
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
             job (JobManager): The JobManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
+            signals (SignalsManager): The SignalsManager instance.
         """
         tracer.set_session_id(
             uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
@@ -149,6 +151,9 @@ class RapidataClient:
             self._demographic = DemographicManager(
                 openapi_service=self._openapi_service
             )
+
+            logger.debug("Initializing SignalsManager")
+            self.signals = SignalsManager(openapi_service=self._openapi_service)
 
         self._check_beta_features()  # can't be in the trace for some reason
 
