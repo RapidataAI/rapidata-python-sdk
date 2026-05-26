@@ -341,7 +341,9 @@ class RapidataBenchmark:
         from rapidata.api_client.models.create_leaderboard_endpoint_input import (
             CreateLeaderboardEndpointInput,
         )
-        from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
+        from rapidata.rapidata_client.audience._audience_base import (
+            RapidataAudienceBase,
+        )
         from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
             RapidataLeaderboard,
@@ -350,10 +352,11 @@ class RapidataBenchmark:
         with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
-                or level_of_detail not in ["low", "medium", "high", "very high"]
+                or level_of_detail not in LevelOfDetail.__args__
             ):
                 raise ValueError(
-                    "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
+                    "Level of detail must be a string and one of: "
+                    + ", ".join(LevelOfDetail.__args__)
                 )
 
             if min_responses_per_matchup is not None and (
