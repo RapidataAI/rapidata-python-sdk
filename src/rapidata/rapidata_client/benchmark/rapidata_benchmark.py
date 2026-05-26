@@ -333,7 +333,7 @@ class RapidataBenchmark:
             show_prompt: Whether to show the prompt to the users. (default: False)
             show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
-            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
+            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. One of: 'debug', 'low', 'medium', 'high', 'very high'. (default: None, server decides)
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
             audience_id: The audience that should answer the leaderboard. Pass either the audience id, a :class:`RapidataAudience` (dimension audience), or a :class:`RapidataFilteredAudience` (derived via :py:meth:`RapidataAudience.filter`). Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
