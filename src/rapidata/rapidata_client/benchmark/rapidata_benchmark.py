@@ -333,7 +333,7 @@ class RapidataBenchmark:
             show_prompt: Whether to show the prompt to the users. (default: False)
             show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
-            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
+            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. One of: 'debug', 'low', 'medium', 'high', 'very high'. (default: None, server decides)
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
             audience_id: The audience that should answer the leaderboard. Pass either the audience id, a :class:`RapidataAudience` (dimension audience), or a :class:`RapidataFilteredAudience` (derived via :py:meth:`RapidataAudience.filter`). Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
@@ -341,7 +341,9 @@ class RapidataBenchmark:
         from rapidata.api_client.models.create_leaderboard_endpoint_input import (
             CreateLeaderboardEndpointInput,
         )
-        from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
+        from rapidata.rapidata_client.audience._audience_base import (
+            RapidataAudienceBase,
+        )
         from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
             RapidataLeaderboard,
@@ -350,10 +352,11 @@ class RapidataBenchmark:
         with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
-                or level_of_detail not in ["low", "medium", "high", "very high"]
+                or level_of_detail not in LevelOfDetail.__args__
             ):
                 raise ValueError(
-                    "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
+                    "Level of detail must be a string and one of: "
+                    + ", ".join(LevelOfDetail.__args__)
                 )
 
             if min_responses_per_matchup is not None and (

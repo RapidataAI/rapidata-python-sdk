@@ -18,7 +18,8 @@ class DetailMapper:
             return 16_000
         else:
             raise ValueError(
-                "Invalid level of detail. Must be one of: 'debug', 'low', 'medium', 'high', 'very high'"
+                "Invalid level of detail. Must be one of: "
+                + ", ".join(LevelOfDetail.__args__)
             )
 
     @staticmethod
