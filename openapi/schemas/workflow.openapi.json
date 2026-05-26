@@ -1242,6 +1242,7 @@
           "payload",
           "asset",
           "responses",
+          "totalResponseCount",
           "state"
         ],
         "type": "object",
@@ -1275,7 +1276,12 @@
                 }
               }
             ],
-            "description": "The list of responses for the rapid."
+            "description": "The (possibly capped) list of responses for the rapid."
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "format": "int64"
           },
           "state": {
             "allOf": [
@@ -1303,6 +1309,14 @@
             "description": "The decisiveness of the rapid.",
             "format": "double",
             "nullable": true
+          },
+          "aggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IResponseAggregation"
+              }
+            ],
+            "description": "Per-payload-type aggregation over all matching responses (computed before sampling).\n Populated for Compare and Classify rapids; null otherwise."
           }
         }
       },
@@ -1461,6 +1475,7 @@
           "payload",
           "asset",
           "responses",
+          "totalResponseCount",
           "state"
         ],
         "type": "object",
@@ -1494,7 +1509,12 @@
                 }
               }
             ],
-            "description": "The list of responses for the rapid."
+            "description": "The (possibly capped) list of responses for the rapid."
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "format": "int64"
           },
           "state": {
             "allOf": [
@@ -1522,6 +1542,14 @@
             "description": "The decisiveness of the rapid.",
             "format": "double",
             "nullable": true
+          },
+          "aggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IResponseAggregation"
+              }
+            ],
+            "description": "Per-payload-type aggregation over all matching responses (computed before sampling).\n Populated for Compare and Classify rapids; null otherwise."
           }
         }
       },
@@ -2858,6 +2886,67 @@
           }
         }
       },
+      "IResponseAggregation": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IResponseAggregationClassifyAggregation"
+          },
+          {
+            "$ref": "#/components/schemas/IResponseAggregationCompareAggregation"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassifyAggregation": "#/components/schemas/IResponseAggregationClassifyAggregation",
+            "CompareAggregation": "#/components/schemas/IResponseAggregationCompareAggregation"
+          }
+        }
+      },
+      "IResponseAggregationClassifyAggregation": {
+        "required": [
+          "categoryTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyAggregation"
+            ],
+            "type": "string"
+          },
+          "categoryTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTally"
+            }
+          }
+        }
+      },
+      "IResponseAggregationCompareAggregation": {
+        "required": [
+          "winnerTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareAggregation"
+            ],
+            "type": "string"
+          },
+          "winnerTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTally"
+            }
+          }
+        }
+      },
       "IWorkflowModel": {
         "required": [
           "_t"
@@ -3488,6 +3577,19 @@
           "None",
           "Rejected"
         ]
+      },
+      "ResponseTally": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userScoreSum": {
+            "type": "number",
+            "format": "double"
+          }
+        }
       },
       "SortDirection": {
         "enum": [

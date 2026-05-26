@@ -19,6 +19,7 @@ from rapidata.api_client.api.external_audience_api import ExternalAudienceApi
 from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.flow_api import FlowApi
 from rapidata.api_client.api.flow_item_api import FlowItemApi
+from rapidata.api_client.api.global_text_api import GlobalTextApi
 from rapidata.api_client.api.grouped_ranking_api import GroupedRankingApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.job_api import JobApi

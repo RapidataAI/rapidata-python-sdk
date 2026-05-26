@@ -17,23 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.get_all_global_texts_endpoint_output_item import GetAllGlobalTextsEndpointOutputItem
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateBenchmarkEndpointInput(LazyValidatedModel):
+class GetAllGlobalTextsEndpointOutput(LazyValidatedModel):
     """
-    UpdateBenchmarkEndpointInput
+    GetAllGlobalTextsEndpointOutput
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(default=None, description="The new name of the benchmark.")
-    is_public: Optional[StrictBool] = Field(default=None, description="Whether the benchmark should be public (only admins can change this).", alias="isPublic")
-    initial_boost_level: Optional[StrictInt] = Field(default=None, description="Initial boost level applied to the campaign of every run created from this benchmark.  Admins may set any value the validator allows (0-10) or null to clear the  override; non-admins are restricted to  0.. and may not clear  it. Both restrictions are enforced by  with a 403 on  violation.", alias="initialBoostLevel")
-    score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on the overall scoreboard of this  benchmark.", alias="scoreShift")
-    score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on the overall scoreboard of this benchmark. Must be strictly positive.", alias="scoreScale")
-    __properties: ClassVar[List[str]] = ["name", "isPublic", "initialBoostLevel", "scoreShift", "scoreScale"]
+    global_texts: List[GetAllGlobalTextsEndpointOutputItem] = Field(alias="globalTexts")
+    __properties: ClassVar[List[str]] = ["globalTexts"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -49,7 +46,7 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateBenchmarkEndpointInput from a JSON string"""
+        """Create an instance of GetAllGlobalTextsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,16 +67,18 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if initial_boost_level (nullable) is None
-        # and model_fields_set contains the field
-        if self.initial_boost_level is None and "initial_boost_level" in self.model_fields_set:
-            _dict['initialBoostLevel'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in global_texts (list)
+        _items = []
+        if self.global_texts:
+            for _item_global_texts in self.global_texts:
+                if _item_global_texts:
+                    _items.append(_item_global_texts.to_dict())
+            _dict['globalTexts'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateBenchmarkEndpointInput from a dict"""
+        """Create an instance of GetAllGlobalTextsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -87,11 +86,7 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "name": obj.get("name"),
-            "isPublic": obj.get("isPublic"),
-            "initialBoostLevel": obj.get("initialBoostLevel"),
-            "scoreShift": obj.get("scoreShift"),
-            "scoreScale": obj.get("scoreScale")
+            "globalTexts": [GetAllGlobalTextsEndpointOutputItem.from_dict(_item) for _item in obj["globalTexts"]] if obj.get("globalTexts") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

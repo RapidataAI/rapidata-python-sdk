@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -41,7 +41,11 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
     job_definition_id: Optional[StrictStr] = Field(default=None, description="The id of the associated job definition, if any.", alias="jobDefinitionId")
     priority: Optional[StrictInt] = Field(default=None, description="Priority override applied to every run's job. Null when no override is set; runs then  fall back to the default leaderboard priority.")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "priority", "featureFlags"]
+    weight: Union[StrictFloat, StrictInt] = Field(description="Multiplier applied to every match result from this leaderboard when it contributes to  the parent benchmark's overall / combined scoreboards.")
+    score_shift: Union[StrictFloat, StrictInt] = Field(description="Additive offset applied to displayed scores on this leaderboard's per-leaderboard  scoreboard.", alias="scoreShift")
+    score_scale: Union[StrictFloat, StrictInt] = Field(description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on this leaderboard's per-leaderboard scoreboard.", alias="scoreScale")
+    is_hidden: StrictBool = Field(description="Whether the leaderboard is hidden in listings and reads for non-admins.", alias="isHidden")
+    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "priority", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -118,7 +122,11 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
             "audienceId": obj.get("audienceId"),
             "jobDefinitionId": obj.get("jobDefinitionId"),
             "priority": obj.get("priority"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "weight": obj.get("weight"),
+            "scoreShift": obj.get("scoreShift"),
+            "scoreScale": obj.get("scoreScale"),
+            "isHidden": obj.get("isHidden")
         }
         try:
             _obj = cls.model_validate(_data)
