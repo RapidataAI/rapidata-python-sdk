@@ -46,6 +46,7 @@ from .settings import (
     LocateMinPointsSetting,
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
+    ClassifyEquirectangularSetting,
 )
 # --- GENERATED SETTINGS IMPORTS END ---
 from .filter import (
