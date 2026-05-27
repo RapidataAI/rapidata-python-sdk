@@ -19,6 +19,7 @@ from .locate_max_points import LocateMaxPointsSetting
 from .locate_min_points import LocateMinPointsSetting
 from .compare_panorama import ComparePanoramaSetting
 from .compare_equirectangular import CompareEquirectangularSetting
+from .classify_equirectangular import ClassifyEquirectangularSetting
 from .custom_setting import CustomSetting
 from ._rapidata_setting import RapidataSetting
 from .rapidata_settings import RapidataSettings

@@ -19,6 +19,7 @@ from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsS
 from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
 from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
 from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
+from rapidata.rapidata_client.settings.classify_equirectangular import ClassifyEquirectangularSetting
 
 
 class RapidataSettings:
@@ -45,6 +46,7 @@ class RapidataSettings:
         LocateMinPoints (LocateMinPointsSetting): Sets the minimum number of points required for a valid locate submission. The submit button is disabled until enough points are placed.
         ComparePanorama (ComparePanoramaSetting): Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.
         CompareEquirectangular (CompareEquirectangularSetting): Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
+        ClassifyEquirectangular (ClassifyEquirectangularSetting): Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
 
     Example:
         ```python
@@ -72,3 +74,4 @@ class RapidataSettings:
     LocateMinPoints = LocateMinPointsSetting
     ComparePanorama = ComparePanoramaSetting
     CompareEquirectangular = CompareEquirectangularSetting
+    ClassifyEquirectangular = ClassifyEquirectangularSetting
