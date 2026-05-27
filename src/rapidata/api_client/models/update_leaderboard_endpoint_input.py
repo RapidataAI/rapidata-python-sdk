@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +32,11 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
     response_budget: Optional[StrictInt] = Field(default=None, description="The response budget collected when onboarding a new participant.", alias="responseBudget")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum responses collected per matchup.", alias="minResponses")
     priority: Optional[StrictInt] = Field(default=None, description="Priority override applied to every run's job. Admin-only. Pass null to clear  the override and fall back to the default leaderboard priority.")
-    __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses", "priority"]
+    weight: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplier applied to every match result of this leaderboard when it contributes to  the parent benchmark's overall / combined scoreboards. Unbounded; negative and zero  values are accepted.")
+    score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on this leaderboard's per-leaderboard  scoreboard.", alias="scoreShift")
+    score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on this leaderboard's per-leaderboard scoreboard. Must be strictly positive.", alias="scoreScale")
+    is_hidden: Optional[StrictBool] = Field(default=None, description="Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only.", alias="isHidden")
+    __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses", "priority", "weight", "scoreShift", "scoreScale", "isHidden"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -89,7 +93,11 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
             "name": obj.get("name"),
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
-            "priority": obj.get("priority")
+            "priority": obj.get("priority"),
+            "weight": obj.get("weight"),
+            "scoreShift": obj.get("scoreShift"),
+            "scoreScale": obj.get("scoreScale"),
+            "isHidden": obj.get("isHidden")
         }
         try:
             _obj = cls.model_validate(_data)

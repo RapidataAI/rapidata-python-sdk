@@ -806,6 +806,176 @@
         }
       }
     },
+    "/global-text": {
+      "post": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Creates a new global text entry.",
+        "requestBody": {
+          "description": "The payload describing the entry to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGlobalTextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateGlobalTextEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Returns every global text entry.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllGlobalTextsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/global-text/{globalTextId}": {
+      "delete": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Deletes a global text entry.",
+        "parameters": [
+          {
+            "name": "globalTextId",
+            "in": "path",
+            "description": "The id of the global text entry to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Updates a global text entry using patch semantics.",
+        "parameters": [
+          {
+            "name": "globalTextId",
+            "in": "path",
+            "description": "The id of the global text entry to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The patch payload describing which fields should change.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGlobalTextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/rapid/{rapidId}/reject": {
       "post": {
         "tags": [
@@ -1526,6 +1696,35 @@
           }
         }
       },
+      "CreateGlobalTextEndpoint_Input": {
+        "required": [
+          "key",
+          "englishText"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The human-readable key used to look up the text from translations."
+          },
+          "englishText": {
+            "type": "string",
+            "description": "The English source text that all translations derive from."
+          }
+        }
+      },
+      "CreateGlobalTextEndpoint_Output": {
+        "required": [
+          "globalTextId"
+        ],
+        "type": "object",
+        "properties": {
+          "globalTextId": {
+            "type": "string",
+            "description": "The unique identifier of the created global text entry."
+          }
+        }
+      },
       "CreateValidationFeedbackEndpoint_Input": {
         "required": [
           "feedback"
@@ -1560,6 +1759,44 @@
           "Video",
           "Audio"
         ]
+      },
+      "GetAllGlobalTextsEndpoint_Output": {
+        "required": [
+          "globalTexts"
+        ],
+        "type": "object",
+        "properties": {
+          "globalTexts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetAllGlobalTextsEndpoint_Output_Item"
+                }
+              }
+            ],
+            "description": "The list of global text entries."
+          }
+        }
+      },
+      "GetAllGlobalTextsEndpoint_Output_Item": {
+        "required": [
+          "id",
+          "key",
+          "englishText"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "englishText": {
+            "type": "string"
+          }
+        }
       },
       "GetGlobalResponsesEndpoint_Output": {
         "required": [
@@ -3902,6 +4139,19 @@
           },
           "targetLanguage": {
             "type": "string"
+          }
+        }
+      },
+      "UpdateGlobalTextEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The new key for the global text entry."
+          },
+          "englishText": {
+            "type": "string",
+            "description": "The new English source text for the global text entry."
           }
         }
       },

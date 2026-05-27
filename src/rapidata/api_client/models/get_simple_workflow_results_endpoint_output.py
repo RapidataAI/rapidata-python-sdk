@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.get_workflow_results_result_response import GetWorkflowResultsResultResponse
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_response_aggregation import IResponseAggregation
 from rapidata.api_client.models.rapid_state import RapidState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -36,11 +37,13 @@ class GetSimpleWorkflowResultsEndpointOutput(LazyValidatedModel):
     payload: IRapidPayload = Field(description="The payload of the rapid.")
     asset: IAssetModel = Field(description="The asset of the rapid.")
     responses: List[GetWorkflowResultsResultResponse]
+    total_response_count: StrictInt = Field(description="The true number of matching responses for this rapid, regardless of whether the  returned list was capped.", alias="totalResponseCount")
     state: RapidState = Field(description="The state of the rapid.")
     context: Optional[StrictStr] = Field(default=None, description="The optional textual context of the rapid.")
     context_asset: Optional[IAssetModel] = Field(default=None, description="The optional asset shown as context to the user.", alias="contextAsset")
     decisiveness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The decisiveness of the rapid.")
-    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state", "context", "contextAsset", "decisiveness"]
+    aggregation: Optional[IResponseAggregation] = Field(default=None, description="Per-payload-type aggregation over all matching responses (computed before sampling).  Populated for Compare and Classify rapids; null otherwise.")
+    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "totalResponseCount", "state", "context", "contextAsset", "decisiveness", "aggregation"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -93,6 +96,9 @@ class GetSimpleWorkflowResultsEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of aggregation
+        if self.aggregation:
+            _dict['aggregation'] = self.aggregation.to_dict()
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
@@ -119,10 +125,12 @@ class GetSimpleWorkflowResultsEndpointOutput(LazyValidatedModel):
             "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "responses": [GetWorkflowResultsResultResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
+            "totalResponseCount": obj.get("totalResponseCount"),
             "state": obj.get("state"),
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "decisiveness": obj.get("decisiveness")
+            "decisiveness": obj.get("decisiveness"),
+            "aggregation": IResponseAggregation.from_dict(obj["aggregation"]) if obj.get("aggregation") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -3357,6 +3357,11 @@
               }
             ],
             "description": "The aggregator type. If not provided, inherits from the previous revision."
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "A validation set id to pin on this revision. When set, every job run from this\n revision uses the specified validation set as the source of validation rapids\n instead of audience-derived examples. If not provided, inherits from the previous\n revision. Provide a wrapped null value to clear a previously pinned set.",
+            "nullable": true
           }
         },
         "description": "The input for the create job revision endpoint."

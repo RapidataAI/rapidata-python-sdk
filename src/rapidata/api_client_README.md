@@ -93,6 +93,7 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_base_audience_id_filter_post**](rapidata/api_client/docs/AudienceApi.md#audience_base_audience_id_filter_post) | **POST** /audience/{baseAudienceId}/filter | Creates a filtered view on the given base audience by applying a filter on top of its  graduates. Returns an audience id that can be used in job creation just like a regular  audience id; no new onboarding is required.
 *AudienceApi* | [**audience_inactivity_sync_sync_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_inactivity_sync_sync_id_get) | **GET** /audience/inactivity-sync/{syncId} | Returns the audience inactivity sync with the given id.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
+*AudienceApi* | [**audience_reconcile_user_counts_post**](rapidata/api_client/docs/AudienceApi.md#audience_reconcile_user_counts_post) | **POST** /audience/reconcile-user-counts | Enqueues a background job that reconciles audience-row state derived  from audience_state_counts.
 *AudienceApi* | [**audience_state_recalculation_recalculation_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_state_recalculation_recalculation_id_get) | **GET** /audience/state-recalculation/{recalculationId} | Returns the audience state recalculation with the given id.
 *AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all audiences visible to the caller.
 *BatchUploadApi* | [**asset_batch_upload_batch_upload_id_abort_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_abort_post) | **POST** /asset/batch-upload/{batchUploadId}/abort | Aborts the specified batch upload.
@@ -172,6 +173,10 @@ Class | Method | HTTP request | Description
 *FlowApi* | [**flow_ranking_flow_id_response_count_histogram_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_histogram_get) | **GET** /flow/ranking/{flowId}/response-count-histogram | Returns the distribution of total votes per completed flow item.
 *FlowApi* | [**flow_ranking_flow_id_response_count_timeseries_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_timeseries_get) | **GET** /flow/ranking/{flowId}/response-count-timeseries | Returns average response counts bucketed over time for completed flow items.
 *FlowItemApi* | [**flow_item_flow_item_id_stop_post**](rapidata/api_client/docs/FlowItemApi.md#flow_item_flow_item_id_stop_post) | **POST** /flow/item/{flowItemId}/stop | Stops the specified flow item and triggers partial result processing.
+*GlobalTextApi* | [**global_text_get**](rapidata/api_client/docs/GlobalTextApi.md#global_text_get) | **GET** /global-text | Returns every global text entry.
+*GlobalTextApi* | [**global_text_global_text_id_delete**](rapidata/api_client/docs/GlobalTextApi.md#global_text_global_text_id_delete) | **DELETE** /global-text/{globalTextId} | Deletes a global text entry.
+*GlobalTextApi* | [**global_text_global_text_id_patch**](rapidata/api_client/docs/GlobalTextApi.md#global_text_global_text_id_patch) | **PATCH** /global-text/{globalTextId} | Updates a global text entry using patch semantics.
+*GlobalTextApi* | [**global_text_post**](rapidata/api_client/docs/GlobalTextApi.md#global_text_post) | **POST** /global-text | Creates a new global text entry.
 *GroupedRankingApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Gets the result overview for a grouped ranking workflow.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Reads the bridge token keys for a given read key.
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write bridge token keys for a client.
@@ -366,6 +371,8 @@ Class | Method | HTTP request | Description
  - [CreateFlowEndpointOutput](rapidata/api_client/docs/CreateFlowEndpointOutput.md)
  - [CreateFlowItemEndpointInput](rapidata/api_client/docs/CreateFlowItemEndpointInput.md)
  - [CreateFlowItemEndpointOutput](rapidata/api_client/docs/CreateFlowItemEndpointOutput.md)
+ - [CreateGlobalTextEndpointInput](rapidata/api_client/docs/CreateGlobalTextEndpointInput.md)
+ - [CreateGlobalTextEndpointOutput](rapidata/api_client/docs/CreateGlobalTextEndpointOutput.md)
  - [CreateJobDefinitionEndpointInput](rapidata/api_client/docs/CreateJobDefinitionEndpointInput.md)
  - [CreateJobDefinitionEndpointOutput](rapidata/api_client/docs/CreateJobDefinitionEndpointOutput.md)
  - [CreateJobEndpointInput](rapidata/api_client/docs/CreateJobEndpointInput.md)
@@ -410,6 +417,8 @@ Class | Method | HTTP request | Description
  - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkEndpointOutput](rapidata/api_client/docs/ForkBenchmarkEndpointOutput.md)
  - [GenderUserFilterModelGender](rapidata/api_client/docs/GenderUserFilterModelGender.md)
+ - [GetAllGlobalTextsEndpointOutput](rapidata/api_client/docs/GetAllGlobalTextsEndpointOutput.md)
+ - [GetAllGlobalTextsEndpointOutputItem](rapidata/api_client/docs/GetAllGlobalTextsEndpointOutputItem.md)
  - [GetAudienceByIdEndpointOutput](rapidata/api_client/docs/GetAudienceByIdEndpointOutput.md)
  - [GetAudienceInactivitySyncByIdEndpointOutput](rapidata/api_client/docs/GetAudienceInactivitySyncByIdEndpointOutput.md)
  - [GetAudienceStateRecalculationByIdEndpointOutput](rapidata/api_client/docs/GetAudienceStateRecalculationByIdEndpointOutput.md)
@@ -710,6 +719,9 @@ Class | Method | HTTP request | Description
  - [IRefereeModelEarlyStoppingRefereeModel](rapidata/api_client/docs/IRefereeModelEarlyStoppingRefereeModel.md)
  - [IRefereeModelNaiveRefereeModel](rapidata/api_client/docs/IRefereeModelNaiveRefereeModel.md)
  - [IRefereeModelQuorumRefereeModel](rapidata/api_client/docs/IRefereeModelQuorumRefereeModel.md)
+ - [IResponseAggregation](rapidata/api_client/docs/IResponseAggregation.md)
+ - [IResponseAggregationClassifyAggregation](rapidata/api_client/docs/IResponseAggregationClassifyAggregation.md)
+ - [IResponseAggregationCompareAggregation](rapidata/api_client/docs/IResponseAggregationCompareAggregation.md)
  - [ISelection](rapidata/api_client/docs/ISelection.md)
  - [ISelectionAbTestSelection](rapidata/api_client/docs/ISelectionAbTestSelection.md)
  - [ISelectionCappedSelection](rapidata/api_client/docs/ISelectionCappedSelection.md)
@@ -859,6 +871,7 @@ Class | Method | HTTP request | Description
  - [ReadBridgeTokenEndpointNotAvailableOutput](rapidata/api_client/docs/ReadBridgeTokenEndpointNotAvailableOutput.md)
  - [RecreateExternalAudiencesEndpointInput](rapidata/api_client/docs/RecreateExternalAudiencesEndpointInput.md)
  - [ReportRapidEndpointInput](rapidata/api_client/docs/ReportRapidEndpointInput.md)
+ - [ResponseTally](rapidata/api_client/docs/ResponseTally.md)
  - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
  - [ScrubTruthModelScrubRange](rapidata/api_client/docs/ScrubTruthModelScrubRange.md)
@@ -903,6 +916,7 @@ Class | Method | HTTP request | Description
  - [UpdateCampaignEndpointInput](rapidata/api_client/docs/UpdateCampaignEndpointInput.md)
  - [UpdateConfigEndpointInput](rapidata/api_client/docs/UpdateConfigEndpointInput.md)
  - [UpdateDatasetNameEndpointInput](rapidata/api_client/docs/UpdateDatasetNameEndpointInput.md)
+ - [UpdateGlobalTextEndpointInput](rapidata/api_client/docs/UpdateGlobalTextEndpointInput.md)
  - [UpdateJobDefinitionEndpointInput](rapidata/api_client/docs/UpdateJobDefinitionEndpointInput.md)
  - [UpdateJobEndpointInput](rapidata/api_client/docs/UpdateJobEndpointInput.md)
  - [UpdateLeaderboardEndpointInput](rapidata/api_client/docs/UpdateLeaderboardEndpointInput.md)

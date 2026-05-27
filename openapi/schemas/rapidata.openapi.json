@@ -136,6 +136,10 @@
       "x-displayName": "CustomerRapid"
     },
     {
+      "name": "GlobalText",
+      "x-displayName": "GlobalText"
+    },
+    {
       "name": "Rapid",
       "x-displayName": "Rapid"
     },
@@ -2235,6 +2239,44 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/reconcile-user-counts": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Enqueues a background job that reconciles audience-row state derived\n from audience_state_counts.",
+        "responses": {
+          "202": {
+            "description": "Accepted"
           },
           "400": {
             "description": "Bad Request",
@@ -16363,6 +16405,212 @@
         ]
       }
     },
+    "/global-text": {
+      "post": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Creates a new global text entry.",
+        "requestBody": {
+          "description": "The payload describing the entry to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGlobalTextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateGlobalTextEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Returns every global text entry.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllGlobalTextsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/global-text/{globalTextId}": {
+      "delete": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Deletes a global text entry.",
+        "parameters": [
+          {
+            "name": "globalTextId",
+            "in": "path",
+            "description": "The id of the global text entry to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Updates a global text entry using patch semantics.",
+        "parameters": [
+          {
+            "name": "globalTextId",
+            "in": "path",
+            "description": "The id of the global text entry to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The patch payload describing which fields should change.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGlobalTextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/rapid/{rapidId}/reject": {
       "post": {
         "tags": [
@@ -26425,6 +26673,18 @@
             "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to . Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via .",
             "format": "int32",
             "nullable": true
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark. Defaults to 0 when unset.",
+            "format": "double",
+            "nullable": true
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark. Defaults to 1.0 when\n unset; must be strictly positive.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -26528,6 +26788,25 @@
             "type": "integer",
             "description": "Optional priority override applied to every run's job. Admin-only.\n When unset, runs use the default leaderboard priority.",
             "format": "int32"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result of this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards. Defaults to 1.0 when\n unset; unbounded (negative and zero values are accepted).",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard. Defaults to 0 when unset.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard. Defaults to 1.0 when\n unset; must be strictly positive.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard should be created hidden. Admin-only."
           },
           "featureFlags": {
             "allOf": [
@@ -26762,7 +27041,9 @@
           "isPublic",
           "createdAt",
           "ownerId",
-          "ownerMail"
+          "ownerMail",
+          "scoreShift",
+          "scoreScale"
         ],
         "type": "object",
         "properties": {
@@ -26791,6 +27072,16 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark.",
+            "format": "double"
           }
         }
       },
@@ -27039,7 +27330,11 @@
           "responseBudget",
           "minResponses",
           "audienceId",
-          "featureFlags"
+          "featureFlags",
+          "weight",
+          "scoreShift",
+          "scoreScale",
+          "isHidden"
         ],
         "type": "object",
         "properties": {
@@ -27102,6 +27397,25 @@
               }
             ],
             "description": "Feature flags applied to orders created from this leaderboard."
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
           }
         }
       },
@@ -28019,7 +28333,11 @@
           "responseBudget",
           "minResponses",
           "audienceId",
-          "featureFlags"
+          "featureFlags",
+          "weight",
+          "scoreShift",
+          "scoreScale",
+          "isHidden"
         ],
         "type": "object",
         "properties": {
@@ -28076,6 +28394,25 @@
               }
             ],
             "description": "The feature flags enabled for the leaderboard."
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
           }
         }
       },
@@ -28123,7 +28460,11 @@
           "responseBudget",
           "minResponses",
           "audienceId",
-          "featureFlags"
+          "featureFlags",
+          "weight",
+          "scoreShift",
+          "scoreScale",
+          "isHidden"
         ],
         "type": "object",
         "properties": {
@@ -28180,6 +28521,25 @@
               }
             ],
             "description": "Feature flags applied to orders created from this leaderboard."
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
           }
         }
       },
@@ -28536,6 +28896,16 @@
             "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0.. and may not clear\n it. Both restrictions are enforced by\n with a 403 on\n violation.",
             "format": "int32",
             "nullable": true
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark. Must be strictly positive.",
+            "format": "double"
           }
         }
       },
@@ -28573,6 +28943,25 @@
             "description": "Priority override applied to every run's job. Admin-only. Pass null to clear\n the override and fall back to the default leaderboard priority.",
             "format": "int32",
             "nullable": true
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result of this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards. Unbounded; negative and zero\n values are accepted.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard. Must be strictly positive.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only."
           }
         }
       },
@@ -29063,6 +29452,11 @@
               }
             ],
             "description": "The aggregator type. If not provided, inherits from the previous revision."
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "A validation set id to pin on this revision. When set, every job run from this\n revision uses the specified validation set as the source of validation rapids\n instead of audience-derived examples. If not provided, inherits from the previous\n revision. Provide a wrapped null value to clear a previously pinned set.",
+            "nullable": true
           }
         },
         "description": "The input for the create job revision endpoint."
@@ -32984,6 +33378,35 @@
           }
         }
       },
+      "CreateGlobalTextEndpoint_Input": {
+        "required": [
+          "key",
+          "englishText"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The human-readable key used to look up the text from translations."
+          },
+          "englishText": {
+            "type": "string",
+            "description": "The English source text that all translations derive from."
+          }
+        }
+      },
+      "CreateGlobalTextEndpoint_Output": {
+        "required": [
+          "globalTextId"
+        ],
+        "type": "object",
+        "properties": {
+          "globalTextId": {
+            "type": "string",
+            "description": "The unique identifier of the created global text entry."
+          }
+        }
+      },
       "CreateValidationFeedbackEndpoint_Input": {
         "required": [
           "feedback"
@@ -32993,6 +33416,44 @@
           "feedback": {
             "type": "string",
             "description": "The feedback text."
+          }
+        }
+      },
+      "GetAllGlobalTextsEndpoint_Output": {
+        "required": [
+          "globalTexts"
+        ],
+        "type": "object",
+        "properties": {
+          "globalTexts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetAllGlobalTextsEndpoint_Output_Item"
+                }
+              }
+            ],
+            "description": "The list of global text entries."
+          }
+        }
+      },
+      "GetAllGlobalTextsEndpoint_Output_Item": {
+        "required": [
+          "id",
+          "key",
+          "englishText"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "englishText": {
+            "type": "string"
           }
         }
       },
@@ -34782,6 +35243,19 @@
           }
         }
       },
+      "UpdateGlobalTextEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The new key for the global text entry."
+          },
+          "englishText": {
+            "type": "string",
+            "description": "The new English source text for the global text entry."
+          }
+        }
+      },
       "UpdateValidationRapidEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -35723,6 +36197,7 @@
           "payload",
           "asset",
           "responses",
+          "totalResponseCount",
           "state"
         ],
         "type": "object",
@@ -35756,7 +36231,12 @@
                 }
               }
             ],
-            "description": "The list of responses for the rapid."
+            "description": "The (possibly capped) list of responses for the rapid."
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "format": "int64"
           },
           "state": {
             "allOf": [
@@ -35784,6 +36264,14 @@
             "description": "The decisiveness of the rapid.",
             "format": "double",
             "nullable": true
+          },
+          "aggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IResponseAggregation"
+              }
+            ],
+            "description": "Per-payload-type aggregation over all matching responses (computed before sampling).\n Populated for Compare and Classify rapids; null otherwise."
           }
         }
       },
@@ -35942,6 +36430,7 @@
           "payload",
           "asset",
           "responses",
+          "totalResponseCount",
           "state"
         ],
         "type": "object",
@@ -35975,7 +36464,12 @@
                 }
               }
             ],
-            "description": "The list of responses for the rapid."
+            "description": "The (possibly capped) list of responses for the rapid."
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "format": "int64"
           },
           "state": {
             "allOf": [
@@ -36003,6 +36497,14 @@
             "description": "The decisiveness of the rapid.",
             "format": "double",
             "nullable": true
+          },
+          "aggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IResponseAggregation"
+              }
+            ],
+            "description": "Per-payload-type aggregation over all matching responses (computed before sampling).\n Populated for Compare and Classify rapids; null otherwise."
           }
         }
       },
@@ -36900,6 +37402,67 @@
           }
         }
       },
+      "IResponseAggregation": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IResponseAggregationClassifyAggregation"
+          },
+          {
+            "$ref": "#/components/schemas/IResponseAggregationCompareAggregation"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassifyAggregation": "#/components/schemas/IResponseAggregationClassifyAggregation",
+            "CompareAggregation": "#/components/schemas/IResponseAggregationCompareAggregation"
+          }
+        }
+      },
+      "IResponseAggregationClassifyAggregation": {
+        "required": [
+          "categoryTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyAggregation"
+            ],
+            "type": "string"
+          },
+          "categoryTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTally"
+            }
+          }
+        }
+      },
+      "IResponseAggregationCompareAggregation": {
+        "required": [
+          "winnerTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareAggregation"
+            ],
+            "type": "string"
+          },
+          "winnerTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTally"
+            }
+          }
+        }
+      },
       "IWorkflowModel": {
         "required": [
           "_t"
@@ -37525,6 +38088,19 @@
           "Rejected"
         ]
       },
+      "ResponseTally": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userScoreSum": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "SortDirection": {
         "enum": [
           "Asc",
@@ -37655,6 +38231,7 @@
       "name": "Rapidata Rapid API",
       "tags": [
         "CustomerRapid",
+        "GlobalText",
         "Rapid",
         "UserRapid",
         "ValidationFeedback"

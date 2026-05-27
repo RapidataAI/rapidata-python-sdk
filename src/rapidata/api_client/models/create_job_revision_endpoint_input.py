@@ -39,7 +39,8 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
-    __properties: ClassVar[List[str]] = ["workflow", "referee", "datasetId", "featureFlags", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType"]
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set id to pin on this revision. When set, every job run from this  revision uses the specified validation set as the source of validation rapids  instead of audience-derived examples. If not provided, inherits from the previous  revision. Provide a wrapped null value to clear a previously pinned set.", alias="validationSetId")
+    __properties: ClassVar[List[str]] = ["workflow", "referee", "datasetId", "featureFlags", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType", "validationSetId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -108,6 +109,11 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
         if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:
             _dict['aggregatorType'] = None
 
+        # set to None if validation_set_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
+            _dict['validationSetId'] = None
+
         return _dict
 
     @classmethod
@@ -126,7 +132,8 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
-            "aggregatorType": obj.get("aggregatorType")
+            "aggregatorType": obj.get("aggregatorType"),
+            "validationSetId": obj.get("validationSetId")
         }
         try:
             _obj = cls.model_validate(_data)

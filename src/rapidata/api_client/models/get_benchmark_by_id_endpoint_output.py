@@ -18,8 +18,8 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -35,7 +35,9 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
     owner_id: StrictStr = Field(description="The id of the customer owning the benchmark.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer owning the benchmark.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "createdAt", "ownerId", "ownerMail"]
+    score_shift: Union[StrictFloat, StrictInt] = Field(description="Additive offset applied to displayed scores on the overall scoreboard of this  benchmark.", alias="scoreShift")
+    score_scale: Union[StrictFloat, StrictInt] = Field(description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on the overall scoreboard of this benchmark.", alias="scoreScale")
+    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "createdAt", "ownerId", "ownerMail", "scoreShift", "scoreScale"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -89,7 +91,9 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
             "isPublic": obj.get("isPublic"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "scoreShift": obj.get("scoreShift"),
+            "scoreScale": obj.get("scoreScale")
         }
         try:
             _obj = cls.model_validate(_data)

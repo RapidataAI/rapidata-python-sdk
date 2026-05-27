@@ -4260,6 +4260,18 @@
             "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to . Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via .",
             "format": "int32",
             "nullable": true
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark. Defaults to 0 when unset.",
+            "format": "double",
+            "nullable": true
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark. Defaults to 1.0 when\n unset; must be strictly positive.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -4363,6 +4375,25 @@
             "type": "integer",
             "description": "Optional priority override applied to every run's job. Admin-only.\n When unset, runs use the default leaderboard priority.",
             "format": "int32"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result of this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards. Defaults to 1.0 when\n unset; unbounded (negative and zero values are accepted).",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard. Defaults to 0 when unset.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard. Defaults to 1.0 when\n unset; must be strictly positive.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard should be created hidden. Admin-only."
           },
           "featureFlags": {
             "allOf": [
@@ -4620,7 +4651,9 @@
           "isPublic",
           "createdAt",
           "ownerId",
-          "ownerMail"
+          "ownerMail",
+          "scoreShift",
+          "scoreScale"
         ],
         "type": "object",
         "properties": {
@@ -4649,6 +4682,16 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark.",
+            "format": "double"
           }
         }
       },
@@ -4897,7 +4940,11 @@
           "responseBudget",
           "minResponses",
           "audienceId",
-          "featureFlags"
+          "featureFlags",
+          "weight",
+          "scoreShift",
+          "scoreScale",
+          "isHidden"
         ],
         "type": "object",
         "properties": {
@@ -4960,6 +5007,25 @@
               }
             ],
             "description": "Feature flags applied to orders created from this leaderboard."
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
           }
         }
       },
@@ -6435,7 +6501,11 @@
           "responseBudget",
           "minResponses",
           "audienceId",
-          "featureFlags"
+          "featureFlags",
+          "weight",
+          "scoreShift",
+          "scoreScale",
+          "isHidden"
         ],
         "type": "object",
         "properties": {
@@ -6492,6 +6562,25 @@
               }
             ],
             "description": "The feature flags enabled for the leaderboard."
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
           }
         }
       },
@@ -6539,7 +6628,11 @@
           "responseBudget",
           "minResponses",
           "audienceId",
-          "featureFlags"
+          "featureFlags",
+          "weight",
+          "scoreShift",
+          "scoreScale",
+          "isHidden"
         ],
         "type": "object",
         "properties": {
@@ -6596,6 +6689,25 @@
               }
             ],
             "description": "Feature flags applied to orders created from this leaderboard."
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
           }
         }
       },
@@ -6952,6 +7064,16 @@
             "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0.. and may not clear\n it. Both restrictions are enforced by\n with a 403 on\n violation.",
             "format": "int32",
             "nullable": true
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark. Must be strictly positive.",
+            "format": "double"
           }
         }
       },
@@ -6989,6 +7111,25 @@
             "description": "Priority override applied to every run's job. Admin-only. Pass null to clear\n the override and fall back to the default leaderboard priority.",
             "format": "int32",
             "nullable": true
+          },
+          "weight": {
+            "type": "number",
+            "description": "Multiplier applied to every match result of this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards. Unbounded; negative and zero\n values are accepted.",
+            "format": "double"
+          },
+          "scoreShift": {
+            "type": "number",
+            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "format": "double"
+          },
+          "scoreScale": {
+            "type": "number",
+            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard. Must be strictly positive.",
+            "format": "double"
+          },
+          "isHidden": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only."
           }
         }
       },

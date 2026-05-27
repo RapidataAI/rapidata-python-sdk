@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -40,8 +40,12 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     is_inversed: Optional[StrictBool] = Field(default=None, description="Whether the results should be inversed, selecting the worse model.", alias="isInversed")
     audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience id; defaults to the global audience when unset.", alias="audienceId")
     priority: Optional[StrictInt] = Field(default=None, description="Optional priority override applied to every run's job. Admin-only.  When unset, runs use the default leaderboard priority.")
+    weight: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplier applied to every match result of this leaderboard when it contributes to  the parent benchmark's overall / combined scoreboards. Defaults to 1.0 when  unset; unbounded (negative and zero values are accepted).")
+    score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on this leaderboard's per-leaderboard  scoreboard. Defaults to 0 when unset.", alias="scoreShift")
+    score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on this leaderboard's per-leaderboard scoreboard. Defaults to 1.0 when  unset; must be strictly positive.", alias="scoreScale")
+    is_hidden: Optional[StrictBool] = Field(default=None, description="Whether the leaderboard should be created hidden. Admin-only.", alias="isHidden")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -138,6 +142,10 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
             "isInversed": obj.get("isInversed"),
             "audienceId": obj.get("audienceId"),
             "priority": obj.get("priority"),
+            "weight": obj.get("weight"),
+            "scoreShift": obj.get("scoreShift"),
+            "scoreScale": obj.get("scoreScale"),
+            "isHidden": obj.get("isHidden"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }
         try:
