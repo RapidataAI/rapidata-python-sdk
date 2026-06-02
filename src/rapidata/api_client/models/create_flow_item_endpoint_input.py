@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
+from rapidata.api_client.models.i_asset_input import IAssetInput
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,9 +31,10 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     dataset_id: StrictStr = Field(description="The ID of the dataset to use for this flow item.", alias="datasetId")
     context: Optional[StrictStr] = Field(default=None, description="Optional context to provide additional ranking guidance.")
+    context_asset: Optional[IAssetInput] = Field(default=None, description="Optional asset context to provide additional ranking guidance.", alias="contextAsset")
     time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional time-to-live in seconds before the flow item expires.", alias="timeToLiveInSeconds")
     drain_duration_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.", alias="drainDurationInSeconds")
-    __properties: ClassVar[List[str]] = ["datasetId", "context", "timeToLiveInSeconds", "drainDurationInSeconds"]
+    __properties: ClassVar[List[str]] = ["datasetId", "context", "contextAsset", "timeToLiveInSeconds", "drainDurationInSeconds"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -74,6 +76,15 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
 
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
+
         # set to None if time_to_live_in_seconds (nullable) is None
         # and model_fields_set contains the field
         if self.time_to_live_in_seconds is None and "time_to_live_in_seconds" in self.model_fields_set:
@@ -98,6 +109,7 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
         _data = {
             "datasetId": obj.get("datasetId"),
             "context": obj.get("context"),
+            "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "timeToLiveInSeconds": obj.get("timeToLiveInSeconds"),
             "drainDurationInSeconds": obj.get("drainDurationInSeconds")
         }
@@ -106,5 +118,4 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
         except ValidationError as _val_error:
             _obj = cls._lazy_construct(_data, _val_error)
         return _obj
-
 
