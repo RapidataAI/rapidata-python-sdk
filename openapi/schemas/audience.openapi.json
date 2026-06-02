@@ -2124,7 +2124,10 @@
           "Running",
           "Completed",
           "Failed",
-          "ManualApproval"
+          "ManualApproval",
+          "Queued",
+          "Paused",
+          "StaleResults"
         ]
       },
       "AudienceStateRecalculationPhase": {
@@ -4759,7 +4762,8 @@
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

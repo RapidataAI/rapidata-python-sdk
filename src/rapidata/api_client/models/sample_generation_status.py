@@ -18,26 +18,24 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class AudienceJobStatus(str, Enum):
+class SampleGenerationStatus(str, Enum):
     """
-    AudienceJobStatus
+    SampleGenerationStatus
     """
 
     """
     allowed enum values
     """
-    SUBMITTED = 'Submitted'
-    RUNNING = 'Running'
+    PENDING = 'Pending'
+    PROCESSING = 'Processing'
     COMPLETED = 'Completed'
+    COMPLETEDWITHFAILURES = 'CompletedWithFailures'
     FAILED = 'Failed'
-    MANUALAPPROVAL = 'ManualApproval'
-    QUEUED = 'Queued'
-    PAUSED = 'Paused'
-    STALERESULTS = 'StaleResults'
+    CANCELLED = 'Cancelled'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of AudienceJobStatus from a JSON string"""
+        """Create an instance of SampleGenerationStatus from a JSON string"""
         return cls(json.loads(json_str))
 
 

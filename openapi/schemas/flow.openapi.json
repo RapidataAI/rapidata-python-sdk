@@ -2635,7 +2635,8 @@
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

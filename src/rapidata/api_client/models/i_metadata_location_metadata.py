@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,8 +29,8 @@ class IMetadataLocationMetadata(LazyValidatedModel):
     IMetadataLocationMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    x: Union[StrictFloat, StrictInt]
-    y: Union[StrictFloat, StrictInt]
+    x: Optional[Union[StrictFloat, StrictInt]] = None
+    y: Optional[Union[StrictFloat, StrictInt]] = None
     visibilities: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "x", "y", "visibilities"]
 

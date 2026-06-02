@@ -17,23 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_faucet_output import IFaucetOutput
+from rapidata.api_client.models.get_sample_generation_items_endpoint_output import GetSampleGenerationItemsEndpointOutput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetParticipantByIdEndpointOutput(LazyValidatedModel):
+class GetSampleGenerationItemsEndpointPagedResultOfOutput(LazyValidatedModel):
     """
-    GetParticipantByIdEndpointOutput
+    GetSampleGenerationItemsEndpointPagedResultOfOutput
     """ # noqa: E501
-    id: StrictStr = Field(description="The unique identifier of the participant.")
-    name: StrictStr = Field(description="The name of the participant.")
-    benchmark_id: StrictStr = Field(description="The id of the benchmark the participant belongs to.", alias="benchmarkId")
-    faucet: Optional[IFaucetOutput] = Field(default=None, description="The faucet configured to auto-generate samples, or null if none is set.")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "faucet"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[GetSampleGenerationItemsEndpointOutput]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -49,7 +50,7 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdEndpointOutput from a JSON string"""
+        """Create an instance of GetSampleGenerationItemsEndpointPagedResultOfOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,14 +71,18 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of faucet
-        if self.faucet:
-            _dict['faucet'] = self.faucet.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdEndpointOutput from a dict"""
+        """Create an instance of GetSampleGenerationItemsEndpointPagedResultOfOutput from a dict"""
         if obj is None:
             return None
 
@@ -85,10 +90,11 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "benchmarkId": obj.get("benchmarkId"),
-            "faucet": IFaucetOutput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [GetSampleGenerationItemsEndpointOutput.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         }
         try:
             _obj = cls.model_validate(_data)

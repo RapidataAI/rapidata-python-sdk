@@ -4121,7 +4121,6 @@
       },
       "TranslatedString": {
         "required": [
-          "wasTranslated",
           "englishText",
           "text",
           "targetLanguage"
@@ -4249,7 +4248,8 @@
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

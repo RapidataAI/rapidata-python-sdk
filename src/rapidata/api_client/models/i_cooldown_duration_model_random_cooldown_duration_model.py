@@ -17,23 +17,30 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_faucet_output import IFaucetOutput
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetParticipantByIdEndpointOutput(LazyValidatedModel):
+class ICooldownDurationModelRandomCooldownDurationModel(LazyValidatedModel):
     """
-    GetParticipantByIdEndpointOutput
+    ICooldownDurationModelRandomCooldownDurationModel
     """ # noqa: E501
-    id: StrictStr = Field(description="The unique identifier of the participant.")
-    name: StrictStr = Field(description="The name of the participant.")
-    benchmark_id: StrictStr = Field(description="The id of the benchmark the participant belongs to.", alias="benchmarkId")
-    faucet: Optional[IFaucetOutput] = Field(default=None, description="The faucet configured to auto-generate samples, or null if none is set.")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "faucet"]
+    t: StrictStr = Field(alias="_t")
+    min_duration: datetime = Field(alias="minDuration")
+    max_duration: datetime = Field(alias="maxDuration")
+    seed_by_user_id: StrictBool = Field(alias="seedByUserId")
+    __properties: ClassVar[List[str]] = ["_t", "minDuration", "maxDuration", "seedByUserId"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['RandomCooldownDuration']):
+            raise ValueError("must be one of enum values ('RandomCooldownDuration')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -49,7 +56,7 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdEndpointOutput from a JSON string"""
+        """Create an instance of ICooldownDurationModelRandomCooldownDurationModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,14 +77,11 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of faucet
-        if self.faucet:
-            _dict['faucet'] = self.faucet.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdEndpointOutput from a dict"""
+        """Create an instance of ICooldownDurationModelRandomCooldownDurationModel from a dict"""
         if obj is None:
             return None
 
@@ -85,10 +89,10 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "benchmarkId": obj.get("benchmarkId"),
-            "faucet": IFaucetOutput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None
+            "_t": obj.get("_t"),
+            "minDuration": obj.get("minDuration"),
+            "maxDuration": obj.get("maxDuration"),
+            "seedByUserId": obj.get("seedByUserId")
         }
         try:
             _obj = cls.model_validate(_data)

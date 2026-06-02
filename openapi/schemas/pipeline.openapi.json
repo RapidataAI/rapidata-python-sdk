@@ -599,7 +599,6 @@
       },
       "IMetadataCountMetadata": {
         "required": [
-          "count",
           "visibilities",
           "_t"
         ],
@@ -664,8 +663,6 @@
       },
       "IMetadataImageDimensionMetadata": {
         "required": [
-          "height",
-          "width",
           "visibilities",
           "_t"
         ],
@@ -691,8 +688,6 @@
       },
       "IMetadataLocationMetadata": {
         "required": [
-          "x",
-          "y",
           "visibilities",
           "_t"
         ],
@@ -760,9 +755,6 @@
       },
       "IMetadataStreamsMetadata": {
         "required": [
-          "hasAudio",
-          "hasVideo",
-          "hasSubtitles",
           "visibilities",
           "_t"
         ],
@@ -1644,7 +1636,8 @@
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

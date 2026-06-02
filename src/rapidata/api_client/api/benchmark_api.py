@@ -26,6 +26,8 @@ from rapidata.api_client.models.create_benchmark_participant_endpoint_input impo
 from rapidata.api_client.models.create_benchmark_participant_endpoint_output import CreateBenchmarkParticipantEndpointOutput
 from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import CreatePromptForBenchmarkEndpointInput
 from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_output import CreatePromptForBenchmarkEndpointOutput
+from rapidata.api_client.models.create_sample_generation_endpoint_input import CreateSampleGenerationEndpointInput
+from rapidata.api_client.models.create_sample_generation_endpoint_output import CreateSampleGenerationEndpointOutput
 from rapidata.api_client.models.fork_benchmark_endpoint_output import ForkBenchmarkEndpointOutput
 from rapidata.api_client.models.get_benchmark_by_id_endpoint_output import GetBenchmarkByIdEndpointOutput
 from rapidata.api_client.models.get_combined_benchmark_matrix_endpoint_output import GetCombinedBenchmarkMatrixEndpointOutput
@@ -4050,6 +4052,301 @@ class BenchmarkApi:
 
 
     @validate_call
+    def benchmark_benchmark_id_sample_generation_post(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants should run their faucets.")],
+        create_sample_generation_endpoint_input: Annotated[CreateSampleGenerationEndpointInput, Field(description="The generation configuration.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreateSampleGenerationEndpointOutput:
+        """Starts an asynchronous sample generation run.
+
+
+        :param benchmark_id: The benchmark whose participants should run their faucets. (required)
+        :type benchmark_id: str
+        :param create_sample_generation_endpoint_input: The generation configuration. (required)
+        :type create_sample_generation_endpoint_input: CreateSampleGenerationEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_sample_generation_post_serialize(
+            benchmark_id=benchmark_id,
+            create_sample_generation_endpoint_input=create_sample_generation_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateSampleGenerationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_sample_generation_post_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants should run their faucets.")],
+        create_sample_generation_endpoint_input: Annotated[CreateSampleGenerationEndpointInput, Field(description="The generation configuration.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CreateSampleGenerationEndpointOutput]:
+        """Starts an asynchronous sample generation run.
+
+
+        :param benchmark_id: The benchmark whose participants should run their faucets. (required)
+        :type benchmark_id: str
+        :param create_sample_generation_endpoint_input: The generation configuration. (required)
+        :type create_sample_generation_endpoint_input: CreateSampleGenerationEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_sample_generation_post_serialize(
+            benchmark_id=benchmark_id,
+            create_sample_generation_endpoint_input=create_sample_generation_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateSampleGenerationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_sample_generation_post_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants should run their faucets.")],
+        create_sample_generation_endpoint_input: Annotated[CreateSampleGenerationEndpointInput, Field(description="The generation configuration.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Starts an asynchronous sample generation run.
+
+
+        :param benchmark_id: The benchmark whose participants should run their faucets. (required)
+        :type benchmark_id: str
+        :param create_sample_generation_endpoint_input: The generation configuration. (required)
+        :type create_sample_generation_endpoint_input: CreateSampleGenerationEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_sample_generation_post_serialize(
+            benchmark_id=benchmark_id,
+            create_sample_generation_endpoint_input=create_sample_generation_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateSampleGenerationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_sample_generation_post_serialize(
+        self,
+        benchmark_id,
+        create_sample_generation_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if create_sample_generation_endpoint_input is not None:
+            _body_params = create_sample_generation_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/benchmark/{benchmarkId}/sample-generation',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def benchmark_benchmark_id_standings_get(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark whose standings should be queried.")],
@@ -5552,6 +5849,7 @@ class BenchmarkApi:
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        is_managed: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_managed.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5582,6 +5880,8 @@ class BenchmarkApi:
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_managed: Filter by is_managed.
+        :type is_managed: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5612,6 +5912,7 @@ class BenchmarkApi:
             name=name,
             owner_mail=owner_mail,
             created_at=created_at,
+            is_managed=is_managed,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5645,6 +5946,7 @@ class BenchmarkApi:
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        is_managed: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_managed.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5675,6 +5977,8 @@ class BenchmarkApi:
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_managed: Filter by is_managed.
+        :type is_managed: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5705,6 +6009,7 @@ class BenchmarkApi:
             name=name,
             owner_mail=owner_mail,
             created_at=created_at,
+            is_managed=is_managed,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5738,6 +6043,7 @@ class BenchmarkApi:
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        is_managed: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_managed.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5768,6 +6074,8 @@ class BenchmarkApi:
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_managed: Filter by is_managed.
+        :type is_managed: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5798,6 +6106,7 @@ class BenchmarkApi:
             name=name,
             owner_mail=owner_mail,
             created_at=created_at,
+            is_managed=is_managed,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5826,6 +6135,7 @@ class BenchmarkApi:
         name,
         owner_mail,
         created_at,
+        is_managed,
         _request_auth,
         _content_type,
         _headers,
@@ -5893,6 +6203,14 @@ class BenchmarkApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('created_at[' + _k + ']', _v))
+        if is_managed is not None:
+            _param_val = is_managed
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('is_managed[' + _k + ']', _v))
         # process the header parameters
         # process the form parameters
         # process the body parameter
