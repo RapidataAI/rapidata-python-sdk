@@ -68,10 +68,20 @@ class FailedUploadException(Exception):
 
         lines = [f"{total} datapoint(s) failed to upload:"]
 
-        for reason, datapoints in self.failures_by_reason.items():
+        # Group internally on the full FailedUpload so each item can carry its
+        # own trace ID (the public failures_by_reason groups by reason only and
+        # discards that detail).
+        grouped: dict[str, list[FailedUpload[Datapoint]]] = defaultdict(list)
+        for fu in self._failed_uploads:
+            grouped[fu.error_message].append(fu)
+
+        for reason, failures in grouped.items():
             lines.append(f"  '{reason}': [")
-            for dp in datapoints:
-                lines.append(f"    {dp},")
+            for fu in failures:
+                if fu.trace_id:
+                    lines.append(f"    {fu.item} [trace_id={fu.trace_id}],")
+                else:
+                    lines.append(f"    {fu.item},")
             lines.append("  ]")
 
         failed_upload_message = "\n".join(lines)

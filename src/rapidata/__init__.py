@@ -1,9 +1,11 @@
-__version__ = "3.9.8"
+__version__ = "3.11.7"
 
 from .rapidata_client import (
     RapidataClient,
     RapidataAudience,
+    RapidataAudienceBase,
     RapidataAudienceManager,
+    RapidataFilteredAudience,
     RapidataOrderManager,
     RapidataOrder,
     RapidataJob,
@@ -41,8 +43,10 @@ from .rapidata_client import (
     LocateMinPointsSetting,
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
+    ClassifyEquirectangularSetting,
 # --- GENERATED SETTINGS IMPORTS END ---
     CountryFilter,
+    DemographicFilter,
     LanguageFilter,
     NotFilter,
     OrFilter,
@@ -62,6 +66,7 @@ from .rapidata_client import (
     rapidata_config,
     logger,
     managed_print,
+    CompressionConfig,
 )
 
 from . import types

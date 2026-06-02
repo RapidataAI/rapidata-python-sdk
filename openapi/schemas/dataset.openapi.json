@@ -424,6 +424,151 @@
         }
       }
     },
+    "/dataset/{datasetId}": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets a dataset by its id.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/progress": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets the upload progress of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the progress of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetProgressEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/name": {
+      "patch": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Updates the name of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new name for the dataset.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDatasetNameEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/dataset/{datasetId}/group": {
       "post": {
         "tags": [
@@ -474,133 +619,6 @@
           }
         }
       }
-    },
-    "/dataset/{datasetId}": {
-      "get": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Gets a dataset by its id.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to get.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dataset/{datasetId}/progress": {
-      "get": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Gets the upload progress of a dataset.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to get the progress of.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetProgressResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetProgressResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetProgressResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dataset/{datasetId}/name": {
-      "patch": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Updates the name of a dataset.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body of the request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDatasetNameModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDatasetNameModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDatasetNameModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -635,7 +653,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "The sort index represents the order of the datapoint in the dataset.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "group": {
             "type": "string",
@@ -730,8 +749,7 @@
           "Ready",
           "Pending",
           "Failed"
-        ],
-        "description": "The current state of the datapoint."
+        ]
       },
       "FileType": {
         "enum": [
@@ -760,7 +778,12 @@
             "description": "The id of the dataset this datapoint belongs to."
           },
           "state": {
-            "$ref": "#/components/schemas/DatapointState"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DatapointState"
+              }
+            ],
+            "description": "The current state of the datapoint."
           },
           "asset": {
             "allOf": [
@@ -773,7 +796,8 @@
           "sortIndex": {
             "type": "integer",
             "description": "An optional upload index used to force a certain order.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -782,18 +806,19 @@
           }
         }
       },
-      "GetDatasetByIdResult": {
+      "GetDatasetByIdEndpoint_Output": {
         "required": [
           "name"
         ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the dataset."
           }
         }
       },
-      "GetDatasetProgressResult": {
+      "GetDatasetProgressEndpoint_Output": {
         "required": [
           "total",
           "ready",
@@ -804,18 +829,22 @@
         "properties": {
           "total": {
             "type": "integer",
+            "description": "The total number of datapoints in the dataset.",
             "format": "int32"
           },
           "ready": {
             "type": "integer",
+            "description": "The number of datapoints that have been uploaded successfully.",
             "format": "int32"
           },
           "pending": {
             "type": "integer",
+            "description": "The number of datapoints that are still being processed.",
             "format": "int32"
           },
           "failed": {
             "type": "integer",
+            "description": "The number of datapoints that failed to upload.",
             "format": "int32"
           }
         }
@@ -838,7 +867,8 @@
           },
           "sortIndex": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "asset": {
             "$ref": "#/components/schemas/IAssetModel"
@@ -1485,7 +1515,7 @@
           }
         }
       },
-      "UpdateDatasetNameModel": {
+      "UpdateDatasetNameEndpoint_Input": {
         "required": [
           "name"
         ],
@@ -1495,8 +1525,7 @@
             "type": "string",
             "description": "The new name of the dataset."
           }
-        },
-        "description": "The body request for updating the name of a dataset."
+        }
       },
       "ValidationProblemDetails": {
         "type": "object",
@@ -1511,7 +1540,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",
@@ -1534,53 +1564,21 @@
       }
     },
     "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "description": "JWT Authorization header using the Bearer scheme",
-        "scheme": "bearer",
-        "bearerFormat": "Json Web Token"
-      },
       "OpenIdConnect": {
         "type": "openIdConnect",
-        "description": "OpenId Connect connection flow",
+        "description": "OpenID Connect connection flow",
         "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
-      },
-      "OAuth2": {
-        "type": "oauth2",
-        "description": "OAuth2 authorization header using the Bearer scheme",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
-            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
-            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
-            "scopes": {
-              "openid": "OpenID",
-              "profile": "Profile",
-              "email": "Email"
-            }
-          }
-        }
       }
     }
   },
   "security": [
     {
-      "Bearer": [ ],
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
-      ],
-      "OAuth2": [
-        "openid",
-        "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
-    }
-  ],
-  "tags": [
-    {
-      "name": "Dataset"
     }
   ]
 }

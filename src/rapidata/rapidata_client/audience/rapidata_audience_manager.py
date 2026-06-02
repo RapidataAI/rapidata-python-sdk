@@ -110,8 +110,8 @@ class RapidataAudienceManager:
             from rapidata.rapidata_client.filter._backend_filter_mapper import (
                 BackendFilterMapper,
             )
-            from rapidata.api_client.models.audiences_get_name_parameter import (
-                AudiencesGetNameParameter,
+            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+                AudienceAudienceIdJobsGetJobIdParameter,
             )
             from rapidata.rapidata_client.audience.rapidata_audience import (
                 RapidataAudience,
@@ -121,7 +121,7 @@ class RapidataAudienceManager:
             response = self._openapi_service.audience.audience_api.audiences_get(
                 page=page,
                 page_size=amount,
-                name=AudiencesGetNameParameter(contains=name),
+                name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
                 sort=["-created_at"],
             )
             audiences = []

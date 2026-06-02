@@ -30,8 +30,8 @@ class GetBoostStatusEndpointOutput(LazyValidatedModel):
     """
     GetBoostStatusEndpointOutput
     """ # noqa: E501
-    status: BoostStatusModel
-    mode: BoostMode
+    status: BoostStatusModel = Field(description="The current boost status.")
+    mode: BoostMode = Field(description="The current boost mode.")
     active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
     inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
     unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")

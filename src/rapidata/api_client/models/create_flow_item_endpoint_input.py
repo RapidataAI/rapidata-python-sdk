@@ -74,6 +74,16 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
 
+        # set to None if time_to_live_in_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.time_to_live_in_seconds is None and "time_to_live_in_seconds" in self.model_fields_set:
+            _dict['timeToLiveInSeconds'] = None
+
+        # set to None if drain_duration_in_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.drain_duration_in_seconds is None and "drain_duration_in_seconds" in self.model_fields_set:
+            _dict['drainDurationInSeconds'] = None
+
         return _dict
 
     @classmethod

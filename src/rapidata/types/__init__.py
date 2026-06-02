@@ -74,6 +74,7 @@ from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsS
 from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
 from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
 from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
+from rapidata.rapidata_client.settings.classify_equirectangular import ClassifyEquirectangularSetting
 from rapidata.rapidata_client.settings.custom_setting import CustomSetting
 from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings
 # --- GENERATED SETTINGS IMPORTS END ---
@@ -153,6 +154,7 @@ __all__ = [
     "LocateMinPointsSetting",
     "ComparePanoramaSetting",
     "CompareEquirectangularSetting",
+    "ClassifyEquirectangularSetting",
     "CustomSetting",
     "RapidataSettings",
 # --- GENERATED SETTINGS ALL END ---

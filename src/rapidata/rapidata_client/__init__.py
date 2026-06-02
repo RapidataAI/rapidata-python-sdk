@@ -1,7 +1,9 @@
 from .rapidata_client import RapidataClient
 from .audience import (
     RapidataAudience,
+    RapidataAudienceBase,
     RapidataAudienceManager,
+    RapidataFilteredAudience,
 )
 from .order import RapidataOrderManager, RapidataOrder
 from .job import RapidataJob, RapidataJobDefinition, RapidataJobManager
@@ -44,10 +46,12 @@ from .settings import (
     LocateMinPointsSetting,
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
+    ClassifyEquirectangularSetting,
 )
 # --- GENERATED SETTINGS IMPORTS END ---
 from .filter import (
     CountryFilter,
+    DemographicFilter,
     LanguageFilter,
     NotFilter,
     OrFilter,
@@ -64,3 +68,4 @@ from .filter import (
 )
 from .exceptions import FailedUploadException, FailedUpload
 from .config import rapidata_config, logger, managed_print
+from .config.upload_config import CompressionConfig

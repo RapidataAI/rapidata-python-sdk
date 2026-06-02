@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.named_classification import NamedClassification
+from rapidata.api_client.models.named_entity_truth_model_named_classification import NamedEntityTruthModelNamedClassification
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class IValidationTruthModelNamedEntityTruthModel(LazyValidatedModel):
     IValidationTruthModelNamedEntityTruthModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    classifications: List[NamedClassification]
+    classifications: List[NamedEntityTruthModelNamedClassification]
     __properties: ClassVar[List[str]] = ["_t", "classifications"]
 
     @field_validator('t')
@@ -95,7 +95,7 @@ class IValidationTruthModelNamedEntityTruthModel(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "classifications": [NamedClassification.from_dict(_item) for _item in obj["classifications"]] if obj.get("classifications") is not None else None
+            "classifications": [NamedEntityTruthModelNamedClassification.from_dict(_item) for _item in obj["classifications"]] if obj.get("classifications") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -34,7 +34,7 @@ class GetFlowItemByIdEndpointOutput(LazyValidatedModel):
     flow_id: StrictStr = Field(description="The ID of the flow this item belongs to.", alias="flowId")
     dataset_id: StrictStr = Field(description="The ID of the dataset used by this flow item.", alias="datasetId")
     workflow_id: Optional[StrictStr] = Field(default=None, description="The ID of the workflow created for this flow item.", alias="workflowId")
-    state: FlowItemState
+    state: FlowItemState = Field(description="The current state of the flow item.")
     context: Optional[StrictStr] = Field(default=None, description="Optional context associated with this flow item.")
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message if the flow item failed.", alias="failureMessage")
     expires_at: Optional[datetime] = Field(default=None, description="The expiration timestamp of the flow item.", alias="expiresAt")

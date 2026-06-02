@@ -69,6 +69,26 @@ class ExampleBoxShape(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if x_min (nullable) is None
+        # and model_fields_set contains the field
+        if self.x_min is None and "x_min" in self.model_fields_set:
+            _dict['xMin'] = None
+
+        # set to None if y_min (nullable) is None
+        # and model_fields_set contains the field
+        if self.y_min is None and "y_min" in self.model_fields_set:
+            _dict['yMin'] = None
+
+        # set to None if x_max (nullable) is None
+        # and model_fields_set contains the field
+        if self.x_max is None and "x_max" in self.model_fields_set:
+            _dict['xMax'] = None
+
+        # set to None if y_max (nullable) is None
+        # and model_fields_set contains the field
+        if self.y_max is None and "y_max" in self.model_fields_set:
+            _dict['yMax'] = None
+
         return _dict
 
     @classmethod

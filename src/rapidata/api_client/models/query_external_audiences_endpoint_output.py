@@ -68,6 +68,11 @@ class QueryExternalAudiencesEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if count (nullable) is None
+        # and model_fields_set contains the field
+        if self.count is None and "count" in self.model_fields_set:
+            _dict['count'] = None
+
         return _dict
 
     @classmethod

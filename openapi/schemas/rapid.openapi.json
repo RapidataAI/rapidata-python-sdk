@@ -11,6 +11,129 @@
     }
   ],
   "paths": {
+    "/rapid/demographic": {
+      "post": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Creates a new demographic rapid.",
+        "requestBody": {
+          "description": "The demographic rapid payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDemographicRapidEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDemographicRapidEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/{rapidId}": {
+      "delete": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Deletes a rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The id of the rapid to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/global-responses": {
+      "get": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Gets the most recent public responses across all customers.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGlobalResponsesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/rapid/{rapidId}/responses": {
       "get": {
         "tags": [
@@ -64,6 +187,274 @@
           "CustomerRapid"
         ],
         "summary": "Queries all rapids that have been flagged.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "completed_at",
+                  "-completed_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "correlation_id",
+            "in": "query",
+            "description": "Filter by correlation_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "description": "Filter by owner_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Filter by key.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "completed_at",
+            "in": "query",
+            "description": "Filter by completed_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -74,6 +465,497 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/{correlationId}/validation-potential": {
+      "get": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Queries rapids that may be eligible for validation-set creation.",
+        "parameters": [
+          {
+            "name": "correlationId",
+            "in": "path",
+            "description": "The correlation id whose rapids should be considered.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minResponses",
+            "in": "query",
+            "description": "The minimum response count for a rapid to qualify.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "minConfidence",
+            "in": "query",
+            "description": "The minimum confidence for a rapid to qualify.",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "targetGroupId",
+            "in": "query",
+            "description": "An optional subgroup of rapids to restrict the query to.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "rapid_id",
+            "in": "query",
+            "description": "Filter by rapid_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "response_count",
+            "in": "query",
+            "description": "Filter by response_count.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "confidence",
+            "in": "query",
+            "description": "Filter by confidence.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationRapidEligibilityEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/{rapidId}/unflag": {
+      "post": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Unflags a flagged rapid.",
+        "description": "The rapid is returned to the active labeling pool and cannot be flagged again.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The id of the rapid to unflag.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/validation/{rapidId}": {
+      "patch": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Updates the validation information of a rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The id of the rapid to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The fields to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationRapidEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/global-text": {
+      "post": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Creates a new global text entry.",
+        "requestBody": {
+          "description": "The payload describing the entry to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGlobalTextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateGlobalTextEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Returns every global text entry.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllGlobalTextsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/global-text/{globalTextId}": {
+      "delete": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Deletes a global text entry.",
+        "parameters": [
+          {
+            "name": "globalTextId",
+            "in": "path",
+            "description": "The id of the global text entry to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "GlobalText"
+        ],
+        "summary": "Updates a global text entry using patch semantics.",
+        "parameters": [
+          {
+            "name": "globalTextId",
+            "in": "path",
+            "description": "The id of the global text entry to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The patch payload describing which fields should change.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGlobalTextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -115,6 +997,234 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/response": {
+      "post": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Submits a response for a rapid.",
+        "requestBody": {
+          "description": "The submitted result and session index.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUserResponseEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddUserResponseEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/report/{reportId}": {
+      "get": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Inspects a report's dump so that it can be replayed or restored.",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The id of the report to inspect.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectReportEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/rapid-bag/is-valid": {
+      "get": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Returns whether the rapid bag associated with the current user is still valid.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IsRapidBagValidEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/{rapidId}/report": {
+      "post": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Reports an issue with a rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The rapid to report.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The report payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRapidEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/skip": {
+      "post": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Records that the user skipped the specified rapid.",
+        "requestBody": {
+          "description": "The id of the rapid being skipped and the session index.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SkipRapidEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkipRapidEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -402,477 +1512,33 @@
           }
         }
       }
-    },
-    "/rapid/global-responses": {
-      "get": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "A public endpoint to query the most recent responses globally",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicResponsesResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicResponsesResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicResponsesResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rapid/demographic": {
-      "post": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Creates a new Demographic Rapid with JSON body.",
-        "requestBody": {
-          "description": "The model containing the demographic rapid.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDemographicRapidModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDemographicRapidModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDemographicRapidModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateRapidResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rapid/validation/{rapidId}": {
-      "patch": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Updates the validation information of a Rapid.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The id of the rapid to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/rapid/{rapidId}/unflag": {
-      "post": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Unflags a flagged rapid.\n This will add the rapid back to the active labeling pool and prevent it from being flagged again.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The id of the rapid to unflag",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/rapid/{rapidId}": {
-      "delete": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Deletes a rapid.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The rapid to be deleted",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/rapid/{correlationId}/validation-potential": {
-      "get": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Queries rapids that are potentially eligible for validation set creation.",
-        "parameters": [
-          {
-            "name": "correlationId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "MinResponses",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "MinConfidence",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          },
-          {
-            "name": "TargetGroupId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryValidationRapidEligibilityModel_QueryValidationModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryValidationRapidEligibilityResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryValidationRapidEligibilityResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfQueryValidationRapidEligibilityResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rapid/rapid-bag/is-valid": {
-      "get": {
-        "tags": [
-          "UserRapid"
-        ],
-        "summary": "Validates that the rapids associated with the current user are active.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AreRapidsActiveResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AreRapidsActiveResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AreRapidsActiveResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rapid/response": {
-      "post": {
-        "tags": [
-          "UserRapid"
-        ],
-        "summary": "Submits a response for a Rapid.",
-        "requestBody": {
-          "description": "The model containing the user guess.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidResultModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidResultModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidResultModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddUserResponseResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddUserResponseResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddUserResponseResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rapid/skip": {
-      "post": {
-        "tags": [
-          "UserRapid"
-        ],
-        "summary": "Skips a Rapid for the user.",
-        "requestBody": {
-          "description": "The model containing the Rapid to skip.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidSkippedModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidSkippedModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidSkippedModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddUserResponseResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddUserResponseResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddUserResponseResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rapid/{rapidId}/report": {
-      "post": {
-        "tags": [
-          "UserRapid"
-        ],
-        "summary": "Used to report an issue with a rapid.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The rapid to report.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReportModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReportModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReportModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/rapid/report/{reportId}": {
-      "get": {
-        "tags": [
-          "UserRapid"
-        ],
-        "summary": "Inspects a report's dump. Can be used to restore zustand state or anything alike.",
-        "parameters": [
-          {
-            "name": "reportId",
-            "in": "path",
-            "description": "The report id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/InspectReportResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InspectReportResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InspectReportResult"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
     "schemas": {
-      "AddUserResponseResult": {
+      "AddUserResponseEndpoint_Input": {
+        "required": [
+          "sessionIndex",
+          "result"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionIndex": {
+            "type": "integer",
+            "description": "The index of the session when the result was submitted.",
+            "format": "int32"
+          },
+          "result": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidResultModel"
+              }
+            ],
+            "description": "The result submitted by the user."
+          }
+        }
+      },
+      "AddUserResponseEndpoint_Output": {
         "required": [
           "isAccepted",
           "userScore"
@@ -880,67 +1546,58 @@
         "type": "object",
         "properties": {
           "isAccepted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the response was accepted."
           },
           "validationTruth": {
-            "oneOf": [
+            "allOf": [
               {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
-            ]
+            ],
+            "description": "The validation truth applied to the response, if any."
           },
           "explanation": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "description": "An optional translated explanation for the user."
           },
           "userScore": {
             "type": "number",
+            "description": "The user's score after processing this response.",
             "format": "double"
           }
         }
       },
-      "AreRapidsActiveResult": {
-        "required": [
-          "isValid"
-        ],
-        "type": "object",
-        "properties": {
-          "isValid": {
-            "type": "boolean"
-          }
-        }
-      },
-      "BoxShape": {
+      "BoundingBoxResultModel_Box": {
         "type": "object",
         "properties": {
           "xMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMin": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "xMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "yMax": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
-      "ClassifyPayload": {
+      "ClassifyPayloadModel": {
         "required": [
           "categories",
           "title"
@@ -950,7 +1607,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
+              "$ref": "#/components/schemas/ClassifyPayloadModel_Category"
             }
           },
           "title": {
@@ -958,10 +1615,9 @@
           }
         }
       },
-      "ClassifyPayload_Category": {
+      "ClassifyPayloadModel_Category": {
         "required": [
-          "label",
-          "value"
+          "label"
         ],
         "type": "object",
         "properties": {
@@ -969,11 +1625,12 @@
             "type": "string"
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
-      "CreateDemographicRapidModel": {
+      "CreateDemographicRapidEndpoint_Input": {
         "required": [
           "key",
           "payload"
@@ -987,7 +1644,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ClassifyPayload"
+                "$ref": "#/components/schemas/ClassifyPayloadModel"
               }
             ],
             "description": "The payload for the classification."
@@ -1025,17 +1682,46 @@
             ],
             "description": "An optional asset to use as context to show to the user."
           }
-        },
-        "description": "The model for creating a demographic rapid."
+        }
       },
-      "CreateRapidResult": {
+      "CreateDemographicRapidEndpoint_Output": {
         "required": [
           "rapidId"
         ],
         "type": "object",
         "properties": {
           "rapidId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the created rapid."
+          }
+        }
+      },
+      "CreateGlobalTextEndpoint_Input": {
+        "required": [
+          "key",
+          "englishText"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The human-readable key used to look up the text from translations."
+          },
+          "englishText": {
+            "type": "string",
+            "description": "The English source text that all translations derive from."
+          }
+        }
+      },
+      "CreateGlobalTextEndpoint_Output": {
+        "required": [
+          "globalTextId"
+        ],
+        "type": "object",
+        "properties": {
+          "globalTextId": {
+            "type": "string",
+            "description": "The unique identifier of the created global text entry."
           }
         }
       },
@@ -1074,74 +1760,64 @@
           "Audio"
         ]
       },
-      "Filter": {
+      "GetAllGlobalTextsEndpoint_Output": {
+        "required": [
+          "globalTexts"
+        ],
         "type": "object",
         "properties": {
-          "field": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": { },
-          "operator": {
-            "oneOf": [
+          "globalTexts": {
+            "allOf": [
               {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/FilterOperator"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetAllGlobalTextsEndpoint_Output_Item"
+                }
               }
-            ]
-          },
-          "logic": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/LogicOperator"
-              }
-            ]
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            },
-            "nullable": true
+            ],
+            "description": "The list of global text entries."
           }
         }
       },
-      "FilterOperator": {
-        "enum": [
-          "Eq",
-          "Neq",
-          "Gt",
-          "Gte",
-          "Lt",
-          "Lte",
-          "Contains",
-          "StartsWith",
-          "EndsWith",
-          "In",
-          "NotContains",
-          null
-        ]
+      "GetAllGlobalTextsEndpoint_Output_Item": {
+        "required": [
+          "id",
+          "key",
+          "englishText"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "englishText": {
+            "type": "string"
+          }
+        }
       },
-      "GetPublicResponsesResult": {
+      "GetGlobalResponsesEndpoint_Output": {
         "required": [
           "responses"
         ],
         "type": "object",
         "properties": {
           "responses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetPublicResponsesResult_Response"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetGlobalResponsesEndpoint_Output_Response"
+                }
+              }
+            ],
+            "description": "The most recent public responses."
           }
         }
       },
-      "GetPublicResponsesResult_Response": {
+      "GetGlobalResponsesEndpoint_Output_Response": {
         "required": [
           "id",
           "userId",
@@ -1198,18 +1874,23 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
+                  "$ref": "#/components/schemas/GetResponsesForRapidEndpoint_Output_Response"
                 }
               }
             ],
             "description": "The list of responses for the rapid."
           },
           "state": {
-            "$ref": "#/components/schemas/RapidState"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidStateModel"
+              }
+            ],
+            "description": "The state of the rapid."
           }
         }
       },
-      "GetResponsesForRapidResult_Response": {
+      "GetResponsesForRapidEndpoint_Output_Response": {
         "required": [
           "id",
           "userId",
@@ -1231,7 +1912,7 @@
             "type": "string"
           },
           "result": {
-            "$ref": "#/components/schemas/IRapidResult"
+            "$ref": "#/components/schemas/IRapidResultModel"
           },
           "userScore": {
             "type": "number",
@@ -1784,69 +2465,70 @@
           }
         }
       },
-      "InspectReportResult": {
+      "InspectReportEndpoint_Output": {
         "type": "object",
         "properties": {
           "dump": {
             "type": "string",
+            "description": "The captured dump, if any.",
             "nullable": true
           }
         }
       },
-      "IRapidPayload": {
+      "IRapidPayloadModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelComparePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelLinePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelLocatePayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelScrubPayloadModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "$ref": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
-            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
-            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
-            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
-            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel",
+            "ClassifyPayload": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel",
+            "ComparePayload": "#/components/schemas/IRapidPayloadModelComparePayloadModel",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel",
+            "LinePayload": "#/components/schemas/IRapidPayloadModelLinePayloadModel",
+            "LocatePayload": "#/components/schemas/IRapidPayloadModelLocatePayloadModel",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadModelScrubPayloadModel",
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
           }
         }
       },
-      "IRapidPayloadBoundingBoxPayload": {
+      "IRapidPayloadModelBoundingBoxPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -1863,7 +2545,7 @@
           }
         }
       },
-      "IRapidPayloadClassifyPayload": {
+      "IRapidPayloadModelClassifyPayloadModel": {
         "required": [
           "categories",
           "title",
@@ -1879,7 +2561,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
+              "$ref": "#/components/schemas/ClassifyPayloadModel_Category"
             }
           },
           "title": {
@@ -1887,7 +2569,7 @@
           }
         }
       },
-      "IRapidPayloadComparePayload": {
+      "IRapidPayloadModelComparePayloadModel": {
         "required": [
           "criteria",
           "_t"
@@ -1904,7 +2586,7 @@
           }
         }
       },
-      "IRapidPayloadFreeTextPayload": {
+      "IRapidPayloadModelFreeTextPayloadModel": {
         "required": [
           "question",
           "_t"
@@ -1928,7 +2610,7 @@
           }
         }
       },
-      "IRapidPayloadLinePayload": {
+      "IRapidPayloadModelLinePayloadModel": {
         "required": [
           "target",
           "_t"
@@ -1945,7 +2627,7 @@
           }
         }
       },
-      "IRapidPayloadLocatePayload": {
+      "IRapidPayloadModelLocatePayloadModel": {
         "required": [
           "target",
           "_t"
@@ -1962,7 +2644,7 @@
           }
         }
       },
-      "IRapidPayloadNamedEntityPayload": {
+      "IRapidPayloadModelNamedEntityPayloadModel": {
         "required": [
           "target",
           "classes",
@@ -1986,7 +2668,7 @@
           }
         }
       },
-      "IRapidPayloadPolygonPayload": {
+      "IRapidPayloadModelPolygonPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2003,7 +2685,7 @@
           }
         }
       },
-      "IRapidPayloadScrubPayload": {
+      "IRapidPayloadModelScrubPayloadModel": {
         "required": [
           "target",
           "_t"
@@ -2020,7 +2702,7 @@
           }
         }
       },
-      "IRapidPayloadTranscriptionPayload": {
+      "IRapidPayloadModelTranscriptionPayloadModel": {
         "required": [
           "title",
           "transcription",
@@ -2039,72 +2721,72 @@
           "transcription": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionPayloadModel_TranscriptionWord"
             }
           }
         }
       },
-      "IRapidResult": {
+      "IRapidResultModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidResultTranscriptionResult"
+            "$ref": "#/components/schemas/IRapidResultModelAttachCategoryResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultScrubResult"
+            "$ref": "#/components/schemas/IRapidResultModelBoundingBoxResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultPolygonResult"
+            "$ref": "#/components/schemas/IRapidResultModelCompareResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
+            "$ref": "#/components/schemas/IRapidResultModelFreeTextResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultLocateResult"
+            "$ref": "#/components/schemas/IRapidResultModelLineResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultLineResult"
+            "$ref": "#/components/schemas/IRapidResultModelLocateResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultFreeTextResult"
+            "$ref": "#/components/schemas/IRapidResultModelNamedEntityResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultCompareResult"
+            "$ref": "#/components/schemas/IRapidResultModelPolygonResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultSkipResult"
+            "$ref": "#/components/schemas/IRapidResultModelScrubResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultAttachCategoryResult"
+            "$ref": "#/components/schemas/IRapidResultModelSkipResultModel"
           },
           {
-            "$ref": "#/components/schemas/IRapidResultBoundingBoxResult"
+            "$ref": "#/components/schemas/IRapidResultModelTranscriptionResultModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "TranscriptionResult": "#/components/schemas/IRapidResultTranscriptionResult",
-            "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
-            "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
-            "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
-            "LocateResult": "#/components/schemas/IRapidResultLocateResult",
-            "LineResult": "#/components/schemas/IRapidResultLineResult",
-            "FreeTextResult": "#/components/schemas/IRapidResultFreeTextResult",
-            "CompareResult": "#/components/schemas/IRapidResultCompareResult",
-            "SkipResult": "#/components/schemas/IRapidResultSkipResult",
-            "AttachCategoryResult": "#/components/schemas/IRapidResultAttachCategoryResult",
-            "BoundingBoxResult": "#/components/schemas/IRapidResultBoundingBoxResult"
+            "AttachCategoryResult": "#/components/schemas/IRapidResultModelAttachCategoryResultModel",
+            "BoundingBoxResult": "#/components/schemas/IRapidResultModelBoundingBoxResultModel",
+            "CompareResult": "#/components/schemas/IRapidResultModelCompareResultModel",
+            "FreeTextResult": "#/components/schemas/IRapidResultModelFreeTextResultModel",
+            "LineResult": "#/components/schemas/IRapidResultModelLineResultModel",
+            "LocateResult": "#/components/schemas/IRapidResultModelLocateResultModel",
+            "NamedEntityResult": "#/components/schemas/IRapidResultModelNamedEntityResultModel",
+            "PolygonResult": "#/components/schemas/IRapidResultModelPolygonResultModel",
+            "ScrubResult": "#/components/schemas/IRapidResultModelScrubResultModel",
+            "SkipResult": "#/components/schemas/IRapidResultModelSkipResultModel",
+            "TranscriptionResult": "#/components/schemas/IRapidResultModelTranscriptionResultModel"
           }
         }
       },
-      "IRapidResultAttachCategoryResult": {
+      "IRapidResultModelAttachCategoryResultModel": {
         "required": [
-          "category",
           "rapidId",
+          "category",
           "_t"
         ],
         "properties": {
@@ -2114,18 +2796,18 @@
             ],
             "type": "string"
           },
-          "category": {
+          "rapidId": {
             "type": "string"
           },
-          "rapidId": {
+          "category": {
             "type": "string"
           }
         }
       },
-      "IRapidResultBoundingBoxResult": {
+      "IRapidResultModelBoundingBoxResultModel": {
         "required": [
-          "boundingBoxes",
           "rapidId",
+          "boundingBoxes",
           "_t"
         ],
         "properties": {
@@ -2135,18 +2817,18 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "boundingBoxes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BoxShape"
+              "$ref": "#/components/schemas/BoundingBoxResultModel_Box"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultCompareResult": {
+      "IRapidResultModelCompareResultModel": {
         "required": [
           "rapidId",
           "_t"
@@ -2158,21 +2840,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "winners": {
             "type": "array",
             "items": {
               "type": "string"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultFreeTextResult": {
+      "IRapidResultModelFreeTextResultModel": {
         "required": [
-          "answer",
           "rapidId",
+          "answer",
           "_t"
         ],
         "properties": {
@@ -2182,18 +2864,18 @@
             ],
             "type": "string"
           },
-          "answer": {
+          "rapidId": {
             "type": "string"
           },
-          "rapidId": {
+          "answer": {
             "type": "string"
           }
         }
       },
-      "IRapidResultLineResult": {
+      "IRapidResultModelLineResultModel": {
         "required": [
-          "lines",
           "rapidId",
+          "lines",
           "_t"
         ],
         "properties": {
@@ -2203,21 +2885,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "lines": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LineResult_Line"
+              "$ref": "#/components/schemas/LineResultModel_Line"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultLocateResult": {
+      "IRapidResultModelLocateResultModel": {
         "required": [
-          "coordinates",
           "rapidId",
+          "coordinates",
           "_t"
         ],
         "properties": {
@@ -2227,21 +2909,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "coordinates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LocateCoordinate"
+              "$ref": "#/components/schemas/LocateCoordinateModel"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultNamedEntityResult": {
+      "IRapidResultModelNamedEntityResultModel": {
         "required": [
-          "classifications",
           "rapidId",
+          "classifications",
           "_t"
         ],
         "properties": {
@@ -2251,21 +2933,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "classifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NamedClassification"
+              "$ref": "#/components/schemas/NamedEntityResultModel_NamedClassification"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultPolygonResult": {
+      "IRapidResultModelPolygonResultModel": {
         "required": [
-          "shapes",
           "rapidId",
+          "shapes",
           "_t"
         ],
         "properties": {
@@ -2275,21 +2957,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "shapes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonResult_Shape"
+              "$ref": "#/components/schemas/PolygonResultModel_Shape"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultScrubResult": {
+      "IRapidResultModelScrubResultModel": {
         "required": [
-          "timestamps",
           "rapidId",
+          "timestamps",
           "_t"
         ],
         "properties": {
@@ -2299,19 +2981,19 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "timestamps": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRapidResultSkipResult": {
+      "IRapidResultModelSkipResultModel": {
         "required": [
           "rapidId",
           "_t"
@@ -2328,10 +3010,10 @@
           }
         }
       },
-      "IRapidResultTranscriptionResult": {
+      "IRapidResultModelTranscriptionResultModel": {
         "required": [
-          "selectedWords",
           "rapidId",
+          "selectedWords",
           "_t"
         ],
         "properties": {
@@ -2341,47 +3023,47 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "selectedWords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionResultModel_TranscriptionWord"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRefereeInfo": {
+      "IRefereeInfoModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRefereeInfoQuorumRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelNaiveRefereeInfoModel"
           },
           {
-            "$ref": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelNeverEndingRefereeInfoModel"
           },
           {
-            "$ref": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel"
           },
           {
-            "$ref": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
+            "$ref": "#/components/schemas/IRefereeInfoModelQuorumRefereeInfoModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoQuorumRefereeInfo",
-            "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo",
-            "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo",
-            "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
+            "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoModelNaiveRefereeInfoModel",
+            "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoModelNeverEndingRefereeInfoModel",
+            "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel",
+            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoModelQuorumRefereeInfoModel"
           }
         }
       },
-      "IRefereeInfoNaiveRefereeInfo": {
+      "IRefereeInfoModelNaiveRefereeInfoModel": {
         "required": [
           "_t"
         ],
@@ -2398,11 +3080,12 @@
           },
           "serveThreshold": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
-      "IRefereeInfoNeverEndingRefereeInfo": {
+      "IRefereeInfoModelNeverEndingRefereeInfoModel": {
         "required": [
           "_t"
         ],
@@ -2415,7 +3098,7 @@
           }
         }
       },
-      "IRefereeInfoProbabilisticAttachCategoryRefereeInfo": {
+      "IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel": {
         "required": [
           "threshold",
           "maxVotes",
@@ -2438,7 +3121,7 @@
           }
         }
       },
-      "IRefereeInfoQuorumRefereeInfo": {
+      "IRefereeInfoModelQuorumRefereeInfoModel": {
         "required": [
           "maxVotes",
           "threshold",
@@ -2461,188 +3144,15 @@
           }
         }
       },
-      "IValidationTruth": {
+      "IsRapidBagValidEndpoint_Output": {
         "required": [
-          "_t"
+          "isValid"
         ],
         "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationTruthTranscriptionTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthScrubTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthPolygonTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthNamedEntityTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLocateBoxTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLineTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthEmptyValidationTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthMultiCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthSkipTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthAttachCategoryTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "TranscriptionTruth": "#/components/schemas/IValidationTruthTranscriptionTruth",
-            "ScrubTruth": "#/components/schemas/IValidationTruthScrubTruth",
-            "PolygonTruth": "#/components/schemas/IValidationTruthPolygonTruth",
-            "NamedEntityTruth": "#/components/schemas/IValidationTruthNamedEntityTruth",
-            "LocateBoxTruth": "#/components/schemas/IValidationTruthLocateBoxTruth",
-            "LineTruth": "#/components/schemas/IValidationTruthLineTruth",
-            "EmptyValidationTruth": "#/components/schemas/IValidationTruthEmptyValidationTruth",
-            "CompareTruth": "#/components/schemas/IValidationTruthCompareTruth",
-            "MultiCompareTruth": "#/components/schemas/IValidationTruthMultiCompareTruth",
-            "SkipTruth": "#/components/schemas/IValidationTruthSkipTruth",
-            "AttachCategoryTruth": "#/components/schemas/IValidationTruthAttachCategoryTruth",
-            "BoundingBoxTruth": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        }
-      },
-      "IValidationTruthAttachCategoryTruth": {
-        "required": [
-          "correctCategories",
-          "_t"
-        ],
         "properties": {
-          "_t": {
-            "enum": [
-              "AttachCategoryTruth"
-            ],
-            "type": "string"
-          },
-          "correctCategories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IValidationTruthBoundingBoxTruth": {
-        "required": [
-          "xMin",
-          "yMin",
-          "xMax",
-          "yMax",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxTruth"
-            ],
-            "type": "string"
-          },
-          "xMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "xMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "yMax": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthCompareTruth": {
-        "required": [
-          "winnerId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareTruth"
-            ],
-            "type": "string"
-          },
-          "winnerId": {
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthEmptyValidationTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "EmptyValidationTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthLineTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LineTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthLocateBoxTruth": {
-        "required": [
-          "boundingBoxes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocateBoxTruth"
-            ],
-            "type": "string"
-          },
-          "boundingBoxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BoxShape"
-            }
-          },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
+          "isValid": {
+            "type": "boolean",
+            "description": "Whether the rapid bag is valid."
           }
         }
       },
@@ -2842,7 +3352,7 @@
           "boundingBoxes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BoxShape"
+              "$ref": "#/components/schemas/LocateBoxTruthModel_Box"
             }
           },
           "requiredPrecision": {
@@ -2893,7 +3403,7 @@
           "classifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NamedClassification"
+              "$ref": "#/components/schemas/NamedEntityTruthModel_NamedClassification"
             }
           }
         }
@@ -2926,7 +3436,7 @@
           "validRanges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ScrubRange"
+              "$ref": "#/components/schemas/ScrubTruthModel_ScrubRange"
             }
           }
         }
@@ -2959,7 +3469,7 @@
           "correctWords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionTruthModel_TranscriptionWord"
             }
           },
           "strictGrading": {
@@ -2968,136 +3478,17 @@
           },
           "requiredPrecision": {
             "type": "number",
-            "format": "double"
-          },
-          "requiredCompleteness": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "IValidationTruthMultiCompareTruth": {
-        "required": [
-          "correctCombinations",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiCompareTruth"
-            ],
-            "type": "string"
-          },
-          "correctCombinations": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "IValidationTruthNamedEntityTruth": {
-        "required": [
-          "classifications",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityTruth"
-            ],
-            "type": "string"
-          },
-          "classifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NamedClassification"
-            }
-          }
-        }
-      },
-      "IValidationTruthPolygonTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthScrubTruth": {
-        "required": [
-          "validRanges",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubTruth"
-            ],
-            "type": "string"
-          },
-          "validRanges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScrubRange"
-            }
-          }
-        }
-      },
-      "IValidationTruthSkipTruth": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SkipTruth"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruthTranscriptionTruth": {
-        "required": [
-          "correctWords",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionTruth"
-            ],
-            "type": "string"
-          },
-          "correctWords": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
-            }
-          },
-          "strictGrading": {
-            "type": "boolean",
+            "format": "double",
             "nullable": true
           },
-          "requiredPrecision": {
-            "type": "number",
-            "format": "double"
-          },
           "requiredCompleteness": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
-      "LineResult_Line": {
+      "LineResultModel_Line": {
         "required": [
           "size",
           "points"
@@ -3111,12 +3502,12 @@
           "points": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LineResult_LinePoint"
+              "$ref": "#/components/schemas/LineResultModel_LinePoint"
             }
           }
         }
       },
-      "LineResult_LinePoint": {
+      "LineResultModel_LinePoint": {
         "required": [
           "x",
           "y"
@@ -3133,7 +3524,32 @@
           }
         }
       },
-      "LocateCoordinate": {
+      "LocateBoxTruthModel_Box": {
+        "type": "object",
+        "properties": {
+          "xMin": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "LocateCoordinateModel": {
         "required": [
           "x",
           "y"
@@ -3149,14 +3565,6 @@
             "format": "double"
           }
         }
-      },
-      "LogicOperator": {
-        "enum": [
-          "And",
-          "Or",
-          "Not",
-          null
-        ]
       },
       "MetadataInputCollection": {
         "type": "object",
@@ -3184,7 +3592,7 @@
           "type": "string"
         }
       },
-      "NamedClassification": {
+      "NamedEntityResultModel_NamedClassification": {
         "required": [
           "start",
           "end",
@@ -3205,53 +3613,28 @@
           }
         }
       },
-      "PagedResultOfQueryValidationRapidEligibilityResult": {
+      "NamedEntityTruthModel_NamedClassification": {
         "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
+          "start",
+          "end",
+          "classification"
         ],
         "type": "object",
         "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
+          "start": {
             "type": "integer",
             "format": "int32"
           },
-          "pageSize": {
+          "end": {
             "type": "integer",
             "format": "int32"
           },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QueryValidationRapidEligibilityResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
+          "classification": {
+            "type": "string"
           }
         }
       },
-      "Pagination": {
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "PolygonResult_Coordinate": {
+      "PolygonResultModel_Coordinate": {
         "required": [
           "x",
           "y"
@@ -3260,15 +3643,17 @@
         "properties": {
           "x": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "y": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         }
       },
-      "PolygonResult_Shape": {
+      "PolygonResultModel_Shape": {
         "required": [
           "edges"
         ],
@@ -3277,7 +3662,7 @@
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonResult_Coordinate"
+              "$ref": "#/components/schemas/PolygonResultModel_Coordinate"
             }
           }
         }
@@ -3307,7 +3692,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidPayload"
+                "$ref": "#/components/schemas/IRapidPayloadModel"
               }
             ],
             "description": "The payload of the rapid."
@@ -3315,7 +3700,7 @@
           "referee": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRefereeInfo"
+                "$ref": "#/components/schemas/IRefereeInfoModel"
               }
             ],
             "description": "The referee that created the rapid."
@@ -3329,7 +3714,12 @@
             "description": "The asset associated with the rapid."
           },
           "state": {
-            "$ref": "#/components/schemas/RapidState"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidStateModel"
+              }
+            ],
+            "description": "The state of the rapid."
           },
           "hasResponses": {
             "type": "boolean",
@@ -3342,7 +3732,7 @@
           "truth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ],
             "description": "The optional validation truth of the rapid."
@@ -3355,7 +3745,8 @@
           "randomCorrectProbability": {
             "type": "number",
             "description": "The probability of a random correct answer.",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "key": {
             "type": "string",
@@ -3480,29 +3871,7 @@
           }
         }
       },
-      "QueryValidationRapidEligibilityModel_QueryValidationModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Pagination"
-              }
-            ],
-            "description": "pagination information"
-          },
-          "filter": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/RootFilter"
-              }
-            ],
-            "description": "filter information"
-          }
-        },
-        "description": "The Query Model specific to the validation rapid eligibility query."
-      },
-      "QueryValidationRapidEligibilityResult": {
+      "QueryValidationRapidEligibilityEndpoint_Output": {
         "required": [
           "rapidId",
           "payload",
@@ -3513,25 +3882,71 @@
         "type": "object",
         "properties": {
           "rapidId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the rapid."
           },
           "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidPayloadModel"
+              }
+            ],
+            "description": "The payload of the rapid."
           },
           "responseCount": {
             "type": "integer",
+            "description": "The number of responses that the rapid has received.",
             "format": "int32"
           },
           "confidence": {
             "type": "number",
+            "description": "The confidence of the rapid's aggregated response.",
             "format": "double"
           },
           "truth": {
-            "$ref": "#/components/schemas/IValidationTruth"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IValidationTruthModel"
+              }
+            ],
+            "description": "The derived validation truth for the rapid."
           }
         }
       },
-      "RapidIssue": {
+      "QueryValidationRapidEligibilityEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryValidationRapidEligibilityEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RapidIssueModel": {
         "enum": [
           "Other",
           "CannotSubmit",
@@ -3543,52 +3958,9 @@
           "DoNotCare",
           "NotSeeOptionsOrMediaDidntLoad",
           "MyAnswerIsCorrect"
-        ],
-        "description": "A streamlined enum representing common issues."
+        ]
       },
-      "RapidResultModel": {
-        "required": [
-          "sessionIndex",
-          "result"
-        ],
-        "type": "object",
-        "properties": {
-          "sessionIndex": {
-            "type": "integer",
-            "description": "The index of the session when the result was submitted.",
-            "format": "int32"
-          },
-          "result": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IRapidResult"
-              }
-            ],
-            "description": "The guess that was submitted."
-          }
-        },
-        "description": "The model for a Rapid result."
-      },
-      "RapidSkippedModel": {
-        "required": [
-          "rapidId",
-          "sessionIndex"
-        ],
-        "type": "object",
-        "properties": {
-          "rapidId": {
-            "type": "string",
-            "description": "The ID of the Rapid that was skipped."
-          },
-          "sessionIndex": {
-            "type": "integer",
-            "description": "The index of the session when the Rapid was skipped.",
-            "format": "int32"
-          }
-        },
-        "description": "The model for a Rapid skipped."
-      },
-      "RapidState": {
+      "RapidStateModel": {
         "enum": [
           "Labeling",
           "Paused",
@@ -3597,17 +3969,21 @@
           "Done",
           "None",
           "Rejected"
-        ],
-        "description": "The state of the rapid."
+        ]
       },
-      "ReportModel": {
+      "ReportRapidEndpoint_Input": {
         "required": [
           "issue"
         ],
         "type": "object",
         "properties": {
           "issue": {
-            "$ref": "#/components/schemas/RapidIssue"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidIssueModel"
+              }
+            ],
+            "description": "A streamlined enum representing common issues."
           },
           "message": {
             "type": "string",
@@ -3616,7 +3992,7 @@
           },
           "dump": {
             "type": "string",
-            "description": "A dump, that the frontend defines and can read again.",
+            "description": "A dump that the frontend defines and can read again.",
             "nullable": true
           },
           "source": {
@@ -3624,28 +4000,9 @@
             "description": "An optional identifier where the report originated from.",
             "nullable": true
           }
-        },
-        "description": "The model for reporting an issue with a rapid."
-      },
-      "RootFilter": {
-        "required": [
-          "filters",
-          "logic"
-        ],
-        "type": "object",
-        "properties": {
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "logic": {
-            "$ref": "#/components/schemas/LogicOperator"
-          }
         }
       },
-      "ScrubRange": {
+      "ScrubTruthModel_ScrubRange": {
         "required": [
           "start",
           "end"
@@ -3662,7 +4019,91 @@
           }
         }
       },
-      "TranscriptionWord": {
+      "SkipRapidEndpoint_Input": {
+        "required": [
+          "rapidId",
+          "sessionIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string",
+            "description": "The ID of the Rapid that was skipped."
+          },
+          "sessionIndex": {
+            "type": "integer",
+            "description": "The index of the session when the Rapid was skipped.",
+            "format": "int32"
+          }
+        }
+      },
+      "SkipRapidEndpoint_Output": {
+        "required": [
+          "isAccepted",
+          "userScore"
+        ],
+        "type": "object",
+        "properties": {
+          "isAccepted": {
+            "type": "boolean",
+            "description": "Whether the skip was accepted."
+          },
+          "validationTruth": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IValidationTruthModel"
+              }
+            ],
+            "description": "The validation truth applied, if any."
+          },
+          "explanation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "description": "An optional translated explanation for the user."
+          },
+          "userScore": {
+            "type": "number",
+            "description": "The user's score after the skip.",
+            "format": "double"
+          }
+        }
+      },
+      "TranscriptionPayloadModel_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionResultModel_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionTruthModel_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"
@@ -3680,7 +4121,6 @@
       },
       "TranslatedString": {
         "required": [
-          "wasTranslated",
           "englishText",
           "text",
           "targetLanguage"
@@ -3701,28 +4141,38 @@
           }
         }
       },
-      "UpdateValidationRapidModel": {
+      "UpdateGlobalTextEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The new key for the global text entry."
+          },
+          "englishText": {
+            "type": "string",
+            "description": "The new English source text for the global text entry."
+          }
+        }
+      },
+      "UpdateValidationRapidEndpoint_Input": {
         "type": "object",
         "properties": {
           "truth": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IValidationTruthModel"
-              },
-              {
-                "nullable": true
               }
             ],
             "description": "The truth for the validation rapid."
           },
           "explanation": {
             "type": "string",
-            "description": "The optional explanation that will be shown to the user when answering wrong.",
+            "description": "The optional explanation shown when users answer incorrectly.",
             "nullable": true
           },
           "context": {
             "type": "string",
-            "description": "An optional text context that will be shown to the user.",
+            "description": "An optional text context to show the user.",
             "nullable": true
           },
           "contextAsset": {
@@ -3734,22 +4184,20 @@
                 "nullable": true
               }
             ],
-            "description": "An optional asset that will be used as context to show to the user."
+            "description": "An optional asset to use as context to show the user."
           },
           "randomCorrectProbability": {
             "type": "number",
-            "description": "The probability that if the user answers at random that he'll be correct.",
+            "description": "The probability that a random answer is correct.",
             "format": "double",
             "nullable": true
           },
           "sortIndex": {
             "type": "integer",
             "description": "Controls the serving order of rapids within a target group.",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
-        },
-        "description": "The model for updating a validation rapid."
+        }
       },
       "ValidationProblemDetails": {
         "type": "object",
@@ -3764,7 +4212,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",
@@ -3787,56 +4236,21 @@
       }
     },
     "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "description": "JWT Authorization header using the Bearer scheme",
-        "scheme": "bearer",
-        "bearerFormat": "Json Web Token"
-      },
       "OpenIdConnect": {
         "type": "openIdConnect",
-        "description": "OpenId Connect connection flow",
+        "description": "OpenID Connect connection flow",
         "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
-      },
-      "OAuth2": {
-        "type": "oauth2",
-        "description": "OAuth2 authorization header using the Bearer scheme",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
-            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
-            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
-            "scopes": {
-              "openid": "OpenID",
-              "profile": "Profile",
-              "email": "Email"
-            }
-          }
-        }
       }
     }
   },
   "security": [
     {
-      "Bearer": [ ],
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
-      ],
-      "OAuth2": [
-        "openid",
-        "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
-    }
-  ],
-  "tags": [
-    {
-      "name": "CustomerRapid"
-    },
-    {
-      "name": "UserRapid"
     }
   ]
 }

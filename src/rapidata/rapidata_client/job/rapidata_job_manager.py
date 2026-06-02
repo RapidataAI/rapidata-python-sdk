@@ -155,7 +155,7 @@ class RapidataJobManager:
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -177,8 +177,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the classification i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the classification (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
@@ -224,7 +225,7 @@ class RapidataJobManager:
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         a_b_names: list[str] | None = None,
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
@@ -245,9 +246,10 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             a_b_names (list[str], optional): Custom naming for the two opposing models defined by the index in the datapoints list. Defaults to None.\n
                 If provided has to be a list of exactly two strings.
                 example:
@@ -311,7 +313,7 @@ class RapidataJobManager:
         data_type: Literal["media", "text"] = "media",
         random_comparisons_ratio: float = 0.5,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataJobDefinition:
         """
@@ -332,9 +334,10 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the ranking. Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the ranking i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the ranking (each inner list is the images shown for that ranking). Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per ranking, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
@@ -398,7 +401,7 @@ class RapidataJobManager:
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
@@ -417,9 +420,10 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the free text. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the free text i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the free text (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -496,7 +500,7 @@ class RapidataJobManager:
         datapoints: list[str],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
@@ -513,8 +517,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the locate. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the locate i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the locate (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -544,7 +549,7 @@ class RapidataJobManager:
         datapoints: list[str],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
@@ -561,8 +566,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the draw lines i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the draw lines (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -592,7 +598,7 @@ class RapidataJobManager:
         datapoints: list[str],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
@@ -612,8 +618,9 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the timestamp i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the timestamp (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
@@ -673,35 +680,16 @@ class RapidataJobManager:
             list[JobDefinition]: A list of JobDefinition instances.
         """
         with tracer.start_as_current_span("JobManager.find_job_definitions"):
-            from rapidata.api_client.models.pagination import Pagination
-            from rapidata.api_client.models.query_model import QueryModel
-            from rapidata.api_client.models.root_filter import RootFilter
-            from rapidata.api_client.models.filter import Filter
-            from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.logic_operator import LogicOperator
-            from rapidata.api_client.models.sort_criterion import SortCriterion
-            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+                AudienceAudienceIdJobsGetJobIdParameter,
+            )
 
             job_definition_page_result = (
                 self._openapi_service.order.job_api.job_definitions_get(
-                    request=QueryModel(
-                        page=Pagination(index=page, size=amount),
-                        filter=RootFilter(
-                            filters=[
-                                Filter(
-                                    field="Name",
-                                    operator=FilterOperator.CONTAINS,
-                                    value=name,
-                                )
-                            ],
-                            logic=LogicOperator.AND,
-                        ),
-                        sortCriteria=[
-                            SortCriterion(
-                                direction=SortDirection.DESC, propertyName="CreatedAt"
-                            )
-                        ],
-                    ),
+                    page=page,
+                    page_size=amount,
+                    name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                    sort=["-created_at"],
                 )
             )
 
@@ -754,35 +742,16 @@ class RapidataJobManager:
             list[RapidataJob]: A list of RapidataJob instances.
         """
         with tracer.start_as_current_span("JobManager.find_jobs"):
-            from rapidata.api_client.models.query_model import QueryModel
-            from rapidata.api_client.models.root_filter import RootFilter
-            from rapidata.api_client.models.filter import Filter
-            from rapidata.api_client.models.filter_operator import FilterOperator
-            from rapidata.api_client.models.logic_operator import LogicOperator
-            from rapidata.api_client.models.pagination import Pagination
-            from rapidata.api_client.models.sort_criterion import SortCriterion
-            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+                AudienceAudienceIdJobsGetJobIdParameter,
+            )
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
             response = self._openapi_service.order.job_api.jobs_get(
-                request=QueryModel(
-                    page=Pagination(index=page, size=amount),
-                    filter=RootFilter(
-                        filters=[
-                            Filter(
-                                field="Name",
-                                operator=FilterOperator.CONTAINS,
-                                value=name,
-                            )
-                        ],
-                        logic=LogicOperator.AND,
-                    ),
-                    sortCriteria=[
-                        SortCriterion(
-                            direction=SortDirection.DESC, propertyName="CreatedAt"
-                        )
-                    ],
-                ),
+                page=page,
+                page_size=amount,
+                name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                sort=["-created_at"],
             )
             jobs = [
                 RapidataJob(

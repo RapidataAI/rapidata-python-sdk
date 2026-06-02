@@ -18,10 +18,15 @@ from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from rapidata.api_client.models.create_sample_model import CreateSampleModel
-from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
-from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
-from rapidata.api_client.models.update_participant_model import UpdateParticipantModel
+from rapidata.api_client.models.create_sample_endpoint_input import CreateSampleEndpointInput
+from rapidata.api_client.models.create_sample_endpoint_output import CreateSampleEndpointOutput
+from rapidata.api_client.models.create_sample_new_endpoint_input import CreateSampleNewEndpointInput
+from rapidata.api_client.models.create_sample_new_endpoint_output import CreateSampleNewEndpointOutput
+from rapidata.api_client.models.get_participant_by_id_endpoint_output import GetParticipantByIdEndpointOutput
+from rapidata.api_client.models.i_faucet_input import IFaucetInput
+from rapidata.api_client.models.submit_participant_endpoint_output import SubmitParticipantEndpointOutput
+from rapidata.api_client.models.update_participant_endpoint_input import UpdateParticipantEndpointInput
+from rapidata.api_client.models.update_participant_name_endpoint_input import UpdateParticipantNameEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -44,7 +49,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_delete(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,10 +63,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Deletes a participant on a benchmark.
+        """Deletes a participant.
 
 
-        :param participant_id: (required)
+        :param participant_id: The id of the participant to delete. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -95,6 +100,9 @@ class ParticipantApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -110,7 +118,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_delete_with_http_info(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -124,10 +132,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Deletes a participant on a benchmark.
+        """Deletes a participant.
 
 
-        :param participant_id: (required)
+        :param participant_id: The id of the participant to delete. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -161,6 +169,9 @@ class ParticipantApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -176,7 +187,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_delete_without_preload_content(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -190,10 +201,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Deletes a participant on a benchmark.
+        """Deletes a participant.
 
 
-        :param participant_id: (required)
+        :param participant_id: The id of the participant to delete. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -227,6 +238,9 @@ class ParticipantApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -267,13 +281,18 @@ class ParticipantApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -297,7 +316,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_disable_post(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to be disabled")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to disable.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -311,10 +330,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
+        """Disables a participant in a benchmark.
 
 
-        :param participant_id: The id of the participant to be disabled (required)
+        :param participant_id: The id of the participant to disable. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -347,7 +366,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -363,7 +385,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_disable_post_with_http_info(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to be disabled")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to disable.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -377,10 +399,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
+        """Disables a participant in a benchmark.
 
 
-        :param participant_id: The id of the participant to be disabled (required)
+        :param participant_id: The id of the participant to disable. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -413,7 +435,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -429,7 +454,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_disable_post_without_preload_content(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to be disabled")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to disable.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -443,10 +468,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
+        """Disables a participant in a benchmark.
 
 
-        :param participant_id: The id of the participant to be disabled (required)
+        :param participant_id: The id of the participant to disable. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -479,7 +504,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -520,13 +548,18 @@ class ParticipantApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -548,9 +581,9 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_get(
+    def participant_participant_id_faucet_delete(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -563,11 +596,573 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetParticipantByIdResult:
-        """Gets a participant by it's Id.
+    ) -> None:
+        """Removes the faucet configuration from a participant.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_faucet_delete_serialize(
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def participant_participant_id_faucet_delete_with_http_info(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Removes the faucet configuration from a participant.
+
+
+        :param participant_id: The id of the participant. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_faucet_delete_serialize(
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def participant_participant_id_faucet_delete_without_preload_content(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Removes the faucet configuration from a participant.
+
+
+        :param participant_id: The id of the participant. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_faucet_delete_serialize(
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _participant_participant_id_faucet_delete_serialize(
+        self,
+        participant_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/participant/{participantId}/faucet',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def participant_participant_id_faucet_put(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose faucet to set.")],
+        i_faucet_input: Annotated[IFaucetInput, Field(description="The faucet configuration payload.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Sets the faucet used to auto-generate samples for a participant.
+
+
+        :param participant_id: The id of the participant whose faucet to set. (required)
+        :type participant_id: str
+        :param i_faucet_input: The faucet configuration payload. (required)
+        :type i_faucet_input: IFaucetInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_faucet_put_serialize(
+            participant_id=participant_id,
+            i_faucet_input=i_faucet_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def participant_participant_id_faucet_put_with_http_info(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose faucet to set.")],
+        i_faucet_input: Annotated[IFaucetInput, Field(description="The faucet configuration payload.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Sets the faucet used to auto-generate samples for a participant.
+
+
+        :param participant_id: The id of the participant whose faucet to set. (required)
+        :type participant_id: str
+        :param i_faucet_input: The faucet configuration payload. (required)
+        :type i_faucet_input: IFaucetInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_faucet_put_serialize(
+            participant_id=participant_id,
+            i_faucet_input=i_faucet_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def participant_participant_id_faucet_put_without_preload_content(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose faucet to set.")],
+        i_faucet_input: Annotated[IFaucetInput, Field(description="The faucet configuration payload.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Sets the faucet used to auto-generate samples for a participant.
+
+
+        :param participant_id: The id of the participant whose faucet to set. (required)
+        :type participant_id: str
+        :param i_faucet_input: The faucet configuration payload. (required)
+        :type i_faucet_input: IFaucetInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_faucet_put_serialize(
+            participant_id=participant_id,
+            i_faucet_input=i_faucet_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _participant_participant_id_faucet_put_serialize(
+        self,
+        participant_id,
+        i_faucet_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if i_faucet_input is not None:
+            _body_params = i_faucet_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/participant/{participantId}/faucet',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def participant_participant_id_get(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to query.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetParticipantByIdEndpointOutput:
+        """Gets a participant by its id.
+
+
+        :param participant_id: The id of the participant to query. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -600,7 +1195,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetParticipantByIdResult",
+            '200': "GetParticipantByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -616,7 +1214,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_get_with_http_info(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to query.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -629,11 +1227,11 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetParticipantByIdResult]:
-        """Gets a participant by it's Id.
+    ) -> ApiResponse[GetParticipantByIdEndpointOutput]:
+        """Gets a participant by its id.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant to query. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -666,7 +1264,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetParticipantByIdResult",
+            '200': "GetParticipantByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -682,7 +1283,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_get_without_preload_content(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to query.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -696,10 +1297,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets a participant by it's Id.
+        """Gets a participant by its id.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant to query. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -732,7 +1333,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetParticipantByIdResult",
+            '200': "GetParticipantByIdEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -777,18 +1381,14 @@ class ParticipantApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -810,10 +1410,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_patch(
+    def participant_participant_id_name_put(
         self,
-        participant_id: StrictStr,
-        update_participant_model: UpdateParticipantModel,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose name should be updated.")],
+        update_participant_name_endpoint_input: Annotated[UpdateParticipantNameEndpointInput, Field(description="The payload containing the new participant name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -827,13 +1427,13 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates a participant using patch semantics.
+        """Updates the name of a participant.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant whose name should be updated. (required)
         :type participant_id: str
-        :param update_participant_model:  (required)
-        :type update_participant_model: UpdateParticipantModel
+        :param update_participant_name_endpoint_input: The payload containing the new participant name. (required)
+        :type update_participant_name_endpoint_input: UpdateParticipantNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -856,9 +1456,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_patch_serialize(
+        _param = self._participant_participant_id_name_put_serialize(
             participant_id=participant_id,
-            update_participant_model=update_participant_model,
+            update_participant_name_endpoint_input=update_participant_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -867,6 +1467,9 @@ class ParticipantApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -880,10 +1483,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_patch_with_http_info(
+    def participant_participant_id_name_put_with_http_info(
         self,
-        participant_id: StrictStr,
-        update_participant_model: UpdateParticipantModel,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose name should be updated.")],
+        update_participant_name_endpoint_input: Annotated[UpdateParticipantNameEndpointInput, Field(description="The payload containing the new participant name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -897,13 +1500,13 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates a participant using patch semantics.
+        """Updates the name of a participant.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant whose name should be updated. (required)
         :type participant_id: str
-        :param update_participant_model:  (required)
-        :type update_participant_model: UpdateParticipantModel
+        :param update_participant_name_endpoint_input: The payload containing the new participant name. (required)
+        :type update_participant_name_endpoint_input: UpdateParticipantNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -926,9 +1529,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_patch_serialize(
+        _param = self._participant_participant_id_name_put_serialize(
             participant_id=participant_id,
-            update_participant_model=update_participant_model,
+            update_participant_name_endpoint_input=update_participant_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -937,6 +1540,9 @@ class ParticipantApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -950,10 +1556,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_patch_without_preload_content(
+    def participant_participant_id_name_put_without_preload_content(
         self,
-        participant_id: StrictStr,
-        update_participant_model: UpdateParticipantModel,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant whose name should be updated.")],
+        update_participant_name_endpoint_input: Annotated[UpdateParticipantNameEndpointInput, Field(description="The payload containing the new participant name.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -967,13 +1573,13 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates a participant using patch semantics.
+        """Updates the name of a participant.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant whose name should be updated. (required)
         :type participant_id: str
-        :param update_participant_model:  (required)
-        :type update_participant_model: UpdateParticipantModel
+        :param update_participant_name_endpoint_input: The payload containing the new participant name. (required)
+        :type update_participant_name_endpoint_input: UpdateParticipantNameEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -996,9 +1602,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_patch_serialize(
+        _param = self._participant_participant_id_name_put_serialize(
             participant_id=participant_id,
-            update_participant_model=update_participant_model,
+            update_participant_name_endpoint_input=update_participant_name_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1007,6 +1613,9 @@ class ParticipantApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1015,10 +1624,10 @@ class ParticipantApi:
         return response_data.response
 
 
-    def _participant_participant_id_patch_serialize(
+    def _participant_participant_id_name_put_serialize(
         self,
         participant_id,
-        update_participant_model,
+        update_participant_name_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1046,10 +1655,17 @@ class ParticipantApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_participant_model is not None:
-            _body_params = update_participant_model
+        if update_participant_name_endpoint_input is not None:
+            _body_params = update_participant_name_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -1058,9 +1674,7 @@ class ParticipantApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -1069,9 +1683,302 @@ class ParticipantApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/participant/{participantId}/name',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def participant_participant_id_patch(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to update.")],
+        update_participant_endpoint_input: Annotated[UpdateParticipantEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates a participant using patch semantics.
+
+
+        :param participant_id: The id of the participant to update. (required)
+        :type participant_id: str
+        :param update_participant_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_participant_endpoint_input: UpdateParticipantEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_patch_serialize(
+            participant_id=participant_id,
+            update_participant_endpoint_input=update_participant_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def participant_participant_id_patch_with_http_info(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to update.")],
+        update_participant_endpoint_input: Annotated[UpdateParticipantEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates a participant using patch semantics.
+
+
+        :param participant_id: The id of the participant to update. (required)
+        :type participant_id: str
+        :param update_participant_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_participant_endpoint_input: UpdateParticipantEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_patch_serialize(
+            participant_id=participant_id,
+            update_participant_endpoint_input=update_participant_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def participant_participant_id_patch_without_preload_content(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to update.")],
+        update_participant_endpoint_input: Annotated[UpdateParticipantEndpointInput, Field(description="The patch payload describing which fields should change.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates a participant using patch semantics.
+
+
+        :param participant_id: The id of the participant to update. (required)
+        :type participant_id: str
+        :param update_participant_endpoint_input: The patch payload describing which fields should change. (required)
+        :type update_participant_endpoint_input: UpdateParticipantEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_patch_serialize(
+            participant_id=participant_id,
+            update_participant_endpoint_input=update_participant_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _participant_participant_id_patch_serialize(
+        self,
+        participant_id,
+        update_participant_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_participant_endpoint_input is not None:
+            _body_params = update_participant_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -1093,10 +2000,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_post(
+    def participant_participant_id_sample_new_post(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
-        create_sample_model: Annotated[CreateSampleModel, Field(description="The model for the sample creation")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to.")],
+        create_sample_new_endpoint_input: Annotated[CreateSampleNewEndpointInput, Field(description="The payload describing the sample to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1109,14 +2016,14 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> CreateSampleNewEndpointOutput:
         """Adds a sample to a participant.
 
 
-        :param participant_id: The id of the participant to add the sample to (required)
+        :param participant_id: The id of the participant to add the sample to. (required)
         :type participant_id: str
-        :param create_sample_model: The model for the sample creation (required)
-        :type create_sample_model: CreateSampleModel
+        :param create_sample_new_endpoint_input: The payload describing the sample to create. (required)
+        :type create_sample_new_endpoint_input: CreateSampleNewEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1139,9 +2046,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_post_serialize(
+        _param = self._participant_participant_id_sample_new_post_serialize(
             participant_id=participant_id,
-            create_sample_model=create_sample_model,
+            create_sample_new_endpoint_input=create_sample_new_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1149,7 +2056,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateSampleNewEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1163,10 +2073,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_post_with_http_info(
+    def participant_participant_id_sample_new_post_with_http_info(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
-        create_sample_model: Annotated[CreateSampleModel, Field(description="The model for the sample creation")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to.")],
+        create_sample_new_endpoint_input: Annotated[CreateSampleNewEndpointInput, Field(description="The payload describing the sample to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1179,14 +2089,14 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[CreateSampleNewEndpointOutput]:
         """Adds a sample to a participant.
 
 
-        :param participant_id: The id of the participant to add the sample to (required)
+        :param participant_id: The id of the participant to add the sample to. (required)
         :type participant_id: str
-        :param create_sample_model: The model for the sample creation (required)
-        :type create_sample_model: CreateSampleModel
+        :param create_sample_new_endpoint_input: The payload describing the sample to create. (required)
+        :type create_sample_new_endpoint_input: CreateSampleNewEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1209,9 +2119,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_post_serialize(
+        _param = self._participant_participant_id_sample_new_post_serialize(
             participant_id=participant_id,
-            create_sample_model=create_sample_model,
+            create_sample_new_endpoint_input=create_sample_new_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1219,7 +2129,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateSampleNewEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1233,10 +2146,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_post_without_preload_content(
+    def participant_participant_id_sample_new_post_without_preload_content(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
-        create_sample_model: Annotated[CreateSampleModel, Field(description="The model for the sample creation")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to.")],
+        create_sample_new_endpoint_input: Annotated[CreateSampleNewEndpointInput, Field(description="The payload describing the sample to create.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1253,10 +2166,10 @@ class ParticipantApi:
         """Adds a sample to a participant.
 
 
-        :param participant_id: The id of the participant to add the sample to (required)
+        :param participant_id: The id of the participant to add the sample to. (required)
         :type participant_id: str
-        :param create_sample_model: The model for the sample creation (required)
-        :type create_sample_model: CreateSampleModel
+        :param create_sample_new_endpoint_input: The payload describing the sample to create. (required)
+        :type create_sample_new_endpoint_input: CreateSampleNewEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1279,9 +2192,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_post_serialize(
+        _param = self._participant_participant_id_sample_new_post_serialize(
             participant_id=participant_id,
-            create_sample_model=create_sample_model,
+            create_sample_new_endpoint_input=create_sample_new_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1289,7 +2202,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateSampleNewEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1298,10 +2214,10 @@ class ParticipantApi:
         return response_data.response
 
 
-    def _participant_participant_id_sample_post_serialize(
+    def _participant_participant_id_sample_new_post_serialize(
         self,
         participant_id,
-        create_sample_model,
+        create_sample_new_endpoint_input,
         _request_auth,
         _content_type,
         _headers,
@@ -1329,10 +2245,17 @@ class ParticipantApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_sample_model is not None:
-            _body_params = create_sample_model
+        if create_sample_new_endpoint_input is not None:
+            _body_params = create_sample_new_endpoint_input
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
@@ -1341,9 +2264,7 @@ class ParticipantApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
+                        'application/json'
                     ]
                 )
             )
@@ -1352,9 +2273,302 @@ class ParticipantApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/participant/{participantId}/sample-new',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def participant_participant_id_sample_post(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to.")],
+        create_sample_endpoint_input: Annotated[CreateSampleEndpointInput, Field(description="The payload describing the sample to create.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreateSampleEndpointOutput:
+        """Adds a sample to a participant.
+
+
+        :param participant_id: The id of the participant to add the sample to. (required)
+        :type participant_id: str
+        :param create_sample_endpoint_input: The payload describing the sample to create. (required)
+        :type create_sample_endpoint_input: CreateSampleEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_sample_post_serialize(
+            participant_id=participant_id,
+            create_sample_endpoint_input=create_sample_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateSampleEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def participant_participant_id_sample_post_with_http_info(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to.")],
+        create_sample_endpoint_input: Annotated[CreateSampleEndpointInput, Field(description="The payload describing the sample to create.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CreateSampleEndpointOutput]:
+        """Adds a sample to a participant.
+
+
+        :param participant_id: The id of the participant to add the sample to. (required)
+        :type participant_id: str
+        :param create_sample_endpoint_input: The payload describing the sample to create. (required)
+        :type create_sample_endpoint_input: CreateSampleEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_sample_post_serialize(
+            participant_id=participant_id,
+            create_sample_endpoint_input=create_sample_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateSampleEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def participant_participant_id_sample_post_without_preload_content(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to.")],
+        create_sample_endpoint_input: Annotated[CreateSampleEndpointInput, Field(description="The payload describing the sample to create.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Adds a sample to a participant.
+
+
+        :param participant_id: The id of the participant to add the sample to. (required)
+        :type participant_id: str
+        :param create_sample_endpoint_input: The payload describing the sample to create. (required)
+        :type create_sample_endpoint_input: CreateSampleEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_sample_post_serialize(
+            participant_id=participant_id,
+            create_sample_endpoint_input=create_sample_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateSampleEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _participant_participant_id_sample_post_serialize(
+        self,
+        participant_id,
+        create_sample_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if create_sample_endpoint_input is not None:
+            _body_params = create_sample_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -1378,7 +2592,7 @@ class ParticipantApi:
     @validate_call
     def participant_sample_sample_id_delete(
         self,
-        sample_id: Annotated[StrictStr, Field(description="the id of the sample to be deleted.")],
+        sample_id: Annotated[StrictStr, Field(description="The id of the sample to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1391,11 +2605,11 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetParticipantByIdResult:
-        """Deletes a sample.
+    ) -> None:
+        """Deletes a participant sample.
 
 
-        :param sample_id: the id of the sample to be deleted. (required)
+        :param sample_id: The id of the sample to delete. (required)
         :type sample_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1428,7 +2642,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetParticipantByIdResult",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1444,7 +2661,7 @@ class ParticipantApi:
     @validate_call
     def participant_sample_sample_id_delete_with_http_info(
         self,
-        sample_id: Annotated[StrictStr, Field(description="the id of the sample to be deleted.")],
+        sample_id: Annotated[StrictStr, Field(description="The id of the sample to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1457,11 +2674,11 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetParticipantByIdResult]:
-        """Deletes a sample.
+    ) -> ApiResponse[None]:
+        """Deletes a participant sample.
 
 
-        :param sample_id: the id of the sample to be deleted. (required)
+        :param sample_id: The id of the sample to delete. (required)
         :type sample_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1494,7 +2711,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetParticipantByIdResult",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1510,7 +2730,7 @@ class ParticipantApi:
     @validate_call
     def participant_sample_sample_id_delete_without_preload_content(
         self,
-        sample_id: Annotated[StrictStr, Field(description="the id of the sample to be deleted.")],
+        sample_id: Annotated[StrictStr, Field(description="The id of the sample to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1524,10 +2744,10 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Deletes a sample.
+        """Deletes a participant sample.
 
 
-        :param sample_id: the id of the sample to be deleted. (required)
+        :param sample_id: The id of the sample to delete. (required)
         :type sample_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1560,7 +2780,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetParticipantByIdResult",
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1605,18 +2828,14 @@ class ParticipantApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -1640,7 +2859,7 @@ class ParticipantApi:
     @validate_call
     def participants_participant_id_submit_post(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1653,11 +2872,11 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> SubmitParticipantResult:
+    ) -> SubmitParticipantEndpointOutput:
         """Submits a participant to a benchmark.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant to submit. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1690,7 +2909,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SubmitParticipantResult",
+            '200': "SubmitParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1706,7 +2928,7 @@ class ParticipantApi:
     @validate_call
     def participants_participant_id_submit_post_with_http_info(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1719,11 +2941,11 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmitParticipantResult]:
+    ) -> ApiResponse[SubmitParticipantEndpointOutput]:
         """Submits a participant to a benchmark.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant to submit. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1756,7 +2978,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SubmitParticipantResult",
+            '200': "SubmitParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1772,7 +2997,7 @@ class ParticipantApi:
     @validate_call
     def participants_participant_id_submit_post_without_preload_content(
         self,
-        participant_id: StrictStr,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to submit.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1789,7 +3014,7 @@ class ParticipantApi:
         """Submits a participant to a benchmark.
 
 
-        :param participant_id:  (required)
+        :param participant_id: The id of the participant to submit. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1822,7 +3047,10 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SubmitParticipantResult",
+            '200': "SubmitParticipantEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1867,18 +3095,14 @@ class ParticipantApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
+                    'application/json'
                 ]
             )
 
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(

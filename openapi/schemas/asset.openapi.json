@@ -20,14 +20,6 @@
         "description": "Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,\n X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.",
         "parameters": [
           {
-            "name": "library",
-            "in": "query",
-            "description": "The compression library to use.",
-            "schema": {
-              "$ref": "#/components/schemas/CompressionLibrary"
-            }
-          },
-          {
             "name": "quality",
             "in": "query",
             "description": "The compression quality from 1 to 100.",
@@ -104,6 +96,34 @@
           "Asset"
         ],
         "summary": "Uploads a file to our system and returns the new file name used internally.",
+        "parameters": [
+          {
+            "name": "compress",
+            "in": "query",
+            "description": "When set, forces image compression on or off for this upload, overriding the configured default.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "quality",
+            "in": "query",
+            "description": "WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "maxdim",
+            "in": "query",
+            "description": "Maximum width or height in pixels when compression runs. Falls back to the configured default when null.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "requestBody": {
           "description": "The file to upload",
           "content": {
@@ -168,6 +188,32 @@
             "schema": {
               "type": "string",
               "format": "uri"
+            }
+          },
+          {
+            "name": "compress",
+            "in": "query",
+            "description": "When set, forces image compression on or off for this upload, overriding the configured default.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "quality",
+            "in": "query",
+            "description": "WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "maxdim",
+            "in": "query",
+            "description": "Maximum width or height in pixels when compression runs. Falls back to the configured default when null.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -402,8 +448,7 @@
           "Processing",
           "Completed",
           "Aborted"
-        ],
-        "description": "The current status of the batch upload."
+        ]
       },
       "BatchUploadUrlStatus": {
         "enum": [
@@ -412,11 +457,24 @@
           "Failed"
         ]
       },
-      "CompressionLibrary": {
-        "enum": [
-          "ImageSharp",
-          "NetVips"
-        ]
+      "CompressionOverride": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "quality": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxDimension": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
       },
       "CreateBatchUploadEndpoint_Input": {
         "required": [
@@ -440,6 +498,14 @@
             "type": "string",
             "description": "Optional client-supplied identifier to group related batch uploads.",
             "nullable": true
+          },
+          "compression": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompressionOverride"
+              }
+            ],
+            "description": "Optional per-call override for image compression applied to every URL in the batch.\n Null means use the configured defaults."
           }
         }
       },
@@ -471,7 +537,12 @@
             "description": "The identifier of the batch upload."
           },
           "status": {
-            "$ref": "#/components/schemas/BatchUploadStatus"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BatchUploadStatus"
+              }
+            ],
+            "description": "The current status of the batch upload."
           },
           "totalCount": {
             "type": "integer",
@@ -535,7 +606,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/BatchUploadStatus"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BatchUploadStatus"
+              }
+            ],
+            "description": "The aggregated status across all queried batch uploads."
           },
           "totalCount": {
             "type": "integer",
@@ -599,12 +675,14 @@
           "originalSizeBytes": {
             "type": "integer",
             "description": "The original size of the uploaded file in bytes, if available. This may be null if the size could not be determined.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "finalSizeBytes": {
             "type": "integer",
             "description": "The final size of the stored file in bytes after processing (e.g., compression), if available.\n This may be null if the size could not be determined. If compression was applied, this size may be smaller than the original size.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -638,12 +716,14 @@
           "originalSizeBytes": {
             "type": "integer",
             "description": "The original size of the uploaded file in bytes, if available. This may be null if the size could not be determined.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "finalSizeBytes": {
             "type": "integer",
             "description": "The final size of the stored file in bytes after processing (e.g., compression), if available.\n This may be smaller than the original size if compression was applied.",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -660,7 +740,8 @@
           },
           "status": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
             "type": "string",
@@ -683,47 +764,20 @@
       }
     },
     "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "description": "JWT Authorization header using the Bearer scheme",
-        "scheme": "bearer",
-        "bearerFormat": "Json Web Token"
-      },
       "OpenIdConnect": {
         "type": "openIdConnect",
-        "description": "OpenId Connect connection flow",
+        "description": "OpenID Connect connection flow",
         "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
-      },
-      "OAuth2": {
-        "type": "oauth2",
-        "description": "OAuth2 authorization header using the Bearer scheme",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
-            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
-            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
-            "scopes": {
-              "openid": "OpenID",
-              "profile": "Profile",
-              "email": "Email"
-            }
-          }
-        }
       }
     }
   },
   "security": [
     {
-      "Bearer": [ ],
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
-      ],
-      "OAuth2": [
-        "openid",
-        "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

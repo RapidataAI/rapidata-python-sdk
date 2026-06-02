@@ -27,7 +27,10 @@ from rapidata.api_client.exceptions import ApiException, ApiValueError
 _logger = logging.getLogger("rapidata.api_client")
 _TRANSIENT_RETRY_MAX_ATTEMPTS = 3
 _TRANSIENT_RETRY_BASE_DELAY = 0.5
-_RETRYABLE_STATUS_CODES = {502, 503, 504}
+# 429 = rate limit, 502/503/504 = transient upstream / gateway errors.
+# All five are safe to retry with exponential backoff.
+_RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
+_RETRY_AFTER_MAX_SECONDS = 60.0
 
 
 class RESTResponse(io.IOBase):
@@ -78,9 +81,12 @@ class RESTClientObject:
             self.session.fetch_token()
         except ConnectError as e:
             if self._is_certificate_validation_error(e):
-                exit(self._get_ssl_verify_error_message())
-            else:
-                raise
+                raise ApiException(
+                    status=0,
+                    reason="SSL Certificate Verification Failed\n"
+                    + self._get_ssl_verify_error_message(),
+                ) from e
+            raise
 
     def setup_oauth_with_token(
         self,
@@ -149,7 +155,11 @@ class RESTClientObject:
                 continue
 
             if r.status_code in _RETRYABLE_STATUS_CODES and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS:
-                delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
+                # Prefer the server's `Retry-After` hint when present
+                # (common for 429). Fall back to exponential backoff.
+                delay = self._retry_after_from_response(r)
+                if delay is None:
+                    delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
                 _logger.warning(
                     "Server error on %s %s (attempt %d/%d): %d. Retrying in %.1fs...",
                     method, url, attempt + 1, _TRANSIENT_RETRY_MAX_ATTEMPTS + 1,
@@ -224,6 +234,26 @@ class RESTClientObject:
         return files, data
 
     @staticmethod
+    def _retry_after_from_response(response: httpx.Response) -> Optional[float]:
+        """Parse a `Retry-After` header into a bounded float seconds value.
+
+        Accepts the integer-seconds form (RFC 7231). HTTP-date form is
+        intentionally not supported; in that case we fall back to the
+        exponential backoff schedule. Bounded by `_RETRY_AFTER_MAX_SECONDS`
+        so a hostile or broken server can't extend the retry loop.
+        """
+        raw = response.headers.get("Retry-After")
+        if not raw:
+            return None
+        try:
+            seconds = float(raw)
+        except (TypeError, ValueError):
+            return None
+        if seconds < 0:
+            return None
+        return min(seconds, _RETRY_AFTER_MAX_SECONDS)
+
+    @staticmethod
     def _build_timeout(_request_timeout):
         """Build a Timeout object from the request timeout parameter."""
         if not _request_timeout:
@@ -276,11 +306,13 @@ class RESTClientObject:
         if self.configuration.proxy:
             client_kwargs["proxy"] = self.configuration.proxy
 
-            existing_headers = client_kwargs.pop("headers")
             if self.configuration.proxy_headers:
-                for key, value in self.configuration.proxy_headers.items():
-                    existing_headers[key] = value
-            client_kwargs["headers"] = existing_headers
+                # httpx doesn't have a dedicated `proxy_headers` kwarg the way
+                # urllib3 does — merging them into the default request headers
+                # is the closest equivalent.
+                existing_headers = dict(client_kwargs.get("headers") or {})
+                existing_headers.update(self.configuration.proxy_headers)
+                client_kwargs["headers"] = existing_headers
 
         if self.configuration.retries is not None:
             transport = httpx.HTTPTransport(retries=self.configuration.retries, limits=limits)

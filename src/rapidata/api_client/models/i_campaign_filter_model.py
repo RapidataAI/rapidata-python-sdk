@@ -18,6 +18,7 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_campaign_filter_model_audience_state_filter_model import ICampaignFilterModelAudienceStateFilterModel
+from rapidata.api_client.models.i_campaign_filter_model_campaign_cooldown_filter_model import ICampaignFilterModelCampaignCooldownFilterModel
 from rapidata.api_client.models.i_campaign_filter_model_campaign_id_filter_model import ICampaignFilterModelCampaignIdFilterModel
 from rapidata.api_client.models.i_campaign_filter_model_campaign_session_count_filter_model import ICampaignFilterModelCampaignSessionCountFilterModel
 from rapidata.api_client.models.i_campaign_filter_model_country_filter_model import ICampaignFilterModelCountryFilterModel
@@ -34,7 +35,7 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ICAMPAIGNFILTERMODEL_ONE_OF_SCHEMAS = ["ICampaignFilterModelAndFilterModel", "ICampaignFilterModelAudienceStateFilterModel", "ICampaignFilterModelCampaignIdFilterModel", "ICampaignFilterModelCampaignSessionCountFilterModel", "ICampaignFilterModelCountryFilterModel", "ICampaignFilterModelDemographicFilterModel", "ICampaignFilterModelDeviceFilterModel", "ICampaignFilterModelLanguageFilterModel", "ICampaignFilterModelNewUserFilterModel", "ICampaignFilterModelNotFilterModel", "ICampaignFilterModelOrFilterModel", "ICampaignFilterModelResponseCountFilterModel", "ICampaignFilterModelUserActionRestrictionFilterModel", "ICampaignFilterModelUserScoreFilterModel"]
+ICAMPAIGNFILTERMODEL_ONE_OF_SCHEMAS = ["ICampaignFilterModelAndFilterModel", "ICampaignFilterModelAudienceStateFilterModel", "ICampaignFilterModelCampaignCooldownFilterModel", "ICampaignFilterModelCampaignIdFilterModel", "ICampaignFilterModelCampaignSessionCountFilterModel", "ICampaignFilterModelCountryFilterModel", "ICampaignFilterModelDemographicFilterModel", "ICampaignFilterModelDeviceFilterModel", "ICampaignFilterModelLanguageFilterModel", "ICampaignFilterModelNewUserFilterModel", "ICampaignFilterModelNotFilterModel", "ICampaignFilterModelOrFilterModel", "ICampaignFilterModelResponseCountFilterModel", "ICampaignFilterModelUserActionRestrictionFilterModel", "ICampaignFilterModelUserScoreFilterModel"]
 
 class ICampaignFilterModel(LazyValidatedModel):
     """
@@ -44,32 +45,34 @@ class ICampaignFilterModel(LazyValidatedModel):
     oneof_schema_1_validator: Optional[ICampaignFilterModelAndFilterModel] = None
     # data type: ICampaignFilterModelAudienceStateFilterModel
     oneof_schema_2_validator: Optional[ICampaignFilterModelAudienceStateFilterModel] = None
+    # data type: ICampaignFilterModelCampaignCooldownFilterModel
+    oneof_schema_3_validator: Optional[ICampaignFilterModelCampaignCooldownFilterModel] = None
     # data type: ICampaignFilterModelCampaignIdFilterModel
-    oneof_schema_3_validator: Optional[ICampaignFilterModelCampaignIdFilterModel] = None
+    oneof_schema_4_validator: Optional[ICampaignFilterModelCampaignIdFilterModel] = None
     # data type: ICampaignFilterModelCampaignSessionCountFilterModel
-    oneof_schema_4_validator: Optional[ICampaignFilterModelCampaignSessionCountFilterModel] = None
+    oneof_schema_5_validator: Optional[ICampaignFilterModelCampaignSessionCountFilterModel] = None
     # data type: ICampaignFilterModelCountryFilterModel
-    oneof_schema_5_validator: Optional[ICampaignFilterModelCountryFilterModel] = None
+    oneof_schema_6_validator: Optional[ICampaignFilterModelCountryFilterModel] = None
     # data type: ICampaignFilterModelDemographicFilterModel
-    oneof_schema_6_validator: Optional[ICampaignFilterModelDemographicFilterModel] = None
+    oneof_schema_7_validator: Optional[ICampaignFilterModelDemographicFilterModel] = None
     # data type: ICampaignFilterModelDeviceFilterModel
-    oneof_schema_7_validator: Optional[ICampaignFilterModelDeviceFilterModel] = None
+    oneof_schema_8_validator: Optional[ICampaignFilterModelDeviceFilterModel] = None
     # data type: ICampaignFilterModelLanguageFilterModel
-    oneof_schema_8_validator: Optional[ICampaignFilterModelLanguageFilterModel] = None
+    oneof_schema_9_validator: Optional[ICampaignFilterModelLanguageFilterModel] = None
     # data type: ICampaignFilterModelNewUserFilterModel
-    oneof_schema_9_validator: Optional[ICampaignFilterModelNewUserFilterModel] = None
+    oneof_schema_10_validator: Optional[ICampaignFilterModelNewUserFilterModel] = None
     # data type: ICampaignFilterModelNotFilterModel
-    oneof_schema_10_validator: Optional[ICampaignFilterModelNotFilterModel] = None
+    oneof_schema_11_validator: Optional[ICampaignFilterModelNotFilterModel] = None
     # data type: ICampaignFilterModelOrFilterModel
-    oneof_schema_11_validator: Optional[ICampaignFilterModelOrFilterModel] = None
+    oneof_schema_12_validator: Optional[ICampaignFilterModelOrFilterModel] = None
     # data type: ICampaignFilterModelResponseCountFilterModel
-    oneof_schema_12_validator: Optional[ICampaignFilterModelResponseCountFilterModel] = None
+    oneof_schema_13_validator: Optional[ICampaignFilterModelResponseCountFilterModel] = None
     # data type: ICampaignFilterModelUserActionRestrictionFilterModel
-    oneof_schema_13_validator: Optional[ICampaignFilterModelUserActionRestrictionFilterModel] = None
+    oneof_schema_14_validator: Optional[ICampaignFilterModelUserActionRestrictionFilterModel] = None
     # data type: ICampaignFilterModelUserScoreFilterModel
-    oneof_schema_14_validator: Optional[ICampaignFilterModelUserScoreFilterModel] = None
-    actual_instance: Optional[Union[ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel]] = None
-    one_of_schemas: Set[str] = { "ICampaignFilterModelAndFilterModel", "ICampaignFilterModelAudienceStateFilterModel", "ICampaignFilterModelCampaignIdFilterModel", "ICampaignFilterModelCampaignSessionCountFilterModel", "ICampaignFilterModelCountryFilterModel", "ICampaignFilterModelDemographicFilterModel", "ICampaignFilterModelDeviceFilterModel", "ICampaignFilterModelLanguageFilterModel", "ICampaignFilterModelNewUserFilterModel", "ICampaignFilterModelNotFilterModel", "ICampaignFilterModelOrFilterModel", "ICampaignFilterModelResponseCountFilterModel", "ICampaignFilterModelUserActionRestrictionFilterModel", "ICampaignFilterModelUserScoreFilterModel" }
+    oneof_schema_15_validator: Optional[ICampaignFilterModelUserScoreFilterModel] = None
+    actual_instance: Optional[Union[ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignCooldownFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel]] = None
+    one_of_schemas: Set[str] = { "ICampaignFilterModelAndFilterModel", "ICampaignFilterModelAudienceStateFilterModel", "ICampaignFilterModelCampaignCooldownFilterModel", "ICampaignFilterModelCampaignIdFilterModel", "ICampaignFilterModelCampaignSessionCountFilterModel", "ICampaignFilterModelCountryFilterModel", "ICampaignFilterModelDemographicFilterModel", "ICampaignFilterModelDeviceFilterModel", "ICampaignFilterModelLanguageFilterModel", "ICampaignFilterModelNewUserFilterModel", "ICampaignFilterModelNotFilterModel", "ICampaignFilterModelOrFilterModel", "ICampaignFilterModelResponseCountFilterModel", "ICampaignFilterModelUserActionRestrictionFilterModel", "ICampaignFilterModelUserScoreFilterModel" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -100,6 +103,11 @@ class ICampaignFilterModel(LazyValidatedModel):
         # validate data type: ICampaignFilterModelAudienceStateFilterModel
         if not isinstance(v, ICampaignFilterModelAudienceStateFilterModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ICampaignFilterModelAudienceStateFilterModel`")
+        else:
+            match += 1
+        # validate data type: ICampaignFilterModelCampaignCooldownFilterModel
+        if not isinstance(v, ICampaignFilterModelCampaignCooldownFilterModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ICampaignFilterModelCampaignCooldownFilterModel`")
         else:
             match += 1
         # validate data type: ICampaignFilterModelCampaignIdFilterModel
@@ -164,10 +172,10 @@ class ICampaignFilterModel(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignCooldownFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignCooldownFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -191,6 +199,12 @@ class ICampaignFilterModel(LazyValidatedModel):
         # deserialize data into ICampaignFilterModelAudienceStateFilterModel
         try:
             instance.actual_instance = ICampaignFilterModelAudienceStateFilterModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into ICampaignFilterModelCampaignCooldownFilterModel
+        try:
+            instance.actual_instance = ICampaignFilterModelCampaignCooldownFilterModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -269,10 +283,10 @@ class ICampaignFilterModel(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignCooldownFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into ICampaignFilterModel with oneOf schemas: ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignCooldownFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -286,7 +300,7 @@ class ICampaignFilterModel(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], ICampaignFilterModelAndFilterModel, ICampaignFilterModelAudienceStateFilterModel, ICampaignFilterModelCampaignCooldownFilterModel, ICampaignFilterModelCampaignIdFilterModel, ICampaignFilterModelCampaignSessionCountFilterModel, ICampaignFilterModelCountryFilterModel, ICampaignFilterModelDemographicFilterModel, ICampaignFilterModelDeviceFilterModel, ICampaignFilterModelLanguageFilterModel, ICampaignFilterModelNewUserFilterModel, ICampaignFilterModelNotFilterModel, ICampaignFilterModelOrFilterModel, ICampaignFilterModelResponseCountFilterModel, ICampaignFilterModelUserActionRestrictionFilterModel, ICampaignFilterModelUserScoreFilterModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

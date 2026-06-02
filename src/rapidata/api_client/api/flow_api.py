@@ -20,7 +20,7 @@ from datetime import datetime
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.audiences_get_name_parameter import AudiencesGetNameParameter
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
 from rapidata.api_client.models.get_completion_time_histogram_endpoint_output import GetCompletionTimeHistogramEndpointOutput
 from rapidata.api_client.models.get_flow_item_creation_timeseries_endpoint_output import GetFlowItemCreationTimeseriesEndpointOutput
 from rapidata.api_client.models.get_response_count_histogram_endpoint_output import GetResponseCountHistogramEndpointOutput
@@ -292,9 +292,7 @@ class FlowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -561,9 +559,7 @@ class FlowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -590,8 +586,8 @@ class FlowApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -615,9 +611,9 @@ class FlowApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: AudiencesGetNameParameter
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -675,8 +671,8 @@ class FlowApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -700,9 +696,9 @@ class FlowApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: AudiencesGetNameParameter
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -760,8 +756,8 @@ class FlowApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        name: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by name.")] = None,
-        created_at: Annotated[Optional[AudiencesGetNameParameter], Field(description="Filter by created_at.")] = None,
+        name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -785,9 +781,9 @@ class FlowApi:
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
         :param name: Filter by name.
-        :type name: AudiencesGetNameParameter
+        :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
-        :type created_at: AudiencesGetNameParameter
+        :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -909,9 +905,7 @@ class FlowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -1247,9 +1241,7 @@ class FlowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -1585,9 +1577,7 @@ class FlowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -1923,9 +1913,7 @@ class FlowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(
@@ -2261,9 +2249,7 @@ class FlowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'OAuth2', 
-            'OpenIdConnect', 
-            'Bearer'
+            'OpenIdConnect'
         ]
 
         return self.api_client.param_serialize(

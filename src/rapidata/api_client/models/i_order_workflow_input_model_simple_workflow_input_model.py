@@ -88,6 +88,11 @@ class IOrderWorkflowInputModelSimpleWorkflowInputModel(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if batch_size (nullable) is None
+        # and model_fields_set contains the field
+        if self.batch_size is None and "batch_size" in self.model_fields_set:
+            _dict['batchSize'] = None
+
         return _dict
 
     @classmethod

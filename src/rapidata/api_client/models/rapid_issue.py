@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class RapidIssue(str, Enum):
     """
-    A streamlined enum representing common issues.
+    RapidIssue
     """
 
     """

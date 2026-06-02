@@ -5,23 +5,17 @@ import urllib.parse
 import webbrowser
 from colorama import Fore
 from typing import Literal, TYPE_CHECKING
-from rapidata.api_client import QueryModel
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
-from rapidata.api_client.models.create_validation_set_model import (
-    CreateValidationSetModel,
+from rapidata.api_client.models.create_validation_set_endpoint_input import (
+    CreateValidationSetEndpointInput,
+)
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+    AudienceAudienceIdJobsGetJobIdParameter,
 )
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
-
-from rapidata.api_client.models.pagination import Pagination
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.sort_criterion import SortCriterion
-from rapidata.api_client.models.sort_direction import SortDirection
-from rapidata.api_client.models.filter_operator import FilterOperator
-from rapidata.api_client.models.logic_operator import LogicOperator
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
@@ -71,7 +65,7 @@ class ValidationSetManager:
         truths: list[list[str]],
         data_type: Literal["media", "text"] = "media",
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         explanations: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -91,9 +85,10 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -159,7 +154,7 @@ class ValidationSetManager:
         truths: list[str],
         data_type: Literal["media", "text"] = "media",
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -179,9 +174,10 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -318,7 +314,7 @@ class ValidationSetManager:
         truths: list[list[Box]],
         datapoints: list[str],
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -333,9 +329,10 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -395,7 +392,7 @@ class ValidationSetManager:
         truths: list[list[Box]],
         datapoints: list[str],
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -410,9 +407,10 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -472,7 +470,7 @@ class ValidationSetManager:
         truths: list[list[tuple[int, int]]],
         datapoints: list[str],
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -488,9 +486,10 @@ class ValidationSetManager:
                     truths: [[(0, 10)], [(20, 30)]] -> first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -568,7 +567,7 @@ class ValidationSetManager:
         logger.debug("Creating validation set")
         validation_set_id = (
             self._openapi_service.validation.validation_api.validation_set_post(
-                create_validation_set_model=CreateValidationSetModel(name=name)
+                create_validation_set_endpoint_input=CreateValidationSetEndpointInput(name=name)
             )
         ).validation_set_id
 
@@ -676,31 +675,17 @@ class ValidationSetManager:
 
             validation_page_result = (
                 self._openapi_service.validation.validation_api.validation_sets_get(
-                    QueryModel(
-                        page=Pagination(index=page, size=amount),
-                        filter=RootFilter(
-                            filters=[
-                                Filter(
-                                    field="Name",
-                                    operator=FilterOperator.CONTAINS,
-                                    value=name,
-                                )
-                            ],
-                            logic=LogicOperator.AND,
-                        ),
-                        sortCriteria=[
-                            SortCriterion(
-                                direction=SortDirection.DESC, propertyName="CreatedAt"
-                            )
-                        ],
-                    )
+                    page=page,
+                    page_size=amount,
+                    name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
+                    sort=["-created_at"],
                 )
             )
 
             logger.debug("Validation sets found: %s", validation_page_result.items)
 
             validation_sets = [
-                self.get_validation_set_by_id(str(validation_set.id))
+                self.get_validation_set_by_id(validation_set.id)
                 for validation_set in validation_page_result.items
             ]
             return validation_sets

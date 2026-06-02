@@ -25,7 +25,7 @@ class RapidsManager:
         truths: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a classification rapid
@@ -37,15 +37,15 @@ class RapidsManager:
             truths (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
         from rapidata.api_client.models.i_rapid_payload_classify_payload import (
             IRapidPayloadClassifyPayload,
         )
-        from rapidata.api_client.models.classify_payload_category import (
-            ClassifyPayloadCategory,
+        from rapidata.api_client.models.classify_category import (
+            ClassifyCategory,
         )
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
@@ -65,7 +65,7 @@ class RapidsManager:
             actual_instance=IRapidPayloadClassifyPayload(
                 _t="ClassifyPayload",
                 categories=[
-                    ClassifyPayloadCategory(label=option, value=option)
+                    ClassifyCategory(label=option, value=option)
                     for option in answer_options
                 ],
                 title=instruction,
@@ -95,7 +95,7 @@ class RapidsManager:
         datapoint: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
-        media_context: str | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a compare rapid
@@ -106,7 +106,7 @@ class RapidsManager:
             datapoint (list[str]): The two assets that the labeler will be comparing.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -178,6 +178,9 @@ class RapidsManager:
             IRapidPayloadTranscriptionPayload,
         )
         from rapidata.api_client.models.transcription_word import TranscriptionWord
+        from rapidata.api_client.models.transcription_truth_model_transcription_word import (
+            TranscriptionTruthModelTranscriptionWord,
+        )
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
         )
@@ -191,10 +194,12 @@ class RapidsManager:
             for i, word in enumerate(sentence.split(" "))
         ]
 
-        correct_transcription_words: list[TranscriptionWord] = []
+        correct_transcription_words: list[TranscriptionTruthModelTranscriptionWord] = []
         for index in truths:
             correct_transcription_words.append(
-                TranscriptionWord(word=transcription_words[index].word, wordIndex=index)
+                TranscriptionTruthModelTranscriptionWord(
+                    word=transcription_words[index].word, wordIndex=index
+                )
             )
 
         payload = IRapidPayload(
@@ -230,7 +235,7 @@ class RapidsManager:
         truths: list[Box],
         datapoint: str,
         context: str | None = None,
-        media_context: str | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a locate rapid
@@ -240,7 +245,7 @@ class RapidsManager:
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be locating.
             datapoint (str): The asset that the labeler will be locating the object in.
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -288,7 +293,7 @@ class RapidsManager:
         truths: list[Box],
         datapoint: str,
         context: str | None = None,
-        media_context: str | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a draw rapid
@@ -296,9 +301,11 @@ class RapidsManager:
         Args:
             instruction (str): The instructions on what the labeler
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be drawing.
+                All boxes are attached as the ground truth — labelers are graded on whether
+                their drawn lines fall within any of these boxes.
             datapoint (str): The asset that the labeler will be drawing the object in.
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -308,10 +315,13 @@ class RapidsManager:
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
         )
-        from rapidata.api_client.models.i_validation_truth_model_bounding_box_truth_model import (
-            IValidationTruthModelBoundingBoxTruthModel,
+        from rapidata.api_client.models.i_validation_truth_model_locate_box_truth_model import (
+            IValidationTruthModelLocateBoxTruthModel,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+
+        if not truths:
+            raise ValueError("Draw rapid requires at least one truth bounding box")
 
         payload = IRapidPayload(
             actual_instance=IRapidPayloadLinePayload(
@@ -320,12 +330,9 @@ class RapidsManager:
         )
 
         model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelBoundingBoxTruthModel(
-                _t="BoundingBoxTruth",
-                xMax=truths[0].x_max * 100,
-                xMin=truths[0].x_min * 100,
-                yMax=truths[0].y_max * 100,
-                yMin=truths[0].y_min * 100,
+            actual_instance=IValidationTruthModelLocateBoxTruthModel(
+                _t="LocateBoxTruth",
+                boundingBoxes=[truth.to_model() for truth in truths],
             )
         )
 
@@ -349,7 +356,7 @@ class RapidsManager:
         truths: list[tuple[int, int]],
         datapoint: str,
         context: str | None = None,
-        media_context: str | None = None,
+        media_context: list[str] | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a timestamp rapid
@@ -360,14 +367,16 @@ class RapidsManager:
                 The first element of the tuple is the start of the interval and the second element is the end of the interval.
             datapoint (str): The asset that the labeler will be timestamping.
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
-            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
         from rapidata.api_client.models.i_rapid_payload import IRapidPayload
         from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
             IRapidPayloadScrubPayload,
         )
-        from rapidata.api_client.models.scrub_range import ScrubRange
+        from rapidata.api_client.models.scrub_truth_model_scrub_range import (
+            ScrubTruthModelScrubRange,
+        )
         from rapidata.api_client.models.i_validation_truth_model import (
             IValidationTruthModel,
         )
@@ -396,7 +405,8 @@ class RapidsManager:
             actual_instance=IValidationTruthModelScrubTruthModel(
                 _t="ScrubTruth",
                 validRanges=[
-                    ScrubRange(start=truth[0], end=truth[1]) for truth in truths
+                    ScrubTruthModelScrubRange(start=truth[0], end=truth[1])
+                    for truth in truths
                 ],
             )
         )

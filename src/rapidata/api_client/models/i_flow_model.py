@@ -27,7 +27,7 @@ IFLOWMODEL_ONE_OF_SCHEMAS = ["IFlowModelRankingFlowModel"]
 
 class IFlowModel(LazyValidatedModel):
     """
-    IFlowModel
+    A flow definition exposed over the API, identified by a discriminator.  Implementations describe the flow's type-specific configuration.
     """
     # data type: IFlowModelRankingFlowModel
     oneof_schema_1_validator: Optional[IFlowModelRankingFlowModel] = None

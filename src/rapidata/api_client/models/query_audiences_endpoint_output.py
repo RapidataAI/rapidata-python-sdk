@@ -34,7 +34,7 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The unique identifier of the audience.")
     name: StrictStr = Field(description="The name of the audience.")
     description: Optional[StrictStr] = Field(default=None, description="The markdown-supported description of the audience.")
-    status: AudienceStatus
+    status: AudienceStatus = Field(description="The current status of the audience.")
     qualified_user_count: StrictInt = Field(description="The number of users that have qualified for this audience.", alias="qualifiedUserCount")
     filters: List[IAudienceFilter]
     logo: Optional[StrictStr] = Field(default=None, description="The URL of the audience logo, if any.")
@@ -99,6 +99,16 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
             _dict['logo'] = None
+
+        # set to None if random_admission_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_admission_probability is None and "random_admission_probability" in self.model_fields_set:
+            _dict['randomAdmissionProbability'] = None
+
+        # set to None if health (nullable) is None
+        # and model_fields_set contains the field
+        if self.health is None and "health" in self.model_fields_set:
+            _dict['health'] = None
 
         return _dict
 

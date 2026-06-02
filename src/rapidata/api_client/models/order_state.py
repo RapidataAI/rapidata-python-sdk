@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class OrderState(str, Enum):
     """
-    The current state of the order.
+    OrderState
     """
 
     """

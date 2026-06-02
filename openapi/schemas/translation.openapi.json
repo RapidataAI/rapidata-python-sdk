@@ -1,0 +1,254 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Translation API",
+    "description": "The API for the Rapidata Translation service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/translation/ensure-english": {
+      "post": {
+        "tags": [
+          "Translation"
+        ],
+        "summary": "Ensures the provided text is in English, returning a suggested English text when it isn't.",
+        "requestBody": {
+          "description": "The text to verify.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnsureEnglishEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnsureEnglishEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/translation": {
+      "post": {
+        "tags": [
+          "Translation"
+        ],
+        "summary": "Translates text from one language to another using the specified translator.",
+        "requestBody": {
+          "description": "The translation request body.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranslateEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EnsureEnglishEndpoint_Input": {
+        "required": [
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The text to ensure is English."
+          }
+        }
+      },
+      "EnsureEnglishEndpoint_Output": {
+        "required": [
+          "englishText"
+        ],
+        "type": "object",
+        "properties": {
+          "englishText": {
+            "type": "string",
+            "description": "The English version of the provided text."
+          }
+        }
+      },
+      "TranslateEndpoint_Input": {
+        "required": [
+          "translator",
+          "text",
+          "targetLanguage"
+        ],
+        "type": "object",
+        "properties": {
+          "translator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TranslatorType"
+              }
+            ],
+            "description": "The type of translator to use."
+          },
+          "text": {
+            "type": "string",
+            "description": "The text to translate."
+          },
+          "targetLanguage": {
+            "type": "string",
+            "description": "The language to translate the text into."
+          },
+          "sourceLanguage": {
+            "type": "string",
+            "description": "The original language of the text."
+          }
+        }
+      },
+      "TranslateEndpoint_Output": {
+        "required": [
+          "translation",
+          "sourceLanguage",
+          "targetLanguage"
+        ],
+        "type": "object",
+        "properties": {
+          "translation": {
+            "type": "string",
+            "description": "The translated text."
+          },
+          "sourceLanguage": {
+            "type": "string",
+            "description": "The detected or provided source language of the text.",
+            "nullable": true
+          },
+          "targetLanguage": {
+            "type": "string",
+            "description": "The language the text was translated into."
+          }
+        }
+      },
+      "TranslatorType": {
+        "enum": [
+          "Google",
+          "Deepl",
+          "OpenAi",
+          "OpenAi4O",
+          "OpenAi4OMini",
+          "LibreTranslate",
+          "Gemini",
+          "Tllm"
+        ]
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenID Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      }
+    }
+  },
+  "security": [
+    {
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email",
+        "offline_access"
+      ]
+    }
+  ]
+}

@@ -158,6 +158,39 @@ results = job.get_results()
 print(results)
 ```
 
+## Matching the Job UI with Settings
+
+Qualification examples default to the standard UI for their task type. If
+your job uses `settings` to change how the task is rendered (e.g.
+`NoShuffleSetting` to keep answer options in order, `AllowNeitherBothSetting`
+to add an "Unsure" button), pass the same settings to the example so the
+labeler qualifies on the exact UI they will later see.
+
+```py
+from rapidata import NoShuffleSetting
+
+audience.add_classification_example(
+    instruction="How well does the image match the description?",
+    answer_options=[
+        "1: Not at all",
+        "2: A little",
+        "3: Moderately",
+        "4: Very well",
+        "5: Perfectly",
+    ],
+    datapoint="https://assets.rapidata.ai/email-4o.png",
+    truth=["5: Perfectly", "4: Very well"],
+    context="A laptop screen with clearly readable text, addressed to the marketing team.",
+    settings=[NoShuffleSetting()], # (1)!
+)
+```
+
+1. Applies the setting as a feature flag on this single example. Use the same
+   `RapidataSetting` subclasses you would pass to `settings=` on a job or
+   order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
+   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). Both
+   `add_classification_example` and `add_compare_example` accept `settings`.
+
 ## Reusing Audiences
 
 Once created, you can reuse your audience for multiple jobs:
@@ -168,6 +201,88 @@ audience = client.audience.get_audience_by_id("audience_id")
 
 job = audience.assign_job(new_job_definition)
 ```
+
+## Filtered Audiences
+
+A filtered audience is a lightweight subset of an existing audience's
+qualified labelers — derived by applying filters on top of the base
+audience. No new qualification or recruiting takes place; the filtered
+audience reuses the same pool. Use it when you want to target a specific
+slice (e.g. by country or language) of an audience that you have already
+trained.
+
+### Deriving a filtered audience with `.filter()`
+
+Call `.filter(...)` on any `RapidataAudience` with a list of one or more
+filters. The call returns a `RapidataFilteredAudience` — a slim handle
+that reuses the base audience's qualified pool. Multiple filters in the
+list are combined with logical AND.
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+base = client.audience.get_audience_by_id("audience_id")
+
+us_english_speakers = base.filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+
+job = us_english_speakers.assign_job(new_job_definition)
+```
+
+The returned object is a `RapidataFilteredAudience` — a slim variant that
+exposes only the operations that make sense for a filtered view
+(`assign_job`, `find_jobs`, `delete`, and use as `audience_id` on
+[leaderboard creation](mri.md)). It deliberately does **not** offer
+`add_classification_example`, `update_filters`, or further nested
+`.filter(...)` calls: those would either mutate the base audience's
+qualification pool (which the filtered view shares) or chain filters in
+a way that's better expressed as a single combined filter on the base.
+
+### Supported filters
+
+| Filter | Targets labelers by |
+|---|---|
+| `CountryFilter` | ISO-3166 country code (e.g. `["US", "CA"]`) |
+| `LanguageFilter` | Spoken / device language (e.g. `["en", "de"]`) |
+
+### Combining filters
+
+The list form combines filters with logical AND. For anything richer,
+build a single top-level filter explicitly with `AndFilter` / `OrFilter` /
+`NotFilter`, or use the equivalent `&` / `|` / `~` operators:
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+# "US or Canadian labelers, but not French speakers"
+audience_slice = base.filter([
+    (CountryFilter(["US"]) | CountryFilter(["CA"]))
+    & ~LanguageFilter(["fr"]),
+])
+```
+
+### Using a filtered audience with a leaderboard
+
+`RapidataFilteredAudience` is a valid `audience_id` anywhere a regular
+audience id is accepted, including [`benchmark.create_leaderboard`](mri.md).
+Pass the object directly — no need to read `.id` yourself:
+
+```py
+us_english = base.filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (US, English)",
+    instruction="Which image is more realistic?",
+    audience_id=us_english, # (1)!
+)
+```
+
+1. Accepts an id string, a `RapidataAudience`, or a `RapidataFilteredAudience`. Defaults to the global audience when omitted.
 
 ## Next Steps
 

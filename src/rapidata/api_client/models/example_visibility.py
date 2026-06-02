@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class ExampleVisibility(str, Enum):
     """
-    Controls who can see this example. Public examples are visible to all customers.  Private examples are only visible to the customer who created them and admins.  Defaults to Private.
+    ExampleVisibility
     """
 
     """

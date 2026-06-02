@@ -45,7 +45,7 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of a random correct answer.", alias="randomCorrectProbability")
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example is common sense.", alias="isCommonSense")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls serving order.", alias="sortIndex")
-    visibility: Optional[ExampleVisibility] = None
+    visibility: Optional[ExampleVisibility] = Field(default=None, description="The visibility of this example. Public examples are visible to all customers.")
     __properties: ClassVar[List[str]] = ["id", "rapidId", "asset", "payload", "correctCount", "incorrectCount", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability", "isCommonSense", "sortIndex", "visibility"]
 
     # model_config is inherited from LazyValidatedModel

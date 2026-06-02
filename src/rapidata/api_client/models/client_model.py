@@ -31,8 +31,8 @@ class ClientModel(LazyValidatedModel):
     """ # noqa: E501
     client_id: StrictStr
     client_secret: Optional[StrictStr]
-    client_id_issued_at: StrictInt
-    client_secret_expires_at: StrictInt
+    client_id_issued_at: Optional[StrictInt]
+    client_secret_expires_at: Optional[StrictInt]
     redirect_uris: Optional[List[List[StrictStr]]]
     grant_types: Optional[List[List[StrictStr]]]
     response_types: Optional[List[List[StrictStr]]]
@@ -89,6 +89,16 @@ class ClientModel(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.client_secret is None and "client_secret" in self.model_fields_set:
             _dict['client_secret'] = None
+
+        # set to None if client_id_issued_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.client_id_issued_at is None and "client_id_issued_at" in self.model_fields_set:
+            _dict['client_id_issued_at'] = None
+
+        # set to None if client_secret_expires_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.client_secret_expires_at is None and "client_secret_expires_at" in self.model_fields_set:
+            _dict['client_secret_expires_at'] = None
 
         # set to None if redirect_uris (nullable) is None
         # and model_fields_set contains the field

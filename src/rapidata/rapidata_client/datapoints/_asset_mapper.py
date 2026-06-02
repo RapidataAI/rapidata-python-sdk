@@ -61,7 +61,7 @@ class AssetMapper:
         Returns:
             IAssetInput wrapping ExistingAssetInput (or MultiAssetInput for lists).
         """
-        if isinstance(uploaded_names, list):
+        if isinstance(uploaded_names, list) and len(uploaded_names) > 1:
             return IAssetInput(
                 actual_instance=IAssetInputMultiAssetInput(
                     _t="MultiAssetInput",
@@ -80,6 +80,10 @@ class AssetMapper:
             return IAssetInput(
                 actual_instance=IAssetInputExistingAssetInput(
                     _t="ExistingAssetInput",
-                    name=uploaded_names,
+                    name=(
+                        uploaded_names
+                        if isinstance(uploaded_names, str)
+                        else uploaded_names[0]
+                    ),
                 )
             )

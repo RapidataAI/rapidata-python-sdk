@@ -32,7 +32,7 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
     name: StrictStr = Field(description="The name of the job definition.")
-    definition_type: DefinitionType = Field(alias="definitionType")
+    definition_type: DefinitionType = Field(description="The type of the job definition.", alias="definitionType")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     owner_id: StrictStr = Field(description="The id of the job definition's owner.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the job definition's owner.", alias="ownerMail")

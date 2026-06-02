@@ -90,6 +90,16 @@ class IExampleTruthTranscriptionExampleTruth(LazyValidatedModel):
         if self.strict_grading is None and "strict_grading" in self.model_fields_set:
             _dict['strictGrading'] = None
 
+        # set to None if required_precision (nullable) is None
+        # and model_fields_set contains the field
+        if self.required_precision is None and "required_precision" in self.model_fields_set:
+            _dict['requiredPrecision'] = None
+
+        # set to None if required_completeness (nullable) is None
+        # and model_fields_set contains the field
+        if self.required_completeness is None and "required_completeness" in self.model_fields_set:
+            _dict['requiredCompleteness'] = None
+
         return _dict
 
     @classmethod

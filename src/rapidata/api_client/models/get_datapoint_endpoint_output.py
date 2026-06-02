@@ -33,7 +33,7 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The id of the datapoint.")
     dataset_id: StrictStr = Field(description="The id of the dataset this datapoint belongs to.", alias="datasetId")
-    state: DatapointState
+    state: DatapointState = Field(description="The current state of the datapoint.")
     asset: IAssetModel = Field(description="The asset that will be displayed to the users.")
     sort_index: Optional[StrictInt] = Field(default=None, description="An optional upload index used to force a certain order.", alias="sortIndex")
     created_at: datetime = Field(description="The timestamp when the datapoint was created.", alias="createdAt")
@@ -77,6 +77,11 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         return _dict
 
     @classmethod

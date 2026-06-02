@@ -12,23 +12,25 @@ class DemographicManager:
     def create_demographic_rapid(
         self, instruction: str, answer_options: list[str], datapoint: str, key: str
     ):
-        from rapidata.api_client.models.classify_payload import ClassifyPayload
-        from rapidata.api_client.models.classify_payload_category import (
-            ClassifyPayloadCategory,
+        from rapidata.api_client.models.classify_payload_model import (
+            ClassifyPayloadModel,
         )
-        from rapidata.api_client.models.create_demographic_rapid_model import (
-            CreateDemographicRapidModel,
+        from rapidata.api_client.models.classify_payload_model_category import (
+            ClassifyPayloadModelCategory,
+        )
+        from rapidata.api_client.models.create_demographic_rapid_endpoint_input import (
+            CreateDemographicRapidEndpointInput,
         )
         from rapidata.api_client.models.i_asset_input import IAssetInput
         from rapidata.api_client.models.i_asset_input_existing_asset_input import (
             IAssetInputExistingAssetInput,
         )
 
-        model = CreateDemographicRapidModel(
+        model = CreateDemographicRapidEndpointInput(
             key=key,
-            payload=ClassifyPayload(
+            payload=ClassifyPayloadModel(
                 categories=[
-                    ClassifyPayloadCategory(label=option, value=option)
+                    ClassifyPayloadModelCategory(label=option, value=option)
                     for option in answer_options
                 ],
                 title=instruction,
@@ -42,7 +44,7 @@ class DemographicManager:
         )
 
         result = self._openapi_service.rapid.rapid_api.rapid_demographic_post(
-            create_demographic_rapid_model=model
+            create_demographic_rapid_endpoint_input=model
         )
         logger.info(f"Demographic Rapid created: {result.rapid_id}")
         return result.rapid_id

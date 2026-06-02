@@ -29,7 +29,7 @@ class IRefereeConfigBudgetRefereeConfig(LazyValidatedModel):
     IRefereeConfigBudgetRefereeConfig
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    total_budget: Optional[StrictInt] = Field(default=None, alias="totalBudget")
+    total_budget: StrictInt = Field(alias="totalBudget")
     total_serve_budget: Optional[StrictInt] = Field(default=None, alias="totalServeBudget")
     __properties: ClassVar[List[str]] = ["_t", "totalBudget", "totalServeBudget"]
 
@@ -75,6 +75,11 @@ class IRefereeConfigBudgetRefereeConfig(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if total_serve_budget (nullable) is None
+        # and model_fields_set contains the field
+        if self.total_serve_budget is None and "total_serve_budget" in self.model_fields_set:
+            _dict['totalServeBudget'] = None
+
         return _dict
 
     @classmethod

@@ -10,7 +10,9 @@ from rapidata.rapidata_client.benchmark._detail_mapper import (
     LevelOfDetail,
 )
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
+from rapidata.api_client.models.update_leaderboard_endpoint_input import (
+    UpdateLeaderboardEndpointInput,
+)
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -243,7 +245,7 @@ class RapidataLeaderboard:
         with tracer.start_as_current_span("RapidataLeaderboard._update_config"):
             self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_patch(
                 leaderboard_id=self.id,
-                update_leaderboard_model=UpdateLeaderboardModel(
+                update_leaderboard_endpoint_input=UpdateLeaderboardEndpointInput(
                     name=self.__name,
                     responseBudget=self.__response_budget,
                     minResponses=self.__min_responses_per_matchup,

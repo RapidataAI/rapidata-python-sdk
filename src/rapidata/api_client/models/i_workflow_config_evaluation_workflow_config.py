@@ -33,7 +33,7 @@ class IWorkflowConfigEvaluationWorkflowConfig(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     validation_set_id: StrictStr = Field(alias="validationSetId")
     referee: IRefereeConfig
-    should_accept_incorrect: Optional[StrictBool] = Field(default=None, alias="shouldAcceptIncorrect")
+    should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "validationSetId", "referee", "shouldAcceptIncorrect", "featureFlags"]
 

@@ -154,7 +154,9 @@ class RapidataOrderManager:
             raise TypeError("Priority must be an integer or None")
 
         if priority is not None and priority < 0:
-            raise ValueError("Priority must be greater than 0 or None")
+            raise ValueError(
+                "Priority must be a positive integer or None"
+            )
 
         self.__priority = priority
 
@@ -181,7 +183,7 @@ class RapidataOrderManager:
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
@@ -206,8 +208,9 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the classification i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the classification (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
@@ -279,7 +282,7 @@ class RapidataOrderManager:
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         a_b_names: list[str] | None = None,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
@@ -303,9 +306,10 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             a_b_names (list[str], optional): Custom naming for the two opposing models defined by the index in the datapoints list. Defaults to None.\n
                 If provided has to be a list of exactly two strings.
                 example:
@@ -402,7 +406,7 @@ class RapidataOrderManager:
         data_type: Literal["media", "text"] = "media",
         random_comparisons_ratio: float = 0.5,
         contexts: Optional[list[str]] = None,
-        media_contexts: Optional[list[str]] = None,
+        media_contexts: Optional[list[list[str]]] = None,
         validation_set_id: Optional[str] = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -426,9 +430,10 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the ranking. Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the ranking i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the ranking (each inner list is the images shown for that ranking). Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per ranking, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the ranking. Defaults to []. Decides who the tasks should be shown to.
@@ -516,7 +521,7 @@ class RapidataOrderManager:
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
@@ -537,9 +542,10 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the free text. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the free text i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the free text (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to []. Decides in what order the tasks should be shown.
@@ -592,7 +598,7 @@ class RapidataOrderManager:
         datapoints: list[str],
         sentences: list[str],
         responses_per_datapoint: int = 10,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         validation_set_id: str | None = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -612,8 +618,9 @@ class RapidataOrderManager:
             sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n
                 Must be the same length as datapoints.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            media_contexts (list[str], optional): The list of media contexts for the select words i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the select words (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
@@ -670,7 +677,7 @@ class RapidataOrderManager:
         datapoints: list[str],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         validation_set_id: str | None = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -690,8 +697,9 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the locate. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the locate i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the locate (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
@@ -743,7 +751,7 @@ class RapidataOrderManager:
         datapoints: list[str],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         validation_set_id: str | None = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -763,8 +771,9 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the draw lines i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the draw lines (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
@@ -816,7 +825,7 @@ class RapidataOrderManager:
         datapoints: list[str],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         validation_set_id: str | None = None,
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -839,8 +848,9 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[str], optional): The list of media contexts for the timestamp i.e links to the images / videos. Defaults to None.\n
+            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the timestamp (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
@@ -907,14 +917,14 @@ class RapidataOrderManager:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
         with tracer.start_as_current_span("RapidataOrderManager.find_orders"):
-            from rapidata.api_client.models.audiences_get_name_parameter import (
-                AudiencesGetNameParameter,
+            from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+                AudienceAudienceIdJobsGetJobIdParameter,
             )
 
             order_page_result = self.__openapi_service.order.order_api.orders_get(
                 page=page,
                 page_size=amount,
-                order_name=AudiencesGetNameParameter(contains=name),
+                order_name=AudienceAudienceIdJobsGetJobIdParameter(contains=name),
                 sort=["-order_date"],
             )
 

@@ -66,6 +66,11 @@ class SetManualGlobalBoostLevelEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if level (nullable) is None
+        # and model_fields_set contains the field
+        if self.level is None and "level" in self.model_fields_set:
+            _dict['level'] = None
+
         return _dict
 
     @classmethod

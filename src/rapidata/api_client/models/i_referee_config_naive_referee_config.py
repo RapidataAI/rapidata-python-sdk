@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class IRefereeConfigNaiveRefereeConfig(LazyValidatedModel):
     IRefereeConfigNaiveRefereeConfig
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    guesses_required: Optional[StrictInt] = Field(default=None, alias="guessesRequired")
+    guesses_required: StrictInt = Field(alias="guessesRequired")
     __properties: ClassVar[List[str]] = ["_t", "guessesRequired"]
 
     @field_validator('t')

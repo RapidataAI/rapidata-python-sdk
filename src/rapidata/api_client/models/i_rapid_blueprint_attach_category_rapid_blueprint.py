@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.category import Category
+from rapidata.api_client.models.attach_category_rapid_blueprint_category import AttachCategoryRapidBlueprintCategory
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(LazyValidatedModel):
     IRapidBlueprintAttachCategoryRapidBlueprint
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    categories: List[Category]
+    categories: List[AttachCategoryRapidBlueprintCategory]
     possible_categories: Optional[List[StrictStr]] = Field(default=None, alias="possibleCategories")
     title: StrictStr
     __properties: ClassVar[List[str]] = ["_t", "categories", "possibleCategories", "title"]
@@ -102,7 +102,7 @@ class IRapidBlueprintAttachCategoryRapidBlueprint(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "categories": [Category.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
+            "categories": [AttachCategoryRapidBlueprintCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "possibleCategories": obj.get("possibleCategories"),
             "title": obj.get("title")
         }

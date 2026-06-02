@@ -20,9 +20,9 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_model import IAssetModel
-from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_rapid_payload_model import IRapidPayloadModel
 from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
-from rapidata.api_client.models.rapid_state import RapidState
+from rapidata.api_client.models.rapid_state_model import RapidStateModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -36,14 +36,14 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
     type: StrictStr = Field(description="The type of the rapid.")
     asset: IAssetModel = Field(description="The asset associated with the rapid.")
     truth: Optional[IValidationTruthModel] = Field(default=None, description="The truth of the rapid.")
-    payload: IRapidPayload = Field(description="The payload of the rapid.")
+    payload: IRapidPayloadModel = Field(description="The payload of the rapid.")
     context: Optional[StrictStr] = Field(default=None, description="The optional textual context of the rapid.")
     context_asset: Optional[IAssetModel] = Field(default=None, description="The optional asset shown as context to the user.", alias="contextAsset")
     correct_validation_count: StrictInt = Field(description="The number of correct validations received.", alias="correctValidationCount")
     invalid_validation_count: StrictInt = Field(description="The number of invalid validations received.", alias="invalidValidationCount")
     explanation: Optional[StrictStr] = Field(default=None, description="The explanation shown when users answer incorrectly.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of a random correct answer.", alias="randomCorrectProbability")
-    state: RapidState
+    state: RapidStateModel = Field(description="The state of the rapid.")
     __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "context", "contextAsset", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state"]
 
     # model_config is inherited from LazyValidatedModel
@@ -103,6 +103,11 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
 
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
+
         return _dict
 
     @classmethod
@@ -119,7 +124,7 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
             "type": obj.get("type"),
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
-            "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "payload": IRapidPayloadModel.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "correctValidationCount": obj.get("correctValidationCount"),

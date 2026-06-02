@@ -1,6 +1,9 @@
 from itertools import zip_longest
 from typing import Literal, cast, Iterable
-from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import (
+    Datapoint,
+    coerce_media_context,
+)
 
 
 class DatapointsValidator:
@@ -8,7 +11,7 @@ class DatapointsValidator:
     def validate_datapoints(
         datapoints: list[str] | list[list[str]],
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | list[str] | None = None,
         sentences: list[str] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
         groups: list[str] | None = None,
@@ -22,8 +25,10 @@ class DatapointsValidator:
             raise ValueError("Datapoints must be a list of strings")
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("Number of contexts must match number of datapoints")
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError("Number of media contexts must match number of datapoints")
+        if media_contexts is not None and len(media_contexts) != len(datapoints):
+            raise ValueError(
+                "Number of media contexts must match number of datapoints"
+            )
         if sentences and len(sentences) != len(datapoints):
             raise ValueError("Number of sentences must match number of datapoints")
         if private_metadata and len(private_metadata) != len(datapoints):
@@ -41,7 +46,7 @@ class DatapointsValidator:
     def map_datapoints(
         datapoints: list[str] | list[list[str]],
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | list[str] | None = None,
         sentences: list[str] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
         groups: list[str] | None = None,
@@ -57,18 +62,23 @@ class DatapointsValidator:
             groups=groups,
             multi_asset=multi_asset,
         )
+        # ``media_context`` may arrive as a ``str`` (legacy form, one media
+        # context per datapoint) or as a ``list[str]``. The same
+        # ``coerce_media_context`` helper that backs the Datapoint field
+        # validator handles both — calling it here narrows the static type
+        # so pyright is happy with the Datapoint constructor.
         return [
             Datapoint(
                 asset=asset,
                 data_type=data_type,
                 context=context,
-                media_context=media_context,
+                media_context=coerce_media_context(media_context),
                 sentence=sentence,
                 private_metadata=private_tag,
                 group=group,
             )
             for asset, context, media_context, sentence, private_tag, group in cast(
-                "Iterable[tuple[str | list[str], str | None, str | None, str | None, dict[str, str] | None, str | None]]",  # because iterator only supports 5 arguments with specific type casting
+                "Iterable[tuple[str | list[str], str | None, str | list[str] | None, str | None, dict[str, str] | None, str | None]]",  # because iterator only supports 5 arguments with specific type casting
                 zip_longest(
                     datapoints,
                     contexts or [],

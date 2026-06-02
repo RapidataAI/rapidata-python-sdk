@@ -54,7 +54,7 @@ class RapidataJobDefinition:
         datapoints: list[str] | list[list[str]],
         data_type: Literal["text", "media"] = "media",
         contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
+        media_contexts: list[list[str]] | None = None,
         sentences: list[str] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
@@ -63,6 +63,10 @@ class RapidataJobDefinition:
         Args:
             datapoints (list[str] | list[list[str]]): paths to the datapoints or strings for text datapoints.
             data_type (Literal["text", "media"]): The type of the datapoints.
+            contexts (list[str], optional): One text context per datapoint. Defaults to None.
+            media_contexts (list[list[str]], optional): Image URLs / paths shown alongside each datapoint, one inner list per datapoint. Use a single-element inner list for one image per datapoint, or multiple entries to display several images. Defaults to None.
+            sentences (list[str], optional): The sentences associated with each datapoint (used by select-words workflows). Defaults to None.
+            private_metadata (list[dict[str, str]], optional): Key-value pairs attached to each datapoint that will not be shown to labelers. Defaults to None.
         """
         with tracer.start_as_current_span("JobDefinition.update_dataset"):
             from rapidata.rapidata_client.datapoints._datapoints_validator import (

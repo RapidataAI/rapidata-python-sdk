@@ -8,6 +8,7 @@ from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 
 if TYPE_CHECKING:
     import pandas as pd
+    from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
     from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
         RapidataLeaderboard,
     )
@@ -135,8 +136,6 @@ class RapidataBenchmark:
         """
         Returns the leaderboards that are registered for the benchmark.
         """
-        from rapidata.api_client.models.query_model import QueryModel
-        from rapidata.api_client.models.pagination import Pagination
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
             RapidataLeaderboard,
         )
@@ -149,9 +148,8 @@ class RapidataBenchmark:
                 while True:
                     leaderboards_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_leaderboards_get(
                         benchmark_id=self.id,
-                        request=QueryModel(
-                            page=Pagination(index=current_page, size=100),
-                        ),
+                        page=current_page,
+                        page_size=100,
                     )
 
                     if leaderboards_result.total_pages is None:
@@ -227,7 +225,9 @@ class RapidataBenchmark:
             prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
-        from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
+        from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import (
+            CreatePromptForBenchmarkEndpointInput,
+        )
         from rapidata.api_client.models.i_asset_input_existing_asset_input import (
             IAssetInputExistingAssetInput,
         )
@@ -289,7 +289,7 @@ class RapidataBenchmark:
 
             self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
                 benchmark_id=self.id,
-                submit_prompt_model=SubmitPromptModel(
+                create_prompt_for_benchmark_endpoint_input=CreatePromptForBenchmarkEndpointInput(
                     identifier=identifier,
                     prompt=prompt,
                     promptAsset=(
@@ -321,7 +321,7 @@ class RapidataBenchmark:
         inverse_ranking: bool = False,
         level_of_detail: LevelOfDetail | None = None,
         min_responses_per_matchup: int | None = None,
-        audience_id: str | None = None,
+        audience_id: str | RapidataAudienceBase | None = None,
         settings: Sequence["RapidataSetting"] | None = None,
     ) -> RapidataLeaderboard:
         """
@@ -333,13 +333,16 @@ class RapidataBenchmark:
             show_prompt: Whether to show the prompt to the users. (default: False)
             show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
-            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
+            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. One of: 'debug', 'low', 'medium', 'high', 'very high'. (default: None, server decides)
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
-            audience_id: The id of the audience that should answer the leaderboard. Defaults to the global audience when not specified.
+            audience_id: The audience that should answer the leaderboard. Pass either the audience id, a :class:`RapidataAudience` (dimension audience), or a :class:`RapidataFilteredAudience` (derived via :py:meth:`RapidataAudience.filter`). Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
-        from rapidata.api_client.models.create_leaderboard_model import (
-            CreateLeaderboardModel,
+        from rapidata.api_client.models.create_leaderboard_endpoint_input import (
+            CreateLeaderboardEndpointInput,
+        )
+        from rapidata.rapidata_client.audience._audience_base import (
+            RapidataAudienceBase,
         )
         from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
@@ -349,10 +352,11 @@ class RapidataBenchmark:
         with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
-                or level_of_detail not in ["low", "medium", "high", "very high"]
+                or level_of_detail not in LevelOfDetail.__args__
             ):
                 raise ValueError(
-                    "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
+                    "Level of detail must be a string and one of: "
+                    + ", ".join(LevelOfDetail.__args__)
                 )
 
             if min_responses_per_matchup is not None and (
@@ -363,6 +367,12 @@ class RapidataBenchmark:
                     "Min responses per matchup must be an integer and at least 3"
                 )
 
+            resolved_audience_id = (
+                audience_id.id
+                if isinstance(audience_id, RapidataAudienceBase)
+                else audience_id
+            )
+
             logger.info(
                 "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s",
                 name,
@@ -372,13 +382,13 @@ class RapidataBenchmark:
                 inverse_ranking,
                 level_of_detail,
                 min_responses_per_matchup,
-                audience_id,
+                resolved_audience_id,
                 settings,
             )
 
             leaderboard_result = (
                 self._openapi_service.leaderboard.leaderboard_api.leaderboard_post(
-                    create_leaderboard_model=CreateLeaderboardModel(
+                    create_leaderboard_endpoint_input=CreateLeaderboardEndpointInput(
                         benchmarkId=self.id,
                         name=name,
                         instruction=instruction,
@@ -391,7 +401,7 @@ class RapidataBenchmark:
                             if level_of_detail is not None
                             else None
                         ),
-                        audienceId=audience_id,
+                        audienceId=resolved_audience_id,
                         featureFlags=(
                             [setting._to_feature_flag() for setting in settings]
                             if settings
@@ -475,8 +485,8 @@ class RapidataBenchmark:
         Returns:
             The created BenchmarkParticipant instance.
         """
-        from rapidata.api_client.models.create_benchmark_participant_model import (
-            CreateBenchmarkParticipantModel,
+        from rapidata.api_client.models.create_benchmark_participant_endpoint_input import (
+            CreateBenchmarkParticipantEndpointInput,
         )
         from rapidata.rapidata_client.benchmark.participant.participant import (
             BenchmarkParticipant,
@@ -510,7 +520,7 @@ class RapidataBenchmark:
 
             participant_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_participants_post(
                 benchmark_id=self.id,
-                create_benchmark_participant_model=CreateBenchmarkParticipantModel(
+                create_benchmark_participant_endpoint_input=CreateBenchmarkParticipantEndpointInput(
                     name=name,
                 ),
             )
@@ -595,9 +605,17 @@ class RapidataBenchmark:
                 + Fore.RESET
             )
 
-    def get_overall_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
+    def get_overall_standings(
+        self,
+        tags: Optional[list[str]] = None,
+        leaderboard_ids: Optional[list[str]] = None,
+    ) -> pd.DataFrame:
         """
         Returns an aggregated elo table of all leaderboards in the benchmark.
+
+        Args:
+            tags: Filter standings by these tags. If None, all tags are considered.
+            leaderboard_ids: Filter to only include matchups from these leaderboards. If None, all leaderboards are considered.
         """
         import pandas as pd
 
@@ -605,6 +623,7 @@ class RapidataBenchmark:
             participants = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_get(
                 benchmark_id=self.id,
                 tags=tags,
+                leaderboard_ids=leaderboard_ids,
             )
 
             standings = []
