@@ -1274,6 +1274,14 @@
             "description": "Optional context to provide additional ranking guidance.",
             "nullable": true
           },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "Optional asset context to provide additional ranking guidance."
+          },
           "timeToLiveInSeconds": {
             "type": "integer",
             "description": "Optional time-to-live in seconds before the flow item expires.",
@@ -1420,6 +1428,14 @@
             "type": "string",
             "description": "Optional context associated with this flow item.",
             "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "Optional asset context associated with this flow item."
           },
           "failureMessage": {
             "type": "string",
@@ -1659,6 +1675,127 @@
           "averageResponseCount": {
             "type": "number",
             "format": "double"
+          }
+        }
+      },
+      "IAssetInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetInputExistingAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputMultiAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ExistingAssetInput": "#/components/schemas/IAssetInputExistingAssetInput",
+            "MultiAssetInput": "#/components/schemas/IAssetInputMultiAssetInput",
+            "TextAssetInput": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        }
+      },
+      "IAssetInputExistingAssetInput": {
+        "required": [
+          "name",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ExistingAssetInput"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputMultiAssetInput": {
+        "required": [
+          "assets",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IAssetInput"
+            }
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputTextAssetInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAssetInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -2021,6 +2158,45 @@
           }
         }
       },
+      "IMetadataInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TextMetadataInput": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        }
+      },
+      "IMetadataInputTextMetadataInput": {
+        "required": [
+          "text",
+          "visibilities",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadataInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
       "IMetadataModel": {
         "required": [
           "_t"
@@ -2265,10 +2441,30 @@
           }
         }
       },
+      "MetadataInputCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataInput"
+        }
+      },
       "MetadataModelCollection": {
         "type": "object",
         "additionalProperties": {
           "$ref": "#/components/schemas/IMetadataModel"
+        }
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
         }
       },
       "PidBatchMode": {
@@ -2338,6 +2534,14 @@
             "type": "string",
             "description": "Optional context associated with this flow item.",
             "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "Optional asset context associated with this flow item."
           },
           "failureMessage": {
             "type": "string",

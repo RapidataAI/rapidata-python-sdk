@@ -19,9 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.i_asset_input import IAssetInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
-from rapidata.api_client.models.i_asset_input import IAssetInput
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -71,19 +71,13 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
-
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-
-        # set to None if context_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.context_asset is None and "context_asset" in self.model_fields_set:
-            _dict['contextAsset'] = None
 
         # set to None if time_to_live_in_seconds (nullable) is None
         # and model_fields_set contains the field
@@ -118,4 +112,5 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
         except ValidationError as _val_error:
             _obj = cls._lazy_construct(_data, _val_error)
         return _obj
+
 
