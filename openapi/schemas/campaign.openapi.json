@@ -1862,6 +1862,9 @@
             "$ref": "#/components/schemas/ICampaignFilterModelAudienceStateFilterModel"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterModelCampaignCooldownFilterModel"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterModelCampaignIdFilterModel"
           },
           {
@@ -1903,6 +1906,7 @@
           "mapping": {
             "AndFilter": "#/components/schemas/ICampaignFilterModelAndFilterModel",
             "AudienceStateFilter": "#/components/schemas/ICampaignFilterModelAudienceStateFilterModel",
+            "CampaignCooldownFilter": "#/components/schemas/ICampaignFilterModelCampaignCooldownFilterModel",
             "CampaignIdFilter": "#/components/schemas/ICampaignFilterModelCampaignIdFilterModel",
             "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterModelCampaignSessionCountFilterModel",
             "CountryFilter": "#/components/schemas/ICampaignFilterModelCountryFilterModel",
@@ -1963,6 +1967,23 @@
           },
           "includeUnknownState": {
             "type": "boolean"
+          }
+        }
+      },
+      "ICampaignFilterModelCampaignCooldownFilterModel": {
+        "required": [
+          "cooldown",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignCooldownFilter"
+            ],
+            "type": "string"
+          },
+          "cooldown": {
+            "$ref": "#/components/schemas/ICooldownDurationModel"
           }
         }
       },
@@ -2527,6 +2548,72 @@
           }
         }
       },
+      "ICooldownDurationModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ICooldownDurationModelFixedCooldownDurationModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICooldownDurationModelRandomCooldownDurationModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FixedCooldownDuration": "#/components/schemas/ICooldownDurationModelFixedCooldownDurationModel",
+            "RandomCooldownDuration": "#/components/schemas/ICooldownDurationModelRandomCooldownDurationModel"
+          }
+        }
+      },
+      "ICooldownDurationModelFixedCooldownDurationModel": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FixedCooldownDuration"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ICooldownDurationModelRandomCooldownDurationModel": {
+        "required": [
+          "minDuration",
+          "maxDuration",
+          "seedByUserId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RandomCooldownDuration"
+            ],
+            "type": "string"
+          },
+          "minDuration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maxDuration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seedByUserId": {
+            "type": "boolean"
+          }
+        }
+      },
       "QueryCampaignsEndpoint_Output": {
         "required": [
           "id",
@@ -2755,6 +2842,9 @@
           "isEnabled": {
             "type": "boolean"
           },
+          "dimension": {
+            "type": "string"
+          },
           "bypassFilters": {
             "type": "boolean"
           },
@@ -2920,7 +3010,8 @@
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

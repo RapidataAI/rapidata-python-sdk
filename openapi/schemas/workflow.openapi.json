@@ -462,8 +462,8 @@
               "type": "array",
               "items": {
                 "enum": [
-                  "rapid_id",
-                  "-rapid_id",
+                  "id",
+                  "-id",
                   "state",
                   "-state",
                   "decisiveness",
@@ -3681,7 +3681,8 @@
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

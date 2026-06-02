@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,11 +29,12 @@ class StickyConfigModel(LazyValidatedModel):
     StickyConfigModel
     """ # noqa: E501
     is_enabled: StrictBool = Field(alias="isEnabled")
+    dimension: Optional[StrictStr] = None
     bypass_filters: StrictBool = Field(alias="bypassFilters")
     bypass_priority_selection: StrictBool = Field(alias="bypassPrioritySelection")
     block_other_sticky_campaigns: StrictBool = Field(alias="blockOtherStickyCampaigns")
     clear_on_pause: StrictBool = Field(alias="clearOnPause")
-    __properties: ClassVar[List[str]] = ["isEnabled", "bypassFilters", "bypassPrioritySelection", "blockOtherStickyCampaigns", "clearOnPause"]
+    __properties: ClassVar[List[str]] = ["isEnabled", "dimension", "bypassFilters", "bypassPrioritySelection", "blockOtherStickyCampaigns", "clearOnPause"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -83,6 +84,7 @@ class StickyConfigModel(LazyValidatedModel):
 
         _data = {
             "isEnabled": obj.get("isEnabled"),
+            "dimension": obj.get("dimension"),
             "bypassFilters": obj.get("bypassFilters"),
             "bypassPrioritySelection": obj.get("bypassPrioritySelection"),
             "blockOtherStickyCampaigns": obj.get("blockOtherStickyCampaigns"),

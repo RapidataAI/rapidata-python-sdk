@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class IMetadataCountMetadata(LazyValidatedModel):
     IMetadataCountMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    count: StrictInt
+    count: Optional[StrictInt] = None
     visibilities: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "count", "visibilities"]
 

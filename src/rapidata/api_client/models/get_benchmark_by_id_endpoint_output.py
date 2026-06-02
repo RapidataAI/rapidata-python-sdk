@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -35,9 +35,10 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
     owner_id: StrictStr = Field(description="The id of the customer owning the benchmark.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer owning the benchmark.", alias="ownerMail")
+    initial_boost_level: Optional[StrictInt] = Field(description="The initial boost level applied to the campaign of every run created from this  benchmark. Null means the benchmark default is used.", alias="initialBoostLevel")
     score_shift: Union[StrictFloat, StrictInt] = Field(description="Additive offset applied to displayed scores on the overall scoreboard of this  benchmark.", alias="scoreShift")
     score_scale: Union[StrictFloat, StrictInt] = Field(description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on the overall scoreboard of this benchmark.", alias="scoreScale")
-    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "createdAt", "ownerId", "ownerMail", "scoreShift", "scoreScale"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "createdAt", "ownerId", "ownerMail", "initialBoostLevel", "scoreShift", "scoreScale"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -74,6 +75,11 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if initial_boost_level (nullable) is None
+        # and model_fields_set contains the field
+        if self.initial_boost_level is None and "initial_boost_level" in self.model_fields_set:
+            _dict['initialBoostLevel'] = None
+
         return _dict
 
     @classmethod
@@ -92,6 +98,7 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
+            "initialBoostLevel": obj.get("initialBoostLevel"),
             "scoreShift": obj.get("scoreShift"),
             "scoreScale": obj.get("scoreScale")
         }

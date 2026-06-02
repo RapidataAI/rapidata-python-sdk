@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,7 +28,7 @@ class TranslatedString(LazyValidatedModel):
     """
     TranslatedString
     """ # noqa: E501
-    was_translated: StrictBool = Field(alias="wasTranslated")
+    was_translated: Optional[StrictBool] = Field(default=None, alias="wasTranslated")
     english_text: StrictStr = Field(alias="englishText")
     text: StrictStr
     target_language: StrictStr = Field(alias="targetLanguage")

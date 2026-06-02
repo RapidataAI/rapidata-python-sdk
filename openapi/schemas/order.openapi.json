@@ -3013,7 +3013,10 @@
           "Running",
           "Completed",
           "Failed",
-          "ManualApproval"
+          "ManualApproval",
+          "Queued",
+          "Paused",
+          "StaleResults"
         ]
       },
       "CloneOrderEndpoint_Input": {
@@ -6084,10 +6087,16 @@
         ]
       },
       "StickyConfig": {
+        "required": [
+          "dimension"
+        ],
         "type": "object",
         "properties": {
           "isEnabled": {
             "type": "boolean"
+          },
+          "dimension": {
+            "type": "string"
           },
           "bypassFilters": {
             "type": "boolean"
@@ -6247,7 +6256,8 @@
       "OpenIdConnect": [
         "openid",
         "profile",
-        "email"
+        "email",
+        "offline_access"
       ]
     }
   ]

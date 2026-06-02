@@ -100,12 +100,20 @@
       "x-displayName": "Benchmark"
     },
     {
+      "name": "SampleGeneration",
+      "x-displayName": "SampleGeneration"
+    },
+    {
       "name": "Leaderboard",
       "x-displayName": "Leaderboard"
     },
     {
       "name": "Participant",
       "x-displayName": "Participant"
+    },
+    {
+      "name": "Faucet",
+      "x-displayName": "Faucet"
     },
     {
       "name": "Prompt",
@@ -263,7 +271,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -355,7 +364,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -438,7 +448,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -488,7 +499,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -545,7 +557,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -601,7 +614,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -667,7 +681,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -727,7 +742,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -783,7 +799,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -850,7 +867,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -899,7 +917,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -953,7 +972,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1018,7 +1038,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1074,7 +1095,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1130,7 +1152,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1186,7 +1209,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1242,7 +1266,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1297,7 +1322,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1353,7 +1379,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1408,7 +1435,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1476,7 +1504,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1525,7 +1554,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -1849,7 +1879,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2212,7 +2243,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2262,7 +2294,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2300,7 +2333,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2360,7 +2394,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2409,7 +2444,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2458,7 +2494,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2525,7 +2562,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2592,7 +2630,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2648,7 +2687,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2830,7 +2870,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2899,7 +2940,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2944,7 +2986,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -2989,7 +3032,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3039,7 +3083,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3084,7 +3129,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3129,7 +3175,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3185,7 +3232,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3243,7 +3291,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3301,7 +3350,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3368,7 +3418,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3400,7 +3451,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3449,7 +3501,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3487,7 +3540,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3850,7 +3904,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3899,7 +3954,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -3948,7 +4004,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4171,7 +4228,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4209,7 +4267,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4276,7 +4335,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4325,7 +4385,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4379,7 +4440,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4436,7 +4498,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4620,7 +4683,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4676,7 +4740,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4732,7 +4797,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4788,7 +4854,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4848,7 +4915,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4908,7 +4976,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -4957,7 +5026,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5011,7 +5081,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5094,7 +5165,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5177,7 +5249,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5260,7 +5333,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5343,7 +5417,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5518,7 +5593,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5567,7 +5643,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5623,7 +5700,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5683,7 +5761,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5750,7 +5829,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5932,7 +6012,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -5988,7 +6069,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6055,7 +6137,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6122,7 +6205,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6143,7 +6227,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6199,7 +6284,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6248,7 +6334,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6303,7 +6390,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6525,7 +6613,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6559,7 +6648,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6827,7 +6917,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6884,7 +6975,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -6943,7 +7035,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7000,7 +7093,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7033,7 +7127,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7082,7 +7177,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7131,7 +7227,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7352,7 +7449,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7401,7 +7499,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7457,7 +7556,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7524,7 +7624,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7754,7 +7855,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7821,7 +7923,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7870,7 +7973,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7924,7 +8028,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -7982,7 +8087,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8040,7 +8146,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8096,7 +8203,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8195,7 +8303,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8263,7 +8372,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8340,7 +8450,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8524,7 +8635,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8631,7 +8743,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -8865,6 +8978,52 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_managed",
+            "in": "query",
+            "description": "Filter by is_managed.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -8900,7 +9059,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9084,7 +9244,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9140,7 +9301,77 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/sample-generation": {
+      "post": {
+        "tags": [
+          "Benchmark",
+          "SampleGeneration"
+        ],
+        "summary": "Starts an asynchronous sample generation run.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose participants should run their faucets.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The generation configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleGenerationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSampleGenerationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9205,7 +9436,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9265,7 +9497,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9325,7 +9558,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9381,7 +9615,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9448,7 +9683,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9502,7 +9738,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9569,7 +9806,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9618,7 +9856,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9672,7 +9911,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9730,7 +9970,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9798,7 +10039,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9875,7 +10117,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -9952,7 +10195,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10017,7 +10261,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10082,7 +10327,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10406,7 +10652,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10675,7 +10922,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10760,7 +11008,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10825,7 +11074,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10885,7 +11135,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -10945,7 +11196,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11012,7 +11264,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11079,7 +11332,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11128,7 +11382,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11182,7 +11437,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11240,7 +11496,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11289,7 +11546,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11338,7 +11596,119 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/participant/{participantId}/faucet": {
+      "delete": {
+        "tags": [
+          "Participant",
+          "Faucet"
+        ],
+        "summary": "Removes the faucet configuration from a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Participant",
+          "Faucet"
+        ],
+        "summary": "Sets the faucet used to auto-generate samples for a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant whose faucet to set.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The faucet configuration payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IFaucetInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11394,7 +11764,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11454,7 +11825,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11514,7 +11886,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11570,7 +11943,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11626,7 +12000,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11865,7 +12240,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -11894,6 +12270,17 @@
             "schema": {
               "type": "boolean",
               "default": false
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "The tags to filter the samples by; a sample matches when any of its prompt tags is in this list.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -12058,7 +12445,555 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/sample-generation/{sampleGenerationId}": {
+      "get": {
+        "tags": [
+          "SampleGeneration"
+        ],
+        "summary": "Returns the current status and progress of a sample generation request.",
+        "parameters": [
+          {
+            "name": "sampleGenerationId",
+            "in": "path",
+            "description": "The id of the sample generation request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleGenerationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/sample-generation/{sampleGenerationId}/items": {
+      "get": {
+        "tags": [
+          "SampleGeneration"
+        ],
+        "summary": "Returns the per-item audit trail for a sample generation request.",
+        "parameters": [
+          {
+            "name": "sampleGenerationId",
+            "in": "path",
+            "description": "The id of the sample generation request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "created_at",
+                  "-created_at",
+                  "prompt_identifier",
+                  "-prompt_identifier"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_id",
+            "in": "query",
+            "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "prompt_identifier",
+            "in": "query",
+            "description": "Filter by prompt_identifier.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleGenerationItemsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/sample-generations": {
+      "get": {
+        "tags": [
+          "SampleGeneration"
+        ],
+        "summary": "Lists historical sample generation runs for the given benchmark.",
+        "description": "Results are sorted by creation time (newest first) by default.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark whose sample generations should be listed.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuerySampleGenerationsByBenchmarkEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/sample-generation/{sampleGenerationId}/retry": {
+      "post": {
+        "tags": [
+          "SampleGeneration"
+        ],
+        "summary": "Re-queues failed items of a sample generation so they run again.",
+        "description": "When no item ids are supplied, every failed item of the generation is retried. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.",
+        "parameters": [
+          {
+            "name": "sampleGenerationId",
+            "in": "path",
+            "description": "The id of the sample generation request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Optional payload restricting the retry to specific item ids.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/RetrySampleGenerationEndpoint_Input"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrySampleGenerationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12107,7 +13042,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12164,7 +13100,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12221,7 +13158,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12289,7 +13227,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12343,7 +13282,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12392,7 +13332,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12446,7 +13387,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12504,7 +13446,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12553,7 +13496,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12607,7 +13551,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12665,7 +13610,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12712,7 +13658,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12759,7 +13706,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -12825,7 +13773,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -13185,7 +14134,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -13415,7 +14365,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -13777,7 +14728,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -13826,7 +14778,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -13894,7 +14847,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -13950,7 +14904,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14007,7 +14962,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14056,7 +15012,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14105,7 +15062,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14159,7 +15117,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14217,7 +15176,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14264,7 +15224,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14311,7 +15272,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14356,7 +15318,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14414,7 +15377,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14463,7 +15427,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14529,7 +15494,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -14754,7 +15720,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15069,7 +16036,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15118,7 +16086,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15167,7 +16136,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15225,7 +16195,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15292,7 +16263,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15349,7 +16321,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15405,7 +16378,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15465,7 +16439,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15532,7 +16507,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15588,7 +16564,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15637,7 +16614,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15682,7 +16660,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -15738,7 +16717,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16051,7 +17031,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16289,7 +17270,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16339,7 +17321,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16399,7 +17382,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16455,7 +17439,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16498,7 +17483,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16547,7 +17533,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16605,7 +17592,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16655,7 +17643,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16711,7 +17700,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16767,7 +17757,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16812,7 +17803,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16872,7 +17864,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16928,7 +17921,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -16988,7 +17982,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17214,7 +18209,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17270,7 +18266,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17326,7 +18323,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17386,7 +18384,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17442,7 +18441,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17491,7 +18491,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17545,7 +18546,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17603,7 +18605,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17636,7 +18639,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17681,7 +18685,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17760,7 +18765,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -17992,7 +18998,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -18489,7 +19496,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -18523,7 +19531,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -18583,7 +19592,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -18643,7 +19653,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -18702,7 +19713,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -18803,7 +19815,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19035,7 +20048,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19127,7 +20141,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19186,8 +20201,8 @@
               "type": "array",
               "items": {
                 "enum": [
-                  "rapid_id",
-                  "-rapid_id",
+                  "id",
+                  "-id",
                   "state",
                   "-state",
                   "decisiveness",
@@ -19232,7 +20247,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19281,7 +20297,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19335,7 +20352,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19400,7 +20418,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19456,7 +20475,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19530,7 +20550,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -19799,7 +20820,8 @@
             "OpenIdConnect": [
               "openid",
               "profile",
-              "email"
+              "email",
+              "offline_access"
             ]
           }
         ]
@@ -20248,7 +21270,10 @@
           "Running",
           "Completed",
           "Failed",
-          "ManualApproval"
+          "ManualApproval",
+          "Queued",
+          "Paused",
+          "StaleResults"
         ]
       },
       "AudienceStateRecalculationPhase": {
@@ -23506,6 +24531,9 @@
             "$ref": "#/components/schemas/ICampaignFilterModelAudienceStateFilterModel"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterModelCampaignCooldownFilterModel"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterModelCampaignIdFilterModel"
           },
           {
@@ -23547,6 +24575,7 @@
           "mapping": {
             "AndFilter": "#/components/schemas/ICampaignFilterModelAndFilterModel",
             "AudienceStateFilter": "#/components/schemas/ICampaignFilterModelAudienceStateFilterModel",
+            "CampaignCooldownFilter": "#/components/schemas/ICampaignFilterModelCampaignCooldownFilterModel",
             "CampaignIdFilter": "#/components/schemas/ICampaignFilterModelCampaignIdFilterModel",
             "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterModelCampaignSessionCountFilterModel",
             "CountryFilter": "#/components/schemas/ICampaignFilterModelCountryFilterModel",
@@ -23607,6 +24636,23 @@
           },
           "includeUnknownState": {
             "type": "boolean"
+          }
+        }
+      },
+      "ICampaignFilterModelCampaignCooldownFilterModel": {
+        "required": [
+          "cooldown",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignCooldownFilter"
+            ],
+            "type": "string"
+          },
+          "cooldown": {
+            "$ref": "#/components/schemas/ICooldownDurationModel"
           }
         }
       },
@@ -24171,6 +25217,72 @@
           }
         }
       },
+      "ICooldownDurationModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ICooldownDurationModelFixedCooldownDurationModel"
+          },
+          {
+            "$ref": "#/components/schemas/ICooldownDurationModelRandomCooldownDurationModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FixedCooldownDuration": "#/components/schemas/ICooldownDurationModelFixedCooldownDurationModel",
+            "RandomCooldownDuration": "#/components/schemas/ICooldownDurationModelRandomCooldownDurationModel"
+          }
+        }
+      },
+      "ICooldownDurationModelFixedCooldownDurationModel": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FixedCooldownDuration"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ICooldownDurationModelRandomCooldownDurationModel": {
+        "required": [
+          "minDuration",
+          "maxDuration",
+          "seedByUserId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RandomCooldownDuration"
+            ],
+            "type": "string"
+          },
+          "minDuration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maxDuration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seedByUserId": {
+            "type": "boolean"
+          }
+        }
+      },
       "QueryCampaignsEndpoint_Output": {
         "required": [
           "id",
@@ -24391,6 +25503,9 @@
         "properties": {
           "isEnabled": {
             "type": "boolean"
+          },
+          "dimension": {
+            "type": "string"
           },
           "bypassFilters": {
             "type": "boolean"
@@ -26989,6 +28104,85 @@
           }
         }
       },
+      "CreateSampleGenerationEndpoint_Input": {
+        "required": [
+          "samplesPerPrompt"
+        ],
+        "type": "object",
+        "properties": {
+          "samplesPerPrompt": {
+            "type": "integer",
+            "description": "How many samples to request per matching prompt (1 to 16).",
+            "format": "int32"
+          },
+          "participantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Restrict generation to specific participants. Defaults to all participants\n in the benchmark that have a configured faucet."
+          },
+          "promptIdentifiers": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Restrict generation to specific prompt identifiers.\n Defaults to every prompt in the benchmark."
+          },
+          "tags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Restrict generation to prompts having at least one of these tags."
+          }
+        }
+      },
+      "CreateSampleGenerationEndpoint_Output": {
+        "required": [
+          "id",
+          "totalCount",
+          "skippedParticipantIds"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the created sample generation request."
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "The total number of generation items that were queued.",
+            "format": "int32"
+          },
+          "skippedParticipantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Participants that matched the selection but were skipped because they have no faucet\n configured. Empty when explicit participant ids were supplied."
+          }
+        }
+      },
       "CreateSampleNewEndpoint_Input": {
         "required": [
           "identifier",
@@ -27042,6 +28236,7 @@
           "createdAt",
           "ownerId",
           "ownerMail",
+          "initialBoostLevel",
           "scoreShift",
           "scoreScale"
         ],
@@ -27072,6 +28267,12 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "initialBoostLevel": {
+            "type": "integer",
+            "description": "The initial boost level applied to the campaign of every run created from this\n benchmark. Null means the benchmark default is used.",
+            "format": "int32",
+            "nullable": true
           },
           "scoreShift": {
             "type": "number",
@@ -27438,6 +28639,14 @@
           "benchmarkId": {
             "type": "string",
             "description": "The id of the benchmark the participant belongs to."
+          },
+          "faucet": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IFaucetOutput"
+              }
+            ],
+            "description": "The faucet configured to auto-generate samples, or null if none is set."
           }
         }
       },
@@ -27631,6 +28840,223 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that owns the sample."
+          }
+        }
+      },
+      "GetSampleGenerationEndpoint_Output": {
+        "required": [
+          "id",
+          "benchmarkId",
+          "status",
+          "samplesPerPrompt",
+          "totalCount",
+          "completedCount",
+          "failedCount",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the sample generation request."
+          },
+          "benchmarkId": {
+            "type": "string",
+            "description": "The benchmark this generation belongs to."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationStatus"
+              }
+            ],
+            "description": "The current status of the generation."
+          },
+          "samplesPerPrompt": {
+            "type": "integer",
+            "description": "How many samples are being generated per prompt.",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "The total number of items queued.",
+            "format": "int32"
+          },
+          "completedCount": {
+            "type": "integer",
+            "description": "The number of items that have succeeded so far.",
+            "format": "int32"
+          },
+          "failedCount": {
+            "type": "integer",
+            "description": "The number of items that have failed.",
+            "format": "int32"
+          },
+          "participantIdFilter": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional participant id filter that was applied when this generation was created."
+          },
+          "promptIdentifierFilter": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional prompt identifier filter that was applied."
+          },
+          "tagsFilter": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional tag filter that was applied."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer that started this generation.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer that started this generation."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the generation was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetSampleGenerationItemsEndpoint_Output": {
+        "required": [
+          "id",
+          "sampleGenerationId",
+          "participantId",
+          "benchmarkPromptId",
+          "promptIdentifier",
+          "sampleCount",
+          "status",
+          "attemptCount",
+          "sampleIds",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the generation item."
+          },
+          "sampleGenerationId": {
+            "type": "string",
+            "description": "The id of the parent sample generation."
+          },
+          "participantId": {
+            "type": "string",
+            "description": "The participant whose faucet is producing this sample."
+          },
+          "benchmarkPromptId": {
+            "type": "string",
+            "description": "The benchmark prompt this item targets."
+          },
+          "promptIdentifier": {
+            "type": "string",
+            "description": "The identifier of the prompt being generated."
+          },
+          "sampleCount": {
+            "type": "integer",
+            "description": "How many samples this item produces for its (participant, prompt) pair.",
+            "format": "int32"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationItemStatus"
+              }
+            ],
+            "description": "The current status of this item."
+          },
+          "attemptCount": {
+            "type": "integer",
+            "description": "Number of delivery attempts that have been made on this item.",
+            "format": "int32"
+          },
+          "providerRequestId": {
+            "type": "string",
+            "description": "Provider-side request id used to correlate with the provider's logs.",
+            "nullable": true
+          },
+          "failureReason": {
+            "type": "string",
+            "description": "Failure reason if the item is in a failed state.",
+            "nullable": true
+          },
+          "sampleIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The ids of the samples created from this item once it succeeds."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the item was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetSampleGenerationItemsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetSampleGenerationItemsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -28058,6 +29484,117 @@
           "isDisabled": {
             "type": "boolean",
             "description": "Whether the participant is disabled."
+          }
+        }
+      },
+      "IFaucetInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IFaucetInputReplicateFaucetInput"
+          }
+        ],
+        "description": "Polymorphic request body describing a faucet to configure on a participant. The concrete\n type is selected by the _t discriminator (e.g. \"Replicate\").",
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Replicate": "#/components/schemas/IFaucetInputReplicateFaucetInput"
+          }
+        }
+      },
+      "IFaucetInputReplicateFaucetInput": {
+        "required": [
+          "modelOwner",
+          "modelName",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Replicate"
+            ],
+            "type": "string"
+          },
+          "modelOwner": {
+            "type": "string",
+            "description": "The owner of the hosted model (e.g. \"stability-ai\")."
+          },
+          "modelName": {
+            "type": "string",
+            "description": "The model name (e.g. \"sdxl\")."
+          },
+          "modelVersion": {
+            "type": "string",
+            "description": "Optional pinned model version hash.",
+            "nullable": true
+          }
+        },
+        "description": "Configures a faucet that generates samples via the Replicate API."
+      },
+      "IFaucetOutput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IFaucetOutputManagedFaucetOutput"
+          },
+          {
+            "$ref": "#/components/schemas/IFaucetOutputReplicateFaucetOutput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Managed": "#/components/schemas/IFaucetOutputManagedFaucetOutput",
+            "Replicate": "#/components/schemas/IFaucetOutputReplicateFaucetOutput"
+          }
+        }
+      },
+      "IFaucetOutputManagedFaucetOutput": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Managed"
+            ],
+            "type": "string"
+          },
+          "testTimeScaling": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "IFaucetOutputReplicateFaucetOutput": {
+        "required": [
+          "modelOwner",
+          "modelName",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Replicate"
+            ],
+            "type": "string"
+          },
+          "modelOwner": {
+            "type": "string"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "modelVersion": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -28712,6 +30249,142 @@
           }
         }
       },
+      "QuerySampleGenerationsByBenchmarkEndpoint_Output": {
+        "required": [
+          "id",
+          "benchmarkId",
+          "status",
+          "samplesPerPrompt",
+          "totalCount",
+          "completedCount",
+          "failedCount",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the sample generation request."
+          },
+          "benchmarkId": {
+            "type": "string",
+            "description": "The benchmark this generation belongs to."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationStatus"
+              }
+            ],
+            "description": "The current status of the generation."
+          },
+          "samplesPerPrompt": {
+            "type": "integer",
+            "description": "How many samples are being generated per prompt.",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "The total number of items queued.",
+            "format": "int32"
+          },
+          "completedCount": {
+            "type": "integer",
+            "description": "The number of items that have succeeded so far.",
+            "format": "int32"
+          },
+          "failedCount": {
+            "type": "integer",
+            "description": "The number of items that have failed.",
+            "format": "int32"
+          },
+          "participantIdFilter": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional participant id filter that was applied when this generation was created."
+          },
+          "promptIdentifierFilter": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional prompt identifier filter that was applied."
+          },
+          "tagsFilter": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional tag filter that was applied."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer that started this generation.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer that started this generation."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the generation was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QuerySampleGenerationsByBenchmarkEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuerySampleGenerationsByBenchmarkEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "QueryStandingsEndpoint_Output": {
         "required": [
           "id",
@@ -28827,12 +30500,72 @@
           }
         }
       },
+      "RetrySampleGenerationEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "itemIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The specific item ids to retry. When omitted or empty, every failed item of the\n generation is retried."
+          }
+        }
+      },
+      "RetrySampleGenerationEndpoint_Output": {
+        "required": [
+          "retriedCount",
+          "retriedItemIds"
+        ],
+        "type": "object",
+        "properties": {
+          "retriedCount": {
+            "type": "integer",
+            "description": "How many failed items were re-queued.",
+            "format": "int32"
+          },
+          "retriedItemIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The ids of the items that were re-queued."
+          }
+        }
+      },
       "RunStatus": {
         "enum": [
           "Queued",
           "Running",
           "Completed",
           "Failed"
+        ]
+      },
+      "SampleGenerationItemStatus": {
+        "enum": [
+          "Pending",
+          "Running",
+          "Succeeded",
+          "Failed"
+        ]
+      },
+      "SampleGenerationStatus": {
+        "enum": [
+          "Pending",
+          "Processing",
+          "Completed",
+          "CompletedWithFailures",
+          "Failed",
+          "Cancelled"
         ]
       },
       "StandingStatus": {
@@ -29118,7 +30851,10 @@
           "Running",
           "Completed",
           "Failed",
-          "ManualApproval"
+          "ManualApproval",
+          "Queued",
+          "Paused",
+          "StaleResults"
         ]
       },
       "CloneOrderEndpoint_Input": {
@@ -31970,10 +33706,16 @@
         }
       },
       "StickyConfig": {
+        "required": [
+          "dimension"
+        ],
         "type": "object",
         "properties": {
           "isEnabled": {
             "type": "boolean"
+          },
+          "dimension": {
+            "type": "string"
           },
           "bypassFilters": {
             "type": "boolean"
@@ -32475,7 +34217,6 @@
       },
       "IMetadataCountMetadata": {
         "required": [
-          "count",
           "visibilities",
           "_t"
         ],
@@ -32540,8 +34281,6 @@
       },
       "IMetadataImageDimensionMetadata": {
         "required": [
-          "height",
-          "width",
           "visibilities",
           "_t"
         ],
@@ -32567,8 +34306,6 @@
       },
       "IMetadataLocationMetadata": {
         "required": [
-          "x",
-          "y",
           "visibilities",
           "_t"
         ],
@@ -32636,9 +34373,6 @@
       },
       "IMetadataStreamsMetadata": {
         "required": [
-          "hasAudio",
-          "hasVideo",
-          "hasSubtitles",
           "visibilities",
           "_t"
         ],
@@ -35222,7 +36956,6 @@
       },
       "TranslatedString": {
         "required": [
-          "wasTranslated",
           "englishText",
           "text",
           "targetLanguage"
@@ -38207,8 +39940,10 @@
       "name": "Rapidata Leaderboard API",
       "tags": [
         "Benchmark",
+        "SampleGeneration",
         "Leaderboard",
         "Participant",
+        "Faucet",
         "Prompt",
         "Sample"
       ]

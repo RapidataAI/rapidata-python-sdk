@@ -113,6 +113,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_patch**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_patch) | **PATCH** /benchmark/{benchmarkId} | Updates a benchmark using patch semantics.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_sample_generation_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_sample_generation_post) | **POST** /benchmark/{benchmarkId}/sample-generation | Starts an asynchronous sample generation run.
 *BenchmarkApi* | [**benchmark_benchmark_id_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_get) | **GET** /benchmark/{benchmarkId}/standings | Queries all standings for a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Queries all tags within a benchmark.
 *BenchmarkApi* | [**benchmark_combined_matrix_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_combined_matrix_get) | **GET** /benchmark/combined-matrix | Returns the combined pairwise vote matrix for multiple benchmarks.
@@ -164,6 +165,8 @@ Class | Method | HTTP request | Description
 *ExamplesApi* | [**audience_example_example_id_delete**](rapidata/api_client/docs/ExamplesApi.md#audience_example_example_id_delete) | **DELETE** /audience/example/{exampleId} | Deletes the specified audience example.
 *ExternalAudienceApi* | [**campaign_external_audiences_get**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_get) | **GET** /campaign/external-audiences | Queries the cached external audiences available for targeting.
 *ExternalAudienceApi* | [**campaign_external_audiences_sync_post**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_sync_post) | **POST** /campaign/external-audiences/sync | Enqueues a background job that synchronises external audiences with the cache.
+*FaucetApi* | [**participant_participant_id_faucet_delete_0**](rapidata/api_client/docs/FaucetApi.md#participant_participant_id_faucet_delete_0) | **DELETE** /participant/{participantId}/faucet | Removes the faucet configuration from a participant.
+*FaucetApi* | [**participant_participant_id_faucet_put_0**](rapidata/api_client/docs/FaucetApi.md#participant_participant_id_faucet_put_0) | **PUT** /participant/{participantId}/faucet | Sets the faucet used to auto-generate samples for a participant.
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *FlowApi* | [**flow_flow_id_delete**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_delete) | **DELETE** /flow/{flowId} | Deletes a flow.
 *FlowApi* | [**flow_flow_id_get**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_get) | **GET** /flow/{flowId} | Retrieves a flow by its ID.
@@ -243,6 +246,8 @@ Class | Method | HTTP request | Description
 *OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | Disables a participant in a benchmark.
+*ParticipantApi* | [**participant_participant_id_faucet_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_faucet_delete) | **DELETE** /participant/{participantId}/faucet | Removes the faucet configuration from a participant.
+*ParticipantApi* | [**participant_participant_id_faucet_put**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_faucet_put) | **PUT** /participant/{participantId}/faucet | Sets the faucet used to auto-generate samples for a participant.
 *ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by its id.
 *ParticipantApi* | [**participant_participant_id_name_put**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_name_put) | **PUT** /participant/{participantId}/name | Updates the name of a participant.
 *ParticipantApi* | [**participant_participant_id_patch**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_patch) | **PATCH** /participant/{participantId} | Updates a participant using patch semantics.
@@ -268,6 +273,11 @@ Class | Method | HTTP request | Description
 *SampleApi* | [**benchmark_sample_sample_id_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_get) | **GET** /benchmark-sample/{sampleId} | Gets a benchmark sample by its id.
 *SampleApi* | [**benchmark_sample_sample_id_navigation_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_navigation_get) | **GET** /benchmark-sample/{sampleId}/navigation | Gets navigation context (previous, next, related samples) for a sample.
 *SampleApi* | [**participant_participant_id_samples_get**](rapidata/api_client/docs/SampleApi.md#participant_participant_id_samples_get) | **GET** /participant/{participantId}/samples | Queries all samples of a participant.
+*SampleGenerationApi* | [**benchmark_benchmark_id_sample_generation_post_0**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_benchmark_id_sample_generation_post_0) | **POST** /benchmark/{benchmarkId}/sample-generation | Starts an asynchronous sample generation run.
+*SampleGenerationApi* | [**benchmark_benchmark_id_sample_generations_get**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_benchmark_id_sample_generations_get) | **GET** /benchmark/{benchmarkId}/sample-generations | Lists historical sample generation runs for the given benchmark.
+*SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_get**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_get) | **GET** /benchmark/sample-generation/{sampleGenerationId} | Returns the current status and progress of a sample generation request.
+*SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_items_get**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_items_get) | **GET** /benchmark/sample-generation/{sampleGenerationId}/items | Returns the per-item audit trail for a sample generation request.
+*SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_retry_post**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_retry_post) | **POST** /benchmark/sample-generation/{sampleGenerationId}/retry | Re-queues failed items of a sample generation so they run again.
 *SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Gets the result overview for a simple workflow.
 *SurveyApi* | [**identity_survey_post**](rapidata/api_client/docs/SurveyApi.md#identity_survey_post) | **POST** /identity/survey | Submits a survey for the calling customer.
 *TranslationApi* | [**translation_ensure_english_post**](rapidata/api_client/docs/TranslationApi.md#translation_ensure_english_post) | **POST** /translation/ensure-english | Ensures the provided text is in English, returning a suggested English text when it isn&#39;t.
@@ -390,6 +400,8 @@ Class | Method | HTTP request | Description
  - [CreatePromptForLeaderboardEndpointOutput](rapidata/api_client/docs/CreatePromptForLeaderboardEndpointOutput.md)
  - [CreateSampleEndpointInput](rapidata/api_client/docs/CreateSampleEndpointInput.md)
  - [CreateSampleEndpointOutput](rapidata/api_client/docs/CreateSampleEndpointOutput.md)
+ - [CreateSampleGenerationEndpointInput](rapidata/api_client/docs/CreateSampleGenerationEndpointInput.md)
+ - [CreateSampleGenerationEndpointOutput](rapidata/api_client/docs/CreateSampleGenerationEndpointOutput.md)
  - [CreateSampleNewEndpointInput](rapidata/api_client/docs/CreateSampleNewEndpointInput.md)
  - [CreateSampleNewEndpointOutput](rapidata/api_client/docs/CreateSampleNewEndpointOutput.md)
  - [CreateUnsupportedOrderEndpointInput](rapidata/api_client/docs/CreateUnsupportedOrderEndpointInput.md)
@@ -490,6 +502,9 @@ Class | Method | HTTP request | Description
  - [GetResponsesForRapidEndpointOutput](rapidata/api_client/docs/GetResponsesForRapidEndpointOutput.md)
  - [GetResponsesForRapidEndpointOutputResponse](rapidata/api_client/docs/GetResponsesForRapidEndpointOutputResponse.md)
  - [GetSampleByIdEndpointOutput](rapidata/api_client/docs/GetSampleByIdEndpointOutput.md)
+ - [GetSampleGenerationEndpointOutput](rapidata/api_client/docs/GetSampleGenerationEndpointOutput.md)
+ - [GetSampleGenerationItemsEndpointOutput](rapidata/api_client/docs/GetSampleGenerationItemsEndpointOutput.md)
+ - [GetSampleGenerationItemsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetSampleGenerationItemsEndpointPagedResultOfOutput.md)
  - [GetSampleNavigationEndpointOutput](rapidata/api_client/docs/GetSampleNavigationEndpointOutput.md)
  - [GetSampleNavigationEndpointSampleModel](rapidata/api_client/docs/GetSampleNavigationEndpointSampleModel.md)
  - [GetSamplesByIdentifierEndpointOutput](rapidata/api_client/docs/GetSamplesByIdentifierEndpointOutput.md)
@@ -544,6 +559,7 @@ Class | Method | HTTP request | Description
  - [ICampaignFilterModel](rapidata/api_client/docs/ICampaignFilterModel.md)
  - [ICampaignFilterModelAndFilterModel](rapidata/api_client/docs/ICampaignFilterModelAndFilterModel.md)
  - [ICampaignFilterModelAudienceStateFilterModel](rapidata/api_client/docs/ICampaignFilterModelAudienceStateFilterModel.md)
+ - [ICampaignFilterModelCampaignCooldownFilterModel](rapidata/api_client/docs/ICampaignFilterModelCampaignCooldownFilterModel.md)
  - [ICampaignFilterModelCampaignIdFilterModel](rapidata/api_client/docs/ICampaignFilterModelCampaignIdFilterModel.md)
  - [ICampaignFilterModelCampaignSessionCountFilterModel](rapidata/api_client/docs/ICampaignFilterModelCampaignSessionCountFilterModel.md)
  - [ICampaignFilterModelCountryFilterModel](rapidata/api_client/docs/ICampaignFilterModelCountryFilterModel.md)
@@ -567,6 +583,9 @@ Class | Method | HTTP request | Description
  - [ICampaignSelectionModelShufflingSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelShufflingSelectionModel.md)
  - [ICampaignSelectionModelStaticSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelStaticSelectionModel.md)
  - [ICampaignSelectionModelValidationSelectionModel](rapidata/api_client/docs/ICampaignSelectionModelValidationSelectionModel.md)
+ - [ICooldownDurationModel](rapidata/api_client/docs/ICooldownDurationModel.md)
+ - [ICooldownDurationModelFixedCooldownDurationModel](rapidata/api_client/docs/ICooldownDurationModelFixedCooldownDurationModel.md)
+ - [ICooldownDurationModelRandomCooldownDurationModel](rapidata/api_client/docs/ICooldownDurationModelRandomCooldownDurationModel.md)
  - [IDatasetModel](rapidata/api_client/docs/IDatasetModel.md)
  - [IDatasetModelCloneDatasetModel](rapidata/api_client/docs/IDatasetModelCloneDatasetModel.md)
  - [IExamplePayload](rapidata/api_client/docs/IExamplePayload.md)
@@ -583,6 +602,11 @@ Class | Method | HTTP request | Description
  - [IExampleTruthLocateExampleTruth](rapidata/api_client/docs/IExampleTruthLocateExampleTruth.md)
  - [IExampleTruthScrubExampleTruth](rapidata/api_client/docs/IExampleTruthScrubExampleTruth.md)
  - [IExampleTruthTranscriptionExampleTruth](rapidata/api_client/docs/IExampleTruthTranscriptionExampleTruth.md)
+ - [IFaucetInput](rapidata/api_client/docs/IFaucetInput.md)
+ - [IFaucetInputReplicateFaucetInput](rapidata/api_client/docs/IFaucetInputReplicateFaucetInput.md)
+ - [IFaucetOutput](rapidata/api_client/docs/IFaucetOutput.md)
+ - [IFaucetOutputManagedFaucetOutput](rapidata/api_client/docs/IFaucetOutputManagedFaucetOutput.md)
+ - [IFaucetOutputReplicateFaucetOutput](rapidata/api_client/docs/IFaucetOutputReplicateFaucetOutput.md)
  - [IFlowModel](rapidata/api_client/docs/IFlowModel.md)
  - [IFlowModelRankingFlowModel](rapidata/api_client/docs/IFlowModelRankingFlowModel.md)
  - [IMetadata](rapidata/api_client/docs/IMetadata.md)
@@ -853,6 +877,8 @@ Class | Method | HTTP request | Description
  - [QueryParticipantsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryParticipantsByBenchmarkEndpointPagedResultOfOutput.md)
  - [QueryParticipantsObsoleteEndpointOutput](rapidata/api_client/docs/QueryParticipantsObsoleteEndpointOutput.md)
  - [QueryParticipantsObsoleteEndpointOutputItem](rapidata/api_client/docs/QueryParticipantsObsoleteEndpointOutputItem.md)
+ - [QuerySampleGenerationsByBenchmarkEndpointOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointOutput.md)
+ - [QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput.md)
  - [QueryStandingsEndpointOutput](rapidata/api_client/docs/QueryStandingsEndpointOutput.md)
  - [QueryStandingsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryStandingsEndpointPagedResultOfOutput.md)
  - [QueryTagsByBenchmarkEndpointOutput](rapidata/api_client/docs/QueryTagsByBenchmarkEndpointOutput.md)
@@ -873,7 +899,11 @@ Class | Method | HTTP request | Description
  - [ReportRapidEndpointInput](rapidata/api_client/docs/ReportRapidEndpointInput.md)
  - [ResponseTally](rapidata/api_client/docs/ResponseTally.md)
  - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
+ - [RetrySampleGenerationEndpointInput](rapidata/api_client/docs/RetrySampleGenerationEndpointInput.md)
+ - [RetrySampleGenerationEndpointOutput](rapidata/api_client/docs/RetrySampleGenerationEndpointOutput.md)
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
+ - [SampleGenerationItemStatus](rapidata/api_client/docs/SampleGenerationItemStatus.md)
+ - [SampleGenerationStatus](rapidata/api_client/docs/SampleGenerationStatus.md)
  - [ScrubTruthModelScrubRange](rapidata/api_client/docs/ScrubTruthModelScrubRange.md)
  - [SendSurveyEndpointInput](rapidata/api_client/docs/SendSurveyEndpointInput.md)
  - [SetFastBidMultiplierEndpointInput](rapidata/api_client/docs/SetFastBidMultiplierEndpointInput.md)
