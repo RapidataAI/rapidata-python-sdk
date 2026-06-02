@@ -21,6 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.flow_item_state import FlowItemState
+from rapidata.api_client.models.i_asset_model import IAssetModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -36,13 +37,14 @@ class GetFlowItemByIdEndpointOutput(LazyValidatedModel):
     workflow_id: Optional[StrictStr] = Field(default=None, description="The ID of the workflow created for this flow item.", alias="workflowId")
     state: FlowItemState = Field(description="The current state of the flow item.")
     context: Optional[StrictStr] = Field(default=None, description="Optional context associated with this flow item.")
+    context_asset: Optional[IAssetModel] = Field(default=None, description="Optional asset context associated with this flow item.", alias="contextAsset")
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message if the flow item failed.", alias="failureMessage")
     expires_at: Optional[datetime] = Field(default=None, description="The expiration timestamp of the flow item.", alias="expiresAt")
     created_at: datetime = Field(description="The timestamp when the flow item was created.", alias="createdAt")
     started_at: Optional[datetime] = Field(default=None, description="The timestamp when the flow item started processing.", alias="startedAt")
     completed_at: Optional[datetime] = Field(default=None, description="The timestamp when the flow item completed.", alias="completedAt")
     failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the flow item failed.", alias="failedAt")
-    __properties: ClassVar[List[str]] = ["id", "flowId", "datasetId", "workflowId", "state", "context", "failureMessage", "expiresAt", "createdAt", "startedAt", "completedAt", "failedAt"]
+    __properties: ClassVar[List[str]] = ["id", "flowId", "datasetId", "workflowId", "state", "context", "contextAsset", "failureMessage", "expiresAt", "createdAt", "startedAt", "completedAt", "failedAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -79,6 +81,9 @@ class GetFlowItemByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
         # set to None if workflow_id (nullable) is None
         # and model_fields_set contains the field
         if self.workflow_id is None and "workflow_id" in self.model_fields_set:
@@ -132,6 +137,7 @@ class GetFlowItemByIdEndpointOutput(LazyValidatedModel):
             "workflowId": obj.get("workflowId"),
             "state": obj.get("state"),
             "context": obj.get("context"),
+            "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "failureMessage": obj.get("failureMessage"),
             "expiresAt": obj.get("expiresAt"),
             "createdAt": obj.get("createdAt"),

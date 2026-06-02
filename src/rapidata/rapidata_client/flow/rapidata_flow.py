@@ -7,6 +7,7 @@ from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
@@ -27,6 +28,7 @@ class RapidataFlow:
         self,
         datapoints: list[str],
         context: str | None = None,
+        context_assets: list[str] | None = None,
         data_type: Literal["media", "text"] = "media",
         private_metadata: list[dict[str, str]] | None = None,
         accept_failed_uploads: bool = False,
@@ -37,6 +39,7 @@ class RapidataFlow:
         Args:
             datapoints: The list of datapoints (paths or URLs) to upload.
             context: The context shown alongside the instruction.
+            context_assets: Optional image, video, or audio paths/URLs shown alongside the instruction.
             data_type: The data type of the datapoints. Defaults to "media".
             private_metadata: Optional key-value metadata per datapoint.
             accept_failed_uploads: If True, continues even if some uploads fail.
@@ -58,6 +61,8 @@ class RapidataFlow:
 
             if time_to_live is not None and time_to_live < 60:
                 raise ValueError("Time to live must be at least 60 seconds.")
+            if context_assets is not None and not 1 <= len(context_assets) <= 10:
+                raise ValueError("Context assets must contain between 1 and 10 assets.")
 
             logger.debug("Creating flow item for flow '%s'", self.name)
 
@@ -87,11 +92,18 @@ class RapidataFlow:
                         "Failed to upload %d datapoints", len(failed_uploads)
                     )
 
+            context_asset_input = (
+                AssetUploader(self._openapi_service).upload_and_map_asset(context_assets)
+                if context_assets
+                else None
+            )
+
             response = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post(
                 flow_id=self.id,
                 create_flow_item_endpoint_input=CreateFlowItemEndpointInput(
                     datasetId=rapidata_dataset.id,
                     context=context,
+                    contextAsset=context_asset_input,
                     timeToLiveInSeconds=time_to_live,
                 ),
             )

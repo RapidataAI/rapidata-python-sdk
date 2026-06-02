@@ -26092,6 +26092,14 @@
             "description": "Optional context to provide additional ranking guidance.",
             "nullable": true
           },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "Optional asset context to provide additional ranking guidance."
+          },
           "timeToLiveInSeconds": {
             "type": "integer",
             "description": "Optional time-to-live in seconds before the flow item expires.",
@@ -26215,6 +26223,14 @@
             "type": "string",
             "description": "Optional context associated with this flow item.",
             "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "Optional asset context associated with this flow item."
           },
           "failureMessage": {
             "type": "string",
@@ -26755,6 +26771,14 @@
             "type": "string",
             "description": "Optional context associated with this flow item.",
             "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ],
+            "description": "Optional asset context associated with this flow item."
           },
           "failureMessage": {
             "type": "string",
