@@ -20,24 +20,22 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.definition_type import DefinitionType
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
+class QueryManagedBenchmarksEndpointOutput(LazyValidatedModel):
     """
-    The result when a job definition has been retrieved.
+    QueryManagedBenchmarksEndpointOutput
     """ # noqa: E501
-    definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
-    name: StrictStr = Field(description="The name of the job definition.")
-    definition_type: DefinitionType = Field(description="The type of the job definition.", alias="definitionType")
-    is_public: StrictBool = Field(description="Whether the definition is shared publicly as a reusable template.", alias="isPublic")
-    created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
-    owner_id: StrictStr = Field(description="The id of the job definition's owner.", alias="ownerId")
-    owner_mail: StrictStr = Field(description="The email of the job definition's owner.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "isPublic", "createdAt", "ownerId", "ownerMail"]
+    id: StrictStr = Field(description="The unique identifier of the benchmark.")
+    name: StrictStr = Field(description="The name of the benchmark.")
+    is_managed: StrictBool = Field(description="Whether the benchmark is managed.", alias="isManaged")
+    is_public: StrictBool = Field(description="Whether the benchmark is public.", alias="isPublic")
+    created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
+    owner_mail: StrictStr = Field(description="The mail of the customer owning the benchmark.", alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "createdAt", "ownerMail"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -53,7 +51,7 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetJobDefinitionByIdEndpointOutput from a JSON string"""
+        """Create an instance of QueryManagedBenchmarksEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,7 +76,7 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetJobDefinitionByIdEndpointOutput from a dict"""
+        """Create an instance of QueryManagedBenchmarksEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -86,12 +84,11 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "definitionId": obj.get("definitionId"),
+            "id": obj.get("id"),
             "name": obj.get("name"),
-            "definitionType": obj.get("definitionType"),
+            "isManaged": obj.get("isManaged"),
             "isPublic": obj.get("isPublic"),
             "createdAt": obj.get("createdAt"),
-            "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail")
         }
         try:

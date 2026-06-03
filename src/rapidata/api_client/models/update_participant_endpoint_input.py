@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.i_faucet_input import IFaucetInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +30,8 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
     UpdateParticipantEndpointInput
     """ # noqa: E501
     name: Optional[StrictStr] = Field(default=None, description="The new name of the participant.")
-    __properties: ClassVar[List[str]] = ["name"]
+    faucet: Optional[IFaucetInput] = Field(default=None, description="The faucet to set or replace on the participant.")
+    __properties: ClassVar[List[str]] = ["name", "faucet"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -66,6 +68,9 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of faucet
+        if self.faucet:
+            _dict['faucet'] = self.faucet.to_dict()
         return _dict
 
     @classmethod
@@ -78,7 +83,8 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "name": obj.get("name")
+            "name": obj.get("name"),
+            "faucet": IFaucetInput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

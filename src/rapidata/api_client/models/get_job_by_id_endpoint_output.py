@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -36,6 +36,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     revision_number: StrictInt = Field(description="The revision number.", alias="revisionNumber")
     pipeline_id: StrictStr = Field(description="The pipeline id.", alias="pipelineId")
     status: StrictStr = Field(description="The job status.")
+    is_public: StrictBool = Field(description="Whether the job (and its results) is shared publicly.", alias="isPublic")
     completed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job was completed.", alias="completedAt")
     result_file_name: Optional[StrictStr] = Field(default=None, description="The file name of the result.", alias="resultFileName")
     failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job failed.", alias="failedAt")
@@ -43,7 +44,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     owner_id: StrictStr = Field(description="The owner id.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt", "ownerId", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "isPublic", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt", "ownerId", "ownerMail"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -119,6 +120,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
             "revisionNumber": obj.get("revisionNumber"),
             "pipelineId": obj.get("pipelineId"),
             "status": obj.get("status"),
+            "isPublic": obj.get("isPublic"),
             "completedAt": obj.get("completedAt"),
             "resultFileName": obj.get("resultFileName"),
             "failedAt": obj.get("failedAt"),

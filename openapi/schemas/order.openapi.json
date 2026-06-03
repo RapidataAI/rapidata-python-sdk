@@ -51,6 +51,46 @@
         }
       }
     },
+    "/job/{jobId}/approve": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Approves a job in manual review so its pipeline can start processing.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The ID of the job to approve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/job/definition": {
       "post": {
         "tags": [
@@ -629,6 +669,262 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/pause": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Pauses a job, stopping all of its campaigns from processing.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The ID of the job to pause.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/jobs/aggregated-overview": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Retrieves jobs aggregated by customer with total counts and most recent job information.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "amount",
+                  "-amount",
+                  "last7_days",
+                  "-last7_days",
+                  "last_job_date",
+                  "-last_job_date",
+                  "owner_mail",
+                  "-owner_mail"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "last_job_date",
+            "in": "query",
+            "description": "Filter by last_job_date.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "last_job_name",
+            "in": "query",
+            "description": "Filter by last_job_name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryAggregatedJobsEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -1557,6 +1853,534 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/definitions/public": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Queries job definitions that have been shared publicly, regardless of owner, so they can be\n reused as templates.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "definition_id",
+            "in": "query",
+            "description": "Filter by definition_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "definition_type",
+            "in": "query",
+            "description": "Filter by definition_type.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "description": "Filter by owner_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryPublicJobDefinitionsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/resume": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Resumes a job, restarting all of its campaigns.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The ID of the job to resume.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/retry": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Retries processing of a failed job.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The ID of the job to retry.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/definition/{definitionId}/share": {
+      "patch": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Marks or unmarks a job definition as a public template that other users can discover and run.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "description": "The ID of the job definition.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isPublic",
+            "in": "query",
+            "description": "Whether to mark or unmark the definition as public.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/share": {
+      "patch": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Marks or unmarks a job as public so its results can be shared with other users.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The ID of the job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isPublic",
+            "in": "query",
+            "description": "Whether to mark or unmark the job as public.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -3271,6 +4095,11 @@
             "type": "integer",
             "description": "The priority of the job. Higher values mean higher priority. Default is 50.",
             "format": "int32"
+          },
+          "precedingJobId": {
+            "type": "string",
+            "description": "Optional id of a job that must finish before this job starts. When set, this job is\n queued until the preceding job completes or fails.",
+            "nullable": true
           }
         },
         "description": "The input for the create job endpoint."
@@ -3685,6 +4514,7 @@
           "revisionNumber",
           "pipelineId",
           "status",
+          "isPublic",
           "createdAt",
           "ownerId",
           "ownerMail"
@@ -3719,6 +4549,10 @@
           "status": {
             "type": "string",
             "description": "The job status."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the job (and its results) is shared publicly."
           },
           "completedAt": {
             "type": "string",
@@ -3764,6 +4598,7 @@
           "definitionId",
           "name",
           "definitionType",
+          "isPublic",
           "createdAt",
           "ownerId",
           "ownerMail"
@@ -3785,6 +4620,10 @@
               }
             ],
             "description": "The type of the job definition."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the definition is shared publicly as a reusable template."
           },
           "createdAt": {
             "type": "string",
@@ -5686,6 +6525,79 @@
           }
         }
       },
+      "QueryAggregatedJobsEndpoint_Output": {
+        "required": [
+          "amount",
+          "last7Days",
+          "lastJobDate",
+          "lastJobName",
+          "lastJobId",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "description": "The total number of jobs for this customer.",
+            "format": "int32"
+          },
+          "last7Days": {
+            "type": "integer",
+            "description": "The number of jobs created in the last 7 days.",
+            "format": "int32"
+          },
+          "lastJobDate": {
+            "type": "string",
+            "description": "The date of the most recent job.",
+            "format": "date-time"
+          },
+          "lastJobName": {
+            "type": "string",
+            "description": "The name of the most recent job."
+          },
+          "lastJobId": {
+            "type": "string",
+            "description": "The ID of the most recent job."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The customer's email address."
+          }
+        }
+      },
+      "QueryAggregatedJobsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryAggregatedJobsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "QueryAggregatedOrdersEndpoint_Output": {
         "required": [
           "amount",
@@ -6071,6 +6983,88 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QueryOrdersEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryPublicJobDefinitionsEndpoint_Output": {
+        "required": [
+          "definitionId",
+          "name",
+          "definitionType",
+          "createdAt",
+          "revisionCount",
+          "ownerId",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string",
+            "description": "The id of the job definition."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the job definition."
+          },
+          "definitionType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DefinitionType"
+              }
+            ],
+            "description": "The type of the job definition."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The creation timestamp of the job definition.",
+            "format": "date-time"
+          },
+          "revisionCount": {
+            "type": "integer",
+            "description": "The number of revisions for this job definition.",
+            "format": "int32"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the owner of the job definition.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the owner of the job definition."
+          }
+        }
+      },
+      "QueryPublicJobDefinitionsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryPublicJobDefinitionsEndpoint_Output"
             }
           },
           "totalPages": {
