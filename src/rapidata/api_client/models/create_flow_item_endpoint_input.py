@@ -32,7 +32,7 @@ class CreateFlowItemEndpointInput(LazyValidatedModel):
     dataset_id: StrictStr = Field(description="The ID of the dataset to use for this flow item.", alias="datasetId")
     context: Optional[StrictStr] = Field(default=None, description="Optional context to provide additional ranking guidance.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="Optional asset context to provide additional ranking guidance.", alias="contextAsset")
-    time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional time-to-live in seconds before the flow item expires.", alias="timeToLiveInSeconds")
+    time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional time-to-live in seconds before the flow item expires. Must be between 60 seconds and 1 hour; defaults to 1 hour when omitted.", alias="timeToLiveInSeconds")
     drain_duration_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.", alias="drainDurationInSeconds")
     __properties: ClassVar[List[str]] = ["datasetId", "context", "contextAsset", "timeToLiveInSeconds", "drainDurationInSeconds"]
 

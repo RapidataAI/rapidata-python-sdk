@@ -17,27 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.definition_type import DefinitionType
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
+class SearchReplicateModelsEndpointModel(LazyValidatedModel):
     """
-    The result when a job definition has been retrieved.
+    SearchReplicateModelsEndpointModel
     """ # noqa: E501
-    definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
-    name: StrictStr = Field(description="The name of the job definition.")
-    definition_type: DefinitionType = Field(description="The type of the job definition.", alias="definitionType")
-    is_public: StrictBool = Field(description="Whether the definition is shared publicly as a reusable template.", alias="isPublic")
-    created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
-    owner_id: StrictStr = Field(description="The id of the job definition's owner.", alias="ownerId")
-    owner_mail: StrictStr = Field(description="The email of the job definition's owner.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "isPublic", "createdAt", "ownerId", "ownerMail"]
+    model_owner: StrictStr = Field(alias="modelOwner")
+    model_name: StrictStr = Field(alias="modelName")
+    description: Optional[StrictStr] = None
+    cover_image_url: Optional[StrictStr] = Field(default=None, alias="coverImageUrl")
+    run_count: Optional[StrictInt] = Field(default=None, alias="runCount")
+    __properties: ClassVar[List[str]] = ["modelOwner", "modelName", "description", "coverImageUrl", "runCount"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -53,7 +49,7 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetJobDefinitionByIdEndpointOutput from a JSON string"""
+        """Create an instance of SearchReplicateModelsEndpointModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,11 +70,26 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if description (nullable) is None
+        # and model_fields_set contains the field
+        if self.description is None and "description" in self.model_fields_set:
+            _dict['description'] = None
+
+        # set to None if cover_image_url (nullable) is None
+        # and model_fields_set contains the field
+        if self.cover_image_url is None and "cover_image_url" in self.model_fields_set:
+            _dict['coverImageUrl'] = None
+
+        # set to None if run_count (nullable) is None
+        # and model_fields_set contains the field
+        if self.run_count is None and "run_count" in self.model_fields_set:
+            _dict['runCount'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetJobDefinitionByIdEndpointOutput from a dict"""
+        """Create an instance of SearchReplicateModelsEndpointModel from a dict"""
         if obj is None:
             return None
 
@@ -86,13 +97,11 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "definitionId": obj.get("definitionId"),
-            "name": obj.get("name"),
-            "definitionType": obj.get("definitionType"),
-            "isPublic": obj.get("isPublic"),
-            "createdAt": obj.get("createdAt"),
-            "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail")
+            "modelOwner": obj.get("modelOwner"),
+            "modelName": obj.get("modelName"),
+            "description": obj.get("description"),
+            "coverImageUrl": obj.get("coverImageUrl"),
+            "runCount": obj.get("runCount")
         }
         try:
             _obj = cls.model_validate(_data)

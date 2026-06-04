@@ -1343,52 +1343,6 @@
               }
             },
             "x-parameter-group": "filters"
-          },
-          {
-            "name": "is_managed",
-            "in": "query",
-            "description": "Filter by is_managed.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "string"
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -1573,6 +1527,266 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryLeaderboardsByBenchmarkEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmarks/managed": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries the curated benchmarks available to every customer.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryManagedBenchmarksEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -1789,6 +2003,120 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/leaderboard/faucet/replicate/models/{modelOwner}/{modelName}": {
+      "get": {
+        "tags": [
+          "Faucet",
+          "Replicate"
+        ],
+        "summary": "Returns a single Replicate model with its input parameter schema.",
+        "parameters": [
+          {
+            "name": "modelOwner",
+            "in": "path",
+            "description": "The owner of the hosted model.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "modelName",
+            "in": "path",
+            "description": "The model name.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReplicateModelEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/leaderboard/faucet/replicate/models": {
+      "get": {
+        "tags": [
+          "Faucet",
+          "Replicate"
+        ],
+        "summary": "Searches Replicate models by free-text term.",
+        "description": "Results are cursor-paginated: pass the returned nextCursor back as cursor to\n fetch the next page.",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "The free-text term to search models by.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Cursor continuing a previous search; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchReplicateModelsEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -5976,6 +6304,106 @@
           }
         }
       },
+      "GetReplicateModelEndpoint_Output": {
+        "required": [
+          "modelOwner",
+          "modelName",
+          "parameters"
+        ],
+        "type": "object",
+        "properties": {
+          "modelOwner": {
+            "type": "string",
+            "description": "The owner of the hosted model."
+          },
+          "modelName": {
+            "type": "string",
+            "description": "The model name."
+          },
+          "description": {
+            "type": "string",
+            "description": "A short description of the model.",
+            "nullable": true
+          },
+          "coverImageUrl": {
+            "type": "string",
+            "description": "URL of a representative cover image, if available.",
+            "nullable": true
+          },
+          "runCount": {
+            "type": "integer",
+            "description": "Total number of times the model has been run on Replicate, if known.",
+            "format": "int64",
+            "nullable": true
+          },
+          "latestVersion": {
+            "type": "string",
+            "description": "The model's latest version id, if reported by Replicate.",
+            "nullable": true
+          },
+          "parameters": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetReplicateModelEndpoint_Parameter"
+                }
+              }
+            ],
+            "description": "The model's configurable input parameters, ordered for rendering."
+          }
+        }
+      },
+      "GetReplicateModelEndpoint_Parameter": {
+        "required": [
+          "key",
+          "type",
+          "required",
+          "enumValues"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/ReplicateModelParameterType"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "default": { },
+          "enumValues": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "minimum": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "maximum": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "GetSampleByIdEndpoint_Output": {
         "required": [
           "id",
@@ -7880,6 +8308,77 @@
           }
         }
       },
+      "QueryManagedBenchmarksEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "isManaged",
+          "isPublic",
+          "createdAt",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the benchmark."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the benchmark."
+          },
+          "isManaged": {
+            "type": "boolean",
+            "description": "Whether the benchmark is managed."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the benchmark is public."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the benchmark was created.",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer owning the benchmark."
+          }
+        }
+      },
+      "QueryManagedBenchmarksEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryManagedBenchmarksEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "QueryParticipantsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
@@ -8267,6 +8766,15 @@
           }
         }
       },
+      "ReplicateModelParameterType": {
+        "enum": [
+          "String",
+          "Integer",
+          "Number",
+          "Boolean",
+          "Uri"
+        ]
+      },
       "RetrySampleGenerationEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -8334,6 +8842,58 @@
           "Failed",
           "Cancelled"
         ]
+      },
+      "SearchReplicateModelsEndpoint_Model": {
+        "required": [
+          "modelOwner",
+          "modelName"
+        ],
+        "type": "object",
+        "properties": {
+          "modelOwner": {
+            "type": "string"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "coverImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "runCount": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        }
+      },
+      "SearchReplicateModelsEndpoint_Output": {
+        "required": [
+          "models"
+        ],
+        "type": "object",
+        "properties": {
+          "models": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SearchReplicateModelsEndpoint_Model"
+                }
+              }
+            ],
+            "description": "The matching models for this page."
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Cursor to fetch the next page, or null when there are no more results.",
+            "nullable": true
+          }
+        }
       },
       "StandingStatus": {
         "enum": [
@@ -8502,6 +9062,14 @@
           "name": {
             "type": "string",
             "description": "The new name of the participant."
+          },
+          "faucet": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IFaucetInput"
+              }
+            ],
+            "description": "The faucet to set or replace on the participant."
           }
         }
       },

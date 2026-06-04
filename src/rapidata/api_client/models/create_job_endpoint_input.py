@@ -33,7 +33,8 @@ class CreateJobEndpointInput(LazyValidatedModel):
     revision_number: Optional[StrictInt] = Field(default=None, description="The revision number to use. If not specified, the latest revision will be used.", alias="revisionNumber")
     name: Optional[StrictStr] = Field(default=None, description="The name of the job. If not specified, defaults to \"{definition name}:{revision number}\".")
     priority: Optional[StrictInt] = Field(default=None, description="The priority of the job. Higher values mean higher priority. Default is 50.")
-    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority"]
+    preceding_job_id: Optional[StrictStr] = Field(default=None, description="Optional id of a job that must finish before this job starts. When set, this job is  queued until the preceding job completes or fails.", alias="precedingJobId")
+    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority", "precedingJobId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -80,6 +81,11 @@ class CreateJobEndpointInput(LazyValidatedModel):
         if self.name is None and "name" in self.model_fields_set:
             _dict['name'] = None
 
+        # set to None if preceding_job_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.preceding_job_id is None and "preceding_job_id" in self.model_fields_set:
+            _dict['precedingJobId'] = None
+
         return _dict
 
     @classmethod
@@ -96,7 +102,8 @@ class CreateJobEndpointInput(LazyValidatedModel):
             "audienceId": obj.get("audienceId"),
             "revisionNumber": obj.get("revisionNumber"),
             "name": obj.get("name"),
-            "priority": obj.get("priority")
+            "priority": obj.get("priority"),
+            "precedingJobId": obj.get("precedingJobId")
         }
         try:
             _obj = cls.model_validate(_data)

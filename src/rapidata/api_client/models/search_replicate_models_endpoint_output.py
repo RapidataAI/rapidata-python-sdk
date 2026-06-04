@@ -17,27 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.definition_type import DefinitionType
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.search_replicate_models_endpoint_model import SearchReplicateModelsEndpointModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
+class SearchReplicateModelsEndpointOutput(LazyValidatedModel):
     """
-    The result when a job definition has been retrieved.
+    SearchReplicateModelsEndpointOutput
     """ # noqa: E501
-    definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
-    name: StrictStr = Field(description="The name of the job definition.")
-    definition_type: DefinitionType = Field(description="The type of the job definition.", alias="definitionType")
-    is_public: StrictBool = Field(description="Whether the definition is shared publicly as a reusable template.", alias="isPublic")
-    created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
-    owner_id: StrictStr = Field(description="The id of the job definition's owner.", alias="ownerId")
-    owner_mail: StrictStr = Field(description="The email of the job definition's owner.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "isPublic", "createdAt", "ownerId", "ownerMail"]
+    models: List[SearchReplicateModelsEndpointModel]
+    next_cursor: Optional[StrictStr] = Field(default=None, description="Cursor to fetch the next page, or null when there are no more results.", alias="nextCursor")
+    __properties: ClassVar[List[str]] = ["models", "nextCursor"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -53,7 +47,7 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetJobDefinitionByIdEndpointOutput from a JSON string"""
+        """Create an instance of SearchReplicateModelsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,11 +68,23 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in models (list)
+        _items = []
+        if self.models:
+            for _item_models in self.models:
+                if _item_models:
+                    _items.append(_item_models.to_dict())
+            _dict['models'] = _items
+        # set to None if next_cursor (nullable) is None
+        # and model_fields_set contains the field
+        if self.next_cursor is None and "next_cursor" in self.model_fields_set:
+            _dict['nextCursor'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetJobDefinitionByIdEndpointOutput from a dict"""
+        """Create an instance of SearchReplicateModelsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -86,13 +92,8 @@ class GetJobDefinitionByIdEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "definitionId": obj.get("definitionId"),
-            "name": obj.get("name"),
-            "definitionType": obj.get("definitionType"),
-            "isPublic": obj.get("isPublic"),
-            "createdAt": obj.get("createdAt"),
-            "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail")
+            "models": [SearchReplicateModelsEndpointModel.from_dict(_item) for _item in obj["models"]] if obj.get("models") is not None else None,
+            "nextCursor": obj.get("nextCursor")
         }
         try:
             _obj = cls.model_validate(_data)

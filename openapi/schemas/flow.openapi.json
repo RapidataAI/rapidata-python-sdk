@@ -1284,7 +1284,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 60 seconds and 1 hour; defaults to 1 hour when omitted.",
             "format": "int32",
             "nullable": true
           },
