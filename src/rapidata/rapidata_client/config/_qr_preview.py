@@ -21,6 +21,10 @@ if TYPE_CHECKING:
 
 
 _PREVIEW_URL_TEMPLATE = "https://rapids.{environment}/preview/campaign?id={campaign_id}"
+_APP_JOB_DEFINITION_URL_TEMPLATE = (
+    "https://app.{environment}/definitions/{job_definition_id}"
+)
+_APP_ORDER_URL_TEMPLATE = "https://app.{environment}/order/detail/{order_id}"
 
 
 def build_campaign_preview_url(environment: str, campaign_id: str) -> str:
@@ -28,6 +32,38 @@ def build_campaign_preview_url(environment: str, campaign_id: str) -> str:
     return _PREVIEW_URL_TEMPLATE.format(
         environment=environment, campaign_id=campaign_id
     )
+
+
+def build_job_definition_preview_url(environment: str, job_definition_id: str) -> str:
+    """Return the app URL for previewing the given job definition."""
+    return _APP_JOB_DEFINITION_URL_TEMPLATE.format(
+        environment=environment, job_definition_id=job_definition_id
+    )
+
+
+def build_order_preview_url(environment: str, order_id: str) -> str:
+    """Return the app URL for the given order's detail page."""
+    return _APP_ORDER_URL_TEMPLATE.format(environment=environment, order_id=order_id)
+
+
+def print_job_definition_preview_link(
+    environment: str, job_definition_id: str
+) -> None:
+    """Print the app URL for previewing the given job definition."""
+    if rapidata_config.logging.silent_mode:
+        return
+
+    url = build_job_definition_preview_url(environment, job_definition_id)
+    managed_print(f"Preview in dashboard: {url}")
+
+
+def print_order_preview_link(environment: str, order_id: str) -> None:
+    """Print the app URL for the given order's detail page."""
+    if rapidata_config.logging.silent_mode:
+        return
+
+    url = build_order_preview_url(environment, order_id)
+    managed_print(f"Preview in dashboard: {url}")
 
 
 def print_campaign_preview_qr(environment: str, campaign_id: str) -> None:

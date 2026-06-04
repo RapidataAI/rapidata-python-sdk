@@ -4,6 +4,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.config._qr_preview import (
     print_campaign_preview_qr_for_pipeline,
+    print_job_definition_preview_link,
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.workflow import Workflow
@@ -142,6 +143,10 @@ class RapidataJobManager:
         print_campaign_preview_qr_for_pipeline(
             openapi_service=self._openapi_service,
             pipeline_id=job_definition_response.pipeline_id,
+        )
+        print_job_definition_preview_link(
+            environment=self._openapi_service.environment,
+            job_definition_id=job_model.id,
         )
 
         return job_model

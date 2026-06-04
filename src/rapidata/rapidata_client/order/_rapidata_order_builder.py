@@ -18,6 +18,7 @@ from rapidata.rapidata_client.config import (
 )
 from rapidata.rapidata_client.config._qr_preview import (
     print_campaign_preview_qr_for_pipeline,
+    print_order_preview_link,
 )
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
@@ -190,6 +191,10 @@ class RapidataOrderBuilder:
         print_campaign_preview_qr_for_pipeline(
             openapi_service=self._openapi_service,
             pipeline_id=result.pipeline_id,
+        )
+        print_order_preview_link(
+            environment=self._openapi_service.environment,
+            order_id=order.id,
         )
         return order
 
