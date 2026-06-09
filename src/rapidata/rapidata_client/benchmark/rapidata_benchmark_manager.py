@@ -1,4 +1,5 @@
 from typing import Optional, cast
+from tqdm.auto import tqdm
 from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchmark
 from rapidata.api_client.models.create_benchmark_endpoint_input import (
     CreateBenchmarkEndpointInput,
@@ -8,6 +9,7 @@ from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter i
 )
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, tracer
+from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 
 
 class RapidataBenchmarkManager:
@@ -161,8 +163,11 @@ class RapidataBenchmarkManager:
                 name, benchmark_result.id, self.__openapi_service
             )
 
-            for identifier, prompt, asset, tag in zip(
-                identifiers, prompts, prompt_assets, tags
+            for identifier, prompt, asset, tag in tqdm(
+                zip(identifiers, prompts, prompt_assets, tags),
+                total=expected_length,
+                desc="Uploading prompts",
+                disable=rapidata_config.logging.silent_mode,
             ):
                 benchmark.add_prompt(identifier, prompt, asset, tag)
 
