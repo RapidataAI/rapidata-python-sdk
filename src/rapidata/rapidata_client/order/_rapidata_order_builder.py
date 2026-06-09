@@ -7,6 +7,7 @@ from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.create_order_model import CreateOrderModel
+    from rapidata.api_client.models.sticky_config import StickyConfig
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
@@ -37,6 +38,35 @@ from rapidata.service.openapi_service import OpenAPIService
 
 StickyStateLiteral = Literal["Temporary", "Permanent", "Passive"]
 
+_STICKY_DEFAULT_DIMENSION = "default"
+
+
+def _sticky_config_from_preset(preset: StickyStateLiteral) -> StickyConfig:
+    """Build a ``StickyConfig`` for a well-known preset.
+
+    Mirrors the backend ``StickyConfigFactories`` so that the presets that used
+    to be the ``StickyState`` enum keep producing identical wire configs after
+    the enum was replaced by ``StickyConfig``. All presets are enabled, keyed on
+    the default dimension, and block competing sticky campaigns; they differ only
+    in whether filters and priority selection are bypassed.
+    """
+    from rapidata.api_client.models.sticky_config import StickyConfig
+
+    bypass_filters, bypass_priority_selection = {
+        "Temporary": (False, True),
+        "Permanent": (True, True),
+        "Passive": (False, False),
+    }[preset]
+
+    return StickyConfig(
+        isEnabled=True,
+        dimension=_STICKY_DEFAULT_DIMENSION,
+        bypassFilters=bypass_filters,
+        bypassPrioritySelection=bypass_priority_selection,
+        blockOtherStickyCampaigns=True,
+        clearOnPause=True,
+    )
+
 
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
@@ -64,7 +94,7 @@ class RapidataOrderBuilder:
         self._selections: Sequence[RapidataSelection] = []
         self._priority: int | None = None
         self._datapoints: list[Datapoint] = []
-        self._sticky_state_value: StickyStateLiteral | None = None
+        self._sticky_config: StickyConfig | None = None
         self._validation_set_manager: ValidationSetManager = ValidationSetManager(
             self._openapi_service
         )
@@ -86,15 +116,12 @@ class RapidataOrderBuilder:
             managed_print("No referee provided, using default NaiveReferee.")
             self._referee = NaiveReferee()
 
-        sticky_state = self._sticky_state_value
-
         validation_set_id = (
             self._validation_set.id
             if (self._validation_set and not self._selections)
             else None
         )
         from rapidata.api_client.models.create_order_model import CreateOrderModel
-        from rapidata.api_client.models.sticky_state import StickyState
 
         rapid_feature_flags = (
             [
@@ -131,7 +158,7 @@ class RapidataOrderBuilder:
                 else None
             ),
             priority=self._priority,
-            stickyState=(StickyState(sticky_state) if sticky_state else None),
+            stickyConfig=self._sticky_config,
         )
 
     def _generate_id(self, length=9):
@@ -360,17 +387,26 @@ class RapidataOrderBuilder:
         return self
 
     def _set_sticky_state(
-        self, sticky_state: StickyStateLiteral | None = None
+        self, sticky_state: StickyStateLiteral | StickyConfig | None = None
     ) -> RapidataOrderBuilder:
         """
-        Set the sticky state for the order.
-        """
-        sticky_state_valid_values = get_args(StickyStateLiteral)
+        Set the sticky behavior for the order.
 
-        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
+        Accepts one of the preset literals ("Temporary", "Permanent", "Passive")
+        or a full StickyConfig for fine-grained control.
+        """
+        from rapidata.api_client.models.sticky_config import StickyConfig
+
+        if sticky_state is None or isinstance(sticky_state, StickyConfig):
+            self._sticky_config = sticky_state
+            return self
+
+        sticky_state_valid_values = get_args(StickyStateLiteral)
+        if sticky_state not in sticky_state_valid_values:
             raise ValueError(
-                f"Sticky state must be one of {sticky_state_valid_values} or None"
+                f"Sticky state must be one of {sticky_state_valid_values}, "
+                "a StickyConfig, or None"
             )
 
-        self._sticky_state_value = sticky_state
+        self._sticky_config = _sticky_config_from_preset(sticky_state)
         return self

@@ -18,6 +18,7 @@ from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelec
 from rapidata.service.openapi_service import OpenAPIService
 
 if TYPE_CHECKING:
+    from rapidata.api_client.models.sticky_config import StickyConfig
     from rapidata.rapidata_client.order._rapidata_order_builder import (
         StickyStateLiteral,
     )
@@ -47,7 +48,7 @@ class RapidataOrderManager:
         )
 
         self.__priority: int | None = None
-        self.__sticky_state: StickyStateLiteral | None = None
+        self.__sticky_state: StickyStateLiteral | StickyConfig | None = None
         self._asset_uploader = AssetUploader(openapi_service)
         logger.debug("RapidataOrderManager initialized")
 
@@ -160,17 +161,21 @@ class RapidataOrderManager:
 
         self.__priority = priority
 
-    def _set_sticky_state(self, sticky_state: StickyStateLiteral | None):
+    def _set_sticky_state(
+        self, sticky_state: StickyStateLiteral | StickyConfig | None
+    ):
+        from rapidata.api_client.models.sticky_config import StickyConfig
         from rapidata.rapidata_client.order._rapidata_order_builder import (
             StickyStateLiteral,
         )
 
-        sticky_state_valid_values = get_args(StickyStateLiteral)
-
-        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
-            raise ValueError(
-                f"Sticky state must be one of {sticky_state_valid_values} or None"
-            )
+        if sticky_state is not None and not isinstance(sticky_state, StickyConfig):
+            sticky_state_valid_values = get_args(StickyStateLiteral)
+            if sticky_state not in sticky_state_valid_values:
+                raise ValueError(
+                    f"Sticky state must be one of {sticky_state_valid_values}, "
+                    "a StickyConfig, or None"
+                )
 
         self.__sticky_state = sticky_state
 
