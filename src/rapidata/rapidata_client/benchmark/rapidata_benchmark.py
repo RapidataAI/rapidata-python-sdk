@@ -1,9 +1,13 @@
 from __future__ import annotations
 import urllib.parse
 import webbrowser
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from colorama import Fore
+from opentelemetry import context as otel_context
+from tqdm.auto import tqdm
 from typing import Literal, Optional, Sequence, TYPE_CHECKING
 from rapidata.rapidata_client.config import logger, managed_print, tracer
+from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 
 if TYPE_CHECKING:
@@ -225,15 +229,6 @@ class RapidataBenchmark:
             prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
-        from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import (
-            CreatePromptForBenchmarkEndpointInput,
-        )
-        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
-            IAssetInputExistingAssetInput,
-        )
-
-        from rapidata.api_client.models.i_asset_input import IAssetInput
-
         with tracer.start_as_current_span("RapidataBenchmark.add_prompt_to_benchmark"):
             if tags is None:
                 tags = []
@@ -287,30 +282,102 @@ class RapidataBenchmark:
             self.__prompts.append(prompt)
             self.__prompt_assets.append(prompt_asset)
 
-            self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
-                benchmark_id=self.id,
-                create_prompt_for_benchmark_endpoint_input=CreatePromptForBenchmarkEndpointInput(
-                    identifier=identifier,
-                    prompt=prompt,
-                    promptAsset=(
-                        IAssetInput(
-                            actual_instance=(
-                                IAssetInputExistingAssetInput(
-                                    _t="ExistingAssetInput",
-                                    name=self._asset_uploader.upload_asset(
-                                        prompt_asset
-                                    ),
-                                )
-                                if prompt_asset is not None
-                                else None
-                            )
+            self._post_prompt(identifier, prompt, prompt_asset, tags)
+
+    def _post_prompt(
+        self,
+        identifier: str,
+        prompt: str | None,
+        prompt_asset: str | None,
+        tags: list[str],
+    ) -> None:
+        """Performs the network calls to register a single prompt.
+
+        Does not validate or mutate the local caches — callers own that. Kept
+        free of shared state so it can be run concurrently (see
+        :py:meth:`_add_prompts`).
+        """
+        from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import (
+            CreatePromptForBenchmarkEndpointInput,
+        )
+        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
+            IAssetInputExistingAssetInput,
+        )
+        from rapidata.api_client.models.i_asset_input import IAssetInput
+
+        self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
+            benchmark_id=self.id,
+            create_prompt_for_benchmark_endpoint_input=CreatePromptForBenchmarkEndpointInput(
+                identifier=identifier,
+                prompt=prompt,
+                promptAsset=(
+                    IAssetInput(
+                        actual_instance=IAssetInputExistingAssetInput(
+                            _t="ExistingAssetInput",
+                            name=self._asset_uploader.upload_asset(prompt_asset),
                         )
-                        if prompt_asset is not None
-                        else None
-                    ),
-                    tags=tags,
+                    )
+                    if prompt_asset is not None
+                    else None
                 ),
-            )
+                tags=tags,
+            ),
+        )
+
+    def _add_prompts(
+        self,
+        identifiers: Sequence[str],
+        prompts: Sequence[str | None],
+        prompt_assets: Sequence[str | None],
+        tags: Sequence[list[str] | None],
+    ) -> None:
+        """Registers many prompts concurrently.
+
+        Used by benchmark creation, where the inputs have already been validated
+        (matching lengths, unique identifiers) and the benchmark is empty — so the
+        per-prompt validation and cache reads in :py:meth:`add_prompt` are
+        unnecessary and would not be thread-safe. Uploads run on a thread pool;
+        the local caches are populated in input order once all succeed.
+        """
+        normalized_tags = [tag if tag is not None else [] for tag in tags]
+        current_context = otel_context.get_current()
+
+        def post_with_context(
+            identifier: str,
+            prompt: str | None,
+            prompt_asset: str | None,
+            tag: list[str],
+        ) -> None:
+            token = otel_context.attach(current_context)
+            try:
+                self._post_prompt(identifier, prompt, prompt_asset, tag)
+            finally:
+                otel_context.detach(token)
+
+        with tracer.start_as_current_span("RapidataBenchmark._add_prompts"):
+            with ThreadPoolExecutor(
+                max_workers=rapidata_config.upload.maxWorkers
+            ) as executor:
+                futures = [
+                    executor.submit(post_with_context, identifier, prompt, asset, tag)
+                    for identifier, prompt, asset, tag in zip(
+                        identifiers, prompts, prompt_assets, normalized_tags
+                    )
+                ]
+
+                with tqdm(
+                    total=len(identifiers),
+                    desc="Uploading prompts",
+                    disable=rapidata_config.logging.silent_mode,
+                ) as pbar:
+                    for future in as_completed(futures):
+                        future.result()
+                        pbar.update(1)
+
+            self.__identifiers.extend(identifiers)
+            self.__prompts.extend(prompts)
+            self.__prompt_assets.extend(prompt_assets)
+            self.__tags.extend(normalized_tags)
 
     def create_leaderboard(
         self,
