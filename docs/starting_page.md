@@ -149,5 +149,6 @@ The SDK is built around three concepts:
 |---|---|---|
 | **Compare** | Side-by-side comparison of images, video, audio, or text | [Comparison example](examples/compare_job.md) |
 | **Classify** | Categorize data with custom labels or Likert scales | [Classification example](examples/classify_job.md) |
+| **Locate** | Point out objects, artifacts, or regions within an image | [Locate example](examples/locate_job.md) |
 | **Rank models** | Benchmark AI models on leaderboards with human evaluation | [Model Ranking](mri.md) |
 | **Continuous ranking** | Lightweight ongoing ranking without full job setup | [Ranking Flows](flows.md) |
