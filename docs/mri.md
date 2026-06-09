@@ -92,6 +92,9 @@ Once your benchmark and leaderboard are set up, you can evaluate models by the f
 All prompts must be from the benchmark's registered prompt set (available through the `prompts` attribute of the benchmark)
 
 !!! note
+    `prompts` returns the prompts as you originally provided them. The English translation of each prompt is available through the `english_prompts` attribute, aligned by index. Prompts added in the current session report `None` there until they are re-fetched, since the translation is produced server-side.
+
+!!! note
     You are not limited to one media per prompt; you can supply the same prompt multiple times.
 
 

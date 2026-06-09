@@ -361,8 +361,6 @@ class RapidataBenchmark:
             for uploaded in self._prompt_uploader.upload_many(to_upload):
                 self.__identifiers.append(uploaded.identifier)
                 self.__prompts.append(uploaded.prompt)
-                # The English translation is produced server-side and is not known
-                # until the prompts are re-fetched.
                 self.__english_prompts.append(None)
                 self.__prompt_assets.append(uploaded.prompt_asset)
                 self.__tags.append(uploaded.tags)
