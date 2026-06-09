@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.boosting_control_mode import BoostingControlMode
 from rapidata.api_client.models.campaign_status_model import CampaignStatusModel
 from pydantic import ValidationError
@@ -38,10 +38,9 @@ class QueryCampaignsEndpointOutput(LazyValidatedModel):
     has_booster: StrictBool = Field(description="Whether the campaign has a booster.", alias="hasBooster")
     boost_level: StrictInt = Field(description="The campaign's effective boost level (0-10). 0 when no boost is active.  Lets clients render and edit the level without unpacking the boosting profile.", alias="boostLevel")
     boosting_control_mode: BoostingControlMode = Field(description="How the campaign's boost is controlled — Manual (user-editable) or Automatic  (managed by an owning service; boost edits are rejected by the API).", alias="boostingControlMode")
-    requires_booster: Optional[StrictBool] = Field(default=None, description="Whether the campaign requires a booster.", alias="requiresBooster")
     owner_mail: StrictStr = Field(description="The email of the campaign owner.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the campaign was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "hasBooster", "boostLevel", "boostingControlMode", "requiresBooster", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "hasBooster", "boostLevel", "boostingControlMode", "ownerMail", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -97,7 +96,6 @@ class QueryCampaignsEndpointOutput(LazyValidatedModel):
             "hasBooster": obj.get("hasBooster"),
             "boostLevel": obj.get("boostLevel"),
             "boostingControlMode": obj.get("boostingControlMode"),
-            "requiresBooster": obj.get("requiresBooster"),
             "ownerMail": obj.get("ownerMail"),
             "createdAt": obj.get("createdAt")
         }

@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.boosting_control_mode import BoostingControlMode
 from rapidata.api_client.models.boosting_profile_model import BoostingProfileModel
 from rapidata.api_client.models.campaign_status_model import CampaignStatusModel
@@ -44,14 +44,13 @@ class GetCampaignByIdEndpointOutput(LazyValidatedModel):
     boosting_control_mode: BoostingControlMode = Field(description="The boosting control mode.", alias="boostingControlMode")
     has_booster: StrictBool = Field(description="Whether the campaign has a booster.", alias="hasBooster")
     boost_level: StrictInt = Field(description="The campaign's effective boost level (0-10). 0 when no boost is active.  Lets clients render and edit the level without unpacking the boosting profile.", alias="boostLevel")
-    requires_booster: Optional[StrictBool] = Field(default=None, description="Whether the campaign requires a booster.", alias="requiresBooster")
     sticky_config: StickyConfigModel = Field(description="The sticky behavior configuration.", alias="stickyConfig")
     filters: List[ICampaignFilterModel]
     selections: List[ICampaignSelectionModel]
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     owner_mail: StrictStr = Field(description="The email of the campaign owner.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the campaign was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "requiresBooster", "stickyConfig", "filters", "selections", "featureFlags", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "stickyConfig", "filters", "selections", "featureFlags", "ownerMail", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -135,7 +134,6 @@ class GetCampaignByIdEndpointOutput(LazyValidatedModel):
             "boostingControlMode": obj.get("boostingControlMode"),
             "hasBooster": obj.get("hasBooster"),
             "boostLevel": obj.get("boostLevel"),
-            "requiresBooster": obj.get("requiresBooster"),
             "stickyConfig": StickyConfigModel.from_dict(obj["stickyConfig"]) if obj.get("stickyConfig") is not None else None,
             "filters": [ICampaignFilterModel.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "selections": [ICampaignSelectionModel.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,

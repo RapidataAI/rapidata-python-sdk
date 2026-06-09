@@ -20,9 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.audience_boost_model2 import AudienceBoostModel2
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.flow_type import FlowType
 from rapidata.api_client.models.pid_batch_mode import PidBatchMode
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -35,7 +33,6 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     id: StrictStr = Field(description="The unique identifier of the flow.")
-    type: Optional[FlowType] = Field(default=None, description="The type of the flow. Use the _t discriminator instead.")
     name: StrictStr = Field(description="The name of the flow.")
     campaign_id: StrictStr = Field(description="The ID of the campaign associated with this flow.", alias="campaignId")
     flow_item_count: StrictInt = Field(description="The total number of items that have been added to this flow. Incremented atomically on each item creation.", alias="flowItemCount")
@@ -50,13 +47,8 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     serve_timeout_seconds: Optional[StrictInt] = Field(description="Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.", alias="serveTimeoutSeconds")
     drain_duration_seconds: StrictInt = Field(description="Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.", alias="drainDurationSeconds")
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(description="Ratio of serves to responses used to calculate how many tasks to serve per expected response.", alias="serveToResponseRatio")
-    global_boost_level: Optional[StrictInt] = Field(default=None, description="Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.", alias="globalBoostLevel")
-    audience_boosts: Optional[List[AudienceBoostModel2]] = Field(default=None, alias="audienceBoosts")
-    audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the flow will only serve items to users in this audience.", alias="audienceId")
     criteria: Optional[StrictStr] = Field(description="The comparison instruction shown to annotators during ranking tasks (e.g. \"Which image is sharper?\").")
     starting_elo: StrictInt = Field(description="The initial Elo rating assigned to new items entering the ranking. Standard default is 1200.", alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, description="Elo K-factor controlling rating volatility. Higher values cause larger rating changes per comparison. Used as a direct multiplier on the Elo change formula.", alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, description="Elo scaling factor that determines how rating differences translate to expected win probabilities. A difference equal to the scaling factor gives the higher-rated item approximately 90% expected win rate.", alias="scalingFactor")
     min_responses: StrictInt = Field(description="Minimum number of responses a ranking item must receive before it is considered sufficiently evaluated.", alias="minResponses")
     max_responses: Optional[StrictInt] = Field(description="Maximum number of responses a ranking item can receive before being removed from active ranking. Null allows unlimited responses.", alias="maxResponses")
     serve_responses: Optional[StrictInt] = Field(description="Number of accepted responses per rapid at which to stop serving. Null defaults to MaxResponses.", alias="serveResponses")
@@ -64,7 +56,7 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     owner_id: StrictStr = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "id", "type", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "globalBoostLevel", "audienceBoosts", "audienceId", "criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -108,13 +100,6 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in audience_boosts (list)
-        _items = []
-        if self.audience_boosts:
-            for _item_audience_boosts in self.audience_boosts:
-                if _item_audience_boosts:
-                    _items.append(_item_audience_boosts.to_dict())
-            _dict['audienceBoosts'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -136,21 +121,6 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.serve_to_response_ratio is None and "serve_to_response_ratio" in self.model_fields_set:
             _dict['serveToResponseRatio'] = None
-
-        # set to None if global_boost_level (nullable) is None
-        # and model_fields_set contains the field
-        if self.global_boost_level is None and "global_boost_level" in self.model_fields_set:
-            _dict['globalBoostLevel'] = None
-
-        # set to None if audience_boosts (nullable) is None
-        # and model_fields_set contains the field
-        if self.audience_boosts is None and "audience_boosts" in self.model_fields_set:
-            _dict['audienceBoosts'] = None
-
-        # set to None if audience_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.audience_id is None and "audience_id" in self.model_fields_set:
-            _dict['audienceId'] = None
 
         # set to None if criteria (nullable) is None
         # and model_fields_set contains the field
@@ -181,7 +151,6 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "id": obj.get("id"),
-            "type": obj.get("type"),
             "name": obj.get("name"),
             "campaignId": obj.get("campaignId"),
             "flowItemCount": obj.get("flowItemCount"),
@@ -196,13 +165,8 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
             "serveTimeoutSeconds": obj.get("serveTimeoutSeconds"),
             "drainDurationSeconds": obj.get("drainDurationSeconds"),
             "serveToResponseRatio": obj.get("serveToResponseRatio"),
-            "globalBoostLevel": obj.get("globalBoostLevel"),
-            "audienceBoosts": [AudienceBoostModel2.from_dict(_item) for _item in obj["audienceBoosts"]] if obj.get("audienceBoosts") is not None else None,
-            "audienceId": obj.get("audienceId"),
             "criteria": obj.get("criteria"),
             "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor"),
             "minResponses": obj.get("minResponses"),
             "maxResponses": obj.get("maxResponses"),
             "serveResponses": obj.get("serveResponses"),
