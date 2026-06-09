@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import Optional
 from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchmark
 from rapidata.api_client.models.create_benchmark_endpoint_input import (
     CreateBenchmarkEndpointInput,
@@ -60,91 +60,6 @@ class RapidataBenchmarkManager:
             if not isinstance(name, str):
                 raise ValueError("Name must be a string.")
 
-            if prompts and (
-                not isinstance(prompts, list)
-                or not all(
-                    isinstance(prompt, str) or prompt is None for prompt in prompts
-                )
-            ):
-                raise ValueError("Prompts must be a list of strings or None.")
-
-            if prompt_assets and (
-                not isinstance(prompt_assets, list)
-                or not all(
-                    isinstance(asset, str) or asset is None for asset in prompt_assets
-                )
-            ):
-                raise ValueError("Media assets must be a list of strings or None.")
-
-            if identifiers and (
-                not isinstance(identifiers, list)
-                or not all(isinstance(identifier, str) for identifier in identifiers)
-            ):
-                raise ValueError("Identifiers must be a list of strings.")
-
-            if identifiers:
-                if not len(set(identifiers)) == len(identifiers):
-                    raise ValueError("Identifiers must be unique.")
-
-            if tags is not None:
-                if not isinstance(tags, list):
-                    raise ValueError("Tags must be a list of lists of strings or None.")
-
-                for tag in tags:
-                    if tag is not None and (
-                        not isinstance(tag, list)
-                        or not all(isinstance(item, str) for item in tag)
-                    ):
-                        raise ValueError(
-                            "Tags must be a list of lists of strings or None."
-                        )
-
-            if not identifiers and not prompts:
-                raise ValueError(
-                    "At least one of identifiers or prompts must be provided."
-                )
-
-            if not prompts and not prompt_assets:
-                raise ValueError(
-                    "At least one of prompts or media assets must be provided."
-                )
-
-            if not identifiers:
-                assert prompts is not None
-                if not len(set(prompts)) == len(prompts):
-                    raise ValueError(
-                        "Prompts must be unique. Otherwise use identifiers."
-                    )
-                if any(prompt is None for prompt in prompts):
-                    raise ValueError(
-                        "Prompts must not be None. Otherwise use identifiers."
-                    )
-
-                identifiers = cast(list[str], prompts)
-
-            assert identifiers is not None
-
-            expected_length = len(identifiers)
-
-            if not prompts:
-                prompts = cast(list[str | None], [None] * expected_length)
-
-            if not prompt_assets:
-                prompt_assets = cast(list[str | None], [None] * expected_length)
-
-            if not tags:
-                tags = cast(list[list[str] | None], [None] * expected_length)
-
-            # At this point, all variables are guaranteed to be lists, not None
-            assert prompts is not None
-            assert prompt_assets is not None
-            assert tags is not None
-
-            if not (expected_length == len(prompts) == len(prompt_assets) == len(tags)):
-                raise ValueError(
-                    "Identifiers, prompts, media assets, and tags must have the same length or set to None."
-                )
-
             logger.info("Creating new benchmark %s", name)
 
             benchmark_result = (
@@ -161,10 +76,7 @@ class RapidataBenchmarkManager:
                 name, benchmark_result.id, self.__openapi_service
             )
 
-            for identifier, prompt, asset, tag in zip(
-                identifiers, prompts, prompt_assets, tags
-            ):
-                benchmark.add_prompt(identifier, prompt, asset, tag)
+            benchmark.add_prompts(identifiers, prompts, prompt_assets, tags)
 
             return benchmark
 

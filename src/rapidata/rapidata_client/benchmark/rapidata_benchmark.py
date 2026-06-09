@@ -2,9 +2,13 @@ from __future__ import annotations
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Literal, Optional, Sequence, TYPE_CHECKING
+from typing import Literal, Optional, Sequence, TYPE_CHECKING, cast
 from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
+from rapidata.rapidata_client.benchmark._prompt_uploader import (
+    BenchmarkPrompt,
+    BenchmarkPromptUploader,
+)
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -32,8 +36,6 @@ class RapidataBenchmark:
     """
 
     def __init__(self, name: str, id: str, openapi_service: OpenAPIService):
-        from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-
         self.name = name
         self.id = id
         self._openapi_service = openapi_service
@@ -46,7 +48,7 @@ class RapidataBenchmark:
         self.__benchmark_page: str = (
             f"https://app.{self._openapi_service.environment}/mri/benchmarks/{self.id}"
         )
-        self._asset_uploader = AssetUploader(openapi_service)
+        self._prompt_uploader = BenchmarkPromptUploader(id, openapi_service)
 
     def __instantiate_prompts(self) -> None:
         from rapidata.rapidata_client.config import tracer
@@ -209,108 +211,143 @@ class RapidataBenchmark:
 
             return self.__participants
 
-    def add_prompt(
+    def add_prompts(
         self,
-        identifier: str | None = None,
-        prompt: str | None = None,
-        prompt_asset: str | None = None,
-        tags: Optional[list[str]] = None,
-    ):
+        identifiers: Optional[list[str]] = None,
+        prompts: Optional[list[str | None] | list[str]] = None,
+        prompt_assets: Optional[list[str | None] | list[str]] = None,
+        tags: Optional[list[list[str] | None] | list[list[str]]] = None,
+    ) -> None:
         """
-        Adds a prompt to the benchmark.
+        Adds one or more prompts to the benchmark. Everything is matched up by the
+        indexes of the lists.
+
+        prompts or identifiers must be provided, as well as prompts or prompt_assets.
+
+        The prompts are uploaded concurrently. A failed upload does not abort the
+        rest: every prompt is attempted, failures are logged, and only the prompts
+        that succeeded are registered.
 
         Args:
-            identifier: The identifier of the prompt/asset/tags that will be used to match up the media. If not provided, it will use the prompt, asset or prompt + asset as the identifier.
-            prompt: The prompt that will be used to evaluate the model.
-            prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
-            tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
+            identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts as the identifiers.
+            prompts: The prompts that will be registered for the benchmark.
+            prompt_assets: The prompt assets that will be registered for the benchmark.
+            tags: The tags that will be associated with the prompts to use for filtering the leaderboard results. They will NOT be shown to the users.
+
+        Example:
+            ```python
+            benchmark.add_prompts(
+                identifiers=["id1", "id2"],
+                prompts=["prompt 1", "prompt 2"],
+                prompt_assets=["https://assets.rapidata.ai/prompt_1.jpg", "https://assets.rapidata.ai/prompt_2.jpg"],
+                tags=[["tag1", "tag2"], ["tag2"]],
+            )
+            ```
         """
-        from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import (
-            CreatePromptForBenchmarkEndpointInput,
-        )
-        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
-            IAssetInputExistingAssetInput,
-        )
+        with tracer.start_as_current_span("RapidataBenchmark.add_prompts"):
+            if prompts and (
+                not isinstance(prompts, list)
+                or not all(
+                    isinstance(prompt, str) or prompt is None for prompt in prompts
+                )
+            ):
+                raise ValueError("Prompts must be a list of strings or None.")
 
-        from rapidata.api_client.models.i_asset_input import IAssetInput
+            if prompt_assets and (
+                not isinstance(prompt_assets, list)
+                or not all(
+                    isinstance(asset, str) or asset is None for asset in prompt_assets
+                )
+            ):
+                raise ValueError("Media assets must be a list of strings or None.")
 
-        with tracer.start_as_current_span("RapidataBenchmark.add_prompt_to_benchmark"):
-            if tags is None:
-                tags = []
+            if identifiers and (
+                not isinstance(identifiers, list)
+                or not all(isinstance(identifier, str) for identifier in identifiers)
+            ):
+                raise ValueError("Identifiers must be a list of strings.")
 
-            if prompt is None and prompt_asset is None:
-                raise ValueError("Prompt or prompt asset must be provided.")
+            if identifiers and len(set(identifiers)) != len(identifiers):
+                raise ValueError("Identifiers must be unique.")
 
-            if identifier is None and prompt is None:
-                raise ValueError("Identifier or prompt must be provided.")
+            if tags is not None:
+                if not isinstance(tags, list):
+                    raise ValueError("Tags must be a list of lists of strings or None.")
 
-            if identifier and not isinstance(identifier, str):
-                raise ValueError("Identifier must be a string.")
+                for tag in tags:
+                    if tag is not None and (
+                        not isinstance(tag, list)
+                        or not all(isinstance(item, str) for item in tag)
+                    ):
+                        raise ValueError(
+                            "Tags must be a list of lists of strings or None."
+                        )
 
-            if prompt and not isinstance(prompt, str):
-                raise ValueError("Prompt must be a string.")
-
-            if prompt_asset and not isinstance(prompt_asset, str):
+            if not identifiers and not prompts:
                 raise ValueError(
-                    "Asset must be a string. That is the link to the asset."
+                    "At least one of identifiers or prompts must be provided."
                 )
 
-            if identifier is None:
-                assert prompt is not None
-                if prompt in self.prompts:
+            if not prompts and not prompt_assets:
+                raise ValueError(
+                    "At least one of prompts or media assets must be provided."
+                )
+
+            if not identifiers:
+                assert prompts is not None
+                if len(set(prompts)) != len(prompts):
                     raise ValueError(
                         "Prompts must be unique. Otherwise use identifiers."
                     )
-                identifier = prompt
+                if any(prompt is None for prompt in prompts):
+                    raise ValueError(
+                        "Prompts must not be None. Otherwise use identifiers."
+                    )
 
-            if identifier in self.identifiers:
-                raise ValueError("Identifier already exists in the benchmark.")
+                identifiers = cast(list[str], prompts)
 
-            if tags is not None and (
-                not isinstance(tags, list)
-                or not all(isinstance(tag, str) for tag in tags)
-            ):
-                raise ValueError("Tags must be a list of strings.")
+            assert identifiers is not None
 
-            logger.info(
-                "Adding identifier %s with prompt %s, prompt asset %s and tags %s to benchmark %s",
-                identifier,
-                prompt,
-                prompt_asset,
-                tags,
-                self.id,
-            )
+            expected_length = len(identifiers)
 
-            self.__identifiers.append(identifier)
+            if not prompts:
+                prompts = cast(list[str | None], [None] * expected_length)
 
-            self.__tags.append(tags)
-            self.__prompts.append(prompt)
-            self.__prompt_assets.append(prompt_asset)
+            if not prompt_assets:
+                prompt_assets = cast(list[str | None], [None] * expected_length)
 
-            self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
-                benchmark_id=self.id,
-                create_prompt_for_benchmark_endpoint_input=CreatePromptForBenchmarkEndpointInput(
-                    identifier=identifier,
-                    prompt=prompt,
-                    promptAsset=(
-                        IAssetInput(
-                            actual_instance=(
-                                IAssetInputExistingAssetInput(
-                                    _t="ExistingAssetInput",
-                                    name=self._asset_uploader.upload_asset(
-                                        prompt_asset
-                                    ),
-                                )
-                                if prompt_asset is not None
-                                else None
-                            )
-                        )
-                        if prompt_asset is not None
-                        else None
-                    ),
-                    tags=tags,
-                ),
-            )
+            if not tags:
+                tags = cast(list[list[str] | None], [None] * expected_length)
+
+            if not (expected_length == len(prompts) == len(prompt_assets) == len(tags)):
+                raise ValueError(
+                    "Identifiers, prompts, media assets, and tags must have the same length or set to None."
+                )
+
+            already_registered = [
+                identifier
+                for identifier in identifiers
+                if identifier in self.identifiers
+            ]
+            if already_registered:
+                raise ValueError(
+                    f"Identifiers already exist in the benchmark: {already_registered}"
+                )
+
+            to_upload = [
+                BenchmarkPrompt(
+                    identifier, prompt, asset, tag if tag is not None else []
+                )
+                for identifier, prompt, asset, tag in zip(
+                    identifiers, prompts, prompt_assets, tags
+                )
+            ]
+
+            for uploaded in self._prompt_uploader.upload_many(to_upload):
+                self.__identifiers.append(uploaded.identifier)
+                self.__prompts.append(uploaded.prompt)
+                self.__prompt_assets.append(uploaded.prompt_asset)
+                self.__tags.append(uploaded.tags)
 
     def create_leaderboard(
         self,

@@ -75,12 +75,12 @@ standings = leaderboard.get_standings(tags=["landscape", "outdoor"])
 If you have already created a benchmark and want to add new prompts and assets after the fact. Note however that these will only take effect for new models.
 
 ```python
-# Adding individual prompts with assets
-benchmark.add_prompt(
-    identifier="new_style",
-    prompt="Generate artwork in this new style",
-    prompt_asset="https://assets.rapidata.ai/new_style_ref.jpg",
-    tags=["abstract", "modern"]
+# Adding prompts with assets (one or many, matched up by index)
+benchmark.add_prompts(
+    identifiers=["new_style"],
+    prompts=["Generate artwork in this new style"],
+    prompt_assets=["https://assets.rapidata.ai/new_style_ref.jpg"],
+    tags=[["abstract", "modern"]]
 )
 ```
 
