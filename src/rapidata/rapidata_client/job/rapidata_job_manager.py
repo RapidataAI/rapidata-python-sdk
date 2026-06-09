@@ -498,7 +498,7 @@ class RapidataJobManager:
                 settings=settings,
             )
 
-    def _create_locate_job_definition(
+    def create_locate_job_definition(
         self,
         name: str,
         instruction: str,
@@ -511,7 +511,7 @@ class RapidataJobManager:
     ) -> RapidataJobDefinition:
         """Create a locate job definition.
 
-        With this order you can have people locate specific objects in a datapoint (image, text, video, audio).
+        With this job you can have people locate specific objects in a datapoint (image, text, video, audio).
         The annotators will be shown a datapoint and will be asked to select locations based on the instruction.
 
         Args:
