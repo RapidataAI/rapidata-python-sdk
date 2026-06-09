@@ -67,6 +67,7 @@ The data to be labeled. The format depends on the job type:
 |----------|--------|-------------|
 | Classification | `list[str]` | Single items to classify |
 | Compare | `list[list[str]]` | Pairs of items (exactly 2 per inner list) |
+| Locate | `list[str]` | Single items to locate within |
 
 **Supported Formats:**
 
@@ -337,21 +338,33 @@ job_definition = client.job.create_compare_job_definition(
 )
 ```
 
+### Locate Job
+
+Locate has no job-specific parameters — it uses only the core parameters. The `instruction` describes what labelers should locate, and each response is the set of points they tapped on the datapoint.
+
+```python
+job_definition = client.job.create_locate_job_definition(
+    name="Artifact Detection",
+    instruction="Tap on any visual glitches or errors in the image.",
+    datapoints=["image1.jpg", "image2.jpg"],
+)
+```
+
 ---
 
 ## Parameter Availability Matrix
 
-| Parameter | Classification | Compare |
-|-----------|:-:|:-:|
-| `name` | :white_check_mark: | :white_check_mark: |
-| `instruction` | :white_check_mark: | :white_check_mark: |
-| `datapoints` | :white_check_mark: | :white_check_mark: |
-| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: |
-| `data_type` | :white_check_mark: | :white_check_mark: |
-| `contexts` | :white_check_mark: | :white_check_mark: |
-| `media_contexts` | :white_check_mark: | :white_check_mark: |
-| `confidence_threshold` | :white_check_mark: | :white_check_mark: |
-| `quorum_threshold` | :white_check_mark: | :white_check_mark: |
-| `settings` | :white_check_mark: | :white_check_mark: |
-| `answer_options` | :white_check_mark: | :x: |
-| `a_b_names` | :x: | :white_check_mark: |
+| Parameter | Classification | Compare | Locate |
+|-----------|:-:|:-:|:-:|
+| `name` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `instruction` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `datapoints` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `data_type` | :white_check_mark: | :white_check_mark: | :x: |
+| `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: |
+| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: |
+| `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `answer_options` | :white_check_mark: | :x: | :x: |
+| `a_b_names` | :x: | :white_check_mark: | :x: |
