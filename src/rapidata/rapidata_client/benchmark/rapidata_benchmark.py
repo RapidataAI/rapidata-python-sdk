@@ -2,7 +2,7 @@ from __future__ import annotations
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Literal, Optional, Sequence, TYPE_CHECKING
+from typing import Literal, Optional, Sequence, TYPE_CHECKING, cast
 from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 from rapidata.rapidata_client.benchmark._prompt_uploader import (
@@ -211,105 +211,143 @@ class RapidataBenchmark:
 
             return self.__participants
 
-    def add_prompt(
+    def add_prompts(
         self,
-        identifier: str | None = None,
-        prompt: str | None = None,
-        prompt_asset: str | None = None,
-        tags: Optional[list[str]] = None,
-    ):
+        identifiers: Optional[list[str]] = None,
+        prompts: Optional[list[str | None] | list[str]] = None,
+        prompt_assets: Optional[list[str | None] | list[str]] = None,
+        tags: Optional[list[list[str] | None] | list[list[str]]] = None,
+    ) -> None:
         """
-        Adds a prompt to the benchmark.
+        Adds one or more prompts to the benchmark. Everything is matched up by the
+        indexes of the lists.
+
+        prompts or identifiers must be provided, as well as prompts or prompt_assets.
+
+        The prompts are uploaded concurrently. A failed upload does not abort the
+        rest: every prompt is attempted, failures are logged, and only the prompts
+        that succeeded are registered.
 
         Args:
-            identifier: The identifier of the prompt/asset/tags that will be used to match up the media. If not provided, it will use the prompt, asset or prompt + asset as the identifier.
-            prompt: The prompt that will be used to evaluate the model.
-            prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
-            tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
+            identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts as the identifiers.
+            prompts: The prompts that will be registered for the benchmark.
+            prompt_assets: The prompt assets that will be registered for the benchmark.
+            tags: The tags that will be associated with the prompts to use for filtering the leaderboard results. They will NOT be shown to the users.
+
+        Example:
+            ```python
+            benchmark.add_prompts(
+                identifiers=["id1", "id2"],
+                prompts=["prompt 1", "prompt 2"],
+                prompt_assets=["https://assets.rapidata.ai/prompt_1.jpg", "https://assets.rapidata.ai/prompt_2.jpg"],
+                tags=[["tag1", "tag2"], ["tag2"]],
+            )
+            ```
         """
-        with tracer.start_as_current_span("RapidataBenchmark.add_prompt_to_benchmark"):
-            if tags is None:
-                tags = []
+        with tracer.start_as_current_span("RapidataBenchmark.add_prompts"):
+            if prompts and (
+                not isinstance(prompts, list)
+                or not all(
+                    isinstance(prompt, str) or prompt is None for prompt in prompts
+                )
+            ):
+                raise ValueError("Prompts must be a list of strings or None.")
 
-            if prompt is None and prompt_asset is None:
-                raise ValueError("Prompt or prompt asset must be provided.")
+            if prompt_assets and (
+                not isinstance(prompt_assets, list)
+                or not all(
+                    isinstance(asset, str) or asset is None for asset in prompt_assets
+                )
+            ):
+                raise ValueError("Media assets must be a list of strings or None.")
 
-            if identifier is None and prompt is None:
-                raise ValueError("Identifier or prompt must be provided.")
+            if identifiers and (
+                not isinstance(identifiers, list)
+                or not all(isinstance(identifier, str) for identifier in identifiers)
+            ):
+                raise ValueError("Identifiers must be a list of strings.")
 
-            if identifier and not isinstance(identifier, str):
-                raise ValueError("Identifier must be a string.")
+            if identifiers and len(set(identifiers)) != len(identifiers):
+                raise ValueError("Identifiers must be unique.")
 
-            if prompt and not isinstance(prompt, str):
-                raise ValueError("Prompt must be a string.")
+            if tags is not None:
+                if not isinstance(tags, list):
+                    raise ValueError("Tags must be a list of lists of strings or None.")
 
-            if prompt_asset and not isinstance(prompt_asset, str):
+                for tag in tags:
+                    if tag is not None and (
+                        not isinstance(tag, list)
+                        or not all(isinstance(item, str) for item in tag)
+                    ):
+                        raise ValueError(
+                            "Tags must be a list of lists of strings or None."
+                        )
+
+            if not identifiers and not prompts:
                 raise ValueError(
-                    "Asset must be a string. That is the link to the asset."
+                    "At least one of identifiers or prompts must be provided."
                 )
 
-            if identifier is None:
-                assert prompt is not None
-                if prompt in self.prompts:
+            if not prompts and not prompt_assets:
+                raise ValueError(
+                    "At least one of prompts or media assets must be provided."
+                )
+
+            if not identifiers:
+                assert prompts is not None
+                if len(set(prompts)) != len(prompts):
                     raise ValueError(
                         "Prompts must be unique. Otherwise use identifiers."
                     )
-                identifier = prompt
+                if any(prompt is None for prompt in prompts):
+                    raise ValueError(
+                        "Prompts must not be None. Otherwise use identifiers."
+                    )
 
-            if identifier in self.identifiers:
-                raise ValueError("Identifier already exists in the benchmark.")
+                identifiers = cast(list[str], prompts)
 
-            if tags is not None and (
-                not isinstance(tags, list)
-                or not all(isinstance(tag, str) for tag in tags)
-            ):
-                raise ValueError("Tags must be a list of strings.")
+            assert identifiers is not None
 
-            logger.info(
-                "Adding identifier %s with prompt %s, prompt asset %s and tags %s to benchmark %s",
-                identifier,
-                prompt,
-                prompt_asset,
-                tags,
-                self.id,
-            )
+            expected_length = len(identifiers)
 
-            self.__identifiers.append(identifier)
+            if not prompts:
+                prompts = cast(list[str | None], [None] * expected_length)
 
-            self.__tags.append(tags)
-            self.__prompts.append(prompt)
-            self.__prompt_assets.append(prompt_asset)
+            if not prompt_assets:
+                prompt_assets = cast(list[str | None], [None] * expected_length)
 
-            self._prompt_uploader.upload(
-                BenchmarkPrompt(identifier, prompt, prompt_asset, tags)
-            )
+            if not tags:
+                tags = cast(list[list[str] | None], [None] * expected_length)
 
-    def _add_prompts(
-        self,
-        identifiers: Sequence[str],
-        prompts: Sequence[str | None],
-        prompt_assets: Sequence[str | None],
-        tags: Sequence[list[str] | None],
-    ) -> None:
-        """Registers many prompts concurrently, used by benchmark creation.
+            if not (expected_length == len(prompts) == len(prompt_assets) == len(tags)):
+                raise ValueError(
+                    "Identifiers, prompts, media assets, and tags must have the same length or set to None."
+                )
 
-        The inputs are already validated there (matching lengths, unique
-        identifiers) and the benchmark is empty, so this bypasses the per-prompt
-        validation and cache reads in :py:meth:`add_prompt`. Only the prompts that
-        upload successfully are added to the local caches, in input order.
-        """
-        to_upload = [
-            BenchmarkPrompt(identifier, prompt, asset, tag if tag is not None else [])
-            for identifier, prompt, asset, tag in zip(
-                identifiers, prompts, prompt_assets, tags
-            )
-        ]
+            already_registered = [
+                identifier
+                for identifier in identifiers
+                if identifier in self.identifiers
+            ]
+            if already_registered:
+                raise ValueError(
+                    f"Identifiers already exist in the benchmark: {already_registered}"
+                )
 
-        for uploaded in self._prompt_uploader.upload_many(to_upload):
-            self.__identifiers.append(uploaded.identifier)
-            self.__prompts.append(uploaded.prompt)
-            self.__prompt_assets.append(uploaded.prompt_asset)
-            self.__tags.append(uploaded.tags)
+            to_upload = [
+                BenchmarkPrompt(
+                    identifier, prompt, asset, tag if tag is not None else []
+                )
+                for identifier, prompt, asset, tag in zip(
+                    identifiers, prompts, prompt_assets, tags
+                )
+            ]
+
+            for uploaded in self._prompt_uploader.upload_many(to_upload):
+                self.__identifiers.append(uploaded.identifier)
+                self.__prompts.append(uploaded.prompt)
+                self.__prompt_assets.append(uploaded.prompt_asset)
+                self.__tags.append(uploaded.tags)
 
     def create_leaderboard(
         self,
