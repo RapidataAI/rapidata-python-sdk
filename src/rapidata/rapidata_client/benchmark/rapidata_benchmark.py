@@ -46,6 +46,7 @@ class RapidataBenchmark:
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
         self.__prompts_fetched: bool = False
+        self.__english_prompts_fetched: bool = False
         self.__participants: list[BenchmarkParticipant] = []
         self.__benchmark_page: str = (
             f"https://app.{self._openapi_service.environment}/mri/benchmarks/{self.id}"
@@ -106,6 +107,7 @@ class RapidataBenchmark:
                 current_page += 1
 
             self.__prompts_fetched = True
+            self.__english_prompts_fetched = True
 
     @property
     def identifiers(self) -> list[str]:
@@ -128,8 +130,11 @@ class RapidataBenchmark:
     def english_prompts(self) -> list[str | None]:
         """
         Returns the prompts translated to English, aligned by index with `prompts`.
+
+        The translations are produced server-side, so accessing this after
+        `add_prompts` triggers a one-off re-fetch of the prompt set.
         """
-        if not self.__prompts_fetched:
+        if not self.__english_prompts_fetched:
             self.__instantiate_prompts()
 
         return self.__english_prompts
@@ -364,11 +369,16 @@ class RapidataBenchmark:
                 )
             ]
 
-            self._prompt_uploader.upload_many(to_upload)
+            for uploaded in self._prompt_uploader.upload_many(to_upload):
+                self.__identifiers.append(uploaded.identifier)
+                self.__prompts.append(uploaded.prompt)
+                self.__prompt_assets.append(uploaded.prompt_asset)
+                self.__tags.append(uploaded.tags)
 
-            # Invalidate the cache so the next access re-fetches from the server,
-            # including the English translations that are produced server-side.
-            self.__prompts_fetched = False
+            # The English translation is produced server-side and is unknown for
+            # the just-added prompts. Leave the rest of the cache intact and only
+            # mark the translations for a lazy re-fetch on next access.
+            self.__english_prompts_fetched = False
 
     def create_leaderboard(
         self,
