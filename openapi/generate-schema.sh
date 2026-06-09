@@ -101,6 +101,7 @@ npx -y @redocly/cli join ./${SCHEMA_DIR}/*.openapi.json -o ./${SCHEMA_DIR}/rapid
 # deprecated parameters and deprecated schema properties (also pruning the
 # latter from any `required` list). This mirrors the endpoint filtering for
 # partly-deprecated surfaces like a single deprecated field on a model.
+# Note: the `walk` builtin requires jq >= 1.6.
 jq '
   del(.paths[][] | select(.deprecated == true))
   | walk(
