@@ -336,10 +336,15 @@ class RapidataBenchmark:
         Used by benchmark creation, where the inputs have already been validated
         (matching lengths, unique identifiers) and the benchmark is empty — so the
         per-prompt validation and cache reads in :py:meth:`add_prompt` are
-        unnecessary and would not be thread-safe. Uploads run on a thread pool;
-        the local caches are populated in input order once all succeed.
+        unnecessary and would not be thread-safe. Uploads run on a thread pool.
+
+        A failed upload does not abort the rest: every prompt is attempted, the
+        failures are logged, and only the prompts that succeeded are added to the
+        local caches (in input order). If every prompt fails a ``RuntimeError`` is
+        raised, since the benchmark would otherwise be empty.
         """
         normalized_tags = [tag if tag is not None else [] for tag in tags]
+        entries = list(zip(identifiers, prompts, prompt_assets, normalized_tags))
         current_context = otel_context.get_current()
 
         def post_with_context(
@@ -347,12 +352,17 @@ class RapidataBenchmark:
             prompt: str | None,
             prompt_asset: str | None,
             tag: list[str],
-        ) -> None:
+        ) -> tuple[str, Exception | None]:
             token = otel_context.attach(current_context)
             try:
                 self._post_prompt(identifier, prompt, prompt_asset, tag)
+                return identifier, None
+            except Exception as e:
+                return identifier, e
             finally:
                 otel_context.detach(token)
+
+        failed: dict[str, Exception] = {}
 
         with tracer.start_as_current_span("RapidataBenchmark._add_prompts"):
             with ThreadPoolExecutor(
@@ -360,24 +370,42 @@ class RapidataBenchmark:
             ) as executor:
                 futures = [
                     executor.submit(post_with_context, identifier, prompt, asset, tag)
-                    for identifier, prompt, asset, tag in zip(
-                        identifiers, prompts, prompt_assets, normalized_tags
-                    )
+                    for identifier, prompt, asset, tag in entries
                 ]
 
                 with tqdm(
-                    total=len(identifiers),
+                    total=len(entries),
                     desc="Uploading prompts",
                     disable=rapidata_config.logging.silent_mode,
                 ) as pbar:
                     for future in as_completed(futures):
-                        future.result()
+                        identifier, error = future.result()
+                        if error is not None:
+                            failed[identifier] = error
+                            logger.error(
+                                "Failed to upload prompt %s: %s", identifier, str(error)
+                            )
                         pbar.update(1)
 
-            self.__identifiers.extend(identifiers)
-            self.__prompts.extend(prompts)
-            self.__prompt_assets.extend(prompt_assets)
-            self.__tags.extend(normalized_tags)
+            for identifier, prompt, prompt_asset, tag in entries:
+                if identifier in failed:
+                    continue
+                self.__identifiers.append(identifier)
+                self.__prompts.append(prompt)
+                self.__prompt_assets.append(prompt_asset)
+                self.__tags.append(tag)
+
+        if failed:
+            logger.warning(
+                "%d of %d prompts failed to upload and were skipped: %s",
+                len(failed),
+                len(entries),
+                list(failed.keys()),
+            )
+            if len(failed) == len(entries):
+                raise RuntimeError(
+                    "Failed to upload any prompts to the benchmark. See logs for details."
+                )
 
     def create_leaderboard(
         self,
