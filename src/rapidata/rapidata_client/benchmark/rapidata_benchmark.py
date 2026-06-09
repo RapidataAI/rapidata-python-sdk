@@ -45,6 +45,7 @@ class RapidataBenchmark:
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
+        self.__prompts_fetched: bool = False
         self.__participants: list[BenchmarkParticipant] = []
         self.__benchmark_page: str = (
             f"https://app.{self._openapi_service.environment}/mri/benchmarks/{self.id}"
@@ -59,6 +60,12 @@ class RapidataBenchmark:
         )
 
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
+            self.__prompts = []
+            self.__english_prompts = []
+            self.__identifiers = []
+            self.__prompt_assets = []
+            self.__tags = []
+
             current_page = 1
             total_pages = None
 
@@ -98,9 +105,11 @@ class RapidataBenchmark:
 
                 current_page += 1
 
+            self.__prompts_fetched = True
+
     @property
     def identifiers(self) -> list[str]:
-        if not self.__identifiers:
+        if not self.__prompts_fetched:
             self.__instantiate_prompts()
 
         return self.__identifiers
@@ -110,7 +119,7 @@ class RapidataBenchmark:
         """
         Returns the prompts as originally provided, in the order they were registered.
         """
-        if not self.__prompts:
+        if not self.__prompts_fetched:
             self.__instantiate_prompts()
 
         return self.__prompts
@@ -119,11 +128,8 @@ class RapidataBenchmark:
     def english_prompts(self) -> list[str | None]:
         """
         Returns the prompts translated to English, aligned by index with `prompts`.
-
-        Translation happens server-side, so prompts added in the current session
-        report `None` here until they are re-fetched.
         """
-        if not self.__english_prompts:
+        if not self.__prompts_fetched:
             self.__instantiate_prompts()
 
         return self.__english_prompts
@@ -133,7 +139,7 @@ class RapidataBenchmark:
         """
         Returns the prompt assets that are registered for the benchmark.
         """
-        if not self.__prompt_assets:
+        if not self.__prompts_fetched:
             self.__instantiate_prompts()
 
         return self.__prompt_assets
@@ -143,7 +149,7 @@ class RapidataBenchmark:
         """
         Returns the tags that are registered for the benchmark.
         """
-        if not self.__tags:
+        if not self.__prompts_fetched:
             self.__instantiate_prompts()
 
         return self.__tags
@@ -358,12 +364,11 @@ class RapidataBenchmark:
                 )
             ]
 
-            for uploaded in self._prompt_uploader.upload_many(to_upload):
-                self.__identifiers.append(uploaded.identifier)
-                self.__prompts.append(uploaded.prompt)
-                self.__english_prompts.append(None)
-                self.__prompt_assets.append(uploaded.prompt_asset)
-                self.__tags.append(uploaded.tags)
+            self._prompt_uploader.upload_many(to_upload)
+
+            # Invalidate the cache so the next access re-fetches from the server,
+            # including the English translations that are produced server-side.
+            self.__prompts_fetched = False
 
     def create_leaderboard(
         self,
