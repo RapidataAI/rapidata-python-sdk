@@ -40,6 +40,7 @@ class RapidataBenchmark:
         self.id = id
         self._openapi_service = openapi_service
         self.__prompts: list[str | None] = []
+        self.__english_prompts: list[str | None] = []
         self.__prompt_assets: list[str | None] = []
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
@@ -76,7 +77,8 @@ class RapidataBenchmark:
                 total_pages = prompts_result.total_pages
 
                 for prompt in prompts_result.items:
-                    self.__prompts.append(prompt.prompt)
+                    self.__prompts.append(prompt.original_prompt)
+                    self.__english_prompts.append(prompt.english_prompt)
                     self.__identifiers.append(prompt.identifier)
                     if prompt.prompt_asset is None:
                         self.__prompt_assets.append(None)
@@ -106,12 +108,25 @@ class RapidataBenchmark:
     @property
     def prompts(self) -> list[str | None]:
         """
-        Returns the prompts that are registered for the leaderboard.
+        Returns the prompts as originally provided, in the order they were registered.
         """
         if not self.__prompts:
             self.__instantiate_prompts()
 
         return self.__prompts
+
+    @property
+    def english_prompts(self) -> list[str | None]:
+        """
+        Returns the prompts translated to English, aligned by index with `prompts`.
+
+        Translation happens server-side, so prompts added in the current session
+        report `None` here until they are re-fetched.
+        """
+        if not self.__english_prompts:
+            self.__instantiate_prompts()
+
+        return self.__english_prompts
 
     @property
     def prompt_assets(self) -> list[str | None]:
@@ -346,6 +361,9 @@ class RapidataBenchmark:
             for uploaded in self._prompt_uploader.upload_many(to_upload):
                 self.__identifiers.append(uploaded.identifier)
                 self.__prompts.append(uploaded.prompt)
+                # The English translation is produced server-side and is not known
+                # until the prompts are re-fetched.
+                self.__english_prompts.append(None)
                 self.__prompt_assets.append(uploaded.prompt_asset)
                 self.__tags.append(uploaded.tags)
 
