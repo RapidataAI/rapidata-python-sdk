@@ -764,7 +764,7 @@ class RapidataJobManager:
                     name=job.name,
                     audience_id=job.audience_id,
                     created_at=job.created_at,
-                    definition_id=job.definition_id,
+                    definition_id=job.job_definition_id,
                     openapi_service=self._openapi_service,
                     pipeline_id=job.pipeline_id,
                 )
