@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
@@ -46,7 +46,9 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     created_by_id: StrictStr = Field(description="The id of the user who created the revision.", alias="createdById")
     created_by_mail: StrictStr = Field(description="The email of the user who created the revision.", alias="createdByMail")
-    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail"]
+    is_instruction_complex: Optional[StrictBool] = Field(default=None, description="Whether the instruction was flagged as too complex for the average annotator to  understand. Null until the asynchronous complexity check has completed.", alias="isInstructionComplex")
+    instruction_complexity_reason: Optional[StrictStr] = Field(default=None, description="A short explanation of why the instruction was flagged, when applicable.", alias="instructionComplexityReason")
+    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail", "isInstructionComplex", "instructionComplexityReason"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -96,6 +98,16 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if is_instruction_complex (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_instruction_complex is None and "is_instruction_complex" in self.model_fields_set:
+            _dict['isInstructionComplex'] = None
+
+        # set to None if instruction_complexity_reason (nullable) is None
+        # and model_fields_set contains the field
+        if self.instruction_complexity_reason is None and "instruction_complexity_reason" in self.model_fields_set:
+            _dict['instructionComplexityReason'] = None
+
         return _dict
 
     @classmethod
@@ -119,7 +131,9 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "createdAt": obj.get("createdAt"),
             "createdById": obj.get("createdById"),
-            "createdByMail": obj.get("createdByMail")
+            "createdByMail": obj.get("createdByMail"),
+            "isInstructionComplex": obj.get("isInstructionComplex"),
+            "instructionComplexityReason": obj.get("instructionComplexityReason")
         }
         try:
             _obj = cls.model_validate(_data)

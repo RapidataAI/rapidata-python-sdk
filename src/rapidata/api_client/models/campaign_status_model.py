@@ -32,6 +32,7 @@ class CampaignStatusModel(str, Enum):
     ANALYSIS = 'Analysis'
     PAUSED = 'Paused'
     COMPLETED = 'Completed'
+    SPENDLIMITED = 'SpendLimited'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

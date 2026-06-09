@@ -257,6 +257,7 @@ Class | Method | HTTP request | Description
 *OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | Disables a participant in a benchmark.
+*ParticipantApi* | [**participant_participant_id_enable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_enable_post) | **POST** /participant/{participantId}/enable | Enables a previously disabled participant in a benchmark.
 *ParticipantApi* | [**participant_participant_id_faucet_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_faucet_delete) | **DELETE** /participant/{participantId}/faucet | Removes the faucet configuration from a participant.
 *ParticipantApi* | [**participant_participant_id_faucet_put**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_faucet_put) | **PUT** /participant/{participantId}/faucet | Sets the faucet used to auto-generate samples for a participant.
 *ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by its id.
@@ -341,7 +342,6 @@ Class | Method | HTTP request | Description
  - [AudienceInactivitySyncPhase](rapidata/api_client/docs/AudienceInactivitySyncPhase.md)
  - [AudienceInactivitySyncState](rapidata/api_client/docs/AudienceInactivitySyncState.md)
  - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
- - [AudienceJobStatus](rapidata/api_client/docs/AudienceJobStatus.md)
  - [AudienceStateRecalculationPhase](rapidata/api_client/docs/AudienceStateRecalculationPhase.md)
  - [AudienceStateRecalculationState](rapidata/api_client/docs/AudienceStateRecalculationState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)

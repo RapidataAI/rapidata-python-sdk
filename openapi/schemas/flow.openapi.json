@@ -1345,8 +1345,7 @@
       "FlowType": {
         "enum": [
           "Ranking"
-        ],
-        "deprecated": true
+        ]
       },
       "GetCompletionTimeHistogramEndpoint_Output": {
         "required": [
@@ -1990,7 +1989,8 @@
                 "$ref": "#/components/schemas/FlowType"
               }
             ],
-            "description": "The type of the flow. Use the _t discriminator instead."
+            "description": "The type of the flow. Use the _t discriminator instead.",
+            "deprecated": true
           },
           "name": {
             "type": "string",

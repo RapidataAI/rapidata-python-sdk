@@ -6911,11 +6911,12 @@ class JobApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        job_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_id.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
-        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        job_definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_definition_id.")] = None,
         audience_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by audience_id.")] = None,
-        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
@@ -6940,16 +6941,18 @@ class JobApi:
         :type page_size: int
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
-        :param job_id: Filter by job_id.
-        :type job_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
-        :param definition_id: Filter by definition_id.
-        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param job_definition_id: Filter by job_definition_id.
+        :type job_definition_id: AudienceAudienceIdJobsGetJobIdParameter
         :param audience_id: Filter by audience_id.
         :type audience_id: AudienceAudienceIdJobsGetJobIdParameter
-        :param status: Filter by status.
-        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
@@ -6978,11 +6981,12 @@ class JobApi:
             page=page,
             page_size=page_size,
             sort=sort,
-            job_id=job_id,
+            id=id,
             name=name,
-            definition_id=definition_id,
+            job_definition_id=job_definition_id,
             audience_id=audience_id,
-            status=status,
+            state=state,
+            owner_mail=owner_mail,
             created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -7013,11 +7017,12 @@ class JobApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        job_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_id.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
-        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        job_definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_definition_id.")] = None,
         audience_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by audience_id.")] = None,
-        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
@@ -7042,16 +7047,18 @@ class JobApi:
         :type page_size: int
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
-        :param job_id: Filter by job_id.
-        :type job_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
-        :param definition_id: Filter by definition_id.
-        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param job_definition_id: Filter by job_definition_id.
+        :type job_definition_id: AudienceAudienceIdJobsGetJobIdParameter
         :param audience_id: Filter by audience_id.
         :type audience_id: AudienceAudienceIdJobsGetJobIdParameter
-        :param status: Filter by status.
-        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
@@ -7080,11 +7087,12 @@ class JobApi:
             page=page,
             page_size=page_size,
             sort=sort,
-            job_id=job_id,
+            id=id,
             name=name,
-            definition_id=definition_id,
+            job_definition_id=job_definition_id,
             audience_id=audience_id,
-            status=status,
+            state=state,
+            owner_mail=owner_mail,
             created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -7115,11 +7123,12 @@ class JobApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        job_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_id.")] = None,
+        id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
-        definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
+        job_definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by job_definition_id.")] = None,
         audience_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by audience_id.")] = None,
-        status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        state: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by state.")] = None,
+        owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
@@ -7144,16 +7153,18 @@ class JobApi:
         :type page_size: int
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
-        :param job_id: Filter by job_id.
-        :type job_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param id: Filter by id.
+        :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
-        :param definition_id: Filter by definition_id.
-        :type definition_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param job_definition_id: Filter by job_definition_id.
+        :type job_definition_id: AudienceAudienceIdJobsGetJobIdParameter
         :param audience_id: Filter by audience_id.
         :type audience_id: AudienceAudienceIdJobsGetJobIdParameter
-        :param status: Filter by status.
-        :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param state: Filter by state.
+        :type state: AudienceAudienceIdJobsGetJobIdParameter
+        :param owner_mail: Filter by owner_mail.
+        :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param _request_timeout: timeout setting for this request. If one
@@ -7182,11 +7193,12 @@ class JobApi:
             page=page,
             page_size=page_size,
             sort=sort,
-            job_id=job_id,
+            id=id,
             name=name,
-            definition_id=definition_id,
+            job_definition_id=job_definition_id,
             audience_id=audience_id,
-            status=status,
+            state=state,
+            owner_mail=owner_mail,
             created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -7212,11 +7224,12 @@ class JobApi:
         page,
         page_size,
         sort,
-        job_id,
+        id,
         name,
-        definition_id,
+        job_definition_id,
         audience_id,
-        status,
+        state,
+        owner_mail,
         created_at,
         _request_auth,
         _content_type,
@@ -7253,14 +7266,14 @@ class JobApi:
             
             _query_params.append(('sort', sort))
             
-        if job_id is not None:
-            _param_val = job_id
+        if id is not None:
+            _param_val = id
             if hasattr(_param_val, 'to_dict'):
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
                     if _v is not None:
-                        _query_params.append(('job_id[' + _k + ']', _v))
+                        _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
             if hasattr(_param_val, 'to_dict'):
@@ -7269,14 +7282,14 @@ class JobApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('name[' + _k + ']', _v))
-        if definition_id is not None:
-            _param_val = definition_id
+        if job_definition_id is not None:
+            _param_val = job_definition_id
             if hasattr(_param_val, 'to_dict'):
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
                     if _v is not None:
-                        _query_params.append(('definition_id[' + _k + ']', _v))
+                        _query_params.append(('job_definition_id[' + _k + ']', _v))
         if audience_id is not None:
             _param_val = audience_id
             if hasattr(_param_val, 'to_dict'):
@@ -7285,14 +7298,22 @@ class JobApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('audience_id[' + _k + ']', _v))
-        if status is not None:
-            _param_val = status
+        if state is not None:
+            _param_val = state
             if hasattr(_param_val, 'to_dict'):
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
                     if _v is not None:
-                        _query_params.append(('status[' + _k + ']', _v))
+                        _query_params.append(('state[' + _k + ']', _v))
+        if owner_mail is not None:
+            _param_val = owner_mail
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('owner_mail[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
             if hasattr(_param_val, 'to_dict'):

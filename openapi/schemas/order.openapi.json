@@ -1558,8 +1558,10 @@
                   "-name",
                   "created_at",
                   "-created_at",
-                  "status",
-                  "-status"
+                  "state",
+                  "-state",
+                  "owner_mail",
+                  "-owner_mail"
                 ],
                 "type": "string"
               }
@@ -1567,9 +1569,9 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "job_id",
+            "name": "id",
             "in": "query",
-            "description": "Filter by job_id.",
+            "description": "Filter by id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -1659,9 +1661,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "definition_id",
+            "name": "job_definition_id",
             "in": "query",
-            "description": "Filter by definition_id.",
+            "description": "Filter by job_definition_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -1751,9 +1753,55 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "status",
+            "name": "state",
             "in": "query",
-            "description": "Filter by status.",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -4329,7 +4377,8 @@
                 "$ref": "#/components/schemas/StickyState"
               }
             ],
-            "description": "Indicates if the underlying campaign should be sticky."
+            "description": "Indicates if the underlying campaign should be sticky.",
+            "deprecated": true
           },
           "stickyConfig": {
             "allOf": [
@@ -4731,6 +4780,16 @@
           "createdByMail": {
             "type": "string",
             "description": "The email of the user who created the revision."
+          },
+          "isInstructionComplex": {
+            "type": "boolean",
+            "description": "Whether the instruction was flagged as too complex for the average annotator to\n understand. Null until the asynchronous complexity check has completed.",
+            "nullable": true
+          },
+          "instructionComplexityReason": {
+            "type": "string",
+            "description": "A short explanation of why the instruction was flagged, when applicable.",
+            "nullable": true
           }
         },
         "description": "The result when a job revision has been retrieved."
@@ -6823,11 +6882,12 @@
         "required": [
           "jobId",
           "name",
-          "definitionId",
+          "jobDefinitionId",
           "audienceId",
           "revisionNumber",
           "pipelineId",
-          "status",
+          "state",
+          "ownerMail",
           "createdAt"
         ],
         "type": "object",
@@ -6840,7 +6900,7 @@
             "type": "string",
             "description": "The name of the job."
           },
-          "definitionId": {
+          "jobDefinitionId": {
             "type": "string",
             "description": "The id of the job definition."
           },
@@ -6863,7 +6923,20 @@
                 "$ref": "#/components/schemas/AudienceJobState"
               }
             ],
-            "description": "The current status of the job."
+            "description": "The current state of the job.",
+            "deprecated": true
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The current state of the job."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the job's owner."
           },
           "createdAt": {
             "type": "string",
@@ -7113,8 +7186,7 @@
           "Permanent",
           "Passive",
           null
-        ],
-        "deprecated": true
+        ]
       },
       "SubmitFeedbackEndpoint_Input": {
         "required": [

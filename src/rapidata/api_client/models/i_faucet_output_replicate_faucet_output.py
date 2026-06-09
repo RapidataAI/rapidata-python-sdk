@@ -32,7 +32,8 @@ class IFaucetOutputReplicateFaucetOutput(LazyValidatedModel):
     model_owner: StrictStr = Field(alias="modelOwner")
     model_name: StrictStr = Field(alias="modelName")
     model_version: Optional[StrictStr] = Field(default=None, alias="modelVersion")
-    __properties: ClassVar[List[str]] = ["_t", "modelOwner", "modelName", "modelVersion"]
+    additional_inputs: Dict[str, Any] = Field(alias="additionalInputs")
+    __properties: ClassVar[List[str]] = ["_t", "modelOwner", "modelName", "modelVersion", "additionalInputs"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -96,7 +97,8 @@ class IFaucetOutputReplicateFaucetOutput(LazyValidatedModel):
             "_t": obj.get("_t"),
             "modelOwner": obj.get("modelOwner"),
             "modelName": obj.get("modelName"),
-            "modelVersion": obj.get("modelVersion")
+            "modelVersion": obj.get("modelVersion"),
+            "additionalInputs": obj.get("additionalInputs")
         }
         try:
             _obj = cls.model_validate(_data)

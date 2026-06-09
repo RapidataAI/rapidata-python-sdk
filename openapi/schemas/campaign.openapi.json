@@ -1271,7 +1271,8 @@
           "Active",
           "Analysis",
           "Paused",
-          "Completed"
+          "Completed",
+          "SpendLimited"
         ]
       },
       "ChangeBoostEndpoint_Input": {
