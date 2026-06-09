@@ -32,11 +32,13 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the prompt.")
     prompt: Optional[StrictStr] = Field(default=None, description="The prompt text.")
+    english_prompt: Optional[StrictStr] = Field(default=None, description="The prompt text translated to English.", alias="englishPrompt")
+    original_prompt: Optional[StrictStr] = Field(default=None, description="The prompt text as originally provided.", alias="originalPrompt")
     prompt_asset: Optional[IAssetModel] = Field(default=None, description="The optional asset associated with the prompt.", alias="promptAsset")
     identifier: StrictStr = Field(description="The identifier associated with the prompt.")
     created_at: datetime = Field(description="The timestamp when the prompt was created.", alias="createdAt")
     tags: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["id", "prompt", "promptAsset", "identifier", "createdAt", "tags"]
+    __properties: ClassVar[List[str]] = ["id", "prompt", "englishPrompt", "originalPrompt", "promptAsset", "identifier", "createdAt", "tags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,6 +83,16 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
 
+        # set to None if english_prompt (nullable) is None
+        # and model_fields_set contains the field
+        if self.english_prompt is None and "english_prompt" in self.model_fields_set:
+            _dict['englishPrompt'] = None
+
+        # set to None if original_prompt (nullable) is None
+        # and model_fields_set contains the field
+        if self.original_prompt is None and "original_prompt" in self.model_fields_set:
+            _dict['originalPrompt'] = None
+
         return _dict
 
     @classmethod
@@ -95,6 +107,8 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "prompt": obj.get("prompt"),
+            "englishPrompt": obj.get("englishPrompt"),
+            "originalPrompt": obj.get("originalPrompt"),
             "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "identifier": obj.get("identifier"),
             "createdAt": obj.get("createdAt"),

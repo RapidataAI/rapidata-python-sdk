@@ -2118,7 +2118,7 @@
           "Aborted"
         ]
       },
-      "AudienceJobStatus": {
+      "AudienceJobState": {
         "enum": [
           "Submitted",
           "Running",
@@ -2498,6 +2498,7 @@
           "qualifiedUserCount",
           "filters",
           "createdAt",
+          "ownerId",
           "ownerMail",
           "isPublic",
           "isDistilling",
@@ -2554,6 +2555,11 @@
             "type": "string",
             "description": "The timestamp when the audience was created.",
             "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The unique identifier of the audience owner.",
+            "format": "uuid"
           },
           "ownerMail": {
             "type": "string",
@@ -4108,7 +4114,7 @@
           "audienceId",
           "revisionNumber",
           "pipelineId",
-          "status",
+          "state",
           "createdAt"
         ],
         "type": "object",
@@ -4141,7 +4147,16 @@
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/AudienceJobStatus"
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The current status of the job.",
+            "deprecated": true
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
               }
             ],
             "description": "The current status of the job."

@@ -32,7 +32,8 @@ class IFaucetInputReplicateFaucetInput(LazyValidatedModel):
     model_owner: StrictStr = Field(description="The owner of the hosted model (e.g. \"stability-ai\").", alias="modelOwner")
     model_name: StrictStr = Field(description="The model name (e.g. \"sdxl\").", alias="modelName")
     model_version: Optional[StrictStr] = Field(default=None, description="Optional pinned model version hash.", alias="modelVersion")
-    __properties: ClassVar[List[str]] = ["_t", "modelOwner", "modelName", "modelVersion"]
+    additional_inputs: Optional[Dict[str, Any]] = Field(default=None, description="Extra model inputs keyed by parameter name (e.g. \"aspect_ratio\"). The system-managed keys  (prompt, num_outputs) must not appear here — they are supplied automatically. Values are  validated against the model's live input schema when the faucet is set.", alias="additionalInputs")
+    __properties: ClassVar[List[str]] = ["_t", "modelOwner", "modelName", "modelVersion", "additionalInputs"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -96,7 +97,8 @@ class IFaucetInputReplicateFaucetInput(LazyValidatedModel):
             "_t": obj.get("_t"),
             "modelOwner": obj.get("modelOwner"),
             "modelName": obj.get("modelName"),
-            "modelVersion": obj.get("modelVersion")
+            "modelVersion": obj.get("modelVersion"),
+            "additionalInputs": obj.get("additionalInputs")
         }
         try:
             _obj = cls.model_validate(_data)

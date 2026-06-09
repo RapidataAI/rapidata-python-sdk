@@ -11915,6 +11915,57 @@
         ]
       }
     },
+    "/participant/{participantId}/enable": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Enables a previously disabled participant in a benchmark.",
+        "description": "Fails with 400 if the participant is not currently disabled.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to enable.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/participant/{participantId}/faucet": {
       "delete": {
         "tags": [
@@ -15048,8 +15099,10 @@
                   "-name",
                   "created_at",
                   "-created_at",
-                  "status",
-                  "-status"
+                  "state",
+                  "-state",
+                  "owner_mail",
+                  "-owner_mail"
                 ],
                 "type": "string"
               }
@@ -15057,9 +15110,9 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "job_id",
+            "name": "id",
             "in": "query",
-            "description": "Filter by job_id.",
+            "description": "Filter by id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -15149,9 +15202,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "definition_id",
+            "name": "job_definition_id",
             "in": "query",
-            "description": "Filter by definition_id.",
+            "description": "Filter by job_definition_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -15241,9 +15294,55 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "status",
+            "name": "state",
             "in": "query",
-            "description": "Filter by status.",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -22480,7 +22579,7 @@
           "Aborted"
         ]
       },
-      "AudienceJobStatus": {
+      "AudienceJobState": {
         "enum": [
           "Submitted",
           "Running",
@@ -22860,6 +22959,7 @@
           "qualifiedUserCount",
           "filters",
           "createdAt",
+          "ownerId",
           "ownerMail",
           "isPublic",
           "isDistilling",
@@ -22916,6 +23016,11 @@
             "type": "string",
             "description": "The timestamp when the audience was created.",
             "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The unique identifier of the audience owner.",
+            "format": "uuid"
           },
           "ownerMail": {
             "type": "string",
@@ -24466,7 +24571,7 @@
           "audienceId",
           "revisionNumber",
           "pipelineId",
-          "status",
+          "state",
           "createdAt"
         ],
         "type": "object",
@@ -24499,7 +24604,16 @@
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/AudienceJobStatus"
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The current status of the job.",
+            "deprecated": true
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
               }
             ],
             "description": "The current status of the job."
@@ -25171,7 +25285,8 @@
           "Active",
           "Analysis",
           "Paused",
-          "Completed"
+          "Completed",
+          "SpendLimited"
         ]
       },
       "ChangeBoostEndpoint_Input": {
@@ -27406,8 +27521,7 @@
       "FlowType": {
         "enum": [
           "Ranking"
-        ],
-        "deprecated": true
+        ]
       },
       "GetCompletionTimeHistogramEndpoint_Output": {
         "required": [
@@ -27802,7 +27916,8 @@
                 "$ref": "#/components/schemas/FlowType"
               }
             ],
-            "description": "The type of the flow. Use the _t discriminator instead."
+            "description": "The type of the flow. Use the _t discriminator instead.",
+            "deprecated": true
           },
           "name": {
             "type": "string",
@@ -29942,6 +30057,17 @@
           "prompt": {
             "type": "string",
             "description": "The prompt text.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "englishPrompt": {
+            "type": "string",
+            "description": "The prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "The prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -30870,6 +30996,10 @@
             "type": "string",
             "description": "Optional pinned model version hash.",
             "nullable": true
+          },
+          "additionalInputs": {
+            "type": "object",
+            "description": "Extra model inputs keyed by parameter name (e.g. \"aspect_ratio\"). The system-managed keys\n (prompt, num_outputs) must not appear here — they are supplied automatically. Values are\n validated against the model's live input schema when the faucet is set."
           }
         },
         "description": "Configures a faucet that generates samples via the Replicate API."
@@ -30917,6 +31047,7 @@
         "required": [
           "modelOwner",
           "modelName",
+          "additionalInputs",
           "_t"
         ],
         "properties": {
@@ -30935,6 +31066,9 @@
           "modelVersion": {
             "type": "string",
             "nullable": true
+          },
+          "additionalInputs": {
+            "type": "object"
           }
         }
       },
@@ -32325,18 +32459,6 @@
           }
         }
       },
-      "AudienceJobState": {
-        "enum": [
-          "Submitted",
-          "Running",
-          "Completed",
-          "Failed",
-          "ManualApproval",
-          "Queued",
-          "Paused",
-          "StaleResults"
-        ]
-      },
       "CloneOrderEndpoint_Input": {
         "required": [
           "orderName"
@@ -32813,7 +32935,8 @@
                 "$ref": "#/components/schemas/StickyState"
               }
             ],
-            "description": "Indicates if the underlying campaign should be sticky."
+            "description": "Indicates if the underlying campaign should be sticky.",
+            "deprecated": true
           },
           "stickyConfig": {
             "allOf": [
@@ -33193,6 +33316,16 @@
           "createdByMail": {
             "type": "string",
             "description": "The email of the user who created the revision."
+          },
+          "isInstructionComplex": {
+            "type": "boolean",
+            "description": "Whether the instruction was flagged as too complex for the average annotator to\n understand. Null until the asynchronous complexity check has completed.",
+            "nullable": true
+          },
+          "instructionComplexityReason": {
+            "type": "string",
+            "description": "A short explanation of why the instruction was flagged, when applicable.",
+            "nullable": true
           }
         },
         "description": "The result when a job revision has been retrieved."
@@ -35105,11 +35238,12 @@
         "required": [
           "jobId",
           "name",
-          "definitionId",
+          "jobDefinitionId",
           "audienceId",
           "revisionNumber",
           "pipelineId",
-          "status",
+          "state",
+          "ownerMail",
           "createdAt"
         ],
         "type": "object",
@@ -35122,7 +35256,7 @@
             "type": "string",
             "description": "The name of the job."
           },
-          "definitionId": {
+          "jobDefinitionId": {
             "type": "string",
             "description": "The id of the job definition."
           },
@@ -35145,7 +35279,20 @@
                 "$ref": "#/components/schemas/AudienceJobState"
               }
             ],
-            "description": "The current status of the job."
+            "description": "The current state of the job.",
+            "deprecated": true
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The current state of the job."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the job's owner."
           },
           "createdAt": {
             "type": "string",
@@ -35388,8 +35535,7 @@
           "Permanent",
           "Passive",
           null
-        ],
-        "deprecated": true
+        ]
       },
       "SubmitFeedbackEndpoint_Input": {
         "required": [

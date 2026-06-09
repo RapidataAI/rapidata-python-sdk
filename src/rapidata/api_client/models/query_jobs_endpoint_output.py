@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.audience_job_state import AudienceJobState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -32,13 +32,15 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     job_id: StrictStr = Field(description="The id of the job.", alias="jobId")
     name: StrictStr = Field(description="The name of the job.")
-    definition_id: StrictStr = Field(description="The id of the job definition.", alias="definitionId")
+    job_definition_id: StrictStr = Field(description="The id of the job definition.", alias="jobDefinitionId")
     audience_id: StrictStr = Field(description="The id of the audience associated with the job.", alias="audienceId")
     revision_number: StrictInt = Field(description="The revision number of the job.", alias="revisionNumber")
     pipeline_id: StrictStr = Field(description="The id of the pipeline executing the job.", alias="pipelineId")
-    status: AudienceJobState = Field(description="The current status of the job.")
+    status: Optional[AudienceJobState] = Field(default=None, description="The current state of the job.")
+    state: AudienceJobState = Field(description="The current state of the job.")
+    owner_mail: StrictStr = Field(description="The email of the job's owner.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the job was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "createdAt"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "status", "state", "ownerMail", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -89,11 +91,13 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
         _data = {
             "jobId": obj.get("jobId"),
             "name": obj.get("name"),
-            "definitionId": obj.get("definitionId"),
+            "jobDefinitionId": obj.get("jobDefinitionId"),
             "audienceId": obj.get("audienceId"),
             "revisionNumber": obj.get("revisionNumber"),
             "pipelineId": obj.get("pipelineId"),
             "status": obj.get("status"),
+            "state": obj.get("state"),
+            "ownerMail": obj.get("ownerMail"),
             "createdAt": obj.get("createdAt")
         }
         try:
