@@ -28832,6 +28832,14 @@
           "y": {
             "type": "string",
             "nullable": true
+          },
+          "pub": {
+            "type": "string",
+            "nullable": true
+          },
+          "priv": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
