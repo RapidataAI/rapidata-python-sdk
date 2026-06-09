@@ -324,10 +324,15 @@ class RapidataBenchmark:
                     "Identifiers, prompts, media assets, and tags must have the same length or set to None."
                 )
 
+            # Snapshot once: `self.identifiers` is a property whose getter re-fetches
+            # over HTTP while the cache is empty, so testing it inside the comprehension
+            # fired one request per identifier (a full re-fetch each time on a fresh,
+            # empty benchmark). One lookup into a set instead.
+            existing_identifiers = set(self.identifiers)
             already_registered = [
                 identifier
                 for identifier in identifiers
-                if identifier in self.identifiers
+                if identifier in existing_identifiers
             ]
             if already_registered:
                 raise ValueError(
