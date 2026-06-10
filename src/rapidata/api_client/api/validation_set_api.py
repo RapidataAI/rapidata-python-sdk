@@ -24,6 +24,7 @@ from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter i
 from rapidata.api_client.models.create_validation_set_endpoint_input import CreateValidationSetEndpointInput
 from rapidata.api_client.models.create_validation_set_endpoint_output import CreateValidationSetEndpointOutput
 from rapidata.api_client.models.get_available_validation_sets_endpoint_output import GetAvailableValidationSetsEndpointOutput
+from rapidata.api_client.models.get_compatible_validation_sets_endpoint_output import GetCompatibleValidationSetsEndpointOutput
 from rapidata.api_client.models.get_recommended_validation_set_endpoint_output import GetRecommendedValidationSetEndpointOutput
 from rapidata.api_client.models.get_validation_rapids_endpoint_paged_result_of_output import GetValidationRapidsEndpointPagedResultOfOutput
 from rapidata.api_client.models.get_validation_set_by_id_endpoint_output import GetValidationSetByIdEndpointOutput
@@ -3778,6 +3779,332 @@ class ValidationSetApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/validation-sets/available',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_sets_compatible_get(
+        self,
+        asset_type: Annotated[Optional[List[StrictStr]], Field(description="The asset type that the validation set must contain.  An asset type can be an image, video, audio, text, or any combination of these.")] = None,
+        modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modality that the validation set must contain.  The modality is the type of rapid such as classify, compare, locate, etc.")] = None,
+        prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt type that the validation set must contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction used to find validation sets that have the same instruction.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetCompatibleValidationSetsEndpointOutput:
+        """Gets all validation sets available to the user that a rapid with the provided parameters can be added to.
+
+        Matching is strict: a validation set is only returned when its asset type, modality, and prompt type  equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.  This differs from /validation-set/recommended, which uses loose overlap matching and may return  sets that then reject the rapid. Returns an empty array when no compatible set exists.
+
+        :param asset_type: The asset type that the validation set must contain.  An asset type can be an image, video, audio, text, or any combination of these.
+        :type asset_type: List[str]
+        :param modality: The rapid modality that the validation set must contain.  The modality is the type of rapid such as classify, compare, locate, etc.
+        :type modality: List[str]
+        :param prompt_type: The prompt type that the validation set must contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.
+        :type prompt_type: List[str]
+        :param instruction: An instruction used to find validation sets that have the same instruction.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
+        :type instruction: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_sets_compatible_get_serialize(
+            asset_type=asset_type,
+            modality=modality,
+            prompt_type=prompt_type,
+            instruction=instruction,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCompatibleValidationSetsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_sets_compatible_get_with_http_info(
+        self,
+        asset_type: Annotated[Optional[List[StrictStr]], Field(description="The asset type that the validation set must contain.  An asset type can be an image, video, audio, text, or any combination of these.")] = None,
+        modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modality that the validation set must contain.  The modality is the type of rapid such as classify, compare, locate, etc.")] = None,
+        prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt type that the validation set must contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction used to find validation sets that have the same instruction.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetCompatibleValidationSetsEndpointOutput]:
+        """Gets all validation sets available to the user that a rapid with the provided parameters can be added to.
+
+        Matching is strict: a validation set is only returned when its asset type, modality, and prompt type  equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.  This differs from /validation-set/recommended, which uses loose overlap matching and may return  sets that then reject the rapid. Returns an empty array when no compatible set exists.
+
+        :param asset_type: The asset type that the validation set must contain.  An asset type can be an image, video, audio, text, or any combination of these.
+        :type asset_type: List[str]
+        :param modality: The rapid modality that the validation set must contain.  The modality is the type of rapid such as classify, compare, locate, etc.
+        :type modality: List[str]
+        :param prompt_type: The prompt type that the validation set must contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.
+        :type prompt_type: List[str]
+        :param instruction: An instruction used to find validation sets that have the same instruction.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
+        :type instruction: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_sets_compatible_get_serialize(
+            asset_type=asset_type,
+            modality=modality,
+            prompt_type=prompt_type,
+            instruction=instruction,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCompatibleValidationSetsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_sets_compatible_get_without_preload_content(
+        self,
+        asset_type: Annotated[Optional[List[StrictStr]], Field(description="The asset type that the validation set must contain.  An asset type can be an image, video, audio, text, or any combination of these.")] = None,
+        modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modality that the validation set must contain.  The modality is the type of rapid such as classify, compare, locate, etc.")] = None,
+        prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt type that the validation set must contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction used to find validation sets that have the same instruction.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Gets all validation sets available to the user that a rapid with the provided parameters can be added to.
+
+        Matching is strict: a validation set is only returned when its asset type, modality, and prompt type  equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.  This differs from /validation-set/recommended, which uses loose overlap matching and may return  sets that then reject the rapid. Returns an empty array when no compatible set exists.
+
+        :param asset_type: The asset type that the validation set must contain.  An asset type can be an image, video, audio, text, or any combination of these.
+        :type asset_type: List[str]
+        :param modality: The rapid modality that the validation set must contain.  The modality is the type of rapid such as classify, compare, locate, etc.
+        :type modality: List[str]
+        :param prompt_type: The prompt type that the validation set must contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.
+        :type prompt_type: List[str]
+        :param instruction: An instruction used to find validation sets that have the same instruction.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
+        :type instruction: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_sets_compatible_get_serialize(
+            asset_type=asset_type,
+            modality=modality,
+            prompt_type=prompt_type,
+            instruction=instruction,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetCompatibleValidationSetsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_sets_compatible_get_serialize(
+        self,
+        asset_type,
+        modality,
+        prompt_type,
+        instruction,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'assetType': 'multi',
+            'modality': 'multi',
+            'promptType': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if asset_type is not None:
+            
+            _query_params.append(('assetType', asset_type))
+            
+        if modality is not None:
+            
+            _query_params.append(('modality', modality))
+            
+        if prompt_type is not None:
+            
+            _query_params.append(('promptType', prompt_type))
+            
+        if instruction is not None:
+            
+            _query_params.append(('instruction', instruction))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/validation-sets/compatible',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

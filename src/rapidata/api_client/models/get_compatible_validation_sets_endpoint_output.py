@@ -17,27 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.vote_aggregation import VoteAggregation
+from rapidata.api_client.models.get_compatible_validation_sets_endpoint_validation_set_output_model import GetCompatibleValidationSetsEndpointValidationSetOutputModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateLeaderboardEndpointOutput(LazyValidatedModel):
+class GetCompatibleValidationSetsEndpointOutput(LazyValidatedModel):
     """
-    CreateLeaderboardEndpointOutput
+    GetCompatibleValidationSetsEndpointOutput
     """ # noqa: E501
-    id: StrictStr = Field(description="The id of the created leaderboard.")
-    benchmark_id: StrictStr = Field(description="The id of the benchmark the leaderboard belongs to.", alias="benchmarkId")
-    show_prompt: StrictBool = Field(description="Whether the prompt is shown on the rapids.", alias="showPrompt")
-    show_prompt_asset: StrictBool = Field(description="Whether the prompt asset is shown on the rapids.", alias="showPromptAsset")
-    response_budget: StrictInt = Field(description="The response budget per run.", alias="responseBudget")
-    min_responses: StrictInt = Field(description="The minimum responses per comparison.", alias="minResponses")
-    is_inversed: StrictBool = Field(description="Whether the leaderboard results are inversed.", alias="isInversed")
-    vote_aggregation: VoteAggregation = Field(description="How individual votes on a matchup are aggregated into the stored result.", alias="voteAggregation")
-    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "voteAggregation"]
+    validation_sets: List[GetCompatibleValidationSetsEndpointValidationSetOutputModel] = Field(alias="validationSets")
+    __properties: ClassVar[List[str]] = ["validationSets"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -53,7 +46,7 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateLeaderboardEndpointOutput from a JSON string"""
+        """Create an instance of GetCompatibleValidationSetsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,11 +67,18 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in validation_sets (list)
+        _items = []
+        if self.validation_sets:
+            for _item_validation_sets in self.validation_sets:
+                if _item_validation_sets:
+                    _items.append(_item_validation_sets.to_dict())
+            _dict['validationSets'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateLeaderboardEndpointOutput from a dict"""
+        """Create an instance of GetCompatibleValidationSetsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -86,14 +86,7 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "benchmarkId": obj.get("benchmarkId"),
-            "showPrompt": obj.get("showPrompt"),
-            "showPromptAsset": obj.get("showPromptAsset"),
-            "responseBudget": obj.get("responseBudget"),
-            "minResponses": obj.get("minResponses"),
-            "isInversed": obj.get("isInversed"),
-            "voteAggregation": obj.get("voteAggregation")
+            "validationSets": [GetCompatibleValidationSetsEndpointValidationSetOutputModel.from_dict(_item) for _item in obj["validationSets"]] if obj.get("validationSets") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
