@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Optional, Sequence, get_args
+from typing import TYPE_CHECKING, Optional, Sequence
 import secrets
 
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -35,38 +35,6 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
-
-StickyStateLiteral = Literal["Temporary", "Permanent", "Passive"]
-
-_STICKY_DEFAULT_DIMENSION = "default"
-
-
-def _sticky_config_from_preset(preset: StickyStateLiteral) -> StickyConfig:
-    """Build a ``StickyConfig`` for a well-known preset.
-
-    Mirrors the backend ``StickyConfigFactories`` so that the presets that used
-    to be the ``StickyState`` enum keep producing identical wire configs after
-    the enum was replaced by ``StickyConfig``. All presets are enabled, keyed on
-    the default dimension, and block competing sticky campaigns; they differ only
-    in whether filters and priority selection are bypassed.
-    """
-    from rapidata.api_client.models.sticky_config import StickyConfig
-
-    bypass_filters, bypass_priority_selection = {
-        "Temporary": (False, True),
-        "Permanent": (True, True),
-        "Passive": (False, False),
-    }[preset]
-
-    return StickyConfig(
-        isEnabled=True,
-        dimension=_STICKY_DEFAULT_DIMENSION,
-        bypassFilters=bypass_filters,
-        bypassPrioritySelection=bypass_priority_selection,
-        blockOtherStickyCampaigns=True,
-        clearOnPause=True,
-    )
-
 
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
@@ -386,27 +354,11 @@ class RapidataOrderBuilder:
         self._priority = priority
         return self
 
-    def _set_sticky_state(
-        self, sticky_state: StickyStateLiteral | StickyConfig | None = None
+    def _set_sticky_config(
+        self, sticky_config: StickyConfig | None = None
     ) -> RapidataOrderBuilder:
         """
         Set the sticky behavior for the order.
-
-        Accepts one of the preset literals ("Temporary", "Permanent", "Passive")
-        or a full StickyConfig for fine-grained control.
         """
-        from rapidata.api_client.models.sticky_config import StickyConfig
-
-        if sticky_state is None or isinstance(sticky_state, StickyConfig):
-            self._sticky_config = sticky_state
-            return self
-
-        sticky_state_valid_values = get_args(StickyStateLiteral)
-        if sticky_state not in sticky_state_valid_values:
-            raise ValueError(
-                f"Sticky state must be one of {sticky_state_valid_values}, "
-                "a StickyConfig, or None"
-            )
-
-        self._sticky_config = _sticky_config_from_preset(sticky_state)
+        self._sticky_config = sticky_config
         return self
