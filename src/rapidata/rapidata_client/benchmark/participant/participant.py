@@ -13,7 +13,6 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
 
 from opentelemetry import context as otel_context
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 
 
 from rapidata.service.openapi_service import OpenAPIService
@@ -92,12 +91,7 @@ class BenchmarkParticipant:
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
             try:
-                if data_type == "text":
-                    asset_input = AssetMapper.create_text_input(asset)
-                else:
-                    asset_input = AssetMapper.create_existing_asset_input(
-                        self._asset_uploader.upload_asset(asset)
-                    )
+                asset_input = self._asset_uploader.build_asset_input(asset, data_type)
 
                 with suppress_rapidata_error_logging():
                     self._openapi_service.leaderboard.participant_api.participant_participant_id_sample_post(

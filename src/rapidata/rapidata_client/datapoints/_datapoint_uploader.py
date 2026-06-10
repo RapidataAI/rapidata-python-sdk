@@ -10,7 +10,6 @@ from rapidata.rapidata_client.config import logger, rapidata_config
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.create_datapoint_endpoint_input import (
@@ -25,7 +24,6 @@ class DatapointUploader:
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
         self.asset_uploader = AssetUploader(openapi_service)
-        self.asset_mapper = AssetMapper()
 
     def upload_datapoint(
         self, datapoint: Datapoint, dataset_id: str, index: int
@@ -34,10 +32,9 @@ class DatapointUploader:
             CreateDatapointEndpointInput,
         )
 
-        if datapoint.data_type == "media":
-            uploaded_asset = self.asset_uploader.upload_and_map_asset(datapoint.asset)
-        else:
-            uploaded_asset = self.asset_mapper.create_text_input(datapoint.asset)
+        uploaded_asset = self.asset_uploader.build_asset_input(
+            datapoint.asset, datapoint.data_type
+        )
 
         # If the datapoint belongs to a group, context is handled at group level
         has_group = datapoint.group is not None
