@@ -27,7 +27,6 @@ from rapidata.api_client.models.i_selection import ISelection
 from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
 from rapidata.api_client.models.retrieval_mode import RetrievalMode
 from rapidata.api_client.models.sticky_config import StickyConfig
-from rapidata.api_client.models.sticky_state import StickyState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -41,11 +40,9 @@ class CreateOrderModel(LazyValidatedModel):
     workflow: IOrderWorkflowInputModel = Field(description="The workflow helps to determine the tasks that need to be completed by the users.")
     referee: IRefereeModel = Field(description="The referee is used to determine how many votes will be collected.")
     aggregator: Optional[AggregatorType] = Field(default=None, description="The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
-    sticky_state: Optional[StickyState] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="stickyState")
     sticky_config: Optional[StickyConfig] = Field(default=None, description="Configuration for sticky campaign behavior. Takes precedence over StickyState if both are provided.", alias="stickyConfig")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, alias="demographicKeys")
@@ -55,7 +52,7 @@ class CreateOrderModel(LazyValidatedModel):
     retrieval_mode: Optional[RetrievalMode] = Field(default=None, description="The retrieval mode defines how rapids are retrieved from the active labeling pool.", alias="retrievalMode")
     max_iterations: Optional[StrictInt] = Field(default=None, description="The maximum number of times a user is allowed to see the same rapid.", alias="maxIterations")
     preceding_order_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the order that must complete before this order starts processing.", alias="precedingOrderId")
-    __properties: ClassVar[List[str]] = ["orderName", "workflow", "referee", "aggregator", "featureFlags", "rapidFeatureFlags", "campaignFeatureFlags", "priority", "stickyState", "stickyConfig", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations", "precedingOrderId"]
+    __properties: ClassVar[List[str]] = ["orderName", "workflow", "referee", "aggregator", "rapidFeatureFlags", "campaignFeatureFlags", "priority", "stickyConfig", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations", "precedingOrderId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -98,13 +95,6 @@ class CreateOrderModel(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
-        _items = []
-        if self.feature_flags:
-            for _item_feature_flags in self.feature_flags:
-                if _item_feature_flags:
-                    _items.append(_item_feature_flags.to_dict())
-            _dict['featureFlags'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in rapid_feature_flags (list)
         _items = []
         if self.rapid_feature_flags:
@@ -136,11 +126,6 @@ class CreateOrderModel(LazyValidatedModel):
                 if _item_selections:
                     _items.append(_item_selections.to_dict())
             _dict['selections'] = _items
-        # set to None if feature_flags (nullable) is None
-        # and model_fields_set contains the field
-        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
-            _dict['featureFlags'] = None
-
         # set to None if rapid_feature_flags (nullable) is None
         # and model_fields_set contains the field
         if self.rapid_feature_flags is None and "rapid_feature_flags" in self.model_fields_set:
@@ -207,11 +192,9 @@ class CreateOrderModel(LazyValidatedModel):
             "workflow": IOrderWorkflowInputModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "aggregator": obj.get("aggregator"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
             "priority": obj.get("priority"),
-            "stickyState": obj.get("stickyState"),
             "stickyConfig": StickyConfig.from_dict(obj["stickyConfig"]) if obj.get("stickyConfig") is not None else None,
             "userScoreDimensions": obj.get("userScoreDimensions"),
             "demographicKeys": obj.get("demographicKeys"),

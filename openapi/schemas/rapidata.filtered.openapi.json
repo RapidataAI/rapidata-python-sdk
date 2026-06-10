@@ -20007,6 +20007,87 @@
         ]
       }
     },
+    "/validation-sets/compatible": {
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Gets all validation sets available to the user that a rapid with the provided parameters can be added to.",
+        "description": "Matching is strict: a validation set is only returned when its asset type, modality, and prompt type\n equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.\n This differs from /validation-set/recommended, which uses loose overlap matching and may return\n sets that then reject the rapid. Returns an empty array when no compatible set exists.",
+        "parameters": [
+          {
+            "name": "assetType",
+            "in": "query",
+            "description": "The asset type that the validation set must contain.\n An asset type can be an image, video, audio, text, or any combination of these.",
+            "schema": {
+              "$ref": "#/components/schemas/AssetType"
+            }
+          },
+          {
+            "name": "modality",
+            "in": "query",
+            "description": "The rapid modality that the validation set must contain.\n The modality is the type of rapid such as classify, compare, locate, etc.",
+            "schema": {
+              "$ref": "#/components/schemas/RapidModality"
+            }
+          },
+          {
+            "name": "promptType",
+            "in": "query",
+            "description": "The prompt type that the validation set must contain.\n A prompt type is the additional information that is presented to the user when solving a rapid.\n For example, a prompt type can be either text or an asset if the context is an image or video.",
+            "schema": {
+              "$ref": "#/components/schemas/PromptType"
+            }
+          },
+          {
+            "name": "instruction",
+            "in": "query",
+            "description": "An instruction used to find validation sets that have the same instruction.\n An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompatibleValidationSetsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/validation-set/recommended": {
       "get": {
         "tags": [
@@ -24601,15 +24682,6 @@
             "type": "string",
             "description": "The identifier of the pipeline executing the job."
           },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AudienceJobState"
-              }
-            ],
-            "description": "The current status of the job.",
-            "deprecated": true
-          },
           "state": {
             "allOf": [
               {
@@ -25231,18 +25303,6 @@
             "format": "int32",
             "nullable": true
           },
-          "languageBoosts": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "nullable": true
-              }
-            ],
-            "deprecated": true
-          },
           "prospectBlacklist": {
             "type": "array",
             "items": {
@@ -25298,11 +25358,6 @@
           "isManual": {
             "type": "boolean",
             "description": "Whether the manual overwrite should be applied."
-          },
-          "isActive": {
-            "type": "boolean",
-            "description": "Whether the boost is active. Deprecated in favor of Level.",
-            "deprecated": true
           },
           "level": {
             "type": "integer",
@@ -25477,32 +25532,6 @@
             ],
             "description": "Global boost insight with contributing campaigns."
           },
-          "languageBoosts": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_LanguageBoostOutput"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "Language-specific boost insights.",
-            "deprecated": true
-          },
-          "audienceBoosts": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetBoostInsightsEndpoint_AudienceOutput"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "Audience boost insights.",
-            "deprecated": true
-          },
           "prospectBlacklist": {
             "allOf": [
               {
@@ -25664,11 +25693,6 @@
             "type": "integer",
             "description": "The campaign's effective boost level (0-10). 0 when no boost is active.\n Lets clients render and edit the level without unpacking the boosting profile.",
             "format": "int32"
-          },
-          "requiresBooster": {
-            "type": "boolean",
-            "description": "Whether the campaign requires a booster.",
-            "deprecated": true
           },
           "stickyConfig": {
             "allOf": [
@@ -26666,11 +26690,6 @@
             ],
             "description": "How the campaign's boost is controlled — Manual (user-editable) or Automatic\n (managed by an owning service; boost edits are rejected by the API)."
           },
-          "requiresBooster": {
-            "type": "boolean",
-            "description": "Whether the campaign requires a booster.",
-            "deprecated": true
-          },
           "ownerMail": {
             "type": "string",
             "description": "The email of the campaign owner."
@@ -26863,11 +26882,6 @@
             "type": "integer",
             "description": "The new priority value for the campaign.",
             "format": "int32"
-          },
-          "requiresBooster": {
-            "type": "boolean",
-            "description": "Legacy on/off toggle for boosting. Translates server-side to BoostLevel = 3\n when true and BoostLevel = 0 (clear) when false. New clients should send\n BoostLevel directly; this field is kept for backwards compatibility.",
-            "deprecated": true
           },
           "boostLevel": {
             "type": "integer",
@@ -27368,13 +27382,6 @@
             "description": "Minimum number of responses per comparison. Defaults to 20.",
             "format": "int32",
             "nullable": true
-          },
-          "responsesRequired": {
-            "type": "integer",
-            "description": "Deprecated. Use MaxResponses instead.",
-            "format": "int32",
-            "nullable": true,
-            "deprecated": true
           },
           "featureFlags": {
             "allOf": [
@@ -27910,15 +27917,6 @@
             "type": "string",
             "description": "The unique identifier of the flow."
           },
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/FlowType"
-              }
-            ],
-            "description": "The type of the flow. Use the _t discriminator instead.",
-            "deprecated": true
-          },
           "name": {
             "type": "string",
             "description": "The name of the flow."
@@ -27993,32 +27991,6 @@
             "format": "double",
             "nullable": true
           },
-          "globalBoostLevel": {
-            "type": "integer",
-            "description": "Priority multiplier for the flow's campaign. Higher values increase annotator compensation to attract more responses.",
-            "format": "int32",
-            "nullable": true,
-            "deprecated": true
-          },
-          "audienceBoosts": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/AudienceBoostModel2"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "Audience-specific boost levels that override the global boost for targeted demographics.",
-            "deprecated": true
-          },
-          "audienceId": {
-            "type": "string",
-            "description": "Optional audience ID. When provided, the flow will only serve items to users in this audience.",
-            "nullable": true,
-            "deprecated": true
-          },
           "criteria": {
             "type": "string",
             "description": "The comparison instruction shown to annotators during ranking tasks (e.g. \"Which image is sharper?\").",
@@ -28028,18 +28000,6 @@
             "type": "integer",
             "description": "The initial Elo rating assigned to new items entering the ranking. Standard default is 1200.",
             "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "description": "Elo K-factor controlling rating volatility. Higher values cause larger rating changes per comparison. Used as a direct multiplier on the Elo change formula.",
-            "format": "int32",
-            "deprecated": true
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "description": "Elo scaling factor that determines how rating differences translate to expected win probabilities. A difference equal to the scaling factor gives the higher-rated item approximately 90% expected win rate.",
-            "format": "int32",
-            "deprecated": true
           },
           "minResponses": {
             "type": "integer",
@@ -28344,12 +28304,6 @@
             "description": "Time in seconds a user has to submit an answer after loading the task. Set to null to use the global default.",
             "format": "int32",
             "nullable": true
-          },
-          "responsesRequired": {
-            "type": "integer",
-            "description": "Deprecated. Use MaxResponses instead.",
-            "format": "int32",
-            "deprecated": true
           },
           "featureFlags": {
             "allOf": [
@@ -29286,6 +29240,14 @@
             "type": "boolean",
             "description": "Whether the leaderboard should be created hidden. Admin-only."
           },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Defaults to AllVotes when unset."
+          },
           "featureFlags": {
             "allOf": [
               {
@@ -29308,7 +29270,8 @@
           "showPromptAsset",
           "responseBudget",
           "minResponses",
-          "isInversed"
+          "isInversed",
+          "voteAggregation"
         ],
         "type": "object",
         "properties": {
@@ -29341,6 +29304,14 @@
           "isInversed": {
             "type": "boolean",
             "description": "Whether the leaderboard results are inversed."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result."
           }
         }
       },
@@ -29898,7 +29869,8 @@
           "weight",
           "scoreShift",
           "scoreScale",
-          "isHidden"
+          "isHidden",
+          "voteAggregation"
         ],
         "type": "object",
         "properties": {
@@ -29980,6 +29952,14 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result."
           }
         }
       },
@@ -30061,12 +30041,6 @@
           "id": {
             "type": "string",
             "description": "The unique identifier of the prompt."
-          },
-          "prompt": {
-            "type": "string",
-            "description": "The prompt text.",
-            "nullable": true,
-            "deprecated": true
           },
           "englishPrompt": {
             "type": "string",
@@ -30277,9 +30251,14 @@
             ],
             "description": "The asset associated with the sample."
           },
-          "prompt": {
+          "englishPrompt": {
             "type": "string",
-            "description": "An optional prompt associated with the sample.",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -30613,7 +30592,11 @@
           "asset": {
             "$ref": "#/components/schemas/IAssetModel"
           },
-          "prompt": {
+          "englishPrompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "originalPrompt": {
             "type": "string",
             "nullable": true
           },
@@ -30682,9 +30665,14 @@
             ],
             "description": "The asset associated with the sample."
           },
-          "prompt": {
+          "englishPrompt": {
             "type": "string",
-            "description": "An optional prompt associated with the sample.",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -30794,9 +30782,14 @@
             "type": "string",
             "description": "The identifier used to correlate samples of different participants."
           },
-          "prompt": {
+          "englishPrompt": {
             "type": "string",
-            "description": "An optional prompt associated with the sample.",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -30852,9 +30845,14 @@
             ],
             "description": "The asset associated with the sample."
           },
-          "prompt": {
+          "englishPrompt": {
             "type": "string",
-            "description": "An optional prompt associated with the sample.",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -31483,7 +31481,8 @@
           "weight",
           "scoreShift",
           "scoreScale",
-          "isHidden"
+          "isHidden",
+          "voteAggregation"
         ],
         "type": "object",
         "properties": {
@@ -31559,6 +31558,14 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result."
           }
         }
       },
@@ -32309,6 +32316,14 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Only affects future runs."
           }
         }
       },
@@ -32390,6 +32405,12 @@
             "description": "The list of tags to be associated with the prompt."
           }
         }
+      },
+      "VoteAggregation": {
+        "enum": [
+          "AllVotes",
+          "MajorityVote"
+        ]
       },
       "VoteMatrixResult": {
         "required": [
@@ -32615,19 +32636,6 @@
             "type": "string",
             "description": "The dataset id."
           },
-          "featureFlags": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/FeatureFlag"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "The feature flags. Deprecated: use RapidFeatureFlags instead.",
-            "deprecated": true
-          },
           "rapidFeatureFlags": {
             "allOf": [
               {
@@ -32759,18 +32767,6 @@
             "type": "string",
             "description": "The dataset id. If not provided, inherits from the previous revision."
           },
-          "featureFlags": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/FeatureFlag"
-                }
-              }
-            ],
-            "description": "The feature flags. Deprecated: use RapidFeatureFlags instead.\n If not provided, inherits from the previous revision.",
-            "deprecated": true
-          },
           "rapidFeatureFlags": {
             "allOf": [
               {
@@ -32894,19 +32890,6 @@
             ],
             "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases"
           },
-          "featureFlags": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/FeatureFlag"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "The feature flags are used to enable or disable certain features.",
-            "deprecated": true
-          },
           "rapidFeatureFlags": {
             "allOf": [
               {
@@ -32936,15 +32919,6 @@
             "description": "The priority is used to prioritize over other orders.",
             "format": "int32",
             "nullable": true
-          },
-          "stickyState": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StickyState"
-              }
-            ],
-            "description": "Indicates if the underlying campaign should be sticky.",
-            "deprecated": true
           },
           "stickyConfig": {
             "allOf": [
@@ -33531,14 +33505,6 @@
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfigModel"
-          },
-          "eloConfig": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EloConfigModel"
-              }
-            ],
-            "deprecated": true
           },
           "rankingConfig": {
             "oneOf": [
@@ -35281,15 +35247,6 @@
             "type": "string",
             "description": "The id of the pipeline executing the job."
           },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AudienceJobState"
-              }
-            ],
-            "description": "The current state of the job.",
-            "deprecated": true
-          },
           "state": {
             "allOf": [
               {
@@ -36568,22 +36525,6 @@
               "type": "string"
             }
           },
-          "contexts": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "nullable": true,
-            "deprecated": true
-          },
-          "contextAssets": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/IAsset"
-            },
-            "nullable": true,
-            "deprecated": true
-          },
           "maxParallelism": {
             "type": "integer",
             "format": "int32"
@@ -36597,14 +36538,6 @@
                 "$ref": "#/components/schemas/IRankingConfig"
               }
             ]
-          },
-          "eloConfig": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EloRankingConfig"
-              }
-            ],
-            "deprecated": true
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
@@ -36661,14 +36594,6 @@
                 "$ref": "#/components/schemas/IRankingConfig"
               }
             ]
-          },
-          "eloConfig": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EloRankingConfig"
-              }
-            ],
-            "deprecated": true
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
@@ -39069,6 +38994,78 @@
           "ownerId": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "GetCompatibleValidationSetsEndpoint_Output": {
+        "required": [
+          "validationSets"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSets": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCompatibleValidationSetsEndpoint_ValidationSetOutputModel"
+                }
+              }
+            ],
+            "description": "The validation sets that the rapid can be added to."
+          }
+        }
+      },
+      "GetCompatibleValidationSetsEndpoint_ValidationSetOutputModel": {
+        "required": [
+          "id",
+          "name",
+          "assetType",
+          "modality",
+          "promptType",
+          "dimensions",
+          "isPublic",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "assetType": {
+            "$ref": "#/components/schemas/AssetType"
+          },
+          "modality": {
+            "$ref": "#/components/schemas/RapidModality"
+          },
+          "promptType": {
+            "$ref": "#/components/schemas/PromptType"
+          },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.elo_ranking_config import EloRankingConfig
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset import IAsset
 from rapidata.api_client.models.i_pair_maker_config import IPairMakerConfig
@@ -40,10 +39,9 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
     context: Optional[StrictStr] = None
     context_asset: Optional[IAsset] = Field(default=None, alias="contextAsset")
     ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
-    elo_config: Optional[EloRankingConfig] = Field(default=None, alias="eloConfig")
     pair_maker_config: IPairMakerConfig = Field(alias="pairMakerConfig")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "context", "contextAsset", "rankingConfig", "eloConfig", "pairMakerConfig", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "context", "contextAsset", "rankingConfig", "pairMakerConfig", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -96,9 +94,6 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of ranking_config
         if self.ranking_config:
             _dict['rankingConfig'] = self.ranking_config.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of elo_config
-        if self.elo_config:
-            _dict['eloConfig'] = self.elo_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pair_maker_config
         if self.pair_maker_config:
             _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
@@ -147,7 +142,6 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
             "context": obj.get("context"),
             "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
-            "eloConfig": EloRankingConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
             "pairMakerConfig": IPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }

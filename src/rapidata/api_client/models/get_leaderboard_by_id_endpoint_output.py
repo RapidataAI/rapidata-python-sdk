@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.vote_aggregation import VoteAggregation
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -45,7 +46,8 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
     score_shift: Union[StrictFloat, StrictInt] = Field(description="Additive offset applied to displayed scores on this leaderboard's per-leaderboard  scoreboard.", alias="scoreShift")
     score_scale: Union[StrictFloat, StrictInt] = Field(description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on this leaderboard's per-leaderboard scoreboard.", alias="scoreScale")
     is_hidden: StrictBool = Field(description="Whether the leaderboard is hidden in listings and reads for non-admins.", alias="isHidden")
-    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "priority", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden"]
+    vote_aggregation: VoteAggregation = Field(description="How individual votes on a matchup are aggregated into the stored result.", alias="voteAggregation")
+    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "priority", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden", "voteAggregation"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -126,7 +128,8 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
             "weight": obj.get("weight"),
             "scoreShift": obj.get("scoreShift"),
             "scoreScale": obj.get("scoreScale"),
-            "isHidden": obj.get("isHidden")
+            "isHidden": obj.get("isHidden"),
+            "voteAggregation": obj.get("voteAggregation")
         }
         try:
             _obj = cls.model_validate(_data)

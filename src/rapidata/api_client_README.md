@@ -316,6 +316,7 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_set_validation_set_id_update_labeling_hints_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_update_labeling_hints_post) | **POST** /validation-set/{validationSetId}/update-labeling-hints | Refreshes the labeling hints for a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_visibility_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_visibility_patch) | **PATCH** /validation-set/{validationSetId}/visibility | Updates the visibility of a validation set.
 *ValidationSetApi* | [**validation_sets_available_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_available_get) | **GET** /validation-sets/available | Gets the available validation sets for the current user.
+*ValidationSetApi* | [**validation_sets_compatible_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_compatible_get) | **GET** /validation-sets/compatible | Gets all validation sets available to the user that a rapid with the provided parameters can be added to.
 *ValidationSetApi* | [**validation_sets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_get) | **GET** /validation-sets | Queries available validation sets based on the provided filter, paging and sorting criteria.
 *WorkflowApi* | [**workflow_workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_compare_ab_summary_get) | **GET** /workflow/{workflowId}/compare-ab-summary | Returns the number of times each asset index won across the workflow&#39;s rapids.
 *WorkflowApi* | [**workflow_workflow_id_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_delete) | **DELETE** /workflow/{workflowId} | Deletes a workflow by its id.
@@ -472,6 +473,8 @@ Class | Method | HTTP request | Description
  - [GetCombinedLeaderboardStandingsEndpointOutput](rapidata/api_client/docs/GetCombinedLeaderboardStandingsEndpointOutput.md)
  - [GetCombinedLeaderboardStandingsEndpointOutputItem](rapidata/api_client/docs/GetCombinedLeaderboardStandingsEndpointOutputItem.md)
  - [GetCompareAbSummaryEndpointOutput](rapidata/api_client/docs/GetCompareAbSummaryEndpointOutput.md)
+ - [GetCompatibleValidationSetsEndpointOutput](rapidata/api_client/docs/GetCompatibleValidationSetsEndpointOutput.md)
+ - [GetCompatibleValidationSetsEndpointValidationSetOutputModel](rapidata/api_client/docs/GetCompatibleValidationSetsEndpointValidationSetOutputModel.md)
  - [GetCompletionTimeHistogramEndpointOutput](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutput.md)
  - [GetCompletionTimeHistogramEndpointOutputBucket](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutputBucket.md)
  - [GetDatapointEndpointOutput](rapidata/api_client/docs/GetDatapointEndpointOutput.md)
@@ -988,6 +991,7 @@ Class | Method | HTTP request | Description
  - [UploadFileFromUrlEndpointOutput](rapidata/api_client/docs/UploadFileFromUrlEndpointOutput.md)
  - [ValidationChanceModel](rapidata/api_client/docs/ValidationChanceModel.md)
  - [ValidationProblemDetails](rapidata/api_client/docs/ValidationProblemDetails.md)
+ - [VoteAggregation](rapidata/api_client/docs/VoteAggregation.md)
  - [VoteMatrixResult](rapidata/api_client/docs/VoteMatrixResult.md)
  - [WorkflowState](rapidata/api_client/docs/WorkflowState.md)
  - [WorkflowStateModel](rapidata/api_client/docs/WorkflowStateModel.md)

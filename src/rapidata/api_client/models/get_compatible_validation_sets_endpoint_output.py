@@ -17,29 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.audience_job_state import AudienceJobState
+from rapidata.api_client.models.get_compatible_validation_sets_endpoint_validation_set_output_model import GetCompatibleValidationSetsEndpointValidationSetOutputModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryJobsEndpointOutput(LazyValidatedModel):
+class GetCompatibleValidationSetsEndpointOutput(LazyValidatedModel):
     """
-    QueryJobsEndpointOutput
+    GetCompatibleValidationSetsEndpointOutput
     """ # noqa: E501
-    job_id: StrictStr = Field(description="The id of the job.", alias="jobId")
-    name: StrictStr = Field(description="The name of the job.")
-    job_definition_id: StrictStr = Field(description="The id of the job definition.", alias="jobDefinitionId")
-    audience_id: StrictStr = Field(description="The id of the audience associated with the job.", alias="audienceId")
-    revision_number: StrictInt = Field(description="The revision number of the job.", alias="revisionNumber")
-    pipeline_id: StrictStr = Field(description="The id of the pipeline executing the job.", alias="pipelineId")
-    state: AudienceJobState = Field(description="The current state of the job.")
-    owner_mail: StrictStr = Field(description="The email of the job's owner.", alias="ownerMail")
-    created_at: datetime = Field(description="The timestamp when the job was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "state", "ownerMail", "createdAt"]
+    validation_sets: List[GetCompatibleValidationSetsEndpointValidationSetOutputModel] = Field(alias="validationSets")
+    __properties: ClassVar[List[str]] = ["validationSets"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -55,7 +46,7 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryJobsEndpointOutput from a JSON string"""
+        """Create an instance of GetCompatibleValidationSetsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,11 +67,18 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in validation_sets (list)
+        _items = []
+        if self.validation_sets:
+            for _item_validation_sets in self.validation_sets:
+                if _item_validation_sets:
+                    _items.append(_item_validation_sets.to_dict())
+            _dict['validationSets'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryJobsEndpointOutput from a dict"""
+        """Create an instance of GetCompatibleValidationSetsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -88,15 +86,7 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "jobId": obj.get("jobId"),
-            "name": obj.get("name"),
-            "jobDefinitionId": obj.get("jobDefinitionId"),
-            "audienceId": obj.get("audienceId"),
-            "revisionNumber": obj.get("revisionNumber"),
-            "pipelineId": obj.get("pipelineId"),
-            "state": obj.get("state"),
-            "ownerMail": obj.get("ownerMail"),
-            "createdAt": obj.get("createdAt")
+            "validationSets": [GetCompatibleValidationSetsEndpointValidationSetOutputModel.from_dict(_item) for _item in obj["validationSets"]] if obj.get("validationSets") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

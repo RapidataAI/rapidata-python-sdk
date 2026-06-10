@@ -40,7 +40,6 @@ class CreateFlowEndpointInput(LazyValidatedModel):
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to max responses. When set, limits serving to avoid over-collection.", alias="serveToResponseRatio")
     serve_timeout_seconds: Optional[StrictInt] = Field(default=None, description="Time in seconds a user has to submit an answer after loading the task. When set, overrides the global default.", alias="serveTimeoutSeconds")
     min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 20.", alias="minResponses")
-    responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Enables PID control when set.", alias="targetResponseCount")
     pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain. Defaults to 0.", alias="pidProportionalGain")
@@ -51,7 +50,7 @@ class CreateFlowEndpointInput(LazyValidatedModel):
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 50.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[PidBatchMode] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total.", alias="pidBatchMode")
     drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
+    __properties: ClassVar[List[str]] = ["name", "criteria", "audienceId", "validationSetId", "startingElo", "maxResponses", "serveResponses", "serveToResponseRatio", "serveTimeoutSeconds", "minResponses", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -135,11 +134,6 @@ class CreateFlowEndpointInput(LazyValidatedModel):
         if self.min_responses is None and "min_responses" in self.model_fields_set:
             _dict['minResponses'] = None
 
-        # set to None if responses_required (nullable) is None
-        # and model_fields_set contains the field
-        if self.responses_required is None and "responses_required" in self.model_fields_set:
-            _dict['responsesRequired'] = None
-
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
@@ -207,7 +201,6 @@ class CreateFlowEndpointInput(LazyValidatedModel):
             "serveToResponseRatio": obj.get("serveToResponseRatio"),
             "serveTimeoutSeconds": obj.get("serveTimeoutSeconds"),
             "minResponses": obj.get("minResponses"),
-            "responsesRequired": obj.get("responsesRequired"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "targetResponseCount": obj.get("targetResponseCount"),
             "pidProportionalGain": obj.get("pidProportionalGain"),
