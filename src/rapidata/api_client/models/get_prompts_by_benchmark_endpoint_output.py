@@ -31,14 +31,13 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
     GetPromptsByBenchmarkEndpointOutput
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the prompt.")
-    prompt: Optional[StrictStr] = Field(default=None, description="The prompt text.")
     english_prompt: Optional[StrictStr] = Field(default=None, description="The prompt text translated to English.", alias="englishPrompt")
     original_prompt: Optional[StrictStr] = Field(default=None, description="The prompt text as originally provided.", alias="originalPrompt")
     prompt_asset: Optional[IAssetModel] = Field(default=None, description="The optional asset associated with the prompt.", alias="promptAsset")
     identifier: StrictStr = Field(description="The identifier associated with the prompt.")
     created_at: datetime = Field(description="The timestamp when the prompt was created.", alias="createdAt")
     tags: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["id", "prompt", "englishPrompt", "originalPrompt", "promptAsset", "identifier", "createdAt", "tags"]
+    __properties: ClassVar[List[str]] = ["id", "englishPrompt", "originalPrompt", "promptAsset", "identifier", "createdAt", "tags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -78,11 +77,6 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of prompt_asset
         if self.prompt_asset:
             _dict['promptAsset'] = self.prompt_asset.to_dict()
-        # set to None if prompt (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt is None and "prompt" in self.model_fields_set:
-            _dict['prompt'] = None
-
         # set to None if english_prompt (nullable) is None
         # and model_fields_set contains the field
         if self.english_prompt is None and "english_prompt" in self.model_fields_set:
@@ -106,7 +100,6 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
 
         _data = {
             "id": obj.get("id"),
-            "prompt": obj.get("prompt"),
             "englishPrompt": obj.get("englishPrompt"),
             "originalPrompt": obj.get("originalPrompt"),
             "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,

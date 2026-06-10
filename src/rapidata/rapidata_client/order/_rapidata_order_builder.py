@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Optional, Sequence, get_args
+from typing import TYPE_CHECKING, Optional, Sequence
 import secrets
 
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.create_order_model import CreateOrderModel
+    from rapidata.api_client.models.sticky_config import StickyConfig
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
@@ -35,9 +36,6 @@ from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
 
-StickyStateLiteral = Literal["Temporary", "Permanent", "Passive"]
-
-
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
 
@@ -64,7 +62,7 @@ class RapidataOrderBuilder:
         self._selections: Sequence[RapidataSelection] = []
         self._priority: int | None = None
         self._datapoints: list[Datapoint] = []
-        self._sticky_state_value: StickyStateLiteral | None = None
+        self._sticky_config: StickyConfig | None = None
         self._validation_set_manager: ValidationSetManager = ValidationSetManager(
             self._openapi_service
         )
@@ -86,15 +84,12 @@ class RapidataOrderBuilder:
             managed_print("No referee provided, using default NaiveReferee.")
             self._referee = NaiveReferee()
 
-        sticky_state = self._sticky_state_value
-
         validation_set_id = (
             self._validation_set.id
             if (self._validation_set and not self._selections)
             else None
         )
         from rapidata.api_client.models.create_order_model import CreateOrderModel
-        from rapidata.api_client.models.sticky_state import StickyState
 
         rapid_feature_flags = (
             [
@@ -131,7 +126,7 @@ class RapidataOrderBuilder:
                 else None
             ),
             priority=self._priority,
-            stickyState=(StickyState(sticky_state) if sticky_state else None),
+            stickyConfig=self._sticky_config,
         )
 
     def _generate_id(self, length=9):
@@ -359,18 +354,11 @@ class RapidataOrderBuilder:
         self._priority = priority
         return self
 
-    def _set_sticky_state(
-        self, sticky_state: StickyStateLiteral | None = None
+    def _set_sticky_config(
+        self, sticky_config: StickyConfig | None = None
     ) -> RapidataOrderBuilder:
         """
-        Set the sticky state for the order.
+        Set the sticky behavior for the order.
         """
-        sticky_state_valid_values = get_args(StickyStateLiteral)
-
-        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
-            raise ValueError(
-                f"Sticky state must be one of {sticky_state_valid_values} or None"
-            )
-
-        self._sticky_state_value = sticky_state
+        self._sticky_config = sticky_config
         return self

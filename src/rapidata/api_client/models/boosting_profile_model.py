@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.audience_boost_model import AudienceBoostModel
 from pydantic import ValidationError
@@ -32,11 +32,10 @@ class BoostingProfileModel(LazyValidatedModel):
     global_boost_level: StrictInt = Field(alias="globalBoostLevel")
     min_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="minAutoAdjustLevel")
     max_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="maxAutoAdjustLevel")
-    language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
     prospect_blacklist: List[StrictInt] = Field(alias="prospectBlacklist")
     distilling_boosts: List[AudienceBoostModel] = Field(alias="distillingBoosts")
     labeling_boosts: List[AudienceBoostModel] = Field(alias="labelingBoosts")
-    __properties: ClassVar[List[str]] = ["globalBoostLevel", "minAutoAdjustLevel", "maxAutoAdjustLevel", "languageBoosts", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
+    __properties: ClassVar[List[str]] = ["globalBoostLevel", "minAutoAdjustLevel", "maxAutoAdjustLevel", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -97,11 +96,6 @@ class BoostingProfileModel(LazyValidatedModel):
         if self.max_auto_adjust_level is None and "max_auto_adjust_level" in self.model_fields_set:
             _dict['maxAutoAdjustLevel'] = None
 
-        # set to None if language_boosts (nullable) is None
-        # and model_fields_set contains the field
-        if self.language_boosts is None and "language_boosts" in self.model_fields_set:
-            _dict['languageBoosts'] = None
-
         return _dict
 
     @classmethod
@@ -117,7 +111,6 @@ class BoostingProfileModel(LazyValidatedModel):
             "globalBoostLevel": obj.get("globalBoostLevel"),
             "minAutoAdjustLevel": obj.get("minAutoAdjustLevel"),
             "maxAutoAdjustLevel": obj.get("maxAutoAdjustLevel"),
-            "languageBoosts": obj.get("languageBoosts"),
             "prospectBlacklist": obj.get("prospectBlacklist"),
             "distillingBoosts": [AudienceBoostModel.from_dict(_item) for _item in obj["distillingBoosts"]] if obj.get("distillingBoosts") is not None else None,
             "labelingBoosts": [AudienceBoostModel.from_dict(_item) for _item in obj["labelingBoosts"]] if obj.get("labelingBoosts") is not None else None
