@@ -50,7 +50,9 @@ class JsonWebKey(LazyValidatedModel):
     x5t_s256: Optional[StrictStr] = Field(default=None, alias="x5t#S256")
     x5u: Optional[StrictStr] = None
     y: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["alg", "crv", "d", "dp", "dq", "e", "k", "key_ops", "kid", "kty", "n", "oth", "p", "q", "qi", "use", "x", "x5c", "x5t", "x5t#S256", "x5u", "y"]
+    pub: Optional[StrictStr] = None
+    priv: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["alg", "crv", "d", "dp", "dq", "e", "k", "key_ops", "kid", "kty", "n", "oth", "p", "q", "qi", "use", "x", "x5c", "x5t", "x5t#S256", "x5u", "y", "pub", "priv"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -197,6 +199,16 @@ class JsonWebKey(LazyValidatedModel):
         if self.y is None and "y" in self.model_fields_set:
             _dict['y'] = None
 
+        # set to None if pub (nullable) is None
+        # and model_fields_set contains the field
+        if self.pub is None and "pub" in self.model_fields_set:
+            _dict['pub'] = None
+
+        # set to None if priv (nullable) is None
+        # and model_fields_set contains the field
+        if self.priv is None and "priv" in self.model_fields_set:
+            _dict['priv'] = None
+
         return _dict
 
     @classmethod
@@ -230,7 +242,9 @@ class JsonWebKey(LazyValidatedModel):
             "x5t": obj.get("x5t"),
             "x5t#S256": obj.get("x5t#S256"),
             "x5u": obj.get("x5u"),
-            "y": obj.get("y")
+            "y": obj.get("y"),
+            "pub": obj.get("pub"),
+            "priv": obj.get("priv")
         }
         try:
             _obj = cls.model_validate(_data)

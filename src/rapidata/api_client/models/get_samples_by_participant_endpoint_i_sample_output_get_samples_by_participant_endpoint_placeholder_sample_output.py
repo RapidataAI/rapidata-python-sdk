@@ -31,10 +31,11 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
-    prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt associated with the sample.")
+    english_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text translated to English.", alias="englishPrompt")
+    original_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text as originally provided.", alias="originalPrompt")
     prompt_asset: Optional[IAssetModel] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
     tags: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["_t", "identifier", "prompt", "promptAsset", "tags"]
+    __properties: ClassVar[List[str]] = ["_t", "identifier", "englishPrompt", "originalPrompt", "promptAsset", "tags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -81,10 +82,15 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
         # override the default output from pydantic by calling `to_dict()` of prompt_asset
         if self.prompt_asset:
             _dict['promptAsset'] = self.prompt_asset.to_dict()
-        # set to None if prompt (nullable) is None
+        # set to None if english_prompt (nullable) is None
         # and model_fields_set contains the field
-        if self.prompt is None and "prompt" in self.model_fields_set:
-            _dict['prompt'] = None
+        if self.english_prompt is None and "english_prompt" in self.model_fields_set:
+            _dict['englishPrompt'] = None
+
+        # set to None if original_prompt (nullable) is None
+        # and model_fields_set contains the field
+        if self.original_prompt is None and "original_prompt" in self.model_fields_set:
+            _dict['originalPrompt'] = None
 
         return _dict
 
@@ -100,7 +106,8 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
         _data = {
             "_t": obj.get("_t"),
             "identifier": obj.get("identifier"),
-            "prompt": obj.get("prompt"),
+            "englishPrompt": obj.get("englishPrompt"),
+            "originalPrompt": obj.get("originalPrompt"),
             "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "tags": obj.get("tags")
         }

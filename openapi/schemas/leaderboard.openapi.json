@@ -5478,6 +5478,14 @@
             "type": "boolean",
             "description": "Whether the leaderboard should be created hidden. Admin-only."
           },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Defaults to AllVotes when unset."
+          },
           "featureFlags": {
             "allOf": [
               {
@@ -5500,7 +5508,8 @@
           "showPromptAsset",
           "responseBudget",
           "minResponses",
-          "isInversed"
+          "isInversed",
+          "voteAggregation"
         ],
         "type": "object",
         "properties": {
@@ -5533,6 +5542,14 @@
           "isInversed": {
             "type": "boolean",
             "description": "Whether the leaderboard results are inversed."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result."
           }
         }
       },
@@ -6113,7 +6130,8 @@
           "weight",
           "scoreShift",
           "scoreScale",
-          "isHidden"
+          "isHidden",
+          "voteAggregation"
         ],
         "type": "object",
         "properties": {
@@ -6195,6 +6213,14 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result."
           }
         }
       },
@@ -6495,6 +6521,17 @@
           "prompt": {
             "type": "string",
             "description": "An optional prompt associated with the sample.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "englishPrompt": {
+            "type": "string",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -6830,6 +6867,15 @@
           },
           "prompt": {
             "type": "string",
+            "nullable": true,
+            "deprecated": true
+          },
+          "englishPrompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
             "nullable": true
           },
           "promptAsset": {
@@ -6900,6 +6946,17 @@
           "prompt": {
             "type": "string",
             "description": "An optional prompt associated with the sample.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "englishPrompt": {
+            "type": "string",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -7012,6 +7069,17 @@
           "prompt": {
             "type": "string",
             "description": "An optional prompt associated with the sample.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "englishPrompt": {
+            "type": "string",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -7070,6 +7138,17 @@
           "prompt": {
             "type": "string",
             "description": "An optional prompt associated with the sample.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "englishPrompt": {
+            "type": "string",
+            "description": "An optional prompt text translated to English.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "An optional prompt text as originally provided.",
             "nullable": true
           },
           "promptAsset": {
@@ -8256,7 +8335,8 @@
           "weight",
           "scoreShift",
           "scoreScale",
-          "isHidden"
+          "isHidden",
+          "voteAggregation"
         ],
         "type": "object",
         "properties": {
@@ -8332,6 +8412,14 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result."
           }
         }
       },
@@ -9082,6 +9170,14 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only."
+          },
+          "voteAggregation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteAggregation"
+              }
+            ],
+            "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Only affects future runs."
           }
         }
       },
@@ -9198,6 +9294,12 @@
             }
           }
         }
+      },
+      "VoteAggregation": {
+        "enum": [
+          "AllVotes",
+          "MajorityVote"
+        ]
       },
       "VoteMatrixResult": {
         "required": [

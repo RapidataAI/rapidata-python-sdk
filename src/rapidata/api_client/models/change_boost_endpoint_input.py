@@ -29,9 +29,8 @@ class ChangeBoostEndpointInput(LazyValidatedModel):
     ChangeBoostEndpointInput
     """ # noqa: E501
     is_manual: StrictBool = Field(description="Whether the manual overwrite should be applied.", alias="isManual")
-    is_active: Optional[StrictBool] = Field(default=None, description="Whether the boost is active. Deprecated in favor of Level.", alias="isActive")
     level: Optional[StrictInt] = Field(default=None, description="The boost level. Takes precedence over IsActive when set.")
-    __properties: ClassVar[List[str]] = ["isManual", "isActive", "level"]
+    __properties: ClassVar[List[str]] = ["isManual", "level"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -86,7 +85,6 @@ class ChangeBoostEndpointInput(LazyValidatedModel):
 
         _data = {
             "isManual": obj.get("isManual"),
-            "isActive": obj.get("isActive"),
             "level": obj.get("level")
         }
         try:

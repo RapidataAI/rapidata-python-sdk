@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.vote_aggregation import VoteAggregation
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -35,7 +36,8 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
     response_budget: StrictInt = Field(description="The response budget per run.", alias="responseBudget")
     min_responses: StrictInt = Field(description="The minimum responses per comparison.", alias="minResponses")
     is_inversed: StrictBool = Field(description="Whether the leaderboard results are inversed.", alias="isInversed")
-    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed"]
+    vote_aggregation: VoteAggregation = Field(description="How individual votes on a matchup are aggregated into the stored result.", alias="voteAggregation")
+    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "voteAggregation"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -90,7 +92,8 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
             "showPromptAsset": obj.get("showPromptAsset"),
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
-            "isInversed": obj.get("isInversed")
+            "isInversed": obj.get("isInversed"),
+            "voteAggregation": obj.get("voteAggregation")
         }
         try:
             _obj = cls.model_validate(_data)

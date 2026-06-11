@@ -96,8 +96,29 @@ done
 
 npx -y @redocly/cli join ./${SCHEMA_DIR}/*.openapi.json -o ./${SCHEMA_DIR}/rapidata.openapi.json
 
-# Filter out deprecated endpoints
-jq 'del(.paths[][] | select(.deprecated == true))' \
+# Filter out anything deprecated so it is not generated into the SDK:
+# fully-deprecated operations (whole endpoints), and — recursively —
+# deprecated parameters and deprecated schema properties (also pruning the
+# latter from any `required` list). This mirrors the endpoint filtering for
+# partly-deprecated surfaces like a single deprecated field on a model.
+# Note: the `walk` builtin requires jq >= 1.6.
+jq '
+  del(.paths[][] | select(.deprecated == true))
+  | walk(
+      if type == "object" then
+        ( if (.parameters | type) == "array"
+          then .parameters |= map(select(.deprecated != true))
+          else . end )
+        | ( if (.properties | type) == "object"
+            then
+              ( [ .properties | to_entries[] | select(.value.deprecated == true) | .key ] ) as $deprecated
+              | .properties |= with_entries(select(.value.deprecated != true))
+              | ( if (.required | type) == "array"
+                  then .required |= map(select(. as $name | ($deprecated | index($name)) | not))
+                  else . end )
+            else . end )
+      else . end
+    )' \
    ${SCHEMA_DIR}/rapidata.openapi.json \
    > ${SCHEMA_DIR}/rapidata.filtered.openapi.json
 

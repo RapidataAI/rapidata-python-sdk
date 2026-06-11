@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, Optional, Sequence, get_args, TYPE_CHECKING
+from typing import Literal, Optional, Sequence, TYPE_CHECKING
 
 from opentelemetry import trace
 
@@ -18,9 +18,7 @@ from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelec
 from rapidata.service.openapi_service import OpenAPIService
 
 if TYPE_CHECKING:
-    from rapidata.rapidata_client.order._rapidata_order_builder import (
-        StickyStateLiteral,
-    )
+    from rapidata.api_client.models.sticky_config import StickyConfig
     from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
     from rapidata.rapidata_client.selection._base_selection import RapidataSelection
     from rapidata.rapidata_client.workflow import (
@@ -42,12 +40,9 @@ class RapidataOrderManager:
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
-        from rapidata.rapidata_client.order._rapidata_order_builder import (
-            StickyStateLiteral,
-        )
 
         self.__priority: int | None = None
-        self.__sticky_state: StickyStateLiteral | None = None
+        self.__sticky_config: StickyConfig | None = None
         self._asset_uploader = AssetUploader(openapi_service)
         logger.debug("RapidataOrderManager initialized")
 
@@ -134,7 +129,7 @@ class RapidataOrderManager:
                 ._set_settings(settings)
                 ._set_validation_set_id(validation_set_id if not selections else None)
                 ._set_priority(self.__priority)
-                ._set_sticky_state(self.__sticky_state)
+                ._set_sticky_config(self.__sticky_config)
                 ._create()
             )
 
@@ -160,19 +155,8 @@ class RapidataOrderManager:
 
         self.__priority = priority
 
-    def _set_sticky_state(self, sticky_state: StickyStateLiteral | None):
-        from rapidata.rapidata_client.order._rapidata_order_builder import (
-            StickyStateLiteral,
-        )
-
-        sticky_state_valid_values = get_args(StickyStateLiteral)
-
-        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
-            raise ValueError(
-                f"Sticky state must be one of {sticky_state_valid_values} or None"
-            )
-
-        self.__sticky_state = sticky_state
+    def _set_sticky_config(self, sticky_config: StickyConfig | None):
+        self.__sticky_config = sticky_config
 
     def create_classification_order(
         self,

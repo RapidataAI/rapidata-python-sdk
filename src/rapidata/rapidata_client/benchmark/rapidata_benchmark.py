@@ -40,6 +40,7 @@ class RapidataBenchmark:
         self.id = id
         self._openapi_service = openapi_service
         self.__prompts: list[str | None] = []
+        self.__english_prompts: list[str | None] = []
         self.__prompt_assets: list[str | None] = []
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
@@ -58,6 +59,12 @@ class RapidataBenchmark:
         )
 
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
+            self.__prompts = []
+            self.__english_prompts = []
+            self.__identifiers = []
+            self.__prompt_assets = []
+            self.__tags = []
+
             current_page = 1
             total_pages = None
 
@@ -76,7 +83,8 @@ class RapidataBenchmark:
                 total_pages = prompts_result.total_pages
 
                 for prompt in prompts_result.items:
-                    self.__prompts.append(prompt.prompt)
+                    self.__prompts.append(prompt.original_prompt)
+                    self.__english_prompts.append(prompt.english_prompt)
                     self.__identifiers.append(prompt.identifier)
                     if prompt.prompt_asset is None:
                         self.__prompt_assets.append(None)
@@ -106,12 +114,25 @@ class RapidataBenchmark:
     @property
     def prompts(self) -> list[str | None]:
         """
-        Returns the prompts that are registered for the leaderboard.
+        Returns the prompts as originally provided, in the order they were registered.
         """
         if not self.__prompts:
             self.__instantiate_prompts()
 
         return self.__prompts
+
+    @property
+    def english_prompts(self) -> list[str | None]:
+        """
+        Returns the prompts translated to English, aligned by index with `prompts`.
+
+        The translations are produced server-side, so accessing this after
+        `add_prompts` triggers a one-off re-fetch of the prompt set.
+        """
+        if not self.__english_prompts:
+            self.__instantiate_prompts()
+
+        return self.__english_prompts
 
     @property
     def prompt_assets(self) -> list[str | None]:
@@ -324,10 +345,15 @@ class RapidataBenchmark:
                     "Identifiers, prompts, media assets, and tags must have the same length or set to None."
                 )
 
+            # Snapshot once: `self.identifiers` is a property whose getter re-fetches
+            # over HTTP while the cache is empty, so testing it inside the comprehension
+            # fired one request per identifier (a full re-fetch each time on a fresh,
+            # empty benchmark). One lookup into a set instead.
+            existing_identifiers = set(self.identifiers)
             already_registered = [
                 identifier
                 for identifier in identifiers
-                if identifier in self.identifiers
+                if identifier in existing_identifiers
             ]
             if already_registered:
                 raise ValueError(
@@ -348,6 +374,11 @@ class RapidataBenchmark:
                 self.__prompts.append(uploaded.prompt)
                 self.__prompt_assets.append(uploaded.prompt_asset)
                 self.__tags.append(uploaded.tags)
+
+            # The English translation is produced server-side and is unknown for
+            # the just-added prompts. Clear it so the next access lazily re-fetches
+            # the prompt set, while the rest of the cache stays intact.
+            self.__english_prompts = []
 
     def create_leaderboard(
         self,
