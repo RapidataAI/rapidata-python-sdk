@@ -21,9 +21,7 @@ In this example, we rate images on a Likert scale to assess how well generated i
 
     client = RapidataClient()
 
-    audience = next( # (1)!
-        a for a in client.audience.find_audiences("Coherence") if a.name == "Coherence"
-    )
+    audience = client.audience.get_audience_by_id("aud_mr3NbeWa4Uo") # (1)!
 
     job_definition = client.job.create_classification_job_definition(
         name="Likert Scale Example",
@@ -43,12 +41,15 @@ In this example, we rate images on a Likert scale to assess how well generated i
     print(results)
     ```
 
-    1. Grabs the curated **Coherence** audience, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+    1. Looks up the curated **Coherence** audience by id, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
     2. Keeps the answer options in their specified order. Without this, options are randomized to reduce bias — but for Likert scales you want them ordered.
 
 === "Advanced"
 
     The advanced version builds a **custom** audience and trains labelers with qualification examples before running the job. Only labelers who answer the examples correctly join the audience, which raises label quality on nuanced tasks.
+
+    !!! warning "This takes significantly longer"
+        Unlike the Simple path, this first builds and trains an entirely new audience before the job can start collecting responses — expect it to take considerably longer to return results.
 
     ```python
     from rapidata import RapidataClient, NoShuffleSetting
@@ -108,5 +109,5 @@ In this example, we rate images on a Likert scale to assess how well generated i
     1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it.
     2. Qualify labelers on the same UI they'll see in the job. Since the job uses `NoShuffleSetting`, the examples use it too — see [Custom Audiences](../audiences.md#matching-the-job-ui-with-settings).
 
-    !!! warning "Review your qualification examples carefully"
-        Every qualification example and its truth must be reviewed before use. An example with a wrong or ambiguous truth filters out good labelers while letting bad ones through — inverting your quality control. Use only examples with a clear, unambiguous correct answer, and add more than the few shown here for production workloads. See [Custom Audiences](../audiences.md) for the full guide.
+    !!! note
+        Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.

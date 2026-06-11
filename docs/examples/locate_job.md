@@ -4,7 +4,7 @@ To learn about the basics of creating a job, please refer to the [quickstart gui
 
 In a locate job, labelers tap the points in a datapoint that match your instruction. In this example, we ask people to point out visual artifacts in AI-generated images — a common way to find where a generator went wrong.
 
-Locate jobs run on the **global** audience — the broadest pool of labelers, ready to work immediately. Unlike classification and comparison, locate tasks don't support custom qualification examples yet, so there's no custom-audience variant for this job type.
+Like any other job, a locate job can be assigned to any audience. This example uses the **global** audience — the broadest pool of labelers, ready to work immediately — so it starts collecting responses right away.
 
 ```python
 from rapidata import RapidataClient
@@ -17,9 +17,7 @@ IMAGE_URLS = [
 
 client = RapidataClient()
 
-audience = next( # (1)!
-    a for a in client.audience.find_audiences("Global Audience") if a.name == "Global Audience"
-)
+audience = client.audience.get_audience_by_id("global") # (1)!
 
 job_definition = client.job.create_locate_job_definition(
     name="Artifact Detection Example",
@@ -36,5 +34,5 @@ results = job.get_results()
 print(results)
 ```
 
-1. The global audience already has labelers ready to work. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses.
+1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a locate job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 2. The instruction tells labelers what to locate. Each response is the set of points they tapped on that datapoint.

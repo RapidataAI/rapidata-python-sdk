@@ -61,12 +61,10 @@ client = RapidataClient(client_id="Your client ID", client_secret="Your client s
 The simplest way to get started is with a curated audience:
 
 ```py
-audience = next( # (1)!
-    a for a in client.audience.find_audiences("Alignment") if a.name == "Alignment"
-)
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
 ```
 
-1. Curated audiences are pre-existing pools of labelers trained on a specific type of task. `find_audiences` returns matches ordered by recency, so selecting by exact name avoids accidentally picking a custom audience that happens to match the search term. You can browse the curated audiences in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+1. Curated audiences are pre-existing pools of labelers trained on a specific type of task — this is the **Alignment** audience. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 !!! note
     The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
@@ -167,9 +165,7 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-audience = next(
-    a for a in client.audience.find_audiences("Alignment") if a.name == "Alignment"
-)
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 
 job_definition = client.job.create_compare_job_definition(
     name="Example Image Prompt Alignment",

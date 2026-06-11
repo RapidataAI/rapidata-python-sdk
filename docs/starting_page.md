@@ -18,7 +18,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    audience = client.audience.find_audiences("alignment")[0]
+    audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 
     job_definition = client.job.create_compare_job_definition(
         name="Example Image Comparison",
@@ -41,7 +41,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    audience = client.audience.find_audiences("alignment")[0]
+    audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 
     job_definition = client.job.create_compare_job_definition(
         name="Example Video Comparison",

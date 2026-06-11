@@ -29,9 +29,7 @@ In this example, we compare images from two image generation models (Flux and Mi
 
     client = RapidataClient()
 
-    audience = next( # (1)!
-        a for a in client.audience.find_audiences("Alignment") if a.name == "Alignment"
-    )
+    audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
 
     job_definition = client.job.create_compare_job_definition(
         name="Example Image Prompt Alignment Job",
@@ -49,11 +47,14 @@ In this example, we compare images from two image generation models (Flux and Mi
     print(results)
     ```
 
-    1. Grabs the curated **Alignment** audience, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+    1. Looks up the curated **Alignment** audience by id, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 === "Advanced"
 
     The advanced version builds a **custom** audience and trains labelers with qualification examples before running the job. Only labelers who pick the correct image on the examples join the audience, which raises label quality.
+
+    !!! warning "This takes significantly longer"
+        Unlike the Simple path, this first builds and trains an entirely new audience before the job can start collecting responses — expect it to take considerably longer to return results.
 
     ```python
     from rapidata import RapidataClient
@@ -126,5 +127,5 @@ In this example, we compare images from two image generation models (Flux and Mi
 
     1. Creates a new, empty audience. The `add_compare_example` calls train and filter the labelers who join it.
 
-    !!! warning "Review your qualification examples carefully"
-        Every qualification example and its truth must be reviewed before use. An example with a wrong or ambiguous truth filters out good labelers while letting bad ones through — inverting your quality control. Use only pairs with a clearly better image, and add more than the few shown here for production workloads. See [Custom Audiences](../audiences.md) for the full guide.
+    !!! note
+        Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
