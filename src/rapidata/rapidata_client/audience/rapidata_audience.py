@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     )
     from rapidata.rapidata_client.filter import RapidataFilter
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+    from rapidata.rapidata_client.validation.rapids.box import Box
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
     import pandas as pd
 
@@ -258,6 +259,50 @@ class RapidataAudience(RapidataAudienceBase):
                 truth,
                 datapoint,
                 data_type,
+                context,
+                media_context,
+                explanation,
+                settings,
+            )
+            self._try_start_recruiting()
+            return self
+
+    def add_locate_example(
+        self,
+        instruction: str,
+        datapoint: str,
+        truths: list[Box],
+        context: str | None = None,
+        media_context: list[str] | None = None,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataAudience:
+        """Add a locate training example to this audience.
+
+        Training examples help annotators understand the task by showing them
+        a sample datapoint with the correct regions before they start labeling.
+
+        Args:
+            instruction (str): The instruction telling annotators what to locate.
+            datapoint (str): The media datapoint (URL or path) to use as the training example.
+            truths (list[Box]): The bounding boxes covering the correct regions to tap, as :class:`Box` objects with coordinates in image ratios (0.0 to 1.0).
+            context (str, optional): Additional text context to display with the example. Defaults to None.
+            media_context (list[str], optional): Additional image URLs / paths to display with the example. Pass a single-element list for one image, or multiple to display several images. Defaults to None.
+            explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature flags on this example so the qualification example matches how the actual task will be rendered. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        media_context = coerce_media_context(media_context)
+        with tracer.start_as_current_span("RapidataAudience.add_locate_example"):
+            logger.debug(
+                f"Adding locate example to audience: {self.id} with instruction: {instruction}, datapoint: {datapoint}, truths: {truths}, context: {context}, media_context: {media_context}, explanation: {explanation}, settings: {settings}"
+            )
+            self._example_handler.add_locate_example(
+                instruction,
+                datapoint,
+                truths,
                 context,
                 media_context,
                 explanation,
