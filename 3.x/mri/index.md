@@ -58,6 +58,31 @@ leaderboard = benchmark.create_leaderboard(
 
 1. Whether to display the prompt to evaluators. Only include it when the prompt is necessary for the task (e.g., prompt alignment). It adds complexity and cost.
 
+#### Restricting a leaderboard to a specific audience
+
+By default a leaderboard is answered by the global audience. To restrict
+it to a specific group of labelers — for example a [custom
+audience](audiences.md) you have trained, or a country/language slice of
+one — pass `audience_id`:
+
+```python
+from rapidata import CountryFilter, LanguageFilter
+
+base = client.audience.get_audience_by_id("audience_id")
+us_english = base.filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (US, English)",
+    instruction="Which image is more realistic?",
+    audience_id=us_english, # (1)!
+)
+```
+
+1. Accepts an id string, a `RapidataAudience`, or a `RapidataFilteredAudience` (derived via [`RapidataAudience.filter()`](audiences.md#filtered-audiences)). Omit to use the global audience.
+
 ### 3. Model Evaluation
 Once your benchmark and leaderboard are set up, you can evaluate models by the following:
 
@@ -65,6 +90,9 @@ Once your benchmark and leaderboard are set up, you can evaluate models by the f
 - **Prompts**: Each media file must be paired with a prompt
 
 All prompts must be from the benchmark's registered prompt set (available through the `prompts` attribute of the benchmark)
+
+!!! note
+    `prompts` returns the prompts as you originally provided them. The English translation of each prompt is available through the `english_prompts` attribute, aligned by index.
 
 !!! note
     You are not limited to one media per prompt; you can supply the same prompt multiple times.

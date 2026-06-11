@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/settings/rapidata_settings/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/filter/demographic_filter/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Rapidata settings - Rapidata Python SDK</title>
+        <title>Demographic filter - Rapidata Python SDK</title>
       
     
     
@@ -109,7 +109,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.settings.rapidata_settings" class="md-skip">
+        <a href="#rapidata.rapidata_client.filter.demographic_filter" class="md-skip">
           Skip to content
         </a>
       
@@ -148,7 +148,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rapidata settings
+              Demographic filter
             
           </span>
         </div>
@@ -1041,10 +1041,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.settings.rapidata_settings" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.filter.demographic_filter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        rapidata_settings
+        demographic_filter
       
     </span>
   </a>
@@ -1052,10 +1052,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.filter.demographic_filter.DemographicFilter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RapidataSettings
+        DemographicFilter
       
     </span>
   </a>
@@ -1082,13 +1082,13 @@
   
 
 
-  <h1>Rapidata settings</h1>
+  <h1>Demographic filter</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.settings.rapidata_settings"></a>
+<a id="rapidata.rapidata_client.filter.demographic_filter"></a>
     <div class="doc doc-contents first">
 
 
@@ -1114,227 +1114,69 @@
 
 
 
-<h2 id="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">RapidataSettings</span>
+<h2 id="rapidata.rapidata_client.filter.demographic_filter.DemographicFilter" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">DemographicFilter</span>
 
 
-<a href="#rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings" class="headerlink" title="Permanent link">#</a></h2>
-
+<a href="#rapidata.rapidata_client.filter.demographic_filter.DemographicFilter" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">DemographicFilter</span><span class="p">(</span><span class="n">identifier</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">])</span>
+</span></code></pre></div>
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="rapidata.rapidata_client.filter._base_filter.RapidataFilter">RapidataFilter</span></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
-        <p>Container class for all setting factory functions</p>
-<p>Settings can be added to an order to determine the behaviour of the task.</p>
+        <p>DemographicFilter Class</p>
+<p>Filters the graduates of an audience by a demographic attribute (e.g. age, gender,
+occupation). Used when deriving a filtered audience from an existing dimension audience
+via <img alt="🇵🇾" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f1f5-1f1fe.svg" title=":py:">meth:<code>RapidataAudience.filter</code>.</p>
 
 
-<p><span class="doc-section-title">Attributes:</span></p>
+<p><span class="doc-section-title">Parameters:</span></p>
     <table>
       <thead>
         <tr>
           <th>Name</th>
           <th>Type</th>
           <th>Description</th>
+          <th>Default</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.NoShuffle">NoShuffle</span></code></td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="NoShuffleSetting (rapidata.rapidata_client.settings.no_shuffle.NoShuffleSetting)" href="../no_shuffle/#rapidata.rapidata_client.settings.no_shuffle.NoShuffleSetting">NoShuffleSetting</a></code>
+                <code>identifier</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Only for classification and compare tasks. If true, the order of the categories / images will not be shuffled and presented in the same order as specified.</p>
+                <p>The demographic key to filter on (e.g. <code>"age"</code>, <code>"gender"</code>,
+<code>"occupation"</code>).</p>
               </div>
+            </td>
+            <td>
+                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.MuteVideo">MuteVideo</span></code></td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="MuteVideoSetting (rapidata.rapidata_client.settings.mute_video.MuteVideoSetting)" href="../mute_video/#rapidata.rapidata_client.settings.mute_video.MuteVideoSetting">MuteVideoSetting</a></code>
+                <code>values</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Mute the video. If this setting is not supplied, the video will not be muted.</p>
+                <p>The accepted values for that demographic. A graduate is included
+if any of their stored demographic values for <code>identifier</code> matches one of these.</p>
               </div>
             </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.FreeTextMinimumCharacters">FreeTextMinimumCharacters</span></code></td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="FreeTextMinimumCharactersSetting (rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting)" href="../free_text_minimum_characters/#rapidata.rapidata_client.settings.free_text_minimum_characters.FreeTextMinimumCharactersSetting">FreeTextMinimumCharactersSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Set the minimum number of characters a user has to type.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.FreeTextMaxCharacters">FreeTextMaxCharacters</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="FreeTextMaxCharactersSetting (rapidata.rapidata_client.settings.free_text_max_characters.FreeTextMaxCharactersSetting)" href="../free_text_max_characters/#rapidata.rapidata_client.settings.free_text_max_characters.FreeTextMaxCharactersSetting">FreeTextMaxCharactersSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Set the maximum number of characters allowed in a free text answer.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.SwapContextInstruction">SwapContextInstruction</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="SwapContextInstructionSetting (rapidata.rapidata_client.settings.swap_context_instruction.SwapContextInstructionSetting)" href="../swap_context_instruction/#rapidata.rapidata_client.settings.swap_context_instruction.SwapContextInstructionSetting">SwapContextInstructionSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Swap the place of the context and instruction.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.PlayPercentageVideo">PlayPercentageVideo</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="PlayPercentageVideoSetting (rapidata.rapidata_client.settings.play_percentage_video.PlayPercentageVideoSetting)" href="../play_percentage_video/#rapidata.rapidata_client.settings.play_percentage_video.PlayPercentageVideoSetting">PlayPercentageVideoSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Requires users to watch a certain percentage of the video before they can submit their answer.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.Markdown">Markdown</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="MarkdownSetting (rapidata.rapidata_client.settings.markdown.MarkdownSetting)" href="../markdown/#rapidata.rapidata_client.settings.markdown.MarkdownSetting">MarkdownSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Enables limited markdown rendering for text datapoints.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.AllowNeitherBoth">AllowNeitherBoth</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="AllowNeitherBothSetting (rapidata.rapidata_client.settings.allow_neither_both.AllowNeitherBothSetting)" href="../allow_neither_both/#rapidata.rapidata_client.settings.allow_neither_both.AllowNeitherBothSetting">AllowNeitherBothSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Only for compare tasks. Enables an "Unsure" button that allows users to select neither or both options.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.OriginalLanguageOnly">OriginalLanguageOnly</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="OriginalLanguageOnlySetting (rapidata.rapidata_client.settings.original_language_only.OriginalLanguageOnlySetting)" href="../original_language_only/#rapidata.rapidata_client.settings.original_language_only.OriginalLanguageOnlySetting">OriginalLanguageOnlySetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Display the content in the original language only. Hides the language switch UI from users.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.NoMistakeOption">NoMistakeOption</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="NoMistakeOptionSetting (rapidata.rapidata_client.settings.no_mistake_option.NoMistakeOptionSetting)" href="../no_mistake_option/#rapidata.rapidata_client.settings.no_mistake_option.NoMistakeOptionSetting">NoMistakeOptionSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.DisableAutoloop">DisableAutoloop</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="DisableAutoloopSetting (rapidata.rapidata_client.settings.disable_autoloop.DisableAutoloopSetting)" href="../disable_autoloop/#rapidata.rapidata_client.settings.disable_autoloop.DisableAutoloopSetting">DisableAutoloopSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.NoInstructionDisplay">NoInstructionDisplay</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="NoInstructionDisplaySetting (rapidata.rapidata_client.settings.no_instruction_display.NoInstructionDisplaySetting)" href="../no_instruction_display/#rapidata.rapidata_client.settings.no_instruction_display.NoInstructionDisplaySetting">NoInstructionDisplaySetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Hides the instruction text in the UI. Only the context will be shown.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.KeyboardNumeric">KeyboardNumeric</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="KeyboardNumericSetting (rapidata.rapidata_client.settings.keyboard_numeric.KeyboardNumericSetting)" href="../keyboard_numeric/#rapidata.rapidata_client.settings.keyboard_numeric.KeyboardNumericSetting">KeyboardNumericSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.LocateMaxPoints">LocateMaxPoints</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="LocateMaxPointsSetting (rapidata.rapidata_client.settings.locate_max_points.LocateMaxPointsSetting)" href="../locate_max_points/#rapidata.rapidata_client.settings.locate_max_points.LocateMaxPointsSetting">LocateMaxPointsSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Sets the maximum number of points a user can place on a locate task. Once the limit is reached, no more points can be added.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.LocateMinPoints">LocateMinPoints</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="LocateMinPointsSetting (rapidata.rapidata_client.settings.locate_min_points.LocateMinPointsSetting)" href="../locate_min_points/#rapidata.rapidata_client.settings.locate_min_points.LocateMinPointsSetting">LocateMinPointsSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Sets the minimum number of points required for a valid locate submission. The submit button is disabled until enough points are placed.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.ComparePanorama">ComparePanorama</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ComparePanoramaSetting (rapidata.rapidata_client.settings.compare_panorama.ComparePanoramaSetting)" href="../compare_panorama/#rapidata.rapidata_client.settings.compare_panorama.ComparePanoramaSetting">ComparePanoramaSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.CompareEquirectangular">CompareEquirectangular</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="CompareEquirectangularSetting (rapidata.rapidata_client.settings.compare_equirectangular.CompareEquirectangularSetting)" href="../compare_equirectangular/#rapidata.rapidata_client.settings.compare_equirectangular.CompareEquirectangularSetting">CompareEquirectangularSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.settings.rapidata_settings.RapidataSettings.ClassifyEquirectangular">ClassifyEquirectangular</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ClassifyEquirectangularSetting (rapidata.rapidata_client.settings.classify_equirectangular.ClassifyEquirectangularSetting)" href="../classify_equirectangular/#rapidata.rapidata_client.settings.classify_equirectangular.ClassifyEquirectangularSetting">ClassifyEquirectangularSetting</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.</p>
-              </div>
+                <em>required</em>
             </td>
           </tr>
       </tbody>
@@ -1343,10 +1185,11 @@
 
 <details class="example" open>
   <summary>Example</summary>
-  <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoShuffleSetting</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">NoShuffleSetting</span><span class="p">()]</span>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">DemographicFilter</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Keep graduates who are between 18 and 39 years old.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">DemographicFilter</span><span class="p">(</span><span class="s2">"age"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"18-29"</span><span class="p">,</span> <span class="s2">"30-39"</span><span class="p">])</span>
 </span></code></pre></div>
-<p>This can be used in an order to disable shuffling of categories.</p>
 </details>
 
 
@@ -1355,6 +1198,13 @@
 
 
 
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>src/rapidata/rapidata_client/filter/demographic_filter.py</code></summary>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">identifier</span><span class="o">=</span><span class="n">identifier</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+                  </details>
 
 
 

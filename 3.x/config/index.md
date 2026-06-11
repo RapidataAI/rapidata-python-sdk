@@ -49,6 +49,23 @@ logger.info("This will be shown") # (2)!
 | `cacheShards` | `int` | `128` | Number of cache shards for parallel access (immutable) |
 | `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
 | `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
+| `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression settings; see [Compression override](#compression-override) below. |
+
+#### Compression override
+
+```python
+from rapidata import rapidata_config, CompressionConfig
+
+# Force the asset service to compress images at quality 70 with a max dimension of 1024px,
+# regardless of the server-side default (which is currently off in production).
+rapidata_config.upload.compression = CompressionConfig(
+    enabled=True,
+    quality=70,
+    max_dimension=1024,
+)
+```
+
+Any field left as `None` falls back to the server-side default. Currently applies to single-asset uploads (`/asset/file` and `/asset/url`); batched URL uploads will pick the override up in a follow-up after the OpenAPI client regenerates.
 
 ## Environment Variables
 

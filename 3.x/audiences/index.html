@@ -689,6 +689,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#filtered-audiences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtered Audiences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtered Audiences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deriving-a-filtered-audience-with-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deriving a filtered audience with .filter()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-a-filtered-audience-with-a-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a filtered audience with a leaderboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1300,6 +1361,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#filtered-audiences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtered Audiences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtered Audiences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deriving-a-filtered-audience-with-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deriving a filtered audience with .filter()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-a-filtered-audience-with-a-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a filtered audience with a leaderboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1534,6 +1656,86 @@ labeler qualifies on the exact UI they will later see.</p>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">new_job_definition</span><span class="p">)</span>
 </span></code></pre></div>
+<h2 id="filtered-audiences">Filtered Audiences<a class="headerlink" href="#filtered-audiences" title="Permanent link">#</a></h2>
+<p>A filtered audience is a lightweight subset of an existing audience's
+qualified labelers — derived by applying filters on top of the base
+audience. No new qualification or recruiting takes place; the filtered
+audience reuses the same pool. Use it when you want to target a specific
+slice (e.g. by country or language) of an audience that you have already
+trained.</p>
+<h3 id="deriving-a-filtered-audience-with-filter">Deriving a filtered audience with <code>.filter()</code><a class="headerlink" href="#deriving-a-filtered-audience-with-filter" title="Permanent link">#</a></h3>
+<p>Call <code>.filter(...)</code> on any <code>RapidataAudience</code> with a list of one or more
+filters. The call returns a <code>RapidataFilteredAudience</code> — a slim handle
+that reuses the base audience's qualified pool. Multiple filters in the
+list are combined with logical AND.</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">LanguageFilter</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">base</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">us_english_speakers</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"en"</span><span class="p">]),</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">])</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">job</span> <span class="o">=</span> <span class="n">us_english_speakers</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">new_job_definition</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The returned object is a <code>RapidataFilteredAudience</code> — a slim variant that
+exposes only the operations that make sense for a filtered view
+(<code>assign_job</code>, <code>find_jobs</code>, <code>delete</code>, and use as <code>audience_id</code> on
+<a href="../mri/">leaderboard creation</a>). It deliberately does <strong>not</strong> offer
+<code>add_classification_example</code>, <code>update_filters</code>, or further nested
+<code>.filter(...)</code> calls: those would either mutate the base audience's
+qualification pool (which the filtered view shares) or chain filters in
+a way that's better expressed as a single combined filter on the base.</p>
+<h3 id="supported-filters">Supported filters<a class="headerlink" href="#supported-filters" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Targets labelers by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CountryFilter</code></td>
+<td>ISO-3166 country code (e.g. <code>["US", "CA"]</code>)</td>
+</tr>
+<tr>
+<td><code>LanguageFilter</code></td>
+<td>Spoken / device language (e.g. <code>["en", "de"]</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="combining-filters">Combining filters<a class="headerlink" href="#combining-filters" title="Permanent link">#</a></h3>
+<p>The list form combines filters with logical AND. For anything richer,
+build a single top-level filter explicitly with <code>AndFilter</code> / <code>OrFilter</code> /
+<code>NotFilter</code>, or use the equivalent <code>&amp;</code> / <code>|</code> / <code>~</code> operators:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">LanguageFilter</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># "US or Canadian labelers, but not French speakers"</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">audience_slice</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="p">(</span><span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">])</span> <span class="o">|</span> <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"CA"</span><span class="p">]))</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="o">&amp;</span> <span class="o">~</span><span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"fr"</span><span class="p">]),</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">])</span>
+</span></code></pre></div>
+<h3 id="using-a-filtered-audience-with-a-leaderboard">Using a filtered audience with a leaderboard<a class="headerlink" href="#using-a-filtered-audience-with-a-leaderboard" title="Permanent link">#</a></h3>
+<p><code>RapidataFilteredAudience</code> is a valid <code>audience_id</code> anywhere a regular
+audience id is accepted, including <a href="../mri/"><code>benchmark.create_leaderboard</code></a>.
+Pass the object directly — no need to read <code>.id</code> yourself:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">us_english</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"en"</span><span class="p">]),</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">])</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Realism (US, English)"</span><span class="p">,</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is more realistic?"</span><span class="p">,</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">audience_id</span><span class="o">=</span><span class="n">us_english</span><span class="p">,</span> <span class="c1"># (1)!</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<ol>
+<li>Accepts an id string, a <code>RapidataAudience</code>, or a <code>RapidataFilteredAudience</code>. Defaults to the global audience when omitted.</li>
+</ol>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
 <ul>
 <li>Learn about <a href="../examples/classify_job/">Classification Jobs</a> for categorizing data</li>
