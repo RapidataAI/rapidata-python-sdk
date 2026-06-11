@@ -23,7 +23,9 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.i_example_payload import IExamplePayload
 from rapidata.api_client.models.i_example_truth import IExampleTruth
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
+from rapidata.rapidata_client.datapoints._truth_translator import (
+    translate_compare_truth,
+)
 
 
 class AudienceExampleHandler:
@@ -35,7 +37,6 @@ class AudienceExampleHandler:
         self._openapi_service = openapi_service
         self._audience_id = audience_id
         self._asset_uploader = AssetUploader(openapi_service)
-        self._asset_mapper = AssetMapper()
 
     def add_classification_example(
         self,
@@ -72,10 +73,7 @@ class AudienceExampleHandler:
         if not all(truth in answer_options for truth in truth):
             raise ValueError("Truth must be part of the answer options")
 
-        if data_type == "media":
-            asset_input = self._asset_uploader.upload_and_map_asset(datapoint)
-        else:
-            asset_input = self._asset_mapper.create_text_input(datapoint)
+        asset_input = self._asset_uploader.build_asset_input(datapoint, data_type)
 
         payload = IExamplePayload(
             actual_instance=IExamplePayloadClassifyExamplePayload(
@@ -138,35 +136,28 @@ class AudienceExampleHandler:
             AddExampleToAudienceEndpointInput,
         )
 
+        if truth not in datapoint:
+            raise ValueError("Truth must be one of the datapoints")
+
+        if len(datapoint) != 2:
+            raise ValueError("Compare rapid requires exactly two media paths")
+
         payload = IExamplePayload(
             actual_instance=IExamplePayloadCompareExamplePayload(
                 _t="CompareExamplePayload", criteria=instruction
             )
         )
 
-        uploaded_names: list[str] = []
-        if data_type == "media":
-            uploaded_names = [self._asset_uploader.upload_asset(dp) for dp in datapoint]
-            asset_input = self._asset_mapper.create_existing_asset_input(uploaded_names)
-        else:
-            asset_input = self._asset_mapper.create_text_input(datapoint)
+        asset_input, asset_to_uploaded = (
+            self._asset_uploader.build_asset_input_with_names(datapoint, data_type)
+        )
 
-        if truth not in datapoint:
-            raise ValueError("Truth must be one of the datapoints")
-
-        truth_index = datapoint.index(truth)
-        if data_type == "media":
-            winner_id = uploaded_names[truth_index]
-        else:
-            winner_id = truth
+        winner_id = asset_to_uploaded[truth] if data_type == "media" else truth
         model_truth = IExampleTruth(
             actual_instance=IExampleTruthCompareExampleTruth(
                 _t="CompareExampleTruth", winnerId=winner_id
             )
         )
-
-        if len(datapoint) != 2:
-            raise ValueError("Compare rapid requires exactly two media paths")
 
         self._openapi_service.audience.examples_api.audience_audience_id_example_post(
             audience_id=self._audience_id,
@@ -196,23 +187,30 @@ class AudienceExampleHandler:
             AddExampleToAudienceEndpointInput,
         )
 
-        # Handle asset uploading based on data type
-        if rapid.data_type == "media":
-            asset_input = self._asset_uploader.upload_and_map_asset(rapid.asset)
-        else:
-            asset_input = self._asset_mapper.create_text_input(rapid.asset)
+        asset_input, asset_to_uploaded = (
+            self._asset_uploader.build_asset_input_with_names(
+                rapid.asset, rapid.data_type
+            )
+        )
 
-        # Handle media context if present
         context_asset = None
         if rapid.media_context:
             context_asset = self._asset_uploader.upload_and_map_asset(rapid.media_context)
+
+        # Compare truths reference original asset paths — rewrite them to the
+        # uploaded names before the wire conversion.
+        truth = (
+            translate_compare_truth(rapid.truth, asset_to_uploaded)
+            if rapid.data_type == "media"
+            else rapid.truth
+        )
 
         # Convert IValidationTruthModel to IExampleTruth
         # Both types are structurally identical (same JSON schema), differing only in class names
         # The dict-based conversion is safe and preserves all data
         model_truth: IExampleTruth | None = None
-        if rapid.truth:
-            truth_dict = cast(dict[str, Any], rapid.truth.to_dict())
+        if truth:
+            truth_dict = cast(dict[str, Any], truth.to_dict())
             model_truth = IExampleTruth.from_dict(truth_dict)
 
         # Convert IRapidPayload to IExamplePayload

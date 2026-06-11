@@ -6,7 +6,6 @@ from opentelemetry import trace
 
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config.tracer import tracer
-from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
@@ -43,7 +42,6 @@ class RapidataOrderManager:
 
         self.__priority: int | None = None
         self.__sticky_config: StickyConfig | None = None
-        self._asset_uploader = AssetUploader(openapi_service)
         logger.debug("RapidataOrderManager initialized")
 
     def _create_general_order(

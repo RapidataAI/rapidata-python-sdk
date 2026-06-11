@@ -11,7 +11,6 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.job.rapidata_job_definition import RapidataJobDefinition
 from typing import Sequence, Literal, TYPE_CHECKING
-from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
@@ -34,7 +33,6 @@ class RapidataJobManager:
         self._openapi_service = openapi_service
 
         self.__priority: int | None = None
-        self._asset_uploader = AssetUploader(openapi_service)
         logger.debug("JobManager initialized")
 
     def _create_general_job_definition(

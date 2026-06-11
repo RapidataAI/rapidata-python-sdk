@@ -15,6 +15,9 @@ from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter i
     AudienceAudienceIdJobsGetJobIdParameter,
 )
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.datapoints._asset_upload_orchestrator import (
+    AssetUploadOrchestrator,
+)
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 
 from rapidata.rapidata_client.validation.rapids.box import Box
@@ -584,6 +587,23 @@ class ValidationSetManager:
             dimensions=dimensions,
             openapi_service=self._openapi_service,
         )
+        # Pre-upload all media assets (batched URLs, parallel files) so the per-rapid
+        # uploads become cache hits; failures surface via failed_rapids below.
+        assets_to_upload: set[str] = set()
+        for rapid in rapids:
+            if rapid.data_type == "media":
+                if isinstance(rapid.asset, list):
+                    assets_to_upload.update(rapid.asset)
+                else:
+                    assets_to_upload.add(rapid.asset)
+            if rapid.media_context:
+                assets_to_upload.update(rapid.media_context)
+
+        if assets_to_upload:
+            AssetUploadOrchestrator(self._openapi_service).upload_all_assets(
+                assets_to_upload
+            )
+
         with tracer.start_as_current_span("Adding rapids to validation set"):
             logger.debug("Adding rapids to validation set")
             failed_rapids = []
