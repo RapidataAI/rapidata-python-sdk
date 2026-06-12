@@ -11,6 +11,8 @@ class OriginalLanguageOnlySetting(RapidataSetting):
     """
     Display the content in the original language only. Hides the language switch UI from users.
 
+    Use this when task content should not be translated: it disables the automatic translation / localization of the content and prevents annotators from switching languages. Search terms: translation, translate, translated, multilingual, localization, localize, i18n, language switch.
+
     Args:
         value (bool, optional): Whether to display the content in the original language only. Defaults to True.
     """
