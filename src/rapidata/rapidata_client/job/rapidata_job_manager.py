@@ -496,7 +496,7 @@ class RapidataJobManager:
                 settings=settings,
             )
 
-    def _create_locate_job_definition(
+    def create_locate_job_definition(
         self,
         name: str,
         instruction: str,

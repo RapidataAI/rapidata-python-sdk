@@ -68,6 +68,7 @@ plugins:
         Examples:
           - examples/classify_job.md
           - examples/compare_job.md
+          - examples/locate_job.md
         Benchmarks:
           - mri.md
           - mri_advanced.md
@@ -124,6 +125,7 @@ nav:
     - Examples:
       - Classification: examples/classify_job.md
       - Comparison: examples/compare_job.md
+      - Locate: examples/locate_job.md
     - Ranking Flows: flows.md
     - Model Ranking:
       - Getting Started: mri.md
