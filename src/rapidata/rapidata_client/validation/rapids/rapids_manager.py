@@ -6,7 +6,10 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.service.openapi_service import OpenAPIService
 
-from rapidata.rapidata_client.validation.rapids.box import Box
+from rapidata.rapidata_client.validation.rapids.box import (
+    Box,
+    calculate_boxes_coverage,
+)
 
 
 class RapidsManager:
@@ -431,57 +434,7 @@ class RapidsManager:
         Returns:
             float: Coverage ratio between 0.0 and 1.0
         """
-        if not boxes:
-            return 0.0
-
-        # Convert boxes to intervals for sweep line algorithm
-        events = []
-
-        # Create events for x-coordinates
-        for i, box in enumerate(boxes):
-            events.append((box.x_min, "start", i, box))
-            events.append((box.x_max, "end", i, box))
-
-        # Sort events by x-coordinate
-        events.sort(key=lambda x: (x[0], x[1] == "end"))
-
-        total_area = 0.0
-        active_boxes = set()
-        prev_x = 0.0
-
-        for x, event_type, box_id, box in events:
-            # Calculate area for the previous x-interval
-            if active_boxes and x > prev_x:
-                # Merge y-intervals for active boxes
-                y_intervals = [(boxes[i].y_min, boxes[i].y_max) for i in active_boxes]
-                y_intervals.sort()
-
-                # Merge overlapping y-intervals
-                merged_intervals = []
-                for start, end in y_intervals:
-                    if merged_intervals and start <= merged_intervals[-1][1]:
-                        # Overlapping intervals - merge them
-                        merged_intervals[-1] = (
-                            merged_intervals[-1][0],
-                            max(merged_intervals[-1][1], end),
-                        )
-                    else:
-                        # Non-overlapping interval
-                        merged_intervals.append((start, end))
-
-                # Calculate total y-coverage for this x-interval
-                y_coverage = sum(end - start for start, end in merged_intervals)
-                total_area += (x - prev_x) * y_coverage
-
-            # Update active boxes
-            if event_type == "start":
-                active_boxes.add(box_id)
-            else:
-                active_boxes.discard(box_id)
-
-            prev_x = x
-
-        return total_area
+        return calculate_boxes_coverage(boxes)
 
     @staticmethod
     def _calculate_coverage_ratio(
