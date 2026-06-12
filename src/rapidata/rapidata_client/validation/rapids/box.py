@@ -1,6 +1,7 @@
 from rapidata.api_client.models.locate_box_truth_model_box import (
     LocateBoxTruthModelBox,
 )
+from rapidata.api_client.models.example_box_shape import ExampleBoxShape
 from pydantic import BaseModel, field_validator, model_validator
 
 
@@ -42,3 +43,60 @@ class Box(BaseModel):
             xMax=self.x_max * 100,
             yMax=self.y_max * 100,
         )
+
+    def to_example_model(self) -> ExampleBoxShape:
+        return ExampleBoxShape(
+            xMin=self.x_min * 100,
+            yMin=self.y_min * 100,
+            xMax=self.x_max * 100,
+            yMax=self.y_max * 100,
+        )
+
+
+def calculate_boxes_coverage(boxes: list[Box]) -> float:
+    """Calculate the ratio of image area covered by a list of boxes.
+
+    Args:
+        boxes: List of Box objects with coordinates in range [0, 1].
+
+    Returns:
+        float: Coverage ratio between 0.0 and 1.0.
+    """
+    if not boxes:
+        return 0.0
+
+    # Sweep line over x: at each x-interval, sum the merged y-coverage of the
+    # currently active boxes, weighted by the interval width.
+    events: list[tuple[float, str, int]] = []
+    for i, box in enumerate(boxes):
+        events.append((box.x_min, "start", i))
+        events.append((box.x_max, "end", i))
+
+    events.sort(key=lambda e: (e[0], e[1] == "end"))
+
+    total_area = 0.0
+    active_boxes: set[int] = set()
+    prev_x = 0.0
+
+    for x, event_type, box_id in events:
+        if active_boxes and x > prev_x:
+            y_intervals = sorted(
+                (boxes[i].y_min, boxes[i].y_max) for i in active_boxes
+            )
+            merged: list[tuple[float, float]] = []
+            for start, end in y_intervals:
+                if merged and start <= merged[-1][1]:
+                    merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+                else:
+                    merged.append((start, end))
+            y_coverage = sum(end - start for start, end in merged)
+            total_area += (x - prev_x) * y_coverage
+
+        if event_type == "start":
+            active_boxes.add(box_id)
+        else:
+            active_boxes.discard(box_id)
+
+        prev_x = x
+
+    return total_area
