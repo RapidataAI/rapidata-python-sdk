@@ -59,8 +59,7 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
 
     # Qualification examples — each pairs an image with the bounding box(es)
     # covering the region a correct labeler should tap. Coordinates are image
-    # ratios (0.0–1.0); the boxes below are illustrative, mark the real artifact
-    # regions in your own images. Use only examples whose target is unambiguous.
+    # ratios (0.0–1.0);
     EXAMPLES = [
         ("https://assets.rapidata.ai/544b1210-1e91-4351-a97c-fe8263b319b4.webp",
          [Box(x_min=0.44, y_min=0.42, x_max=0.58, y_max=0.63)]),
