@@ -8,7 +8,7 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
 
 === "Simple"
 
-    The simple version runs straight away on a **generally available** audience — a pre-existing pool of labelers, ready to work immediately — so the job starts collecting responses right away.
+    The simple version runs straight away on a **curated** audience — a pre-existing pool of labelers, ready to work immediately — so the job starts collecting responses right away.
 
     ```python
     from rapidata import RapidataClient
