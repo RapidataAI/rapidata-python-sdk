@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 import os
 import threading
-from typing import Any
+from typing import Any, Literal
 
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.service.openapi_service import OpenAPIService
@@ -210,6 +210,42 @@ class AssetUploader:
             return AssetMapper.create_existing_asset_input(uploaded_names)
 
         return AssetMapper.create_existing_asset_input(self.upload_asset(asset))
+
+    def build_asset_input(
+        self, asset: str | list[str], data_type: Literal["media", "text"]
+    ) -> IAssetInput:
+        """Build the ``IAssetInput`` for an asset: upload media, wrap text as-is."""
+        asset_input, _ = self.build_asset_input_with_names(asset, data_type)
+        return asset_input
+
+    def build_asset_input_with_names(
+        self, asset: str | list[str], data_type: Literal["media", "text"]
+    ) -> tuple[IAssetInput, dict[str, str]]:
+        """Build the ``IAssetInput`` plus an original-asset → uploaded-name map.
+
+        The map lets compare-truth translation rewrite truth references
+        (winner ids, correct combinations) from caller-supplied paths/URLs to
+        the uploaded names the API expects. It is empty for text assets,
+        which are sent verbatim and never uploaded.
+        """
+        if data_type == "text":
+            return AssetMapper.create_text_input(asset), {}
+
+        if isinstance(asset, list):
+            asset_to_uploaded = {a: self.upload_asset(a) for a in asset}
+            # Re-index through the original list so duplicate entries survive.
+            return (
+                AssetMapper.create_existing_asset_input(
+                    [asset_to_uploaded[a] for a in asset]
+                ),
+                asset_to_uploaded,
+            )
+
+        uploaded_name = self.upload_asset(asset)
+        return (
+            AssetMapper.create_existing_asset_input(uploaded_name),
+            {asset: uploaded_name},
+        )
 
     def clear_cache(self) -> None:
         """Clear both URL and file caches."""

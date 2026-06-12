@@ -20,8 +20,11 @@ class RapidataResults(dict):
 
         Converts the results to a pandas DataFrame.
 
-        For Compare results, creates standardized A/B columns for metrics.
-        For regular results, flattens nested dictionaries into columns with underscore-separated names.
+        For Compare results (exactly 2 assets), creates standardized ``A_``/``B_``
+        columns for each metric (plus ``Both_``/``Neither_`` when those options
+        are present). For Ranking results with N assets, creates one
+        ``<asset>_<metric>`` column per asset. For non-compare results, flattens
+        nested dictionaries into columns with underscore-separated names.
 
         Args:
             split_details: If True, splits each datapoint by its detailed results,
@@ -44,17 +47,17 @@ class RapidataResults(dict):
                 "Warning: Results are old and Order type is not specified. Dataframe might be wrong."
             )
 
-        # Check for detailed results if split_details is True
-        if split_details:
-            if not self._has_detailed_results():
-                raise ValueError("No detailed results found in the data")
-            return self._to_pandas_with_detailed_results()
+        if split_details and not self._has_detailed_results():
+            raise ValueError("No detailed results found in the data")
 
-        if (
-            self["info"].get("orderType") == "Compare"
-            or self["info"].get("orderType") == "Ranking"
-        ):
-            return self._compare_to_pandas()
+        # Compare/Ranking have an asset-aware shape; route them to the
+        # compare-specific path even when split_details=True so we keep the
+        # A_/B_ (or per-asset) column splitting.
+        if self["info"].get("orderType") in ("Compare", "Ranking"):
+            return self._compare_to_pandas(split_details=split_details)
+
+        if split_details:
+            return self._to_pandas_with_detailed_results()
 
         # Get the structure from first item
         first_item = self["results"][0]
@@ -189,9 +192,38 @@ class RapidataResults(dict):
             d = d.get(key, {})
         return d.get(path[-1])
 
-    def _compare_to_pandas(self) -> "pd.DataFrame":
+    @staticmethod
+    def _extract_compare_assets(result: dict[str, Any]) -> list[str]:
+        """Return the ordered list of asset identifiers for a compare/ranking row.
+
+        Prefers ``assetUrls`` when present (the canonical asset list emitted by
+        the backend, never contaminated with ``Both``/``Neither``). Falls back
+        to ``aggregatedResults`` (filtering ``Both``/``Neither``) for older
+        payloads or text-asset compares that don't include ``assetUrls``.
         """
-        Converts Compare results to a pandas DataFrame dynamically.
+        excluded = {"Both", "Neither"}
+
+        asset_urls = result.get("assetUrls")
+        if isinstance(asset_urls, dict) and asset_urls:
+            return [k for k in asset_urls.keys() if k not in excluded]
+
+        aggregated = result.get("aggregatedResults")
+        if isinstance(aggregated, dict) and aggregated:
+            return [k for k in aggregated.keys() if k not in excluded]
+
+        return []
+
+    def _compare_to_pandas(self, split_details: bool = False) -> "pd.DataFrame":
+        """Convert Compare/Ranking results to a pandas DataFrame.
+
+        For Compare (exactly 2 assets), produces ``A_<metric>`` / ``B_<metric>``
+        columns (plus ``Both_<metric>`` / ``Neither_<metric>`` when those
+        options are present). For Ranking with N assets, produces one
+        ``<asset>_<metric>`` column per asset.
+
+        When ``split_details=True``, each datapoint is expanded to one row per
+        ``detailedResults`` entry, with the asset/metric columns copied across
+        and the per-response fields flattened in.
         """
         import pandas as pd
 
@@ -200,43 +232,61 @@ class RapidataResults(dict):
 
         rows = []
         for result in self["results"]:
-            # Get all asset names from the first metric we find
-            assets = []
-            for key in result:
-                if isinstance(result[key], dict) and len(result[key]) >= 2:
-                    assets = list(result[key].keys())
-                    break
-            else:
+            assets = self._extract_compare_assets(result)
+            if len(assets) < 2:
                 continue
 
-            assets = [asset for asset in assets if asset not in ["Both", "Neither"]]
+            is_compare = len(assets) == 2
 
-            # Initialize row with non-comparative fields
-            row = {
+            # Non-comparative fields. Skip dicts (asset metrics, handled below)
+            # and lists (e.g. detailedResults — handled separately when
+            # split_details=True, otherwise omitted from the tabular export).
+            base_row: dict[str, Any] = {
                 key: value
                 for key, value in result.items()
-                if not isinstance(value, dict)
+                if not isinstance(value, (dict, list))
             }
-            row["assetA"] = assets[0]
-            row["assetB"] = assets[1]
 
-            # Handle comparative metrics
+            if is_compare:
+                base_row["assetA"] = assets[0]
+                base_row["assetB"] = assets[1]
+            else:
+                for i, asset in enumerate(assets):
+                    base_row[f"asset_{i + 1}"] = asset
+
+            # Per-metric asset columns. Dicts keyed by asset names are
+            # treated as comparative metrics and split into A_/B_ (compare) or
+            # per-asset (ranking) columns. Other dicts (e.g. ``privateMetadata``
+            # whose keys are arbitrary user data, not asset identifiers) are
+            # flattened with their field name as the prefix so their values
+            # still make it into the dataframe.
+            asset_set = set(assets)
             for key, values in result.items():
-                if isinstance(values, dict) and len(values) >= 2:
-                    # Add main asset columns
-                    for i, asset in enumerate(
-                        assets[:2]
-                    ):  # Limit to first 2 main assets
-                        column_prefix = "A_" if i == 0 else "B_"
-                        row[f"{column_prefix}{key}"] = values.get(asset, 0)
+                if not isinstance(values, dict) or not values:
+                    continue
+                if asset_set.intersection(values.keys()):
+                    if is_compare:
+                        base_row[f"A_{key}"] = values.get(assets[0])
+                        base_row[f"B_{key}"] = values.get(assets[1])
+                        if "Both" in values:
+                            base_row[f"Both_{key}"] = values["Both"]
+                        if "Neither" in values:
+                            base_row[f"Neither_{key}"] = values["Neither"]
+                    else:
+                        for asset in assets:
+                            base_row[f"{asset}_{key}"] = values.get(asset)
+                else:
+                    base_row.update(self._flatten_dict(values, parent_key=key))
 
-                    # Add special option columns if they exist
-                    if "Both" in values:
-                        row[f"Both_{key}"] = values.get("Both", 0)
-                    if "Neither" in values:
-                        row[f"Neither_{key}"] = values.get("Neither", 0)
-
-            rows.append(row)
+            detailed = result.get("detailedResults")
+            if split_details and isinstance(detailed, list) and detailed:
+                for detailed_result in detailed:
+                    row = base_row.copy()
+                    if isinstance(detailed_result, dict):
+                        row.update(self._flatten_dict(detailed_result))
+                    rows.append(row)
+            else:
+                rows.append(base_row)
 
         return pd.DataFrame(rows)
 
