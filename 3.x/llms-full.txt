@@ -24,7 +24,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    audience = client.audience.find_audiences("alignment")[0]
+    audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 
     job_definition = client.job.create_compare_job_definition(
         name="Example Image Comparison",
@@ -47,7 +47,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    audience = client.audience.find_audiences("alignment")[0]
+    audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 
     job_definition = client.job.create_compare_job_definition(
         name="Example Video Comparison",
@@ -155,6 +155,7 @@ The SDK is built around three concepts:
 |---|---|---|
 | **Compare** | Side-by-side comparison of images, video, audio, or text | [Comparison example](examples/compare_job.md) |
 | **Classify** | Categorize data with custom labels or Likert scales | [Classification example](examples/classify_job.md) |
+| **Locate** | Point out objects, artifacts, or regions within an image | [Locate example](examples/locate_job.md) |
 | **Rank models** | Benchmark AI models on leaderboards with human evaluation | [Model Ranking](mri.md) |
 | **Continuous ranking** | Lightweight ongoing ranking without full job setup | [Ranking Flows](flows.md) |
 
@@ -224,10 +225,10 @@ client = RapidataClient(client_id="Your client ID", client_secret="Your client s
 The simplest way to get started is with a curated audience:
 
 ```py
-audience = client.audience.find_audiences("alignment")[0] # (1)!
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
 ```
 
-1. Curated audiences are pre-existing pools of labelers trained on a specific type of task.
+1. Curated audiences are pre-existing pools of labelers trained on a specific type of task — this is the **Alignment** audience. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 !!! note
     The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
@@ -328,7 +329,7 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-audience = client.audience.find_audiences("alignment")[0]
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 
 job_definition = client.job.create_compare_job_definition(
     name="Example Image Prompt Alignment",
@@ -725,6 +726,7 @@ The data to be labeled. The format depends on the job type:
 |----------|--------|-------------|
 | Classification | `list[str]` | Single items to classify |
 | Compare | `list[list[str]]` | Pairs of items (exactly 2 per inner list) |
+| Locate | `list[str]` | Single items to locate within |
 
 **Supported Formats:**
 
@@ -995,24 +997,36 @@ job_definition = client.job.create_compare_job_definition(
 )
 ```
 
+### Locate Job
+
+Locate has no job-specific parameters — it uses only the core parameters. The `instruction` describes what labelers should locate, and each response is the set of points they tapped on the datapoint.
+
+```python
+job_definition = client.job.create_locate_job_definition(
+    name="Artifact Detection",
+    instruction="Tap on any visual glitches or errors in the image.",
+    datapoints=["image1.jpg", "image2.jpg"],
+)
+```
+
 ---
 
 ## Parameter Availability Matrix
 
-| Parameter | Classification | Compare |
-|-----------|:-:|:-:|
-| `name` | :white_check_mark: | :white_check_mark: |
-| `instruction` | :white_check_mark: | :white_check_mark: |
-| `datapoints` | :white_check_mark: | :white_check_mark: |
-| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: |
-| `data_type` | :white_check_mark: | :white_check_mark: |
-| `contexts` | :white_check_mark: | :white_check_mark: |
-| `media_contexts` | :white_check_mark: | :white_check_mark: |
-| `confidence_threshold` | :white_check_mark: | :white_check_mark: |
-| `quorum_threshold` | :white_check_mark: | :white_check_mark: |
-| `settings` | :white_check_mark: | :white_check_mark: |
-| `answer_options` | :white_check_mark: | :x: |
-| `a_b_names` | :x: | :white_check_mark: |
+| Parameter | Classification | Compare | Locate |
+|-----------|:-:|:-:|:-:|
+| `name` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `instruction` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `datapoints` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `data_type` | :white_check_mark: | :white_check_mark: | :x: |
+| `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: |
+| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: |
+| `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `answer_options` | :white_check_mark: | :x: | :x: |
+| `a_b_names` | :x: | :white_check_mark: | :x: |
 
 
 ## Understanding Results
@@ -1958,49 +1972,115 @@ from rapidata import RapidataClient
 
 To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
 
-In this example, we want to rate different images based on a Likert scale to assess how well generated images match their descriptions. The `NoShuffleSetting` setting ensures answer options remain in order since they represent a scale.
+In this example, we rate images on a Likert scale to assess how well generated images match their descriptions. The `NoShuffleSetting` keeps the answer options in order, since they represent a scale.
 
-```python
-from rapidata import RapidataClient, NoShuffleSetting
+=== "Simple"
 
-IMAGE_URLS = [
-    "https://assets.rapidata.ai/tshirt-4o.png",
-    "https://assets.rapidata.ai/tshirt-aurora.jpg",
-    "https://assets.rapidata.ai/teamleader-aurora.jpg",
-]
+    The simple version runs straight away on a **curated** audience — a pre-existing pool of trained labelers — so the job starts collecting responses immediately.
 
-CONTEXTS = ["A t-shirt with the text 'Running on caffeine & dreams'"] * len(IMAGE_URLS)
+    ```python
+    from rapidata import RapidataClient, NoShuffleSetting
 
-client = RapidataClient()
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/tshirt-4o.png",
+        "https://assets.rapidata.ai/tshirt-aurora.jpg",
+        "https://assets.rapidata.ai/teamleader-aurora.jpg",
+    ]
 
-audience = client.audience.create_audience(name="Likert Scale Audience")
-audience.add_classification_example(
-    instruction="How well does the image match the description?",
-    answer_options=["1: Not at all", "2: A little", "3: Moderately", "4: Very well", "5: Perfectly"],
-    datapoint="https://assets.rapidata.ai/tshirt-4o.png",
-    truth=["5: Perfectly"],
-    context="A t-shirt with the text 'Running on caffeine & dreams'"
-)
+    CONTEXTS = ["A t-shirt with the text 'Running on caffeine & dreams'"] * len(IMAGE_URLS)
 
-job_definition = client.job.create_classification_job_definition(
-    name="Likert Scale Example",
-    instruction="How well does the image match the description?",
-    answer_options=["1: Not at all", "2: A little", "3: Moderately", "4: Very well", "5: Perfectly"],
-    contexts=CONTEXTS,
-    datapoints=IMAGE_URLS,
-    responses_per_datapoint=25,
-    settings=[NoShuffleSetting()] # (1)!
-)
+    client = RapidataClient()
 
-job_definition.preview()
+    audience = client.audience.get_audience_by_id("aud_mr3NbeWa4Uo") # (1)!
 
-job = audience.assign_job(job_definition)
-job.display_progress_bar()
-results = job.get_results()
-print(results)
-```
+    job_definition = client.job.create_classification_job_definition(
+        name="Likert Scale Example",
+        instruction="How well does the image match the description?",
+        answer_options=["1: Not at all", "2: A little", "3: Moderately", "4: Very well", "5: Perfectly"],
+        contexts=CONTEXTS,
+        datapoints=IMAGE_URLS,
+        responses_per_datapoint=25,
+        settings=[NoShuffleSetting()] # (2)!
+    )
 
-1. Keeps the answer options in their specified order. Without this, options are randomized to reduce bias — but for Likert scales you want them ordered.
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. Looks up the curated **Coherence** audience by id, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+    2. Keeps the answer options in their specified order. Without this, options are randomized to reduce bias — but for Likert scales you want them ordered.
+
+=== "Advanced"
+
+    The advanced version builds a **custom** audience and trains labelers with qualification examples before running the job. Only labelers who answer the examples correctly join the audience, which raises label quality on nuanced tasks.
+
+    !!! warning "This takes significantly longer"
+        Unlike the Simple path, this first builds and trains an entirely new audience before the job can start collecting responses — expect it to take considerably longer to return results.
+
+    ```python
+    from rapidata import RapidataClient, NoShuffleSetting
+
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/tshirt-4o.png",
+        "https://assets.rapidata.ai/tshirt-aurora.jpg",
+        "https://assets.rapidata.ai/teamleader-aurora.jpg",
+    ]
+
+    CONTEXTS = ["A t-shirt with the text 'Running on caffeine & dreams'"] * len(IMAGE_URLS)
+
+    ANSWER_OPTIONS = ["1: Not at all", "2: A little", "3: Moderately", "4: Very well", "5: Perfectly"]
+
+    # Qualification examples — each pairs an image with a description and the
+    # correct rating. Use only examples whose truth is clear and unambiguous.
+    EXAMPLES = [
+        ("https://assets.rapidata.ai/tshirt-4o.png", "A t-shirt with the text 'Running on caffeine & dreams'", "5: Perfectly"),
+        ("https://assets.rapidata.ai/flux_duck.jpg", "A psychedelic duck with glasses", "5: Perfectly"),
+        ("https://assets.rapidata.ai/flux_flower.jpg", "A yellow flower sticking out of a green pot", "5: Perfectly"),
+        ("https://assets.rapidata.ai/teamleader-aurora.jpg", "A t-shirt with the text 'Running on caffeine & dreams'", "1: Not at all"),
+        ("https://assets.rapidata.ai/flux_book.jpg", "A psychedelic duck with glasses", "1: Not at all"),
+        ("https://assets.rapidata.ai/flux_duck.jpg", "A small blue book sitting on a large red book", "1: Not at all"),
+    ]
+
+    client = RapidataClient()
+
+    audience = client.audience.create_audience(name="Likert Scale Audience") # (1)!
+    for datapoint, context, truth in EXAMPLES:
+        audience.add_classification_example(
+            instruction="How well does the image match the description?",
+            answer_options=ANSWER_OPTIONS,
+            datapoint=datapoint,
+            truth=[truth],
+            context=context,
+            settings=[NoShuffleSetting()] # (2)!
+        )
+
+    job_definition = client.job.create_classification_job_definition(
+        name="Likert Scale Example",
+        instruction="How well does the image match the description?",
+        answer_options=ANSWER_OPTIONS,
+        contexts=CONTEXTS,
+        datapoints=IMAGE_URLS,
+        responses_per_datapoint=25,
+        settings=[NoShuffleSetting()]
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it.
+    2. Qualify labelers on the same UI they'll see in the job. Since the job uses `NoShuffleSetting`, the examples use it too — see [Custom Audiences](../audiences.md#matching-the-job-ui-with-settings).
+
+    !!! note
+        Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
 
 
 ## Comparison
@@ -2011,53 +2091,243 @@ To learn about the basics of creating a job, please refer to the [quickstart gui
 
 In this example, we compare images from two image generation models (Flux and Midjourney) to determine which more accurately follows the given prompts.
 
-```python
-from rapidata import RapidataClient
+=== "Simple"
 
-PROMPTS = [
-    "A sign that says 'Diffusion'.",
-    "A yellow flower sticking out of a green pot.",
-    "hyperrealism render of a surreal alien humanoid.",
-    "psychedelic duck",
-    "A small blue book sitting on a large red book."
-]
+    The simple version runs straight away on a **curated** audience — a pre-existing pool of trained labelers — so the job starts collecting responses immediately.
 
-IMAGE_PAIRS = [
-    ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
-    ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
-    ["https://assets.rapidata.ai/flux_alien.jpg", "https://assets.rapidata.ai/mj_alien.jpg"],
-    ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
-    ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"]
-]
+    ```python
+    from rapidata import RapidataClient
 
-client = RapidataClient()
+    PROMPTS = [
+        "A sign that says 'Diffusion'.",
+        "A yellow flower sticking out of a green pot.",
+        "hyperrealism render of a surreal alien humanoid.",
+        "psychedelic duck",
+        "A small blue book sitting on a large red book."
+    ]
 
-audience = client.audience.create_audience(name="Prompt Alignment Audience")
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=[
-        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-    ],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'."
-)
+    IMAGE_PAIRS = [
+        ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+        ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+        ["https://assets.rapidata.ai/flux_alien.jpg", "https://assets.rapidata.ai/mj_alien.jpg"],
+        ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+        ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"]
+    ]
 
-job_definition = client.job.create_compare_job_definition(
-    name="Example Image Prompt Alignment Job",
-    instruction="Which image follows the prompt more accurately?",
-    datapoints=IMAGE_PAIRS,
-    responses_per_datapoint=25,
-    contexts=PROMPTS
-)
+    client = RapidataClient()
 
-job_definition.preview()
+    audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
 
-job = audience.assign_job(job_definition)
-job.display_progress_bar()
-results = job.get_results()
-print(results)
-```
+    job_definition = client.job.create_compare_job_definition(
+        name="Example Image Prompt Alignment Job",
+        instruction="Which image follows the prompt more accurately?",
+        datapoints=IMAGE_PAIRS,
+        responses_per_datapoint=25,
+        contexts=PROMPTS
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. Looks up the curated **Alignment** audience by id, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+
+=== "Advanced"
+
+    The advanced version builds a **custom** audience and trains labelers with qualification examples before running the job. Only labelers who pick the correct image on the examples join the audience, which raises label quality.
+
+    !!! warning "This takes significantly longer"
+        Unlike the Simple path, this first builds and trains an entirely new audience before the job can start collecting responses — expect it to take considerably longer to return results.
+
+    ```python
+    from rapidata import RapidataClient
+
+    PROMPTS = [
+        "A sign that says 'Diffusion'.",
+        "A yellow flower sticking out of a green pot.",
+        "hyperrealism render of a surreal alien humanoid.",
+        "psychedelic duck",
+        "A small blue book sitting on a large red book."
+    ]
+
+    IMAGE_PAIRS = [
+        ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+        ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+        ["https://assets.rapidata.ai/flux_alien.jpg", "https://assets.rapidata.ai/mj_alien.jpg"],
+        ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+        ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"]
+    ]
+
+    # Qualification pairs where the first (Flux) image clearly follows the prompt
+    # better. The truth must point at the unambiguously better image.
+    QUALIFICATION_PAIRS = [
+        ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+        ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+        ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"],
+        ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+        ["https://assets.rapidata.ai/flux_store_front.jpg", "https://assets.rapidata.ai/mj_store_front.jpg"],
+        ["https://assets.rapidata.ai/flux_hand.jpg", "https://assets.rapidata.ai/mj_hand.jpg"],
+        ["https://assets.rapidata.ai/flux_traffic_lights.jpg", "https://assets.rapidata.ai/mj_traffic_lights.jpg"],
+        ["https://assets.rapidata.ai/flux_plane.jpg", "https://assets.rapidata.ai/mj_plane.jpg"],
+    ]
+    QUALIFICATION_PROMPTS = [
+        "A sign that says 'Diffusion'.",
+        "A psychedelic duck with glasses",
+        "A small blue book sitting on a large red book.",
+        "A yellow flower sticking out of a bright green pot.",
+        "A store front with 'hello world' written on it.",
+        "A yellow hand on a black stone.",
+        "A green, yellow and red traffic light.",
+        "A plane flying over a person.",
+    ]
+
+    client = RapidataClient()
+
+    audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
+    for prompt, datapoint in zip(QUALIFICATION_PROMPTS, QUALIFICATION_PAIRS):
+        audience.add_compare_example(
+            instruction="Which image follows the prompt more accurately?",
+            datapoint=datapoint,
+            truth=datapoint[0],
+            context=prompt
+        )
+
+    job_definition = client.job.create_compare_job_definition(
+        name="Example Image Prompt Alignment Job",
+        instruction="Which image follows the prompt more accurately?",
+        datapoints=IMAGE_PAIRS,
+        responses_per_datapoint=25,
+        contexts=PROMPTS
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. Creates a new, empty audience. The `add_compare_example` calls train and filter the labelers who join it.
+
+    !!! note
+        Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+
+## Locate
+
+# Locate Job Example
+
+To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
+
+In a locate job, labelers tap the points in a datapoint that match your instruction. In this example, we ask people to point out visual artifacts in AI-generated images — a common way to find where a generator went wrong.
+
+Like any other job, a locate job can be assigned to any audience — a ready-to-go curated one, or a custom audience you train with qualification examples.
+
+=== "Simple"
+
+    The simple version runs straight away on a **curated** audience — a pre-existing pool of labelers, ready to work immediately — so the job starts collecting responses right away.
+
+    ```python
+    from rapidata import RapidataClient
+
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/eac11c3e-ad57-402b-90ed-23378d2ff869.jpg",
+        "https://assets.rapidata.ai/04e7e3c6-5554-47ca-bdb2-950e48ac3e6c.jpg",
+        "https://assets.rapidata.ai/91d9913c-b399-47f8-ad19-767798cc951c.jpg",
+    ]
+
+    client = RapidataClient()
+
+    audience = client.audience.get_audience_by_id("global") # (1)!
+
+    job_definition = client.job.create_locate_job_definition(
+        name="Artifact Detection Example",
+        instruction="Tap on any visual glitches or errors in the image.", # (2)!
+        datapoints=IMAGE_URLS,
+        responses_per_datapoint=35,
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a locate job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+    2. The instruction tells labelers what to locate. Each response is the set of points they tapped on that datapoint.
+
+=== "Advanced"
+
+    The advanced version builds a **custom** audience and trains labelers with qualification examples before running the job. Each example carries the bounding box(es) covering the region a correct labeler should tap; only labelers who tap inside them join the audience, which raises label quality.
+
+    !!! warning "This takes significantly longer"
+        Unlike the Simple path, this first builds and trains an entirely new audience before the job can start collecting responses — expect it to take considerably longer to return results.
+
+    ```python
+    from rapidata import RapidataClient, Box
+
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/eac11c3e-ad57-402b-90ed-23378d2ff869.jpg",
+        "https://assets.rapidata.ai/04e7e3c6-5554-47ca-bdb2-950e48ac3e6c.jpg",
+        "https://assets.rapidata.ai/91d9913c-b399-47f8-ad19-767798cc951c.jpg",
+    ]
+
+    # Qualification examples — each pairs an image with the bounding box(es)
+    # covering the region a correct labeler should tap. Coordinates are image
+    # ratios (0.0–1.0);
+    EXAMPLES = [
+        ("https://assets.rapidata.ai/544b1210-1e91-4351-a97c-fe8263b319b4.webp",
+         [Box(x_min=0.44, y_min=0.42, x_max=0.58, y_max=0.63)]),
+        ("https://assets.rapidata.ai/f1e11611-7c5b-4186-8ddf-51e06c0859ff.webp",
+         [Box(x_min=0.07, y_min=0.37, x_max=0.39, y_max=0.71)]),
+        ("https://assets.rapidata.ai/ad816f8f-f7a9-4c90-90dd-9c10bc556856.webp",
+         [Box(x_min=0.04, y_min=0.10, x_max=0.31, y_max=0.28)]),
+        ("https://assets.rapidata.ai/a076ae24-4d5c-415d-9d41-6afbe2fbfcde.webp",
+         [Box(x_min=0.25, y_min=0.40, x_max=0.70, y_max=0.96)]),
+        ("https://assets.rapidata.ai/38753cb4-4b77-4fb7-b601-8a5bc3d166d7.webp",
+         [Box(x_min=0.41, y_min=0.09, x_max=0.87, y_max=0.45)]),
+        ("https://assets.rapidata.ai/50109592-b521-4dcb-a00f-453f6c026a52.webp",
+         [Box(x_min=0.25, y_min=0.03, x_max=0.71, y_max=0.48)]),
+        ("https://assets.rapidata.ai/a5a954d0-91e8-4b4e-bec6-2bb739444be8.webp",
+         [Box(x_min=0.57, y_min=0.40, x_max=0.96, y_max=0.89)]),
+    ]
+
+    client = RapidataClient()
+
+    audience = client.audience.create_audience(name="Artifact Detection Audience") # (1)!
+    for datapoint, truths in EXAMPLES:
+        audience.add_locate_example(
+            instruction="Tap on any visual glitches or errors in the image.",
+            datapoint=datapoint,
+            truths=truths,
+        )
+
+    job_definition = client.job.create_locate_job_definition(
+        name="Artifact Detection Example",
+        instruction="Tap on any visual glitches or errors in the image.",
+        datapoints=IMAGE_URLS,
+        responses_per_datapoint=35,
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. Creates a new, empty audience. The `add_locate_example` calls train and filter the labelers who join it.
+
+    !!! note
+        Review every qualification example and its truth regions carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
 
 
 # Benchmarks

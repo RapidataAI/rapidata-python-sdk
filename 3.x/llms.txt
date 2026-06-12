@@ -16,6 +16,7 @@
 
 - [Classification](https://docs.rapidata.ai/3.x/examples/classify_job/index.md)
 - [Comparison](https://docs.rapidata.ai/3.x/examples/compare_job/index.md)
+- [Locate](https://docs.rapidata.ai/3.x/examples/locate_job/index.md)
 
 ## Benchmarks
 
