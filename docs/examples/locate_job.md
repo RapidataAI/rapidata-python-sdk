@@ -62,12 +62,20 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
     # ratios (0.0–1.0); the boxes below are illustrative, mark the real artifact
     # regions in your own images. Use only examples whose target is unambiguous.
     EXAMPLES = [
-        ("https://assets.rapidata.ai/eac11c3e-ad57-402b-90ed-23378d2ff869.jpg",
-         [Box(x_min=0.10, y_min=0.55, x_max=0.30, y_max=0.80)]),
-        ("https://assets.rapidata.ai/04e7e3c6-5554-47ca-bdb2-950e48ac3e6c.jpg",
-         [Box(x_min=0.60, y_min=0.20, x_max=0.85, y_max=0.45)]),
-        ("https://assets.rapidata.ai/91d9913c-b399-47f8-ad19-767798cc951c.jpg",
-         [Box(x_min=0.40, y_min=0.40, x_max=0.60, y_max=0.65)]),
+        ("https://assets.rapidata.ai/544b1210-1e91-4351-a97c-fe8263b319b4.webp",
+         [Box(x_min=0.44, y_min=0.42, x_max=0.58, y_max=0.63)]),
+        ("https://assets.rapidata.ai/f1e11611-7c5b-4186-8ddf-51e06c0859ff.webp",
+         [Box(x_min=0.07, y_min=0.37, x_max=0.39, y_max=0.71)]),
+        ("https://assets.rapidata.ai/ad816f8f-f7a9-4c90-90dd-9c10bc556856.webp",
+         [Box(x_min=0.04, y_min=0.10, x_max=0.31, y_max=0.28)]),
+        ("https://assets.rapidata.ai/a076ae24-4d5c-415d-9d41-6afbe2fbfcde.webp",
+         [Box(x_min=0.25, y_min=0.40, x_max=0.70, y_max=0.96)]),
+        ("https://assets.rapidata.ai/38753cb4-4b77-4fb7-b601-8a5bc3d166d7.webp",
+         [Box(x_min=0.41, y_min=0.09, x_max=0.87, y_max=0.45)]),
+        ("https://assets.rapidata.ai/50109592-b521-4dcb-a00f-453f6c026a52.webp",
+         [Box(x_min=0.25, y_min=0.03, x_max=0.71, y_max=0.48)]),
+        ("https://assets.rapidata.ai/a5a954d0-91e8-4b4e-bec6-2bb739444be8.webp",
+         [Box(x_min=0.57, y_min=0.40, x_max=0.96, y_max=0.89)]),
     ]
 
     client = RapidataClient()
