@@ -1,0 +1,67 @@
+{
+  "_README": "Template manifest. Replace the placeholder URLs with your own image-editing comparisons, hosted somewhere the crowd can fetch (e.g. assets.rapidata.ai or any public bucket). Every pair needs a unique file name. 'input' (the source image shown to the annotator) is optional but strongly recommended for editing tasks - include it on ALL pairs or NONE. truth = 'a' or 'b' for trap/gold; null for real.",
+  "name": "Image-edit audience quality diagnostic",
+  "instruction": "You are shown the ORIGINAL image and two edited versions. Which edited image more accurately applies the requested change while leaving everything else unchanged?",
+  "responses_per_datapoint": 30,
+  "pairs": [
+    {
+      "bucket": "trap",
+      "edit": "Remove the person standing on the left.",
+      "input": "https://REPLACE.example/edit01_input.jpg",
+      "a": "https://REPLACE.example/edit01_good.jpg",
+      "b": "https://REPLACE.example/edit01_blank.jpg",
+      "truth": "a",
+      "_note": "trap = the wrong option is OBVIOUSLY broken (garbled, blank, untouched). Anyone paying attention gets this right."
+    },
+    {
+      "bucket": "trap",
+      "edit": "Change the car colour to red.",
+      "input": "https://REPLACE.example/edit02_input.jpg",
+      "a": "https://REPLACE.example/edit02_garbled.jpg",
+      "b": "https://REPLACE.example/edit02_good.jpg",
+      "truth": "b"
+    },
+    {
+      "bucket": "gold",
+      "edit": "Remove the coffee cup from the table.",
+      "input": "https://REPLACE.example/edit03_input.jpg",
+      "a": "https://REPLACE.example/edit03_cup_removed.jpg",
+      "b": "https://REPLACE.example/edit03_cup_still_there.jpg",
+      "truth": "a",
+      "_note": "gold = the wrong option is PLAUSIBLE but clearly worse to an attentive human (edit not actually done, wrong object, artifacts, identity drift). This is the real test of edit-quality perception."
+    },
+    {
+      "bucket": "gold",
+      "edit": "Add a hat to the dog.",
+      "input": "https://REPLACE.example/edit04_input.jpg",
+      "a": "https://REPLACE.example/edit04_hat_warped_face.jpg",
+      "b": "https://REPLACE.example/edit04_hat_clean.jpg",
+      "truth": "b"
+    },
+    {
+      "bucket": "gold",
+      "edit": "Replace the text on the sign with 'OPEN'.",
+      "input": "https://REPLACE.example/edit05_input.jpg",
+      "a": "https://REPLACE.example/edit05_open_clean.jpg",
+      "b": "https://REPLACE.example/edit05_0pen_misspelled.jpg",
+      "truth": "a"
+    },
+    {
+      "bucket": "real",
+      "edit": "Change the season to winter with snow.",
+      "input": "https://REPLACE.example/edit06_input.jpg",
+      "a": "https://REPLACE.example/edit06_modelX.jpg",
+      "b": "https://REPLACE.example/edit06_modelY.jpg",
+      "truth": null,
+      "_note": "real = genuine model-vs-model edit, no known answer. Measures consensus strength and split-half reliability."
+    },
+    {
+      "bucket": "real",
+      "edit": "Make the photo look like a watercolour painting.",
+      "input": "https://REPLACE.example/edit07_input.jpg",
+      "a": "https://REPLACE.example/edit07_modelX.jpg",
+      "b": "https://REPLACE.example/edit07_modelY.jpg",
+      "truth": null
+    }
+  ]
+}
