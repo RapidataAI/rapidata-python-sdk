@@ -15,7 +15,7 @@ audience = client.audience.get_audience_by_id("global") # (1)!
 
 job_definition = client.job.create_free_text_job_definition(
     name="Example prompt generation",
-    instruction="What would you like to ask an AI? please spell out the question", # (2)!
+    instruction="What would you like to ask an AI? Please spell out the question", # (2)!
     datapoints=["https://assets.rapidata.ai/ai_question.png"],
 )
 
