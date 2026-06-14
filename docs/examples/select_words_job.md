@@ -83,17 +83,33 @@ Like any other job, a select words job can be assigned to any audience — a rea
         prompt + " [No_mistakes]" for prompt in PROMPTS
     ]
 
-    # TODO: replace with real qualification examples.
     # Each example pairs an image with the sentence shown to the labeler and
-    # the indices of the words a correct labeler should select (0-based,
-    # split by spaces).
+    # the indices of the words a correct labeler should select (0-based, split
+    # by spaces). The image is generated from a correct prompt; the sentence
+    # then plants a single mismatching word the labeler must catch. For the two
+    # correctly-depicted images the truth is the trailing [No_mistakes] token.
     EXAMPLES = [
-        ("https://assets.rapidata.ai/<your-image-1>.jpg",
-         "<your sentence with a mistake> [No_mistakes]",
+        ("https://assets.rapidata.ai/22f0c7c5-d085-4360-acce-f42ecf0b8804.png",
+         "a white cat lying on a sandy beach [No_mistakes]",  # depicts a black cat
+         [1]),
+        ("https://assets.rapidata.ai/f4709f2f-40a1-40e3-a338-7acff5495c28.png",
+         "a green apple resting on a wooden kitchen table [No_mistakes]",  # depicts a red apple
+         [1]),
+        ("https://assets.rapidata.ai/8406992c-aea6-41d1-8736-8038bf3621d9.png",
+         "five yellow balloons floating above a birthday cake [No_mistakes]",  # depicts three balloons
          [0]),
-        ("https://assets.rapidata.ai/<your-image-2>.jpg",
-         "<your correctly depicted sentence> [No_mistakes]",
-         [4]),
+        ("https://assets.rapidata.ai/cffc8a44-5155-43bf-807c-5c358edb9481.png",
+         "a square mirror hanging on a bedroom wall [No_mistakes]",  # depicts a round mirror
+         [1]),
+        ("https://assets.rapidata.ai/20afca97-9736-4311-9ad8-efe74d3a6886.png",
+         "a metal chair standing in an empty white room [No_mistakes]",  # depicts a wooden chair
+         [1]),
+        ("https://assets.rapidata.ai/4618bd82-fef3-420e-a417-9f72dd8d08b3.png",
+         "a small motorcycle parked next to a tall building [No_mistakes]",  # correctly depicted
+         [9]),
+        ("https://assets.rapidata.ai/26ab1e0b-19b5-4f2e-a4b6-d5e319931064.png",
+         "a dog sitting under a large oak tree [No_mistakes]",  # correctly depicted
+         [8]),
     ]
 
     client = RapidataClient()
