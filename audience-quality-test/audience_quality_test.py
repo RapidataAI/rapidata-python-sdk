@@ -192,6 +192,16 @@ def _majority_correct(votes_for_truth: list[bool]) -> float:
     return 1.0 if right > half else (0.5 if right == half else 0.0)
 
 
+def model_of(asset: str) -> str:
+    """Model name from the '<edit>__<model>.png' file-naming convention.
+
+    Falls back to the bare file name when the convention isn't followed, so the
+    report still runs on arbitrary real pairs.
+    """
+    stem = asset.rsplit(".", 1)[0]
+    return stem.split("__", 1)[1] if "__" in stem else stem
+
+
 def analyze(args) -> None:
     with open(args.state) as f:
         state = json.load(f)
@@ -220,6 +230,7 @@ def report(state: dict, results: dict) -> None:
     trap_pair_majority: list[float] = []
     trap_resp_correct: list[bool] = []
     real_decisiveness: list[float] = []           # max ratio on real pairs
+    real_pairs: list[dict] = []                   # per real pair: model-vs-model outcome
     gold_decisiveness: list[float] = []
     splithalf_agree: list[float] = []             # over all pairs with >=4 votes
     user_scores: list[float] = []
@@ -258,6 +269,16 @@ def report(state: dict, results: dict) -> None:
 
         if bucket == "real":
             real_decisiveness.append(decisiveness)
+            sus = item.get("summedUserScores", {})
+            va, vb = agg.get(p["a"], 0), agg.get(p["b"], 0)
+            wa, wb = sus.get(p["a"], 0.0), sus.get(p["b"], 0.0)
+            ma, mb = model_of(p["a"]), model_of(p["b"])
+            winner = ma if wa > wb else (mb if wb > wa else "tie")
+            real_pairs.append({
+                "edit": p.get("edit", ""), "ma": ma, "mb": mb,
+                "va": va, "vb": vb, "wa": wa, "wb": wb,
+                "n": va + vb, "winner": winner,
+            })
             continue
 
         # trap / gold: we know the truth
@@ -293,97 +314,142 @@ def report(state: dict, results: dict) -> None:
     def pct(xs):
         return f"{100 * statistics.mean(xs):.1f}%" if xs else "n/a"
 
+    # MODEL COMPARISON -- the headline when the job is real model-vs-model pairs.
+    if real_pairs:
+        print("=" * 64)
+        print("MODEL COMPARISON  (real pairs: which model the crowd prefers)")
+        wins: Counter = Counter()              # pairs won (reliability-weighted)
+        wvotes: dict[str, float] = defaultdict(float)
+        total_w = 0.0
+        for d in real_pairs:
+            if d["winner"] != "tie":
+                wins[d["winner"]] += 1
+            wvotes[d["ma"]] += d["wa"]
+            wvotes[d["mb"]] += d["wb"]
+            total_w += d["wa"] + d["wb"]
+            ratio_a = d["va"] / d["n"] if d["n"] else 0
+            print(f"  - {d['edit']}")
+            print(f"      {d['ma']} {d['va']:>3}  vs  {d['vb']:>3} {d['mb']}   "
+                  f"({100*ratio_a:.0f}% / {100*(1-ratio_a):.0f}%)  ->  winner: {d['winner']}")
+        print("\n  overall:")
+        for m in sorted(wvotes, key=lambda k: -wvotes[k]):
+            share = wvotes[m] / total_w if total_w else 0
+            print(f"    {m:<18} pairs won: {wins[m]}/{len(real_pairs)}   "
+                  f"weighted vote share: {100*share:.1f}%")
+        print()
+
+    if trap_pair_majority:
+        print("=" * 64)
+        print("ATTENTION / SPAM  (trap pairs: obvious good vs broken)")
+        print(f"  pairs evaluated:        {len(trap_pair_majority)}")
+        print(f"  crowd-majority correct: {pct(trap_pair_majority)}   (target >= {TH_TRAP_MAJORITY:.0%})")
+        print(f"  individual responses:   {pct(trap_resp_correct)}   (target >= {TH_TRAP_RESPONSE:.0%})\n")
+
+    if gold_pair_majority:
+        print("=" * 64)
+        print("EDIT-QUALITY PERCEPTION  (gold pairs: correct vs plausibly-wrong edit)")
+        print(f"  pairs evaluated:           {len(gold_pair_majority)}")
+        print(f"  crowd-majority correct:    {pct(gold_pair_majority)}   (target >= {TH_GOLD_MAJORITY:.0%})")
+        print(f"  reliability-weighted maj.: {pct(gold_pair_majority_weighted)}   (what a validation set / weighting buys)")
+        print(f"  individual responses:      {pct(gold_resp_correct)}   (target >= {TH_GOLD_RESPONSE:.0%})")
+
+        # accuracy vs number of votes -> recommended responses_per_datapoint
+        if gold_vote_lists:
+            print("\n  majority accuracy vs #responses aggregated (bootstrap):")
+            maxk = max(len(v) for v in gold_vote_lists)
+            for k in [1, 3, 5, 7, 10, 15, 20, 30]:
+                if k > maxk:
+                    break
+                accs = []
+                for votes in gold_vote_lists:
+                    if len(votes) < k:
+                        continue
+                    hits = 0
+                    for _ in range(300):
+                        accs_sample = rng.sample(votes, k)
+                        hits += _majority_correct(accs_sample)
+                    accs.append(hits / 300)
+                if accs:
+                    print(f"    k={k:>2}:  {100 * statistics.mean(accs):5.1f}%")
+        print()
+
     print("=" * 64)
-    print("ATTENTION / SPAM  (trap pairs: obvious good vs broken)")
-    print(f"  pairs evaluated:        {len(trap_pair_majority)}")
-    print(f"  crowd-majority correct: {pct(trap_pair_majority)}   (target >= {TH_TRAP_MAJORITY:.0%})")
-    print(f"  individual responses:   {pct(trap_resp_correct)}   (target >= {TH_TRAP_RESPONSE:.0%})")
-
-    print("\n" + "=" * 64)
-    print("EDIT-QUALITY PERCEPTION  (gold pairs: correct vs plausibly-wrong edit)")
-    print(f"  pairs evaluated:           {len(gold_pair_majority)}")
-    print(f"  crowd-majority correct:    {pct(gold_pair_majority)}   (target >= {TH_GOLD_MAJORITY:.0%})")
-    print(f"  reliability-weighted maj.: {pct(gold_pair_majority_weighted)}   (what a validation set / weighting buys)")
-    print(f"  individual responses:      {pct(gold_resp_correct)}   (target >= {TH_GOLD_RESPONSE:.0%})")
-
-    # accuracy vs number of votes -> recommended responses_per_datapoint
-    if gold_vote_lists:
-        print("\n  majority accuracy vs #responses aggregated (bootstrap):")
-        maxk = max(len(v) for v in gold_vote_lists)
-        for k in [1, 3, 5, 7, 10, 15, 20, 30]:
-            if k > maxk:
-                break
-            accs = []
-            for votes in gold_vote_lists:
-                if len(votes) < k:
-                    continue
-                hits = 0
-                for _ in range(300):
-                    accs_sample = rng.sample(votes, k)
-                    hits += _majority_correct(accs_sample)
-                accs.append(hits / 300)
-            if accs:
-                print(f"    k={k:>2}:  {100 * statistics.mean(accs):5.1f}%")
-
-    print("\n" + "=" * 64)
     print("RELIABILITY  (do two halves of the votes agree on the winner?)")
     print(f"  split-half winner agreement: {pct(splithalf_agree)}   (target >= {TH_SPLITHALF:.0%})")
-    print(f"  decisiveness  gold pairs:    {pct(gold_decisiveness)}   (how lopsided the vote is)")
-    print(f"  decisiveness  real pairs:    {pct(real_decisiveness)}   (near 50% => coin-flip / true ties)")
+    if gold_decisiveness:
+        print(f"  decisiveness  gold pairs:    {pct(gold_decisiveness)}   (how lopsided the vote is)")
+    if real_decisiveness:
+        print(f"  decisiveness  real pairs:    {pct(real_decisiveness)}   (near 50% => coin-flip / true ties)")
 
     print("\n" + "=" * 64)
-    print("WHO IS VOTING  (does filtering / weighting help?)")
+    print("WHO IS VOTING")
     if user_scores:
         print(f"  annotator global userScore: median={statistics.median(user_scores):.2f} "
               f"mean={statistics.mean(user_scores):.2f} n={len(user_scores)}")
-    print("  gold accuracy by reliability band:")
-    for band in ("hi >0.6", "mid 0.4-0.6", "lo <0.4", "unknown"):
-        xs = by_score_band.get(band)
-        if xs:
-            print(f"    {band:<12} {pct(xs):>7}  (n={len(xs)})")
-    top_countries = sorted(by_country.items(), key=lambda kv: -len(kv[1]))[:6]
-    if top_countries:
-        print("  gold accuracy by top countries:")
-        for c, xs in top_countries:
-            print(f"    {c:<4} {pct(xs):>7}  (n={len(xs)})")
+    if by_score_band:
+        print("  gold accuracy by reliability band:")
+        for band in ("hi >0.6", "mid 0.4-0.6", "lo <0.4", "unknown"):
+            xs = by_score_band.get(band)
+            if xs:
+                print(f"    {band:<12} {pct(xs):>7}  (n={len(xs)})")
+        top_countries = sorted(by_country.items(), key=lambda kv: -len(kv[1]))[:6]
+        if top_countries:
+            print("  gold accuracy by top countries:")
+            for c, xs in top_countries:
+                print(f"    {c:<4} {pct(xs):>7}  (n={len(xs)})")
 
     if unmatched:
         print(f"\n  note: {unmatched} returned datapoints could not be matched to the manifest.")
 
     # --- Verdict ------------------------------------------------------------ #
+    # Only score checks that have data, so a real-only model-comparison job
+    # isn't failed for lacking trap/gold pairs.
     print("\n" + "#" * 64)
-    checks = {
-        "trap majority": (statistics.mean(trap_pair_majority) if trap_pair_majority else 0) >= TH_TRAP_MAJORITY,
-        "trap responses": (statistics.mean(trap_resp_correct) if trap_resp_correct else 0) >= TH_TRAP_RESPONSE,
-        "gold majority": (statistics.mean(gold_pair_majority) if gold_pair_majority else 0) >= TH_GOLD_MAJORITY,
-        "gold responses": (statistics.mean(gold_resp_correct) if gold_resp_correct else 0) >= TH_GOLD_RESPONSE,
-        "split-half": (statistics.mean(splithalf_agree) if splithalf_agree else 0) >= TH_SPLITHALF,
-    }
-    passed = sum(checks.values())
-    if passed == len(checks):
-        verdict = "PASS -- global audience is good enough for this task as-is."
-    elif checks["trap majority"] and checks["gold majority"]:
+    checks: dict[str, bool] = {}
+    if trap_pair_majority:
+        checks["trap majority"] = statistics.mean(trap_pair_majority) >= TH_TRAP_MAJORITY
+        checks["trap responses"] = statistics.mean(trap_resp_correct) >= TH_TRAP_RESPONSE
+    if gold_pair_majority:
+        checks["gold majority"] = statistics.mean(gold_pair_majority) >= TH_GOLD_MAJORITY
+        checks["gold responses"] = statistics.mean(gold_resp_correct) >= TH_GOLD_RESPONSE
+    if splithalf_agree:
+        checks["split-half"] = statistics.mean(splithalf_agree) >= TH_SPLITHALF
+
+    passed, total = sum(checks.values()), len(checks)
+    if total == 0:
+        verdict = "INCONCLUSIVE -- no scorable responses returned yet."
+    elif passed == total:
+        verdict = "PASS -- global audience gives a reliable signal for this task."
+    elif passed >= (total + 1) // 2:
         verdict = "MARGINAL -- usable, but tighten it (see recommendations)."
     else:
         verdict = "FAIL -- the raw global crowd does not reliably judge these edits."
     print(f"VERDICT: {verdict}")
     for name, ok in checks.items():
         print(f"   [{'x' if ok else ' '}] {name}")
+    if not gold_pair_majority and not trap_pair_majority:
+        print("   note: this run has only real (no ground-truth) pairs, so it measures\n"
+              "         reliability + model preference, NOT accuracy. Add gold/trap pairs\n"
+              "         to test whether the crowd judges edits *correctly*.")
 
     # Targeted, data-driven recommendations
     print("\nRecommendations:")
     gm = statistics.mean(gold_pair_majority) if gold_pair_majority else 0
     gmw = statistics.mean(gold_pair_majority_weighted) if gold_pair_majority_weighted else 0
-    if gmw - gm >= 0.05:
+    if gold_pair_majority and gmw - gm >= 0.05:
         print("  - Reliability weighting helps materially: use summedUserScores (not raw\n"
               "    vote counts) and add a validation set so weak annotators are screened.")
     hi = by_score_band.get("hi >0.6"); lo = by_score_band.get("lo <0.4")
     if hi and lo and (statistics.mean(hi) - statistics.mean(lo)) >= 0.1:
         print("  - High-userScore annotators are clearly more accurate: a userScore filter\n"
               "    or a ConditionalValidationSelection will raise quality.")
-    if not checks["trap responses"]:
+    if checks.get("trap responses") is False:
         print("  - Low trap pass-rate => spam/inattentive responses. Add trap items and a\n"
               "    validation set to gate them out.")
+    if real_pairs and statistics.mean(real_decisiveness) < 0.6:
+        print("  - Real pairs are close to 50/50: either the models are genuinely tied on\n"
+              "    these edits, or more responses are needed to separate them. Raise\n"
+              "    responses_per_datapoint and/or add clearer-cut edits.")
     if gold_vote_lists:
         print("  - Use the 'accuracy vs #responses' curve above to pick responses_per_datapoint\n"
               "    (the smallest k where majority accuracy plateaus near its max).")

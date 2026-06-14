@@ -22,6 +22,25 @@ Aim for ~10–15 gold, ~3–5 trap, ~5–10 real pairs to start. The gold pairs 
 the heart of it — invest your effort making the "wrong" option plausible but
 genuinely worse, because that is exactly the discrimination your benchmark needs.
 
+## Ready-to-run job: GPT Image 2 vs Nano Banana Pro
+
+`gpt_vs_nano_pairs.json` wires up the 5 real edit comparisons in `inputs/` +
+`edits/` (documented in `edits/README.md`). These are **real** model-vs-model
+pairs with no ground-truth winner, so the report leads with a **model
+comparison** (per-edit winner + overall weighted vote share) plus the
+reliability metrics. Run it from inside this folder so the relative image paths
+resolve:
+
+```bash
+python audience_quality_test.py launch --manifest gpt_vs_nano_pairs.json --dry-run   # validate
+python audience_quality_test.py launch --manifest gpt_vs_nano_pairs.json             # launch
+python audience_quality_test.py analyze                                              # later
+```
+
+Because this set has no gold/trap pairs, the verdict reflects *reliability and
+model preference, not accuracy*. To also test whether the crowd judges edits
+*correctly*, add gold/trap pairs (see the template below).
+
 ## Usage
 
 ```bash

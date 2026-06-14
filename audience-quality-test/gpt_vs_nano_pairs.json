@@ -1,0 +1,48 @@
+{
+  "_README": "Real model-vs-model job: GPT Image 2 vs Nano Banana Pro on 5 edits (see edits/README.md). All pairs are bucket 'real' (no ground-truth winner) -- the crowd decides which edit is better. 'a' is always the gpt-image-2 output, 'b' the nano-banana-pro output; the script reads the model name from the '<edit>__<model>.png' file name. Run from inside this folder so the relative paths resolve. Bump responses_per_datapoint for tighter separation.",
+  "name": "GPT Image 2 vs Nano Banana Pro -- edit quality",
+  "instruction": "You are shown the ORIGINAL image and two edited versions. Which edited image most accurately applies the requested edit? Every other part of the original image should be unchanged.",
+  "responses_per_datapoint": 30,
+  "pairs": [
+    {
+      "bucket": "real",
+      "edit": "Edit the image so the cat is in a jungle instead.",
+      "input": "inputs/black-cat-on-beach.png",
+      "a": "edits/cat-in-jungle__gpt-image-2.png",
+      "b": "edits/cat-in-jungle__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Change the cake to a chocolate cake.",
+      "input": "inputs/three-yellow-balloons-birthday-cake.png",
+      "a": "edits/chocolate-cake__gpt-image-2.png",
+      "b": "edits/chocolate-cake__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Make the mirror's shape square.",
+      "input": "inputs/round-mirror-on-bedroom-wall.png",
+      "a": "edits/square-mirror__gpt-image-2.png",
+      "b": "edits/square-mirror__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Remove the chair from the image.",
+      "input": "inputs/wooden-chair-empty-room.png",
+      "a": "edits/removed-chair__gpt-image-2.png",
+      "b": "edits/removed-chair__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Make his hair blond.",
+      "input": "inputs/afro-student.png",
+      "a": "edits/blond-hair__gpt-image-2.png",
+      "b": "edits/blond-hair__nano-banana-pro.png",
+      "truth": null
+    }
+  ]
+}
