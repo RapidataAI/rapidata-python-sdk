@@ -424,6 +424,24 @@ def is_demand_request(row: dict) -> bool:
     return not SHOWCASE_RE.search(row.get("title") or "")
 
 
+def subreddit_include(args: argparse.Namespace) -> set[str] | None:
+    """Explicit --subreddits include-set, or None when not given."""
+    raw = getattr(args, "subreddits", "") or ""
+    names = {s.strip() for s in raw.split(",") if s.strip()}
+    return names or None
+
+
+def keep_subreddit(name: str, include: set[str] | None, general_only: bool) -> bool:
+    """Filter by --subreddits and --general-only. General = not single-purpose
+    (single-purpose subs are the keys of SUBREDDIT_DEFAULT, e.g. r/estoration),
+    so excluding them removes the dedicated-community amplification."""
+    if include is not None and name not in include:
+        return False
+    if general_only and name in SUBREDDIT_DEFAULT:
+        return False
+    return True
+
+
 # --------------------------------------------------------------------------- #
 # Optional official Reddit API enrichment (skippable)
 # --------------------------------------------------------------------------- #
@@ -633,6 +651,21 @@ def categorize(args: argparse.Namespace) -> None:
     df["is_removed"] = df.get("is_removed", False)
     df["is_removed"] = df["is_removed"].map(lambda v: str(v).lower() in ("true", "1"))
 
+    include = subreddit_include(args)
+    if include is not None or args.general_only:
+        df = df[
+            df["subreddit"].map(lambda s: keep_subreddit(s, include, args.general_only))
+        ]
+        scope = (
+            "general subs only"
+            if args.general_only
+            else ",".join(sorted(include or []))
+        )
+        print(f"filter: {scope}  ({len(df)} posts after filtering)")
+        if df.empty:
+            print("no posts match the subreddit filter.")
+            return
+
     kw = compile_rules(RULES)
     fl = compile_rules(FLAIR_RULES)
     df["category"] = df.apply(
@@ -702,6 +735,16 @@ def stats(args: argparse.Namespace) -> None:
     if not rows:
         print("no data; run scrape first.")
         return
+    include = subreddit_include(args)
+    if include is not None or args.general_only:
+        rows = [
+            r
+            for r in rows
+            if keep_subreddit(r["subreddit"], include, args.general_only)
+        ]
+        if not rows:
+            print("no posts match the subreddit filter.")
+            return
     months = sorted({r["year_month"] for r in rows})
     print(
         f"stats: {len(rows)} unique posts, {months[0]}..{months[-1]} ({len(months)} months)"
@@ -762,6 +805,12 @@ def main() -> None:
     ca.add_argument("--data-dir", default=DATA_DIR)
     ca.add_argument("--output-dir", default=OUTPUT_DIR)
     ca.add_argument(
+        "--general-only",
+        action="store_true",
+        help="exclude single-purpose subs (e.g. r/estoration) to de-bias weights",
+    )
+    ca.add_argument("--subreddits", default="", help="restrict to a comma list of subs")
+    ca.add_argument(
         "--examples",
         type=int,
         default=4,
@@ -771,6 +820,10 @@ def main() -> None:
 
     st = sub.add_parser("stats", help="coverage / flair / paid-vs-free diagnostics")
     st.add_argument("--data-dir", default=DATA_DIR)
+    st.add_argument(
+        "--general-only", action="store_true", help="exclude single-purpose subs"
+    )
+    st.add_argument("--subreddits", default="", help="restrict to a comma list of subs")
     st.set_defaults(func=stats)
 
     args = ap.parse_args()

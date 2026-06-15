@@ -36,6 +36,8 @@ python reddit_edit_demand.py clean --format csv          # or parquet/both (parq
 
 # 3. categorize -> output/category_report.md + category_counts.csv
 python reddit_edit_demand.py categorize
+python reddit_edit_demand.py categorize --general-only      # exclude dedicated subs (de-bias)
+python reddit_edit_demand.py categorize --subreddits picrequests,PhotoshopRequest
 
 # 4. coverage / flair / paid-vs-free diagnostics
 python reddit_edit_demand.py stats
@@ -70,6 +72,16 @@ python reddit_edit_demand.py stats      --data-dir sample
   priority-ordered keyword rule set (first match wins). Edit it and re-run
   `categorize` — the report prints example titles per category so you can audit
   the bucketing.
+
+## De-biasing the weights (`--general-only`)
+
+r/estoration is a *dedicated* restoration community, so pooling it with the
+general subs amplifies the restoration category. `--general-only` (on
+`categorize` and `stats`) drops single-purpose subs (the keys of
+`SUBREDDIT_DEFAULT`) so you see what people bring to a *general* editing
+community — where object removal leads. Report both: pooled shows total demand,
+general-only shows the de-biased per-request mix. `--subreddits a,b` restricts
+to an explicit list.
 
 ## Caveat on counts
 
