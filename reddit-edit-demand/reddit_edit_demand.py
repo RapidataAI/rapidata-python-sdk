@@ -47,11 +47,18 @@ import sys
 import time
 from collections import Counter
 from datetime import datetime, timezone
-from typing import Iterable
+from typing import Iterable, cast
 
 import requests
 
-from category_rules import RULES, compile_rules
+from category_rules import (
+    EXCLUDE_FLAIRS,
+    FLAIR_RULES,
+    RULES,
+    SHOWCASE_RE,
+    SUBREDDIT_DEFAULT,
+    compile_rules,
+)
 
 # --------------------------------------------------------------------------- #
 # Config
@@ -388,6 +395,35 @@ def categorize_text(text: str, compiled: list[tuple[str, re.Pattern[str]]]) -> s
     return "UNMATCHED"
 
 
+def categorize_post(
+    title: str,
+    selftext: str,
+    flair: str,
+    subreddit: str,
+    keyword_rules: list[tuple[str, re.Pattern[str]]],
+    flair_rules: list[tuple[str, re.Pattern[str]]],
+) -> str:
+    """Category from three signals, precision-first: keyword, then flair, then
+    single-purpose-subreddit default."""
+    cat = categorize_text((title + " " + selftext).lower(), keyword_rules)
+    if cat != "UNMATCHED":
+        return cat
+    cat = categorize_text(flair, flair_rules)
+    if cat != "UNMATCHED":
+        return cat
+    return SUBREDDIT_DEFAULT.get(subreddit, "UNMATCHED")
+
+
+def is_demand_request(row: dict) -> bool:
+    """False for posts that aren't an edit request: removed/deleted (no text),
+    finished-work showcases, and meta/result flairs."""
+    if row.get("is_removed"):
+        return False
+    if (row.get("flair") or "") in EXCLUDE_FLAIRS:
+        return False
+    return not SHOWCASE_RE.search(row.get("title") or "")
+
+
 # --------------------------------------------------------------------------- #
 # Optional official Reddit API enrichment (skippable)
 # --------------------------------------------------------------------------- #
@@ -589,25 +625,49 @@ def categorize(args: argparse.Namespace) -> None:
         print("no data to categorize; run scrape/clean first.")
         return
 
-    compiled = compile_rules(RULES)
-    df["category"] = (df["title"].astype(str) + " " + df["selftext"].astype(str)).map(
-        lambda t: categorize_text(t.lower(), compiled)
+    for col in ("title", "selftext", "flair", "subreddit", "cohort"):
+        if col not in df.columns:
+            df[col] = ""
+        df[col] = df[col].fillna("").astype(str)
+    # is_removed survives a CSV round-trip as the string "True"/"False"; coerce.
+    df["is_removed"] = df.get("is_removed", False)
+    df["is_removed"] = df["is_removed"].map(lambda v: str(v).lower() in ("true", "1"))
+
+    kw = compile_rules(RULES)
+    fl = compile_rules(FLAIR_RULES)
+    df["category"] = df.apply(
+        lambda r: categorize_post(
+            r["title"], r["selftext"], r["flair"], r["subreddit"], kw, fl
+        ),
+        axis=1,
+    )
+    df["is_request"] = df.apply(
+        lambda r: is_demand_request(
+            {"is_removed": r["is_removed"], "flair": r["flair"], "title": r["title"]}
+        ),
+        axis=1,
     )
 
+    # Shares are over demand *requests* only -- excluding posts that can't be a
+    # request (removed/no-text) or aren't one (finished-work showcases / meta).
+    req = cast("pd.DataFrame", df[df["is_request"]])
+    total, n_req = len(df), len(req)
+    n_removed = int(df["is_removed"].sum())
+    n_showcase = total - n_req - n_removed
+
     os.makedirs(args.output_dir, exist_ok=True)
-    counts = df.groupby(["category", "cohort", "subreddit"]).size().reset_index()
+    counts = req.groupby(["category", "cohort", "subreddit"]).size().reset_index()
     counts.columns = ["category", "cohort", "subreddit", "n"]
     counts_csv = os.path.join(args.output_dir, "category_counts.csv")
     counts.to_csv(counts_csv, index=False)
 
-    # Markdown report: overall + per-cohort shares with example titles.
     lines: list[str] = ["# Image-edit demand by category\n"]
-    total = len(df)
     lines.append(
-        f"_{total} posts categorized across {df['subreddit'].nunique()} subreddits._\n"
+        f"_{n_req} demand requests across {req['subreddit'].nunique()} subreddits "
+        f"(excluded {n_removed} removed/deleted, {n_showcase} showcase/meta)._\n"
     )
     for cohort in ["pre_ai", "transition", "post_ai"]:
-        sub = df[df["cohort"] == cohort]
+        sub = cast("pd.DataFrame", req[req["cohort"] == cohort])
         if sub.empty:
             continue
         lines.append(f"\n## {cohort} (n={len(sub)})\n")
@@ -616,21 +676,25 @@ def categorize(args: argparse.Namespace) -> None:
         for cat, n in Counter(sub["category"]).most_common():
             lines.append(f"| {cat} | {n} | {100 * n / len(sub):.1f}% |")
     lines.append("\n## Example titles per category\n")
-    for cat, _ in Counter(df["category"]).most_common():
+    for cat, _ in Counter(req["category"]).most_common():
         if cat == "UNMATCHED":
             continue
-        titles = df.loc[df["category"] == cat, "title"].astype(str)
-        examples = titles.head(args.examples).tolist()
+        examples = req.loc[req["category"] == cat, "title"].head(args.examples).tolist()
         lines.append(f"\n**{cat}**")
         for ex in examples:
-            lines.append(f"- {ex[:110]}")
+            lines.append(f"- {str(ex)[:110]}")
     report = os.path.join(args.output_dir, "category_report.md")
     with open(report, "w") as f:
         f.write("\n".join(lines) + "\n")
 
-    print(f"categorize: {total} posts -> {report}, {counts_csv}")
-    for cat, n in Counter(df["category"]).most_common():
-        print(f"  {n:6d}  {100 * n / total:5.1f}%  {cat}")
+    print(
+        f"categorize: {total} posts; {n_req} demand requests -> {report}, {counts_csv}"
+    )
+    print(
+        f"  excluded: {n_removed} removed/deleted, {n_showcase} showcase/meta (not requests)"
+    )
+    for cat, n in Counter(req["category"]).most_common():
+        print(f"  {n:6d}  {100 * n / n_req:5.1f}%  {cat}")
 
 
 def stats(args: argparse.Namespace) -> None:
