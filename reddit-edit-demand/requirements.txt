@@ -1,0 +1,6 @@
+# Tool-only dependencies. NOT added to the SDK's pyproject.toml -- this is a
+# personal research tool, not shipped with the SDK.
+#
+# requests and pandas are already SDK dependencies; everything else is stdlib.
+# pyarrow is only needed for `clean --format parquet` (CSV needs nothing extra).
+pyarrow>=15.0

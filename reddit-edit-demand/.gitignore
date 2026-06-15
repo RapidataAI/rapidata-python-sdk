@@ -1,0 +1,7 @@
+# Scraped data and outputs are personal; never commit them.
+data/
+output/
+.env
+*state*.json
+__pycache__/
+*.pyc
