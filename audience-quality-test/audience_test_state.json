@@ -1,0 +1,42 @@
+{
+  "order_id": "ord_1MTDFtfV25mmq2",
+  "instruction": "You are shown the ORIGINAL image and two edited versions. Which edited image most accurately applies the requested edit? Every other part of the original image should be unchanged.",
+  "audience": "global",
+  "pairs": [
+    {
+      "bucket": "real",
+      "edit": "Edit the image so the cat is in a jungle instead.",
+      "a": "cat-in-jungle__gpt-image-2.png",
+      "b": "cat-in-jungle__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Change the cake to a chocolate cake.",
+      "a": "chocolate-cake__gpt-image-2.png",
+      "b": "chocolate-cake__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Make the mirror's shape square.",
+      "a": "square-mirror__gpt-image-2.png",
+      "b": "square-mirror__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Remove the chair from the image.",
+      "a": "removed-chair__gpt-image-2.png",
+      "b": "removed-chair__nano-banana-pro.png",
+      "truth": null
+    },
+    {
+      "bucket": "real",
+      "edit": "Make his hair blond.",
+      "a": "blond-hair__gpt-image-2.png",
+      "b": "blond-hair__nano-banana-pro.png",
+      "truth": null
+    }
+  ]
+}
