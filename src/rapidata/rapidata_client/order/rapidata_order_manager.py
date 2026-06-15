@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 _ORDER_DEPRECATION_MESSAGE = (
     "client.order is deprecated and will be removed in a future release. "
     "Use client.job to create job definitions and client.audience to assign them "
-    "instead. See https://docs.rapidata.ai/ for the migration guide."
+    "instead. See https://docs.rapidata.ai/."
 )
 
 
@@ -170,9 +170,7 @@ class RapidataOrderManager:
             raise TypeError("Priority must be an integer or None")
 
         if priority is not None and priority < 0:
-            raise ValueError(
-                "Priority must be a positive integer or None"
-            )
+            raise ValueError("Priority must be a positive integer or None")
 
         self.__priority = priority
 
