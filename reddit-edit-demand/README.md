@@ -51,9 +51,10 @@ A tiny committed fixture lets you exercise the pipeline without scraping:
 python reddit_edit_demand.py clean      --data-dir sample --output-dir output --format csv
 python reddit_edit_demand.py categorize --output-dir output --examples 3
 python reddit_edit_demand.py stats      --data-dir sample
-# business taxonomy over the same fixture:
+# business taxonomy over the same fixture (note the showcase/discussion rows in
+# graphic_design/smallbusiness/logodesign are dropped by the demand gate):
 python reddit_edit_demand.py categorize --output-dir output --examples 3 --taxonomy business \
-    --subreddits DesignRequests,DesignJobs,forhire,realestatephotography,AmazonSeller
+    --subreddits DesignRequests,DesignJobs,forhire,realestatephotography,AmazonSeller,graphic_design,smallbusiness,logodesign
 ```
 
 ## Business demand benchmark (`--taxonomy business`)
@@ -66,32 +67,42 @@ Same pipeline, same cohorts, same report; only the subreddits and the rule set
 `--taxonomy business` to `categorize`/`stats`.
 
 ```bash
-# scrape stays taxonomy-agnostic -- just point it at the business subs
-python reddit_edit_demand.py scrape --data-dir data-business \
-    --subreddits DesignRequests,DesignJobs,forhire,realestatephotography,AmazonSeller
+# scrape stays taxonomy-agnostic -- a wide net of business subs (see
+# BUSINESS_SUBREDDITS in reddit_edit_demand.py). Start later than the consumer
+# default: these subs barely existed before ~2019, so 2016-2018 is wasted calls.
+python reddit_edit_demand.py scrape --data-dir data-business --start-month 2019-01 \
+    --subreddits DesignRequests,DesignJobs,forhire,slavelabour,HungryArtists,logodesign,graphic_design,photoshop,Design,logo,smallbusiness,Entrepreneur,ecommerce,shopify,AmazonSeller,Etsy,marketing,advertising,realestatephotography,Twitch,NewTubers,podcasting
 python reddit_edit_demand.py clean  --data-dir data-business --output-dir output-business --format csv
 python reddit_edit_demand.py categorize --taxonomy business --output-dir output-business
+# cleanest mix: the pure request board only
+python reddit_edit_demand.py categorize --taxonomy business --output-dir output-business --subreddits DesignRequests
 # de-biased + edits-only (apples-to-apples with the consumer edit-only mix):
-python reddit_edit_demand.py categorize --taxonomy business --output-dir output-business \
-    --general-only --edits-only
+python reddit_edit_demand.py categorize --taxonomy business --output-dir output-business --general-only --edits-only
 ```
 
-- **Subreddits**: `DesignRequests` is the backbone request sub (the r/PhotoshopRequest
-  analog); `DesignJobs` + `forhire` add volume but are **supply-heavy** — a post
-  there only counts as demand if it reads as the buyer hiring (`SUPPLY_HEAVY_SUBS`
-  + `HIRING_RE`), so freelancers advertising (`[For Hire] I can make your logo`)
-  are dropped. `realestatephotography` (single-purpose → `SUBREDDIT_DEFAULT`,
-  droppable via `--general-only`) and `AmazonSeller` are niche amplifiers for thin
-  edit categories (virtual staging, ecommerce photos).
+- **Wide net + demand gate**: businesses don't cluster in one request board the way
+  consumers do, so we scrape broadly — gig boards (`DesignJobs`, `forhire`,
+  `slavelabour`, `HungryArtists`), design communities (`logodesign`,
+  `graphic_design`, `photoshop`, ...), business-owner subs (`smallbusiness`,
+  `ecommerce`, `AmazonSeller`, `Etsy`, ...) and creator-economy subs (`Twitch`,
+  `NewTubers`, ...). But most posts in those subs are **supply** (freelancers
+  advertising), **showcase**, or **discussion**, not demand. So every sub except
+  the pure request board(s) in `UNGATED_SUBS` (`DesignRequests`) passes a
+  **demand gate**: a post only counts if it carries an explicit ask (`DEMAND_RE`
+  over title+selftext+flair — "can someone…", "looking for someone to…",
+  "[hiring]/[task]", "WTB", "need a white background…", "remove the background…").
+  This is what lets the net be wide without the report filling up with
+  non-requests. Scrape wide, then slice with `--subreddits` / `--general-only`.
 - **Edit vs create** (`is_edit`): business demand is dominated by create-from-scratch
   work (logo/flyer/packaging design). Every request is tagged edit-of-existing-asset
   vs create-from-scratch (`EDIT_CATEGORIES`); the report shows the full mix **and** an
   edits-only view, and `--edits-only` restricts the whole report to the consumer-comparable
   edit subset.
-- **Expanded supply/showcase filtering**: `EXCLUDE_FLAIRS` and `SHOWCASE_RE` are
-  widened with freelancer vocabulary (`for hire`, `commissions open`, `offering
-  design`, `$X/hr`, ...) because business subs are full of people *offering*
-  services, the inverse of demand.
+- **Supply/showcase filtering**: `EXCLUDE_FLAIRS` and `SHOWCASE_RE` are widened with
+  supply/showcase vocabulary (`for hire`, `[offer]`, `commissions open`, `feedback`,
+  `critique`, `rate my`, `$X/hr`, ...) so the inverse-of-demand posts are dropped
+  even when they slip past the gate. **Audit the per-category example titles** the
+  report prints after a wide scrape and tune the gate / drop noisy subs as needed.
 
 > ⚠️ **Reddit is a weak proxy for business demand.** Real businesses commission on
 > Fiverr / Upwork / 99designs, not Reddit; Reddit business requests skew toward

@@ -36,6 +36,7 @@ NOTE on counts: scrape caps each (subreddit, month) at --cap so the time series
 stays even. The category counts are therefore demand *samples* for fair
 month-to-month comparison, NOT absolute volumes. Raise --cap for absolute work.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -47,11 +48,10 @@ import sys
 import time
 from collections import Counter
 from datetime import datetime, timezone
+from types import ModuleType
 from typing import Iterable, cast
 
 import requests
-
-from types import ModuleType
 
 from category_rules import compile_rules
 
@@ -61,8 +61,8 @@ def load_taxonomy(name: str) -> ModuleType:
 
     Both modules export the same names (RULES, FLAIR_RULES, SUBREDDIT_DEFAULT,
     EXCLUDE_FLAIRS, SHOWCASE_RE). The business module additionally exports
-    EDIT_CATEGORIES / HIRING_RE / SUPPLY_HEAVY_SUBS; callers probe those with
-    getattr so the consumer taxonomy is unaffected.
+    EDIT_CATEGORIES / DEMAND_RE / UNGATED_SUBS; callers probe those with getattr
+    so the consumer taxonomy is unaffected.
     """
     if name == "business":
         import business_category_rules as mod
@@ -71,6 +71,7 @@ def load_taxonomy(name: str) -> ModuleType:
     import category_rules as mod
 
     return mod
+
 
 # --------------------------------------------------------------------------- #
 # Config
@@ -84,15 +85,37 @@ DEFAULT_SUBREDDITS = [
 ]
 
 # Business/commercial demand subs (pass via --subreddits; scrape stays taxonomy-
-# agnostic). DesignRequests is the backbone request sub; DesignJobs/forhire add
-# volume but are supply-heavy (filtered to hiring at categorize time); the last
-# two are niche amplifiers for thin edit categories.
+# agnostic). A wide net for coverage: DesignRequests is the pure request board
+# (ungated); everything else is demand-gated at categorize time (DEMAND_RE) so
+# the supply/showcase/discussion that dominates these subs is dropped and only
+# genuine asks count. Slice with --subreddits / --general-only for cleaner mixes.
 BUSINESS_SUBREDDITS = [
+    # request / gig boards
     "DesignRequests",
     "DesignJobs",
     "forhire",
-    "realestatephotography",
+    "slavelabour",
+    "HungryArtists",
+    # design communities (showcase/discussion-heavy -> demand-gated)
+    "logodesign",
+    "graphic_design",
+    "photoshop",
+    "Design",
+    "logo",
+    # business-owner / commercial
+    "smallbusiness",
+    "Entrepreneur",
+    "ecommerce",
+    "shopify",
     "AmazonSeller",
+    "Etsy",
+    "marketing",
+    "advertising",
+    # niche image-specific + creator economy
+    "realestatephotography",
+    "Twitch",
+    "NewTubers",
+    "podcasting",
 ]
 
 ARCTIC_BASE = "https://arctic-shift.photon-reddit.com/api/posts/search"
@@ -443,15 +466,16 @@ def is_demand_request(
     row: dict,
     exclude_flairs: set[str],
     showcase_re: re.Pattern[str],
-    hiring_re: re.Pattern[str] | None = None,
-    supply_heavy_subs: set[str] | frozenset[str] = frozenset(),
+    demand_re: re.Pattern[str] | None = None,
+    ungated_subs: set[str] | frozenset[str] = frozenset(),
 ) -> bool:
     """False for posts that aren't a demand request: removed/deleted (no text),
     finished-work showcases, and meta/result flairs.
 
-    For supply-heavy subs (business taxonomy), also require a positive hiring
-    signal so freelancers advertising their services ("[For Hire] ...") don't
-    count as demand -- we want the buyer, not the seller.
+    Business taxonomy adds a demand gate: outside the pure request subs
+    (``ungated_subs``) a post must carry an explicit ask (``demand_re`` over
+    title+selftext+flair), so the supply/showcase/discussion that dominates wide
+    business subs doesn't get counted as demand.
     """
     if row.get("is_removed"):
         return False
@@ -459,9 +483,11 @@ def is_demand_request(
         return False
     if showcase_re.search(row.get("title") or ""):
         return False
-    if hiring_re is not None and row.get("subreddit") in supply_heavy_subs:
-        hay = (row.get("title") or "") + " " + (row.get("flair") or "")
-        if not hiring_re.search(hay):
+    if demand_re is not None and row.get("subreddit") not in ungated_subs:
+        hay = " ".join(
+            [row.get("title") or "", row.get("selftext") or "", row.get("flair") or ""]
+        )
+        if not demand_re.search(hay):
             return False
     return True
 
@@ -701,8 +727,8 @@ def categorize(args: argparse.Namespace) -> None:
     tax = load_taxonomy(args.taxonomy)
     subreddit_default: dict[str, str] = tax.SUBREDDIT_DEFAULT
     edit_categories: set[str] | None = getattr(tax, "EDIT_CATEGORIES", None)
-    hiring_re = getattr(tax, "HIRING_RE", None)
-    supply_heavy = getattr(tax, "SUPPLY_HEAVY_SUBS", frozenset())
+    demand_re = getattr(tax, "DEMAND_RE", None)
+    ungated_subs = getattr(tax, "UNGATED_SUBS", frozenset())
 
     include = subreddit_include(args)
     if include is not None or args.general_only:
@@ -743,12 +769,13 @@ def categorize(args: argparse.Namespace) -> None:
                 "is_removed": r["is_removed"],
                 "flair": r["flair"],
                 "title": r["title"],
+                "selftext": r["selftext"],
                 "subreddit": r["subreddit"],
             },
             tax.EXCLUDE_FLAIRS,
             tax.SHOWCASE_RE,
-            hiring_re,
-            supply_heavy,
+            demand_re,
+            ungated_subs,
         ),
         axis=1,
     )
@@ -785,7 +812,11 @@ def categorize(args: argparse.Namespace) -> None:
                 out.append(f"| {cat} | {n} | {100 * n / len(sub):.1f}% |")
         return out
 
-    title = "Business image-edit demand" if args.taxonomy == "business" else "Image-edit demand"
+    title = (
+        "Business image-edit demand"
+        if args.taxonomy == "business"
+        else "Image-edit demand"
+    )
     lines: list[str] = [f"# {title} by category\n"]
     lines.append(
         f"_{n_req} demand requests across {req['subreddit'].nunique()} subreddits "
@@ -842,7 +873,9 @@ def stats(args: argparse.Namespace) -> None:
         rows = [
             r
             for r in rows
-            if keep_subreddit(r["subreddit"], include, args.general_only, subreddit_default)
+            if keep_subreddit(
+                r["subreddit"], include, args.general_only, subreddit_default
+            )
         ]
         if not rows:
             print("no posts match the subreddit filter.")

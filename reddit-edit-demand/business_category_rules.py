@@ -9,12 +9,14 @@ title+selftext, then flair, then single-purpose-subreddit default); see
      ecommerce product photo, virtual staging, mockups, ad creative, packaging,
      ...) rather than the consumer ones (restore, remove person, retouch).
 
-  2. Business request subs are flooded with the *inverse* of demand -- freelancers
-     advertising their services ("[For Hire] I can make your logo"). That supply
-     is filtered two ways: ``SHOWCASE_RE`` / ``EXCLUDE_FLAIRS`` are expanded with
-     freelancer vocabulary, and for supply-heavy subs (``SUPPLY_HEAVY_SUBS``) a
-     row is only kept as demand if ``HIRING_RE`` matches -- i.e. it's the buyer
-     ("[Hiring] need a designer"), not the seller.
+  2. Business subs are mostly NOT demand -- gig boards are flooded with supply
+     (freelancers advertising) and design/business communities with showcase,
+     feedback, and discussion. So everything except the pure request subs
+     (``UNGATED_SUBS``) passes a *demand gate*: a row only counts if ``DEMAND_RE``
+     matches title+selftext+flair (an actual ask -- "can someone...", "[hiring]",
+     "looking for someone to...", "WTB"). ``SHOWCASE_RE`` / ``EXCLUDE_FLAIRS`` are
+     also expanded with supply/showcase vocabulary. Together these let us scrape a
+     wide, high-volume net without drowning the signal in non-requests.
 
 Each request is also tagged edit-vs-create via ``EDIT_CATEGORIES``: business demand
 is dominated by create-from-scratch work (logo/flyer/packaging design), so the
@@ -155,12 +157,43 @@ EDIT_CATEGORIES: set[str] = {
     "Resize / adapt to platform format",
 }
 
-# Subs where supply (freelancers offering services) dominates: keep a post only
-# if it reads as the buyer hiring, not the seller advertising.
-SUPPLY_HEAVY_SUBS: set[str] = {"forhire", "DesignJobs"}
-HIRING_RE = re.compile(
-    r"\bhiring\b|\[\s*hiring\s*\]|looking for (a |an )?(designer|someone|artist|editor)|"
-    r"need (a |an )?(designer|logo|graphic|edit)|requesting|\[\s*task\s*\]|\bbudget\b",
+# Demand gate. The consumer subs were pure request boards -- every post is an
+# edit request. Most business subs are NOT: gig boards are dominated by supply
+# (freelancers advertising), and design/business communities are dominated by
+# showcase, feedback, and discussion. So OUTSIDE the pure request subs
+# (UNGATED_SUBS) a post only counts as demand if it actually asks for work --
+# DEMAND_RE over title + selftext + flair. This is what lets us scrape a wide
+# net of high-volume subs without drowning the signal in showcase/discussion.
+UNGATED_SUBS: set[str] = {"DesignRequests"}
+
+# Objects a commercial image request is about, and the imperative verbs that act
+# on them -- used to recognise "Remove the background", "Need a white background
+# for my listing photos" as asks even when no role/"can someone" phrasing is
+# present (common in business-owner subs).
+_OBJ = (
+    r"photo|image|logo|background|backdrop|product|listing|thumbnail|banner|"
+    r"mockup|flyer|poster|graphic|design|sky|\btext\b|label|packaging|headshot|"
+    r"\broom\b|space|property|\bhome\b|wallpaper"
+)
+_VERB = (
+    r"need|remove|edit|design|make|create|fix|enhance|composite|vectori[sz]e|resize|"
+    r"retouch|colou?ri[sz]e|restore|crop|cut ?out|add|replace|change|put|stage|"
+    r"clean ?up|touch ?up|photoshop"
+)
+DEMAND_RE = re.compile(
+    # explicit hiring / request framing
+    r"\bhiring\b|\[\s*(hiring|task|request|req|paid)\s*\]|"
+    r"can (someone|somebody|anyone|you)|could (someone|somebody|anyone|you)|"
+    r"would (someone|somebody|anyone)|anyone (able|who can|willing)|"
+    r"looking for (a |an |someone )?(designer|editor|artist|illustrator|photographer|"
+    r"help|someone to)|"
+    r"\bi need\b|requesting|\brequest\b|want to buy|\bwtb\b|"
+    r"help me (make|edit|design|create|with)|make me (a|an)|"
+    r"paying (for|someone)|will pay|\bbudget\b|commission (a|an|someone|for)|"
+    # a "need"/imperative-edit verb acting on a commercial object, allowing an
+    # adjective or two in between ("stage this empty living room", "need a pure
+    # white background"). Gap-capped so it stays within one clause.
+    rf"\b({_VERB})\b[^.?!]{{0,40}}\b({_OBJ})\b",
     re.I,
 )
 
@@ -170,6 +203,8 @@ EXCLUDE_FLAIRS: set[str] = {
     "for hire",
     "for-hire",
     "forhire",
+    "offer",
+    "closed",
     "commission",
     "commissions",
     "commissions open",
@@ -193,7 +228,9 @@ EXCLUDE_FLAIRS: set[str] = {
 # catch the freelancer-advertising vocabulary that floods business design subs;
 # the leading-bracket anchor catches "[For Hire] ..." titles that carry no flair.
 SHOWCASE_RE = re.compile(
-    r"^\s*\[?\s*for ?hire|for ?hire\]|\bfor hire\b|open for (work|comm)|"
+    r"^\s*\[?\s*for ?hire|for ?hire\]|\bfor hire\b|^\s*\[?\s*offer\b|open for (work|comm)|"
+    # feedback/critique posts are showcase, not a request to do the work
+    r"\bfeedback\b|critique|thoughts on|rate my|roast my|\bc ?& ?c\b|cc welcome|"
     r"my (recent )?work|hit me up|portfolio|"
     r"offering (free )?(graphic )?design|i can (make|do|design) (your|a|you)|"
     r"\bi do\b.*(edit|design|logo)|commissions? open|dm (me )?if interested|"
