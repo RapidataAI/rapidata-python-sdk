@@ -36,7 +36,9 @@ class RapidataAudience(RapidataAudienceBase):
         filters: list[RapidataFilter],
         openapi_service: OpenAPIService,
     ):
-        super().__init__(id=id, name=name, filters=filters, openapi_service=openapi_service)
+        super().__init__(
+            id=id, name=name, filters=filters, openapi_service=openapi_service
+        )
         self._example_handler = AudienceExampleHandler(openapi_service, id)
         self._recruiting_started = False
 
@@ -305,6 +307,96 @@ class RapidataAudience(RapidataAudienceBase):
                 truths,
                 context,
                 media_context,
+                explanation,
+                settings,
+            )
+            self._try_start_recruiting()
+            return self
+
+    def add_draw_example(
+        self,
+        instruction: str,
+        datapoint: str,
+        truths: list[Box],
+        context: str | None = None,
+        media_context: list[str] | None = None,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataAudience:
+        """Add a draw training example to this audience.
+
+        Training examples help annotators understand the task by showing them
+        a sample datapoint with the correct regions before they start labeling.
+
+        Args:
+            instruction (str): The instruction telling annotators what to draw.
+            datapoint (str): The media datapoint (URL or path) to use as the training example.
+            truths (list[Box]): The bounding boxes covering the correct regions — annotators are graded on whether their drawn lines fall within any of these boxes. :class:`Box` coordinates are image ratios (0.0 to 1.0).
+            context (str, optional): Additional text context to display with the example. Defaults to None.
+            media_context (list[str], optional): Additional image URLs / paths to display with the example. Pass a single-element list for one image, or multiple to display several images. Defaults to None.
+            explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature flags on this example so the qualification example matches how the actual task will be rendered. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        media_context = coerce_media_context(media_context)
+        with tracer.start_as_current_span("RapidataAudience.add_draw_example"):
+            logger.debug(
+                f"Adding draw example to audience: {self.id} with instruction: {instruction}, datapoint: {datapoint}, truths: {truths}, context: {context}, media_context: {media_context}, explanation: {explanation}, settings: {settings}"
+            )
+            self._example_handler.add_draw_example(
+                instruction,
+                datapoint,
+                truths,
+                context,
+                media_context,
+                explanation,
+                settings,
+            )
+            self._try_start_recruiting()
+            return self
+
+    def add_select_words_example(
+        self,
+        instruction: str,
+        datapoint: str,
+        sentence: str,
+        truths: list[int],
+        required_precision: float = 1,
+        required_completeness: float = 1,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataAudience:
+        """Add a select words training example to this audience.
+
+        Training examples help annotators understand the task by showing them
+        a sample datapoint with the correct words before they start labeling.
+
+        Args:
+            instruction (str): The instruction telling annotators which words to select.
+            datapoint (str): The media datapoint (URL or path) to use as the training example.
+            sentence (str): The sentence the annotators will be selecting words from. (split up by spaces)
+            truths (list[int]): The indices of the words that are the correct answers.
+            required_precision (float): The required precision for the annotator to get the example correct (minimum ratio of the words selected that need to be correct). Defaults to 1. (no wrong words can be selected)
+            required_completeness (float): The required completeness for the annotator to get the example correct (minimum ratio of total correct words selected). Defaults to 1. (all correct words need to be selected)
+            explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): Settings applied as feature flags on this example so the qualification example matches how the actual task will be rendered. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        with tracer.start_as_current_span("RapidataAudience.add_select_words_example"):
+            logger.debug(
+                f"Adding select words example to audience: {self.id} with instruction: {instruction}, datapoint: {datapoint}, sentence: {sentence}, truths: {truths}, explanation: {explanation}, settings: {settings}"
+            )
+            self._example_handler.add_select_words_example(
+                instruction,
+                datapoint,
+                sentence,
+                truths,
+                required_precision,
+                required_completeness,
                 explanation,
                 settings,
             )

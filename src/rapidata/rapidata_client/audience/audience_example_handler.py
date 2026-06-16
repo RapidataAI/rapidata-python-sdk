@@ -25,6 +25,21 @@ from rapidata.api_client.models.i_example_payload_locate_example_payload import 
 from rapidata.api_client.models.i_example_truth_locate_example_truth import (
     IExampleTruthLocateExampleTruth,
 )
+from rapidata.api_client.models.i_example_payload_line_example_payload import (
+    IExamplePayloadLineExamplePayload,
+)
+from rapidata.api_client.models.i_example_truth_line_example_truth import (
+    IExampleTruthLineExampleTruth,
+)
+from rapidata.api_client.models.i_example_payload_transcription_example_payload import (
+    IExamplePayloadTranscriptionExamplePayload,
+)
+from rapidata.api_client.models.i_example_truth_transcription_example_truth import (
+    IExampleTruthTranscriptionExampleTruth,
+)
+from rapidata.api_client.models.example_transcription_word import (
+    ExampleTranscriptionWord,
+)
 from rapidata.rapidata_client.validation.rapids.box import (
     Box,
     calculate_boxes_coverage,
@@ -115,7 +130,9 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=len(truth) / len(answer_options),
-                featureFlags=[s._to_feature_flag() for s in settings] if settings else None,
+                featureFlags=(
+                    [s._to_feature_flag() for s in settings] if settings else None
+                ),
             ),
         )
 
@@ -183,7 +200,9 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=0.5,
-                featureFlags=[s._to_feature_flag() for s in settings] if settings else None,
+                featureFlags=(
+                    [s._to_feature_flag() for s in settings] if settings else None
+                ),
             ),
         )
 
@@ -243,7 +262,150 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=calculate_boxes_coverage(truths),
-                featureFlags=[s._to_feature_flag() for s in settings] if settings else None,
+                featureFlags=(
+                    [s._to_feature_flag() for s in settings] if settings else None
+                ),
+            ),
+        )
+
+    def add_draw_example(
+        self,
+        instruction: str,
+        datapoint: str,
+        truths: list[Box],
+        context: str | None = None,
+        media_context: list[str] | None = None,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> None:
+        """add a draw example to the audience
+
+        Args:
+            instruction (str): The instruction telling the labeler what to draw.
+            datapoint (str): The media datapoint the labeler will be drawing on.
+            truths (list[Box]): The bounding boxes covering the correct regions — labelers are graded on whether their drawn lines fall within any of these boxes. Coordinates are ratios of the image size (0.0 to 1.0).
+            context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
+            media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler. Defaults to None.
+        """
+        from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
+            AddExampleToAudienceEndpointInput,
+        )
+
+        if not truths:
+            raise ValueError("Draw example requires at least one truth bounding box")
+
+        asset_input = self._asset_uploader.upload_and_map_asset(datapoint)
+
+        payload = IExamplePayload(
+            actual_instance=IExamplePayloadLineExamplePayload(
+                _t="LineExamplePayload", target=instruction
+            )
+        )
+        model_truth = IExampleTruth(
+            actual_instance=IExampleTruthLineExampleTruth(
+                _t="LineExampleTruth",
+                boundingBoxes=[truth.to_example_model() for truth in truths],
+            )
+        )
+
+        self._openapi_service.audience.examples_api.audience_audience_id_example_post(
+            audience_id=self._audience_id,
+            add_example_to_audience_endpoint_input=AddExampleToAudienceEndpointInput(
+                asset=asset_input,
+                payload=payload,
+                truth=model_truth,
+                context=context,
+                contextAsset=(
+                    self._asset_uploader.upload_and_map_asset(media_context)
+                    if media_context
+                    else None
+                ),
+                explanation=explanation,
+                randomCorrectProbability=calculate_boxes_coverage(truths),
+                featureFlags=(
+                    [s._to_feature_flag() for s in settings] if settings else None
+                ),
+            ),
+        )
+
+    def add_select_words_example(
+        self,
+        instruction: str,
+        datapoint: str,
+        sentence: str,
+        truths: list[int],
+        required_precision: float = 1,
+        required_completeness: float = 1,
+        explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> None:
+        """add a select words example to the audience
+
+        Args:
+            instruction (str): The instruction telling the labeler which words to select.
+            datapoint (str): The media datapoint the labeler will be selecting words for.
+            sentence (str): The sentence that the labeler will be selecting words from. (split up by spaces)
+            truths (list[int]): The indices of the words that are the correct answers.
+            required_precision (float): The required precision for the labeler to get the example correct (minimum ratio of the words selected that need to be correct). Defaults to 1. (no wrong words can be selected)
+            required_completeness (float): The required completeness for the labeler to get the example correct (minimum ratio of total correct words selected). Defaults to 1. (all correct words need to be selected)
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
+            settings (Sequence[RapidataSetting], optional): The list of settings to apply to the example as feature flags. Controls how the example is rendered to the labeler. Defaults to None.
+        """
+        from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
+            AddExampleToAudienceEndpointInput,
+        )
+
+        transcription_words = [
+            ExampleTranscriptionWord(word=word, wordIndex=i)
+            for i, word in enumerate(sentence.split(" "))
+        ]
+
+        if not truths:
+            raise ValueError("Select words example requires at least one truth index")
+
+        if any(index < 0 or index >= len(transcription_words) for index in truths):
+            raise ValueError(
+                "Truth indices must be within the range of words in the sentence"
+            )
+
+        correct_words = [
+            ExampleTranscriptionWord(
+                word=transcription_words[index].word, wordIndex=index
+            )
+            for index in truths
+        ]
+
+        asset_input = self._asset_uploader.upload_and_map_asset(datapoint)
+
+        payload = IExamplePayload(
+            actual_instance=IExamplePayloadTranscriptionExamplePayload(
+                _t="TranscriptionExamplePayload",
+                title=instruction,
+                transcription=transcription_words,
+            )
+        )
+        model_truth = IExampleTruth(
+            actual_instance=IExampleTruthTranscriptionExampleTruth(
+                _t="TranscriptionExampleTruth",
+                correctWords=correct_words,
+                requiredPrecision=required_precision,
+                requiredCompleteness=required_completeness,
+            )
+        )
+
+        self._openapi_service.audience.examples_api.audience_audience_id_example_post(
+            audience_id=self._audience_id,
+            add_example_to_audience_endpoint_input=AddExampleToAudienceEndpointInput(
+                asset=asset_input,
+                payload=payload,
+                truth=model_truth,
+                explanation=explanation,
+                randomCorrectProbability=len(correct_words) / len(transcription_words),
+                featureFlags=(
+                    [s._to_feature_flag() for s in settings] if settings else None
+                ),
             ),
         )
 
@@ -265,7 +427,9 @@ class AudienceExampleHandler:
 
         context_asset = None
         if rapid.media_context:
-            context_asset = self._asset_uploader.upload_and_map_asset(rapid.media_context)
+            context_asset = self._asset_uploader.upload_and_map_asset(
+                rapid.media_context
+            )
 
         # Compare truths reference original asset paths — rewrite them to the
         # uploaded names before the wire conversion.
