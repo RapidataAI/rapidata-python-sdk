@@ -37,7 +37,8 @@ import re
 RULES: list[tuple[str, str]] = [
     (
         "Virtual staging / real-estate edit",
-        r"virtual(ly)? stag|de-?clutter|empty (the )?room|furnish|real ?estate|"
+        r"virtual(ly)? stag|de-?clutter|empty (the )?room|furnish|"
+        r"real ?estate (photo|listing|image|edit|shoot|stag)|"
         r"replace (the )?sky|sky replace|twilight (photo|edit|conversion)|"
         r"day ?to ?dusk|\bmls\b",
     ),
@@ -49,7 +50,7 @@ RULES: list[tuple[str, str]] = [
         "Ecommerce product photo / white background",
         r"white background|product (photo|image|shot)|listing (image|photo)|"
         r"amazon (listing|image|photo)|clipping path|\bcut ?out\b|infographic|"
-        r"hero image|catalog|on (a )?white|pure white",
+        r"hero image|catalog (photo|image|shot)|on (a )?white background|pure white",
     ),
     (
         "Remove / replace background",
@@ -119,7 +120,8 @@ RULES: list[tuple[str, str]] = [
     (
         "Resize / adapt to platform format",
         r"\bresize\b|aspect ratio|different sizes|adapt (it |this )?(for|to)|"
-        r"reformat|square version|story size|\b1080|\b4k\b|print ?ready|"
+        r"reformat|square version|story size|1080 ?(p|px|x)|"
+        r"4 ?k (resolution|px|wide|tall|version|image)|print ?ready|"
         r"\bdimensions\b|\bdpi\b",
     ),
     (
@@ -165,6 +167,19 @@ EDIT_CATEGORIES: set[str] = {
 # DEMAND_RE over title + selftext + flair. This is what lets us scrape a wide
 # net of high-volume subs without drowning the signal in showcase/discussion.
 UNGATED_SUBS: set[str] = {"DesignRequests"}
+
+# Classify on title + only the LEAD of the selftext. Gig-board posts carry
+# essay-length job specs whose keyword soup ("...4k budget, product catalog
+# experience, white-label...") otherwise mis-fires a category on a post whose
+# actual ask is something else. The real request is in the opening line; the cap
+# keeps it and drops the tail. None on the consumer taxonomy (full selftext).
+SELFTEXT_CHARS: int = 200
+
+# In gated subs, a post must also resolve to a real image-edit category --
+# UNMATCHED there means "an ask, but not a discrete image-edit task" (a generic
+# role/project hire), which is not the demand this benchmark measures. The pure
+# request board (UNGATED_SUBS) keeps its UNMATCHED, like the consumer benchmark.
+GATED_REQUIRE_CATEGORY: bool = True
 
 # Objects a commercial image request is about, and the imperative verbs that act
 # on them -- used to recognise "Remove the background", "Need a white background

@@ -729,6 +729,8 @@ def categorize(args: argparse.Namespace) -> None:
     edit_categories: set[str] | None = getattr(tax, "EDIT_CATEGORIES", None)
     demand_re = getattr(tax, "DEMAND_RE", None)
     ungated_subs = getattr(tax, "UNGATED_SUBS", frozenset())
+    selftext_chars = getattr(tax, "SELFTEXT_CHARS", None)
+    gated_require_category = getattr(tax, "GATED_REQUIRE_CATEGORY", False)
 
     include = subreddit_include(args)
     if include is not None or args.general_only:
@@ -751,10 +753,18 @@ def categorize(args: argparse.Namespace) -> None:
 
     kw = compile_rules(tax.RULES)
     fl = compile_rules(tax.FLAIR_RULES)
+    # Classify on title + (optionally capped) selftext lead. The gate below still
+    # sees full selftext; only the category match uses the cap, so long gig-board
+    # job specs don't mis-fire a category via a stray keyword in their tail.
+    clf_selftext = (
+        df["selftext"].str.slice(0, selftext_chars)
+        if selftext_chars
+        else df["selftext"]
+    )
     df["category"] = df.apply(
         lambda r: categorize_post(
             r["title"],
-            r["selftext"],
+            clf_selftext.loc[r.name],
             r["flair"],
             r["subreddit"],
             kw,
@@ -779,9 +789,17 @@ def categorize(args: argparse.Namespace) -> None:
         ),
         axis=1,
     )
+    # In gated subs, an ask that resolves to no image-edit category (UNMATCHED)
+    # is a generic role/project hire, not the discrete edit demand we measure.
+    if gated_require_category:
+        df["is_request"] = df["is_request"] & ~(
+            (~df["subreddit"].isin(list(ungated_subs)))
+            & (df["category"] == "UNMATCHED")
+        )
+
     # Tag edit-of-existing-asset vs create-from-scratch (business taxonomy only).
     if edit_categories is not None:
-        df["is_edit"] = df["category"].isin(edit_categories)
+        df["is_edit"] = df["category"].isin(list(edit_categories))
 
     # Shares are over demand *requests* only -- excluding posts that can't be a
     # request (removed/no-text) or aren't one (finished-work showcases / supply).
