@@ -162,7 +162,6 @@ theme:
   features:
     - content.code.copy
     - content.code.annotate
-    - content.tabs.link
     - navigation.instant
     - navigation.instant.progress
     - navigation.sections
