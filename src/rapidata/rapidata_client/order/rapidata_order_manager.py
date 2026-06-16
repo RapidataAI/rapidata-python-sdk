@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from typing import Literal, Optional, Sequence, TYPE_CHECKING
 
 from opentelemetry import trace
@@ -25,9 +26,21 @@ if TYPE_CHECKING:
     )
 
 
+_ORDER_DEPRECATION_MESSAGE = (
+    "client.order is deprecated and will be removed in a future release. "
+    "Use client.job to create job definitions and client.audience to assign them "
+    "instead. See https://docs.rapidata.ai/."
+)
+
+
 class RapidataOrderManager:
     """
     Handels everything regarding the orders from creation to retrieval.
+
+    Deprecated:
+        ``client.order`` is deprecated and will be removed in a future release.
+        Use ``client.job`` to create job definitions and ``client.audience`` to
+        assign them instead. See https://docs.rapidata.ai/ for the migration guide.
 
     Attributes:
         filters (RapidataFilters): The RapidataFilters instance.
@@ -42,7 +55,16 @@ class RapidataOrderManager:
 
         self.__priority: int | None = None
         self.__sticky_config: StickyConfig | None = None
+        self.__deprecation_warned = False
         logger.debug("RapidataOrderManager initialized")
+
+    def _warn_deprecated(self) -> None:
+        # Warn once per manager instance so loops creating many orders don't spam.
+        if self.__deprecation_warned:
+            return
+        self.__deprecation_warned = True
+        warnings.warn(_ORDER_DEPRECATION_MESSAGE, DeprecationWarning, stacklevel=3)
+        logger.warning(_ORDER_DEPRECATION_MESSAGE)
 
     def _create_general_order(
         self,
@@ -57,6 +79,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
     ) -> RapidataOrder:
+        self._warn_deprecated()
         if filters is None:
             filters = []
         if settings is None:
@@ -147,9 +170,7 @@ class RapidataOrderManager:
             raise TypeError("Priority must be an integer or None")
 
         if priority is not None and priority < 0:
-            raise ValueError(
-                "Priority must be a positive integer or None"
-            )
+            raise ValueError("Priority must be a positive integer or None")
 
         self.__priority = priority
 
@@ -874,6 +895,7 @@ class RapidataOrderManager:
         Returns:
             RapidataOrder: The Order instance.
         """
+        self._warn_deprecated()
         with tracer.start_as_current_span("RapidataOrderManager.get_order_by_id"):
             from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
@@ -898,6 +920,7 @@ class RapidataOrderManager:
         Returns:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
+        self._warn_deprecated()
         with tracer.start_as_current_span("RapidataOrderManager.find_orders"):
             from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
                 AudienceAudienceIdJobsGetJobIdParameter,

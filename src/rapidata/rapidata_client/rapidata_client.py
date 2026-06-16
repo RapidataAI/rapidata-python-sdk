@@ -101,6 +101,7 @@ class RapidataClient:
 
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
+                Deprecated: use ``job`` together with ``audience`` instead.
             validation (ValidationSetManager): The ValidationSetManager instance.
             flow (RapidataFlowManager): The RapidataFlowManager instance.
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
