@@ -160,6 +160,46 @@ datapoints=["image1.jpg", "image2.jpg"],
 contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 ```
 
+**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. If a context exceeds the limit, a warning is logged at creation time. See `auto_shorten` below to have over-long contexts shortened automatically.
+
+---
+
+### `auto_shorten`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `bool` |
+| **Required** | No |
+| **Default** | `False` |
+
+When `True`, any context longer than the 400-character limit is automatically shortened — tuned to the `instruction` so only the part relevant to the question is kept — before upload. When `False` (the default), an over-long context is left unchanged and a warning is logged explaining the backend would reject it.
+
+```python
+order = rapi.order.create_classification_order(
+    name="Outfit check",
+    instruction="Does the main character wear the right clothing?",
+    answer_options=["Yes", "No"],
+    datapoints=["scene.jpg"],
+    contexts=["<a very long, detailed beach-scene description ...>"],
+    auto_shorten=True,
+)
+```
+
+You can also shorten contexts directly via the client, without creating an order:
+
+```python
+short = rapi.context.shorten_context(
+    context="<a very long description ...>",
+    question="Does the main character wear the right clothing?",
+)
+
+# Or a batch of (context, question) pairs in one call:
+shortened = rapi.context.shorten_contexts([
+    (context_a, question_a),
+    (context_b, question_b),
+])
+```
+
 ---
 
 ### `media_contexts`

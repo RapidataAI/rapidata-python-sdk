@@ -25,6 +25,7 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 )
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
+from rapidata.rapidata_client.context.context_manager import ContextManager
 
 from rapidata.rapidata_client.config import (
     logger,
@@ -107,6 +108,8 @@ class RapidataClient:
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
             job (JobManager): The JobManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
+            context (ContextManager): The ContextManager instance for shortening
+                datapoint contexts against a question.
         """
         tracer.set_session_id(
             uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
@@ -171,6 +174,9 @@ class RapidataClient:
             self._demographic = DemographicManager(
                 openapi_service=self._openapi_service
             )
+
+            logger.debug("Initializing ContextManager")
+            self.context = ContextManager(openapi_service=self._openapi_service)
 
         self._check_beta_features()  # can't be in the trace for some reason
 

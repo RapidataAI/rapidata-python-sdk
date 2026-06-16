@@ -15,6 +15,8 @@ from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSetting, RapidataSettings
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
+from rapidata.rapidata_client.context.context_manager import ContextManager
+from rapidata.rapidata_client.context._context_length import enforce_context_length
 from rapidata.service.openapi_service import OpenAPIService
 
 if TYPE_CHECKING:
@@ -49,6 +51,7 @@ class RapidataOrderManager:
 
     def __init__(self, openapi_service: OpenAPIService):
         self.__openapi_service = openapi_service
+        self.__context_manager = ContextManager(openapi_service)
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
@@ -78,8 +81,15 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         self._warn_deprecated()
+        enforce_context_length(
+            datapoints=datapoints,
+            question=workflow._get_instruction(),
+            auto_shorten=auto_shorten,
+            context_manager=self.__context_manager,
+        )
         if filters is None:
             filters = []
         if settings is None:
@@ -194,6 +204,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """Create a classification order.
 
@@ -227,6 +238,9 @@ class RapidataOrderManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
 
         Example:
             ```python
@@ -275,6 +289,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def create_compare_order(
@@ -294,6 +309,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """Create a compare order.
 
@@ -341,6 +357,9 @@ class RapidataOrderManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
 
         Example:
             ```python
@@ -397,6 +416,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def create_ranking_order(
@@ -414,6 +434,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """
         Create a ranking order.
@@ -442,6 +463,9 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the ranking. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the ranking. Defaults to []. Decides in what order the tasks should be shown.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
 
         Example:
             ```python
@@ -514,6 +538,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def create_free_text_order(
@@ -529,6 +554,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """Create a free text order.
 
@@ -555,6 +581,9 @@ class RapidataOrderManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
 
         Example:
             ```python
@@ -592,6 +621,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def create_select_words_order(
@@ -607,6 +637,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """Create a select words order.
 
@@ -632,6 +663,9 @@ class RapidataOrderManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
 
         Example:
             ```python
@@ -671,6 +705,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def create_locate_order(
@@ -686,6 +721,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """Create a locate order.
 
@@ -711,6 +747,9 @@ class RapidataOrderManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
 
         Example:
             ```python
@@ -745,6 +784,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def create_draw_order(
@@ -760,6 +800,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """Create a draw order.
 
@@ -785,6 +826,9 @@ class RapidataOrderManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
 
         Example:
             ```python
@@ -819,6 +863,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def create_timestamp_order(
@@ -834,6 +879,7 @@ class RapidataOrderManager:
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        auto_shorten: bool = False,
     ) -> RapidataOrder:
         """Create a timestamp order.
 
@@ -862,6 +908,9 @@ class RapidataOrderManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
+                maximum length is automatically shortened for the instruction before upload. If False, an
+                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
 
         with tracer.start_as_current_span(
@@ -884,6 +933,7 @@ class RapidataOrderManager:
                 filters=filters,
                 selections=selections,
                 settings=settings,
+                auto_shorten=auto_shorten,
             )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:

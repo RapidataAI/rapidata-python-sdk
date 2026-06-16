@@ -61,6 +61,7 @@ from .rapidata_client import (
     DeviceFilter,
     DeviceType,
     Datapoint,
+    ContextManager,
     FailedUploadException,
     FailedUpload,
     rapidata_config,
