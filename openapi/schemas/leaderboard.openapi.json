@@ -305,6 +305,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -985,6 +997,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1343,6 +1367,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1518,6 +1554,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1778,6 +1826,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1787,6 +1847,278 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryManagedBenchmarksEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmarks/published": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries the benchmarks surfaced in the public benchmark repository.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryPublishedBenchmarksEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -3120,6 +3452,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3380,6 +3724,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4549,6 +4905,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4744,6 +5112,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5058,6 +5438,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5186,6 +5578,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5828,6 +6232,7 @@
           "id",
           "name",
           "isPublic",
+          "isPublished",
           "createdAt",
           "ownerId",
           "ownerMail",
@@ -5848,6 +6253,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
           },
           "createdAt": {
             "type": "string",
@@ -7945,6 +8354,7 @@
           "name",
           "isManaged",
           "isPublic",
+          "isPublished",
           "createdAt",
           "ownerMail"
         ],
@@ -7965,6 +8375,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
           },
           "createdAt": {
             "type": "string",
@@ -8462,6 +8876,7 @@
           "name",
           "isManaged",
           "isPublic",
+          "isPublished",
           "createdAt",
           "ownerMail"
         ],
@@ -8482,6 +8897,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
           },
           "createdAt": {
             "type": "string",
@@ -8660,6 +9079,82 @@
                 "$ref": "#/components/schemas/ConfidenceInterval"
               }
             ]
+          }
+        }
+      },
+      "QueryPublishedBenchmarksEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "isManaged",
+          "isPublic",
+          "isPublished",
+          "createdAt",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the benchmark."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the benchmark."
+          },
+          "isManaged": {
+            "type": "boolean",
+            "description": "Whether the benchmark is managed."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the benchmark was created.",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer owning the benchmark."
+          }
+        }
+      },
+      "QueryPublishedBenchmarksEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryPublishedBenchmarksEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -9098,6 +9593,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark should be public (only admins can change this)."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark should be surfaced in the public benchmark repository (only\n admins can change this)."
           },
           "initialBoostLevel": {
             "type": "integer",

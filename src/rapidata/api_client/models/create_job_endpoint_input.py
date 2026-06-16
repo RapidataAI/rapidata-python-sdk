@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -34,7 +34,8 @@ class CreateJobEndpointInput(LazyValidatedModel):
     name: Optional[StrictStr] = Field(default=None, description="The name of the job. If not specified, defaults to \"{definition name}:{revision number}\".")
     priority: Optional[StrictInt] = Field(default=None, description="The priority of the job. Higher values mean higher priority. Default is 50.")
     preceding_job_id: Optional[StrictStr] = Field(default=None, description="Optional id of a job that must finish before this job starts. When set, this job is  queued until the preceding job completes or fails.", alias="precedingJobId")
-    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority", "precedingJobId"]
+    notify_owner_on_completion: Optional[StrictBool] = Field(default=None, description="Whether the job's owner should be emailed when the job completes. Defaults to false.", alias="notifyOwnerOnCompletion")
+    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority", "precedingJobId", "notifyOwnerOnCompletion"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -103,7 +104,8 @@ class CreateJobEndpointInput(LazyValidatedModel):
             "revisionNumber": obj.get("revisionNumber"),
             "name": obj.get("name"),
             "priority": obj.get("priority"),
-            "precedingJobId": obj.get("precedingJobId")
+            "precedingJobId": obj.get("precedingJobId"),
+            "notifyOwnerOnCompletion": obj.get("notifyOwnerOnCompletion")
         }
         try:
             _obj = cls.model_validate(_data)

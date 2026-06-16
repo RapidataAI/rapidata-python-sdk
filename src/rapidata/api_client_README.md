@@ -121,6 +121,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark.
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the current user.
 *BenchmarkApi* | [**benchmarks_managed_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_managed_get) | **GET** /benchmarks/managed | Queries the curated benchmarks available to every customer.
+*BenchmarkApi* | [**benchmarks_published_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_published_get) | **GET** /benchmarks/published | Queries the benchmarks surfaced in the public benchmark repository.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
 *CampaignApi* | [**campaign_boost_external_campaign_id_fast_bid_multiplier_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_external_campaign_id_fast_bid_multiplier_get) | **GET** /campaign/boost/{externalCampaignId}/fast-bid-multiplier | Returns the fast bid multiplier currently applied to an external booster campaign.
@@ -255,6 +256,8 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders with filtering and pagination.
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves all publicly available orders.
 *OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations.
+*OrganizationApi* | [**organizations_mine_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_mine_get) | **GET** /organizations/mine | Returns the organization resolved from the calling customer&#39;s email domain.
+*OrganizationApi* | [**organizations_owner_support_slack_channel_put**](rapidata/api_client/docs/OrganizationApi.md#organizations_owner_support_slack_channel_put) | **PUT** /organizations/{owner}/support-slack-channel | Sets the support Slack channel URL for the organization owned by the given customer.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | Disables a participant in a benchmark.
 *ParticipantApi* | [**participant_participant_id_enable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_enable_post) | **POST** /participant/{participantId}/enable | Enables a previously disabled participant in a benchmark.
@@ -496,6 +499,7 @@ Class | Method | HTTP request | Description
  - [GetLatestAudienceInactivitySyncEndpointOutput](rapidata/api_client/docs/GetLatestAudienceInactivitySyncEndpointOutput.md)
  - [GetLatestAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/GetLatestAudienceStateRecalculationEndpointOutput.md)
  - [GetLeaderboardByIdEndpointOutput](rapidata/api_client/docs/GetLeaderboardByIdEndpointOutput.md)
+ - [GetMyOrganizationEndpointOutput](rapidata/api_client/docs/GetMyOrganizationEndpointOutput.md)
  - [GetOrderByIdEndpointOutput](rapidata/api_client/docs/GetOrderByIdEndpointOutput.md)
  - [GetParticipantByIdEndpointOutput](rapidata/api_client/docs/GetParticipantByIdEndpointOutput.md)
  - [GetParticipantByIdObsoleteEndpointOutput](rapidata/api_client/docs/GetParticipantByIdObsoleteEndpointOutput.md)
@@ -901,6 +905,8 @@ Class | Method | HTTP request | Description
  - [QueryParticipantsObsoleteEndpointOutputItem](rapidata/api_client/docs/QueryParticipantsObsoleteEndpointOutputItem.md)
  - [QueryPublicJobDefinitionsEndpointOutput](rapidata/api_client/docs/QueryPublicJobDefinitionsEndpointOutput.md)
  - [QueryPublicJobDefinitionsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryPublicJobDefinitionsEndpointPagedResultOfOutput.md)
+ - [QueryPublishedBenchmarksEndpointOutput](rapidata/api_client/docs/QueryPublishedBenchmarksEndpointOutput.md)
+ - [QueryPublishedBenchmarksEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryPublishedBenchmarksEndpointPagedResultOfOutput.md)
  - [QuerySampleGenerationsByBenchmarkEndpointOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointOutput.md)
  - [QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput.md)
  - [QueryStandingsEndpointOutput](rapidata/api_client/docs/QueryStandingsEndpointOutput.md)
@@ -936,6 +942,7 @@ Class | Method | HTTP request | Description
  - [SetFastBidMultiplierEndpointInput](rapidata/api_client/docs/SetFastBidMultiplierEndpointInput.md)
  - [SetFastBidMultiplierEndpointOutput](rapidata/api_client/docs/SetFastBidMultiplierEndpointOutput.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
+ - [SetOrganizationSupportSlackChannelEndpointInput](rapidata/api_client/docs/SetOrganizationSupportSlackChannelEndpointInput.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
  - [SkipRapidEndpointInput](rapidata/api_client/docs/SkipRapidEndpointInput.md)
  - [SkipRapidEndpointOutput](rapidata/api_client/docs/SkipRapidEndpointOutput.md)
