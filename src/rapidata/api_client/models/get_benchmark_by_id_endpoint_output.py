@@ -32,13 +32,14 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The unique identifier of the benchmark.")
     name: StrictStr = Field(description="The name of the benchmark.")
     is_public: StrictBool = Field(description="Whether the benchmark is public.", alias="isPublic")
+    is_published: StrictBool = Field(description="Whether the benchmark is published to the public benchmark repository.", alias="isPublished")
     created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
     owner_id: StrictStr = Field(description="The id of the customer owning the benchmark.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer owning the benchmark.", alias="ownerMail")
     initial_boost_level: Optional[StrictInt] = Field(description="The initial boost level applied to the campaign of every run created from this  benchmark. Null means the benchmark default is used.", alias="initialBoostLevel")
     score_shift: Union[StrictFloat, StrictInt] = Field(description="Additive offset applied to displayed scores on the overall scoreboard of this  benchmark.", alias="scoreShift")
     score_scale: Union[StrictFloat, StrictInt] = Field(description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on the overall scoreboard of this benchmark.", alias="scoreScale")
-    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "createdAt", "ownerId", "ownerMail", "initialBoostLevel", "scoreShift", "scoreScale"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "isPublished", "createdAt", "ownerId", "ownerMail", "initialBoostLevel", "scoreShift", "scoreScale"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -95,6 +96,7 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "isPublic": obj.get("isPublic"),
+            "isPublished": obj.get("isPublished"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),

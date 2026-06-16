@@ -337,6 +337,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -621,6 +633,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -903,6 +927,43 @@
         }
       }
     },
+    "/organizations/mine": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns the organization resolved from the calling customer's email domain.",
+        "description": "Responds with 404 when the caller's email domain does not match a registered organization.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMyOrganizationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/organizations": {
       "get": {
         "tags": [
@@ -1083,6 +1144,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1095,6 +1168,59 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/organizations/{owner}/support-slack-channel": {
+      "put": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Sets the support Slack channel URL for the organization owned by the given customer.",
+        "description": "A null or empty URL clears the channel. Responds with 404 when no organization is owned by the given customer.",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "The customer ID that owns the organization.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The support Slack channel URL to set or clear.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetOrganizationSupportSlackChannelEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -1403,6 +1529,24 @@
           }
         },
         "description": "The request body for dynamic client registration."
+      },
+      "GetMyOrganizationEndpoint_Output": {
+        "required": [
+          "name",
+          "supportSlackChannelUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the organization."
+          },
+          "supportSlackChannelUrl": {
+            "type": "string",
+            "description": "The support Slack channel URL of the organization, if one has been configured.",
+            "nullable": true
+          }
+        }
       },
       "GoogleOneTapLoginEndpoint_Input": {
         "required": [
@@ -1807,6 +1951,16 @@
               }
             ],
             "description": "The fields of the survey."
+          }
+        }
+      },
+      "SetOrganizationSupportSlackChannelEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The support Slack channel URL to set, or null/empty to clear it.",
+            "nullable": true
           }
         }
       },

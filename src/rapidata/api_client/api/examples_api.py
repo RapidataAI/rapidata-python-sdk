@@ -658,6 +658,7 @@ class ExamplesApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
         is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -686,6 +687,8 @@ class ExamplesApi:
         :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
         :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -715,6 +718,7 @@ class ExamplesApi:
             sort=sort,
             visibility=visibility,
             is_common_sense=is_common_sense,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -747,6 +751,7 @@ class ExamplesApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
         is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -775,6 +780,8 @@ class ExamplesApi:
         :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
         :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -804,6 +811,7 @@ class ExamplesApi:
             sort=sort,
             visibility=visibility,
             is_common_sense=is_common_sense,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -836,6 +844,7 @@ class ExamplesApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
         is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -864,6 +873,8 @@ class ExamplesApi:
         :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
         :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -893,6 +904,7 @@ class ExamplesApi:
             sort=sort,
             visibility=visibility,
             is_common_sense=is_common_sense,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -920,6 +932,7 @@ class ExamplesApi:
         sort,
         visibility,
         is_common_sense,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -973,6 +986,10 @@ class ExamplesApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('is_common_sense[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
