@@ -51,14 +51,26 @@ from typing import Iterable, cast
 
 import requests
 
-from category_rules import (
-    EXCLUDE_FLAIRS,
-    FLAIR_RULES,
-    RULES,
-    SHOWCASE_RE,
-    SUBREDDIT_DEFAULT,
-    compile_rules,
-)
+from types import ModuleType
+
+from category_rules import compile_rules
+
+
+def load_taxonomy(name: str) -> ModuleType:
+    """Return the rule module for the selected taxonomy.
+
+    Both modules export the same names (RULES, FLAIR_RULES, SUBREDDIT_DEFAULT,
+    EXCLUDE_FLAIRS, SHOWCASE_RE). The business module additionally exports
+    EDIT_CATEGORIES / HIRING_RE / SUPPLY_HEAVY_SUBS; callers probe those with
+    getattr so the consumer taxonomy is unaffected.
+    """
+    if name == "business":
+        import business_category_rules as mod
+
+        return mod
+    import category_rules as mod
+
+    return mod
 
 # --------------------------------------------------------------------------- #
 # Config
@@ -69,6 +81,18 @@ DEFAULT_SUBREDDITS = [
     "picrequests",
     "editmyphoto",
     "PhotoShopRequests",
+]
+
+# Business/commercial demand subs (pass via --subreddits; scrape stays taxonomy-
+# agnostic). DesignRequests is the backbone request sub; DesignJobs/forhire add
+# volume but are supply-heavy (filtered to hiring at categorize time); the last
+# two are niche amplifiers for thin edit categories.
+BUSINESS_SUBREDDITS = [
+    "DesignRequests",
+    "DesignJobs",
+    "forhire",
+    "realestatephotography",
+    "AmazonSeller",
 ]
 
 ARCTIC_BASE = "https://arctic-shift.photon-reddit.com/api/posts/search"
@@ -402,6 +426,7 @@ def categorize_post(
     subreddit: str,
     keyword_rules: list[tuple[str, re.Pattern[str]]],
     flair_rules: list[tuple[str, re.Pattern[str]]],
+    subreddit_default: dict[str, str],
 ) -> str:
     """Category from three signals, precision-first: keyword, then flair, then
     single-purpose-subreddit default."""
@@ -411,17 +436,34 @@ def categorize_post(
     cat = categorize_text(flair, flair_rules)
     if cat != "UNMATCHED":
         return cat
-    return SUBREDDIT_DEFAULT.get(subreddit, "UNMATCHED")
+    return subreddit_default.get(subreddit, "UNMATCHED")
 
 
-def is_demand_request(row: dict) -> bool:
-    """False for posts that aren't an edit request: removed/deleted (no text),
-    finished-work showcases, and meta/result flairs."""
+def is_demand_request(
+    row: dict,
+    exclude_flairs: set[str],
+    showcase_re: re.Pattern[str],
+    hiring_re: re.Pattern[str] | None = None,
+    supply_heavy_subs: set[str] | frozenset[str] = frozenset(),
+) -> bool:
+    """False for posts that aren't a demand request: removed/deleted (no text),
+    finished-work showcases, and meta/result flairs.
+
+    For supply-heavy subs (business taxonomy), also require a positive hiring
+    signal so freelancers advertising their services ("[For Hire] ...") don't
+    count as demand -- we want the buyer, not the seller.
+    """
     if row.get("is_removed"):
         return False
-    if (row.get("flair") or "") in EXCLUDE_FLAIRS:
+    if (row.get("flair") or "") in exclude_flairs:
         return False
-    return not SHOWCASE_RE.search(row.get("title") or "")
+    if showcase_re.search(row.get("title") or ""):
+        return False
+    if hiring_re is not None and row.get("subreddit") in supply_heavy_subs:
+        hay = (row.get("title") or "") + " " + (row.get("flair") or "")
+        if not hiring_re.search(hay):
+            return False
+    return True
 
 
 def subreddit_include(args: argparse.Namespace) -> set[str] | None:
@@ -431,13 +473,18 @@ def subreddit_include(args: argparse.Namespace) -> set[str] | None:
     return names or None
 
 
-def keep_subreddit(name: str, include: set[str] | None, general_only: bool) -> bool:
+def keep_subreddit(
+    name: str,
+    include: set[str] | None,
+    general_only: bool,
+    subreddit_default: dict[str, str],
+) -> bool:
     """Filter by --subreddits and --general-only. General = not single-purpose
     (single-purpose subs are the keys of SUBREDDIT_DEFAULT, e.g. r/estoration),
     so excluding them removes the dedicated-community amplification."""
     if include is not None and name not in include:
         return False
-    if general_only and name in SUBREDDIT_DEFAULT:
+    if general_only and name in subreddit_default:
         return False
     return True
 
@@ -651,10 +698,20 @@ def categorize(args: argparse.Namespace) -> None:
     df["is_removed"] = df.get("is_removed", False)
     df["is_removed"] = df["is_removed"].map(lambda v: str(v).lower() in ("true", "1"))
 
+    tax = load_taxonomy(args.taxonomy)
+    subreddit_default: dict[str, str] = tax.SUBREDDIT_DEFAULT
+    edit_categories: set[str] | None = getattr(tax, "EDIT_CATEGORIES", None)
+    hiring_re = getattr(tax, "HIRING_RE", None)
+    supply_heavy = getattr(tax, "SUPPLY_HEAVY_SUBS", frozenset())
+
     include = subreddit_include(args)
     if include is not None or args.general_only:
         df = df[
-            df["subreddit"].map(lambda s: keep_subreddit(s, include, args.general_only))
+            df["subreddit"].map(
+                lambda s: keep_subreddit(
+                    s, include, args.general_only, subreddit_default
+                )
+            )
         ]
         scope = (
             "general subs only"
@@ -666,27 +723,48 @@ def categorize(args: argparse.Namespace) -> None:
             print("no posts match the subreddit filter.")
             return
 
-    kw = compile_rules(RULES)
-    fl = compile_rules(FLAIR_RULES)
+    kw = compile_rules(tax.RULES)
+    fl = compile_rules(tax.FLAIR_RULES)
     df["category"] = df.apply(
         lambda r: categorize_post(
-            r["title"], r["selftext"], r["flair"], r["subreddit"], kw, fl
+            r["title"],
+            r["selftext"],
+            r["flair"],
+            r["subreddit"],
+            kw,
+            fl,
+            subreddit_default,
         ),
         axis=1,
     )
     df["is_request"] = df.apply(
         lambda r: is_demand_request(
-            {"is_removed": r["is_removed"], "flair": r["flair"], "title": r["title"]}
+            {
+                "is_removed": r["is_removed"],
+                "flair": r["flair"],
+                "title": r["title"],
+                "subreddit": r["subreddit"],
+            },
+            tax.EXCLUDE_FLAIRS,
+            tax.SHOWCASE_RE,
+            hiring_re,
+            supply_heavy,
         ),
         axis=1,
     )
+    # Tag edit-of-existing-asset vs create-from-scratch (business taxonomy only).
+    if edit_categories is not None:
+        df["is_edit"] = df["category"].isin(edit_categories)
 
     # Shares are over demand *requests* only -- excluding posts that can't be a
-    # request (removed/no-text) or aren't one (finished-work showcases / meta).
+    # request (removed/no-text) or aren't one (finished-work showcases / supply).
     req = cast("pd.DataFrame", df[df["is_request"]])
-    total, n_req = len(df), len(req)
-    n_removed = int(df["is_removed"].sum())
-    n_showcase = total - n_req - n_removed
+    total, n_removed = len(df), int(df["is_removed"].sum())
+    n_showcase = total - len(req) - n_removed
+    # --edits-only restricts the whole report to the consumer-comparable subset.
+    if args.edits_only and edit_categories is not None:
+        req = cast("pd.DataFrame", req[req["is_edit"]])
+    n_req = len(req)
 
     os.makedirs(args.output_dir, exist_ok=True)
     counts = req.groupby(["category", "cohort", "subreddit"]).size().reset_index()
@@ -694,20 +772,43 @@ def categorize(args: argparse.Namespace) -> None:
     counts_csv = os.path.join(args.output_dir, "category_counts.csv")
     counts.to_csv(counts_csv, index=False)
 
-    lines: list[str] = ["# Image-edit demand by category\n"]
+    def cohort_tables(frame: "pd.DataFrame") -> list[str]:
+        out: list[str] = []
+        for cohort in ["pre_ai", "transition", "post_ai"]:
+            sub = cast("pd.DataFrame", frame[frame["cohort"] == cohort])
+            if sub.empty:
+                continue
+            out.append(f"\n## {cohort} (n={len(sub)})\n")
+            out.append("| category | n | share |")
+            out.append("|---|---:|---:|")
+            for cat, n in Counter(sub["category"]).most_common():
+                out.append(f"| {cat} | {n} | {100 * n / len(sub):.1f}% |")
+        return out
+
+    title = "Business image-edit demand" if args.taxonomy == "business" else "Image-edit demand"
+    lines: list[str] = [f"# {title} by category\n"]
     lines.append(
         f"_{n_req} demand requests across {req['subreddit'].nunique()} subreddits "
-        f"(excluded {n_removed} removed/deleted, {n_showcase} showcase/meta)._\n"
+        f"(excluded {n_removed} removed/deleted, {n_showcase} showcase/supply)._\n"
     )
-    for cohort in ["pre_ai", "transition", "post_ai"]:
-        sub = cast("pd.DataFrame", req[req["cohort"] == cohort])
-        if sub.empty:
-            continue
-        lines.append(f"\n## {cohort} (n={len(sub)})\n")
-        lines.append("| category | n | share |")
-        lines.append("|---|---:|---:|")
-        for cat, n in Counter(sub["category"]).most_common():
-            lines.append(f"| {cat} | {n} | {100 * n / len(sub):.1f}% |")
+    if edit_categories is not None and not args.edits_only:
+        n_edit = int(req["is_edit"].sum())
+        lines.append(
+            f"_Of these, {n_edit} edit an existing asset and {n_req - n_edit} are "
+            f"create-from-scratch. Reddit is a weak proxy for business demand "
+            f"(real commissions run on Fiverr/Upwork/99designs and skew this toward "
+            f"low-budget/free work), so read the category **mix**, not absolute volume._\n"
+        )
+    lines.extend(cohort_tables(req))
+
+    # Business: an edits-only view (manipulating an existing asset) that lines up
+    # apples-to-apples with the consumer (edit-only) benchmark.
+    if edit_categories is not None and not args.edits_only:
+        edits = cast("pd.DataFrame", req[req["is_edit"]])
+        if not edits.empty:
+            lines.append("\n# Edits-only view (existing-asset manipulation)\n")
+            lines.extend(cohort_tables(edits))
+
     lines.append("\n## Example titles per category\n")
     for cat, _ in Counter(req["category"]).most_common():
         if cat == "UNMATCHED":
@@ -724,7 +825,7 @@ def categorize(args: argparse.Namespace) -> None:
         f"categorize: {total} posts; {n_req} demand requests -> {report}, {counts_csv}"
     )
     print(
-        f"  excluded: {n_removed} removed/deleted, {n_showcase} showcase/meta (not requests)"
+        f"  excluded: {n_removed} removed/deleted, {n_showcase} showcase/supply (not requests)"
     )
     for cat, n in Counter(req["category"]).most_common():
         print(f"  {n:6d}  {100 * n / n_req:5.1f}%  {cat}")
@@ -737,10 +838,11 @@ def stats(args: argparse.Namespace) -> None:
         return
     include = subreddit_include(args)
     if include is not None or args.general_only:
+        subreddit_default = load_taxonomy(args.taxonomy).SUBREDDIT_DEFAULT
         rows = [
             r
             for r in rows
-            if keep_subreddit(r["subreddit"], include, args.general_only)
+            if keep_subreddit(r["subreddit"], include, args.general_only, subreddit_default)
         ]
         if not rows:
             print("no posts match the subreddit filter.")
@@ -811,6 +913,17 @@ def main() -> None:
     )
     ca.add_argument("--subreddits", default="", help="restrict to a comma list of subs")
     ca.add_argument(
+        "--taxonomy",
+        choices=["consumer", "business"],
+        default="consumer",
+        help="which rule set to classify with (default: consumer)",
+    )
+    ca.add_argument(
+        "--edits-only",
+        action="store_true",
+        help="business: restrict to edits of an existing asset (consumer-comparable)",
+    )
+    ca.add_argument(
         "--examples",
         type=int,
         default=4,
@@ -824,6 +937,12 @@ def main() -> None:
         "--general-only", action="store_true", help="exclude single-purpose subs"
     )
     st.add_argument("--subreddits", default="", help="restrict to a comma list of subs")
+    st.add_argument(
+        "--taxonomy",
+        choices=["consumer", "business"],
+        default="consumer",
+        help="taxonomy whose single-purpose subs --general-only drops",
+    )
     st.set_defaults(func=stats)
 
     args = ap.parse_args()
