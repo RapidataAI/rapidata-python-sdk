@@ -156,6 +156,10 @@ The SDK is built around three concepts:
 | **Compare** | Side-by-side comparison of images, video, audio, or text | [Comparison example](examples/compare_job.md) |
 | **Classify** | Categorize data with custom labels or Likert scales | [Classification example](examples/classify_job.md) |
 | **Locate** | Point out objects, artifacts, or regions within an image | [Locate example](examples/locate_job.md) |
+| **Draw** | Color in objects or regions within an image | [Draw example](examples/draw_job.md) |
+| **Select words** | Mark the words of a sentence that match an instruction | [Select Words example](examples/select_words_job.md) |
+| **Free text** | Collect free-form text answers from real people | [Free Text example](examples/free_text_job.md) |
+| **Rank** | Order a set of images, videos, or texts via pairwise matchups | [Ranking example](examples/ranking_job.md) |
 | **Rank models** | Benchmark AI models on leaderboards with human evaluation | [Model Ranking](mri.md) |
 | **Continuous ranking** | Lightweight ongoing ranking without full job setup | [Ranking Flows](flows.md) |
 
@@ -552,8 +556,8 @@ audience.add_classification_example(
 1. Applies the setting as a feature flag on this single example. Use the same
    `RapidataSetting` subclasses you would pass to `settings=` on a job or
    order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
-   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). Both
-   `add_classification_example` and `add_compare_example` accept `settings`.
+   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). All
+   `add_*_example` methods accept `settings`.
 
 ## Reusing Audiences
 
@@ -727,6 +731,10 @@ The data to be labeled. The format depends on the job type:
 | Classification | `list[str]` | Single items to classify |
 | Compare | `list[list[str]]` | Pairs of items (exactly 2 per inner list) |
 | Locate | `list[str]` | Single items to locate within |
+| Draw | `list[str]` | Single items to draw on |
+| Select Words | `list[str]` | Single items, each paired with a sentence from `sentences` |
+| Free Text | `list[str]` | Single items to answer about |
+| Ranking | `list[list[str]]` | Independent rankings (each inner list is one set to rank) |
 
 **Supported Formats:**
 
@@ -1009,24 +1017,84 @@ job_definition = client.job.create_locate_job_definition(
 )
 ```
 
+### Draw Job
+
+Draw has no job-specific parameters — it uses only the core parameters. The `instruction` describes what labelers should draw, and each response is the set of lines they drew on the datapoint.
+
+```python
+job_definition = client.job.create_draw_job_definition(
+    name="Object Marking",
+    instruction="Color in all the blue books",
+    datapoints=["image1.jpg", "image2.jpg"],
+)
+```
+
+### Select Words Job
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `sentences` | `list[str]` | One sentence per datapoint, split up by spaces for the labeler to select words from (must have the same length as `datapoints`) |
+
+```python
+job_definition = client.job.create_select_words_job_definition(
+    name="Prompt Alignment",
+    instruction="Select the words that are not depicted in the image.",
+    datapoints=["image1.jpg", "image2.jpg"],
+    sentences=["A cat on a red couch", "A blue car in the rain"],
+)
+```
+
+### Free Text Job
+
+Free Text has no job-specific parameters — it uses only the core parameters. The `instruction` is the question labelers answer, and each response is the text they typed.
+
+```python
+job_definition = client.job.create_free_text_job_definition(
+    name="Prompt Collection",
+    instruction="What would you like to ask an AI?",
+    datapoints=["image1.jpg"],
+)
+```
+
+### Ranking Job
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `comparison_budget_per_ranking` | `int` | Number of pairwise matchups collected per ranking (per inner list of `datapoints`) |
+| `responses_per_comparison` | `int` | Number of responses collected per matchup (default `1`) — replaces `responses_per_datapoint` |
+| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints |
+
+```python
+job_definition = client.job.create_ranking_job_definition(
+    name="Image Ranking",
+    instruction="Which image looks better?",
+    datapoints=[["img1.jpg", "img2.jpg", "img3.jpg"]],
+    comparison_budget_per_ranking=50,
+)
+```
+
 ---
 
 ## Parameter Availability Matrix
 
-| Parameter | Classification | Compare | Locate |
-|-----------|:-:|:-:|:-:|
-| `name` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `instruction` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `datapoints` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `data_type` | :white_check_mark: | :white_check_mark: | :x: |
-| `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: |
-| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: |
-| `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `answer_options` | :white_check_mark: | :x: | :x: |
-| `a_b_names` | :x: | :white_check_mark: | :x: |
+| Parameter | Classification | Compare | Locate | Draw | Select Words | Free Text | Ranking |
+|-----------|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| `name` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `instruction` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `datapoints` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| `data_type` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :white_check_mark: | :white_check_mark: |
+| `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
+| `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
+| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `answer_options` | :white_check_mark: | :x: | :x: | :x: | :x: | :x: | :x: |
+| `a_b_names` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `sentences` | :x: | :x: | :x: | :x: | :white_check_mark: | :x: | :x: |
+| `comparison_budget_per_ranking` | :x: | :x: | :x: | :x: | :x: | :x: | :white_check_mark: |
+| `responses_per_comparison` | :x: | :x: | :x: | :x: | :x: | :x: | :white_check_mark: |
+| `random_comparisons_ratio` | :x: | :x: | :x: | :x: | :x: | :x: | :white_check_mark: |
 
 
 ## Understanding Results
@@ -2328,6 +2396,363 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
 
     !!! note
         Review every qualification example and its truth regions carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+
+## Draw
+
+# Draw Job Example
+
+To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
+
+In a draw job, labelers draw lines on a datapoint to color in the regions that match your instruction. This is a powerful way to collect localization data — for example, training data that teaches image editing models where to apply their edits.
+
+Like any other job, a draw job can be assigned to any audience — a ready-to-go curated one, or a custom audience you train with qualification examples.
+
+=== "Simple"
+
+    The simple version runs straight away on a **curated** audience — a pre-existing pool of labelers, ready to work immediately — so the job starts collecting responses right away. Here we ask people to color in specific objects in AI-generated images.
+
+    ```python
+    from rapidata import RapidataClient
+
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+        "https://assets.rapidata.ai/flux-1-pro_37_0.jpg",
+        "https://assets.rapidata.ai/frames-23-1-25_37_4.png",
+        "https://assets.rapidata.ai/aurora-20-1-25_37_3.png",
+    ]
+
+    client = RapidataClient()
+
+    audience = client.audience.get_audience_by_id("global") # (1)!
+
+    job_definition = client.job.create_draw_job_definition(
+        name="Blue Books Example",
+        instruction="Color in all the blue books", # (2)!
+        datapoints=IMAGE_URLS,
+        responses_per_datapoint=35,
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a draw job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+    2. The instruction tells labelers what to color in. Each response is the set of lines they drew on that datapoint.
+
+=== "Advanced"
+
+    The advanced version builds a **custom** audience and trains labelers with qualification examples before running the job. Each example carries the bounding box(es) covering the region a correct labeler should color in — their drawn lines must fall within them to qualify — which raises label quality. In this version, we train an audience to color in visual artifacts in AI-generated images.
+
+    !!! warning "This takes significantly longer"
+        Unlike the Simple path, this first builds and trains an entirely new audience before the job can start collecting responses — expect it to take considerably longer to return results.
+
+    ```python
+    from rapidata import RapidataClient, Box
+
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/eac11c3e-ad57-402b-90ed-23378d2ff869.jpg",
+        "https://assets.rapidata.ai/04e7e3c6-5554-47ca-bdb2-950e48ac3e6c.jpg",
+        "https://assets.rapidata.ai/91d9913c-b399-47f8-ad19-767798cc951c.jpg",
+    ]
+
+    # Qualification examples — each pairs an image with the bounding box(es)
+    # covering the region a correct labeler should color in. Coordinates are
+    # image ratios (0.0–1.0).
+    EXAMPLES = [
+        ("https://assets.rapidata.ai/544b1210-1e91-4351-a97c-fe8263b319b4.webp",
+         [Box(x_min=0.44, y_min=0.42, x_max=0.58, y_max=0.63)]),
+        ("https://assets.rapidata.ai/f1e11611-7c5b-4186-8ddf-51e06c0859ff.webp",
+         [Box(x_min=0.07, y_min=0.37, x_max=0.39, y_max=0.71)]),
+        ("https://assets.rapidata.ai/ad816f8f-f7a9-4c90-90dd-9c10bc556856.webp",
+         [Box(x_min=0.04, y_min=0.10, x_max=0.31, y_max=0.28)]),
+        ("https://assets.rapidata.ai/a076ae24-4d5c-415d-9d41-6afbe2fbfcde.webp",
+         [Box(x_min=0.25, y_min=0.40, x_max=0.70, y_max=0.96)]),
+        ("https://assets.rapidata.ai/38753cb4-4b77-4fb7-b601-8a5bc3d166d7.webp",
+         [Box(x_min=0.41, y_min=0.09, x_max=0.87, y_max=0.45)]),
+        ("https://assets.rapidata.ai/50109592-b521-4dcb-a00f-453f6c026a52.webp",
+         [Box(x_min=0.25, y_min=0.03, x_max=0.71, y_max=0.48)]),
+        ("https://assets.rapidata.ai/a5a954d0-91e8-4b4e-bec6-2bb739444be8.webp",
+         [Box(x_min=0.57, y_min=0.40, x_max=0.96, y_max=0.89)]),
+    ]
+
+    client = RapidataClient()
+
+    audience = client.audience.create_audience(name="Artifact Drawing Audience") # (1)!
+    for datapoint, truths in EXAMPLES:
+        audience.add_draw_example(
+            instruction="Color in the visual glitches or errors in the image.",
+            datapoint=datapoint,
+            truths=truths,
+        )
+
+    job_definition = client.job.create_draw_job_definition(
+        name="Artifact Drawing Example",
+        instruction="Color in the visual glitches or errors in the image.",
+        datapoints=IMAGE_URLS,
+        responses_per_datapoint=35,
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. Creates a new, empty audience. The `add_draw_example` calls train and filter the labelers who join it.
+
+    !!! note
+        Review every qualification example and its truth regions carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+
+## Select Words
+
+# Select Words Job Example
+
+To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
+
+In a select words job, labelers are shown a datapoint together with a sentence split up by spaces, and select the words that match your instruction. A big part of image generation is following the prompt accurately — in this example, labelers select the words of the prompt that are not correctly depicted in the image.
+
+Like any other job, a select words job can be assigned to any audience — a ready-to-go curated one, or a custom audience you train with qualification examples.
+
+=== "Simple"
+
+    The simple version runs straight away on a **curated** audience — a pre-existing pool of labelers, ready to work immediately — so the job starts collecting responses right away.
+
+    ```python
+    from rapidata import RapidataClient
+
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/dalle-3_244_0.jpg",
+        "https://assets.rapidata.ai/dalle-3_30_1.jpg",
+        "https://assets.rapidata.ai/dalle-3_268_2.jpg",
+        "https://assets.rapidata.ai/dalle-3_26_2.jpg",
+    ]
+
+    PROMPTS = [
+        "The black camera was next to the white tripod.",
+        "Four cars on the street.",
+        "Car is bigger than the airplane.",
+        "One cat and two dogs sitting on the grass.",
+    ]
+
+    PROMPTS_WITH_NO_MISTAKES = [
+        prompt + " [No_mistakes]" for prompt in PROMPTS
+    ] # (1)!
+
+    client = RapidataClient()
+
+    audience = client.audience.get_audience_by_id("global") # (2)!
+
+    job_definition = client.job.create_select_words_job_definition(
+        name="Image-Text Alignment Example",
+        instruction="The image is based on the text below. Select mistakes, i.e., words that are not aligned with the image.",
+        datapoints=IMAGE_URLS,
+        sentences=PROMPTS_WITH_NO_MISTAKES, # (3)!
+        responses_per_datapoint=15,
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. The selection is split based on spaces. Appending a `[No_mistakes]` token gives labelers an explicit way to say the prompt is depicted correctly.
+    2. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a select words job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+    3. Each sentence is matched to the datapoint at the same list index, so the lists must have the same length.
+
+=== "Advanced"
+
+    The advanced version builds a **custom** audience and trains labelers with qualification examples before running the job. Each example carries the indices of the words a correct labeler should select; only labelers who select them join the audience, which raises label quality.
+
+    !!! warning "This takes significantly longer"
+        Unlike the Simple path, this first builds and trains an entirely new audience before the job can start collecting responses — expect it to take considerably longer to return results.
+
+    ```python
+    from rapidata import RapidataClient
+
+    IMAGE_URLS = [
+        "https://assets.rapidata.ai/dalle-3_244_0.jpg",
+        "https://assets.rapidata.ai/dalle-3_30_1.jpg",
+        "https://assets.rapidata.ai/dalle-3_268_2.jpg",
+        "https://assets.rapidata.ai/dalle-3_26_2.jpg",
+    ]
+
+    PROMPTS = [
+        "The black camera was next to the white tripod.",
+        "Four cars on the street.",
+        "Car is bigger than the airplane.",
+        "One cat and two dogs sitting on the grass.",
+    ]
+
+    PROMPTS_WITH_NO_MISTAKES = [
+        prompt + " [No_mistakes]" for prompt in PROMPTS
+    ]
+
+    # Each example pairs an image with the sentence shown to the labeler and
+    # the indices of the words a correct labeler should select (0-based, split
+    # by spaces). The image is generated from a correct prompt; the sentence
+    # then plants a single mismatching word the labeler must catch. For the two
+    # correctly-depicted images the truth is the trailing [No_mistakes] token.
+    EXAMPLES = [
+        ("https://assets.rapidata.ai/22f0c7c5-d085-4360-acce-f42ecf0b8804.png",
+         "a white cat lying on a sandy beach [No_mistakes]",  # depicts a black cat
+         [1]),
+        ("https://assets.rapidata.ai/f4709f2f-40a1-40e3-a338-7acff5495c28.png",
+         "a green apple resting on a wooden kitchen table [No_mistakes]",  # depicts a red apple
+         [1]),
+        ("https://assets.rapidata.ai/8406992c-aea6-41d1-8736-8038bf3621d9.png",
+         "five yellow balloons floating above a birthday cake [No_mistakes]",  # depicts three balloons
+         [0]),
+        ("https://assets.rapidata.ai/cffc8a44-5155-43bf-807c-5c358edb9481.png",
+         "a square mirror hanging on a bedroom wall [No_mistakes]",  # depicts a round mirror
+         [1]),
+        ("https://assets.rapidata.ai/20afca97-9736-4311-9ad8-efe74d3a6886.png",
+         "a metal chair standing in an empty white room [No_mistakes]",  # depicts a wooden chair
+         [1]),
+        ("https://assets.rapidata.ai/4618bd82-fef3-420e-a417-9f72dd8d08b3.png",
+         "a small motorcycle parked next to a tall building [No_mistakes]",  # correctly depicted
+         [9]),
+        ("https://assets.rapidata.ai/26ab1e0b-19b5-4f2e-a4b6-d5e319931064.png",
+         "a dog sitting under a large oak tree [No_mistakes]",  # correctly depicted
+         [8]),
+    ]
+
+    client = RapidataClient()
+
+    audience = client.audience.create_audience(name="Image-Text Alignment Audience") # (1)!
+    for datapoint, sentence, truths in EXAMPLES:
+        audience.add_select_words_example(
+            instruction="The image is based on the text below. Select mistakes, i.e., words that are not aligned with the image.",
+            datapoint=datapoint,
+            sentence=sentence,
+            truths=truths,
+        )
+
+    job_definition = client.job.create_select_words_job_definition(
+        name="Image-Text Alignment Example",
+        instruction="The image is based on the text below. Select mistakes, i.e., words that are not aligned with the image.",
+        datapoints=IMAGE_URLS,
+        sentences=PROMPTS_WITH_NO_MISTAKES,
+        responses_per_datapoint=15,
+    )
+
+    job_definition.preview()
+
+    job = audience.assign_job(job_definition)
+    job.display_progress_bar()
+    results = job.get_results()
+    print(results)
+    ```
+
+    1. Creates a new, empty audience. The `add_select_words_example` calls train and filter the labelers who join it.
+
+    !!! note
+        Review every qualification example and its truth words carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+
+## Free Text
+
+# Free Text Job Example
+
+To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
+
+In a free text job, labelers answer your instruction with free-form text. Let's assume you want to build a new LLM chatbot and want to know what people might ask it — a free text job gathers those questions directly from real people.
+
+A free text job typically takes longer to complete than other job types, as typing an answer is more involved for the labeler than tapping one.
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+audience = client.audience.get_audience_by_id("global") # (1)!
+
+job_definition = client.job.create_free_text_job_definition(
+    name="Example prompt generation",
+    instruction="What would you like to ask an AI? Please spell out the question", # (2)!
+    datapoints=["https://assets.rapidata.ai/ai_question.png"],
+)
+
+job_definition.preview()
+
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a free text job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+2. The instruction is shown alongside each datapoint. Each response is the text the labeler typed.
+
+!!! note
+    Free text answers can't be graded against a ground truth, so audiences can't be trained with free text qualification examples — use examples of another job type (e.g. classification) if you want a custom audience, see [Custom Audiences](../audiences.md).
+
+
+## Ranking
+
+# Ranking Job Example
+
+To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
+
+In a ranking job, a set of datapoints is ordered through pairwise matchups: labelers are repeatedly shown two datapoints from the set and pick one based on the instruction. The ranking is based on an Elo rating system that updates after each matchup. In this example, we rank images of rabbits by how cool they look.
+
+Phrase the instruction for the individual matchup rather than the overall ranking — "Which rabbit looks cooler?" instead of "Which rabbit looks the coolest?" — since labelers only ever see two images at a time.
+
+```python
+from rapidata import RapidataClient
+
+DATAPOINTS = [
+    "https://assets.rapidata.ai/f9d92460-a362-493c-af91-bf50046453ae.webp",
+    "https://assets.rapidata.ai/9bcd8b18-e9ad-4449-84d4-b3d72e200e9c.webp",
+    "https://assets.rapidata.ai/266f6446-3ca8-4c2d-b070-13558b35a4e0.webp",
+    "https://assets.rapidata.ai/f787f02c-e5d0-43ca-aa6e-aea747845cf3.webp",
+    "https://assets.rapidata.ai/7e518a1b-4d1c-4a86-9109-26646684cc02.webp",
+    "https://assets.rapidata.ai/10af47bd-3502-4534-b917-73dba5feaf76.webp",
+    "https://assets.rapidata.ai/59725ca0-1fd5-4850-a15c-4221e191e293.webp",
+    "https://assets.rapidata.ai/65d3939d-c1b8-433c-b180-13dae80f0519.webp",
+    "https://assets.rapidata.ai/c13b8feb-fb97-4646-8dfc-97f05d37a637.webp",
+    "https://assets.rapidata.ai/586dc517-c987-4d06-8a6f-553508b86356.webp",
+    "https://assets.rapidata.ai/f4884ecd-cacb-4387-ab18-3b6e7dcdf10c.webp",
+    "https://assets.rapidata.ai/79076f76-a432-4ef9-9007-6d09a218417a.webp",
+]
+
+client = RapidataClient()
+
+audience = client.audience.get_audience_by_id("global") # (1)!
+
+job_definition = client.job.create_ranking_job_definition(
+    name="Example Ranking Job",
+    instruction="Which rabbit looks cooler?",
+    datapoints=[DATAPOINTS], # (2)!
+    comparison_budget_per_ranking=50, # (3)!
+    random_comparisons_ratio=0.5, # (4)!
+)
+
+job_definition.preview()
+
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a ranking job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+2. The outer list defines independent rankings; each inner list is the set of datapoints ranked against each other. Here, this is a single ranking over all rabbits.
+3. The number of matchups collected per ranking. More comparisons make the resulting order more reliable.
+4. Half the comparisons are random; the rest are close matchups between similarly-rated datapoints.
+
+!!! note
+    For benchmarking AI models on an ongoing leaderboard, see [Model Ranking](../mri.md); for lightweight continuous ranking without full job setup, see [Ranking Flows](../flows.md).
 
 
 # Benchmarks

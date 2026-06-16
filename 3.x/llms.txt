@@ -17,6 +17,10 @@
 - [Classification](https://docs.rapidata.ai/3.x/examples/classify_job/index.md)
 - [Comparison](https://docs.rapidata.ai/3.x/examples/compare_job/index.md)
 - [Locate](https://docs.rapidata.ai/3.x/examples/locate_job/index.md)
+- [Draw](https://docs.rapidata.ai/3.x/examples/draw_job/index.md)
+- [Select Words](https://docs.rapidata.ai/3.x/examples/select_words_job/index.md)
+- [Free Text](https://docs.rapidata.ai/3.x/examples/free_text_job/index.md)
+- [Ranking](https://docs.rapidata.ai/3.x/examples/ranking_job/index.md)
 
 ## Benchmarks
 
