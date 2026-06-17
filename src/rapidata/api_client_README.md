@@ -141,6 +141,7 @@ Class | Method | HTTP request | Description
 *ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client using the OpenID Connect Dynamic Client Registration protocol.
 *ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries clients for the current customer.
 *ClientApi* | [**identity_get_client**](rapidata/api_client/docs/ClientApi.md#identity_get_client) | **GET** /client/{clientId} | Gets the details of a specific client.
+*ContextShorteningApi* | [**datasets_shorten_context_post**](rapidata/api_client/docs/ContextShorteningApi.md#datasets_shorten_context_post) | **POST** /datasets/shorten-context | Shortens each context to the parts relevant to its question, returning results in input order.
 *CustomerApi* | [**customers_get**](rapidata/api_client/docs/CustomerApi.md#customers_get) | **GET** /customers | Queries customers with filtering and pagination.
 *CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that may be eligible for validation-set creation.
 *CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new demographic rapid.
@@ -273,6 +274,7 @@ Class | Method | HTTP request | Description
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Streams the preliminary download file when ready.
+*PromptApi* | [**benchmark_prompt_prompt_id_delete**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_delete) | **DELETE** /benchmark-prompt/{promptId} | Deletes a prompt.
 *PromptApi* | [**benchmark_prompt_prompt_id_tags_put**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_tags_put) | **PUT** /benchmark-prompt/{promptId}/tags | Updates the tags associated with a prompt.
 *RankingApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/RankingApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Gets the result overview for a ranking workflow.
 *RankingFlowApi* | [**flow_ranking_flow_id_config_patch**](rapidata/api_client/docs/RankingFlowApi.md#flow_ranking_flow_id_config_patch) | **PATCH** /flow/ranking/{flowId}/config | Updates the configuration of a ranking flow.
@@ -943,6 +945,10 @@ Class | Method | HTTP request | Description
  - [SetFastBidMultiplierEndpointOutput](rapidata/api_client/docs/SetFastBidMultiplierEndpointOutput.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
  - [SetOrganizationSupportSlackChannelEndpointInput](rapidata/api_client/docs/SetOrganizationSupportSlackChannelEndpointInput.md)
+ - [ShortenContextEndpointInput](rapidata/api_client/docs/ShortenContextEndpointInput.md)
+ - [ShortenContextEndpointInputItem](rapidata/api_client/docs/ShortenContextEndpointInputItem.md)
+ - [ShortenContextEndpointOutput](rapidata/api_client/docs/ShortenContextEndpointOutput.md)
+ - [ShortenContextEndpointOutputItem](rapidata/api_client/docs/ShortenContextEndpointOutputItem.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
  - [SkipRapidEndpointInput](rapidata/api_client/docs/SkipRapidEndpointInput.md)
  - [SkipRapidEndpointOutput](rapidata/api_client/docs/SkipRapidEndpointOutput.md)

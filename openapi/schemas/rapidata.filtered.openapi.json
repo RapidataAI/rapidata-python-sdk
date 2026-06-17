@@ -40,6 +40,10 @@
       "x-displayName": "ExternalAudience"
     },
     {
+      "name": "ContextShortening",
+      "x-displayName": "ContextShortening"
+    },
+    {
       "name": "Datapoints",
       "x-displayName": "Datapoints"
     },
@@ -4258,6 +4262,64 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/datasets/shorten-context": {
+      "post": {
+        "tags": [
+          "ContextShortening"
+        ],
+        "summary": "Shortens each context to the parts relevant to its question, returning results in input order.",
+        "description": "Results are cached per (context, question, prompt version), so repeated requests do not re-call the model.",
+        "requestBody": {
+          "description": "The context/question pairs to shorten.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShortenContextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -8810,6 +8872,144 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "identifier",
+            "in": "query",
+            "description": "Filter by identifier.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "english_prompt",
+            "in": "query",
+            "description": "Filter by english_prompt.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "original_prompt",
+            "in": "query",
+            "description": "Filter by original_prompt.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -12770,6 +12970,57 @@
           },
           "required": true
         },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark-prompt/{promptId}": {
+      "delete": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Deletes a prompt.",
+        "description": "Also removes every sample generated for the prompt across the benchmark.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "The id of the prompt to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "No Content"
@@ -23493,7 +23744,8 @@
           "ManualApproval",
           "Queued",
           "Paused",
-          "StaleResults"
+          "StaleResults",
+          "SpendLimited"
         ]
       },
       "AudienceStateRecalculationPhase": {
@@ -28115,6 +28367,72 @@
           "totalPages": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "ShortenContextEndpoint_Input": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_InputItem"
+                }
+              }
+            ],
+            "description": "The context/question pairs to shorten."
+          }
+        },
+        "description": "The input for the shorten-context endpoint."
+      },
+      "ShortenContextEndpoint_InputItem": {
+        "required": [
+          "context",
+          "question"
+        ],
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          }
+        }
+      },
+      "ShortenContextEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_OutputItem"
+                }
+              }
+            ],
+            "description": "The shortened contexts."
+          }
+        },
+        "description": "The shortened contexts, in the same order as the input items."
+      },
+      "ShortenContextEndpoint_OutputItem": {
+        "required": [
+          "shortenedContext"
+        ],
+        "type": "object",
+        "properties": {
+          "shortenedContext": {
+            "type": "string"
           }
         }
       },
@@ -34031,7 +34349,7 @@
           "audienceId",
           "revisionNumber",
           "pipelineId",
-          "status",
+          "state",
           "isPublic",
           "createdAt",
           "ownerId",
@@ -34064,9 +34382,13 @@
             "type": "string",
             "description": "The pipeline id."
           },
-          "status": {
-            "type": "string",
-            "description": "The job status."
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The job state."
           },
           "isPublic": {
             "type": "boolean",
@@ -42662,6 +42984,7 @@
     {
       "name": "Rapidata Dataset API",
       "tags": [
+        "ContextShortening",
         "Datapoints",
         "Dataset",
         "DatasetGroup"

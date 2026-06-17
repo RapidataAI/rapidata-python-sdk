@@ -3735,6 +3735,9 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by identifier.")] = None,
+        english_prompt: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by english_prompt.")] = None,
+        original_prompt: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by original_prompt.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3764,6 +3767,12 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param identifier: Filter by identifier.
+        :type identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param english_prompt: Filter by english_prompt.
+        :type english_prompt: AudienceAudienceIdJobsGetJobIdParameter
+        :param original_prompt: Filter by original_prompt.
+        :type original_prompt: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3795,6 +3804,9 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             created_at=created_at,
+            identifier=identifier,
+            english_prompt=english_prompt,
+            original_prompt=original_prompt,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3828,6 +3840,9 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by identifier.")] = None,
+        english_prompt: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by english_prompt.")] = None,
+        original_prompt: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by original_prompt.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3857,6 +3872,12 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param identifier: Filter by identifier.
+        :type identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param english_prompt: Filter by english_prompt.
+        :type english_prompt: AudienceAudienceIdJobsGetJobIdParameter
+        :param original_prompt: Filter by original_prompt.
+        :type original_prompt: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3888,6 +3909,9 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             created_at=created_at,
+            identifier=identifier,
+            english_prompt=english_prompt,
+            original_prompt=original_prompt,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3921,6 +3945,9 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by identifier.")] = None,
+        english_prompt: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by english_prompt.")] = None,
+        original_prompt: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by original_prompt.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3950,6 +3977,12 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param identifier: Filter by identifier.
+        :type identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param english_prompt: Filter by english_prompt.
+        :type english_prompt: AudienceAudienceIdJobsGetJobIdParameter
+        :param original_prompt: Filter by original_prompt.
+        :type original_prompt: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3981,6 +4014,9 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             created_at=created_at,
+            identifier=identifier,
+            english_prompt=english_prompt,
+            original_prompt=original_prompt,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4009,6 +4045,9 @@ class BenchmarkApi:
         sort,
         id,
         created_at,
+        identifier,
+        english_prompt,
+        original_prompt,
         logic,
         _request_auth,
         _content_type,
@@ -4063,6 +4102,30 @@ class BenchmarkApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('created_at[' + _k + ']', _v))
+        if identifier is not None:
+            _param_val = identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('identifier[' + _k + ']', _v))
+        if english_prompt is not None:
+            _param_val = english_prompt
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('english_prompt[' + _k + ']', _v))
+        if original_prompt is not None:
+            _param_val = original_prompt
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('original_prompt[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
