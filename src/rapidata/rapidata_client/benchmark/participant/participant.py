@@ -73,7 +73,9 @@ class BenchmarkParticipant:
 
             for standing in result.items:
                 if standing.id == self.id:
-                    return standing.score
+                    return (
+                        round(standing.score, 2) if standing.score is not None else None
+                    )
 
             return None
 
@@ -182,7 +184,9 @@ class BenchmarkParticipant:
             """Wrapper function that runs _process_single_sample_upload with the provided context."""
             token = otel_context.attach(context)
             try:
-                return self._process_single_sample_upload(asset, identifier, data_type=data_type)
+                return self._process_single_sample_upload(
+                    asset, identifier, data_type=data_type
+                )
             finally:
                 otel_context.detach(token)
 
