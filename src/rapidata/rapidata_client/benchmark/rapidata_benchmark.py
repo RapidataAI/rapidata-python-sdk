@@ -12,6 +12,7 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
 
 if TYPE_CHECKING:
     import pandas as pd
+    from rapidata.api_client.models.i_asset_model import IAssetModel
     from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
     from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
         RapidataLeaderboard,
@@ -51,12 +52,27 @@ class RapidataBenchmark:
         )
         self._prompt_uploader = BenchmarkPromptUploader(id, openapi_service)
 
+    @staticmethod
+    def __source_url(asset: "IAssetModel | None") -> str | None:
+        """Best-effort source URL for a prompt asset.
+
+        The prompts endpoint returns an ``IAssetModel`` oneOf wrapper whose
+        ``actual_instance`` is a file/multi/text/null variant; only assets
+        registered from a URL carry a ``sourceUrl`` metadata entry. Navigate
+        defensively and fall back to None rather than asserting a concrete type
+        (the variants are ``IAssetModel*`` / ``IMetadataModel*``, not the bare
+        ``FileAssetModel`` / ``SourceUrlMetadataModel`` the API no longer returns).
+        """
+        instance = getattr(asset, "actual_instance", None)
+        metadata = getattr(instance, "metadata", None)
+        if not metadata:
+            return None
+        source_url = metadata.get("sourceUrl")
+        actual = getattr(source_url, "actual_instance", None)
+        return getattr(actual, "url", None)
+
     def __instantiate_prompts(self) -> None:
         from rapidata.rapidata_client.config import tracer
-        from rapidata.api_client.models.file_asset_model import FileAssetModel
-        from rapidata.api_client.models.source_url_metadata_model import (
-            SourceUrlMetadataModel,
-        )
 
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
             self.__prompts = []
@@ -86,18 +102,7 @@ class RapidataBenchmark:
                     self.__prompts.append(prompt.original_prompt)
                     self.__english_prompts.append(prompt.english_prompt)
                     self.__identifiers.append(prompt.identifier)
-                    if prompt.prompt_asset is None:
-                        self.__prompt_assets.append(None)
-                    else:
-                        assert isinstance(
-                            prompt.prompt_asset.actual_instance, FileAssetModel
-                        )
-                        source_url = prompt.prompt_asset.actual_instance.metadata[
-                            "sourceUrl"
-                        ].actual_instance
-                        assert isinstance(source_url, SourceUrlMetadataModel)
-                        self.__prompt_assets.append(source_url.url)
-
+                    self.__prompt_assets.append(self.__source_url(prompt.prompt_asset))
                     self.__tags.append(prompt.tags)
                 if current_page >= total_pages:
                     break
