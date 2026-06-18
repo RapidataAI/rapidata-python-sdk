@@ -163,6 +163,25 @@ benchmark.add_model(name="ModelC", media=["https://example.com/img3.png"], ident
 benchmark.run()  # Submits all participants in CREATED state
 ```
 
+### Inspecting a Participant's Elo
+
+Each participant has an Elo score aggregated across all of the benchmark's leaderboards. Read it directly from the participant:
+
+```python
+participant = benchmark.participants[0]
+elo = participant.get_elo()  # None if not computed yet
+print(f"{participant.name}: {elo}")
+```
+
+### Deleting Participants
+
+You can remove a participant — and its uploaded media — from the benchmark. This cannot be undone:
+
+```python
+participant = benchmark.participants[0]
+participant.delete()
+```
+
 ## References
 - [RapidataBenchmarkManager](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/)
 - [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)

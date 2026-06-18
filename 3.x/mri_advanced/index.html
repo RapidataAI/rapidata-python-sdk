@@ -1326,6 +1326,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#inspecting-a-participants-elo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting a Participant's Elo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleting-participants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting Participants
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1556,6 +1578,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#inspecting-a-participants-elo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting a Participant's Elo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleting-participants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting Participants
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1719,6 +1763,17 @@
 </span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelB"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img2.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
 </span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelC"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img3.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
 </span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Submits all participants in CREATED state</span>
+</span></code></pre></div>
+<h3 id="inspecting-a-participants-elo">Inspecting a Participant's Elo<a class="headerlink" href="#inspecting-a-participants-elo" title="Permanent link">#</a></h3>
+<p>Each participant has an Elo score aggregated across all of the benchmark's leaderboards. Read it directly from the participant:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">elo</span> <span class="o">=</span> <span class="n">participant</span><span class="o">.</span><span class="n">get_elo</span><span class="p">()</span>  <span class="c1"># None if not computed yet</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">elo</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="deleting-participants">Deleting Participants<a class="headerlink" href="#deleting-participants" title="Permanent link">#</a></h3>
+<p>You can remove a participant — and its uploaded media — from the benchmark. This cannot be undone:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </span></code></pre></div>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
