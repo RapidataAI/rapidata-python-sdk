@@ -101,6 +101,49 @@ class BenchmarkParticipant:
         )
         self._status = ParticipantStatus.SUBMITTED
 
+    def disable(self) -> None:
+        """Disables the participant in the benchmark.
+
+        A disabled participant is excluded from evaluation and the computed
+        standings. Use :meth:`enable` to reverse this.
+        """
+        with tracer.start_as_current_span("BenchmarkParticipant.disable"):
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_disable_post(
+                participant_id=self.id
+            )
+            self._status = ParticipantStatus.DISABLED
+
+    def enable(self) -> None:
+        """Re-enables a previously disabled participant.
+
+        The participant returns to the ``Submitted`` state and is included in
+        evaluation and standings again.
+        """
+        with tracer.start_as_current_span("BenchmarkParticipant.enable"):
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_enable_post(
+                participant_id=self.id
+            )
+            self._status = ParticipantStatus.SUBMITTED
+
+    def rename(self, name: str) -> None:
+        """Renames the participant.
+
+        Args:
+            name: The new name of the participant.
+        """
+        from rapidata.api_client.models.update_participant_name_endpoint_input import (
+            UpdateParticipantNameEndpointInput,
+        )
+
+        with tracer.start_as_current_span("BenchmarkParticipant.rename"):
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_name_put(
+                participant_id=self.id,
+                update_participant_name_endpoint_input=UpdateParticipantNameEndpointInput(
+                    name=name
+                ),
+            )
+            self.name = name
+
     def __str__(self) -> str:
         return f"BenchmarkParticipant(name={self.name}, id={self.id}, status={self._status})"
 

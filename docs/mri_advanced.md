@@ -173,6 +173,25 @@ elo = participant.get_elo()  # None if not computed yet
 print(f"{participant.name}: {elo}")
 ```
 
+### Renaming a Participant
+
+```python
+participant = benchmark.participants[0]
+participant.rename("New model name")
+```
+
+### Disabling Participants
+
+A disabled participant is excluded from evaluation and the computed standings. Unlike deleting, this is reversible:
+
+```python
+participant = benchmark.participants[0]
+participant.disable()
+
+# Bring it back into the evaluation later
+participant.enable()
+```
+
 ### Deleting Participants
 
 You can remove a participant — and its uploaded media — from the benchmark. This cannot be undone:
