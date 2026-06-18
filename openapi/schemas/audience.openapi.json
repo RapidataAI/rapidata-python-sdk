@@ -2163,7 +2163,8 @@
           "ManualApproval",
           "Queued",
           "Paused",
-          "StaleResults"
+          "StaleResults",
+          "SpendLimited"
         ]
       },
       "AudienceStateRecalculationPhase": {
