@@ -5,7 +5,7 @@ import time
 from typing import Literal
 from tqdm.auto import tqdm
 
-from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
@@ -29,6 +29,7 @@ class BenchmarkParticipant:
         name: The name of the participant/model.
         id: The unique identifier of the participant.
         openapi_service: The OpenAPI service for API communication.
+        benchmark_id: The id of the benchmark the participant belongs to.
         status: The current status of the participant.
     """
 
@@ -37,11 +38,13 @@ class BenchmarkParticipant:
         name: str,
         id: str,
         openapi_service: OpenAPIService,
+        benchmark_id: str,
         status: ParticipantStatus = ParticipantStatus.CREATED,
     ):
         self.name = name
         self.id = id
         self._openapi_service = openapi_service
+        self._benchmark_id = benchmark_id
         self._asset_uploader = AssetUploader(openapi_service)
         self._status = status
 
@@ -49,6 +52,43 @@ class BenchmarkParticipant:
     def status(self) -> ParticipantStatus:
         """The current status of the participant."""
         return self._status
+
+    def get_elo(self) -> float | None:
+        """Returns the participant's current Elo score in the benchmark.
+
+        The score is aggregated across all of the benchmark's leaderboards and
+        reflects the latest computed standings.
+
+        Returns:
+            The Elo score, or ``None`` if it has not been computed yet (for
+            example when the participant has not been evaluated).
+        """
+        # The full standings must be requested: scores are recomputed relative
+        # to the whole field on every call, so filtering to a single participant
+        # would yield a meaningless score.
+        with tracer.start_as_current_span("BenchmarkParticipant.get_elo"):
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_get(
+                benchmark_id=self._benchmark_id,
+            )
+
+            for standing in result.items:
+                if standing.id == self.id:
+                    return (
+                        round(standing.score, 2) if standing.score is not None else None
+                    )
+
+            return None
+
+    def delete(self) -> None:
+        """Deletes the participant from the benchmark.
+
+        This removes the participant and its uploaded media. The operation
+        cannot be undone.
+        """
+        with tracer.start_as_current_span("BenchmarkParticipant.delete"):
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_delete(
+                participant_id=self.id
+            )
 
     def run(self) -> None:
         """Submits the participant for evaluation.
@@ -144,7 +184,9 @@ class BenchmarkParticipant:
             """Wrapper function that runs _process_single_sample_upload with the provided context."""
             token = otel_context.attach(context)
             try:
-                return self._process_single_sample_upload(asset, identifier, data_type=data_type)
+                return self._process_single_sample_upload(
+                    asset, identifier, data_type=data_type
+                )
             finally:
                 otel_context.detach(token)
 
