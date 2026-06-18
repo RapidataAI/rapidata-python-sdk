@@ -63,10 +63,12 @@ class BenchmarkParticipant:
             The Elo score, or ``None`` if it has not been computed yet (for
             example when the participant has not been evaluated).
         """
+        # The full standings must be requested: scores are recomputed relative
+        # to the whole field on every call, so filtering to a single participant
+        # would yield a meaningless score.
         with tracer.start_as_current_span("BenchmarkParticipant.get_elo"):
             result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_get(
                 benchmark_id=self._benchmark_id,
-                participant_ids=[self.id],
             )
 
             for standing in result.items:
