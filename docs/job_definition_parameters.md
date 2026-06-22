@@ -160,28 +160,23 @@ datapoints=["image1.jpg", "image2.jpg"],
 contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 ```
 
-**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. If a context exceeds the limit, a warning is logged at creation time. See `auto_shorten` below to have over-long contexts shortened automatically.
+**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. If a context exceeds the limit, a warning is logged at creation time. Enable automatic shortening (see below) to have over-long contexts trimmed for you.
 
----
+#### Automatic shortening
 
-### `auto_shorten`
-
-| Property | Value |
-|----------|-------|
-| **Type** | `bool` |
-| **Required** | No |
-| **Default** | `False` |
-
-When `True`, any context longer than the 400-character limit is automatically shortened — tuned to the `instruction` so only the part relevant to the question is kept — before upload. When `False` (the default), an over-long context is left unchanged and a warning is logged explaining the backend would reject it.
+Set `rapidata_config.upload.autoShortenContext = True` to have any context longer than the 400-character limit automatically shortened — tuned to the `instruction` so only the part relevant to the question is kept — before upload. When left at its default (`False`), an over-long context is left unchanged and a warning is logged explaining the backend would reject it.
 
 ```python
+from rapidata import rapidata_config
+
+rapidata_config.upload.autoShortenContext = True
+
 order = rapi.order.create_classification_order(
     name="Outfit check",
     instruction="Does the main character wear the right clothing?",
     answer_options=["Yes", "No"],
     datapoints=["scene.jpg"],
     contexts=["<a very long, detailed beach-scene description ...>"],
-    auto_shorten=True,
 )
 ```
 

@@ -19,7 +19,6 @@ from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
 from rapidata.rapidata_client.context.context_manager import ContextManager
-from rapidata.rapidata_client.context._context_length import enforce_context_length
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
@@ -47,16 +46,13 @@ class RapidataJobManager:
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
 
-        enforce_context_length(
+        self.__context_manager._enforce_context_length(
             datapoints=datapoints,
             question=workflow._get_instruction(),
-            auto_shorten=auto_shorten,
-            context_manager=self.__context_manager,
         )
 
         if confidence_threshold is not None and quorum_threshold is not None:
@@ -174,7 +170,6 @@ class RapidataJobManager:
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """Create a classification job definition.
 
@@ -204,9 +199,6 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
-                maximum length is automatically shortened for the instruction before upload. If False, an
-                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
         with tracer.start_as_current_span("JobManager.create_classification_job"):
             if not isinstance(datapoints, list) or not all(
@@ -233,7 +225,6 @@ class RapidataJobManager:
                 confidence_threshold=confidence_threshold,
                 quorum_threshold=quorum_threshold,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def create_compare_job_definition(
@@ -250,7 +241,6 @@ class RapidataJobManager:
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """Create a compare job definition.
 
@@ -288,9 +278,6 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
-                maximum length is automatically shortened for the instruction before upload. If False, an
-                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
         with tracer.start_as_current_span("JobManager.create_compare_job"):
             if any(not isinstance(datapoint, list) for datapoint in datapoints):
@@ -324,7 +311,6 @@ class RapidataJobManager:
                 confidence_threshold=confidence_threshold,
                 quorum_threshold=quorum_threshold,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def _create_ranking_job_definition(
@@ -339,7 +325,6 @@ class RapidataJobManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """
         Create a ranking job definition.
@@ -416,7 +401,6 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def _create_free_text_job_definition(
@@ -430,7 +414,6 @@ class RapidataJobManager:
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """Create a free text job definition.
 
@@ -455,9 +438,6 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
-                maximum length is automatically shortened for the instruction before upload. If False, an
-                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
         with tracer.start_as_current_span("JobManager.create_free_text_job"):
             from rapidata.rapidata_client.workflow import FreeTextWorkflow
@@ -475,7 +455,6 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def _create_select_words_job_definition(
@@ -487,7 +466,6 @@ class RapidataJobManager:
         responses_per_datapoint: int = 10,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """Create a select words job definition.
 
@@ -506,9 +484,6 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
-                maximum length is automatically shortened for the instruction before upload. If False, an
-                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
         with tracer.start_as_current_span("JobManager.create_select_words_job"):
             from rapidata.rapidata_client.workflow import SelectWordsWorkflow
@@ -526,7 +501,6 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def create_locate_job_definition(
@@ -539,7 +513,6 @@ class RapidataJobManager:
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """Create a locate job definition.
 
@@ -561,9 +534,6 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
-                maximum length is automatically shortened for the instruction before upload. If False, an
-                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
         with tracer.start_as_current_span("JobManager.create_locate_job"):
             from rapidata.rapidata_client.workflow import LocateWorkflow
@@ -580,7 +550,6 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def _create_draw_job_definition(
@@ -593,7 +562,6 @@ class RapidataJobManager:
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """Create a draw job definition.
 
@@ -615,9 +583,6 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
-                maximum length is automatically shortened for the instruction before upload. If False, an
-                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
         with tracer.start_as_current_span("JobManager.create_draw_job"):
             from rapidata.rapidata_client.workflow import DrawWorkflow
@@ -634,7 +599,6 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def _create_timestamp_job_definition(
@@ -647,7 +611,6 @@ class RapidataJobManager:
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        auto_shorten: bool = False,
     ) -> RapidataJobDefinition:
         """Create a timestamp job definition.
 
@@ -672,9 +635,6 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            auto_shorten (bool, optional): Defaults to False. If True, any context longer than the backend's
-                maximum length is automatically shortened for the instruction before upload. If False, an
-                over-long context is left unchanged and a warning is logged that the backend would reject it.
         """
         with tracer.start_as_current_span("JobManager.create_timestamp_job"):
             from rapidata.rapidata_client.workflow import TimestampWorkflow
@@ -691,7 +651,6 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
-                auto_shorten=auto_shorten,
             )
 
     def get_job_definition_by_id(self, job_definition_id: str) -> RapidataJobDefinition:
