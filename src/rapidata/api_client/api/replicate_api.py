@@ -349,6 +349,7 @@ class ReplicateApi:
     ) -> GetReplicateModelEndpointOutput:
         """Returns a single Replicate model with its input parameter schema.
 
+        When supportsImageReference is true the model accepts a reference image that the  platform auto-fills with a prompt's attached media; that input is excluded from the returned  parameters and must not be configured by the customer.
 
         :param model_owner: The owner of the hosted model. (required)
         :type model_owner: str
@@ -422,6 +423,7 @@ class ReplicateApi:
     ) -> ApiResponse[GetReplicateModelEndpointOutput]:
         """Returns a single Replicate model with its input parameter schema.
 
+        When supportsImageReference is true the model accepts a reference image that the  platform auto-fills with a prompt's attached media; that input is excluded from the returned  parameters and must not be configured by the customer.
 
         :param model_owner: The owner of the hosted model. (required)
         :type model_owner: str
@@ -495,6 +497,7 @@ class ReplicateApi:
     ) -> RESTResponseType:
         """Returns a single Replicate model with its input parameter schema.
 
+        When supportsImageReference is true the model accepts a reference image that the  platform auto-fills with a prompt's attached media; that input is excluded from the returned  parameters and must not be configured by the customer.
 
         :param model_owner: The owner of the hosted model. (required)
         :type model_owner: str
