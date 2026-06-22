@@ -2500,6 +2500,7 @@
           "Replicate"
         ],
         "summary": "Returns a single Replicate model with its input parameter schema.",
+        "description": "When supportsImageReference is true the model accepts a reference image that the\n platform auto-fills with a prompt's attached media; that input is excluded from the returned\n parameters and must not be configured by the customer.",
         "parameters": [
           {
             "name": "modelOwner",
@@ -6974,6 +6975,7 @@
         "required": [
           "modelOwner",
           "modelName",
+          "supportsImageReference",
           "parameters"
         ],
         "type": "object",
@@ -7006,6 +7008,10 @@
             "type": "string",
             "description": "The model's latest version id, if reported by Replicate.",
             "nullable": true
+          },
+          "supportsImageReference": {
+            "type": "boolean",
+            "description": "Whether the model accepts a reference image that the platform auto-fills with a prompt's\n attached media. When true that input is excluded from ."
           },
           "parameters": {
             "allOf": [
