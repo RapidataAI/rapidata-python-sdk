@@ -225,6 +225,7 @@ class RapidataBenchmark:
                         name=p.name,
                         id=p.id,
                         openapi_service=self._openapi_service,
+                        benchmark_id=self.id,
                         status=p.status,
                     )
                     for p in result.items
@@ -599,6 +600,7 @@ class RapidataBenchmark:
                 name,
                 participant_result.participant_id,
                 self._openapi_service,
+                self.id,
             )
 
             with tracer.start_as_current_span("upload_media_for_participant"):

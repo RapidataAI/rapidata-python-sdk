@@ -4384,6 +4384,7 @@ class LeaderboardApi:
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4418,6 +4419,8 @@ class LeaderboardApi:
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4450,6 +4453,7 @@ class LeaderboardApi:
             status=status,
             created_at=created_at,
             owner_mail=owner_mail,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4485,6 +4489,7 @@ class LeaderboardApi:
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4519,6 +4524,8 @@ class LeaderboardApi:
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4551,6 +4558,7 @@ class LeaderboardApi:
             status=status,
             created_at=created_at,
             owner_mail=owner_mail,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4586,6 +4594,7 @@ class LeaderboardApi:
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4620,6 +4629,8 @@ class LeaderboardApi:
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4652,6 +4663,7 @@ class LeaderboardApi:
             status=status,
             created_at=created_at,
             owner_mail=owner_mail,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4682,6 +4694,7 @@ class LeaderboardApi:
         status,
         created_at,
         owner_mail,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -4759,6 +4772,10 @@ class LeaderboardApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -5405,6 +5422,7 @@ class LeaderboardApi:
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         benchmark_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by benchmark_id.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5435,6 +5453,8 @@ class LeaderboardApi:
         :type benchmark_id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5465,6 +5485,7 @@ class LeaderboardApi:
             name=name,
             benchmark_id=benchmark_id,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5498,6 +5519,7 @@ class LeaderboardApi:
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         benchmark_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by benchmark_id.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5528,6 +5550,8 @@ class LeaderboardApi:
         :type benchmark_id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5558,6 +5582,7 @@ class LeaderboardApi:
             name=name,
             benchmark_id=benchmark_id,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5591,6 +5616,7 @@ class LeaderboardApi:
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         benchmark_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by benchmark_id.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5621,6 +5647,8 @@ class LeaderboardApi:
         :type benchmark_id: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5651,6 +5679,7 @@ class LeaderboardApi:
             name=name,
             benchmark_id=benchmark_id,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5679,6 +5708,7 @@ class LeaderboardApi:
         name,
         benchmark_id,
         created_at,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -5746,6 +5776,10 @@ class LeaderboardApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('created_at[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

@@ -17,22 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class LocateBoxTruthModelBox(LazyValidatedModel):
+class SetOrganizationSupportSlackChannelEndpointInput(LazyValidatedModel):
     """
-    LocateBoxTruthModelBox
+    SetOrganizationSupportSlackChannelEndpointInput
     """ # noqa: E501
-    x_min: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="xMin")
-    y_min: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="yMin")
-    x_max: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="xMax")
-    y_max: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="yMax")
-    __properties: ClassVar[List[str]] = ["xMin", "yMin", "xMax", "yMax"]
+    url: Optional[StrictStr] = Field(default=None, description="The support Slack channel URL to set, or null/empty to clear it.")
+    __properties: ClassVar[List[str]] = ["url"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -48,7 +45,7 @@ class LocateBoxTruthModelBox(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of LocateBoxTruthModelBox from a JSON string"""
+        """Create an instance of SetOrganizationSupportSlackChannelEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,31 +66,16 @@ class LocateBoxTruthModelBox(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if x_min (nullable) is None
+        # set to None if url (nullable) is None
         # and model_fields_set contains the field
-        if self.x_min is None and "x_min" in self.model_fields_set:
-            _dict['xMin'] = None
-
-        # set to None if y_min (nullable) is None
-        # and model_fields_set contains the field
-        if self.y_min is None and "y_min" in self.model_fields_set:
-            _dict['yMin'] = None
-
-        # set to None if x_max (nullable) is None
-        # and model_fields_set contains the field
-        if self.x_max is None and "x_max" in self.model_fields_set:
-            _dict['xMax'] = None
-
-        # set to None if y_max (nullable) is None
-        # and model_fields_set contains the field
-        if self.y_max is None and "y_max" in self.model_fields_set:
-            _dict['yMax'] = None
+        if self.url is None and "url" in self.model_fields_set:
+            _dict['url'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of LocateBoxTruthModelBox from a dict"""
+        """Create an instance of SetOrganizationSupportSlackChannelEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -101,10 +83,7 @@ class LocateBoxTruthModelBox(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "xMin": obj.get("xMin"),
-            "yMin": obj.get("yMin"),
-            "xMax": obj.get("xMax"),
-            "yMax": obj.get("yMax")
+            "url": obj.get("url")
         }
         try:
             _obj = cls.model_validate(_data)

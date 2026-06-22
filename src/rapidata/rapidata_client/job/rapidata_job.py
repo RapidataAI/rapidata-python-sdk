@@ -160,7 +160,9 @@ class RapidataJob:
             The current status of the job as a string.
         """
         with tracer.start_as_current_span("RapidataJob.get_status"):
-            return self._openapi_service.order.job_api.job_job_id_get(self.id).status
+            return self._openapi_service.order.job_api.job_job_id_get(
+                self.id
+            ).state.value
 
     def get_results(self) -> RapidataResults:
         """

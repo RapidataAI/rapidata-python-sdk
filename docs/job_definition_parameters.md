@@ -68,6 +68,10 @@ The data to be labeled. The format depends on the job type:
 | Classification | `list[str]` | Single items to classify |
 | Compare | `list[list[str]]` | Pairs of items (exactly 2 per inner list) |
 | Locate | `list[str]` | Single items to locate within |
+| Draw | `list[str]` | Single items to draw on |
+| Select Words | `list[str]` | Single items, each paired with a sentence from `sentences` |
+| Free Text | `list[str]` | Single items to answer about |
+| Ranking | `list[list[str]]` | Independent rankings (each inner list is one set to rank) |
 
 **Supported Formats:**
 
@@ -385,21 +389,81 @@ job_definition = client.job.create_locate_job_definition(
 )
 ```
 
+### Draw Job
+
+Draw has no job-specific parameters — it uses only the core parameters. The `instruction` describes what labelers should draw, and each response is the set of lines they drew on the datapoint.
+
+```python
+job_definition = client.job.create_draw_job_definition(
+    name="Object Marking",
+    instruction="Color in all the blue books",
+    datapoints=["image1.jpg", "image2.jpg"],
+)
+```
+
+### Select Words Job
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `sentences` | `list[str]` | One sentence per datapoint, split up by spaces for the labeler to select words from (must have the same length as `datapoints`) |
+
+```python
+job_definition = client.job.create_select_words_job_definition(
+    name="Prompt Alignment",
+    instruction="Select the words that are not depicted in the image.",
+    datapoints=["image1.jpg", "image2.jpg"],
+    sentences=["A cat on a red couch", "A blue car in the rain"],
+)
+```
+
+### Free Text Job
+
+Free Text has no job-specific parameters — it uses only the core parameters. The `instruction` is the question labelers answer, and each response is the text they typed.
+
+```python
+job_definition = client.job.create_free_text_job_definition(
+    name="Prompt Collection",
+    instruction="What would you like to ask an AI?",
+    datapoints=["image1.jpg"],
+)
+```
+
+### Ranking Job
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `comparison_budget_per_ranking` | `int` | Number of pairwise matchups collected per ranking (per inner list of `datapoints`) |
+| `responses_per_comparison` | `int` | Number of responses collected per matchup (default `1`) — replaces `responses_per_datapoint` |
+| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints |
+
+```python
+job_definition = client.job.create_ranking_job_definition(
+    name="Image Ranking",
+    instruction="Which image looks better?",
+    datapoints=[["img1.jpg", "img2.jpg", "img3.jpg"]],
+    comparison_budget_per_ranking=50,
+)
+```
+
 ---
 
 ## Parameter Availability Matrix
 
-| Parameter | Classification | Compare | Locate |
-|-----------|:-:|:-:|:-:|
-| `name` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `instruction` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `datapoints` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `data_type` | :white_check_mark: | :white_check_mark: | :x: |
-| `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: |
-| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: |
-| `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `answer_options` | :white_check_mark: | :x: | :x: |
-| `a_b_names` | :x: | :white_check_mark: | :x: |
+| Parameter | Classification | Compare | Locate | Draw | Select Words | Free Text | Ranking |
+|-----------|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| `name` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `instruction` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `datapoints` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| `data_type` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :white_check_mark: | :white_check_mark: |
+| `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
+| `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
+| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `answer_options` | :white_check_mark: | :x: | :x: | :x: | :x: | :x: | :x: |
+| `a_b_names` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `sentences` | :x: | :x: | :x: | :x: | :white_check_mark: | :x: | :x: |
+| `comparison_budget_per_ranking` | :x: | :x: | :x: | :x: | :x: | :x: | :white_check_mark: |
+| `responses_per_comparison` | :x: | :x: | :x: | :x: | :x: | :x: | :white_check_mark: |
+| `random_comparisons_ratio` | :x: | :x: | :x: | :x: | :x: | :x: | :white_check_mark: |

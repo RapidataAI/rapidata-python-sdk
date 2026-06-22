@@ -69,6 +69,10 @@ plugins:
           - examples/classify_job.md
           - examples/compare_job.md
           - examples/locate_job.md
+          - examples/draw_job.md
+          - examples/select_words_job.md
+          - examples/free_text_job.md
+          - examples/ranking_job.md
         Benchmarks:
           - mri.md
           - mri_advanced.md
@@ -126,6 +130,10 @@ nav:
       - Classification: examples/classify_job.md
       - Comparison: examples/compare_job.md
       - Locate: examples/locate_job.md
+      - Draw: examples/draw_job.md
+      - Select Words: examples/select_words_job.md
+      - Free Text: examples/free_text_job.md
+      - Ranking: examples/ranking_job.md
     - Ranking Flows: flows.md
     - Model Ranking:
       - Getting Started: mri.md
@@ -154,7 +162,6 @@ theme:
   features:
     - content.code.copy
     - content.code.annotate
-    - content.tabs.link
     - navigation.instant
     - navigation.instant.progress
     - navigation.sections

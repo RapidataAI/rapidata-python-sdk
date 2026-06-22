@@ -5063,6 +5063,7 @@ class OrderApi:
         customer_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by customer_mail.")] = None,
         last_order_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by last_order_date.")] = None,
         last_order_name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by last_order_name.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5091,6 +5092,8 @@ class OrderApi:
         :type last_order_date: AudienceAudienceIdJobsGetJobIdParameter
         :param last_order_name: Filter by last_order_name.
         :type last_order_name: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5120,6 +5123,7 @@ class OrderApi:
             customer_mail=customer_mail,
             last_order_date=last_order_date,
             last_order_name=last_order_name,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5152,6 +5156,7 @@ class OrderApi:
         customer_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by customer_mail.")] = None,
         last_order_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by last_order_date.")] = None,
         last_order_name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by last_order_name.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5180,6 +5185,8 @@ class OrderApi:
         :type last_order_date: AudienceAudienceIdJobsGetJobIdParameter
         :param last_order_name: Filter by last_order_name.
         :type last_order_name: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5209,6 +5216,7 @@ class OrderApi:
             customer_mail=customer_mail,
             last_order_date=last_order_date,
             last_order_name=last_order_name,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5241,6 +5249,7 @@ class OrderApi:
         customer_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by customer_mail.")] = None,
         last_order_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by last_order_date.")] = None,
         last_order_name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by last_order_name.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5269,6 +5278,8 @@ class OrderApi:
         :type last_order_date: AudienceAudienceIdJobsGetJobIdParameter
         :param last_order_name: Filter by last_order_name.
         :type last_order_name: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5298,6 +5309,7 @@ class OrderApi:
             customer_mail=customer_mail,
             last_order_date=last_order_date,
             last_order_name=last_order_name,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5325,6 +5337,7 @@ class OrderApi:
         customer_mail,
         last_order_date,
         last_order_name,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -5384,6 +5397,10 @@ class OrderApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('last_order_name[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -5432,6 +5449,7 @@ class OrderApi:
         order_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by order_date.")] = None,
         customer_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by customer_mail.")] = None,
         is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5464,6 +5482,8 @@ class OrderApi:
         :type customer_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param is_public: Filter by is_public.
         :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5495,6 +5515,7 @@ class OrderApi:
             order_date=order_date,
             customer_mail=customer_mail,
             is_public=is_public,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5529,6 +5550,7 @@ class OrderApi:
         order_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by order_date.")] = None,
         customer_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by customer_mail.")] = None,
         is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5561,6 +5583,8 @@ class OrderApi:
         :type customer_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param is_public: Filter by is_public.
         :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5592,6 +5616,7 @@ class OrderApi:
             order_date=order_date,
             customer_mail=customer_mail,
             is_public=is_public,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5626,6 +5651,7 @@ class OrderApi:
         order_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by order_date.")] = None,
         customer_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by customer_mail.")] = None,
         is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5658,6 +5684,8 @@ class OrderApi:
         :type customer_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param is_public: Filter by is_public.
         :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5689,6 +5717,7 @@ class OrderApi:
             order_date=order_date,
             customer_mail=customer_mail,
             is_public=is_public,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5718,6 +5747,7 @@ class OrderApi:
         order_date,
         customer_mail,
         is_public,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -5793,6 +5823,10 @@ class OrderApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('is_public[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

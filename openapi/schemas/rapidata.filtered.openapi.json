@@ -40,6 +40,10 @@
       "x-displayName": "ExternalAudience"
     },
     {
+      "name": "ContextShortening",
+      "x-displayName": "ContextShortening"
+    },
+    {
       "name": "Datapoints",
       "x-displayName": "Datapoints"
     },
@@ -1848,6 +1852,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2212,6 +2228,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2839,6 +2867,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3823,6 +3863,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4147,6 +4199,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4198,6 +4262,64 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/datasets/shorten-context": {
+      "post": {
+        "tags": [
+          "ContextShortening"
+        ],
+        "summary": "Shortens each context to the parts relevant to its question, returning results in input order.",
+        "description": "Results are cached per (context, question, prompt version), so repeated requests do not re-call the model.",
+        "requestBody": {
+          "description": "The context/question pairs to shorten.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShortenContextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -4602,6 +4724,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5512,6 +5646,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5931,6 +6077,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6532,6 +6690,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6836,6 +7006,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7188,6 +7370,53 @@
         ]
       }
     },
+    "/organizations/mine": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns the organization resolved from the calling customer's email domain.",
+        "description": "Responds with 404 when the caller's email domain does not match a registered organization.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMyOrganizationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/organizations": {
       "get": {
         "tags": [
@@ -7368,6 +7597,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7380,6 +7621,69 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/{owner}/support-slack-channel": {
+      "put": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Sets the support Slack channel URL for the organization owned by the given customer.",
+        "description": "A null or empty URL clears the channel. Responds with 404 when no organization is owned by the given customer.",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "The customer ID that owns the organization.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The support Slack channel URL to set or clear.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetOrganizationSupportSlackChannelEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -7774,6 +8078,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -8554,6 +8870,156 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "identifier",
+            "in": "query",
+            "description": "Filter by identifier.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "english_prompt",
+            "in": "query",
+            "description": "Filter by english_prompt.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "original_prompt",
+            "in": "query",
+            "description": "Filter by original_prompt.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -8932,6 +9398,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -9117,6 +9595,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -9387,6 +9877,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -9396,6 +9898,288 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryManagedBenchmarksEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmarks/published": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries the benchmarks surfaced in the public benchmark repository.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryPublishedBenchmarksEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -9689,6 +10473,7 @@
           "Replicate"
         ],
         "summary": "Returns a single Replicate model with its input parameter schema.",
+        "description": "When supportsImageReference is true the model accepts a reference image that the\n platform auto-fills with a prompt's attached media; that input is excluded from the returned\n parameters and must not be configured by the customer.",
         "parameters": [
           {
             "name": "modelOwner",
@@ -10929,6 +11714,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -11199,6 +11996,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -12195,6 +13004,57 @@
         ]
       }
     },
+    "/benchmark-prompt/{promptId}": {
+      "delete": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Deletes a prompt.",
+        "description": "Also removes every sample generated for the prompt across the benchmark.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "The id of the prompt to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark-prompt/{promptId}/tags": {
       "put": {
         "tags": [
@@ -12568,6 +13428,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -12773,6 +13645,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -13107,6 +13991,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -13245,6 +14141,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -14427,6 +15335,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -14788,6 +15708,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -15019,6 +15951,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -15430,6 +16374,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -15790,6 +16746,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -17000,6 +17968,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -17316,6 +18296,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -18311,6 +19303,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -18550,6 +19554,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -19489,6 +20505,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -20359,6 +21387,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -20857,6 +21897,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -21409,6 +22461,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -22181,6 +23245,18 @@
               }
             },
             "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -22669,7 +23745,8 @@
           "ManualApproval",
           "Queued",
           "Paused",
-          "StaleResults"
+          "StaleResults",
+          "SpendLimited"
         ]
       },
       "AudienceStateRecalculationPhase": {
@@ -27294,6 +28371,72 @@
           }
         }
       },
+      "ShortenContextEndpoint_Input": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_InputItem"
+                }
+              }
+            ],
+            "description": "The context/question pairs to shorten."
+          }
+        },
+        "description": "The input for the shorten-context endpoint."
+      },
+      "ShortenContextEndpoint_InputItem": {
+        "required": [
+          "context",
+          "question"
+        ],
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          }
+        }
+      },
+      "ShortenContextEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_OutputItem"
+                }
+              }
+            ],
+            "description": "The shortened contexts."
+          }
+        },
+        "description": "The shortened contexts, in the same order as the input items."
+      },
+      "ShortenContextEndpoint_OutputItem": {
+        "required": [
+          "shortenedContext"
+        ],
+        "type": "object",
+        "properties": {
+          "shortenedContext": {
+            "type": "string"
+          }
+        }
+      },
       "UpdateDatasetNameEndpoint_Input": {
         "required": [
           "name"
@@ -28608,6 +29751,24 @@
         },
         "description": "The request body for dynamic client registration."
       },
+      "GetMyOrganizationEndpoint_Output": {
+        "required": [
+          "name",
+          "supportSlackChannelUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the organization."
+          },
+          "supportSlackChannelUrl": {
+            "type": "string",
+            "description": "The support Slack channel URL of the organization, if one has been configured.",
+            "nullable": true
+          }
+        }
+      },
       "GoogleOneTapLoginEndpoint_Input": {
         "required": [
           "idToken"
@@ -29011,6 +30172,16 @@
               }
             ],
             "description": "The fields of the survey."
+          }
+        }
+      },
+      "SetOrganizationSupportSlackChannelEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The support Slack channel URL to set, or null/empty to clear it.",
+            "nullable": true
           }
         }
       },
@@ -29567,6 +30738,7 @@
           "id",
           "name",
           "isPublic",
+          "isPublished",
           "createdAt",
           "ownerId",
           "ownerMail",
@@ -29587,6 +30759,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
           },
           "createdAt": {
             "type": "string",
@@ -30119,6 +31295,7 @@
         "required": [
           "modelOwner",
           "modelName",
+          "supportsImageReference",
           "parameters"
         ],
         "type": "object",
@@ -30151,6 +31328,10 @@
             "type": "string",
             "description": "The model's latest version id, if reported by Replicate.",
             "nullable": true
+          },
+          "supportsImageReference": {
+            "type": "boolean",
+            "description": "Whether the model accepts a reference image that the platform auto-fills with a prompt's\n attached media. When true that input is excluded from ."
           },
           "parameters": {
             "allOf": [
@@ -31091,6 +32272,7 @@
           "name",
           "isManaged",
           "isPublic",
+          "isPublished",
           "createdAt",
           "ownerMail"
         ],
@@ -31111,6 +32293,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
           },
           "createdAt": {
             "type": "string",
@@ -31608,6 +32794,7 @@
           "name",
           "isManaged",
           "isPublic",
+          "isPublished",
           "createdAt",
           "ownerMail"
         ],
@@ -31628,6 +32815,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
           },
           "createdAt": {
             "type": "string",
@@ -31806,6 +32997,82 @@
                 "$ref": "#/components/schemas/ConfidenceInterval"
               }
             ]
+          }
+        }
+      },
+      "QueryPublishedBenchmarksEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "isManaged",
+          "isPublic",
+          "isPublished",
+          "createdAt",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the benchmark."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the benchmark."
+          },
+          "isManaged": {
+            "type": "boolean",
+            "description": "Whether the benchmark is managed."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the benchmark is public."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark is published to the public benchmark repository."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the benchmark was created.",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The mail of the customer owning the benchmark."
+          }
+        }
+      },
+      "QueryPublishedBenchmarksEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryPublishedBenchmarksEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -32244,6 +33511,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the benchmark should be public (only admins can change this)."
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the benchmark should be surfaced in the public benchmark repository (only\n admins can change this)."
           },
           "initialBoostLevel": {
             "type": "integer",
@@ -32722,6 +33993,10 @@
             "type": "string",
             "description": "Optional id of a job that must finish before this job starts. When set, this job is\n queued until the preceding job completes or fails.",
             "nullable": true
+          },
+          "notifyOwnerOnCompletion": {
+            "type": "boolean",
+            "description": "Whether the job's owner should be emailed when the job completes. Defaults to false."
           }
         },
         "description": "The input for the create job endpoint."
@@ -33080,7 +34355,7 @@
           "audienceId",
           "revisionNumber",
           "pipelineId",
-          "status",
+          "state",
           "isPublic",
           "createdAt",
           "ownerId",
@@ -33113,9 +34388,13 @@
             "type": "string",
             "description": "The pipeline id."
           },
-          "status": {
-            "type": "string",
-            "description": "The job status."
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The job state."
           },
           "isPublic": {
             "type": "boolean",
@@ -41711,6 +42990,7 @@
     {
       "name": "Rapidata Dataset API",
       "tags": [
+        "ContextShortening",
         "Datapoints",
         "Dataset",
         "DatasetGroup"

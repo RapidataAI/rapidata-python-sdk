@@ -49,6 +49,7 @@ class ExternalAudienceApi:
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         count: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by count.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -77,6 +78,8 @@ class ExternalAudienceApi:
         :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param count: Filter by count.
         :type count: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -106,6 +109,7 @@ class ExternalAudienceApi:
             id=id,
             name=name,
             count=count,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -138,6 +142,7 @@ class ExternalAudienceApi:
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         count: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by count.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -166,6 +171,8 @@ class ExternalAudienceApi:
         :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param count: Filter by count.
         :type count: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -195,6 +202,7 @@ class ExternalAudienceApi:
             id=id,
             name=name,
             count=count,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -227,6 +235,7 @@ class ExternalAudienceApi:
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         count: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by count.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -255,6 +264,8 @@ class ExternalAudienceApi:
         :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param count: Filter by count.
         :type count: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -284,6 +295,7 @@ class ExternalAudienceApi:
             id=id,
             name=name,
             count=count,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -311,6 +323,7 @@ class ExternalAudienceApi:
         id,
         name,
         count,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -370,6 +383,10 @@ class ExternalAudienceApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('count[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

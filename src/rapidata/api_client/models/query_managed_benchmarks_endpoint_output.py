@@ -33,9 +33,10 @@ class QueryManagedBenchmarksEndpointOutput(LazyValidatedModel):
     name: StrictStr = Field(description="The name of the benchmark.")
     is_managed: StrictBool = Field(description="Whether the benchmark is managed.", alias="isManaged")
     is_public: StrictBool = Field(description="Whether the benchmark is public.", alias="isPublic")
+    is_published: StrictBool = Field(description="Whether the benchmark is published to the public benchmark repository.", alias="isPublished")
     created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
     owner_mail: StrictStr = Field(description="The mail of the customer owning the benchmark.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "createdAt", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "isPublished", "createdAt", "ownerMail"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -88,6 +89,7 @@ class QueryManagedBenchmarksEndpointOutput(LazyValidatedModel):
             "name": obj.get("name"),
             "isManaged": obj.get("isManaged"),
             "isPublic": obj.get("isPublic"),
+            "isPublished": obj.get("isPublished"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail")
         }

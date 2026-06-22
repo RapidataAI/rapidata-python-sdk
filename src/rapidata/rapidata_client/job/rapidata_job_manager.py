@@ -127,7 +127,9 @@ class RapidataJobManager:
                     workflow=workflow._to_model(),
                     datasetId=rapidata_dataset.id,
                     referee=referee._to_model(),
-                    rapidFeatureFlags=rapid_feature_flags if rapid_feature_flags else None,
+                    rapidFeatureFlags=(
+                        rapid_feature_flags if rapid_feature_flags else None
+                    ),
                     campaignFeatureFlags=(
                         campaign_feature_flags if campaign_feature_flags else None
                     ),
@@ -313,7 +315,7 @@ class RapidataJobManager:
                 settings=settings,
             )
 
-    def _create_ranking_job_definition(
+    def create_ranking_job_definition(
         self,
         name: str,
         instruction: str,
@@ -348,8 +350,6 @@ class RapidataJobManager:
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per ranking, or multiple entries to display several images.
-            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
-                If provided, one validation task will be shown infront of the datapoints that will be labeled.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
         """
         with tracer.start_as_current_span("JobManager.create_ranking_job"):
@@ -403,7 +403,7 @@ class RapidataJobManager:
                 settings=settings,
             )
 
-    def _create_free_text_job_definition(
+    def create_free_text_job_definition(
         self,
         name: str,
         instruction: str,
@@ -457,7 +457,7 @@ class RapidataJobManager:
                 settings=settings,
             )
 
-    def _create_select_words_job_definition(
+    def create_select_words_job_definition(
         self,
         name: str,
         instruction: str,
@@ -552,7 +552,7 @@ class RapidataJobManager:
                 settings=settings,
             )
 
-    def _create_draw_job_definition(
+    def create_draw_job_definition(
         self,
         name: str,
         instruction: str,

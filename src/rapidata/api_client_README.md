@@ -121,6 +121,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark.
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the current user.
 *BenchmarkApi* | [**benchmarks_managed_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_managed_get) | **GET** /benchmarks/managed | Queries the curated benchmarks available to every customer.
+*BenchmarkApi* | [**benchmarks_published_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_published_get) | **GET** /benchmarks/published | Queries the benchmarks surfaced in the public benchmark repository.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
 *CampaignApi* | [**campaign_boost_external_campaign_id_fast_bid_multiplier_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_external_campaign_id_fast_bid_multiplier_get) | **GET** /campaign/boost/{externalCampaignId}/fast-bid-multiplier | Returns the fast bid multiplier currently applied to an external booster campaign.
@@ -140,6 +141,7 @@ Class | Method | HTTP request | Description
 *ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client using the OpenID Connect Dynamic Client Registration protocol.
 *ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries clients for the current customer.
 *ClientApi* | [**identity_get_client**](rapidata/api_client/docs/ClientApi.md#identity_get_client) | **GET** /client/{clientId} | Gets the details of a specific client.
+*ContextShorteningApi* | [**datasets_shorten_context_post**](rapidata/api_client/docs/ContextShorteningApi.md#datasets_shorten_context_post) | **POST** /datasets/shorten-context | Shortens each context to the parts relevant to its question, returning results in input order.
 *CustomerApi* | [**customers_get**](rapidata/api_client/docs/CustomerApi.md#customers_get) | **GET** /customers | Queries customers with filtering and pagination.
 *CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that may be eligible for validation-set creation.
 *CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new demographic rapid.
@@ -255,6 +257,8 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders with filtering and pagination.
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves all publicly available orders.
 *OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations.
+*OrganizationApi* | [**organizations_mine_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_mine_get) | **GET** /organizations/mine | Returns the organization resolved from the calling customer&#39;s email domain.
+*OrganizationApi* | [**organizations_owner_support_slack_channel_put**](rapidata/api_client/docs/OrganizationApi.md#organizations_owner_support_slack_channel_put) | **PUT** /organizations/{owner}/support-slack-channel | Sets the support Slack channel URL for the organization owned by the given customer.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | Disables a participant in a benchmark.
 *ParticipantApi* | [**participant_participant_id_enable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_enable_post) | **POST** /participant/{participantId}/enable | Enables a previously disabled participant in a benchmark.
@@ -270,6 +274,7 @@ Class | Method | HTTP request | Description
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Streams the preliminary download file when ready.
+*PromptApi* | [**benchmark_prompt_prompt_id_delete**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_delete) | **DELETE** /benchmark-prompt/{promptId} | Deletes a prompt.
 *PromptApi* | [**benchmark_prompt_prompt_id_tags_put**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_tags_put) | **PUT** /benchmark-prompt/{promptId}/tags | Updates the tags associated with a prompt.
 *RankingApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/RankingApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Gets the result overview for a ranking workflow.
 *RankingFlowApi* | [**flow_ranking_flow_id_config_patch**](rapidata/api_client/docs/RankingFlowApi.md#flow_ranking_flow_id_config_patch) | **PATCH** /flow/ranking/{flowId}/config | Updates the configuration of a ranking flow.
@@ -496,6 +501,7 @@ Class | Method | HTTP request | Description
  - [GetLatestAudienceInactivitySyncEndpointOutput](rapidata/api_client/docs/GetLatestAudienceInactivitySyncEndpointOutput.md)
  - [GetLatestAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/GetLatestAudienceStateRecalculationEndpointOutput.md)
  - [GetLeaderboardByIdEndpointOutput](rapidata/api_client/docs/GetLeaderboardByIdEndpointOutput.md)
+ - [GetMyOrganizationEndpointOutput](rapidata/api_client/docs/GetMyOrganizationEndpointOutput.md)
  - [GetOrderByIdEndpointOutput](rapidata/api_client/docs/GetOrderByIdEndpointOutput.md)
  - [GetParticipantByIdEndpointOutput](rapidata/api_client/docs/GetParticipantByIdEndpointOutput.md)
  - [GetParticipantByIdObsoleteEndpointOutput](rapidata/api_client/docs/GetParticipantByIdObsoleteEndpointOutput.md)
@@ -901,6 +907,8 @@ Class | Method | HTTP request | Description
  - [QueryParticipantsObsoleteEndpointOutputItem](rapidata/api_client/docs/QueryParticipantsObsoleteEndpointOutputItem.md)
  - [QueryPublicJobDefinitionsEndpointOutput](rapidata/api_client/docs/QueryPublicJobDefinitionsEndpointOutput.md)
  - [QueryPublicJobDefinitionsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryPublicJobDefinitionsEndpointPagedResultOfOutput.md)
+ - [QueryPublishedBenchmarksEndpointOutput](rapidata/api_client/docs/QueryPublishedBenchmarksEndpointOutput.md)
+ - [QueryPublishedBenchmarksEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryPublishedBenchmarksEndpointPagedResultOfOutput.md)
  - [QuerySampleGenerationsByBenchmarkEndpointOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointOutput.md)
  - [QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput.md)
  - [QueryStandingsEndpointOutput](rapidata/api_client/docs/QueryStandingsEndpointOutput.md)
@@ -936,6 +944,11 @@ Class | Method | HTTP request | Description
  - [SetFastBidMultiplierEndpointInput](rapidata/api_client/docs/SetFastBidMultiplierEndpointInput.md)
  - [SetFastBidMultiplierEndpointOutput](rapidata/api_client/docs/SetFastBidMultiplierEndpointOutput.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
+ - [SetOrganizationSupportSlackChannelEndpointInput](rapidata/api_client/docs/SetOrganizationSupportSlackChannelEndpointInput.md)
+ - [ShortenContextEndpointInput](rapidata/api_client/docs/ShortenContextEndpointInput.md)
+ - [ShortenContextEndpointInputItem](rapidata/api_client/docs/ShortenContextEndpointInputItem.md)
+ - [ShortenContextEndpointOutput](rapidata/api_client/docs/ShortenContextEndpointOutput.md)
+ - [ShortenContextEndpointOutputItem](rapidata/api_client/docs/ShortenContextEndpointOutputItem.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
  - [SkipRapidEndpointInput](rapidata/api_client/docs/SkipRapidEndpointInput.md)
  - [SkipRapidEndpointOutput](rapidata/api_client/docs/SkipRapidEndpointOutput.md)

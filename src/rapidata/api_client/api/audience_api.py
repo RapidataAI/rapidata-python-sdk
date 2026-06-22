@@ -1732,6 +1732,7 @@ class AudienceApi:
         definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1766,6 +1767,8 @@ class AudienceApi:
         :type status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1798,6 +1801,7 @@ class AudienceApi:
             definition_id=definition_id,
             status=status,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1833,6 +1837,7 @@ class AudienceApi:
         definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1867,6 +1872,8 @@ class AudienceApi:
         :type status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1899,6 +1906,7 @@ class AudienceApi:
             definition_id=definition_id,
             status=status,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1934,6 +1942,7 @@ class AudienceApi:
         definition_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by definition_id.")] = None,
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1968,6 +1977,8 @@ class AudienceApi:
         :type status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2000,6 +2011,7 @@ class AudienceApi:
             definition_id=definition_id,
             status=status,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2030,6 +2042,7 @@ class AudienceApi:
         definition_id,
         status,
         created_at,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -2107,6 +2120,10 @@ class AudienceApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('created_at[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -6277,6 +6294,7 @@ class AudienceApi:
         is_distilling: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_distilling.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6311,6 +6329,8 @@ class AudienceApi:
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -6343,6 +6363,7 @@ class AudienceApi:
             is_distilling=is_distilling,
             owner_mail=owner_mail,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -6378,6 +6399,7 @@ class AudienceApi:
         is_distilling: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_distilling.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6412,6 +6434,8 @@ class AudienceApi:
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -6444,6 +6468,7 @@ class AudienceApi:
             is_distilling=is_distilling,
             owner_mail=owner_mail,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -6479,6 +6504,7 @@ class AudienceApi:
         is_distilling: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_distilling.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6513,6 +6539,8 @@ class AudienceApi:
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -6545,6 +6573,7 @@ class AudienceApi:
             is_distilling=is_distilling,
             owner_mail=owner_mail,
             created_at=created_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -6575,6 +6604,7 @@ class AudienceApi:
         is_distilling,
         owner_mail,
         created_at,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -6658,6 +6688,10 @@ class AudienceApi:
                 for _k, _v in _param_val.items():
                     if _v is not None:
                         _query_params.append(('created_at[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
