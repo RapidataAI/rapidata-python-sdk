@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
     from rapidata.api_client.api.dataset_group_api import DatasetGroupApi
     from rapidata.api_client.api.datapoints_api import DatapointsApi
+    from rapidata.api_client.api.context_shortening_api import ContextShorteningApi
 
 
 class DatasetService:
@@ -16,6 +17,7 @@ class DatasetService:
         self._dataset_api: DatasetApi | None = None
         self._dataset_group_api: DatasetGroupApi | None = None
         self._datapoints_api: DatapointsApi | None = None
+        self._context_shortening_api: ContextShorteningApi | None = None
 
     @property
     def dataset_api(self) -> DatasetApi:
@@ -40,3 +42,13 @@ class DatasetService:
 
             self._datapoints_api = DatapointsApi(self._api_client)
         return self._datapoints_api
+
+    @property
+    def context_shortening_api(self) -> ContextShorteningApi:
+        if self._context_shortening_api is None:
+            from rapidata.api_client.api.context_shortening_api import (
+                ContextShorteningApi,
+            )
+
+            self._context_shortening_api = ContextShorteningApi(self._api_client)
+        return self._context_shortening_api

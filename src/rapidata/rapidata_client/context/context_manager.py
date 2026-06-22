@@ -49,8 +49,28 @@ class ContextManager:
         Returns:
             The shortened contexts, in the same order as ``pairs``.
         """
+        from rapidata.api_client.models.shorten_context_endpoint_input import (
+            ShortenContextEndpointInput,
+        )
+        from rapidata.api_client.models.shorten_context_endpoint_input_item import (
+            ShortenContextEndpointInputItem,
+        )
+
+        if not pairs:
+            return []
+
         with tracer.start_as_current_span("ContextManager.shorten_contexts"):
-            return self._openapi_service.context.shorten_contexts(pairs)
+            output = self._openapi_service.dataset.context_shortening_api.datasets_shorten_context_post(
+                shorten_context_endpoint_input=ShortenContextEndpointInput(
+                    items=[
+                        ShortenContextEndpointInputItem(
+                            context=context, question=question
+                        )
+                        for context, question in pairs
+                    ]
+                )
+            )
+            return [item.shortened_context for item in output.items]
 
     def _enforce_context_length(
         self, datapoints: list[Datapoint], question: str | None

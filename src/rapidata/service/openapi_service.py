@@ -23,7 +23,6 @@ if TYPE_CHECKING:
     from rapidata.service.services.leaderboard_service import LeaderboardService
     from rapidata.service.services.rapid_service import RapidService
     from rapidata.service.services.translation_service import TranslationService
-    from rapidata.service.services.context_service import ContextService
 
 
 class OpenAPIService:
@@ -78,7 +77,6 @@ class OpenAPIService:
         self._leaderboard: LeaderboardService | None = None
         self._rapid: RapidService | None = None
         self._translation: TranslationService | None = None
-        self._context: ContextService | None = None
 
         if token:
             logger.debug("Using token for authentication")
@@ -221,13 +219,6 @@ class OpenAPIService:
             from rapidata.service.services.translation_service import TranslationService
             self._translation = TranslationService(self.api_client)
         return self._translation
-
-    @property
-    def context(self) -> ContextService:
-        if self._context is None:
-            from rapidata.service.services.context_service import ContextService
-            self._context = ContextService(self.api_client)
-        return self._context
 
     def _get_rapidata_package_version(self):
         """
