@@ -18,6 +18,7 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
+from rapidata.rapidata_client.context.context_manager import ContextManager
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
@@ -31,6 +32,7 @@ class RapidataJobManager:
 
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
+        self.__context_manager = ContextManager(openapi_service)
 
         self.__priority: int | None = None
         logger.debug("JobManager initialized")
@@ -47,6 +49,11 @@ class RapidataJobManager:
     ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
+
+        self.__context_manager._enforce_context_length(
+            datapoints=datapoints,
+            question=workflow._get_instruction(),
+        )
 
         if confidence_threshold is not None and quorum_threshold is not None:
             raise ValueError(

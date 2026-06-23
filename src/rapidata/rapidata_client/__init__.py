@@ -20,11 +20,13 @@ from .selection import (
     EffortSelection,
 )
 from .datapoints import Datapoint
+from .context import ContextManager
 from .datapoints.metadata import (
     PrivateTextMetadata,
     PublicTextMetadata,
     SelectWordsMetadata,
 )
+
 # --- GENERATED SETTINGS IMPORTS START ---
 from .settings import (
     RapidataSettings,
@@ -48,6 +50,7 @@ from .settings import (
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
 )
+
 # --- GENERATED SETTINGS IMPORTS END ---
 from .filter import (
     CountryFilter,
