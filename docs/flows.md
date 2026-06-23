@@ -80,6 +80,34 @@ Call `get_results()` on a flow item to retrieve the ranking results. If the flow
 results = flow_item.get_results()
 ```
 
+This returns a `FlowItemResult`. For the batch above it looks like this:
+
+```python
+FlowItemResult(
+    datapoints={
+        "https://example.com/image_a.jpg": 1243,
+        "https://example.com/image_b.jpg": 1102,
+        "https://example.com/image_c.jpg": 987,
+    },
+    total_votes=150,
+)
+```
+
+It has two fields:
+
+- `datapoints`: a mapping of each item to its [ELO score](https://en.wikipedia.org/wiki/Elo_rating_system). Items are keyed by their source URL when provided, otherwise by their original filename. A higher score means the item was preferred more often across comparisons.
+- `total_votes`: the total number of pairwise comparisons collected across all items.
+
+Access the fields directly:
+
+```python
+ranking = results.datapoints  # {"https://example.com/image_a.jpg": 1243, ...}
+votes = results.total_votes   # 150
+
+# Items sorted from best to worst
+ranked = sorted(results.datapoints.items(), key=lambda item: item[1], reverse=True)
+```
+
 You can also check the status without blocking:
 
 ```python
