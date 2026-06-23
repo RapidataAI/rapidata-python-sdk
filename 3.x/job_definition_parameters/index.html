@@ -743,6 +743,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-shortening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic shortening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1721,6 +1738,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-shortening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic shortening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2233,6 +2267,33 @@
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A cat sitting on a red couch"</span><span class="p">,</span> <span class="s2">"A blue car in the rain"</span><span class="p">]</span>
 </span></code></pre></div>
+<p><strong>Length limit:</strong> A context may be at most 400 characters; the backend rejects longer ones. If a context exceeds the limit, a warning is logged at creation time. Enable automatic shortening (see below) to have over-long contexts trimmed for you.</p>
+<h4 id="automatic-shortening">Automatic shortening<a class="headerlink" href="#automatic-shortening" title="Permanent link">#</a></h4>
+<p>Set <code>rapidata_config.upload.autoShortenContext = True</code> to have any context longer than the 400-character limit automatically shortened — tuned to the <code>instruction</code> so only the part relevant to the question is kept — before upload. When left at its default (<code>False</code>), an over-long context is left unchanged and a warning is logged explaining the backend would reject it.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidata_config</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">rapidata_config</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">autoShortenContext</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">order</span> <span class="o">=</span> <span class="n">rapi</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">create_classification_order</span><span class="p">(</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Outfit check"</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Does the main character wear the right clothing?"</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Yes"</span><span class="p">,</span> <span class="s2">"No"</span><span class="p">],</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene.jpg"</span><span class="p">],</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"&lt;a very long, detailed beach-scene description ...&gt;"</span><span class="p">],</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>You can also shorten contexts directly via the client, without creating an order:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">short</span> <span class="o">=</span> <span class="n">rapi</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">shorten_context</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">context</span><span class="o">=</span><span class="s2">"&lt;a very long description ...&gt;"</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">question</span><span class="o">=</span><span class="s2">"Does the main character wear the right clothing?"</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">)</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Or a batch of (context, question) pairs in one call:</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">shortened</span> <span class="o">=</span> <span class="n">rapi</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">shorten_contexts</span><span class="p">([</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="p">(</span><span class="n">context_a</span><span class="p">,</span> <span class="n">question_a</span><span class="p">),</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="p">(</span><span class="n">context_b</span><span class="p">,</span> <span class="n">question_b</span><span class="p">),</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">])</span>
+</span></code></pre></div>
 <hr>
 <h3 id="media_contexts"><code>media_contexts</code><a class="headerlink" href="#media_contexts" title="Permanent link">#</a></h3>
 <table>
@@ -2259,16 +2320,16 @@
 </table>
 <p>Image URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images alongside the item being evaluated.</p>
 <p><strong>Constraints:</strong> If provided, must have the same length as <code>datapoints</code>. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># One reference image per datapoint (each inner list has one entry)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"edited1.jpg"</span><span class="p">,</span> <span class="s2">"edited2.jpg"</span><span class="p">],</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">media_contexts</span><span class="o">=</span><span class="p">[[</span><span class="s2">"original1.jpg"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"original2.jpg"</span><span class="p">]]</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Multiple reference images per datapoint</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"edited1.jpg"</span><span class="p">,</span> <span class="s2">"edited2.jpg"</span><span class="p">],</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">media_contexts</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">[</span><span class="s2">"original1_a.jpg"</span><span class="p">,</span> <span class="s2">"original1_b.jpg"</span><span class="p">],</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="p">[</span><span class="s2">"original2_a.jpg"</span><span class="p">,</span> <span class="s2">"original2_b.jpg"</span><span class="p">],</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># One reference image per datapoint (each inner list has one entry)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"edited1.jpg"</span><span class="p">,</span> <span class="s2">"edited2.jpg"</span><span class="p">],</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">media_contexts</span><span class="o">=</span><span class="p">[[</span><span class="s2">"original1.jpg"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"original2.jpg"</span><span class="p">]]</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Multiple reference images per datapoint</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"edited1.jpg"</span><span class="p">,</span> <span class="s2">"edited2.jpg"</span><span class="p">],</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">media_contexts</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="p">[</span><span class="s2">"original1_a.jpg"</span><span class="p">,</span> <span class="s2">"original1_b.jpg"</span><span class="p">],</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="p">[</span><span class="s2">"original2_a.jpg"</span><span class="p">,</span> <span class="s2">"original2_b.jpg"</span><span class="p">],</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">]</span>
 </span></code></pre></div>
 <hr>
 <h2 id="quality-control-parameters">Quality Control Parameters<a class="headerlink" href="#quality-control-parameters" title="Permanent link">#</a></h2>
@@ -2302,14 +2363,14 @@
 <p>Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.</p>
 <p><strong>How It Works:</strong> Uses labeler trust scores (<code>userScore</code>) to calculate statistical confidence for each category.</p>
 <p><strong>Related:</strong> <a href="../confidence_stopping/">Confidence Stopping</a></p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Cat or Dog with Early Stopping"</span><span class="p">,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"pet1.jpg"</span><span class="p">,</span> <span class="s2">"pet2.jpg"</span><span class="p">],</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># Maximum responses</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span>   <span class="c1"># Stop at 99% confidence</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Cat or Dog with Early Stopping"</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"pet1.jpg"</span><span class="p">,</span> <span class="s2">"pet2.jpg"</span><span class="p">],</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># Maximum responses</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span>   <span class="c1"># Stop at 99% confidence</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr>
 <h3 id="quorum_threshold"><code>quorum_threshold</code><a class="headerlink" href="#quorum_threshold" title="Permanent link">#</a></h3>
@@ -2338,14 +2399,14 @@
 <p>Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after <code>responses_per_datapoint</code> votes.</p>
 <p>Cannot be used together with <code>confidence_threshold</code>.</p>
 <p><strong>Related:</strong> <a href="../confidence_stopping/#quorum-stopping">Early Stopping</a></p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Cat or Dog with Quorum Stopping"</span><span class="p">,</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"pet1.jpg"</span><span class="p">,</span> <span class="s2">"pet2.jpg"</span><span class="p">],</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># Maximum responses</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">quorum_threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>          <span class="c1"># Stop when 7 agree</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Cat or Dog with Quorum Stopping"</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"pet1.jpg"</span><span class="p">,</span> <span class="s2">"pet2.jpg"</span><span class="p">],</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># Maximum responses</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">quorum_threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>          <span class="c1"># Stop when 7 agree</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr>
 <h2 id="settings">Settings<a class="headerlink" href="#settings" title="Permanent link">#</a></h2>
@@ -2375,37 +2436,37 @@
 <h3 id="commonly-used-settings">Commonly Used Settings<a class="headerlink" href="#commonly-used-settings" title="Permanent link">#</a></h3>
 <h4 id="noshufflesetting"><code>NoShuffleSetting()</code><a class="headerlink" href="#noshufflesetting" title="Permanent link">#</a></h4>
 <p>Keeps answer options in the order you specified. By default, options are randomized to reduce bias. Use this for Likert scales or any ordered options.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoShuffleSetting</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Rate the quality of this image"</span><span class="p">,</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"1: Poor"</span><span class="p">,</span> <span class="s2">"2: Fair"</span><span class="p">,</span> <span class="s2">"3: Good"</span><span class="p">,</span> <span class="s2">"4: Excellent"</span><span class="p">],</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image.jpg"</span><span class="p">],</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">NoShuffleSetting</span><span class="p">()]</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoShuffleSetting</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Rate the quality of this image"</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"1: Poor"</span><span class="p">,</span> <span class="s2">"2: Fair"</span><span class="p">,</span> <span class="s2">"3: Good"</span><span class="p">,</span> <span class="s2">"4: Excellent"</span><span class="p">],</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image.jpg"</span><span class="p">],</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">NoShuffleSetting</span><span class="p">()]</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <h4 id="markdownsetting"><code>MarkdownSetting()</code><a class="headerlink" href="#markdownsetting" title="Permanent link">#</a></h4>
 <p>Enables limited markdown rendering for text datapoints. Useful when comparing formatted text like LLM outputs.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownSetting</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"LLM Response Comparison"</span><span class="p">,</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which response is better formatted?"</span><span class="p">,</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"**Bold** and _italic_"</span><span class="p">,</span> <span class="s2">"Plain text only"</span><span class="p">]],</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">data_type</span><span class="o">=</span><span class="s2">"text"</span><span class="p">,</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">MarkdownSetting</span><span class="p">()]</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownSetting</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"LLM Response Comparison"</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which response is better formatted?"</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"**Bold** and _italic_"</span><span class="p">,</span> <span class="s2">"Plain text only"</span><span class="p">]],</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">data_type</span><span class="o">=</span><span class="s2">"text"</span><span class="p">,</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">MarkdownSetting</span><span class="p">()]</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">)</span>
 </span></code></pre></div>
 <h4 id="allowneitherbothsetting"><code>AllowNeitherBothSetting()</code><a class="headerlink" href="#allowneitherbothsetting" title="Permanent link">#</a></h4>
 <p>For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">AllowNeitherBothSetting</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Quality Comparison"</span><span class="p">,</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is higher quality?"</span><span class="p">,</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"img_a.jpg"</span><span class="p">,</span> <span class="s2">"img_b.jpg"</span><span class="p">]],</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">AllowNeitherBothSetting</span><span class="p">()]</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">AllowNeitherBothSetting</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Quality Comparison"</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is higher quality?"</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"img_a.jpg"</span><span class="p">,</span> <span class="s2">"img_b.jpg"</span><span class="p">]],</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">AllowNeitherBothSetting</span><span class="p">()]</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr>
 <h2 id="job-specific-parameters">Job-Specific Parameters<a class="headerlink" href="#job-specific-parameters" title="Permanent link">#</a></h2>
@@ -2426,12 +2487,12 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Animal Classification"</span><span class="p">,</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in the image?"</span><span class="p">,</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">,</span> <span class="s2">"Bird"</span><span class="p">,</span> <span class="s2">"Other"</span><span class="p">],</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Animal Classification"</span><span class="p">,</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in the image?"</span><span class="p">,</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">,</span> <span class="s2">"Bird"</span><span class="p">,</span> <span class="s2">"Other"</span><span class="p">],</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="compare-job">Compare Job<a class="headerlink" href="#compare-job" title="Permanent link">#</a></h3>
 <table>
@@ -2450,28 +2511,28 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Model Comparison"</span><span class="p">,</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is better?"</span><span class="p">,</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"model_a.jpg"</span><span class="p">,</span> <span class="s2">"model_b.jpg"</span><span class="p">]],</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">a_b_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"Flux"</span><span class="p">,</span> <span class="s2">"Midjourney"</span><span class="p">],</span>  <span class="c1"># Results will show these names</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Model Comparison"</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is better?"</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"model_a.jpg"</span><span class="p">,</span> <span class="s2">"model_b.jpg"</span><span class="p">]],</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">a_b_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"Flux"</span><span class="p">,</span> <span class="s2">"Midjourney"</span><span class="p">],</span>  <span class="c1"># Results will show these names</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="locate-job">Locate Job<a class="headerlink" href="#locate-job" title="Permanent link">#</a></h3>
 <p>Locate has no job-specific parameters — it uses only the core parameters. The <code>instruction</code> describes what labelers should locate, and each response is the set of points they tapped on the datapoint.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_locate_job_definition</span><span class="p">(</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Artifact Detection"</span><span class="p">,</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Tap on any visual glitches or errors in the image."</span><span class="p">,</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_locate_job_definition</span><span class="p">(</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Artifact Detection"</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Tap on any visual glitches or errors in the image."</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="draw-job">Draw Job<a class="headerlink" href="#draw-job" title="Permanent link">#</a></h3>
 <p>Draw has no job-specific parameters — it uses only the core parameters. The <code>instruction</code> describes what labelers should draw, and each response is the set of lines they drew on the datapoint.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_draw_job_definition</span><span class="p">(</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Object Marking"</span><span class="p">,</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Color in all the blue books"</span><span class="p">,</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_draw_job_definition</span><span class="p">(</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Object Marking"</span><span class="p">,</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Color in all the blue books"</span><span class="p">,</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="select-words-job">Select Words Job<a class="headerlink" href="#select-words-job" title="Permanent link">#</a></h3>
 <table>
@@ -2490,20 +2551,20 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_select_words_job_definition</span><span class="p">(</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment"</span><span class="p">,</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Select the words that are not depicted in the image."</span><span class="p">,</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="s2">"A cat on a red couch"</span><span class="p">,</span> <span class="s2">"A blue car in the rain"</span><span class="p">],</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_select_words_job_definition</span><span class="p">(</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment"</span><span class="p">,</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Select the words that are not depicted in the image."</span><span class="p">,</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">,</span> <span class="s2">"image2.jpg"</span><span class="p">],</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="s2">"A cat on a red couch"</span><span class="p">,</span> <span class="s2">"A blue car in the rain"</span><span class="p">],</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="free-text-job">Free Text Job<a class="headerlink" href="#free-text-job" title="Permanent link">#</a></h3>
 <p>Free Text has no job-specific parameters — it uses only the core parameters. The <code>instruction</code> is the question labelers answer, and each response is the text they typed.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_free_text_job_definition</span><span class="p">(</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Collection"</span><span class="p">,</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What would you like to ask an AI?"</span><span class="p">,</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">],</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_free_text_job_definition</span><span class="p">(</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Collection"</span><span class="p">,</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What would you like to ask an AI?"</span><span class="p">,</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"image1.jpg"</span><span class="p">],</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="ranking-job">Ranking Job<a class="headerlink" href="#ranking-job" title="Permanent link">#</a></h3>
 <table>
@@ -2532,12 +2593,12 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_ranking_job_definition</span><span class="p">(</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Ranking"</span><span class="p">,</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image looks better?"</span><span class="p">,</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"img1.jpg"</span><span class="p">,</span> <span class="s2">"img2.jpg"</span><span class="p">,</span> <span class="s2">"img3.jpg"</span><span class="p">]],</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">comparison_budget_per_ranking</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_ranking_job_definition</span><span class="p">(</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Ranking"</span><span class="p">,</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image looks better?"</span><span class="p">,</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"img1.jpg"</span><span class="p">,</span> <span class="s2">"img2.jpg"</span><span class="p">,</span> <span class="s2">"img3.jpg"</span><span class="p">]],</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">comparison_budget_per_ranking</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr>
 <h2 id="parameter-availability-matrix">Parameter Availability Matrix<a class="headerlink" href="#parameter-availability-matrix" title="Permanent link">#</a></h2>

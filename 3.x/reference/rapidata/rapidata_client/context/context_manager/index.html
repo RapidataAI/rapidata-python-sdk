@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/upload_config/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/context/context_manager/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Upload config - Rapidata Python SDK</title>
+        <title>Context manager - Rapidata Python SDK</title>
       
     
     
@@ -109,7 +109,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.config.upload_config" class="md-skip">
+        <a href="#rapidata.rapidata_client.context.context_manager" class="md-skip">
           Skip to content
         </a>
       
@@ -148,7 +148,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Upload config
+              Context manager
             
           </span>
         </div>
@@ -1191,10 +1191,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.config.upload_config" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.context.context_manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        upload_config
+        context_manager
       
     </span>
   </a>
@@ -1202,22 +1202,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.config.upload_config.CompressionConfig" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.context.context_manager.ContextManager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CompressionConfig
+        ContextManager
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="CompressionConfig">
+    <nav class="md-nav" aria-label="ContextManager">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.config.upload_config.CompressionConfig.is_set" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.context.context_manager.ContextManager.shorten_context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        is_set
+        shorten_context
       
     </span>
   </a>
@@ -1225,10 +1225,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.config.upload_config.CompressionConfig.cache_suffix" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.context.context_manager.ContextManager.shorten_contexts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        cache_suffix
+        shorten_contexts
       
     </span>
   </a>
@@ -1237,17 +1237,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.config.upload_config.UploadConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UploadConfig
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1271,13 +1260,13 @@
   
 
 
-  <h1>Upload config</h1>
+  <h1>Context manager</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.config.upload_config"></a>
+<a id="rapidata.rapidata_client.context.context_manager"></a>
     <div class="doc doc-contents first">
 
 
@@ -1303,370 +1292,23 @@
 
 
 
-<h2 id="rapidata.rapidata_client.config.upload_config.CompressionConfig" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">CompressionConfig</span>
+<h2 id="rapidata.rapidata_client.context.context_manager.ContextManager" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">ContextManager</span>
 
 
-<a href="#rapidata.rapidata_client.config.upload_config.CompressionConfig" class="headerlink" title="Permanent link">#</a></h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
-
-
-
-        <p>Per-upload override for the asset service's image-compression behaviour.</p>
-<p>Any field left as <code>None</code> falls back to the value the asset service has
-configured globally. Set <code>enabled</code> to <code>True</code> (or <code>False</code>) to force the
-behaviour for this client regardless of the server default. Quality is
-expected in the 1..100 range and <code>max_dimension</code> must be at least 1; both
-are validated server-side.</p>
-<p>Currently applies to single-asset uploads (file paths and individual URLs
-via the <code>/asset/file</code> and <code>/asset/url</code> endpoints). Batched URL uploads
-via the orchestrator's <code>/asset/batch-upload</code> path will gain the same
-override in a follow-up once the SDK's OpenAPI client is regenerated to
-include the <code>compression</code> field on the batch input model.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.CompressionConfig.enabled">enabled</span></code></td>
-            <td>
-                  <code><span title="bool">bool</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Force compression on or off. <code>None</code> to defer to the server default.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.CompressionConfig.quality">quality</span></code></td>
-            <td>
-                  <code><span title="int">int</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>WebP quality (1..100) to use when compression runs.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.CompressionConfig.max_dimension">max_dimension</span></code></td>
-            <td>
-                  <code><span title="int">int</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Maximum width or height in pixels when compression runs.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="rapidata.rapidata_client.config.upload_config.CompressionConfig.is_set" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">is_set</span>
-
-
-<a href="#rapidata.rapidata_client.config.upload_config.CompressionConfig.is_set" class="headerlink" title="Permanent link">#</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">is_set</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="bool">bool</span></span>
+<a href="#rapidata.rapidata_client.context.context_manager.ContextManager" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ContextManager</span><span class="p">(</span><span class="n">openapi_service</span><span class="p">:</span> <span class="n"><span title="rapidata.service.openapi_service.OpenAPIService">OpenAPIService</span></span><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Whether any field has been overridden from its default of <code>None</code>.
-<code>enabled=False</code> counts as set — it is the explicit "force compression
-off" request, distinct from "defer to server default".</p>
 
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/config/upload_config.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    Whether any field has been overridden from its default of ``None``.</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">    ``enabled=False`` counts as set — it is the explicit "force compression</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="sd">    off" request, distinct from "defer to server default".</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    """</span>
-</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_dimension</span><span class="p">)</span>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="p">)</span>
-</span></code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="rapidata.rapidata_client.config.upload_config.CompressionConfig.cache_suffix" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">cache_suffix</span>
-
-
-<a href="#rapidata.rapidata_client.config.upload_config.CompressionConfig.cache_suffix" class="headerlink" title="Permanent link">#</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">cache_suffix</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Stable string used as part of the asset upload cache key so that
-the same source asset uploaded under different compression settings
-does not collide on a single cache entry.</p>
-<p>The separator characters <code>|</code>, <code>/</code> and <code>=</code> are reserved — none of
-the existing field types (<code>bool</code>, <code>int</code>) can produce them, so the
-suffix round-trips unambiguously. Revisit this if a free-form string
-field is ever added.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/config/upload_config.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span>
-<span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span>
-<span class="normal"><a href="#__codelineno-0-76">76</a></span>
-<span class="normal"><a href="#__codelineno-0-77">77</a></span>
-<span class="normal"><a href="#__codelineno-0-78">78</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="k">def</span><span class="w"> </span><span class="nf">cache_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="w">    </span><span class="sd">"""</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    Stable string used as part of the asset upload cache key so that</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    the same source asset uploaded under different compression settings</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">    does not collide on a single cache entry.</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    The separator characters ``|``, ``/`` and ``=`` are reserved — none of</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">    the existing field types (``bool``, ``int``) can produce them, so the</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">    suffix round-trips unambiguously. Revisit this if a free-form string</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    field is ever added.</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">    """</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="k">return</span> <span class="s2">""</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">"|c=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">quality</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_dimension</span><span class="si">}</span><span class="s2">"</span>
-</span></code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="rapidata.rapidata_client.config.upload_config.UploadConfig" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">UploadConfig</span>
-
-
-<a href="#rapidata.rapidata_client.config.upload_config.UploadConfig" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">UploadConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
-
-
-
-        <p>Holds the configuration for the upload process.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.maxWorkers">maxWorkers</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The maximum number of worker threads for concurrent uploads. Defaults to 25.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.maxRetries">maxRetries</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The maximum number of retries for failed uploads. Defaults to 3.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.cacheToDisk">cacheToDisk</span></code></td>
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Enable disk-based caching for file uploads. If False, uses in-memory cache only. Defaults to True.
-Note: URL assets are always cached in-memory regardless of this setting.
-Caching cannot be disabled entirely as it's required for the two-step upload flow.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.cacheTimeout">cacheTimeout</span></code></td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Cache operation timeout in seconds. Defaults to 0.1.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.cacheLocation">cacheLocation</span></code></td>
-            <td>
-                  <code><span title="pathlib.Path">Path</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Directory for cache storage. Defaults to ~/.cache/rapidata/upload_cache.
-This is immutable. Only used for file uploads when cacheToDisk=True.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.cacheShards">cacheShards</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of cache shards for parallel access. Defaults to 128.
-Higher values improve concurrency but increase file handles. Must be positive.
-This is immutable. Only used for file uploads when cacheToDisk=True.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.enableBatchUpload">enableBatchUpload</span></code></td>
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Enable batch URL uploading (two-step process). Defaults to True.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.batchSize">batchSize</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of URLs per batch (100-5000). Defaults to 1000.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.batchPollInterval">batchPollInterval</span></code></td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Polling interval in seconds. Defaults to 0.5.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.compression">compression</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="CompressionConfig (rapidata.rapidata_client.config.upload_config.CompressionConfig)" href="#rapidata.rapidata_client.config.upload_config.CompressionConfig">CompressionConfig</a> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Per-upload override for the asset service's
-image-compression behaviour. Defaults to None (use server-side defaults).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.autoShortenContext">autoShortenContext</span></code></td>
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>When True, a datapoint context longer than the backend's
-maximum length is automatically shortened for the order/job instruction before
-upload. When False (default), an over-long context is left unchanged and a
-warning is logged that the backend would reject it. Defaults to False.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+        <p>Shortens a datapoint's context for the specific question an annotator answers.</p>
+<p>A long, general context (e.g. a full scene description) is often far more
+detail than a single question needs. This manager tunes a context down to
+what is relevant for the question, which keeps it within the length the
+backend accepts and focuses the annotator. Results are cached server-side.</p>
 
 
 
@@ -1676,12 +1318,12 @@ warning is logged that the backend would reject it. Defaults to False.</p>
 
 
                   <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/rapidata/rapidata_client/config/upload_config.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-177">177</a></span>
-<span class="normal"><a href="#__codelineno-0-178">178</a></span>
-<span class="normal"><a href="#__codelineno-0-179">179</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_cache</span><span class="p">()</span>
+                    <summary>Source code in <code>src/rapidata/rapidata_client/context/context_manager.py</code></summary>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">openapi_service</span><span class="p">:</span> <span class="n">OpenAPIService</span><span class="p">):</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span> <span class="o">=</span> <span class="n">openapi_service</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"ContextManager initialized"</span><span class="p">)</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 
@@ -1697,6 +1339,265 @@ warning is logged that the backend would reject it. Defaults to False.</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rapidata.rapidata_client.context.context_manager.ContextManager.shorten_context" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">shorten_context</span>
+
+
+<a href="#rapidata.rapidata_client.context.context_manager.ContextManager.shorten_context" class="headerlink" title="Permanent link">#</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">shorten_context</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">question</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Shorten a single context for the given question.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>context</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The (potentially long) context to shorten.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>question</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The question the context will be shown alongside. The
+context is tuned to what this question needs.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The shortened context.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/rapidata/rapidata_client/context/context_manager.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="k">def</span><span class="w"> </span><span class="nf">shorten_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">    </span><span class="sd">"""Shorten a single context for the given question.</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">        context: The (potentially long) context to shorten.</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">        question: The question the context will be shown alongside. The</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">            context is tuned to what this question needs.</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        The shortened context.</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    """</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shorten_contexts</span><span class="p">([(</span><span class="n">context</span><span class="p">,</span> <span class="n">question</span><span class="p">)])[</span><span class="mi">0</span><span class="p">]</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rapidata.rapidata_client.context.context_manager.ContextManager.shorten_contexts" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">shorten_contexts</span>
+
+
+<a href="#rapidata.rapidata_client.context.context_manager.ContextManager.shorten_contexts" class="headerlink" title="Permanent link">#</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">shorten_contexts</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">pairs</span><span class="p">:</span> <span class="n"><span title="typing.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Shorten a batch of <code>(context, question)</code> pairs in one request.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>pairs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="tuple">tuple</span>[<span title="str">str</span>, <span title="str">str</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The <code>(context, question)</code> pairs to shorten.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The shortened contexts, in the same order as <code>pairs</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/rapidata/rapidata_client/context/context_manager.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="k">def</span><span class="w"> </span><span class="nf">shorten_contexts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="w">    </span><span class="sd">"""Shorten a batch of ``(context, question)`` pairs in one request.</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        pairs: The ``(context, question)`` pairs to shorten.</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        The shortened contexts, in the same order as ``pairs``.</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">    """</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.shorten_context_endpoint_input</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="n">ShortenContextEndpointInput</span><span class="p">,</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="p">)</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.shorten_context_endpoint_input_item</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="n">ShortenContextEndpointInputItem</span><span class="p">,</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="p">)</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">pairs</span><span class="p">:</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="k">return</span> <span class="p">[]</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"ContextManager.shorten_contexts"</span><span class="p">):</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">context_shortening_api</span><span class="o">.</span><span class="n">datasets_shorten_context_post</span><span class="p">(</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="n">shorten_context_endpoint_input</span><span class="o">=</span><span class="n">ShortenContextEndpointInput</span><span class="p">(</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>                <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>                    <span class="n">ShortenContextEndpointInputItem</span><span class="p">(</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>                        <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">question</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>                    <span class="p">)</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>                    <span class="k">for</span> <span class="n">context</span><span class="p">,</span> <span class="n">question</span> <span class="ow">in</span> <span class="n">pairs</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>                <span class="p">]</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="p">)</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="p">)</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="k">return</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">shortened_context</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">items</span><span class="p">]</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
