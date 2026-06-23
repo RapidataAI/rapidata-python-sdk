@@ -30448,6 +30448,11 @@
             "type": "string",
             "description": "The name of the benchmark."
           },
+          "description": {
+            "type": "string",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark. Limited to\n 2000 characters. Leave unset for no description.",
+            "nullable": true
+          },
           "initialBoostLevel": {
             "type": "integer",
             "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to . Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via .",
@@ -30525,6 +30530,11 @@
           "benchmarkName": {
             "type": "string",
             "description": "When no BenchmarkId is provided, the name of the new benchmark to create.",
+            "nullable": true
+          },
+          "benchmarkDescription": {
+            "type": "string",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark, applied to\n the new benchmark created via . Limited to 2000 characters.\n Ignored when an existing is provided. Leave unset for no\n description.",
             "nullable": true
           },
           "name": {
@@ -30914,6 +30924,7 @@
         "required": [
           "id",
           "name",
+          "description",
           "isPublic",
           "isPublished",
           "createdAt",
@@ -30932,6 +30943,11 @@
           "name": {
             "type": "string",
             "description": "The name of the benchmark."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark. Null when no\n description was supplied.",
+            "nullable": true
           },
           "isPublic": {
             "type": "boolean",
@@ -33719,6 +33735,10 @@
           "name": {
             "type": "string",
             "description": "The new name of the benchmark."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark. Limited to\n 2000 characters. Send null to clear it; omit to leave it unchanged."
           },
           "isPublic": {
             "type": "boolean",

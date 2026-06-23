@@ -29,12 +29,13 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
     UpdateBenchmarkEndpointInput
     """ # noqa: E501
     name: Optional[StrictStr] = Field(default=None, description="The new name of the benchmark.")
+    description: Optional[StrictStr] = Field(default=None, description="Optional plain-text credit for the people or sources behind the benchmark. Limited to  2000 characters. Send null to clear it; omit to leave it unchanged.")
     is_public: Optional[StrictBool] = Field(default=None, description="Whether the benchmark should be public (only admins can change this).", alias="isPublic")
     is_published: Optional[StrictBool] = Field(default=None, description="Whether the benchmark should be surfaced in the public benchmark repository (only  admins can change this).", alias="isPublished")
     initial_boost_level: Optional[StrictInt] = Field(default=None, description="Initial boost level applied to the campaign of every run created from this benchmark.  Admins may set any value the validator allows (0-10) or null to clear the  override; non-admins are restricted to  0.. and may not clear  it. Both restrictions are enforced by  with a 403 on  violation.", alias="initialBoostLevel")
     score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on the overall scoreboard of this  benchmark.", alias="scoreShift")
     score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on the overall scoreboard of this benchmark. Must be strictly positive.", alias="scoreScale")
-    __properties: ClassVar[List[str]] = ["name", "isPublic", "isPublished", "initialBoostLevel", "scoreShift", "scoreScale"]
+    __properties: ClassVar[List[str]] = ["name", "description", "isPublic", "isPublished", "initialBoostLevel", "scoreShift", "scoreScale"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -89,6 +90,7 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
 
         _data = {
             "name": obj.get("name"),
+            "description": obj.get("description"),
             "isPublic": obj.get("isPublic"),
             "isPublished": obj.get("isPublished"),
             "initialBoostLevel": obj.get("initialBoostLevel"),
