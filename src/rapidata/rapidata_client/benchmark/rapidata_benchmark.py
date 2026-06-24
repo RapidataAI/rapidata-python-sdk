@@ -1,4 +1,6 @@
 from __future__ import annotations
+import os.path
+import re
 import urllib.parse
 import webbrowser
 from colorama import Fore
@@ -118,6 +120,25 @@ class RapidataBenchmark:
                     break
 
                 current_page += 1
+
+    # http / https in any case — same detection the asset uploader uses to tell
+    # a remote URL from a local path.
+    __URL_SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
+
+    @classmethod
+    def __normalize_cached_asset(cls, asset: str | None) -> str | None:
+        """Mirror the representation a re-fetch would reconstruct for an asset.
+
+        `__instantiate_prompts` rebuilds assets from server metadata: remote
+        URLs come back verbatim (`sourceUrl`), but local files come back as just
+        their base filename (`originalFilename`). Normalizing the freshly
+        uploaded value here keeps `prompt_assets` identical before and after any
+        re-fetch, so it stays idempotent as input to downstream calls.
+        """
+        if asset is None or cls.__URL_SCHEME_RE.match(asset):
+            return asset
+
+        return os.path.basename(asset)
 
     @property
     def identifiers(self) -> list[str]:
@@ -388,7 +409,9 @@ class RapidataBenchmark:
             for uploaded in self._prompt_uploader.upload_many(to_upload):
                 self.__identifiers.append(uploaded.identifier)
                 self.__prompts.append(uploaded.prompt)
-                self.__prompt_assets.append(uploaded.prompt_asset)
+                self.__prompt_assets.append(
+                    self.__normalize_cached_asset(uploaded.prompt_asset)
+                )
                 self.__tags.append(uploaded.tags)
 
             # The English translation is produced server-side and is unknown for
