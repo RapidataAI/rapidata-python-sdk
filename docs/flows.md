@@ -95,7 +95,7 @@ FlowItemResult(
 
 It has two fields:
 
-- `datapoints`: a mapping of each item to its [ELO score](https://en.wikipedia.org/wiki/Elo_rating_system). Items are keyed by their source URL when provided, otherwise by their original filename. A higher score means the item was preferred more often across comparisons.
+- `datapoints`: a mapping of each item to its score. The score is a [Bradley–Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) strength estimate fitted over all pairwise comparisons, then mapped onto an Elo-style scale (default starting score 1200) so the values read like familiar Elo ratings. Items are keyed by their source URL when provided, otherwise by their original filename. A higher score means the item was preferred more often across comparisons.
 - `total_votes`: the total number of pairwise comparisons collected across all items.
 
 Access the fields directly:
