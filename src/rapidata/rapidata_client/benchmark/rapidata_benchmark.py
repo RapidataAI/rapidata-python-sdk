@@ -53,9 +53,14 @@ class RapidataBenchmark:
 
     def __instantiate_prompts(self) -> None:
         from rapidata.rapidata_client.config import tracer
-        from rapidata.api_client.models.file_asset_model import FileAssetModel
-        from rapidata.api_client.models.source_url_metadata_model import (
-            SourceUrlMetadataModel,
+        from rapidata.api_client.models.i_asset_model_file_asset_model import (
+            IAssetModelFileAssetModel,
+        )
+        from rapidata.api_client.models.i_metadata_model_source_url_metadata_model import (
+            IMetadataModelSourceUrlMetadataModel,
+        )
+        from rapidata.api_client.models.i_metadata_model_original_filename_metadata_model import (
+            IMetadataModelOriginalFilenameMetadataModel,
         )
 
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
@@ -89,14 +94,24 @@ class RapidataBenchmark:
                     if prompt.prompt_asset is None:
                         self.__prompt_assets.append(None)
                     else:
-                        assert isinstance(
-                            prompt.prompt_asset.actual_instance, FileAssetModel
-                        )
-                        source_url = prompt.prompt_asset.actual_instance.metadata[
-                            "sourceUrl"
-                        ].actual_instance
-                        assert isinstance(source_url, SourceUrlMetadataModel)
-                        self.__prompt_assets.append(source_url.url)
+                        file_asset = prompt.prompt_asset.actual_instance
+                        assert isinstance(file_asset, IAssetModelFileAssetModel)
+                        source_url = file_asset.metadata.get("sourceUrl")
+                        original_filename = file_asset.metadata.get("originalFilename")
+                        if source_url is not None:
+                            instance = source_url.actual_instance
+                            assert isinstance(
+                                instance, IMetadataModelSourceUrlMetadataModel
+                            )
+                            self.__prompt_assets.append(instance.url)
+                        elif original_filename is not None:
+                            instance = original_filename.actual_instance
+                            assert isinstance(
+                                instance, IMetadataModelOriginalFilenameMetadataModel
+                            )
+                            self.__prompt_assets.append(instance.original_filename)
+                        else:
+                            self.__prompt_assets.append(None)
 
                     self.__tags.append(prompt.tags)
                 if current_page >= total_pages:
