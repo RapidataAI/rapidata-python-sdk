@@ -29,10 +29,11 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
     CreateBenchmarkEndpointInput
     """ # noqa: E501
     name: StrictStr = Field(description="The name of the benchmark.")
+    description: Optional[StrictStr] = Field(default=None, description="Optional plain-text credit for the people or sources behind the benchmark. Limited to  2000 characters. Leave unset for no description.")
     initial_boost_level: Optional[StrictInt] = Field(default=None, description="Initial boost level applied to the campaign of every run created from this benchmark.  Leave unset to fall back to . Admins  may set any value the validator allows (0-10); non-admins are restricted to  0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns  403 Forbidden via .", alias="initialBoostLevel")
     score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on the overall scoreboard of this  benchmark. Defaults to 0 when unset.", alias="scoreShift")
     score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on the overall scoreboard of this benchmark. Defaults to 1.0 when  unset; must be strictly positive.", alias="scoreScale")
-    __properties: ClassVar[List[str]] = ["name", "initialBoostLevel", "scoreShift", "scoreScale"]
+    __properties: ClassVar[List[str]] = ["name", "description", "initialBoostLevel", "scoreShift", "scoreScale"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -69,6 +70,11 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if description (nullable) is None
+        # and model_fields_set contains the field
+        if self.description is None and "description" in self.model_fields_set:
+            _dict['description'] = None
+
         # set to None if initial_boost_level (nullable) is None
         # and model_fields_set contains the field
         if self.initial_boost_level is None and "initial_boost_level" in self.model_fields_set:
@@ -97,6 +103,7 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
 
         _data = {
             "name": obj.get("name"),
+            "description": obj.get("description"),
             "initialBoostLevel": obj.get("initialBoostLevel"),
             "scoreShift": obj.get("scoreShift"),
             "scoreScale": obj.get("scoreScale")

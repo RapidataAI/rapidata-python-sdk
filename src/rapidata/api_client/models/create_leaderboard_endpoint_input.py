@@ -32,6 +32,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     benchmark_id: Optional[StrictStr] = Field(default=None, description="If the leaderboard should be added to a preexisting benchmark, the benchmark id.", alias="benchmarkId")
     benchmark_name: Optional[StrictStr] = Field(default=None, description="When no BenchmarkId is provided, the name of the new benchmark to create.", alias="benchmarkName")
+    benchmark_description: Optional[StrictStr] = Field(default=None, description="Optional plain-text credit for the people or sources behind the benchmark, applied to  the new benchmark created via . Limited to 2000 characters.  Ignored when an existing is provided. Leave unset for no  description.", alias="benchmarkDescription")
     name: StrictStr = Field(description="The name of the leaderboard.")
     instruction: StrictStr = Field(description="The instruction datapoints will be matched up against.")
     show_prompt: StrictBool = Field(description="Indicates if the prompt is shown on the rapids.", alias="showPrompt")
@@ -47,7 +48,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     is_hidden: Optional[StrictBool] = Field(default=None, description="Whether the leaderboard should be created hidden. Admin-only.", alias="isHidden")
     vote_aggregation: Optional[VoteAggregation] = Field(default=None, description="How individual votes on a matchup are aggregated into the stored result. AllVotes  counts every vote as a matchup; MajorityVote collapses each matchup to a single  win for the majority side (ties split 0.5/0.5). Defaults to AllVotes when unset.", alias="voteAggregation")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "voteAggregation", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "benchmarkDescription", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "voteAggregation", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -101,6 +102,11 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
         if self.benchmark_name is None and "benchmark_name" in self.model_fields_set:
             _dict['benchmarkName'] = None
 
+        # set to None if benchmark_description (nullable) is None
+        # and model_fields_set contains the field
+        if self.benchmark_description is None and "benchmark_description" in self.model_fields_set:
+            _dict['benchmarkDescription'] = None
+
         # set to None if response_budget (nullable) is None
         # and model_fields_set contains the field
         if self.response_budget is None and "response_budget" in self.model_fields_set:
@@ -135,6 +141,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
         _data = {
             "benchmarkId": obj.get("benchmarkId"),
             "benchmarkName": obj.get("benchmarkName"),
+            "benchmarkDescription": obj.get("benchmarkDescription"),
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
             "showPrompt": obj.get("showPrompt"),
