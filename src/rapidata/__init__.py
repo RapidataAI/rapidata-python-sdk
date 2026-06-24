@@ -1,4 +1,4 @@
-__version__ = "3.14.0"
+__version__ = "3.15.0"
 
 from .rapidata_client import (
     RapidataClient,
@@ -61,6 +61,7 @@ from .rapidata_client import (
     DeviceFilter,
     DeviceType,
     Datapoint,
+    ContextManager,
     FailedUploadException,
     FailedUpload,
     rapidata_config,

@@ -3972,7 +3972,8 @@
           "ManualApproval",
           "Queued",
           "Paused",
-          "StaleResults"
+          "StaleResults",
+          "SpendLimited"
         ]
       },
       "CloneOrderEndpoint_Input": {
@@ -4650,7 +4651,7 @@
           "audienceId",
           "revisionNumber",
           "pipelineId",
-          "status",
+          "state",
           "isPublic",
           "createdAt",
           "ownerId",
@@ -4684,8 +4685,21 @@
             "description": "The pipeline id."
           },
           "status": {
-            "type": "string",
-            "description": "The job status."
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The job state.",
+            "deprecated": true
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The job state."
           },
           "isPublic": {
             "type": "boolean",

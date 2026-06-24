@@ -294,7 +294,8 @@ class RapidataOrder:
             Processing: The order is actively being processed.\n
             Paused: The order has been paused.\n
             Completed: The order has been completed.\n
-            Failed: The order has failed.
+            Failed: The order has failed.\n
+            StaleResults: The order completed but its result file is no longer valid; calling get_results regenerates it automatically.
         """
         with tracer.start_as_current_span("RapidataOrder.get_status"):
             return self._openapi_service.order.order_api.order_order_id_get(
@@ -370,10 +371,25 @@ class RapidataOrder:
 
                 sleep(refresh_rate)
 
+    def _regenerate_results(self) -> None:
+        """Triggers regeneration of an order whose results have gone stale.
+
+        A ``StaleResults`` order no longer has a valid/available result file; retrying it
+        re-runs the pipeline so a fresh result file is produced and the order completes
+        again.
+        """
+        logger.info("Order '%s' has stale results, triggering regeneration", self)
+        managed_print(
+            f"Order '{self.name}' has stale results — regenerating, "
+            "this may take a few minutes..."
+        )
+        self._openapi_service.order.order_api.order_order_id_retry_post(self.id)
+
     def get_results(self, preliminary_results: bool = False) -> RapidataResults:
         """
         Gets the results of the order.
         If the order is still processing, this method will block until the order is completed and then return the results.
+        If the order's results have gone stale, regeneration is triggered automatically and this method blocks until the fresh results are ready.
 
         Args:
             preliminary_results: If True, returns the preliminary results of the order. Defaults to False.
@@ -396,6 +412,11 @@ class RapidataOrder:
 
             if preliminary_results and self.get_status() == OrderState.COMPLETED:
                 managed_print("Order is already completed. Returning final results.")
+
+            # Stale results have no downloadable file until the pipeline is re-run;
+            # trigger that automatically before waiting for the re-completion.
+            if self.get_status() == OrderState.STALERESULTS:
+                self._regenerate_results()
 
             self._wait_for_state(
                 target_states=[

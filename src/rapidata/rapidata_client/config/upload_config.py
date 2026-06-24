@@ -99,6 +99,10 @@ class UploadConfig(BaseModel):
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
         compression (CompressionConfig | None): Per-upload override for the asset service's
             image-compression behaviour. Defaults to None (use server-side defaults).
+        autoShortenContext (bool): When True, a datapoint context longer than the backend's
+            maximum length is automatically shortened for the order/job instruction before
+            upload. When False (default), an over-long context is left unchanged and a
+            warning is logged that the backend would reject it. Defaults to False.
     """
 
     model_config = ConfigDict(validate_assignment=True)
@@ -136,6 +140,10 @@ class UploadConfig(BaseModel):
     compression: CompressionConfig | None = Field(
         default=None,
         description="Per-upload override for image compression. None uses server defaults.",
+    )
+    autoShortenContext: bool = Field(
+        default=False,
+        description="Automatically shorten over-long datapoint contexts for the instruction before upload.",
     )
 
     @field_validator("maxWorkers")

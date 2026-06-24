@@ -160,14 +160,32 @@ class RapidataJob:
             The current status of the job as a string.
         """
         with tracer.start_as_current_span("RapidataJob.get_status"):
-            return self._openapi_service.order.job_api.job_job_id_get(self.id).status
+            return self._openapi_service.order.job_api.job_job_id_get(
+                self.id
+            ).state.value
+
+    def _regenerate_results(self) -> None:
+        """Triggers regeneration of a job whose results have gone stale.
+
+        A ``StaleResults`` job no longer has a valid/available result file; retrying it
+        re-runs the pipeline so a fresh result file is produced and the job completes
+        again.
+        """
+        logger.info("Job '%s' has stale results, triggering regeneration", self)
+        managed_print(
+            f"Job '{self.name}' has stale results — regenerating, "
+            "this may take a few minutes..."
+        )
+        self._openapi_service.order.job_api.job_job_id_retry_post(self.id)
 
     def get_results(self) -> RapidataResults:
         """
         Gets the results of the job.
 
-        If wait_for_completion is True and the job is still processing, this method
-        will block until the job is completed and then return the results.
+        If the job is still processing, this method will block until the job is
+        completed and then return the results.
+        If the job's results have gone stale, regeneration is triggered automatically
+        and this method blocks until the fresh results are ready.
 
         Returns:
             RapidataResults: The results of the job.
@@ -182,6 +200,11 @@ class RapidataJob:
             )
 
             logger.info("Getting results for job '%s'...", self)
+
+            # Stale results have no downloadable file until the pipeline is re-run;
+            # trigger that automatically before waiting for the re-completion.
+            if self.get_status() == "StaleResults":
+                self._regenerate_results()
 
             self._wait_for_status(
                 target_statuses=["Completed", "Failed"],

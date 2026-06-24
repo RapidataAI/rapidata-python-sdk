@@ -11,6 +11,54 @@
     }
   ],
   "paths": {
+    "/datasets/shorten-context": {
+      "post": {
+        "tags": [
+          "ContextShortening"
+        ],
+        "summary": "Shortens each context to the parts relevant to its question, returning results in input order.",
+        "description": "Results are cached per (context, question, prompt version), so repeated requests do not re-call the model.",
+        "requestBody": {
+          "description": "The context/question pairs to shorten.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShortenContextEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/dataset/{datasetId}/datapoint": {
       "post": {
         "tags": [
@@ -1524,6 +1572,72 @@
           "totalPages": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "ShortenContextEndpoint_Input": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_InputItem"
+                }
+              }
+            ],
+            "description": "The context/question pairs to shorten."
+          }
+        },
+        "description": "The input for the shorten-context endpoint."
+      },
+      "ShortenContextEndpoint_InputItem": {
+        "required": [
+          "context",
+          "question"
+        ],
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          }
+        }
+      },
+      "ShortenContextEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShortenContextEndpoint_OutputItem"
+                }
+              }
+            ],
+            "description": "The shortened contexts."
+          }
+        },
+        "description": "The shortened contexts, in the same order as the input items."
+      },
+      "ShortenContextEndpoint_OutputItem": {
+        "required": [
+          "shortenedContext"
+        ],
+        "type": "object",
+        "properties": {
+          "shortenedContext": {
+            "type": "string"
           }
         }
       },

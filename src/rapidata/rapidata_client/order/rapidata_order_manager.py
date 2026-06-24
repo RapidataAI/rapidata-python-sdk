@@ -15,6 +15,7 @@ from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSetting, RapidataSettings
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
+from rapidata.rapidata_client.context.context_manager import ContextManager
 from rapidata.service.openapi_service import OpenAPIService
 
 if TYPE_CHECKING:
@@ -49,6 +50,7 @@ class RapidataOrderManager:
 
     def __init__(self, openapi_service: OpenAPIService):
         self.__openapi_service = openapi_service
+        self.__context_manager = ContextManager(openapi_service)
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
@@ -80,6 +82,10 @@ class RapidataOrderManager:
         selections: Sequence[RapidataSelection] | None = None,
     ) -> RapidataOrder:
         self._warn_deprecated()
+        self.__context_manager._enforce_context_length(
+            datapoints=datapoints,
+            question=workflow._get_instruction(),
+        )
         if filters is None:
             filters = []
         if settings is None:
