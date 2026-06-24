@@ -80,6 +80,34 @@ Call `get_results()` on a flow item to retrieve the ranking results. If the flow
 results = flow_item.get_results()
 ```
 
+This returns a `FlowItemResult`. For the batch above it looks like this:
+
+```python
+FlowItemResult(
+    datapoints={
+        "https://example.com/image_a.jpg": 1243,
+        "https://example.com/image_b.jpg": 1102,
+        "https://example.com/image_c.jpg": 987,
+    },
+    total_votes=150,
+)
+```
+
+It has two fields:
+
+- `datapoints`: a mapping of each item to its score. The score is a [Bradley–Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) strength estimate fitted over all pairwise comparisons, then mapped onto an Elo-style scale (default starting score 1200) so the values read like familiar Elo ratings. Items are keyed by their source URL when provided, otherwise by their original filename. A higher score means the item was preferred more often across comparisons.
+- `total_votes`: the total number of pairwise comparisons collected across all items.
+
+Access the fields directly:
+
+```python
+ranking = results.datapoints  # {"https://example.com/image_a.jpg": 1243, ...}
+votes = results.total_votes   # 150
+
+# Items sorted from best to worst
+ranked = sorted(results.datapoints.items(), key=lambda item: item[1], reverse=True)
+```
+
 You can also check the status without blocking:
 
 ```python
