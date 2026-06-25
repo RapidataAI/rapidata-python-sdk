@@ -4,9 +4,12 @@ from typing import TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.signal.rapidata_signal import RapidataSignal
-from rapidata.rapidata_client.signal.signal_run import SignalRun
 
 if TYPE_CHECKING:
+    from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
+    from rapidata.rapidata_client.job.rapidata_job_definition import (
+        RapidataJobDefinition,
+    )
     from rapidata.service.openapi_service import OpenAPIService
 
 
@@ -14,9 +17,9 @@ class RapidataSignalManager:
     """Manage signals: schedules that periodically create audience jobs.
 
     A signal binds an audience to a job definition and an interval. The signal service
-    creates one audience job per interval tick (a :class:`SignalRun`). Use this manager
-    to create, look up, and find signals; use methods on the returned
-    :class:`RapidataSignal` to control a specific signal and observe its runs.
+    creates one audience job per interval tick. Use this manager to create, look up,
+    and find signals; use methods on the returned :class:`RapidataSignal` to control a
+    specific signal and reach the jobs it produces.
 
     Access this manager via :py:attr:`RapidataClient.signals`.
     """
@@ -28,8 +31,8 @@ class RapidataSignalManager:
     def create_signal(
         self,
         name: str,
-        audience_id: str,
-        job_definition_id: str,
+        audience: str | RapidataAudienceBase,
+        job_definition: str | RapidataJobDefinition,
         interval_hours: float,
         description: str | None = None,
         revision_number: int | None = None,
@@ -39,11 +42,13 @@ class RapidataSignalManager:
 
         Args:
             name: Display name for the signal.
-            audience_id: ID of the audience the signal targets each run.
-            job_definition_id: ID of the job definition that backs each run.
+            audience: The audience each job targets — a :class:`RapidataAudience`,
+                a :class:`RapidataFilteredAudience`, or an audience id.
+            job_definition: The job definition each job is created from — a
+                :class:`RapidataJobDefinition` or a job definition id.
             interval_hours: How often the signal fires, in hours.
             description: Optional human-readable description.
-            revision_number: Optional explicit revision of ``job_definition_id`` to pin
+            revision_number: Optional explicit revision of ``job_definition`` to pin
                 this signal to. If omitted, the signal follows the latest revision.
             is_public: Whether other users can discover and read this signal.
 
@@ -53,8 +58,23 @@ class RapidataSignalManager:
         if interval_hours <= 0:
             raise ValueError("interval_hours must be positive")
 
+        from rapidata.rapidata_client.audience._audience_base import (
+            RapidataAudienceBase,
+        )
+        from rapidata.rapidata_client.job.rapidata_job_definition import (
+            RapidataJobDefinition,
+        )
         from rapidata.api_client.models.create_signal_endpoint_input import (
             CreateSignalEndpointInput,
+        )
+
+        audience_id = (
+            audience.id if isinstance(audience, RapidataAudienceBase) else audience
+        )
+        job_definition_id = (
+            job_definition.id
+            if isinstance(job_definition, RapidataJobDefinition)
+            else job_definition
         )
 
         with tracer.start_as_current_span("RapidataSignalManager.create_signal"):
@@ -126,19 +146,6 @@ class RapidataSignalManager:
             return [
                 RapidataSignal(self._openapi_service, item) for item in result.items
             ]
-
-    def get_run_by_id(self, run_id: str) -> SignalRun:
-        """Get a single signal run by ID, when the signal it belongs to is unknown.
-
-        Args:
-            run_id: The run ID.
-
-        Returns:
-            SignalRun: The run.
-        """
-        with tracer.start_as_current_span("RapidataSignalManager.get_run_by_id"):
-            data = self._openapi_service.signal.signal_api.signal_run_run_id_get(run_id)
-            return SignalRun._from_api(data)
 
     def __str__(self) -> str:
         return "RapidataSignalManager"

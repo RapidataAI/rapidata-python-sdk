@@ -13,7 +13,6 @@ from .rapidata_client import (
     RapidataJobManager,
     RapidataSignal,
     RapidataSignalManager,
-    SignalRun,
     ValidationSetManager,
     RapidataValidationSet,
     Box,

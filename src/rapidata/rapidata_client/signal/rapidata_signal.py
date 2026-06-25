@@ -5,7 +5,6 @@ from time import monotonic, sleep
 from typing import TYPE_CHECKING, Union
 
 from rapidata.rapidata_client.config import logger, managed_print, tracer
-from rapidata.rapidata_client.signal.signal_run import SignalRun
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.get_signal_by_id_endpoint_output import (
@@ -14,19 +13,24 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.query_signals_endpoint_output import (
         QuerySignalsEndpointOutput,
     )
+    from rapidata.rapidata_client.job.rapidata_job import RapidataJob
     from rapidata.service.openapi_service import OpenAPIService
 
     SignalOutput = Union[GetSignalByIdEndpointOutput, QuerySignalsEndpointOutput]
 
 
 class RapidataSignal:
-    """An instance of a Rapidata signal.
+    """A live handle to a Rapidata signal.
 
-    A signal runs an audience job creation on a recurring schedule. Each run produces a
-    :class:`SignalRun` that wraps the audience job that was created (or an explanation
-    of why the run was skipped or failed). Use the manager (:py:attr:`RapidataClient.signals`)
-    to create or look up signals; use the instance methods on this class to manage an
-    existing signal's lifecycle and observe its runs.
+    A signal creates one audience job on a recurring schedule — every interval tick
+    spawns a :class:`RapidataJob` built from the signal's job definition and audience.
+    Use the manager (:py:attr:`RapidataClient.signals`) to create or look up signals;
+    use the methods here to control a signal and reach the jobs it produces.
+
+    This is a *live* handle: identity fields (``id``, ``audience_id``,
+    ``job_definition_id``, ``created_at`` …) are fixed at creation, while mutable state
+    (``name``, ``is_paused``, ``next_run_at`` …) is re-fetched from the server on every
+    access so it never goes stale.
     """
 
     def __init__(
@@ -35,85 +39,48 @@ class RapidataSignal:
         data: SignalOutput,
     ):
         self._openapi_service = openapi_service
-        self._apply(data)
+        # Identity / immutable fields — safe to cache for the object's lifetime.
+        self.id: str = data.id
+        self.audience_id: str = data.audience_id
+        self.job_definition_id: str = data.job_definition_id
+        self.revision_number: int | None = data.revision_number
+        self.is_public: bool = data.is_public
+        self.created_at: datetime = data.created_at
+        # Last-known name, kept only as a display label for __str__/logging; the `name`
+        # property always reads the live value.
+        self._name: str = data.name
         logger.debug("RapidataSignal initialized: %s", self.id)
 
-    def _apply(self, data: SignalOutput) -> None:
-        """Replace this instance's cached state with the latest API payload."""
-        self._id: str = data.id
-        self._name: str = data.name
-        self._description: str | None = data.description
-        self._audience_id: str = data.audience_id
-        self._job_definition_id: str = data.job_definition_id
-        self._revision_number: int | None = data.revision_number
-        self._interval_seconds: int = data.interval_seconds
-        self._next_run_at: datetime = data.next_run_at
-        self._last_run_at: datetime | None = data.last_run_at
-        self._is_paused: bool = data.is_paused
-        self._is_public: bool = data.is_public
-        self._created_at: datetime = data.created_at
-
-    @property
-    def id(self) -> str:
-        return self._id
+    def _latest(self) -> GetSignalByIdEndpointOutput:
+        """Fetch the current server-side state of this signal."""
+        return self._openapi_service.signal.signal_api.signal_signal_id_get(self.id)
 
     @property
     def name(self) -> str:
-        return self._name
+        return self._latest().name
 
     @property
     def description(self) -> str | None:
-        return self._description
-
-    @property
-    def audience_id(self) -> str:
-        return self._audience_id
-
-    @property
-    def job_definition_id(self) -> str:
-        return self._job_definition_id
-
-    @property
-    def revision_number(self) -> int | None:
-        return self._revision_number
+        return self._latest().description
 
     @property
     def interval_hours(self) -> float:
-        return self._interval_seconds / 3600
+        return self._latest().interval_seconds / 3600
 
     @property
     def next_run_at(self) -> datetime:
-        return self._next_run_at
+        return self._latest().next_run_at
 
     @property
     def last_run_at(self) -> datetime | None:
-        return self._last_run_at
+        return self._latest().last_run_at
 
     @property
     def is_paused(self) -> bool:
-        return self._is_paused
-
-    @property
-    def is_public(self) -> bool:
-        return self._is_public
-
-    @property
-    def created_at(self) -> datetime:
-        return self._created_at
-
-    def refresh(self) -> RapidataSignal:
-        """Re-fetch this signal from the server and update local state.
-
-        Returns:
-            RapidataSignal: ``self`` for chaining.
-        """
-        with tracer.start_as_current_span("RapidataSignal.refresh"):
-            data = self._openapi_service.signal.signal_api.signal_signal_id_get(self.id)
-            self._apply(data)
-            return self
+        return self._latest().is_paused
 
     def pause(self) -> RapidataSignal:
-        """Pause the signal. Scheduled runs stop until :py:meth:`resume` is called.
+        """Pause the signal. Scheduled jobs stop until :py:meth:`resume` is called.
 
         Returns:
             RapidataSignal: ``self`` for chaining.
@@ -121,12 +88,11 @@ class RapidataSignal:
         with tracer.start_as_current_span("RapidataSignal.pause"):
             logger.info("Pausing signal '%s'", self.id)
             self._openapi_service.signal.signal_api.signal_signal_id_pause_post(self.id)
-            self.refresh()
             managed_print(f"Signal '{self}' has been paused.")
             return self
 
     def resume(self) -> RapidataSignal:
-        """Resume a paused signal. Scheduled runs start firing again at the configured interval.
+        """Resume a paused signal. Scheduled jobs start firing again at the configured interval.
 
         Returns:
             RapidataSignal: ``self`` for chaining.
@@ -136,22 +102,21 @@ class RapidataSignal:
             self._openapi_service.signal.signal_api.signal_signal_id_resume_post(
                 self.id
             )
-            self.refresh()
             managed_print(f"Signal '{self}' has been resumed.")
             return self
 
     def delete(self) -> None:
-        """Delete the signal. Existing runs and their audience jobs are unaffected."""
+        """Delete the signal. Jobs it already created are unaffected."""
         with tracer.start_as_current_span("RapidataSignal.delete"):
             logger.info("Deleting signal '%s'", self.id)
             self._openapi_service.signal.signal_api.signal_signal_id_delete(self.id)
             managed_print(f"Signal '{self}' has been deleted.")
 
     def trigger(self) -> None:
-        """Trigger the signal manually, creating one extra run outside the schedule.
+        """Trigger the signal manually, creating one extra job outside the schedule.
 
-        The run is created asynchronously; use :py:meth:`wait_for_next_run` to block
-        until it appears and reaches a terminal status.
+        The job is created asynchronously; use :py:meth:`wait_for_next_job` to block
+        until it appears.
         """
         with tracer.start_as_current_span("RapidataSignal.trigger"):
             logger.info("Triggering signal '%s'", self.id)
@@ -174,7 +139,7 @@ class RapidataSignal:
             interval_hours: New scheduling interval, in hours. Omit to leave unchanged.
 
         Returns:
-            RapidataSignal: ``self``, refreshed with the server's response.
+            RapidataSignal: ``self`` for chaining.
         """
         if name is None and description is None and interval_hours is None:
             # Nothing requested — avoid a useless round trip.
@@ -195,102 +160,110 @@ class RapidataSignal:
                     ),
                 ),
             )
-            self.refresh()
+            if name is not None:
+                self._name = name
             return self
 
-    def get_runs(
+    def get_jobs(
         self,
         page: int = 1,
         page_size: int = 20,
         sort_descending: bool = True,
-    ) -> list[SignalRun]:
-        """List historical runs of this signal.
+    ) -> list[RapidataJob]:
+        """List the jobs this signal has created (newest first by default).
+
+        Each scheduled or manual firing that spawned a job is returned as a live
+        :class:`RapidataJob`. Firings that were skipped without creating a job are
+        not included.
 
         Args:
             page: 1-indexed page number.
-            page_size: Number of runs per page.
-            sort_descending: When ``True`` (default), newest runs come first.
+            page_size: Number of firings to inspect per page.
+            sort_descending: When ``True`` (default), newest jobs come first.
 
         Returns:
-            list[SignalRun]: The runs on the requested page.
+            list[RapidataJob]: The jobs on the requested page.
         """
-        with tracer.start_as_current_span("RapidataSignal.get_runs"):
-            result = self._openapi_service.signal.signal_api.signal_signal_id_run_get(
+        from rapidata.rapidata_client.job.rapidata_job_manager import (
+            RapidataJobManager,
+        )
+
+        with tracer.start_as_current_span("RapidataSignal.get_jobs"):
+            runs = self._openapi_service.signal.signal_api.signal_signal_id_run_get(
                 self.id,
                 page=page,
                 page_size=page_size,
                 sort=["-started_at" if sort_descending else "started_at"],
-            )
-            return [SignalRun._from_api(item) for item in result.items]
+            ).items
+            job_manager = RapidataJobManager(openapi_service=self._openapi_service)
+            return [
+                job_manager.get_job_by_id(run.audience_job_id)
+                for run in runs
+                if run.audience_job_id
+            ]
 
-    def get_run_by_id(self, run_id: str) -> SignalRun:
-        """Get a specific run by ID.
-
-        Args:
-            run_id: The ID of the run to fetch.
-
-        Returns:
-            SignalRun: The requested run.
-        """
-        with tracer.start_as_current_span("RapidataSignal.get_run_by_id"):
-            data = self._openapi_service.signal.signal_api.signal_run_run_id_get(run_id)
-            return SignalRun._from_api(data)
-
-    def wait_for_next_run(
+    def wait_for_next_job(
         self,
         timeout: float = 300,
         poll_interval: float = 5.0,
-    ) -> SignalRun:
-        """Block until the next run of this signal reaches a terminal status.
+    ) -> RapidataJob:
+        """Block until the signal's next firing creates a job, then return it.
 
-        Polls the signal's runs and waits for any run that started *after* this call was
-        made to reach a terminal status (``Completed``, ``Failed``, or ``Skipped``).
-        Useful after :py:meth:`trigger` or when watching a scheduled run come through.
+        Waits for a firing that started *after* this call and has spawned a job
+        (skipped firings are ignored). Handy right after :py:meth:`trigger`. The
+        returned :class:`RapidataJob` is live — call ``get_results()`` or
+        ``display_progress_bar()`` on it to follow the job to completion.
 
         Args:
             timeout: Maximum seconds to wait. Raises :py:class:`TimeoutError` on expiry.
             poll_interval: Seconds between polls.
 
         Returns:
-            SignalRun: The first new run to reach a terminal status.
+            RapidataJob: The job created by the next firing.
 
         Raises:
-            TimeoutError: If no new terminal run is observed within ``timeout`` seconds.
+            TimeoutError: If no new job is created within ``timeout`` seconds.
         """
         if timeout <= 0:
             raise ValueError("timeout must be positive")
         if poll_interval <= 0:
             raise ValueError("poll_interval must be positive")
 
-        with tracer.start_as_current_span("RapidataSignal.wait_for_next_run"):
+        from rapidata.rapidata_client.job.rapidata_job_manager import (
+            RapidataJobManager,
+        )
+
+        with tracer.start_as_current_span("RapidataSignal.wait_for_next_job"):
             started_waiting = datetime.now(timezone.utc)
             deadline = monotonic() + timeout
+            job_manager = RapidataJobManager(openapi_service=self._openapi_service)
 
             logger.info(
-                "Waiting up to %.0fs for the next terminal run of signal '%s'",
+                "Waiting up to %.0fs for the next job of signal '%s'",
                 timeout,
                 self.id,
             )
             while True:
-                # Pull the most recent runs and look for any whose started_at is after we
-                # began waiting AND that has reached a terminal status. We re-look every
-                # poll because a Pending run may transition while we wait.
-                runs = self.get_runs(page=1, page_size=20, sort_descending=True)
-                candidates = [r for r in runs if r.started_at >= started_waiting]
-                terminal = [r for r in candidates if r.is_terminal]
-                if terminal:
-                    # `runs` came back descending, so the last terminal in the list is
-                    # the earliest new terminal — return that one (the next to finish).
-                    return terminal[-1]
+                runs = self._openapi_service.signal.signal_api.signal_signal_id_run_get(
+                    self.id, page=1, page_size=20, sort=["-started_at"]
+                ).items
+                # Newest-first, so the last match is the earliest new firing with a job.
+                fresh_job_ids = [
+                    run.audience_job_id
+                    for run in runs
+                    if run.started_at >= started_waiting and run.audience_job_id
+                ]
+                if fresh_job_ids:
+                    return job_manager.get_job_by_id(fresh_job_ids[-1])
 
                 if monotonic() >= deadline:
                     raise TimeoutError(
-                        f"No new terminal run of signal '{self.id}' within {timeout} seconds."
+                        f"No new job from signal '{self.id}' within {timeout} seconds."
                     )
                 sleep(poll_interval)
 
     def __str__(self) -> str:
-        return f"RapidataSignal(name='{self.name}', id='{self.id}')"
+        return f"RapidataSignal(name='{self._name}', id='{self.id}')"
 
     def __repr__(self) -> str:
         return self.__str__()

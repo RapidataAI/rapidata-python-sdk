@@ -1,9 +1,9 @@
 # Signals
 
 A **signal** runs a labeling job on a repeating schedule. Instead of assigning a
-job once and waiting for results, you bind a [job definition](job_definition_parameters.md)
-to an [audience](audiences.md) and an interval — and Rapidata creates a fresh
-labeling job for you on every tick, automatically.
+job once, you bind a [job definition](job_definition_parameters.md) to an
+[audience](audiences.md) and an interval — and Rapidata creates a fresh
+[job](examples/classify_job.md) for you on every tick, automatically.
 
 ## What a signal is
 
@@ -13,15 +13,17 @@ A signal ties together three things:
 - a **job definition** — what they are asked to do (the task, datapoints, settings),
 - an **interval** — how often it fires (in hours).
 
-Each time the interval elapses, the signal fires and produces a **run**
-(`SignalRun`). A run represents one execution: it spawns a single audience job
-from the job definition and tracks it through to completion.
+Each time the interval elapses, the signal fires and creates one **job** — an
+ordinary [`RapidataJob`](understanding_the_results.md), exactly like one you'd
+assign by hand, with the same `get_status()`, `get_results()` and
+`display_progress_bar()`. A signal is simply a scheduler that keeps producing
+jobs for you.
 
 ```mermaid
 graph LR
-    S[Signal<br/>audience + job definition + interval] -->|every interval| R1[Run 1 → audience job]
-    S -->|every interval| R2[Run 2 → audience job]
-    S -->|every interval| R3[Run 3 → audience job]
+    S[Signal<br/>audience + job definition + interval] -->|every interval| J1[Job 1]
+    S -->|every interval| J2[Job 2]
+    S -->|every interval| J3[Job 3]
 ```
 
 ## When to use it
@@ -38,8 +40,8 @@ If you just need labels once, assign a job directly to an audience instead
 
 ## Creating a signal
 
-You need an audience id and a job definition id. Both are created the same way
-you would for a normal job:
+Create an audience and a job definition the same way you would for a normal job,
+then hand them to the signal:
 
 ```py
 from rapidata import RapidataClient
@@ -60,82 +62,60 @@ job_definition = client.job.create_compare_job_definition(
 
 signal = client.signals.create_signal(
     name="Daily prompt alignment",
-    audience_id=audience.id,
-    job_definition_id=job_definition.id,
-    interval_hours=24,  # (1)!
+    audience=audience,                # (1)!
+    job_definition=job_definition,
+    interval_hours=24,                # (2)!
 )
 
 print(signal)
-print("First run scheduled for:", signal.next_run_at)
+print("First job scheduled for:", signal.next_run_at)
 ```
 
-1. Fires once per day.
+1. Pass the `RapidataAudience` / `RapidataFilteredAudience` and `RapidataJobDefinition` objects directly, or their id strings if that's what you have.
+2. Fires once per day.
 
 By default the signal follows the **latest** revision of the job definition at
 fire time. Pin it to a fixed revision with `revision_number=...`, and make it
 discoverable by other users in your organization with `is_public=True`.
 
-## Runs and their lifecycle
+## The jobs a signal creates
 
-Every firing — scheduled or manual — produces a `SignalRun`. A run moves
-through these statuses:
-
-| Status | Meaning |
-|---|---|
-| `Pending` | The run has been created but the audience job hasn't started yet. |
-| `Running` | The audience job is live and collecting labels. |
-| `Completed` | The audience job finished successfully. |
-| `Failed` | The run failed (see `failure_message`). |
-| `Skipped` | The firing was skipped without creating a job (see `skipped_reason`). |
-
-`Completed`, `Failed` and `Skipped` are **terminal**. Two convenience
-properties make this easy to check:
+Every firing creates a `RapidataJob`. List the jobs a signal has produced
+(newest first by default) and work with them like any other job:
 
 ```py
-run.is_terminal  # True once the run has finished (any terminal status)
-run.succeeded    # True only when the run Completed
+for job in signal.get_jobs(page_size=10):
+    print(job, job.get_status())
+
+latest = signal.get_jobs(page_size=1)[0]
+results = latest.get_results()   # blocks until that job is complete
 ```
 
-List the runs a signal has produced (newest first by default):
+!!! note
+    A firing can occasionally be **skipped** (for example if the previous job
+    hasn't finished yet) — a skipped firing creates no job and therefore doesn't
+    appear in `get_jobs()`.
 
-```py
-for run in signal.get_runs(page_size=10):
-    print(run.started_at, run.status, run.audience_job_id)
-```
+## Triggering a job on demand
 
-## Triggering a run on demand
-
-You don't have to wait for the schedule — fire one extra run immediately. This
+You don't have to wait for the schedule — fire one extra job immediately. This
 is the easiest way to test a signal end to end:
 
 ```py
-signal.trigger()  # (1)!
+signal.trigger()                                # (1)!
 
-run = signal.wait_for_next_run(timeout=600)  # (2)!
-print("Run finished with status:", run.status)
+job = signal.wait_for_next_job(timeout=600)     # (2)!
+job.display_progress_bar()
+print(job.get_results())
 ```
 
-1. `trigger()` returns `None` — the run is created asynchronously on the backend.
-2. Blocks until the next run (the one you just triggered, or the next scheduled one) reaches a terminal status. Raises `TimeoutError` if none finishes in time.
-
-## Getting the labeling results of a run
-
-A run spawns a normal audience job. Once the run is terminal, use its
-`audience_job_id` to fetch that job and read its [results](understanding_the_results.md):
-
-```py
-run = signal.wait_for_next_run()
-
-if run.succeeded and run.audience_job_id:
-    job = client.job.get_job_by_id(run.audience_job_id)
-    results = job.get_results()
-    print(results)
-```
+1. `trigger()` returns `None` — the job is created asynchronously on the backend.
+2. Blocks until the next firing (the one you just triggered, or the next scheduled one) has created its job, then returns that live `RapidataJob`. Raises `TimeoutError` if none appears in time.
 
 ## Managing a signal
 
 ```py
-signal.pause()    # stop firing scheduled runs
+signal.pause()    # stop firing scheduled jobs
 signal.resume()   # resume the schedule
 
 signal.update(    # change mutable fields (omit any you don't want to change)
@@ -143,37 +123,39 @@ signal.update(    # change mutable fields (omit any you don't want to change)
     interval_hours=1,
 )
 
-signal.refresh()  # re-fetch the latest server-side state
-signal.delete()   # stop the signal for good (existing runs/jobs are unaffected)
+signal.delete()   # stop the signal for good (jobs it already created are unaffected)
 ```
+
+A `RapidataSignal` is a **live handle** — reading a property like `is_paused`
+or `next_run_at` always reflects the current server state, so there's nothing to
+refresh after `pause()`, `update()`, or a scheduled firing.
 
 Look signals up later through the manager:
 
 ```py
 signal = client.signals.get_signal_by_id("signal_id")   # by id
 signals = client.signals.find_signals(name="alignment") # your signals + public ones
-run = client.signals.get_run_by_id("run_id")            # a run when you don't know its signal
 ```
 
 ## Property reference
 
-A `RapidataSignal` exposes:
+A `RapidataSignal` exposes (mutable properties are re-fetched live on access):
 
 | Property | Description |
 |---|---|
 | `id` | The signal's unique id. |
 | `name` / `description` | Display name and optional description. |
-| `audience_id` | The audience each run targets. |
-| `job_definition_id` | The job definition each run is created from. |
+| `audience_id` | The audience each job targets. |
+| `job_definition_id` | The job definition each job is created from. |
 | `revision_number` | Pinned job-definition revision, or `None` for "latest at fire time". |
 | `interval_hours` | How often the signal fires, in hours. |
-| `next_run_at` / `last_run_at` | Timestamps of the next and most recent runs. |
+| `next_run_at` / `last_run_at` | Timestamps of the next and most recent firings. |
 | `is_paused` | Whether the scheduler is currently skipping this signal. |
 | `is_public` | Whether other users can discover and read it. |
 | `created_at` | When the signal was created. |
 
 ## Next Steps
 
-- Set up the [audience](audiences.md) that will label each run.
+- Set up the [audience](audiences.md) that will label each job.
 - Choose the task and tune the [job definition parameters](job_definition_parameters.md).
-- Learn how to read a run's [results](understanding_the_results.md).
+- Learn how to read a job's [results](understanding_the_results.md).
