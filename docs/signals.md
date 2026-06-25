@@ -11,7 +11,7 @@ A signal ties together three things:
 
 - an **audience** — who labels the data,
 - a **job definition** — what they are asked to do (the task, datapoints, settings),
-- an **interval** — how often it fires (in seconds, minimum 60).
+- an **interval** — how often it fires (in hours).
 
 Each time the interval elapses, the signal fires and produces a **run**
 (`SignalRun`). A run represents one execution: it spawns a single audience job
@@ -58,18 +58,18 @@ job_definition = client.job.create_compare_job_definition(
     contexts=["A small blue book sitting on a large red book."],
 )
 
-signal = client.signals.create(
+signal = client.signals.create_signal(
     name="Daily prompt alignment",
     audience_id=audience.id,
     job_definition_id=job_definition.id,
-    interval_seconds=86_400,  # (1)!
+    interval_hours=24,  # (1)!
 )
 
 print(signal)
 print("First run scheduled for:", signal.next_run_at)
 ```
 
-1. Fires once per day. The minimum interval is 60 seconds.
+1. Fires once per day.
 
 By default the signal follows the **latest** revision of the job definition at
 fire time. Pin it to a fixed revision with `revision_number=...`, and make it
@@ -140,7 +140,7 @@ signal.resume()   # resume the schedule
 
 signal.update(    # change mutable fields (omit any you don't want to change)
     name="Hourly prompt alignment",
-    interval_seconds=3_600,
+    interval_hours=1,
 )
 
 signal.refresh()  # re-fetch the latest server-side state
@@ -150,9 +150,9 @@ signal.delete()   # stop the signal for good (existing runs/jobs are unaffected)
 Look signals up later through the manager:
 
 ```py
-signal = client.signals.get("signal_id")        # by id
-signals = client.signals.list(page_size=20)      # your signals + public ones
-run = client.signals.get_run("run_id")            # a run when you don't know its signal
+signal = client.signals.get_signal_by_id("signal_id")   # by id
+signals = client.signals.find_signals(name="alignment") # your signals + public ones
+run = client.signals.get_run_by_id("run_id")            # a run when you don't know its signal
 ```
 
 ## Property reference
@@ -166,7 +166,7 @@ A `RapidataSignal` exposes:
 | `audience_id` | The audience each run targets. |
 | `job_definition_id` | The job definition each run is created from. |
 | `revision_number` | Pinned job-definition revision, or `None` for "latest at fire time". |
-| `interval_seconds` | How often the signal fires. |
+| `interval_hours` | How often the signal fires, in hours. |
 | `next_run_at` / `last_run_at` | Timestamps of the next and most recent runs. |
 | `is_paused` | Whether the scheduler is currently skipping this signal. |
 | `is_public` | Whether other users can discover and read it. |

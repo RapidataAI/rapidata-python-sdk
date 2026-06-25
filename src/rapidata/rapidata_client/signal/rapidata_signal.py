@@ -78,8 +78,8 @@ class RapidataSignal:
         return self._revision_number
 
     @property
-    def interval_seconds(self) -> int:
-        return self._interval_seconds
+    def interval_hours(self) -> float:
+        return self._interval_seconds / 3600
 
     @property
     def next_run_at(self) -> datetime:
@@ -164,19 +164,19 @@ class RapidataSignal:
         *,
         name: str | None = None,
         description: str | None = None,
-        interval_seconds: int | None = None,
+        interval_hours: float | None = None,
     ) -> RapidataSignal:
         """Update mutable fields on the signal.
 
         Args:
             name: New display name. Omit to leave unchanged.
             description: New description. Omit to leave unchanged.
-            interval_seconds: New scheduling interval. Omit to leave unchanged.
+            interval_hours: New scheduling interval, in hours. Omit to leave unchanged.
 
         Returns:
             RapidataSignal: ``self``, refreshed with the server's response.
         """
-        if name is None and description is None and interval_seconds is None:
+        if name is None and description is None and interval_hours is None:
             # Nothing requested — avoid a useless round trip.
             return self
 
@@ -190,7 +190,9 @@ class RapidataSignal:
                 UpdateSignalEndpointInput(
                     name=name,
                     description=description,
-                    intervalSeconds=interval_seconds,
+                    intervalSeconds=(
+                        None if interval_hours is None else round(interval_hours * 3600)
+                    ),
                 ),
             )
             self.refresh()
@@ -221,7 +223,7 @@ class RapidataSignal:
             )
             return [SignalRun._from_api(item) for item in result.items]
 
-    def get_run(self, run_id: str) -> SignalRun:
+    def get_run_by_id(self, run_id: str) -> SignalRun:
         """Get a specific run by ID.
 
         Args:
@@ -230,7 +232,7 @@ class RapidataSignal:
         Returns:
             SignalRun: The requested run.
         """
-        with tracer.start_as_current_span("RapidataSignal.get_run"):
+        with tracer.start_as_current_span("RapidataSignal.get_run_by_id"):
             data = self._openapi_service.signal.signal_api.signal_run_run_id_get(run_id)
             return SignalRun._from_api(data)
 
