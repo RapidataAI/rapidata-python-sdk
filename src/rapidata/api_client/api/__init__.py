@@ -40,6 +40,7 @@ from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAP
 from rapidata.api_client.api.replicate_api import ReplicateApi
 from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.sample_generation_api import SampleGenerationApi
+from rapidata.api_client.api.signal_api import SignalApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.survey_api import SurveyApi
 from rapidata.api_client.api.translation_api import TranslationApi

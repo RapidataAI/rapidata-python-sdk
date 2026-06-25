@@ -168,6 +168,10 @@
       "x-displayName": "ValidationFeedback"
     },
     {
+      "name": "Signal",
+      "x-displayName": "Signal"
+    },
+    {
       "name": "Translation",
       "x-displayName": "Translation"
     },
@@ -20609,6 +20613,1295 @@
         ]
       }
     },
+    "/signal": {
+      "post": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Creates a new signal.",
+        "requestBody": {
+          "description": "The payload describing the signal to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSignalEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSignalEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Queries the signals visible to the current caller.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at",
+                  "next_run_at",
+                  "-next_run_at",
+                  "last_run_at",
+                  "-last_run_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "description": "Filter by owner_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "audience_id",
+            "in": "query",
+            "description": "Filter by audience_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "job_definition_id",
+            "in": "query",
+            "description": "Filter by job_definition_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_paused",
+            "in": "query",
+            "description": "Filter by is_paused.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "next_run_at",
+            "in": "query",
+            "description": "Filter by next_run_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuerySignalsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/signal/{signalId}": {
+      "delete": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Deletes a signal by its id.",
+        "description": "Soft-deleted signals (and every run they spawned) are hidden from all view / list\n endpoints — including admin endpoints — per the cascade policy.",
+        "parameters": [
+          {
+            "name": "signalId",
+            "in": "path",
+            "description": "The id of the signal to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Gets a signal by its id.",
+        "parameters": [
+          {
+            "name": "signalId",
+            "in": "path",
+            "description": "The id of the signal to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSignalByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Updates a signal using patch semantics.",
+        "parameters": [
+          {
+            "name": "signalId",
+            "in": "path",
+            "description": "The id of the signal to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The patch payload describing which fields should change.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSignalEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/signal/run/{runId}": {
+      "get": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Gets a single signal run by its id.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "description": "The id of the run to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSignalRunByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/signal/{signalId}/pause": {
+      "post": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Pauses a signal.",
+        "description": "Manual triggers still fire on a paused signal — pause only affects the scheduler.",
+        "parameters": [
+          {
+            "name": "signalId",
+            "in": "path",
+            "description": "The id of the signal to pause.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/signal/{signalId}/run": {
+      "get": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Queries the runs spawned by a signal.",
+        "parameters": [
+          {
+            "name": "signalId",
+            "in": "path",
+            "description": "The id of the signal whose runs to query.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "started_at",
+                  "-started_at",
+                  "completed_at",
+                  "-completed_at",
+                  "status",
+                  "-status"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "trigger_source",
+            "in": "query",
+            "description": "Filter by trigger_source.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "started_at",
+            "in": "query",
+            "description": "Filter by started_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "completed_at",
+            "in": "query",
+            "description": "Filter by completed_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "audience_job_id",
+            "in": "query",
+            "description": "Filter by audience_job_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuerySignalRunsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/signal/{signalId}/resume": {
+      "post": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Resumes a paused signal.",
+        "parameters": [
+          {
+            "name": "signalId",
+            "in": "path",
+            "description": "The id of the signal to resume.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/signal/{signalId}/trigger": {
+      "post": {
+        "tags": [
+          "Signal"
+        ],
+        "summary": "Manually triggers a signal.",
+        "description": "Manual triggers fire even when the signal is paused. They are queued via the broker\n and will be skipped (with a recorded reason) if another run is already in flight.",
+        "parameters": [
+          {
+            "name": "signalId",
+            "in": "path",
+            "description": "The id of the signal to trigger.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggerSignalEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/translation/ensure-english": {
       "post": {
         "tags": [
@@ -40385,6 +41678,479 @@
           }
         }
       },
+      "CreateSignalEndpoint_Input": {
+        "required": [
+          "name",
+          "audienceId",
+          "jobDefinitionId",
+          "intervalSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the signal."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience the spawned jobs will target."
+          },
+          "jobDefinitionId": {
+            "type": "string",
+            "description": "The job definition each firing creates a job from."
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "description": "Optional revision pin; omit for \"latest at fire time\".",
+            "format": "int32",
+            "nullable": true
+          },
+          "intervalSeconds": {
+            "type": "integer",
+            "description": "Seconds between consecutive firings. Minimum 60.",
+            "format": "int32"
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "If true the signal is readable by every authenticated user."
+          }
+        }
+      },
+      "CreateSignalEndpoint_Output": {
+        "required": [
+          "id",
+          "nextRunAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the created signal."
+          },
+          "nextRunAt": {
+            "type": "string",
+            "description": "Timestamp at which the first scheduled run will fire.",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetSignalByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "audienceId",
+          "jobDefinitionId",
+          "intervalSeconds",
+          "nextRunAt",
+          "isPaused",
+          "isPublic",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the signal."
+          },
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the signal."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the audience the signal targets."
+          },
+          "jobDefinitionId": {
+            "type": "string",
+            "description": "The id of the job definition each firing creates a job from."
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "description": "Pinned revision number; null means \"latest at fire time\".",
+            "format": "int32",
+            "nullable": true
+          },
+          "intervalSeconds": {
+            "type": "integer",
+            "description": "Seconds between consecutive firings.",
+            "format": "int32"
+          },
+          "nextRunAt": {
+            "type": "string",
+            "description": "Timestamp of the next scheduled run.",
+            "format": "date-time"
+          },
+          "lastRunAt": {
+            "type": "string",
+            "description": "Timestamp of the most recent run (null if the signal has never fired).",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean",
+            "description": "Whether the scheduler is currently skipping this signal."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the signal is readable by every authenticated user."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The customer id of the signal owner.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the signal owner."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the signal was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetSignalRunByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "signalId",
+          "triggerSource",
+          "status",
+          "startedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the run."
+          },
+          "signalId": {
+            "type": "string",
+            "description": "The id of the parent signal."
+          },
+          "triggerSource": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SignalRunTriggerSource"
+              }
+            ],
+            "description": "Whether the run was started by the scheduler or by a manual trigger."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SignalRunStatus"
+              }
+            ],
+            "description": "Current lifecycle state of the run."
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "When the run was started.",
+            "format": "date-time"
+          },
+          "audienceJobId": {
+            "type": "string",
+            "description": "The id of the audience job this run spawned (null until orders confirms creation).",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "When the run reached a terminal state.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resultFileName": {
+            "type": "string",
+            "description": "File name of the audience-job result, when completed.",
+            "nullable": true
+          },
+          "failureMessage": {
+            "type": "string",
+            "description": "Reason the run failed.",
+            "nullable": true
+          },
+          "skippedReason": {
+            "type": "string",
+            "description": "Reason the run was skipped without spawning an audience job.",
+            "nullable": true
+          }
+        }
+      },
+      "QuerySignalRunsEndpoint_Output": {
+        "required": [
+          "id",
+          "signalId",
+          "triggerSource",
+          "status",
+          "startedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the run."
+          },
+          "signalId": {
+            "type": "string",
+            "description": "The id of the parent signal."
+          },
+          "triggerSource": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SignalRunTriggerSource"
+              }
+            ],
+            "description": "Whether the run was started by the scheduler or by a manual trigger."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SignalRunStatus"
+              }
+            ],
+            "description": "Current lifecycle state of the run."
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "When the run was started.",
+            "format": "date-time"
+          },
+          "audienceJobId": {
+            "type": "string",
+            "description": "The id of the audience job this run spawned (null until orders confirms creation).",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "When the run reached a terminal state.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resultFileName": {
+            "type": "string",
+            "description": "File name of the audience-job result, when completed.",
+            "nullable": true
+          },
+          "failureMessage": {
+            "type": "string",
+            "description": "Reason the run failed.",
+            "nullable": true
+          },
+          "skippedReason": {
+            "type": "string",
+            "description": "Reason the run was skipped without spawning an audience job.",
+            "nullable": true
+          }
+        }
+      },
+      "QuerySignalRunsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuerySignalRunsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QuerySignalsEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "audienceId",
+          "jobDefinitionId",
+          "intervalSeconds",
+          "nextRunAt",
+          "isPaused",
+          "isPublic",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the signal."
+          },
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the signal."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the audience the signal targets."
+          },
+          "jobDefinitionId": {
+            "type": "string",
+            "description": "The id of the job definition each firing creates a job from."
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "description": "Pinned revision number; null means \"latest at fire time\".",
+            "format": "int32",
+            "nullable": true
+          },
+          "intervalSeconds": {
+            "type": "integer",
+            "description": "Seconds between consecutive firings.",
+            "format": "int32"
+          },
+          "nextRunAt": {
+            "type": "string",
+            "description": "Timestamp of the next scheduled run.",
+            "format": "date-time"
+          },
+          "lastRunAt": {
+            "type": "string",
+            "description": "Timestamp of the most recent run (null if the signal has never fired).",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean",
+            "description": "Whether the scheduler is currently skipping this signal."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the signal is readable by every authenticated user."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The customer id of the signal owner.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the signal owner."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the signal was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QuerySignalsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuerySignalsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SignalRunStatus": {
+        "enum": [
+          "Pending",
+          "Running",
+          "Completed",
+          "Failed",
+          "Skipped"
+        ]
+      },
+      "SignalRunTriggerSource": {
+        "enum": [
+          "Scheduled",
+          "Manual"
+        ]
+      },
+      "TriggerSignalEndpoint_Output": {
+        "required": [
+          "signalId"
+        ],
+        "type": "object",
+        "properties": {
+          "signalId": {
+            "type": "string",
+            "description": "Echoes the signal id; the spawned run is created asynchronously."
+          }
+        }
+      },
+      "UpdateSignalEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name of the signal."
+          },
+          "description": {
+            "type": "string",
+            "description": "The new description; pass null to clear it.",
+            "nullable": true
+          },
+          "intervalSeconds": {
+            "type": "integer",
+            "description": "The new cadence in seconds. Minimum 60.",
+            "format": "int32"
+          }
+        }
+      },
       "EnsureEnglishEndpoint_Input": {
         "required": [
           "text"
@@ -43395,6 +45161,12 @@
         "Rapid",
         "UserRapid",
         "ValidationFeedback"
+      ]
+    },
+    {
+      "name": "Rapidata Signal API",
+      "tags": [
+        "Signal"
       ]
     },
     {
