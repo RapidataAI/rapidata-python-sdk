@@ -297,6 +297,16 @@ Class | Method | HTTP request | Description
 *SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_get**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_get) | **GET** /benchmark/sample-generation/{sampleGenerationId} | Returns the current status and progress of a sample generation request.
 *SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_items_get**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_items_get) | **GET** /benchmark/sample-generation/{sampleGenerationId}/items | Returns the per-item audit trail for a sample generation request.
 *SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_retry_post**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_retry_post) | **POST** /benchmark/sample-generation/{sampleGenerationId}/retry | Re-queues failed items of a sample generation so they run again.
+*SignalApi* | [**signal_get**](rapidata/api_client/docs/SignalApi.md#signal_get) | **GET** /signal | Queries the signals visible to the current caller.
+*SignalApi* | [**signal_post**](rapidata/api_client/docs/SignalApi.md#signal_post) | **POST** /signal | Creates a new signal.
+*SignalApi* | [**signal_run_run_id_get**](rapidata/api_client/docs/SignalApi.md#signal_run_run_id_get) | **GET** /signal/run/{runId} | Gets a single signal run by its id.
+*SignalApi* | [**signal_signal_id_delete**](rapidata/api_client/docs/SignalApi.md#signal_signal_id_delete) | **DELETE** /signal/{signalId} | Deletes a signal by its id.
+*SignalApi* | [**signal_signal_id_get**](rapidata/api_client/docs/SignalApi.md#signal_signal_id_get) | **GET** /signal/{signalId} | Gets a signal by its id.
+*SignalApi* | [**signal_signal_id_patch**](rapidata/api_client/docs/SignalApi.md#signal_signal_id_patch) | **PATCH** /signal/{signalId} | Updates a signal using patch semantics.
+*SignalApi* | [**signal_signal_id_pause_post**](rapidata/api_client/docs/SignalApi.md#signal_signal_id_pause_post) | **POST** /signal/{signalId}/pause | Pauses a signal.
+*SignalApi* | [**signal_signal_id_resume_post**](rapidata/api_client/docs/SignalApi.md#signal_signal_id_resume_post) | **POST** /signal/{signalId}/resume | Resumes a paused signal.
+*SignalApi* | [**signal_signal_id_run_get**](rapidata/api_client/docs/SignalApi.md#signal_signal_id_run_get) | **GET** /signal/{signalId}/run | Queries the runs spawned by a signal.
+*SignalApi* | [**signal_signal_id_trigger_post**](rapidata/api_client/docs/SignalApi.md#signal_signal_id_trigger_post) | **POST** /signal/{signalId}/trigger | Manually triggers a signal.
 *SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Gets the result overview for a simple workflow.
 *SurveyApi* | [**identity_survey_post**](rapidata/api_client/docs/SurveyApi.md#identity_survey_post) | **POST** /identity/survey | Submits a survey for the calling customer.
 *TranslationApi* | [**translation_ensure_english_post**](rapidata/api_client/docs/TranslationApi.md#translation_ensure_english_post) | **POST** /translation/ensure-english | Ensures the provided text is in English, returning a suggested English text when it isn&#39;t.
@@ -423,6 +433,8 @@ Class | Method | HTTP request | Description
  - [CreateSampleGenerationEndpointOutput](rapidata/api_client/docs/CreateSampleGenerationEndpointOutput.md)
  - [CreateSampleNewEndpointInput](rapidata/api_client/docs/CreateSampleNewEndpointInput.md)
  - [CreateSampleNewEndpointOutput](rapidata/api_client/docs/CreateSampleNewEndpointOutput.md)
+ - [CreateSignalEndpointInput](rapidata/api_client/docs/CreateSignalEndpointInput.md)
+ - [CreateSignalEndpointOutput](rapidata/api_client/docs/CreateSignalEndpointOutput.md)
  - [CreateUnsupportedOrderEndpointInput](rapidata/api_client/docs/CreateUnsupportedOrderEndpointInput.md)
  - [CreateValidationFeedbackEndpointInput](rapidata/api_client/docs/CreateValidationFeedbackEndpointInput.md)
  - [CreateValidationSetEndpointInput](rapidata/api_client/docs/CreateValidationSetEndpointInput.md)
@@ -537,6 +549,8 @@ Class | Method | HTTP request | Description
  - [GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointPlaceholderSampleOutput](rapidata/api_client/docs/GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointPlaceholderSampleOutput.md)
  - [GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointSampleOutput](rapidata/api_client/docs/GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpointSampleOutput.md)
  - [GetSamplesByParticipantEndpointPagedResultOfISampleOutput](rapidata/api_client/docs/GetSamplesByParticipantEndpointPagedResultOfISampleOutput.md)
+ - [GetSignalByIdEndpointOutput](rapidata/api_client/docs/GetSignalByIdEndpointOutput.md)
+ - [GetSignalRunByIdEndpointOutput](rapidata/api_client/docs/GetSignalRunByIdEndpointOutput.md)
  - [GetSimpleWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetSimpleWorkflowResultsEndpointOutput.md)
  - [GetSimpleWorkflowResultsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetSimpleWorkflowResultsEndpointPagedResultOfOutput.md)
  - [GetStandingByIdEndpointOutput](rapidata/api_client/docs/GetStandingByIdEndpointOutput.md)
@@ -911,6 +925,10 @@ Class | Method | HTTP request | Description
  - [QueryPublishedBenchmarksEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryPublishedBenchmarksEndpointPagedResultOfOutput.md)
  - [QuerySampleGenerationsByBenchmarkEndpointOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointOutput.md)
  - [QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QuerySampleGenerationsByBenchmarkEndpointPagedResultOfOutput.md)
+ - [QuerySignalRunsEndpointOutput](rapidata/api_client/docs/QuerySignalRunsEndpointOutput.md)
+ - [QuerySignalRunsEndpointPagedResultOfOutput](rapidata/api_client/docs/QuerySignalRunsEndpointPagedResultOfOutput.md)
+ - [QuerySignalsEndpointOutput](rapidata/api_client/docs/QuerySignalsEndpointOutput.md)
+ - [QuerySignalsEndpointPagedResultOfOutput](rapidata/api_client/docs/QuerySignalsEndpointPagedResultOfOutput.md)
  - [QueryStandingsEndpointOutput](rapidata/api_client/docs/QueryStandingsEndpointOutput.md)
  - [QueryStandingsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryStandingsEndpointPagedResultOfOutput.md)
  - [QueryTagsByBenchmarkEndpointOutput](rapidata/api_client/docs/QueryTagsByBenchmarkEndpointOutput.md)
@@ -949,6 +967,8 @@ Class | Method | HTTP request | Description
  - [ShortenContextEndpointInputItem](rapidata/api_client/docs/ShortenContextEndpointInputItem.md)
  - [ShortenContextEndpointOutput](rapidata/api_client/docs/ShortenContextEndpointOutput.md)
  - [ShortenContextEndpointOutputItem](rapidata/api_client/docs/ShortenContextEndpointOutputItem.md)
+ - [SignalRunStatus](rapidata/api_client/docs/SignalRunStatus.md)
+ - [SignalRunTriggerSource](rapidata/api_client/docs/SignalRunTriggerSource.md)
  - [SimplifiedAudienceUserState](rapidata/api_client/docs/SimplifiedAudienceUserState.md)
  - [SkipRapidEndpointInput](rapidata/api_client/docs/SkipRapidEndpointInput.md)
  - [SkipRapidEndpointOutput](rapidata/api_client/docs/SkipRapidEndpointOutput.md)
@@ -974,6 +994,7 @@ Class | Method | HTTP request | Description
  - [TranslateEndpointOutput](rapidata/api_client/docs/TranslateEndpointOutput.md)
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
  - [TranslatorType](rapidata/api_client/docs/TranslatorType.md)
+ - [TriggerSignalEndpointOutput](rapidata/api_client/docs/TriggerSignalEndpointOutput.md)
  - [UnlockOrderEndpointOutput](rapidata/api_client/docs/UnlockOrderEndpointOutput.md)
  - [UnsubscribeFromNewsletterEndpointInput](rapidata/api_client/docs/UnsubscribeFromNewsletterEndpointInput.md)
  - [UpdateAudienceEndpointInput](rapidata/api_client/docs/UpdateAudienceEndpointInput.md)
@@ -996,6 +1017,7 @@ Class | Method | HTTP request | Description
  - [UpdateParticipantEndpointInput](rapidata/api_client/docs/UpdateParticipantEndpointInput.md)
  - [UpdateParticipantNameEndpointInput](rapidata/api_client/docs/UpdateParticipantNameEndpointInput.md)
  - [UpdatePromptTagsEndpointInput](rapidata/api_client/docs/UpdatePromptTagsEndpointInput.md)
+ - [UpdateSignalEndpointInput](rapidata/api_client/docs/UpdateSignalEndpointInput.md)
  - [UpdateValidationRapidEndpointInput](rapidata/api_client/docs/UpdateValidationRapidEndpointInput.md)
  - [UpdateValidationSetDimensionsEndpointInput](rapidata/api_client/docs/UpdateValidationSetDimensionsEndpointInput.md)
  - [UpdateValidationSetEndpointInput](rapidata/api_client/docs/UpdateValidationSetEndpointInput.md)
