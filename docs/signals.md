@@ -1,23 +1,21 @@
 # Signals
 
-A **signal** runs a labeling job on a repeating schedule. Instead of assigning a
-job once, you bind a [job definition](job_definition_parameters.md) to an
-[audience](audiences.md) and an interval — and Rapidata creates a fresh
-[job](examples/classify_job.md) for you on every tick, automatically.
+A **signal** runs the same labeling job on a repeating schedule: bind a
+[job definition](job_definition_parameters.md) to an [audience](audiences.md)
+and an interval, and Rapidata creates a new [job](understanding_the_results.md)
+on every tick.
 
 ## What a signal is
 
 A signal ties together three things:
 
 - an **audience** — who labels the data,
-- a **job definition** — what they are asked to do (the task, datapoints, settings),
-- an **interval** — how often it fires (in hours).
+- a **job definition** — the task that gets run,
+- an **interval** — how often it fires, in hours.
 
-Each time the interval elapses, the signal fires and creates one **job** — an
-ordinary [`RapidataJob`](understanding_the_results.md), exactly like one you'd
-assign by hand, with the same `get_status()`, `get_results()` and
-`display_progress_bar()`. A signal is simply a scheduler that keeps producing
-jobs for you.
+Each firing creates one `RapidataJob`, identical to a job you create directly.
+A signal is just a scheduler that keeps producing those jobs; every job runs the
+same job definition against the same audience.
 
 ```mermaid
 graph LR
@@ -26,29 +24,14 @@ graph LR
     S -->|every interval| J3[Job 3]
 ```
 
-## When to use it
-
-Reach for a signal whenever you want labeling to happen **continuously and
-unattended** rather than as a single one-off job:
-
-- **Recurring data collection** — re-run the same task on a fresh batch every day/hour.
-- **Ongoing model monitoring** — periodically gather human judgments on your model's latest outputs.
-- **Scheduled evaluation** — keep a benchmark fed with new human votes over time.
-
-If you just need labels once, assign a job directly to an audience instead
-(see [Custom Audiences](audiences.md)) — you don't need a signal.
-
 ## Creating a signal
-
-Create an audience and a job definition the same way you would for a normal job,
-then hand them to the signal:
 
 ```py
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
-audience = client.audience.create_audience(name="Prompt Alignment Audience")
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 
 job_definition = client.job.create_compare_job_definition(
     name="Prompt Alignment Job",
@@ -62,84 +45,65 @@ job_definition = client.job.create_compare_job_definition(
 
 signal = client.signals.create_signal(
     name="Daily prompt alignment",
-    audience=audience,                # (1)!
+    audience=audience,
     job_definition=job_definition,
-    interval_hours=24,                # (2)!
+    interval_hours=24,
 )
-
-print(signal)
-print("First job scheduled for:", signal.next_run_at)
 ```
 
-1. Pass the `RapidataAudience` / `RapidataFilteredAudience` and `RapidataJobDefinition` objects directly, or their id strings if that's what you have.
-2. Fires once per day.
-
-By default the signal follows the **latest** revision of the job definition at
-fire time. Pin it to a fixed revision with `revision_number=...`, and make it
-discoverable by other users in your organization with `is_public=True`.
+`audience` and `job_definition` also accept id strings. By default the signal
+uses the latest revision of the job definition at fire time; pin one with
+`revision_number=...`. Set `is_public=True` to let others in your organization
+read the signal.
 
 ## The jobs a signal creates
 
-Every firing creates a `RapidataJob`. List the jobs a signal has produced
-(newest first by default) and work with them like any other job:
+Every firing creates a `RapidataJob`:
 
 ```py
 for job in signal.get_jobs(page_size=10):
     print(job, job.get_status())
 
-latest = signal.get_jobs(page_size=1)[0]
-results = latest.get_results()   # blocks until that job is complete
+results = signal.get_jobs(page_size=1)[0].get_results()
 ```
 
-!!! note
-    A firing can occasionally be **skipped** (for example if the previous job
-    hasn't finished yet) — a skipped firing creates no job and therefore doesn't
-    appear in `get_jobs()`.
+A firing can be skipped (for example if the previous job hasn't finished). A
+skipped firing creates no job and won't appear in `get_jobs()`.
 
 ## Triggering a job on demand
 
-You don't have to wait for the schedule — fire one extra job immediately. This
-is the easiest way to test a signal end to end:
+Fire one job immediately instead of waiting for the schedule:
 
 ```py
-signal.trigger()                                # (1)!
-
-job = signal.wait_for_next_job(timeout=600)     # (2)!
-job.display_progress_bar()
+signal.trigger()
+job = signal.wait_for_next_job(timeout=600)
 print(job.get_results())
 ```
 
-1. `trigger()` returns `None` — the job is created asynchronously on the backend.
-2. Blocks until the next firing (the one you just triggered, or the next scheduled one) has created its job, then returns that live `RapidataJob`. Raises `TimeoutError` if none appears in time.
+`trigger()` returns right away; the job is created in the background.
+`wait_for_next_job()` blocks until the next firing has created its job and
+returns it.
 
 ## Managing a signal
 
 ```py
-signal.pause()    # stop firing scheduled jobs
-signal.resume()   # resume the schedule
-
-signal.update(    # change mutable fields (omit any you don't want to change)
-    name="Hourly prompt alignment",
-    interval_hours=1,
-)
-
-signal.delete()   # stop the signal for good (jobs it already created are unaffected)
+signal.pause()
+signal.resume()
+signal.update(name="Hourly prompt alignment", interval_hours=1)
+signal.delete()
 ```
 
-A `RapidataSignal` is a **live handle** — reading a property like `is_paused`
-or `next_run_at` always reflects the current server state, so there's nothing to
-refresh after `pause()`, `update()`, or a scheduled firing.
+Reading a property re-fetches the current server state, so there's nothing to
+refresh after a change or a scheduled firing.
 
-Look signals up later through the manager:
+Look signals up later:
 
 ```py
-signal = client.signals.get_signal_by_id("signal_id")   # by id
-signals = client.signals.find_signals(name="alignment") # your signals + public ones
+signal = client.signals.get_signal_by_id("signal_id")
+signals = client.signals.find_signals(name="alignment")
 ```
 
 ## Property reference
-
-A `RapidataSignal` exposes (mutable properties are re-fetched live on access):
 
 | Property | Description |
 |---|---|
@@ -153,9 +117,3 @@ A `RapidataSignal` exposes (mutable properties are re-fetched live on access):
 | `is_paused` | Whether the scheduler is currently skipping this signal. |
 | `is_public` | Whether other users can discover and read it. |
 | `created_at` | When the signal was created. |
-
-## Next Steps
-
-- Set up the [audience](audiences.md) that will label each job.
-- Choose the task and tune the [job definition parameters](job_definition_parameters.md).
-- Learn how to read a job's [results](understanding_the_results.md).
