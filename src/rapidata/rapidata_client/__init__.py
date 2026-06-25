@@ -7,6 +7,7 @@ from .audience import (
 )
 from .order import RapidataOrderManager, RapidataOrder
 from .job import RapidataJob, RapidataJobDefinition, RapidataJobManager
+from .signal import RapidataSignal, RapidataSignalManager, SignalRun
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
 from .selection import (

@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from rapidata.service.services.workflow_service import WorkflowService
     from rapidata.service.services.leaderboard_service import LeaderboardService
     from rapidata.service.services.rapid_service import RapidService
+    from rapidata.service.services.signal_service import SignalService
     from rapidata.service.services.translation_service import TranslationService
 
 
@@ -76,6 +77,7 @@ class OpenAPIService:
         self._workflow: WorkflowService | None = None
         self._leaderboard: LeaderboardService | None = None
         self._rapid: RapidService | None = None
+        self._signal: SignalService | None = None
         self._translation: TranslationService | None = None
 
         if token:
@@ -212,6 +214,13 @@ class OpenAPIService:
             from rapidata.service.services.rapid_service import RapidService
             self._rapid = RapidService(self.api_client)
         return self._rapid
+
+    @property
+    def signal(self) -> SignalService:
+        if self._signal is None:
+            from rapidata.service.services.signal_service import SignalService
+            self._signal = SignalService(self.api_client)
+        return self._signal
 
     @property
     def translation(self) -> TranslationService:
