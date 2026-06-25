@@ -93,9 +93,6 @@ signal.update(name="Hourly prompt alignment", interval_hours=1)
 signal.delete()
 ```
 
-Reading a property re-fetches the current server state, so there's nothing to
-refresh after a change or a scheduled firing.
-
 Look signals up later:
 
 ```py
