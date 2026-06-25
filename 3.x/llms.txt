@@ -5,6 +5,7 @@
 - [Overview](https://docs.rapidata.ai/3.x/starting_page/index.md)
 - [Quick Start](https://docs.rapidata.ai/3.x/quickstart/index.md)
 - [Custom Audiences](https://docs.rapidata.ai/3.x/audiences/index.md)
+- [Signals](https://docs.rapidata.ai/3.x/signals/index.md)
 - [Parameter Reference](https://docs.rapidata.ai/3.x/job_definition_parameters/index.md)
 - [Understanding Results](https://docs.rapidata.ai/3.x/understanding_the_results/index.md)
 - [Error Handling](https://docs.rapidata.ai/3.x/error_handling/index.md)
