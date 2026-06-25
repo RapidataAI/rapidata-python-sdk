@@ -11,6 +11,8 @@ from .rapidata_client import (
     RapidataJob,
     RapidataJobDefinition,
     RapidataJobManager,
+    RapidataSignal,
+    RapidataSignalManager,
     ValidationSetManager,
     RapidataValidationSet,
     Box,

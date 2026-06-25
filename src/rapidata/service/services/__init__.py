@@ -7,6 +7,7 @@ from rapidata.service.services.leaderboard_service import LeaderboardService
 from rapidata.service.services.order_service import OrderService
 from rapidata.service.services.pipeline_service import PipelineService
 from rapidata.service.services.rapid_service import RapidService
+from rapidata.service.services.signal_service import SignalService
 from rapidata.service.services.validation_service import ValidationService
 from rapidata.service.services.workflow_service import WorkflowService
 
@@ -20,6 +21,7 @@ __all__ = [
     "OrderService",
     "PipelineService",
     "RapidService",
+    "SignalService",
     "ValidationService",
     "WorkflowService",
 ]

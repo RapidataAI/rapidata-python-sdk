@@ -37,6 +37,9 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
 from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
+from rapidata.rapidata_client.signal.rapidata_signal_manager import (
+    RapidataSignalManager,
+)
 from rapidata.rapidata_client.api.rapidata_api_client import (
     optional_api_call,
     mark_sdk_outdated,
@@ -108,6 +111,8 @@ class RapidataClient:
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
             job (JobManager): The JobManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
+            signals (RapidataSignalManager): The RapidataSignalManager instance for managing
+                recurring audience-job schedules (signals) and observing their runs.
             context (ContextManager): The ContextManager instance for shortening
                 datapoint contexts against a question.
         """
@@ -164,6 +169,11 @@ class RapidataClient:
 
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing RapidataSignalManager")
+            self.signals = RapidataSignalManager(
+                openapi_service=self._openapi_service
+            )
 
             logger.debug("Initializing RapidataAudienceManager")
             self.audience = RapidataAudienceManager(

@@ -59,6 +59,7 @@ plugins:
           - starting_page.md
           - quickstart.md
           - audiences.md
+          - signals.md
           - job_definition_parameters.md
           - understanding_the_results.md
           - error_handling.md
@@ -120,6 +121,7 @@ nav:
       - Overview: starting_page.md
       - Quick Start: quickstart.md
       - Custom Audiences: audiences.md
+      - Signals: signals.md
       - Parameter Reference: job_definition_parameters.md
       - Understanding Results: understanding_the_results.md
       - Early Stopping: confidence_stopping.md
