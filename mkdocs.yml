@@ -58,6 +58,7 @@ plugins:
         Guides:
           - starting_page.md
           - quickstart.md
+          - authentication.md
           - audiences.md
           - signals.md
           - job_definition_parameters.md
@@ -120,6 +121,7 @@ nav:
     - Guides:
       - Overview: starting_page.md
       - Quick Start: quickstart.md
+      - Authentication: authentication.md
       - Custom Audiences: audiences.md
       - Signals: signals.md
       - Parameter Reference: job_definition_parameters.md

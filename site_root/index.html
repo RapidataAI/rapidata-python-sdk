@@ -49,6 +49,18 @@
         "softwareHelp": "https://docs.rapidata.ai/latest/quickstart/",
         "publisher": { "@id": "https://www.rapidata.ai/#organization" },
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      },
+      {
+        "@type": "WebAPI",
+        "name": "Rapidata API",
+        "description": "OAuth 2.0 secured REST API for requesting human feedback at scale.",
+        "documentation": "https://docs.rapidata.ai/developers/",
+        "provider": { "@id": "https://www.rapidata.ai/#organization" },
+        "EntryPoint": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://api.rapidata.ai/",
+          "contentType": "application/json"
+        }
       }
     ]
   }
@@ -73,9 +85,11 @@
     <p>Install with <code>pip install rapidata</code>, then authenticate with a token from
       <a href="https://app.rapidata.ai/settings/tokens">app.rapidata.ai/settings/tokens</a>.</p>
     <ul>
+      <li><a href="developers/">Developer portal</a></li>
       <li><a href="latest/">Documentation home</a></li>
       <li><a href="latest/quickstart/">Quick Start</a></li>
-      <li><a href="latest/starting_page/">Overview &amp; core concepts</a></li>
+      <li><a href="latest/authentication/">Authentication (OAuth 2.0)</a></li>
+      <li><a href="openapi.json">OpenAPI specification</a></li>
       <li><a href="latest/api/">API reference</a></li>
       <li><a href="latest/ai_agents/">Use Rapidata from your AI agent</a></li>
       <li><a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a></li>

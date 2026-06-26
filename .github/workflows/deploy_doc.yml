@@ -68,17 +68,22 @@ jobs:
           set -euo pipefail
           git fetch origin gh-pages
           git worktree add ghpages gh-pages
+          # Static root files. Copy each published artifact explicitly so repo-only
+          # files in site_root/ (e.g. README.md) never leak onto the live site.
           cp site_root/robots.txt ghpages/robots.txt
           cp site_root/llms.txt   ghpages/llms.txt
           cp site_root/index.html ghpages/index.html
+          cp -R site_root/developers ghpages/developers
           if [ -f ghpages/latest/llms-full.txt ]; then
             cp ghpages/latest/llms-full.txt ghpages/llms-full.txt
           fi
+          # Public OpenAPI document, served at the predictable /openapi.json.
+          python scripts/build_public_openapi.py ghpages/openapi.json
           cd ghpages
-          git add robots.txt llms.txt index.html llms-full.txt
+          git add robots.txt llms.txt index.html llms-full.txt openapi.json developers
           if git diff --cached --quiet; then
             echo "Site-root files already up to date."
           else
-            git commit -m "chore(docs): publish root llms.txt, robots.txt and landing page"
+            git commit -m "chore(docs): publish root llms.txt, robots.txt, openapi.json, developer portal"
             git push origin gh-pages
           fi
