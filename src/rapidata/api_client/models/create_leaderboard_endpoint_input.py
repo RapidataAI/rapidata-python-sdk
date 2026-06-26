@@ -46,9 +46,10 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on this leaderboard's per-leaderboard  scoreboard. Defaults to 0 when unset.", alias="scoreShift")
     score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on this leaderboard's per-leaderboard scoreboard. Defaults to 1.0 when  unset; must be strictly positive.", alias="scoreScale")
     is_hidden: Optional[StrictBool] = Field(default=None, description="Whether the leaderboard should be created hidden. Admin-only.", alias="isHidden")
+    is_excluded_from_overall: Optional[StrictBool] = Field(default=None, description="Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard.  When set, the leaderboard becomes an owner-only private experiment: its results do not  contribute to the overall and it is visible only to its owner and admins. Defaults to  false when unset.", alias="isExcludedFromOverall")
     vote_aggregation: Optional[VoteAggregation] = Field(default=None, description="How individual votes on a matchup are aggregated into the stored result. AllVotes  counts every vote as a matchup; MajorityVote collapses each matchup to a single  win for the majority side (ties split 0.5/0.5). Defaults to AllVotes when unset.", alias="voteAggregation")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "benchmarkDescription", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "voteAggregation", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "benchmarkDescription", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -155,6 +156,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
             "scoreShift": obj.get("scoreShift"),
             "scoreScale": obj.get("scoreScale"),
             "isHidden": obj.get("isHidden"),
+            "isExcludedFromOverall": obj.get("isExcludedFromOverall"),
             "voteAggregation": obj.get("voteAggregation"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }

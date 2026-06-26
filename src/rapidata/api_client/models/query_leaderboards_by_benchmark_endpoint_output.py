@@ -44,7 +44,8 @@ class QueryLeaderboardsByBenchmarkEndpointOutput(LazyValidatedModel):
     score_shift: Union[StrictFloat, StrictInt] = Field(description="Additive offset applied to displayed scores on this leaderboard's per-leaderboard  scoreboard.", alias="scoreShift")
     score_scale: Union[StrictFloat, StrictInt] = Field(description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on this leaderboard's per-leaderboard scoreboard.", alias="scoreScale")
     is_hidden: StrictBool = Field(description="Whether the leaderboard is hidden in listings and reads for non-admins.", alias="isHidden")
-    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden"]
+    is_excluded_from_overall: StrictBool = Field(description="Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,  making it an owner-only private experiment.", alias="isExcludedFromOverall")
+    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -119,7 +120,8 @@ class QueryLeaderboardsByBenchmarkEndpointOutput(LazyValidatedModel):
             "weight": obj.get("weight"),
             "scoreShift": obj.get("scoreShift"),
             "scoreScale": obj.get("scoreScale"),
-            "isHidden": obj.get("isHidden")
+            "isHidden": obj.get("isHidden"),
+            "isExcludedFromOverall": obj.get("isExcludedFromOverall")
         }
         try:
             _obj = cls.model_validate(_data)
