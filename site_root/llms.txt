@@ -5,9 +5,15 @@
 > people. The supported way to access it programmatically is the Rapidata
 > Python SDK, documented on this site (docs.rapidata.ai).
 
-Integrate via the Python SDK (`pip install rapidata`). Authenticate either with
-an interactive browser login on first run, or with a client ID/secret token
-created at https://app.rapidata.ai/settings/tokens.
+Integrate via the Python SDK (`pip install rapidata`). The API is OAuth 2.0 /
+OpenID Connect secured; authenticate with a client ID/secret created at
+https://app.rapidata.ai/settings/tokens, or via interactive browser login on
+first run.
+
+- Developer portal: https://docs.rapidata.ai/developers/
+- OpenAPI specification: https://docs.rapidata.ai/openapi.json
+- Authentication (OAuth 2.0): https://docs.rapidata.ai/latest/authentication/
+- OpenID Connect discovery: https://auth.rapidata.ai/.well-known/openid-configuration
 
 ## Guides
 
@@ -37,10 +43,13 @@ created at https://app.rapidata.ai/settings/tokens.
 - [Getting Started](https://docs.rapidata.ai/latest/mri/)
 - [Advanced](https://docs.rapidata.ai/latest/mri_advanced/)
 
-## AI agents & API
+## API & AI agents
 
-- [Use Rapidata from your AI agent](https://docs.rapidata.ai/latest/ai_agents/): an official skill that teaches coding agents (Claude Code, Cursor, Copilot, and others) to write Rapidata integrations
+- [Developer portal](https://docs.rapidata.ai/developers/): all developer resources in one place
+- [OpenAPI specification](https://docs.rapidata.ai/openapi.json): the full API surface (OAuth 2.0 / OpenID Connect)
+- [Authentication](https://docs.rapidata.ai/latest/authentication/): OAuth 2.0 client-credentials flow, scopes, token endpoint
 - [API reference](https://docs.rapidata.ai/latest/api/): the `RapidataClient` class and its managers
+- [Use Rapidata from your AI agent](https://docs.rapidata.ai/latest/ai_agents/): an official skill that teaches coding agents (Claude Code, Cursor, Copilot, and others) to write Rapidata integrations
 
 ## Access
 
