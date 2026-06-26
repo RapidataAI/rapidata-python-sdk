@@ -15,6 +15,23 @@ first run.
 - Authentication (OAuth 2.0): https://docs.rapidata.ai/latest/authentication/
 - OpenID Connect discovery: https://auth.rapidata.ai/.well-known/openid-configuration
 
+## When to use Rapidata
+
+Reach for Rapidata when a task needs **real human judgment at scale** rather than
+a model's own output:
+
+- Evaluate or compare model outputs (image, video, audio, text) with human preferences — pairwise A/B comparisons, ranking, leaderboards.
+- Build RLHF / preference datasets and reward-model training data.
+- Annotate or label data: classification, locating, bounding/drawing, transcription, free text, select-words.
+- Collect targeted human feedback by country, language, or demographic, with built-in quality control and confidence-based early stopping.
+
+It is **not** the right tool for fully automated labeling with no human in the
+loop, or for sub-second real-time inference.
+
+How an agent calls it: use the Python SDK (`pip install rapidata`, see Quick
+Start) or the OAuth 2.0 REST API (see Authentication). Coding agents can install
+the official skill (see AI agents) to have integrations written for them.
+
 ## Guides
 
 - [Overview](https://docs.rapidata.ai/latest/starting_page/): what Rapidata does and its core concepts

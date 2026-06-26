@@ -50,6 +50,16 @@
       <li><a href="https://app.rapidata.ai/settings/tokens">Create API credentials</a> (client ID &amp; secret)</li>
     </ul>
 
+    <h2>Authenticate as an agent</h2>
+    <p>The API uses OAuth 2.0 (OpenID Connect), client-credentials grant:</p>
+    <ol>
+      <li><a href="https://app.rapidata.ai/settings/tokens">Create a client ID &amp; secret</a>.</li>
+      <li>Set <code>RAPIDATA_CLIENT_ID</code> and <code>RAPIDATA_CLIENT_SECRET</code> in the environment.</li>
+      <li>Construct <code>RapidataClient()</code> — it fetches and refreshes a bearer token automatically.</li>
+      <li>Without the SDK: <code>POST https://auth.rapidata.ai/connect/token</code> with <code>grant_type=client_credentials</code>, then send the token as <code>Authorization: Bearer …</code>.</li>
+    </ol>
+    <p>Full details: <a href="/latest/authentication/">Authentication</a>.</p>
+
     <h2>Reference</h2>
     <ul>
       <li><a href="/openapi.json">OpenAPI specification</a> (<code>/openapi.json</code>)</li>
