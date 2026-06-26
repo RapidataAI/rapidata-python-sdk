@@ -1,0 +1,38 @@
+# Rapidata SDK documentation — https://docs.rapidata.ai
+# All crawlers, including AI/agent crawlers, are welcome.
+User-agent: *
+Allow: /
+
+# Named AI/agent crawlers, listed explicitly so operators that only honour
+# their own user-agent block still see an Allow.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://docs.rapidata.ai/sitemap.xml
