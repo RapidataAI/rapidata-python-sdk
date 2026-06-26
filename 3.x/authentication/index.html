@@ -5,13 +5,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/config/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/authentication/">
       
       
-        <link rel="prev" href="../error_handling/">
+        <link rel="prev" href="../quickstart/">
       
       
-        <link rel="next" href="../examples/classify_job/">
+        <link rel="next" href="../audiences/">
       
       
         
@@ -22,7 +22,7 @@
     
     
       
-        <title>Logging &amp; Config - Rapidata Python SDK</title>
+        <title>Authentication - Rapidata Python SDK</title>
       
     
     
@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuration-and-logging" class="md-skip">
+        <a href="#authentication" class="md-skip">
           Skip to content
         </a>
       
@@ -152,7 +152,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Logging &amp; Config
+              Authentication
             
           </span>
         </div>
@@ -536,10 +536,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -555,6 +582,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get credentials
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#with-the-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With the SDK
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direct-token-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct token request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -760,37 +851,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Logging &amp; Config
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
         
   
   
@@ -806,154 +870,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata-configuration-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rapidata Configuration System
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Rapidata Configuration System">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Usage
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#logging-configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logging Configuration Options
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#upload-configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upload Configuration Options
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Upload Configuration Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#compression-override" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compression override
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#environment-variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Environment Variables
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Environment Variables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#client-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Client authentication
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-env-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example .env file
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#boolean-values" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Boolean values
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#loading-a-env-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Loading a .env file
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1439,130 +1355,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rapidata-configuration-system" class="md-nav__link">
+  <a href="#get-credentials" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rapidata Configuration System
+        Get credentials
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Rapidata Configuration System">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Usage
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#logging-configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logging Configuration Options
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#upload-configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upload Configuration Options
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Upload Configuration Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#compression-override" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compression override
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#environment-variables" class="md-nav__link">
+  <a href="#with-the-sdk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Environment Variables
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Environment Variables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#client-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Client authentication
+        With the SDK
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#example-env-file" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#direct-token-request" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example .env file
+        Direct token request
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#boolean-values" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#scopes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Boolean values
+        Scopes
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#loading-a-env-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Loading a .env file
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1586,227 +1418,73 @@
   
 
 
-<h1 id="configuration-and-logging">Configuration and Logging<a class="headerlink" href="#configuration-and-logging" title="Permanent link">#</a></h1>
-<p>The Rapidata SDK provides a centralized configuration system through the <strong>global</strong> <code>rapidata_config</code> object that controls all aspects of the SDK's behavior including logging, output management, upload settings, and data sharing.</p>
-<h2 id="rapidata-configuration-system">Rapidata Configuration System<a class="headerlink" href="#rapidata-configuration-system" title="Permanent link">#</a></h2>
-<p>All configuration is managed through the <strong>global</strong> <code>rapidata_config</code> object, which provides a unified way to configure:</p>
-<ol>
-<li><strong>Logging Configuration</strong>: Log levels, file output, formatting, silent mode and OpenTelemetry integration</li>
-<li><strong>Upload Configuration</strong>: Worker threads and retry settings</li>
-</ol>
-<h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">#</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidata_config</span><span class="p">,</span> <span class="n">logger</span>
+<h1 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">#</a></h1>
+<p>The Rapidata API uses <strong>OAuth 2.0 / OpenID Connect</strong>. The authorization server is
+<code>https://auth.rapidata.ai</code>, and its discovery document is published at
+<a href="https://auth.rapidata.ai/.well-known/openid-configuration"><code>/.well-known/openid-configuration</code></a>.</p>
+<p>For programmatic access (the SDK, scripts, agents) you authenticate with the
+<strong>client credentials</strong> grant using a client ID and secret.</p>
+<h2 id="get-credentials">Get credentials<a class="headerlink" href="#get-credentials" title="Permanent link">#</a></h2>
+<p>Create a client ID and secret under <a href="https://app.rapidata.ai/settings/tokens">Rapidata Settings → Tokens</a>.</p>
+<h2 id="with-the-sdk">With the SDK<a class="headerlink" href="#with-the-sdk" title="Permanent link">#</a></h2>
+<p>The SDK performs the token exchange for you. Pass the credentials directly:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"This will not be shown"</span><span class="p">)</span> <span class="c1"># (1)!</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">rapidata_config</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="s2">"INFO"</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"This will be shown"</span><span class="p">)</span> <span class="c1"># (2)!</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">client_id</span><span class="o">=</span><span class="s2">"YOUR_CLIENT_ID"</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">client_secret</span><span class="o">=</span><span class="s2">"YOUR_CLIENT_SECRET"</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
 </span></code></pre></div>
-<ol>
-<li>Default level is <code>WARNING</code>, so <code>INFO</code> messages are suppressed.</li>
-<li>After changing the level, <code>INFO</code> messages are now visible.</li>
-</ol>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The logging system is now fully managed through <code>rapidata_config.logging</code>. Changes to the configuration are automatically applied to the logger in real-time.</p>
-</div>
-<h3 id="logging-configuration-options">Logging Configuration Options<a class="headerlink" href="#logging-configuration-options" title="Permanent link">#</a></h3>
+<p>or set <code>RAPIDATA_CLIENT_ID</code> and <code>RAPIDATA_CLIENT_SECRET</code> in the environment
+(useful for headless or containerised runs) and construct <code>RapidataClient()</code>
+with no arguments. On a workstation, calling <code>RapidataClient()</code> with no
+credentials instead opens a browser login once and caches the token in
+<code>~/.config/rapidata/credentials.json</code>.</p>
+<h2 id="direct-token-request">Direct token request<a class="headerlink" href="#direct-token-request" title="Permanent link">#</a></h2>
+<p>To call the API without the SDK, request a token from the token endpoint and
+send it as a bearer token:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://auth.rapidata.ai/connect/token<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">grant_type</span><span class="o">=</span>client_credentials<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_id</span><span class="o">=</span>YOUR_CLIENT_ID<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_secret</span><span class="o">=</span>YOUR_CLIENT_SECRET<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">scope</span><span class="o">=</span><span class="s2">"openid email roles"</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># → {"access_token": "...", "token_type": "Bearer", "expires_in": 3600}</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>https://api.rapidata.ai/order/openapi/v1.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer ACCESS_TOKEN"</span>
+</span></code></pre></div>
+<h2 id="scopes">Scopes<a class="headerlink" href="#scopes" title="Permanent link">#</a></h2>
+<p>Tokens are scoped. The SDK requests <code>openid roles email</code> by default, which is
+sufficient for all SDK operations. Request only the scopes you need. Every
+endpoint in the <a href="https://docs.rapidata.ai/openapi.json">OpenAPI specification</a>
+declares the scopes it requires under its <code>OpenIdConnect</code> security scheme.</p>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
+<th>Scope</th>
+<th>Grants</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>level</code></td>
-<td><code>str</code></td>
-<td><code>"WARNING"</code></td>
-<td>Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)</td>
+<td><code>openid</code></td>
+<td>Required for OIDC; identifies the token subject.</td>
 </tr>
 <tr>
-<td><code>log_file</code></td>
-<td><code>Optional[str]</code></td>
-<td><code>None</code></td>
-<td>Optional file path for log output</td>
+<td><code>email</code></td>
+<td>Access to the account email claim.</td>
 </tr>
 <tr>
-<td><code>format</code></td>
-<td><code>str</code></td>
-<td><code>"%(asctime)s - %(name)s - %(levelname)s - %(message)s"</code></td>
-<td>Log message format</td>
+<td><code>roles</code></td>
+<td>The account's role claims, which gate API operations.</td>
 </tr>
 <tr>
-<td><code>silent_mode</code></td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
-<td>Suppress prints and progress bars (doesn't affect logging)</td>
-</tr>
-<tr>
-<td><code>enable_otlp</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
-<td>Enable OpenTelemetry trace logs to Rapidata</td>
+<td><code>offline_access</code></td>
+<td>A refresh token for long-lived sessions.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Rapidata SDK tracking is limited exclusively to SDK-generated logs and traces. No other data is collected.</p>
-</div>
-<h3 id="upload-configuration-options">Upload Configuration Options<a class="headerlink" href="#upload-configuration-options" title="Permanent link">#</a></h3>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>maxWorkers</code></td>
-<td><code>int</code></td>
-<td><code>25</code></td>
-<td>Maximum concurrent upload threads</td>
-</tr>
-<tr>
-<td><code>maxRetries</code></td>
-<td><code>int</code></td>
-<td><code>3</code></td>
-<td>Retry attempts for failed uploads</td>
-</tr>
-<tr>
-<td><code>cacheToDisk</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
-<td>Enable disk-based caching for file uploads</td>
-</tr>
-<tr>
-<td><code>cacheTimeout</code></td>
-<td><code>float</code></td>
-<td><code>1</code></td>
-<td>Cache operation timeout in seconds</td>
-</tr>
-<tr>
-<td><code>cacheLocation</code></td>
-<td><code>Path</code></td>
-<td><code>~/.cache/rapidata/upload_cache</code></td>
-<td>Directory for cache storage (immutable)</td>
-</tr>
-<tr>
-<td><code>cacheShards</code></td>
-<td><code>int</code></td>
-<td><code>128</code></td>
-<td>Number of cache shards for parallel access (immutable)</td>
-</tr>
-<tr>
-<td><code>batchSize</code></td>
-<td><code>int</code></td>
-<td><code>1000</code></td>
-<td>Number of URLs per batch (100–5000)</td>
-</tr>
-<tr>
-<td><code>batchPollInterval</code></td>
-<td><code>float</code></td>
-<td><code>0.5</code></td>
-<td>Batch polling interval in seconds</td>
-</tr>
-<tr>
-<td><code>compression</code></td>
-<td><code>CompressionConfig \| None</code></td>
-<td><code>None</code></td>
-<td>Per-upload image-compression settings; see <a href="#compression-override">Compression override</a> below.</td>
-</tr>
-</tbody>
-</table>
-<h4 id="compression-override">Compression override<a class="headerlink" href="#compression-override" title="Permanent link">#</a></h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidata_config</span><span class="p">,</span> <span class="n">CompressionConfig</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Force the asset service to compress images at quality 70 with a max dimension of 1024px,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># regardless of the server-side default (which is currently off in production).</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">rapidata_config</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">CompressionConfig</span><span class="p">(</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">quality</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">max_dimension</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
-</span></code></pre></div>
-<p>Any field left as <code>None</code> falls back to the server-side default. Currently applies to single-asset uploads (<code>/asset/file</code> and <code>/asset/url</code>); batched URL uploads will pick the override up in a follow-up after the OpenAPI client regenerates.</p>
-<h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">#</a></h2>
-<p>Every configuration field can also be set through an environment variable prefixed with <code>RAPIDATA_</code> followed by the field name (e.g. <code>RAPIDATA_maxWorkers</code>). This is useful for CI/CD pipelines, containers, or any context where you want to configure the SDK without changing code.</p>
-<p>Environment variables are applied at initialization and act as defaults — values passed explicitly in code always take precedence.</p>
-<p><strong>Precedence</strong> (highest to lowest):</p>
-<ol>
-<li>Values set in code (e.g. <code>rapidata_config.upload.maxWorkers = 10</code>)</li>
-<li>Environment variables (<code>RAPIDATA_*</code>)</li>
-<li>Built-in defaults</li>
-</ol>
-<h3 id="client-authentication">Client authentication<a class="headerlink" href="#client-authentication" title="Permanent link">#</a></h3>
-<p>The <code>RapidataClient</code> constructor also picks up credentials and the target environment from the following variables when the matching constructor arguments are omitted:</p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Maps to</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>RAPIDATA_CLIENT_ID</code></td>
-<td><code>client_id</code></td>
-<td>OAuth client ID</td>
-</tr>
-<tr>
-<td><code>RAPIDATA_CLIENT_SECRET</code></td>
-<td><code>client_secret</code></td>
-<td>OAuth client secret</td>
-</tr>
-<tr>
-<td><code>RAPIDATA_ENVIRONMENT</code></td>
-<td><code>environment</code></td>
-<td>API endpoint (defaults to <code>rapidata.ai</code>)</td>
-</tr>
-</tbody>
-</table>
-<p>Resolution order for these values:</p>
-<ol>
-<li>Arguments passed to <code>RapidataClient(...)</code>.</li>
-<li>The environment variables above.</li>
-<li>Credentials stored under <code>~/.config/rapidata/credentials.json</code>.</li>
-<li>Interactive browser login.</li>
-</ol>
-<p>Empty strings are treated as unset, so <code>RAPIDATA_CLIENT_ID=""</code> falls through to the next layer instead of attempting to authenticate with an empty value.</p>
-<h3 id="example-env-file">Example <code>.env</code> file<a class="headerlink" href="#example-env-file" title="Permanent link">#</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># --- Upload ---</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">RAPIDATA_maxWorkers</span><span class="o">=</span><span class="m">25</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">RAPIDATA_maxRetries</span><span class="o">=</span><span class="m">3</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">RAPIDATA_cacheToDisk</span><span class="o">=</span><span class="nb">true</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">RAPIDATA_cacheTimeout</span><span class="o">=</span><span class="m">1</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">RAPIDATA_cacheLocation</span><span class="o">=</span>~/.cache/rapidata/upload_cache
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">RAPIDATA_cacheShards</span><span class="o">=</span><span class="m">128</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">RAPIDATA_batchSize</span><span class="o">=</span><span class="m">1000</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">RAPIDATA_batchPollInterval</span><span class="o">=</span><span class="m">0</span>.5
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># --- Logging ---</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">RAPIDATA_level</span><span class="o">=</span>WARNING
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">RAPIDATA_log_file</span><span class="o">=</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">RAPIDATA_format</span><span class="o">=</span>%<span class="o">(</span>asctime<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>name<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>levelname<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>message<span class="o">)</span>s
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">RAPIDATA_silent_mode</span><span class="o">=</span><span class="nb">false</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nv">RAPIDATA_enable_otlp</span><span class="o">=</span><span class="nb">true</span>
-</span></code></pre></div>
-<h3 id="boolean-values">Boolean values<a class="headerlink" href="#boolean-values" title="Permanent link">#</a></h3>
-<p>Boolean environment variables accept <code>1</code>, <code>true</code>, or <code>yes</code> (case-insensitive) as truthy. Everything else is treated as <code>false</code>.</p>
-<h3 id="loading-a-env-file">Loading a <code>.env</code> file<a class="headerlink" href="#loading-a-env-file" title="Permanent link">#</a></h3>
-<p>The SDK does not load <code>.env</code> files automatically. Use a library like <a href="https://pypi.org/project/python-dotenv/"><code>python-dotenv</code></a> to load them before importing the SDK:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># reads .env into os.environ</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span></code></pre></div>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>
