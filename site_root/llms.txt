@@ -1,0 +1,54 @@
+# Rapidata
+
+> Rapidata provides human feedback at scale: crowd-sourced labeling, model
+> evaluation, ranking, and preference data (RLHF-style) collected from real
+> people. The supported way to access it programmatically is the Rapidata
+> Python SDK, documented on this site (docs.rapidata.ai).
+
+Integrate via the Python SDK (`pip install rapidata`). Authenticate either with
+an interactive browser login on first run, or with a client ID/secret token
+created at https://app.rapidata.ai/settings/tokens.
+
+## Guides
+
+- [Overview](https://docs.rapidata.ai/latest/starting_page/): what Rapidata does and its core concepts
+- [Quick Start](https://docs.rapidata.ai/latest/quickstart/): install, authenticate, and create your first order
+- [Custom Audiences](https://docs.rapidata.ai/latest/audiences/): target responses by country, language, and qualification
+- [Signals](https://docs.rapidata.ai/latest/signals/)
+- [Parameter Reference](https://docs.rapidata.ai/latest/job_definition_parameters/)
+- [Understanding Results](https://docs.rapidata.ai/latest/understanding_the_results/)
+- [Early Stopping](https://docs.rapidata.ai/latest/confidence_stopping/)
+- [Instruction Design](https://docs.rapidata.ai/latest/human_prompting/)
+- [Error Handling](https://docs.rapidata.ai/latest/error_handling/)
+- [Logging & Config](https://docs.rapidata.ai/latest/config/)
+
+## Examples
+
+- [Classification](https://docs.rapidata.ai/latest/examples/classify_job/)
+- [Comparison](https://docs.rapidata.ai/latest/examples/compare_job/)
+- [Locate](https://docs.rapidata.ai/latest/examples/locate_job/)
+- [Draw](https://docs.rapidata.ai/latest/examples/draw_job/)
+- [Select Words](https://docs.rapidata.ai/latest/examples/select_words_job/)
+- [Free Text](https://docs.rapidata.ai/latest/examples/free_text_job/)
+- [Ranking](https://docs.rapidata.ai/latest/examples/ranking_job/)
+
+## Model ranking & benchmarks
+
+- [Getting Started](https://docs.rapidata.ai/latest/mri/)
+- [Advanced](https://docs.rapidata.ai/latest/mri_advanced/)
+
+## AI agents & API
+
+- [Use Rapidata from your AI agent](https://docs.rapidata.ai/latest/ai_agents/): an official skill that teaches coding agents (Claude Code, Cursor, Copilot, and others) to write Rapidata integrations
+- [API reference](https://docs.rapidata.ai/latest/api/): the `RapidataClient` class and its managers
+
+## Access
+
+- Install: `pip install rapidata`
+- API tokens: https://app.rapidata.ai/settings/tokens
+- Source: https://github.com/RapidataAI/rapidata-python-sdk
+- PyPI: https://pypi.org/project/rapidata/
+
+## Optional
+
+- [llms-full.txt](https://docs.rapidata.ai/llms-full.txt): the full documentation concatenated into a single file

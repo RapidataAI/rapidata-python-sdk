@@ -56,3 +56,29 @@ jobs:
           else
             uv run mike deploy --push ${{ github.event.inputs.version_alias }}
           fi
+      - name: Publish site-root files (llms.txt, robots.txt, landing page)
+        # mike serves every version under a subdirectory, so the generated
+        # llms.txt/robots.txt live under /latest/ and are invisible at the site
+        # root where crawlers and AI agents look. Mirror the curated root files
+        # (and the generated llms-full.txt) into the gh-pages root after mike has
+        # written the version. mike rewrites the root index.html as a bare
+        # redirect on set-default, so this must run last to keep our richer one.
+        if: hashFiles('site_root/**') != ''
+        run: |
+          set -euo pipefail
+          git fetch origin gh-pages
+          git worktree add ghpages gh-pages
+          cp site_root/robots.txt ghpages/robots.txt
+          cp site_root/llms.txt   ghpages/llms.txt
+          cp site_root/index.html ghpages/index.html
+          if [ -f ghpages/latest/llms-full.txt ]; then
+            cp ghpages/latest/llms-full.txt ghpages/llms-full.txt
+          fi
+          cd ghpages
+          git add robots.txt llms.txt index.html llms-full.txt
+          if git diff --cached --quiet; then
+            echo "Site-root files already up to date."
+          else
+            git commit -m "chore(docs): publish root llms.txt, robots.txt and landing page"
+            git push origin gh-pages
+          fi
