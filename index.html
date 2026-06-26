@@ -1,18 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Redirecting</title>
-  <noscript>
-    <meta http-equiv="refresh" content="1; url=latest/" />
-  </noscript>
-  <script>
-    window.location.replace(
-      "latest/" + window.location.search + window.location.hash
-    );
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rapidata Python SDK — Documentation</title>
+  <meta name="description" content="Documentation for the Rapidata Python SDK: request human feedback at scale — crowd-sourced labeling, model evaluation, ranking, and preference data — directly from Python.">
+  <link rel="canonical" href="https://docs.rapidata.ai/latest/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rapidata Documentation">
+  <meta property="og:title" content="Rapidata Python SDK — Documentation">
+  <meta property="og:description" content="Request human feedback at scale — labeling, model evaluation, ranking, and preference data — directly from Python.">
+  <meta property="og:url" content="https://docs.rapidata.ai/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Rapidata Python SDK — Documentation">
+  <meta name="twitter:description" content="Request human feedback at scale, directly from Python.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.rapidata.ai/#organization",
+        "name": "Rapidata",
+        "url": "https://www.rapidata.ai",
+        "logo": "https://docs.rapidata.ai/media/rapidata.svg",
+        "sameAs": [
+          "https://github.com/RapidataAI",
+          "https://pypi.org/project/rapidata/",
+          "https://www.linkedin.com/company/rapidata-ai"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://docs.rapidata.ai/#website",
+        "name": "Rapidata Python SDK Documentation",
+        "url": "https://docs.rapidata.ai/",
+        "publisher": { "@id": "https://www.rapidata.ai/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Rapidata Python SDK",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "OS Independent",
+        "url": "https://docs.rapidata.ai/latest/",
+        "downloadUrl": "https://pypi.org/project/rapidata/",
+        "softwareHelp": "https://docs.rapidata.ai/latest/quickstart/",
+        "publisher": { "@id": "https://www.rapidata.ai/#organization" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    ]
+  }
   </script>
+
+  <!-- Send human visitors to the default (latest) version. Crawlers and agents
+       that do not execute JavaScript still get the content and links below. -->
+  <script>
+    window.location.replace("latest/" + window.location.search + window.location.hash);
+  </script>
+  <noscript><meta http-equiv="refresh" content="0; url=latest/"></noscript>
 </head>
 <body>
-  Redirecting to <a href="latest/">latest/</a>...
+  <main>
+    <h1>Rapidata Python SDK</h1>
+    <p>
+      Rapidata provides human feedback at scale — crowd-sourced labeling, model
+      evaluation, ranking, and preference data collected from real people. The
+      supported way to access it programmatically is the Rapidata Python SDK,
+      documented here.
+    </p>
+    <p>Install with <code>pip install rapidata</code>, then authenticate with a token from
+      <a href="https://app.rapidata.ai/settings/tokens">app.rapidata.ai/settings/tokens</a>.</p>
+    <ul>
+      <li><a href="latest/">Documentation home</a></li>
+      <li><a href="latest/quickstart/">Quick Start</a></li>
+      <li><a href="latest/starting_page/">Overview &amp; core concepts</a></li>
+      <li><a href="latest/api/">API reference</a></li>
+      <li><a href="latest/ai_agents/">Use Rapidata from your AI agent</a></li>
+      <li><a href="llms.txt">llms.txt</a> · <a href="llms-full.txt">llms-full.txt</a></li>
+      <li><a href="https://github.com/RapidataAI/rapidata-python-sdk">Source on GitHub</a></li>
+      <li><a href="https://pypi.org/project/rapidata/">Package on PyPI</a></li>
+    </ul>
+    <p>Redirecting to the <a href="latest/">latest documentation</a>…</p>
+  </main>
 </body>
 </html>
