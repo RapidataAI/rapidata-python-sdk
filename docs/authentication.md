@@ -11,6 +11,15 @@ For programmatic access (the SDK, scripts, agents) you authenticate with the
 
 Create a client ID and secret under [Rapidata Settings → Tokens](https://app.rapidata.ai/settings/tokens).
 
+## Programmatic / agent authentication, step by step
+
+For headless or agent-driven use, authenticate with the client-credentials grant:
+
+1. Create a client ID and secret at [Rapidata Settings → Tokens](https://app.rapidata.ai/settings/tokens).
+2. Expose them to the SDK as the `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` environment variables, so no interactive browser login is needed.
+3. Construct `RapidataClient()` with no arguments — it exchanges the credentials for a bearer token at `https://auth.rapidata.ai/connect/token` and refreshes it automatically.
+4. To call the API without the SDK, request a token yourself and send it as a bearer token (see [Direct token request](#direct-token-request)).
+
 ## With the SDK
 
 The SDK performs the token exchange for you. Pass the credentials directly:
