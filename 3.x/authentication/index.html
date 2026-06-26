@@ -610,6 +610,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#programmatic-agent-authentication-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic / agent authentication, step by step
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#with-the-sdk" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1366,6 +1377,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#programmatic-agent-authentication-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic / agent authentication, step by step
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#with-the-sdk" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1426,6 +1448,14 @@
 <strong>client credentials</strong> grant using a client ID and secret.</p>
 <h2 id="get-credentials">Get credentials<a class="headerlink" href="#get-credentials" title="Permanent link">#</a></h2>
 <p>Create a client ID and secret under <a href="https://app.rapidata.ai/settings/tokens">Rapidata Settings → Tokens</a>.</p>
+<h2 id="programmatic-agent-authentication-step-by-step">Programmatic / agent authentication, step by step<a class="headerlink" href="#programmatic-agent-authentication-step-by-step" title="Permanent link">#</a></h2>
+<p>For headless or agent-driven use, authenticate with the client-credentials grant:</p>
+<ol>
+<li>Create a client ID and secret at <a href="https://app.rapidata.ai/settings/tokens">Rapidata Settings → Tokens</a>.</li>
+<li>Expose them to the SDK as the <code>RAPIDATA_CLIENT_ID</code> and <code>RAPIDATA_CLIENT_SECRET</code> environment variables, so no interactive browser login is needed.</li>
+<li>Construct <code>RapidataClient()</code> with no arguments — it exchanges the credentials for a bearer token at <code>https://auth.rapidata.ai/connect/token</code> and refreshes it automatically.</li>
+<li>To call the API without the SDK, request a token yourself and send it as a bearer token (see <a href="#direct-token-request">Direct token request</a>).</li>
+</ol>
 <h2 id="with-the-sdk">With the SDK<a class="headerlink" href="#with-the-sdk" title="Permanent link">#</a></h2>
 <p>The SDK performs the token exchange for you. Pass the credentials directly:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
