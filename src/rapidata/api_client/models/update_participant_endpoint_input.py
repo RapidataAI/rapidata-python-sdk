@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_faucet_input import IFaucetInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -30,8 +31,11 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
     UpdateParticipantEndpointInput
     """ # noqa: E501
     name: Optional[StrictStr] = Field(default=None, description="The new name of the participant.")
+    family: Optional[StrictStr] = Field(default=None, description="The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"). Pass null to clear.")
+    proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model. Pass null to clear.", alias="proprietaryName")
+    logo: Optional[ExistingAssetInput] = None
     faucet: Optional[IFaucetInput] = Field(default=None, description="The faucet to set or replace on the participant.")
-    __properties: ClassVar[List[str]] = ["name", "faucet"]
+    __properties: ClassVar[List[str]] = ["name", "family", "proprietaryName", "logo", "faucet"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -68,9 +72,27 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of logo
+        if self.logo:
+            _dict['logo'] = self.logo.to_dict()
         # override the default output from pydantic by calling `to_dict()` of faucet
         if self.faucet:
             _dict['faucet'] = self.faucet.to_dict()
+        # set to None if family (nullable) is None
+        # and model_fields_set contains the field
+        if self.family is None and "family" in self.model_fields_set:
+            _dict['family'] = None
+
+        # set to None if proprietary_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.proprietary_name is None and "proprietary_name" in self.model_fields_set:
+            _dict['proprietaryName'] = None
+
+        # set to None if logo (nullable) is None
+        # and model_fields_set contains the field
+        if self.logo is None and "logo" in self.model_fields_set:
+            _dict['logo'] = None
+
         return _dict
 
     @classmethod
@@ -84,6 +106,9 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
 
         _data = {
             "name": obj.get("name"),
+            "family": obj.get("family"),
+            "proprietaryName": obj.get("proprietaryName"),
+            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "faucet": IFaucetInput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None
         }
         try:

@@ -37,8 +37,9 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
     score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on this leaderboard's per-leaderboard  scoreboard.", alias="scoreShift")
     score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on this leaderboard's per-leaderboard scoreboard. Must be strictly positive.", alias="scoreScale")
     is_hidden: Optional[StrictBool] = Field(default=None, description="Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only.", alias="isHidden")
+    is_excluded_from_overall: Optional[StrictBool] = Field(default=None, description="Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard.  When set, the leaderboard becomes an owner-only private experiment: its results do not  contribute to the overall and it is visible only to its owner and admins.", alias="isExcludedFromOverall")
     vote_aggregation: Optional[VoteAggregation] = Field(default=None, description="How individual votes on a matchup are aggregated into the stored result. AllVotes  counts every vote as a matchup; MajorityVote collapses each matchup to a single  win for the majority side (ties split 0.5/0.5). Only affects future runs.", alias="voteAggregation")
-    __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "voteAggregation"]
+    __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -100,6 +101,7 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
             "scoreShift": obj.get("scoreShift"),
             "scoreScale": obj.get("scoreScale"),
             "isHidden": obj.get("isHidden"),
+            "isExcludedFromOverall": obj.get("isExcludedFromOverall"),
             "voteAggregation": obj.get("voteAggregation")
         }
         try:

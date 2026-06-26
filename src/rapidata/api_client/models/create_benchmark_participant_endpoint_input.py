@@ -18,7 +18,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +30,10 @@ class CreateBenchmarkParticipantEndpointInput(LazyValidatedModel):
     CreateBenchmarkParticipantEndpointInput
     """ # noqa: E501
     name: StrictStr = Field(description="The name of the participant.")
-    __properties: ClassVar[List[str]] = ["name"]
+    family: Optional[StrictStr] = Field(default=None, description="The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), if any.")
+    proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model, if any.", alias="proprietaryName")
+    logo: Optional[ExistingAssetInput] = Field(default=None, description="An optional logo image for the model. Must be an existing image asset.")
+    __properties: ClassVar[List[str]] = ["name", "family", "proprietaryName", "logo"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -66,6 +70,19 @@ class CreateBenchmarkParticipantEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of logo
+        if self.logo:
+            _dict['logo'] = self.logo.to_dict()
+        # set to None if family (nullable) is None
+        # and model_fields_set contains the field
+        if self.family is None and "family" in self.model_fields_set:
+            _dict['family'] = None
+
+        # set to None if proprietary_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.proprietary_name is None and "proprietary_name" in self.model_fields_set:
+            _dict['proprietaryName'] = None
+
         return _dict
 
     @classmethod
@@ -78,7 +95,10 @@ class CreateBenchmarkParticipantEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "name": obj.get("name")
+            "name": obj.get("name"),
+            "family": obj.get("family"),
+            "proprietaryName": obj.get("proprietaryName"),
+            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

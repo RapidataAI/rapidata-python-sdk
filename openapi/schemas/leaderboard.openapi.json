@@ -5968,6 +5968,24 @@
           "name": {
             "type": "string",
             "description": "The name of the participant."
+          },
+          "family": {
+            "type": "string",
+            "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), if any.",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "description": "The vendor-facing display name of the model, if any.",
+            "nullable": true
+          },
+          "logo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              }
+            ],
+            "description": "An optional logo image for the model. Must be an existing image asset."
           }
         }
       },
@@ -6071,6 +6089,10 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard should be created hidden. Admin-only."
+          },
+          "isExcludedFromOverall": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard.\n When set, the leaderboard becomes an owner-only private experiment: its results do not\n contribute to the overall and it is visible only to its owner and admins. Defaults to\n false when unset."
           },
           "voteAggregation": {
             "allOf": [
@@ -6379,6 +6401,31 @@
           "id": {
             "type": "string",
             "description": "The id of the created sample."
+          }
+        }
+      },
+      "ExistingAssetInput": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6736,6 +6783,7 @@
           "scoreShift",
           "scoreScale",
           "isHidden",
+          "isExcludedFromOverall",
           "voteAggregation"
         ],
         "type": "object",
@@ -6819,6 +6867,10 @@
             "type": "boolean",
             "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
           },
+          "isExcludedFromOverall": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
+          },
           "voteAggregation": {
             "allOf": [
               {
@@ -6848,6 +6900,21 @@
           "benchmarkId": {
             "type": "string",
             "description": "The id of the benchmark the participant belongs to."
+          },
+          "family": {
+            "type": "string",
+            "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "description": "The vendor-facing display name of the model, or null if unset.",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "description": "The logo of the model, or null if unset.",
+            "nullable": true
           },
           "faucet": {
             "allOf": [
@@ -8823,7 +8890,8 @@
           "weight",
           "scoreShift",
           "scoreScale",
-          "isHidden"
+          "isHidden",
+          "isExcludedFromOverall"
         ],
         "type": "object",
         "properties": {
@@ -8899,6 +8967,10 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+          },
+          "isExcludedFromOverall": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
           }
         }
       },
@@ -8951,6 +9023,7 @@
           "scoreShift",
           "scoreScale",
           "isHidden",
+          "isExcludedFromOverall",
           "voteAggregation"
         ],
         "type": "object",
@@ -9027,6 +9100,10 @@
           "isHidden": {
             "type": "boolean",
             "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+          },
+          "isExcludedFromOverall": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
           },
           "voteAggregation": {
             "allOf": [
@@ -9167,6 +9244,21 @@
           "benchmarkId": {
             "type": "string",
             "description": "The id of the benchmark the participant belongs to."
+          },
+          "family": {
+            "type": "string",
+            "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "description": "The vendor-facing display name of the model, or null if unset.",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "description": "The logo of the model, or null if unset.",
+            "nullable": true
           },
           "status": {
             "allOf": [
@@ -9875,6 +9967,10 @@
             "type": "boolean",
             "description": "Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only."
           },
+          "isExcludedFromOverall": {
+            "type": "boolean",
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard.\n When set, the leaderboard becomes an owner-only private experiment: its results do not\n contribute to the overall and it is visible only to its owner and admins."
+          },
           "voteAggregation": {
             "allOf": [
               {
@@ -9922,6 +10018,27 @@
           "name": {
             "type": "string",
             "description": "The new name of the participant."
+          },
+          "family": {
+            "type": "string",
+            "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"). Pass null to clear.",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "description": "The vendor-facing display name of the model. Pass null to clear.",
+            "nullable": true
+          },
+          "logo": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "An image asset for the model's logo. Pass null to clear."
           },
           "faucet": {
             "allOf": [
