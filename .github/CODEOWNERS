@@ -1,0 +1,3 @@
+# Default reviewers for the whole repo, auto-requested as reviewers on every PR
+# once the "Require review from Code Owners" branch-protection rule is enabled.
+* @LinoGiger
