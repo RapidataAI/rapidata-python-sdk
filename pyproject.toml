@@ -27,6 +27,12 @@ dependencies = [
     "qrcode>=8.0,<9",
 ]
 
+[project.optional-dependencies]
+mcp = ["mcp>=1.8.0"]
+
+[project.scripts]
+rapidata-mcp = "rapidata.mcp.server:main"
+
 [dependency-groups]
 dev = [
     "python-dotenv>=1.0.1,<2",

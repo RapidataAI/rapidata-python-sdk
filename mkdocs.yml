@@ -143,6 +143,7 @@ nav:
       - Getting Started: mri.md
       - Advanced: mri_advanced.md
     - AI Agents: ai_agents.md
+    - MCP Server: mcp_server.md
 
 theme:
   name: material
