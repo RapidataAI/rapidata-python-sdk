@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_faucet_output import IFaucetOutput
+from rapidata.api_client.models.participant_status import ParticipantStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,11 +33,12 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The unique identifier of the participant.")
     name: StrictStr = Field(description="The name of the participant.")
     benchmark_id: StrictStr = Field(description="The id of the benchmark the participant belongs to.", alias="benchmarkId")
+    status: ParticipantStatus = Field(description="The status of the participant.")
     family: Optional[StrictStr] = Field(default=None, description="The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.")
     proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model, or null if unset.", alias="proprietaryName")
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     faucet: Optional[IFaucetOutput] = Field(default=None, description="The faucet configured to auto-generate samples, or null if none is set.")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "proprietaryName", "logo", "faucet"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "family", "proprietaryName", "logo", "faucet"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -106,6 +108,7 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "benchmarkId": obj.get("benchmarkId"),
+            "status": obj.get("status"),
             "family": obj.get("family"),
             "proprietaryName": obj.get("proprietaryName"),
             "logo": obj.get("logo"),

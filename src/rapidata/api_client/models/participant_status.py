@@ -27,6 +27,7 @@ class ParticipantStatus(str, Enum):
     allowed enum values
     """
     CREATED = 'Created'
+    SUBMITTABLE = 'Submittable'
     SUBMITTED = 'Submitted'
     DISABLED = 'Disabled'
 

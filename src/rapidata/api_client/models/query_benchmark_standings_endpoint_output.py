@@ -32,6 +32,9 @@ class QueryBenchmarkStandingsEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the participant.")
     name: StrictStr = Field(description="The name of the participant.")
+    family: Optional[StrictStr] = Field(default=None, description="The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.")
+    proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model, or null if unset.", alias="proprietaryName")
+    logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     benchmark_id: StrictStr = Field(description="The id of the benchmark this standing belongs to.", alias="benchmarkId")
     status: StandingStatus = Field(description="The status of the standing.")
     score: Optional[Union[StrictFloat, StrictInt]] = Field(description="The calculated score, or null if not yet computed.")
@@ -39,7 +42,7 @@ class QueryBenchmarkStandingsEndpointOutput(LazyValidatedModel):
     total_matches: Union[StrictFloat, StrictInt] = Field(description="The total number of matches.", alias="totalMatches")
     is_disabled: StrictBool = Field(description="Whether the participant is disabled.", alias="isDisabled")
     confidence_interval: Optional[ConfidenceInterval] = Field(default=None, description="The confidence interval bounds, if requested.", alias="confidenceInterval")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "score", "wins", "totalMatches", "isDisabled", "confidenceInterval"]
+    __properties: ClassVar[List[str]] = ["id", "name", "family", "proprietaryName", "logo", "benchmarkId", "status", "score", "wins", "totalMatches", "isDisabled", "confidenceInterval"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -79,6 +82,21 @@ class QueryBenchmarkStandingsEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of confidence_interval
         if self.confidence_interval:
             _dict['confidenceInterval'] = self.confidence_interval.to_dict()
+        # set to None if family (nullable) is None
+        # and model_fields_set contains the field
+        if self.family is None and "family" in self.model_fields_set:
+            _dict['family'] = None
+
+        # set to None if proprietary_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.proprietary_name is None and "proprietary_name" in self.model_fields_set:
+            _dict['proprietaryName'] = None
+
+        # set to None if logo (nullable) is None
+        # and model_fields_set contains the field
+        if self.logo is None and "logo" in self.model_fields_set:
+            _dict['logo'] = None
+
         # set to None if score (nullable) is None
         # and model_fields_set contains the field
         if self.score is None and "score" in self.model_fields_set:
@@ -98,6 +116,9 @@ class QueryBenchmarkStandingsEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "family": obj.get("family"),
+            "proprietaryName": obj.get("proprietaryName"),
+            "logo": obj.get("logo"),
             "benchmarkId": obj.get("benchmarkId"),
             "status": obj.get("status"),
             "score": obj.get("score"),
