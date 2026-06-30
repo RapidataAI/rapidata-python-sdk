@@ -18,6 +18,8 @@ from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSe
 from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsSetting
 from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
 from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
+from rapidata.rapidata_client.settings.compare_reference_intro import CompareReferenceIntroSetting
+from rapidata.rapidata_client.settings.compare_reference_intro_stacked import CompareReferenceIntroStackedSetting
 from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
 from rapidata.rapidata_client.settings.classify_equirectangular import ClassifyEquirectangularSetting
 
@@ -45,6 +47,8 @@ class RapidataSettings:
         LocateMaxPoints (LocateMaxPointsSetting): Sets the maximum number of points a user can place on a locate task. Once the limit is reached, no more points can be added.
         LocateMinPoints (LocateMinPointsSetting): Sets the minimum number of points required for a valid locate submission. The submit button is disabled until enough points are placed.
         ComparePanorama (ComparePanoramaSetting): Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.
+        CompareReferenceIntro (CompareReferenceIntroSetting): Enables the reference-intro animation for compare tasks. After a question-intro drawer, the original reference and both candidate edits fly in one by one and land in the reference-asset layout (original on top, the two edits side by side below) before the edits become selectable. Images are shown whole with white letterboxing.
+        CompareReferenceIntroStacked (CompareReferenceIntroStackedSetting): Same as the reference-intro animation, but the two candidate edits are stacked vertically below the original (side-by-side only in landscape), matching the CompareWithReferenceAsset layout. Images are shown whole with white letterboxing.
         CompareEquirectangular (CompareEquirectangularSetting): Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
         ClassifyEquirectangular (ClassifyEquirectangularSetting): Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
 
@@ -73,5 +77,7 @@ class RapidataSettings:
     LocateMaxPoints = LocateMaxPointsSetting
     LocateMinPoints = LocateMinPointsSetting
     ComparePanorama = ComparePanoramaSetting
+    CompareReferenceIntro = CompareReferenceIntroSetting
+    CompareReferenceIntroStacked = CompareReferenceIntroStackedSetting
     CompareEquirectangular = CompareEquirectangularSetting
     ClassifyEquirectangular = ClassifyEquirectangularSetting

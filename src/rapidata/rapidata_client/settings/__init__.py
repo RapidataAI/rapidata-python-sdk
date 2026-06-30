@@ -18,6 +18,8 @@ from .keyboard_numeric import KeyboardNumericSetting
 from .locate_max_points import LocateMaxPointsSetting
 from .locate_min_points import LocateMinPointsSetting
 from .compare_panorama import ComparePanoramaSetting
+from .compare_reference_intro import CompareReferenceIntroSetting
+from .compare_reference_intro_stacked import CompareReferenceIntroStackedSetting
 from .compare_equirectangular import CompareEquirectangularSetting
 from .classify_equirectangular import ClassifyEquirectangularSetting
 from .custom_setting import CustomSetting
