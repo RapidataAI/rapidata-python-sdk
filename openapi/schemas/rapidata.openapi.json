@@ -32390,6 +32390,18 @@
           "name": {
             "type": "string"
           },
+          "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
+          },
           "status": {
             "$ref": "#/components/schemas/StandingStatus"
           },
@@ -32656,7 +32668,8 @@
         "required": [
           "id",
           "name",
-          "benchmarkId"
+          "benchmarkId",
+          "status"
         ],
         "type": "object",
         "properties": {
@@ -32671,6 +32684,14 @@
           "benchmarkId": {
             "type": "string",
             "description": "The id of the benchmark the participant belongs to."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ParticipantStatus"
+              }
+            ],
+            "description": "The status of the participant."
           },
           "family": {
             "type": "string",
@@ -33825,6 +33846,7 @@
       "ParticipantStatus": {
         "enum": [
           "Created",
+          "Submittable",
           "Submitted",
           "Disabled"
         ]
@@ -33925,6 +33947,21 @@
           "name": {
             "type": "string",
             "description": "The name of the participant."
+          },
+          "family": {
+            "type": "string",
+            "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "description": "The vendor-facing display name of the model, or null if unset.",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "description": "The logo of the model, or null if unset.",
+            "nullable": true
           },
           "benchmarkId": {
             "type": "string",
