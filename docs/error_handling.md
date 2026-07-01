@@ -127,7 +127,7 @@ except FailedUploadException as e:
     job_def = e.job_definition # (2)!
 
 # The job definition holds the successful datapoints — assign it to an audience to start collecting responses.
-audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
+audience = client.audience.get_audience_by_id("global")
 job = audience.assign_job(job_def)
 ```
 
@@ -175,7 +175,7 @@ from rapidata import RapidataClient
 client = RapidataClient()
 
 job_def = client.job.get_job_definition_by_id(job_definition_id) # (1)!
-audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
+audience = client.audience.get_audience_by_id("global")
 audience.assign_job(job_def)
 ```
 
