@@ -136,7 +136,7 @@ audience = client.audience.get_audience_by_id("audience_id")
 job_definitions = client.job.find_job_definitions("Example Image Prompt Alignment")
 
 # Get a specific job definition by ID
-job_definition = client.job.get_job_defintion_by_id("job_definition_id")
+job_definition = client.job.get_job_definition_by_id("job_definition_id")
 ```
 
 ### Find Jobs
