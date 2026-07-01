@@ -103,9 +103,8 @@ This groups all failed datapoints by their error message, making it easy to see 
 
 ### Strategy 1: Continue with Successfully Uploaded Datapoints
 
-When a `FailedUploadException` is raised, the `JobDefinition` or `Order` is still created with the successfully uploaded datapoints. You can catch the exception and continue using the created object:
+When a `FailedUploadException` is raised, the `JobDefinition` is still created with the successfully uploaded datapoints. You can catch the exception and continue using the created object:
 
-**For Job Definitions:**
 ```python
 from rapidata import RapidataClient
 from rapidata.rapidata_client.exceptions import FailedUploadException
@@ -126,33 +125,14 @@ except FailedUploadException as e:
         raise ValueError("Too many failures, aborting")
 
     job_def = e.job_definition # (2)!
+
+# The job definition holds the successful datapoints — assign it to an audience to start collecting responses.
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
+job = audience.assign_job(job_def)
 ```
 
 1. Check if the failure rate is acceptable — here we abort if more than 10% failed.
 2. The job definition was still created with the successfully uploaded datapoints. You can use it normally.
-
-**For Orders:**
-```python
-from rapidata import RapidataClient
-from rapidata.rapidata_client.exceptions import FailedUploadException
-
-client = RapidataClient()
-
-try:
-    order = client.order.create(
-        name="Image Classification Order",
-        instruction="What animal is in this image?",
-        answer_options=["Cat", "Dog", "Bird"],
-        datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"]
-    )
-except FailedUploadException as e:
-    print(f"Warning: {len(e.failed_uploads)} datapoints failed")
-
-    order = e.order # (1)!
-    order.run()
-```
-
-1. The order was still created with the successfully uploaded datapoints.
 
 ### Strategy 2: Retry Failed Datapoints
 
@@ -187,27 +167,15 @@ except FailedUploadException as e:
 
 ### Strategy 3: Retrieve and Use After Exception (If Not Caught)
 
-If you didn't catch the exception during creation, you can still retrieve and use the job definition or order. They were created with the successfully uploaded datapoints and can be used through code or the app.rapidata.ai UI:
+If you didn't catch the exception during creation, you can still retrieve and use the job definition. It was created with the successfully uploaded datapoints and can be used through code or the app.rapidata.ai UI:
 
-**For Orders:**
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-order = client.order.get_order_by_id(order_id) # (1)!
-order.run()
-```
-
-1. Retrieve the order using its ID (from the exception message or the [Rapidata Dashboard](https://app.rapidata.ai)).
-
-**For Job Definitions:**
 ```python
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
 job_def = client.job.get_job_definition_by_id(job_definition_id) # (1)!
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 audience.assign_job(job_def)
 ```
 

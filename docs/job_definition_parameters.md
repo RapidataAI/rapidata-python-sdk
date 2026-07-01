@@ -175,7 +175,7 @@ from rapidata import rapidata_config
 
 rapidata_config.upload.autoShortenContext = True
 
-order = rapi.order.create_classification_order(
+job_definition = client.job.create_classification_job_definition(
     name="Outfit check",
     instruction="Does the main character wear the right clothing?",
     answer_options=["Yes", "No"],
@@ -184,16 +184,16 @@ order = rapi.order.create_classification_order(
 )
 ```
 
-You can also shorten contexts directly via the client, without creating an order:
+You can also shorten contexts directly via the client, without creating a job definition:
 
 ```python
-short = rapi.context.shorten_context(
+short = client.context.shorten_context(
     context="<a very long description ...>",
     question="Does the main character wear the right clothing?",
 )
 
 # Or a batch of (context, question) pairs in one call:
-shortened = rapi.context.shorten_contexts([
+shortened = client.context.shorten_contexts([
     (context_a, question_a),
     (context_b, question_b),
 ])
