@@ -16,8 +16,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictBool, StrictInt, StrictStr
+from typing import List, Optional
 from typing_extensions import Annotated
+from rapidata.api_client.models.get_rapid_navigation_endpoint_output import GetRapidNavigationEndpointOutput
+from rapidata.api_client.models.rapid_state_model import RapidStateModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -35,6 +38,362 @@ class RapidApi:
         if api_client is None:
             api_client = ApiClient.get_default()
         self.api_client = api_client
+
+
+    @validate_call
+    def rapid_rapid_id_navigation_get(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The rapid to anchor navigation on.")],
+        correlation_id: Annotated[StrictStr, Field(description="The correlation id whose result slice to navigate.")],
+        states: Annotated[Optional[List[RapidStateModel]], Field(description="Optional rapid states to filter by; all states are included when omitted.")] = None,
+        window: Annotated[Optional[StrictInt], Field(description="The maximum number of neighbours to return on each side.")] = None,
+        include_not_accepted: Annotated[Optional[StrictBool], Field(description="When true, not-accepted responses count toward the anchor's sample and aggregation.")] = None,
+        include_overflow: Annotated[Optional[StrictBool], Field(description="When true, overflow responses count toward the anchor's sample and aggregation.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetRapidNavigationEndpointOutput:
+        """Gets the anchor rapid and its surrounding rapids within the results slice, in the order  and filter the results grid renders, so the explorer can step neighbour-to-neighbour.
+
+        Navigation follows the grid's default order (flagged rapids first, then by id) over the  given correlation slice. Returns 404 when the rapid is not part of the filtered slice.
+
+        :param rapid_id: The rapid to anchor navigation on. (required)
+        :type rapid_id: str
+        :param correlation_id: The correlation id whose result slice to navigate. (required)
+        :type correlation_id: str
+        :param states: Optional rapid states to filter by; all states are included when omitted.
+        :type states: List[RapidStateModel]
+        :param window: The maximum number of neighbours to return on each side.
+        :type window: int
+        :param include_not_accepted: When true, not-accepted responses count toward the anchor's sample and aggregation.
+        :type include_not_accepted: bool
+        :param include_overflow: When true, overflow responses count toward the anchor's sample and aggregation.
+        :type include_overflow: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_id_navigation_get_serialize(
+            rapid_id=rapid_id,
+            correlation_id=correlation_id,
+            states=states,
+            window=window,
+            include_not_accepted=include_not_accepted,
+            include_overflow=include_overflow,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetRapidNavigationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_rapid_id_navigation_get_with_http_info(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The rapid to anchor navigation on.")],
+        correlation_id: Annotated[StrictStr, Field(description="The correlation id whose result slice to navigate.")],
+        states: Annotated[Optional[List[RapidStateModel]], Field(description="Optional rapid states to filter by; all states are included when omitted.")] = None,
+        window: Annotated[Optional[StrictInt], Field(description="The maximum number of neighbours to return on each side.")] = None,
+        include_not_accepted: Annotated[Optional[StrictBool], Field(description="When true, not-accepted responses count toward the anchor's sample and aggregation.")] = None,
+        include_overflow: Annotated[Optional[StrictBool], Field(description="When true, overflow responses count toward the anchor's sample and aggregation.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetRapidNavigationEndpointOutput]:
+        """Gets the anchor rapid and its surrounding rapids within the results slice, in the order  and filter the results grid renders, so the explorer can step neighbour-to-neighbour.
+
+        Navigation follows the grid's default order (flagged rapids first, then by id) over the  given correlation slice. Returns 404 when the rapid is not part of the filtered slice.
+
+        :param rapid_id: The rapid to anchor navigation on. (required)
+        :type rapid_id: str
+        :param correlation_id: The correlation id whose result slice to navigate. (required)
+        :type correlation_id: str
+        :param states: Optional rapid states to filter by; all states are included when omitted.
+        :type states: List[RapidStateModel]
+        :param window: The maximum number of neighbours to return on each side.
+        :type window: int
+        :param include_not_accepted: When true, not-accepted responses count toward the anchor's sample and aggregation.
+        :type include_not_accepted: bool
+        :param include_overflow: When true, overflow responses count toward the anchor's sample and aggregation.
+        :type include_overflow: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_id_navigation_get_serialize(
+            rapid_id=rapid_id,
+            correlation_id=correlation_id,
+            states=states,
+            window=window,
+            include_not_accepted=include_not_accepted,
+            include_overflow=include_overflow,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetRapidNavigationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_rapid_id_navigation_get_without_preload_content(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The rapid to anchor navigation on.")],
+        correlation_id: Annotated[StrictStr, Field(description="The correlation id whose result slice to navigate.")],
+        states: Annotated[Optional[List[RapidStateModel]], Field(description="Optional rapid states to filter by; all states are included when omitted.")] = None,
+        window: Annotated[Optional[StrictInt], Field(description="The maximum number of neighbours to return on each side.")] = None,
+        include_not_accepted: Annotated[Optional[StrictBool], Field(description="When true, not-accepted responses count toward the anchor's sample and aggregation.")] = None,
+        include_overflow: Annotated[Optional[StrictBool], Field(description="When true, overflow responses count toward the anchor's sample and aggregation.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Gets the anchor rapid and its surrounding rapids within the results slice, in the order  and filter the results grid renders, so the explorer can step neighbour-to-neighbour.
+
+        Navigation follows the grid's default order (flagged rapids first, then by id) over the  given correlation slice. Returns 404 when the rapid is not part of the filtered slice.
+
+        :param rapid_id: The rapid to anchor navigation on. (required)
+        :type rapid_id: str
+        :param correlation_id: The correlation id whose result slice to navigate. (required)
+        :type correlation_id: str
+        :param states: Optional rapid states to filter by; all states are included when omitted.
+        :type states: List[RapidStateModel]
+        :param window: The maximum number of neighbours to return on each side.
+        :type window: int
+        :param include_not_accepted: When true, not-accepted responses count toward the anchor's sample and aggregation.
+        :type include_not_accepted: bool
+        :param include_overflow: When true, overflow responses count toward the anchor's sample and aggregation.
+        :type include_overflow: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_id_navigation_get_serialize(
+            rapid_id=rapid_id,
+            correlation_id=correlation_id,
+            states=states,
+            window=window,
+            include_not_accepted=include_not_accepted,
+            include_overflow=include_overflow,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetRapidNavigationEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_rapid_id_navigation_get_serialize(
+        self,
+        rapid_id,
+        correlation_id,
+        states,
+        window,
+        include_not_accepted,
+        include_overflow,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'states': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if rapid_id is not None:
+            _path_params['rapidId'] = rapid_id
+        # process the query parameters
+        if correlation_id is not None:
+            
+            _query_params.append(('correlationId', correlation_id))
+            
+        if states is not None:
+            
+            _query_params.append(('states', states))
+            
+        if window is not None:
+            
+            _query_params.append(('window', window))
+            
+        if include_not_accepted is not None:
+            
+            _query_params.append(('includeNotAccepted', include_not_accepted))
+            
+        if include_overflow is not None:
+            
+            _query_params.append(('includeOverflow', include_overflow))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/rapid/{rapidId}/navigation',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
 
 
     @validate_call

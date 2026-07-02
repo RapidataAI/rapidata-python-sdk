@@ -284,6 +284,7 @@ Class | Method | HTTP request | Description
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_get) | **GET** /flow/ranking/item/{flowItemId} | Retrieves a flow item by its ID.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_results_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_results_get) | **GET** /flow/ranking/item/{flowItemId}/results | Returns ranking results with Elo scores for a completed flow item.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_vote_matrix_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_vote_matrix_get) | **GET** /flow/ranking/item/{flowItemId}/vote-matrix | Retrieves the pairwise vote matrix for a completed flow item.
+*RapidApi* | [**rapid_rapid_id_navigation_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_navigation_get) | **GET** /rapid/{rapidId}/navigation | Gets the anchor rapid and its surrounding rapids within the results slice, in the order  and filter the results grid renders, so the explorer can step neighbour-to-neighbour.
 *RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a completed rapid, marking its results as invalid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *ReplicateApi* | [**leaderboard_faucet_replicate_models_get_0**](rapidata/api_client/docs/ReplicateApi.md#leaderboard_faucet_replicate_models_get_0) | **GET** /leaderboard/faucet/replicate/models | Searches Replicate models by free-text term.
@@ -527,6 +528,10 @@ Class | Method | HTTP request | Description
  - [GetRankingFlowItemVoteMatrixEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemVoteMatrixEndpointOutput.md)
  - [GetRankingWorkflowResultsEndpointDatapoint](rapidata/api_client/docs/GetRankingWorkflowResultsEndpointDatapoint.md)
  - [GetRankingWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetRankingWorkflowResultsEndpointOutput.md)
+ - [GetRapidNavigationEndpointCard](rapidata/api_client/docs/GetRapidNavigationEndpointCard.md)
+ - [GetRapidNavigationEndpointCardResponse](rapidata/api_client/docs/GetRapidNavigationEndpointCardResponse.md)
+ - [GetRapidNavigationEndpointItem](rapidata/api_client/docs/GetRapidNavigationEndpointItem.md)
+ - [GetRapidNavigationEndpointOutput](rapidata/api_client/docs/GetRapidNavigationEndpointOutput.md)
  - [GetRecommendedValidationSetEndpointOutput](rapidata/api_client/docs/GetRecommendedValidationSetEndpointOutput.md)
  - [GetRecommendedValidationSetEndpointValidationSetOutputModel](rapidata/api_client/docs/GetRecommendedValidationSetEndpointValidationSetOutputModel.md)
  - [GetReplicateModelEndpointOutput](rapidata/api_client/docs/GetReplicateModelEndpointOutput.md)
@@ -784,6 +789,9 @@ Class | Method | HTTP request | Description
  - [IResponseAggregation](rapidata/api_client/docs/IResponseAggregation.md)
  - [IResponseAggregationClassifyAggregation](rapidata/api_client/docs/IResponseAggregationClassifyAggregation.md)
  - [IResponseAggregationCompareAggregation](rapidata/api_client/docs/IResponseAggregationCompareAggregation.md)
+ - [IResponseAggregationModel](rapidata/api_client/docs/IResponseAggregationModel.md)
+ - [IResponseAggregationModelClassifyAggregationModel](rapidata/api_client/docs/IResponseAggregationModelClassifyAggregationModel.md)
+ - [IResponseAggregationModelCompareAggregationModel](rapidata/api_client/docs/IResponseAggregationModelCompareAggregationModel.md)
  - [ISelection](rapidata/api_client/docs/ISelection.md)
  - [ISelectionAbTestSelection](rapidata/api_client/docs/ISelectionAbTestSelection.md)
  - [ISelectionCappedSelection](rapidata/api_client/docs/ISelectionCappedSelection.md)
@@ -949,6 +957,7 @@ Class | Method | HTTP request | Description
  - [ReplicateModelParameterType](rapidata/api_client/docs/ReplicateModelParameterType.md)
  - [ReportRapidEndpointInput](rapidata/api_client/docs/ReportRapidEndpointInput.md)
  - [ResponseTally](rapidata/api_client/docs/ResponseTally.md)
+ - [ResponseTallyModel](rapidata/api_client/docs/ResponseTallyModel.md)
  - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
  - [RetrySampleGenerationEndpointInput](rapidata/api_client/docs/RetrySampleGenerationEndpointInput.md)
  - [RetrySampleGenerationEndpointOutput](rapidata/api_client/docs/RetrySampleGenerationEndpointOutput.md)
