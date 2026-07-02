@@ -1000,6 +1000,102 @@
         }
       }
     },
+    "/rapid/{rapidId}/navigation": {
+      "get": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Gets the anchor rapid and its surrounding rapids within the results slice, in the order\n and filter the results grid renders, so the explorer can step neighbour-to-neighbour.",
+        "description": "Navigation follows the grid's default order (flagged rapids first, then by id) over the\n given correlation slice. Returns 404 when the rapid is not part of the filtered slice.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The rapid to anchor navigation on.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "correlationId",
+            "in": "query",
+            "description": "The correlation id whose result slice to navigate.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "description": "Optional rapid states to filter by; all states are included when omitted.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RapidStateModel"
+              }
+            }
+          },
+          {
+            "name": "window",
+            "in": "query",
+            "description": "The maximum number of neighbours to return on each side.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 3
+            }
+          },
+          {
+            "name": "includeNotAccepted",
+            "in": "query",
+            "description": "When true, not-accepted responses count toward the anchor's sample and aggregation.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeOverflow",
+            "in": "query",
+            "description": "When true, overflow responses count toward the anchor's sample and aggregation.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRapidNavigationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/rapid/{rapidId}/reject": {
       "post": {
         "tags": [
@@ -1881,6 +1977,188 @@
           "gender": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "GetRapidNavigationEndpoint_Card": {
+        "required": [
+          "rapidId",
+          "asset",
+          "state",
+          "payload",
+          "responses",
+          "totalResponseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RapidStateModel"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/IRapidPayloadModel"
+          },
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetRapidNavigationEndpoint_Card_Response"
+            }
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "decisiveness": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "aggregation": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IResponseAggregationModel"
+              }
+            ]
+          }
+        }
+      },
+      "GetRapidNavigationEndpoint_Card_Response": {
+        "required": [
+          "id",
+          "userId",
+          "country",
+          "language",
+          "result",
+          "userScore",
+          "userScores",
+          "demographicInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/IRapidResultModel"
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GetRapidNavigationEndpoint_Item": {
+        "required": [
+          "rapidId",
+          "asset",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RapidStateModel"
+          }
+        }
+      },
+      "GetRapidNavigationEndpoint_Output": {
+        "required": [
+          "current",
+          "previous",
+          "next",
+          "index",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "current": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetRapidNavigationEndpoint_Card"
+              }
+            ],
+            "description": "The anchor rapid, carrying the same fields a results-grid card renders."
+          },
+          "previous": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetRapidNavigationEndpoint_Item"
+                }
+              }
+            ],
+            "description": "The rapids preceding the anchor in grid order, at most window entries,\n ordered ascending with the neighbour adjacent to the anchor last."
+          },
+          "next": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetRapidNavigationEndpoint_Item"
+                }
+              }
+            ],
+            "description": "The rapids following the anchor in grid order, at most window entries,\n in ascending order."
+          },
+          "index": {
+            "type": "integer",
+            "description": "The 1-based position of the anchor within the filtered slice.",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of rapids in the filtered slice.",
+            "format": "int64"
           }
         }
       },
@@ -3180,6 +3458,67 @@
           }
         }
       },
+      "IResponseAggregationModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IResponseAggregationModelClassifyAggregationModel"
+          },
+          {
+            "$ref": "#/components/schemas/IResponseAggregationModelCompareAggregationModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassifyAggregation": "#/components/schemas/IResponseAggregationModelClassifyAggregationModel",
+            "CompareAggregation": "#/components/schemas/IResponseAggregationModelCompareAggregationModel"
+          }
+        }
+      },
+      "IResponseAggregationModelClassifyAggregationModel": {
+        "required": [
+          "categoryTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyAggregation"
+            ],
+            "type": "string"
+          },
+          "categoryTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTallyModel"
+            }
+          }
+        }
+      },
+      "IResponseAggregationModelCompareAggregationModel": {
+        "required": [
+          "winnerTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareAggregation"
+            ],
+            "type": "string"
+          },
+          "winnerTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTallyModel"
+            }
+          }
+        }
+      },
       "IsRapidBagValidEndpoint_Output": {
         "required": [
           "isValid"
@@ -4035,6 +4374,23 @@
             "type": "string",
             "description": "An optional identifier where the report originated from.",
             "nullable": true
+          }
+        }
+      },
+      "ResponseTallyModel": {
+        "required": [
+          "count",
+          "userScoreSum"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userScoreSum": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
