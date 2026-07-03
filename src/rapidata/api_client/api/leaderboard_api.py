@@ -1767,6 +1767,12 @@ class LeaderboardApi:
         leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1790,6 +1796,18 @@ class LeaderboardApi:
         :type tags: List[str]
         :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1816,6 +1834,12 @@ class LeaderboardApi:
             leaderboard_id=leaderboard_id,
             tags=tags,
             use_weighted_scoring=use_weighted_scoring,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1845,6 +1869,12 @@ class LeaderboardApi:
         leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1868,6 +1898,18 @@ class LeaderboardApi:
         :type tags: List[str]
         :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1894,6 +1936,12 @@ class LeaderboardApi:
             leaderboard_id=leaderboard_id,
             tags=tags,
             use_weighted_scoring=use_weighted_scoring,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1923,6 +1971,12 @@ class LeaderboardApi:
         leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1946,6 +2000,18 @@ class LeaderboardApi:
         :type tags: List[str]
         :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1972,6 +2038,12 @@ class LeaderboardApi:
             leaderboard_id=leaderboard_id,
             tags=tags,
             use_weighted_scoring=use_weighted_scoring,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1996,6 +2068,12 @@ class LeaderboardApi:
         leaderboard_id,
         tags,
         use_weighted_scoring,
+        country,
+        language,
+        gender,
+        age_bucket,
+        occupation,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -2028,6 +2106,50 @@ class LeaderboardApi:
         if use_weighted_scoring is not None:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
+            
+        if country is not None:
+            _param_val = country
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('country[' + _k + ']', _v))
+        if language is not None:
+            _param_val = language
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('language[' + _k + ']', _v))
+        if gender is not None:
+            _param_val = gender
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('gender[' + _k + ']', _v))
+        if age_bucket is not None:
+            _param_val = age_bucket
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('age_bucket[' + _k + ']', _v))
+        if occupation is not None:
+            _param_val = occupation
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('occupation[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
             
         # process the header parameters
         # process the form parameters
@@ -4820,6 +4942,12 @@ class LeaderboardApi:
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4844,6 +4972,18 @@ class LeaderboardApi:
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4871,6 +5011,12 @@ class LeaderboardApi:
             tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4901,6 +5047,12 @@ class LeaderboardApi:
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4925,6 +5077,18 @@ class LeaderboardApi:
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4952,6 +5116,12 @@ class LeaderboardApi:
             tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4982,6 +5152,12 @@ class LeaderboardApi:
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5006,6 +5182,18 @@ class LeaderboardApi:
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5033,6 +5221,12 @@ class LeaderboardApi:
             tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5058,6 +5252,12 @@ class LeaderboardApi:
         tags,
         use_weighted_scoring,
         include_confidence_intervals,
+        country,
+        language,
+        gender,
+        age_bucket,
+        occupation,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -5094,6 +5294,50 @@ class LeaderboardApi:
         if include_confidence_intervals is not None:
             
             _query_params.append(('includeConfidenceIntervals', include_confidence_intervals))
+            
+        if country is not None:
+            _param_val = country
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('country[' + _k + ']', _v))
+        if language is not None:
+            _param_val = language
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('language[' + _k + ']', _v))
+        if gender is not None:
+            _param_val = gender
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('gender[' + _k + ']', _v))
+        if age_bucket is not None:
+            _param_val = age_bucket
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('age_bucket[' + _k + ']', _v))
+        if occupation is not None:
+            _param_val = occupation
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is not None:
+                        _query_params.append(('occupation[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
             
         # process the header parameters
         # process the form parameters
