@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from rapidata.rapidata_client.config import logger, tracer
+from rapidata.rapidata_client.config import logger, managed_print, tracer
 
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
@@ -86,6 +86,9 @@ class RapidataAudienceBase:
                 openapi_service=self._openapi_service,
             )
             logger.info(f"Assigned job to audience: {self.id}")
+            managed_print(
+                f"Job '{job.name}' is now viewable under: {job.job_details_page}"
+            )
             return job
 
     def find_jobs(
