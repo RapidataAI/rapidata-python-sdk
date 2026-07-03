@@ -39541,6 +39541,29 @@
             "type": "number",
             "description": "The user's score after processing this response.",
             "format": "double"
+          },
+          "nextRapid": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidModel"
+              }
+            ],
+            "description": "The next rapid to solve when the session streams its rapids and continues.\n Null when there is nothing further to solve."
+          }
+        }
+      },
+      "AttachCategoryRapidModel_Category": {
+        "required": [
+          "value",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "$ref": "#/components/schemas/TranslatedString"
           }
         }
       },
@@ -40071,6 +40094,600 @@
             "type": "string",
             "description": "The captured dump, if any.",
             "nullable": true
+          }
+        }
+      },
+      "IRapidModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidModelAttachCategoryRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelBoundingBoxRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelCompareRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelFreeTextRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelLineRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelLocateRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelNamedEntityRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelPolygonRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelScrubRapidModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidModelTranscriptionRapidModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AttachCategoryRapidModel": "#/components/schemas/IRapidModelAttachCategoryRapidModel",
+            "BoundingBoxRapidModel": "#/components/schemas/IRapidModelBoundingBoxRapidModel",
+            "CompareRapidModel": "#/components/schemas/IRapidModelCompareRapidModel",
+            "FreeTextRapidModel": "#/components/schemas/IRapidModelFreeTextRapidModel",
+            "LineRapidModel": "#/components/schemas/IRapidModelLineRapidModel",
+            "LocateRapidModel": "#/components/schemas/IRapidModelLocateRapidModel",
+            "NamedEntityRapidModel": "#/components/schemas/IRapidModelNamedEntityRapidModel",
+            "PolygonRapidModel": "#/components/schemas/IRapidModelPolygonRapidModel",
+            "ScrubRapidModel": "#/components/schemas/IRapidModelScrubRapidModel",
+            "TranscriptionRapidModel": "#/components/schemas/IRapidModelTranscriptionRapidModel"
+          }
+        }
+      },
+      "IRapidModelAttachCategoryRapidModel": {
+        "required": [
+          "categories",
+          "title",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryRapidModel"
+            ],
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachCategoryRapidModel_Category"
+            }
+          },
+          "title": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelBoundingBoxRapidModel": {
+        "required": [
+          "target",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxRapidModel"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelCompareRapidModel": {
+        "required": [
+          "criteria",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareRapidModel"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelFreeTextRapidModel": {
+        "required": [
+          "question",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextRapidModel"
+            ],
+            "type": "string"
+          },
+          "question": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelLineRapidModel": {
+        "required": [
+          "target",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineRapidModel"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelLocateRapidModel": {
+        "required": [
+          "target",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateRapidModel"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelNamedEntityRapidModel": {
+        "required": [
+          "target",
+          "classes",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityRapidModel"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranslatedString"
+            }
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelPolygonRapidModel": {
+        "required": [
+          "target",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonRapidModel"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidModelScrubRapidModel": {
+        "required": [
+          "target",
+          "id",
+          "featureFlags",
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubRapidModel"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "id": {
+            "type": "string"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          }
+        }
+      },
+      "IRapidModelTranscriptionRapidModel": {
+        "required": [
+          "transcription",
+          "title",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionRapidModel"
+            ],
+            "type": "string"
+          },
+          "transcription": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionRapidModel_TranscriptionWord"
+            }
+          },
+          "title": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ]
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
           }
         }
       },
@@ -41719,10 +42336,34 @@
             "type": "number",
             "description": "The user's score after the skip.",
             "format": "double"
+          },
+          "nextRapid": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidModel"
+              }
+            ],
+            "description": "The next rapid to solve when the session streams its rapids and continues.\n Null when there is nothing further to solve."
           }
         }
       },
       "TranscriptionPayloadModel_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionRapidModel_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"

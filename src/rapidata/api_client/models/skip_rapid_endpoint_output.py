@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.i_rapid_model import IRapidModel
 from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from rapidata.api_client.models.translated_string import TranslatedString
 from pydantic import ValidationError
@@ -34,7 +35,8 @@ class SkipRapidEndpointOutput(LazyValidatedModel):
     validation_truth: Optional[IValidationTruthModel] = Field(default=None, description="The validation truth applied, if any.", alias="validationTruth")
     explanation: Optional[TranslatedString] = Field(default=None, description="An optional translated explanation for the user.")
     user_score: Union[StrictFloat, StrictInt] = Field(description="The user's score after the skip.", alias="userScore")
-    __properties: ClassVar[List[str]] = ["isAccepted", "validationTruth", "explanation", "userScore"]
+    next_rapid: Optional[IRapidModel] = Field(default=None, description="The next rapid to solve when the session streams its rapids and continues.  Null when there is nothing further to solve.", alias="nextRapid")
+    __properties: ClassVar[List[str]] = ["isAccepted", "validationTruth", "explanation", "userScore", "nextRapid"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -77,6 +79,9 @@ class SkipRapidEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of explanation
         if self.explanation:
             _dict['explanation'] = self.explanation.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of next_rapid
+        if self.next_rapid:
+            _dict['nextRapid'] = self.next_rapid.to_dict()
         return _dict
 
     @classmethod
@@ -92,7 +97,8 @@ class SkipRapidEndpointOutput(LazyValidatedModel):
             "isAccepted": obj.get("isAccepted"),
             "validationTruth": IValidationTruthModel.from_dict(obj["validationTruth"]) if obj.get("validationTruth") is not None else None,
             "explanation": TranslatedString.from_dict(obj["explanation"]) if obj.get("explanation") is not None else None,
-            "userScore": obj.get("userScore")
+            "userScore": obj.get("userScore"),
+            "nextRapid": IRapidModel.from_dict(obj["nextRapid"]) if obj.get("nextRapid") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
