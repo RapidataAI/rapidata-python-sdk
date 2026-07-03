@@ -67,7 +67,7 @@ class RapidataClient:
         client_id: str | None = None,
         client_secret: str | None = None,
         environment: str | None = None,
-        oauth_scope: str = "openid roles email",
+        oauth_scope: str = "openid roles email api",
         cert_path: str | None = None,
         token: dict | None = None,
         leeway: int = 60,
@@ -171,9 +171,7 @@ class RapidataClient:
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing RapidataSignalManager")
-            self.signals = RapidataSignalManager(
-                openapi_service=self._openapi_service
-            )
+            self.signals = RapidataSignalManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing RapidataAudienceManager")
             self.audience = RapidataAudienceManager(
