@@ -16,6 +16,7 @@ from rapidata.api_client.models.update_leaderboard_endpoint_input import (
 
 if TYPE_CHECKING:
     import pandas as pd
+    from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
 
 class RapidataLeaderboard:
@@ -149,6 +150,51 @@ class RapidataLeaderboard:
 
             self.__name = name
             self._update_config()
+
+    @property
+    def jobs(self) -> list[RapidataJob]:
+        """
+        Returns all Rapidata jobs that have run for this leaderboard.
+
+        Every model evaluation on the leaderboard is carried out by a job. This
+        collects the jobs across all runs of the leaderboard, most recent first.
+
+        Returns:
+            A list of RapidataJob instances, one per run that has an associated job.
+        """
+        with tracer.start_as_current_span("RapidataLeaderboard.jobs"):
+            from rapidata.rapidata_client.job.rapidata_job_manager import (
+                RapidataJobManager,
+            )
+
+            job_manager = RapidataJobManager(self.__openapi_service)
+
+            current_page = 1
+            job_ids: list[str] = []
+
+            while True:
+                runs_result = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_runs_get(
+                    leaderboard_id=self.id,
+                    page=current_page,
+                    page_size=100,
+                    sort=["-created_at"],
+                )
+
+                if runs_result.total_pages is None:
+                    raise ValueError(
+                        "An error occurred while fetching runs: total_pages is None"
+                    )
+
+                job_ids.extend(
+                    run.job_id for run in runs_result.items if run.job_id is not None
+                )
+
+                if current_page >= runs_result.total_pages:
+                    break
+
+                current_page += 1
+
+            return [job_manager.get_job_by_id(job_id) for job_id in job_ids]
 
     def get_standings(self, tags: Optional[list[str]] = None) -> "pd.DataFrame":
         """

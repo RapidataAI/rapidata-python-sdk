@@ -197,4 +197,8 @@ leaderboard = benchmark.leaderboards[0]
 
 # Get the standings
 standings = leaderboard.get_standings() # Returns a pandas dataframe
+
+# Access the jobs that ran for this leaderboard
+for job in leaderboard.jobs:
+    results = job.get_results()
 ```
