@@ -197,8 +197,20 @@ leaderboard = benchmark.leaderboards[0]
 
 # Get the standings
 standings = leaderboard.get_standings() # Returns a pandas dataframe
-
-# Access the jobs that ran for this leaderboard
-for job in leaderboard.jobs:
-    results = job.get_results()
 ```
+
+Every model evaluation on a leaderboard is carried out by a **job**. The `jobs`
+property exposes those jobs so you can drill into the raw comparison results
+behind the standings:
+
+```python
+# All jobs that have run for this leaderboard (most recent first)
+for job in leaderboard.jobs:
+    print(job.name, job.get_status())
+    results = job.get_results() # RapidataResults for that evaluation
+```
+
+Each entry is a full `RapidataJob`, so the usual methods (`get_results()`,
+`get_status()`, `view()`, ...) are available. See
+[Model Ranking Insights Advanced](mri_advanced.md#accessing-the-underlying-jobs)
+for more.
