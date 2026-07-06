@@ -58,6 +58,11 @@ _USERINFO_CACHE_TTL_SECONDS = 24 * 60 * 60
 _userinfo_cache: dict[tuple[str, str], _UserInfoCacheEntry] = {}
 _userinfo_cache_lock = threading.Lock()
 
+# Environments with a deployed SDK OTLP collector at otlp-sdk.<environment>.
+# Other environments (e.g. local rapidata.dev) have no collector, so OTLP is
+# left disabled there to avoid noisy failed exports.
+_OTLP_COLLECTOR_ENVIRONMENTS = frozenset({"rapidata.ai", "rabbitdata.ch"})
+
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
@@ -134,11 +139,13 @@ class RapidataClient:
         self._client_id = client_id
         self._environment = environment
 
+        rapidata_config.logging.environment = environment
+        if environment not in _OTLP_COLLECTOR_ENVIRONMENTS:
+            rapidata_config.logging.enable_otlp = False
+
         with tracer.start_as_current_span("RapidataClient.__init__"):
             logger.debug("Checking version")
             self._check_version()
-            if environment != "rapidata.ai":
-                rapidata_config.logging.enable_otlp = False
 
             logger.debug("Initializing OpenAPIService")
             self._openapi_service = OpenAPIService(

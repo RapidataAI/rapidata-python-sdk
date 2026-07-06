@@ -42,6 +42,8 @@ class LoggingConfig(BaseModel):
         silent_mode (bool): Whether to disable the prints and progress bars. Does NOT affect the logging. Defaults to False.
         enable_otlp (bool): Whether to enable OpenTelemetry trace logs. Defaults to True.
             Can also be disabled via the RAPIDATA_DISABLE_OTLP=1 environment variable.
+        environment (str): The API environment the client targets, used to derive the
+            OTLP collector host (``otlp-sdk.<environment>``). Set by RapidataClient.
     """
 
     @model_validator(mode="before")
@@ -56,6 +58,7 @@ class LoggingConfig(BaseModel):
     format: str = Field(default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     silent_mode: bool = Field(default=False)
     enable_otlp: bool = Field(default_factory=_default_enable_otlp)
+    environment: str = Field(default="rapidata.ai")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
