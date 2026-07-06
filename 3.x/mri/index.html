@@ -1772,6 +1772,18 @@ one — pass <code>audience_id</code>:</p>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Get the standings</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">standings</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_standings</span><span class="p">()</span> <span class="c1"># Returns a pandas dataframe</span>
 </span></code></pre></div>
+<p>Every model evaluation on a leaderboard is carried out by a <strong>job</strong>. The <code>jobs</code>
+property exposes those jobs so you can drill into the raw comparison results
+behind the standings:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># All jobs that have run for this leaderboard (most recent first)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">())</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># RapidataResults for that evaluation</span>
+</span></code></pre></div>
+<p>Each entry is a full <code>RapidataJob</code>, so the usual methods (<code>get_results()</code>,
+<code>get_status()</code>, <code>view()</code>, ...) are available. See
+<a href="../mri_advanced/#accessing-the-underlying-jobs">Model Ranking Insights Advanced</a>
+for more.</p>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>

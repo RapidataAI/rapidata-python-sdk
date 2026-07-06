@@ -201,6 +201,34 @@ participant = benchmark.participants[0]
 participant.delete()
 ```
 
+## Accessing the Underlying Jobs
+
+The standings and win/loss matrix are aggregates. If you need the raw responses
+behind them, use the leaderboard's `jobs` property: every model evaluation on a
+leaderboard runs as a job, and this returns all of them, most recent first.
+
+```python
+leaderboard = benchmark.leaderboards[0]
+
+jobs = leaderboard.jobs # list[RapidataJob], newest first
+print(f"{len(jobs)} evaluations have run for this leaderboard")
+```
+
+Each item is a full `RapidataJob`, so you can pull the detailed comparison
+results, check status, or open a job in the dashboard:
+
+```python
+for job in leaderboard.jobs:
+    if job.get_status() != "Completed":
+        continue
+
+    results = job.get_results() # RapidataResults — the individual matchups
+    df = results.to_pandas()    # or work with the raw dict directly
+```
+
+Runs that don't yet have an associated job (for example, an evaluation still
+being set up) are skipped, so the list only contains jobs you can act on.
+
 ## References
 - [RapidataBenchmarkManager](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/)
 - [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)

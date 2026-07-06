@@ -3159,6 +3159,22 @@ leaderboard = benchmark.leaderboards[0]
 standings = leaderboard.get_standings() # Returns a pandas dataframe
 ```
 
+Every model evaluation on a leaderboard is carried out by a **job**. The `jobs`
+property exposes those jobs so you can drill into the raw comparison results
+behind the standings:
+
+```python
+# All jobs that have run for this leaderboard (most recent first)
+for job in leaderboard.jobs:
+    print(job.name, job.get_status())
+    results = job.get_results() # RapidataResults for that evaluation
+```
+
+Each entry is a full `RapidataJob`, so the usual methods (`get_results()`,
+`get_status()`, `view()`, ...) are available. See
+[Model Ranking Insights Advanced](mri_advanced.md#accessing-the-underlying-jobs)
+for more.
+
 
 ## Advanced
 
@@ -3364,6 +3380,34 @@ You can remove a participant — and its uploaded media — from the benchmark. 
 participant = benchmark.participants[0]
 participant.delete()
 ```
+
+## Accessing the Underlying Jobs
+
+The standings and win/loss matrix are aggregates. If you need the raw responses
+behind them, use the leaderboard's `jobs` property: every model evaluation on a
+leaderboard runs as a job, and this returns all of them, most recent first.
+
+```python
+leaderboard = benchmark.leaderboards[0]
+
+jobs = leaderboard.jobs # list[RapidataJob], newest first
+print(f"{len(jobs)} evaluations have run for this leaderboard")
+```
+
+Each item is a full `RapidataJob`, so you can pull the detailed comparison
+results, check status, or open a job in the dashboard:
+
+```python
+for job in leaderboard.jobs:
+    if job.get_status() != "Completed":
+        continue
+
+    results = job.get_results() # RapidataResults — the individual matchups
+    df = results.to_pandas()    # or work with the raw dict directly
+```
+
+Runs that don't yet have an associated job (for example, an evaluation still
+being set up) are skipped, so the list only contains jobs you can act on.
 
 ## References
 - [RapidataBenchmarkManager](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/)
