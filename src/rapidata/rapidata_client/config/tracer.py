@@ -132,6 +132,7 @@ class RapidataTracer:
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
         self._enabled = True  # Default to enabled
+        self._environment = "rapidata.ai"
         self.session_id: str | None = None
         self.client_id: str | None = None
         self.email: str | None = None
@@ -146,6 +147,7 @@ class RapidataTracer:
     def _update_tracer(self, config: LoggingConfig) -> None:
         """Update the tracer based on the new configuration."""
         self._enabled = config.enable_otlp
+        self._environment = config.environment
 
     def _ensure_initialized(self) -> None:
         """Lazily initialize OTLP tracing on first use."""
@@ -168,7 +170,7 @@ class RapidataTracer:
                 self._tracer_provider = TracerProvider(resource=resource)
 
                 exporter = OTLPSpanExporter(
-                    endpoint="https://otlp-sdk.rapidata.ai/v1/traces",
+                    endpoint=f"https://otlp-sdk.{self._environment}/v1/traces",
                     timeout=30,
                 )
 

@@ -46,6 +46,7 @@ class RapidataLogger:
         self._otlp_handler = None
         self._otlp_enabled = True  # Default to enabled
         self._otlp_attached = False
+        self._environment = "rapidata.ai"
 
         # Register this logger to receive configuration updates
         register_config_handler(self._handle_config_update)
@@ -75,7 +76,7 @@ class RapidataLogger:
                 set_logger_provider(logger_provider)
 
                 exporter = OTLPLogExporter(
-                    endpoint="https://otlp-sdk.rapidata.ai/v1/logs",
+                    endpoint=f"https://otlp-sdk.{self._environment}/v1/logs",
                     timeout=30,
                 )
 
@@ -104,6 +105,7 @@ class RapidataLogger:
         """Update the logger based on the new configuration."""
         self._otlp_enabled = config.enable_otlp
         self._otlp_attached = False
+        self._environment = config.environment
 
         # Console handler with configurable level
         console_handler = logging.StreamHandler()
