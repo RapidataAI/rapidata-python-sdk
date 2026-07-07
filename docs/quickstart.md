@@ -94,26 +94,18 @@ job_definition = client.job.create_compare_job_definition(
 
 For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
 
-### Step 3: Preview the Job Definition
-
-Before running your job, preview it to see exactly what labelers will see:
-
-```py
-job_definition.preview() # (1)!
-```
-
-1. Opens your browser where you can review and adjust the job configuration.
-
-### Step 4: Run and Get Results
+### Step 3: Run and Get Results
 
 ```py
 job = audience.assign_job(job_definition) # (1)!
+job.view() # (2)!
 job.display_progress_bar()
-results = job.get_results() # (2)!
+results = job.get_results() # (3)!
 ```
 
 1. Assigns the job definition to the audience and starts collecting responses.
-2. Blocks until the job is complete and returns the results. You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
+2. Opens your browser on the running job, where you can watch responses come in and monitor progress.
+3. Blocks until the job is complete and returns the results. You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
 
 To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
 
@@ -177,15 +169,14 @@ job_definition = client.job.create_compare_job_definition(
     contexts=["A small blue book sitting on a large red book."]
 )
 
-job_definition.preview() # (1)!
-
 job = audience.assign_job(job_definition)
+job.view() # (1)!
 job.display_progress_bar()
 results = job.get_results()
 print(results)
 ```
 
-1. Optional — opens a browser preview of what labelers will see.
+1. Optional — opens a browser on the running job to watch responses come in and monitor progress.
 
 ## Next Steps
 

@@ -89,7 +89,8 @@ job_definition = client.job.create_compare_job_definition(
     ]
 )
 
-job_definition.preview()
+job = audience.assign_job(job_definition)
+job.view()
 ```
 
 ## Common Task Types and Recommended Instructions
@@ -132,9 +133,9 @@ answer_options=["1: Perfectly",
 
 After assigning your job to an audience, monitor the initial responses to see if labelers are understanding your instructions as intended.
 
-You can preview how users will see the task by calling the `.preview()` method on the job definition:
+You can watch the responses come in by calling the `.view()` method on the running job:
 ```python
-job_definition.preview()
+job.view()
 ```
 
 If you see that labelers are giving inconsistent or incorrect answers:

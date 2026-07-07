@@ -83,8 +83,8 @@ job_definition = client.job.create_classification_job_definition(
     confidence_threshold=0.99, # (2)!
 )
 
-job_definition.preview()
 job = audience.assign_job(job_definition)
+job.view()
 job.display_progress_bar()
 results = job.get_results()
 print(results)
@@ -229,8 +229,8 @@ job_definition = client.job.create_classification_job_definition(
     quorum_threshold=7, # (2)!
 )
 
-job_definition.preview()
 job = audience.assign_job(job_definition)
+job.view()
 job.display_progress_bar()
 results = job.get_results()
 print(results)

@@ -30,9 +30,8 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
         responses_per_datapoint=35,
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)
@@ -94,9 +93,8 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
         responses_per_datapoint=35,
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)
