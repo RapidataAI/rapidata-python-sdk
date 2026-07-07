@@ -104,7 +104,7 @@ results = job.get_results() # (3)!
 ```
 
 1. Assigns the job definition to the audience and starts collecting responses.
-2. Opens your browser on the running job so you can see exactly what labelers see.
+2. Opens your browser on the running job, where you can watch responses come in and monitor progress.
 3. Blocks until the job is complete and returns the results. You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
 
 To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
@@ -176,7 +176,7 @@ results = job.get_results()
 print(results)
 ```
 
-1. Optional — opens a browser on the running job so you can see what labelers see.
+1. Optional — opens a browser on the running job to watch responses come in and monitor progress.
 
 ## Next Steps
 

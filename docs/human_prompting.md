@@ -133,7 +133,7 @@ answer_options=["1: Perfectly",
 
 After assigning your job to an audience, monitor the initial responses to see if labelers are understanding your instructions as intended.
 
-You can see how users experience the task by calling the `.view()` method on the running job:
+You can watch the responses come in by calling the `.view()` method on the running job:
 ```python
 job.view()
 ```
