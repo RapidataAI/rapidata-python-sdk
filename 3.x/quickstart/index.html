@@ -616,21 +616,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-preview-the-job-definition" class="md-nav__link">
+  <a href="#step-3-run-and-get-results" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Preview the Job Definition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-run-and-get-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Run and Get Results
+        Step 3: Run and Get Results
       
     </span>
   </a>
@@ -1500,21 +1489,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-preview-the-job-definition" class="md-nav__link">
+  <a href="#step-3-run-and-get-results" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Preview the Job Definition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-run-and-get-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Run and Get Results
+        Step 3: Run and Get Results
       
     </span>
   </a>
@@ -1693,48 +1671,43 @@
 <p>If some datapoints fail to upload, a <code>FailedUploadException</code> will be raised. Learn how to handle this in the <a href="../error_handling/">Error Handling Guide</a>.</p>
 </div>
 <p>For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the <a href="../job_definition_parameters/">Job Definition Parameters Reference</a>.</p>
-<h3 id="step-3-preview-the-job-definition">Step 3: Preview the Job Definition<a class="headerlink" href="#step-3-preview-the-job-definition" title="Permanent link">#</a></h3>
-<p>Before running your job, preview it to see exactly what labelers will see:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span> <span class="c1"># (1)!</span>
-</span></code></pre></div>
-<ol>
-<li>Opens your browser where you can review and adjust the job configuration.</li>
-</ol>
-<h3 id="step-4-run-and-get-results">Step 4: Run and Get Results<a class="headerlink" href="#step-4-run-and-get-results" title="Permanent link">#</a></h3>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span> <span class="c1"># (1)!</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># (2)!</span>
+<h3 id="step-3-run-and-get-results">Step 3: Run and Get Results<a class="headerlink" href="#step-3-run-and-get-results" title="Permanent link">#</a></h3>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span> <span class="c1"># (1)!</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span> <span class="c1"># (2)!</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># (3)!</span>
 </span></code></pre></div>
 <ol>
 <li>Assigns the job definition to the audience and starts collecting responses.</li>
+<li>Opens your browser on the running job, where you can watch responses come in and monitor progress.</li>
 <li>Blocks until the job is complete and returns the results. You can also monitor progress on the <a href="https://app.rapidata.ai/dashboard">Rapidata Dashboard</a>.</li>
 </ol>
 <p>To understand the results format, see the <a href="../understanding_the_results/">Understanding the Results</a> guide.</p>
 <h2 id="retrieve-existing-resources">Retrieve Existing Resources<a class="headerlink" href="#retrieve-existing-resources" title="Permanent link">#</a></h2>
 <h3 id="find-audiences">Find Audiences<a class="headerlink" href="#find-audiences" title="Permanent link">#</a></h3>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find audiences by name</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">audiences</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">find_audiences</span><span class="p">(</span><span class="s2">"alignment"</span><span class="p">)</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Get a specific audience by ID</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find audiences by name</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">audiences</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">find_audiences</span><span class="p">(</span><span class="s2">"alignment"</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Get a specific audience by ID</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="find-job-definitions">Find Job Definitions<a class="headerlink" href="#find-job-definitions" title="Permanent link">#</a></h3>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find job definitions by name</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">job_definitions</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">find_job_definitions</span><span class="p">(</span><span class="s2">"Example Image Prompt Alignment"</span><span class="p">)</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Get a specific job definition by ID</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_definition_by_id</span><span class="p">(</span><span class="s2">"job_definition_id"</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find job definitions by name</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">job_definitions</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">find_job_definitions</span><span class="p">(</span><span class="s2">"Example Image Prompt Alignment"</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Get a specific job definition by ID</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_definition_by_id</span><span class="p">(</span><span class="s2">"job_definition_id"</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="find-jobs">Find Jobs<a class="headerlink" href="#find-jobs" title="Permanent link">#</a></h3>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Find jobs by name</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">find_jobs</span><span class="p">(</span><span class="s2">"Example Image Prompt Alignment"</span><span class="p">)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Get a specific job by ID</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="s2">"job_id"</span><span class="p">)</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Find jobs for a specific audience</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">find_jobs</span><span class="p">(</span><span class="s2">"Prompt Alignment"</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find jobs by name</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">find_jobs</span><span class="p">(</span><span class="s2">"Example Image Prompt Alignment"</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Get a specific job by ID</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="s2">"job_id"</span><span class="p">)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Find jobs for a specific audience</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">find_jobs</span><span class="p">(</span><span class="s2">"Prompt Alignment"</span><span class="p">)</span>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1742,31 +1715,30 @@
 </div>
 <h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">#</a></h2>
 <p>Here's the full workflow using the curated alignment audience:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"aud_MU1GZYoESyO"</span><span class="p">)</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Example Image Prompt Alignment"</span><span class="p">,</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image matches the description better?"</span><span class="p">,</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/midjourney-5.2_37_3.jpg"</span><span class="p">,</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>         <span class="s2">"https://assets.rapidata.ai/flux-1-pro_37_0.jpg"</span><span class="p">]</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="p">],</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="p">)</span>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span> <span class="c1"># (1)!</span>
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"aud_MU1GZYoESyO"</span><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Example Image Prompt Alignment"</span><span class="p">,</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image matches the description better?"</span><span class="p">,</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/midjourney-5.2_37_3.jpg"</span><span class="p">,</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>         <span class="s2">"https://assets.rapidata.ai/flux-1-pro_37_0.jpg"</span><span class="p">]</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="p">],</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="p">)</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span> <span class="c1"># (1)!</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </span></code></pre></div>
 <ol>
-<li>Optional — opens a browser preview of what labelers will see.</li>
+<li>Optional — opens a browser on the running job to watch responses come in and monitor progress.</li>
 </ol>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
 <ul>

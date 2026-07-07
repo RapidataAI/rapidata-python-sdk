@@ -36,9 +36,8 @@ job_definition = client.job.create_ranking_job_definition(
     random_comparisons_ratio=0.5, # (4)!
 )
 
-job_definition.preview()
-
 job = audience.assign_job(job_definition)
+job.view()
 job.display_progress_bar()
 results = job.get_results()
 print(results)

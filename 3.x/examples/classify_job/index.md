@@ -33,9 +33,8 @@ In this example, we rate images on a Likert scale to assess how well generated i
         settings=[NoShuffleSetting()] # (2)!
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)
@@ -98,9 +97,8 @@ In this example, we rate images on a Likert scale to assess how well generated i
         settings=[NoShuffleSetting()]
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)

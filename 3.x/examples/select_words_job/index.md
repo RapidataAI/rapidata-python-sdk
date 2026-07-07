@@ -43,9 +43,8 @@ Like any other job, a select words job can be assigned to any audience — a rea
         responses_per_datapoint=15,
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)
@@ -131,9 +130,8 @@ Like any other job, a select words job can be assigned to any audience — a rea
         responses_per_datapoint=15,
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)

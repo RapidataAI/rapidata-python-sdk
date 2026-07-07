@@ -1663,7 +1663,8 @@
 </span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="p">]</span>
 </span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="p">)</span>
 </span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
 </span></code></pre></div>
 <h2 id="common-task-types-and-recommended-instructions">Common Task Types and Recommended Instructions<a class="headerlink" href="#common-task-types-and-recommended-instructions" title="Permanent link">#</a></h2>
 <h3 id="image-comparison-tasks">Image Comparison Tasks<a class="headerlink" href="#image-comparison-tasks" title="Permanent link">#</a></h3>
@@ -1697,8 +1698,8 @@
 <p>Every qualification example with its associated truth must be manually and thoroughly reviewed before use. Incorrect or ambiguous examples will filter out good labelers while letting bad ones through, inverting your quality control.</p>
 </div>
 <p>After assigning your job to an audience, monitor the initial responses to see if labelers are understanding your instructions as intended.</p>
-<p>You can preview how users will see the task by calling the <code>.preview()</code> method on the job definition:
-</p><div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+<p>You can watch the responses come in by calling the <code>.view()</code> method on the running job:
+</p><div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
 </span></code></pre></div><p></p>
 <p>If you see that labelers are giving inconsistent or incorrect answers:</p>
 <ol>

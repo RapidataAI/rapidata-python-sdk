@@ -19,9 +19,8 @@ job_definition = client.job.create_free_text_job_definition(
     datapoints=["https://assets.rapidata.ai/ai_question.png"],
 )
 
-job_definition.preview()
-
 job = audience.assign_job(job_definition)
+job.view()
 job.display_progress_bar()
 results = job.get_results()
 print(results)

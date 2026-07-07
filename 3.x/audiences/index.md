@@ -92,9 +92,8 @@ job_definition = client.job.create_compare_job_definition(
     contexts=["A small blue book sitting on a large red book."]
 )
 
-job_definition.preview()
-
 job = audience.assign_job(job_definition)
+job.view()
 job.display_progress_bar()
 results = job.get_results()
 print(results)
@@ -150,9 +149,8 @@ job_definition = client.job.create_compare_job_definition(
     contexts=["A small blue book sitting on a large red book."]
 )
 
-job_definition.preview()
-
 job = audience.assign_job(job_definition)
+job.view()
 job.display_progress_bar()
 results = job.get_results()
 print(results)

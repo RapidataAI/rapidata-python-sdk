@@ -39,9 +39,8 @@ In this example, we compare images from two image generation models (Flux and Mi
         contexts=PROMPTS
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)
@@ -117,9 +116,8 @@ In this example, we compare images from two image generation models (Flux and Mi
         contexts=PROMPTS
     )
 
-    job_definition.preview()
-
     job = audience.assign_job(job_definition)
+    job.view()
     job.display_progress_bar()
     results = job.get_results()
     print(results)
