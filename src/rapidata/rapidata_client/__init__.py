@@ -11,7 +11,6 @@ from .job import (
     RapidataJobDefinition,
     RapidataJobManager,
     CostEstimate,
-    ActualCost,
 )
 from .signal import RapidataSignal, RapidataSignalManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box

@@ -20,34 +20,28 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 
-# The estimate endpoints answer 409 while the first batch of rapids is still
-# being created and priced; once that batch exists the estimate is available.
+# The estimate is not priced instantly after a job is created; the endpoint
+# answers 409 until it becomes available.
 _ESTIMATE_NOT_READY_STATUS = 409
-
-# The first batch is ~5000 rapids, so the estimate is usually ready within a
-# couple of minutes; poll up to this long before giving up.
 DEFAULT_ESTIMATE_TIMEOUT = 300.0
 DEFAULT_ESTIMATE_POLL_INTERVAL = 5.0
 
 
 @dataclass(frozen=True)
 class CostEstimate:
-    """An approximate cost estimate for a job or job definition.
+    """An approximate estimate of what a job will cost to run to completion.
 
-    The estimate is not exact: the backend prices a sample of the rapids that
-    have been created so far (the job's first batch) and scales that per-response
-    cost up to the total number of responses the job requires. The real cost can
-    differ once every rapid has been priced.
+    This is an estimate, not the final bill: it is based on a sample of the
+    job's tasks and scaled to the total number of responses requested, so the
+    amount you are actually charged can differ.
 
     Attributes:
-        estimated_cost: The estimated total cost of running to completion.
-        cost_per_response: The representative per-response cost the estimate is based on.
-        datapoint_count: The number of datapoints in the dataset.
-        required_responses: The total number of responses the referee requires to complete.
+        estimated_cost: The estimated total cost of running the job to completion.
+        datapoint_count: The number of datapoints the job will label.
+        required_responses: The total number of responses the job collects to complete.
     """
 
     estimated_cost: float
-    cost_per_response: float
     datapoint_count: int
     required_responses: int
 
@@ -61,25 +55,9 @@ class CostEstimate:
     ) -> CostEstimate:
         return cls(
             estimated_cost=model.estimated_cost,
-            cost_per_response=model.cost_per_response,
             datapoint_count=model.datapoint_count,
             required_responses=model.required_responses,
         )
-
-
-@dataclass(frozen=True)
-class ActualCost:
-    """The billed cost of a job, derived from its billing group.
-
-    Attributes:
-        net_cost: The billed cost after any discount.
-        gross_cost: The cost before any discount.
-        response_count: The number of responses attributed to the job.
-    """
-
-    net_cost: float
-    gross_cost: float
-    response_count: int
 
 
 def _poll_for_cost_estimate(
@@ -88,11 +66,11 @@ def _poll_for_cost_estimate(
     timeout: float,
     interval: float,
 ) -> T:
-    """Call ``fetch`` until it returns, polling while the estimate is not ready.
+    """Call ``fetch`` until it returns, retrying while the estimate is not ready.
 
-    The estimate endpoints return HTTP 409 while the job's first batch of rapids
-    is still being created and priced. That transient status is retried until the
-    estimate becomes available; any other error is raised immediately.
+    The estimate endpoints return HTTP 409 until the estimate has been priced.
+    That transient status is retried until it becomes available; any other error
+    is raised immediately.
 
     Raises:
         TimeoutError: If the estimate is still not available after ``timeout`` seconds.
@@ -107,9 +85,8 @@ def _poll_for_cost_estimate(
                 raise
             if monotonic() >= deadline:
                 raise TimeoutError(
-                    "Cost estimate was not available after "
-                    f"{timeout:.0f}s. The job's rapids may still be getting "
-                    "created and priced - try again shortly."
+                    f"Cost estimate was not available after {timeout:.0f}s - "
+                    "try again shortly."
                 ) from e
             logger.debug("Cost estimate not ready yet (409), polling...")
             sleep(interval)

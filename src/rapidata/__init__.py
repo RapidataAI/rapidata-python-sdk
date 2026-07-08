@@ -12,7 +12,6 @@ from .rapidata_client import (
     RapidataJobDefinition,
     RapidataJobManager,
     CostEstimate,
-    ActualCost,
     RapidataSignal,
     RapidataSignalManager,
     ValidationSetManager,

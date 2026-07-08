@@ -34,16 +34,11 @@ class RapidataJobDefinition:
 
     @property
     def estimated_cost(self) -> CostEstimate:
-        """An approximate cost estimate for running this definition to completion.
+        """An approximate estimate of what this job will cost to run to completion.
 
-        The estimate is not exact: the backend prices a sample of the rapids
-        created so far (the definition's first batch) and scales that per-response
-        cost up to the total number of responses the referee requires. The real
-        cost can differ once every rapid has been priced.
-
-        Right after a definition is previewed the estimate is not yet available
-        (the first batch of rapids is still being created and priced); this call
-        polls until it becomes available.
+        This is an estimate, not the final bill - see :class:`CostEstimate`. The
+        estimate is priced shortly after the definition is created; this call
+        waits for it to become available.
 
         Raises:
             TimeoutError: If the estimate is still not available after a few minutes.

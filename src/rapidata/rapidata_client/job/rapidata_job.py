@@ -20,7 +20,6 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 from rapidata.rapidata_client.job.cost import (
-    ActualCost,
     CostEstimate,
     DEFAULT_ESTIMATE_POLL_INTERVAL,
     DEFAULT_ESTIMATE_TIMEOUT,
@@ -162,16 +161,11 @@ class RapidataJob:
 
     @property
     def estimated_cost(self) -> CostEstimate:
-        """An approximate cost estimate for running this job to completion.
+        """An approximate estimate of what this job will cost to run to completion.
 
-        The estimate is not exact: the backend prices a sample of the rapids
-        created so far (the job's first batch) and scales that per-response cost
-        up to the total number of responses the job requires. The real cost can
-        differ once every rapid has been priced.
-
-        Right after a job is created the estimate is not yet available (the first
-        batch of rapids is still being created and priced); this call polls until
-        it becomes available.
+        This is an estimate, not the final bill - see :class:`CostEstimate`. The
+        estimate is priced shortly after the job is created; this call waits for
+        it to become available.
 
         Raises:
             TimeoutError: If the estimate is still not available after a few minutes.
@@ -187,57 +181,6 @@ class RapidataJob:
                 )
                 self.__estimated_cost = CostEstimate._from_model(model)
         return self.__estimated_cost
-
-    @property
-    def actual_cost(self) -> ActualCost | None:
-        """The billed cost of this job, or None if it has not been billed yet.
-
-        Derived from the customer's billing groups; returns None while no billing
-        group exists for this job (e.g. the job has not produced billable
-        responses yet). Unlike :attr:`estimated_cost`, this reflects the real
-        amount charged.
-        """
-        with tracer.start_as_current_span("RapidataJob.actual_cost"):
-            from rapidata.api_client.models.i_billing_group_model_audience_job_billing_group_model import (
-                IBillingGroupModelAudienceJobBillingGroupModel,
-            )
-
-            # The endpoint ranks the customer's billing groups by cost descending
-            # and caps the page size at 100, so an unscoped scan of a cheap job
-            # pages through the customer's whole history to reach its group at the
-            # bottom of the ranking. Scoping to costs since the job was created
-            # drops every older group: the backend filters billable_hour by the
-            # start hour, and a job's responses are only billed at or after
-            # creation, so this narrows the scan without dropping any of its cost.
-            page = 1
-            page_size = 100
-            seen = 0
-            while True:
-                result = (
-                    self._openapi_service.billing.billing_api.billing_costs_groups_get(
-                        start_date=self.created_at,
-                        page=page,
-                        page_size=page_size,
-                    )
-                )
-                for group in result.items:
-                    instance = group.actual_instance
-                    if (
-                        isinstance(
-                            instance, IBillingGroupModelAudienceJobBillingGroupModel
-                        )
-                        and instance.job_id == self.id
-                    ):
-                        return ActualCost(
-                            net_cost=instance.net_cost,
-                            gross_cost=instance.gross_cost,
-                            response_count=instance.response_count,
-                        )
-
-                seen += len(result.items)
-                if not result.items or seen >= result.total:
-                    return None
-                page += 1
 
     def get_status(self) -> str:
         """

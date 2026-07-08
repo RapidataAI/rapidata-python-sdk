@@ -13,7 +13,6 @@ from authlib.integrations.httpx_client import OAuthError
 
 if TYPE_CHECKING:
     from rapidata.service.services.asset_service import AssetService
-    from rapidata.service.services.billing_service import BillingService
     from rapidata.service.services.order_service import OrderService
     from rapidata.service.services.flow_service import FlowService
     from rapidata.service.services.audience_service import AudienceService
@@ -70,7 +69,6 @@ class OpenAPIService:
         logger.debug("RapidataApiClient initialized")
 
         self._asset: AssetService | None = None
-        self._billing: BillingService | None = None
         self._order: OrderService | None = None
         self._flow: FlowService | None = None
         self._audience: AudienceService | None = None
@@ -154,13 +152,6 @@ class OpenAPIService:
             from rapidata.service.services.asset_service import AssetService
             self._asset = AssetService(self.api_client)
         return self._asset
-
-    @property
-    def billing(self) -> BillingService:
-        if self._billing is None:
-            from rapidata.service.services.billing_service import BillingService
-            self._billing = BillingService(self.api_client)
-        return self._billing
 
     @property
     def order(self) -> OrderService:
