@@ -165,8 +165,10 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_campaign_id_get**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_get) | **GET** /campaign/{campaignId} | Retrieves the details of a specific campaign.
 *CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates the specified campaign&#39;s properties.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses the specified campaign.
+*CampaignApi* | [**campaign_campaign_id_program_put**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_program_put) | **PUT** /campaign/{campaignId}/program | Replaces the campaign&#39;s stream program.
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes the specified campaign.
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | Exercises the rapid-bag pipeline with a synthetic user profile so the health of  the campaign monitoring path can be probed externally.
+*CampaignApi* | [**campaign_program_post**](rapidata/api_client/docs/CampaignApi.md#campaign_program_post) | **POST** /campaign/program | Creates a program campaign from the given stream program.
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries campaigns with optional filtering, sorting, and pagination.
 *ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a client.
 *ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
@@ -496,6 +498,8 @@ Class | Method | HTTP request | Description
  - [CreateManualChargeEndpointOutput](rapidata/api_client/docs/CreateManualChargeEndpointOutput.md)
  - [CreateOrderEndpointOutput](rapidata/api_client/docs/CreateOrderEndpointOutput.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
+ - [CreateProgramCampaignEndpointInput](rapidata/api_client/docs/CreateProgramCampaignEndpointInput.md)
+ - [CreateProgramCampaignEndpointOutput](rapidata/api_client/docs/CreateProgramCampaignEndpointOutput.md)
  - [CreatePromptForBenchmarkEndpointInput](rapidata/api_client/docs/CreatePromptForBenchmarkEndpointInput.md)
  - [CreatePromptForBenchmarkEndpointOutput](rapidata/api_client/docs/CreatePromptForBenchmarkEndpointOutput.md)
  - [CreatePromptForLeaderboardEndpointOutput](rapidata/api_client/docs/CreatePromptForLeaderboardEndpointOutput.md)
@@ -808,6 +812,15 @@ Class | Method | HTTP request | Description
  - [IPipelineStepModelSendCompletionMailStepModel](rapidata/api_client/docs/IPipelineStepModelSendCompletionMailStepModel.md)
  - [IPipelineStepModelWorkflowAggregationStepModel](rapidata/api_client/docs/IPipelineStepModelWorkflowAggregationStepModel.md)
  - [IPipelineStepModelWorkflowLabelingStepModel](rapidata/api_client/docs/IPipelineStepModelWorkflowLabelingStepModel.md)
+ - [IProgramActionModel](rapidata/api_client/docs/IProgramActionModel.md)
+ - [IProgramActionModelCompleteActionModel](rapidata/api_client/docs/IProgramActionModelCompleteActionModel.md)
+ - [IProgramActionModelServeRapidActionModel](rapidata/api_client/docs/IProgramActionModelServeRapidActionModel.md)
+ - [IProgramNodeModel](rapidata/api_client/docs/IProgramNodeModel.md)
+ - [IProgramNodeModelActionNodeModel](rapidata/api_client/docs/IProgramNodeModelActionNodeModel.md)
+ - [IProgramNodeModelCasesNodeModel](rapidata/api_client/docs/IProgramNodeModelCasesNodeModel.md)
+ - [IProgramPredicateModel](rapidata/api_client/docs/IProgramPredicateModel.md)
+ - [IProgramPredicateModelAnsweredCountPredicateModel](rapidata/api_client/docs/IProgramPredicateModelAnsweredCountPredicateModel.md)
+ - [IProgramPredicateModelCorrectCountPredicateModel](rapidata/api_client/docs/IProgramPredicateModelCorrectCountPredicateModel.md)
  - [IRankingConfig](rapidata/api_client/docs/IRankingConfig.md)
  - [IRankingConfigBradleyTerryRankingConfig](rapidata/api_client/docs/IRankingConfigBradleyTerryRankingConfig.md)
  - [IRankingConfigEloRankingConfig](rapidata/api_client/docs/IRankingConfigEloRankingConfig.md)
@@ -996,6 +1009,8 @@ Class | Method | HTTP request | Description
  - [PolygonShape](rapidata/api_client/docs/PolygonShape.md)
  - [PreviewOrderEndpointInput](rapidata/api_client/docs/PreviewOrderEndpointInput.md)
  - [ProblemDetails](rapidata/api_client/docs/ProblemDetails.md)
+ - [ProgramCaseModel](rapidata/api_client/docs/ProgramCaseModel.md)
+ - [ProgramComparisonModel](rapidata/api_client/docs/ProgramComparisonModel.md)
  - [QueryAggregatedJobsEndpointOutput](rapidata/api_client/docs/QueryAggregatedJobsEndpointOutput.md)
  - [QueryAggregatedJobsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAggregatedJobsEndpointPagedResultOfOutput.md)
  - [QueryAggregatedOrdersEndpointOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointOutput.md)
@@ -1168,6 +1183,7 @@ Class | Method | HTTP request | Description
  - [UpdateParticipantNameEndpointInput](rapidata/api_client/docs/UpdateParticipantNameEndpointInput.md)
  - [UpdatePromptTagsEndpointInput](rapidata/api_client/docs/UpdatePromptTagsEndpointInput.md)
  - [UpdateSignalEndpointInput](rapidata/api_client/docs/UpdateSignalEndpointInput.md)
+ - [UpdateStreamProgramEndpointInput](rapidata/api_client/docs/UpdateStreamProgramEndpointInput.md)
  - [UpdateValidationRapidEndpointInput](rapidata/api_client/docs/UpdateValidationRapidEndpointInput.md)
  - [UpdateValidationSetDimensionsEndpointInput](rapidata/api_client/docs/UpdateValidationSetDimensionsEndpointInput.md)
  - [UpdateValidationSetEndpointInput](rapidata/api_client/docs/UpdateValidationSetEndpointInput.md)
