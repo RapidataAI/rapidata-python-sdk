@@ -215,6 +215,53 @@ class RapidataClient:
         """
         return self._openapi_service.api_client.rest_client.get_token()
 
+    def maintain_token_file(self, path: str, interval: float = 60) -> threading.Thread:
+        """Continuously write this client's token to ``path`` so that other
+        workers can authenticate from it via ``token_file`` — see the
+        Distributed Training guide.
+
+        Writes the file once immediately (creating the parent directory if
+        needed), then keeps rewriting it from a background daemon thread every
+        ``interval`` seconds. Writes are atomic, and a new token is only
+        fetched from the auth server shortly before the current one expires
+        (controlled by the client's ``leeway``).
+
+        The file contains a bearer token — write it only to storage that the
+        consuming workers alone can read.
+
+        Args:
+            path (str): Where to write the token file.
+            interval (float, optional): Seconds between rewrites. Defaults to 60.
+
+        Returns:
+            threading.Thread: The daemon thread keeping the file fresh. Call
+                ``.join()`` on it to block the calling process forever.
+        """
+        directory = os.path.dirname(os.path.abspath(path))
+        os.makedirs(directory, exist_ok=True)
+
+        def write_once():
+            tmp_path = f"{path}.tmp.{os.getpid()}"
+            with open(tmp_path, "w") as f:
+                json.dump(self.get_token(), f)
+            os.replace(tmp_path, path)
+
+        # First write happens synchronously so the file is guaranteed to
+        # exist (or a failure is raised here) before workers are started.
+        write_once()
+
+        def loop():
+            while True:
+                time.sleep(interval)
+                try:
+                    write_once()
+                except Exception as e:
+                    logger.warning("Failed to refresh token file %s: %s", path, e)
+
+        thread = threading.Thread(target=loop, daemon=True, name="rapidata-token-file")
+        thread.start()
+        return thread
+
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
         logger.info("Resetting credentials")

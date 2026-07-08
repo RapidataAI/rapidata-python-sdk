@@ -21,8 +21,41 @@ The fix is to authenticate **once** and share the token:
 ## Coordinator
 
 Start the coordinator first — it authenticates with the client credentials
-as usual (see [Authentication](authentication.md)), exports its token with
-`get_token()`, and keeps the shared file fresh:
+as usual (see [Authentication](authentication.md)) and keeps the shared file
+fresh with `maintain_token_file()`:
+
+```python
+from rapidata import RapidataClient
+
+coordinator = RapidataClient(leeway=300)  # (1)!
+coordinator.maintain_token_file("/shared/rapidata_token.json").join()  # (2)!
+```
+
+1. The coordinator is the only process that holds the client credentials —
+   via `RAPIDATA_CLIENT_ID` / `RAPIDATA_CLIENT_SECRET` or the cached
+   credentials file. `leeway=300` renews the token once it is within
+   5 minutes of expiry, well before workers need a new one.
+2. Writes the file immediately, then keeps rewriting it atomically from a
+   background thread (every 60 seconds by default), creating the directory
+   if needed. `.join()` blocks the process forever — drop it if your
+   coordinator also does other work, e.g. when rank 0 both trains and
+   refreshes the token. The root-level `/shared` is just for the example —
+   use whatever storage all your workers actually mount (an NFS path, a
+   shared volume, …).
+
+!!! warning "Keep the token file secure"
+    The file contains a bearer token — anyone who can read it can act on
+    your Rapidata account until the token expires. Write it only to storage
+    that your training job alone can access, and restrict the file
+    permissions accordingly.
+
+### Writing the file yourself
+
+If the built-in helper doesn't fit (different storage backend, custom
+rotation), export the token with `get_token()` and write it however you
+like. `get_token()` is cheap to call at any frequency: it returns the
+current token and only contacts the auth server once the token is within
+`leeway` of expiry.
 
 ```python
 import json
@@ -31,9 +64,9 @@ import time
 
 from rapidata import RapidataClient
 
-TOKEN_FILE = "/shared/rapidata_token.json"  # (1)!
+TOKEN_FILE = "/shared/rapidata_token.json"
 
-coordinator = RapidataClient(leeway=300)  # (2)!
+coordinator = RapidataClient(leeway=300)
 
 os.makedirs(os.path.dirname(TOKEN_FILE), exist_ok=True)
 
@@ -48,28 +81,18 @@ def write_token(token: dict) -> None:
 
 
 while True:
-    write_token(coordinator.get_token())  # (3)!
+    write_token(coordinator.get_token())
     time.sleep(60)
 ```
 
-1. For simplicity this example writes to a root-level `/shared` directory —
-   point it at whatever storage all your workers actually mount (an NFS
-   path, a shared volume, …).
-2. The coordinator is the only process that holds the client credentials —
-   via `RAPIDATA_CLIENT_ID` / `RAPIDATA_CLIENT_SECRET` or the cached
-   credentials file. `leeway=300` treats the token as expired once it is
-   within 5 minutes of its actual expiry, so the file is renewed well before
-   workers need it.
-3. `get_token()` returns the current token — including the absolute
-   `expires_at` timestamp workers rely on — and only fetches a new one when
-   it is within `leeway` of expiry. Polling it every minute therefore does
-   **not** spam the auth server; most iterations just rewrite the same token.
+Two things to keep when rolling your own:
 
-**Write the file atomically** (temp file + `os.replace`, as above) so
-workers never parse a half-written file. If you produce the token without
-the SDK (e.g. a `curl` call to the token endpoint), you must also add the
-absolute `expires_at` yourself — the raw response only carries the relative
-`expires_in`, which is meaningless to a later reader.
+- **Write atomically** (temp file + `os.replace`, as above) so workers never
+  read a half-written file.
+- **Keep the absolute `expires_at` field** in the JSON — it's how workers
+  decide when to re-read the file. If you produce the token without the SDK
+  (e.g. a `curl` call to the token endpoint), the response only carries the
+  relative `expires_in`, so add `expires_at` yourself.
 
 ## Workers
 
