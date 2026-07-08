@@ -61,16 +61,17 @@ class CostEstimate:
 
 
 def _poll_for_cost_estimate(
-    fetch: Callable[[], T],
+    fetch: Callable[[], T | None],
     *,
     timeout: float,
     interval: float,
 ) -> T:
-    """Call ``fetch`` until it returns, retrying while the estimate is not ready.
+    """Call ``fetch`` until the estimate is available, retrying while it is not.
 
-    The estimate endpoints return HTTP 409 until the estimate has been priced.
-    That transient status is retried until it becomes available; any other error
-    is raised immediately.
+    Until the estimate has been priced the endpoint signals "not ready" in two
+    ways: an HTTP 409, or a success with an empty body (which the generated
+    client returns as ``None``). Both are retried until a result is available;
+    any other error is raised immediately.
 
     Raises:
         TimeoutError: If the estimate is still not available after ``timeout`` seconds.
@@ -79,14 +80,19 @@ def _poll_for_cost_estimate(
     while True:
         try:
             with suppress_rapidata_error_logging():
-                return fetch()
+                result = fetch()
         except RapidataError as e:
             if e.status_code != _ESTIMATE_NOT_READY_STATUS:
                 raise
-            if monotonic() >= deadline:
-                raise TimeoutError(
-                    f"Cost estimate was not available after {timeout:.0f}s - "
-                    "try again shortly."
-                ) from e
-            logger.debug("Cost estimate not ready yet (409), polling...")
-            sleep(interval)
+            result = None
+
+        if result is not None:
+            return result
+
+        if monotonic() >= deadline:
+            raise TimeoutError(
+                f"Cost estimate was not available after {timeout:.0f}s - "
+                "try again shortly."
+            )
+        logger.debug("Cost estimate not ready yet, polling...")
+        sleep(interval)
