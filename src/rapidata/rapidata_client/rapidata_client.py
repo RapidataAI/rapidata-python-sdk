@@ -75,19 +75,23 @@ class RapidataClient:
         oauth_scope: str = "openid roles email api",
         cert_path: str | None = None,
         token: dict | None = None,
+        token_file: str | None = None,
         leeway: int = 60,
     ):
         """Initialize the RapidataClient.
 
         Credentials are resolved in the following order:
 
-        1. ``client_id`` / ``client_secret`` passed explicitly to this
+        1. A ``token`` or ``token_file`` passed explicitly to this
+           constructor (or the ``RAPIDATA_TOKEN_FILE`` environment
+           variable), which bypasses the token exchange entirely.
+        2. ``client_id`` / ``client_secret`` passed explicitly to this
            constructor.
-        2. The ``RAPIDATA_CLIENT_ID`` / ``RAPIDATA_CLIENT_SECRET``
+        3. The ``RAPIDATA_CLIENT_ID`` / ``RAPIDATA_CLIENT_SECRET``
            environment variables (useful for headless / container
            deployments).
-        3. Credentials stored under ``~/.config/rapidata/credentials.json``.
-        4. Interactive browser login, which then saves credentials to the
+        4. Credentials stored under ``~/.config/rapidata/credentials.json``.
+        5. Interactive browser login, which then saves credentials to the
            file above so you don't have to log in again.
 
         The ``environment`` argument follows the same pattern: when omitted
@@ -106,7 +110,8 @@ class RapidataClient:
             oauth_scope (str, optional): The scopes to use for authentication. In general this does not need to be changed.
             cert_path (str, optional): An optional path to a certificate file useful for development.
             token (dict, optional): If you already have a token that the client should use for authentication. Important, if set, this needs to be the complete token object containing the access token, token type and expiration time.
-            leeway (int, optional): An optional leeway to use to determine if a token is expired. Defaults to 60 seconds.
+            token_file (str, optional): Path to a JSON file containing the token object described above (with an absolute ``expires_at`` timestamp). The file is re-read whenever the current token expires, so an external process can keep it fresh — useful to share one token across many workers (e.g. distributed training). Falls back to the ``RAPIDATA_TOKEN_FILE`` environment variable when omitted.
+            leeway (int, optional): How many seconds before its actual expiry a token is treated as expired — i.e. how early it is refreshed (or re-read from ``token_file``). Defaults to 60 seconds.
 
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
@@ -133,6 +138,8 @@ class RapidataClient:
             client_id = os.environ.get("RAPIDATA_CLIENT_ID") or None
         if client_secret is None:
             client_secret = os.environ.get("RAPIDATA_CLIENT_SECRET") or None
+        if token is None and token_file is None:
+            token_file = os.environ.get("RAPIDATA_TOKEN_FILE") or None
         if environment is None:
             environment = os.environ.get("RAPIDATA_ENVIRONMENT") or "rapidata.ai"
 
@@ -155,6 +162,7 @@ class RapidataClient:
                 oauth_scope=oauth_scope,
                 cert_path=cert_path,
                 token=token,
+                token_file=token_file,
                 leeway=leeway,
             )
 
@@ -194,6 +202,65 @@ class RapidataClient:
             self.context = ContextManager(openapi_service=self._openapi_service)
 
         self._check_beta_features()  # can't be in the trace for some reason
+
+    def get_token(self) -> dict[str, Any]:
+        """Return the complete token object this client authenticates with,
+        refreshing it first if it has expired.
+
+        The returned dict has the shape expected by the ``token`` and
+        ``token_file`` constructor arguments (``access_token``, ``token_type``
+        and an absolute ``expires_at`` timestamp), so it can be written to a
+        shared token file that other workers consume — see the Distributed
+        Training guide.
+        """
+        return self._openapi_service.api_client.rest_client.get_token()
+
+    def maintain_token_file(self, path: str, interval: float = 60) -> threading.Thread:
+        """Continuously write this client's token to ``path`` so that other
+        workers can authenticate from it via ``token_file`` — see the
+        Distributed Training guide.
+
+        Writes the file once immediately (creating the parent directory if
+        needed), then keeps rewriting it from a background daemon thread every
+        ``interval`` seconds. Writes are atomic, and a new token is only
+        fetched from the auth server shortly before the current one expires
+        (controlled by the client's ``leeway``).
+
+        The file contains a bearer token — write it only to storage that the
+        consuming workers alone can read.
+
+        Args:
+            path (str): Where to write the token file.
+            interval (float, optional): Seconds between rewrites. Defaults to 60.
+
+        Returns:
+            threading.Thread: The daemon thread keeping the file fresh. Call
+                ``.join()`` on it to block the calling process forever.
+        """
+        directory = os.path.dirname(os.path.abspath(path))
+        os.makedirs(directory, exist_ok=True)
+
+        def write_once():
+            tmp_path = f"{path}.tmp.{os.getpid()}"
+            with open(tmp_path, "w") as f:
+                json.dump(self.get_token(), f)
+            os.replace(tmp_path, path)
+
+        # First write happens synchronously so the file is guaranteed to
+        # exist (or a failure is raised here) before workers are started.
+        write_once()
+
+        def loop():
+            while True:
+                time.sleep(interval)
+                try:
+                    write_once()
+                except Exception as e:
+                    logger.warning("Failed to refresh token file %s: %s", path, e)
+
+        thread = threading.Thread(target=loop, daemon=True, name="rapidata-token-file")
+        thread.start()
+        return thread
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""

@@ -64,9 +64,16 @@ class RESTClientObject:
         self.configuration = configuration
 
         self.session: Optional[OAuth2Client] = None
+        self._token_file: Optional[str] = None
+        self._token_leeway: int = 60
 
     def setup_oauth_client_credentials(
-        self, client_id: str, client_secret: str, token_endpoint: str, scope: str
+        self,
+        client_id: str,
+        client_secret: str,
+        token_endpoint: str,
+        scope: str,
+        leeway: int = 60,
     ):
         client_args = self._get_session_defaults()
         self.session = OAuth2Client(
@@ -74,8 +81,10 @@ class RESTClientObject:
             client_secret=client_secret,
             token_endpoint=token_endpoint,
             scope=scope,
+            leeway=leeway,
             **client_args,
         )
+        self._token_leeway = leeway
 
         try:
             self.session.fetch_token()
@@ -95,6 +104,7 @@ class RESTClientObject:
         token: dict,
         token_endpoint: str,
         leeway: int = 60,
+        token_file: str | None = None,
     ):
         client_args = self._get_session_defaults()
         self.session = OAuth2Client(
@@ -105,6 +115,32 @@ class RESTClientObject:
             leeway=leeway,
             **client_args,
         )
+        self._token_file = token_file
+        self._token_leeway = leeway
+
+    def _reload_token_from_file_if_expired(self, token_file: str):
+        # A pre-supplied token has no refresh path of its own; an external
+        # process keeps the token file fresh, so re-read it once ours expires.
+        assert self.session is not None
+        token = self.session.token
+        if token is not None and not token.is_expired(leeway=self._token_leeway):
+            return
+        with open(token_file) as f:
+            self.session.token = json.load(f)
+
+    def get_token(self) -> dict:
+        """Return the complete token object, refreshing it first if expired."""
+        if not self.session:
+            raise ApiValueError(
+                "OAuth2 session is not initialized. Please initialize it before making requests."
+            )
+        if self._token_file is not None:
+            self._reload_token_from_file_if_expired(self._token_file)
+        elif self.session.token is None or not self.session.ensure_active_token(
+            self.session.token
+        ):
+            raise ApiValueError("The current token is expired and cannot be refreshed.")
+        return dict(self.session.token)
 
     def request(
         self,
@@ -144,6 +180,9 @@ class RESTClientObject:
             raise ApiValueError(
                 "OAuth2 session is not initialized. Please initialize it before making requests."
             )
+
+        if self._token_file is not None:
+            self._reload_token_from_file_if_expired(self._token_file)
 
         timeout = self._build_timeout(_request_timeout)
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from importlib.metadata import version, PackageNotFoundError
 from typing import TYPE_CHECKING
@@ -35,6 +36,7 @@ class OpenAPIService:
         oauth_scope: str,
         cert_path: str | None = None,
         token: dict | None = None,
+        token_file: str | None = None,
         leeway: int = 60,
     ):
         self.environment = environment
@@ -80,7 +82,10 @@ class OpenAPIService:
         self._signal: SignalService | None = None
         self._translation: TranslationService | None = None
 
-        if token:
+        if token or token_file:
+            if token is None:
+                assert token_file is not None
+                token = _read_token_file(token_file)
             logger.debug("Using token for authentication")
             self.api_client.rest_client.setup_oauth_with_token(
                 token=token,
@@ -88,6 +93,7 @@ class OpenAPIService:
                 client_id=client_id,
                 client_secret=client_secret,
                 leeway=leeway,
+                token_file=token_file,
             )
             logger.debug("Token authentication setup complete")
             return
@@ -107,6 +113,7 @@ class OpenAPIService:
                 client_secret=client_secret,
                 token_endpoint=f"{auth_endpoint}/connect/token",
                 scope=oauth_scope,
+                leeway=leeway,
             )
         except OAuthError as e:
             if e.error != "invalid_client":
@@ -128,6 +135,7 @@ class OpenAPIService:
                 client_secret=credentials.client_secret,
                 token_endpoint=f"{auth_endpoint}/connect/token",
                 scope=oauth_scope,
+                leeway=leeway,
             )
             managed_print("Credentials were reset and re-authenticated successfully")
 
@@ -247,6 +255,14 @@ class OpenAPIService:
 
     def __str__(self) -> str:
         return f"OpenAPIService(environment={self.environment})"
+
+
+def _read_token_file(token_file: str) -> dict:
+    try:
+        with open(token_file) as f:
+            return json.load(f)
+    except (OSError, ValueError) as e:
+        raise ValueError(f"Failed to read token file '{token_file}': {e}") from e
 
 
 def _get_local_certificate() -> str | None:
