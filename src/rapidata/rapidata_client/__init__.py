@@ -6,7 +6,13 @@ from .audience import (
     RapidataFilteredAudience,
 )
 from .order import RapidataOrderManager, RapidataOrder
-from .job import RapidataJob, RapidataJobDefinition, RapidataJobManager
+from .job import (
+    RapidataJob,
+    RapidataJobDefinition,
+    RapidataJobManager,
+    CostEstimate,
+    ActualCost,
+)
 from .signal import RapidataSignal, RapidataSignalManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults

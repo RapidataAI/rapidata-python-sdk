@@ -19,6 +19,13 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
+from rapidata.rapidata_client.job.cost import (
+    ActualCost,
+    CostEstimate,
+    DEFAULT_ESTIMATE_POLL_INTERVAL,
+    DEFAULT_ESTIMATE_TIMEOUT,
+    _poll_for_cost_estimate,
+)
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.results.rapidata_results import RapidataResults
@@ -60,6 +67,7 @@ class RapidataJob:
         self.definition_id = definition_id
         self.__pipeline_id = pipeline_id
         self.__completed_at = None
+        self.__estimated_cost: CostEstimate | None = None
         self.job_details_page = f"https://app.{self._openapi_service.environment}/audiences/{self.audience_id}/job/{self.id}"
         logger.debug("RapidataJob initialized")
 
@@ -151,6 +159,75 @@ class RapidataJob:
                 self.id
             ).pipeline_id
         return self.__pipeline_id
+
+    @property
+    def estimated_cost(self) -> CostEstimate:
+        """An approximate cost estimate for running this job to completion.
+
+        The estimate is not exact: the backend prices a sample of the rapids
+        created so far (the job's first batch) and scales that per-response cost
+        up to the total number of responses the job requires. The real cost can
+        differ once every rapid has been priced.
+
+        Right after a job is created the estimate is not yet available (the first
+        batch of rapids is still being created and priced); this call polls until
+        it becomes available.
+
+        Raises:
+            TimeoutError: If the estimate is still not available after a few minutes.
+        """
+        if self.__estimated_cost is None:
+            with tracer.start_as_current_span("RapidataJob.estimated_cost"):
+                model = _poll_for_cost_estimate(
+                    lambda: self._openapi_service.order.job_api.job_job_id_cost_estimate_get(
+                        self.id
+                    ),
+                    timeout=DEFAULT_ESTIMATE_TIMEOUT,
+                    interval=DEFAULT_ESTIMATE_POLL_INTERVAL,
+                )
+                self.__estimated_cost = CostEstimate._from_model(model)
+        return self.__estimated_cost
+
+    @property
+    def actual_cost(self) -> ActualCost | None:
+        """The billed cost of this job, or None if it has not been billed yet.
+
+        Derived from the customer's billing groups; returns None while no billing
+        group exists for this job (e.g. the job has not produced billable
+        responses yet). Unlike :attr:`estimated_cost`, this reflects the real
+        amount charged.
+        """
+        with tracer.start_as_current_span("RapidataJob.actual_cost"):
+            from rapidata.api_client.models.i_billing_group_model_audience_job_billing_group_model import (
+                IBillingGroupModelAudienceJobBillingGroupModel,
+            )
+
+            page = 1
+            page_size = 100
+            while True:
+                result = (
+                    self._openapi_service.billing.billing_api.billing_costs_groups_get(
+                        page=page,
+                        page_size=page_size,
+                    )
+                )
+                for group in result.items:
+                    instance = group.actual_instance
+                    if (
+                        isinstance(
+                            instance, IBillingGroupModelAudienceJobBillingGroupModel
+                        )
+                        and instance.job_id == self.id
+                    ):
+                        return ActualCost(
+                            net_cost=instance.net_cost,
+                            gross_cost=instance.gross_cost,
+                            response_count=instance.response_count,
+                        )
+
+                if page * page_size >= result.total:
+                    return None
+                page += 1
 
     def get_status(self) -> str:
         """

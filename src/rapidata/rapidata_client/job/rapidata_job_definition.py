@@ -6,6 +6,12 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
 from typing import Literal
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import tracer, logger, managed_print
+from rapidata.rapidata_client.job.cost import (
+    CostEstimate,
+    DEFAULT_ESTIMATE_POLL_INTERVAL,
+    DEFAULT_ESTIMATE_TIMEOUT,
+    _poll_for_cost_estimate,
+)
 import webbrowser
 import urllib.parse
 from colorama import Fore
@@ -24,6 +30,35 @@ class RapidataJobDefinition:
         self._job_details_page = (
             f"https://app.{self._openapi_service.environment}/definitions/{self.id}"
         )
+        self.__estimated_cost: CostEstimate | None = None
+
+    @property
+    def estimated_cost(self) -> CostEstimate:
+        """An approximate cost estimate for running this definition to completion.
+
+        The estimate is not exact: the backend prices a sample of the rapids
+        created so far (the definition's first batch) and scales that per-response
+        cost up to the total number of responses the referee requires. The real
+        cost can differ once every rapid has been priced.
+
+        Right after a definition is previewed the estimate is not yet available
+        (the first batch of rapids is still being created and priced); this call
+        polls until it becomes available.
+
+        Raises:
+            TimeoutError: If the estimate is still not available after a few minutes.
+        """
+        if self.__estimated_cost is None:
+            with tracer.start_as_current_span("RapidataJobDefinition.estimated_cost"):
+                model = _poll_for_cost_estimate(
+                    lambda: self._openapi_service.order.job_api.job_definition_definition_id_cost_estimate_get(
+                        self.id
+                    ),
+                    timeout=DEFAULT_ESTIMATE_TIMEOUT,
+                    interval=DEFAULT_ESTIMATE_POLL_INTERVAL,
+                )
+                self.__estimated_cost = CostEstimate._from_model(model)
+        return self.__estimated_cost
 
     def preview(self) -> RapidataJobDefinition:
         """Will open the browser where you can preview the job definition before giving it to an audience."""

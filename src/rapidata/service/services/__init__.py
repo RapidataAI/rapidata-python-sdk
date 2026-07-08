@@ -1,5 +1,6 @@
 from rapidata.service.services.asset_service import AssetService
 from rapidata.service.services.audience_service import AudienceService
+from rapidata.service.services.billing_service import BillingService
 from rapidata.service.services.campaign_service import CampaignService
 from rapidata.service.services.dataset_service import DatasetService
 from rapidata.service.services.flow_service import FlowService
@@ -14,6 +15,7 @@ from rapidata.service.services.workflow_service import WorkflowService
 __all__ = [
     "AssetService",
     "AudienceService",
+    "BillingService",
     "CampaignService",
     "DatasetService",
     "FlowService",
