@@ -64,6 +64,7 @@ leaderboard
 flow
 translation
 signal
+payment
 "
 
 download() {
