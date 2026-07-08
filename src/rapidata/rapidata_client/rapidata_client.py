@@ -111,7 +111,7 @@ class RapidataClient:
             cert_path (str, optional): An optional path to a certificate file useful for development.
             token (dict, optional): If you already have a token that the client should use for authentication. Important, if set, this needs to be the complete token object containing the access token, token type and expiration time.
             token_file (str, optional): Path to a JSON file containing the token object described above (with an absolute ``expires_at`` timestamp). The file is re-read whenever the current token expires, so an external process can keep it fresh — useful to share one token across many workers (e.g. distributed training). Falls back to the ``RAPIDATA_TOKEN_FILE`` environment variable when omitted.
-            leeway (int, optional): An optional leeway to use to determine if a token is expired. Defaults to 60 seconds.
+            leeway (int, optional): How many seconds before its actual expiry a token is treated as expired — i.e. how early it is refreshed (or re-read from ``token_file``). Defaults to 60 seconds.
 
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.

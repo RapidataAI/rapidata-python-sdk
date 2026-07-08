@@ -68,7 +68,12 @@ class RESTClientObject:
         self._token_leeway: int = 60
 
     def setup_oauth_client_credentials(
-        self, client_id: str, client_secret: str, token_endpoint: str, scope: str
+        self,
+        client_id: str,
+        client_secret: str,
+        token_endpoint: str,
+        scope: str,
+        leeway: int = 60,
     ):
         client_args = self._get_session_defaults()
         self.session = OAuth2Client(
@@ -76,8 +81,10 @@ class RESTClientObject:
             client_secret=client_secret,
             token_endpoint=token_endpoint,
             scope=scope,
+            leeway=leeway,
             **client_args,
         )
+        self._token_leeway = leeway
 
         try:
             self.session.fetch_token()

@@ -18,27 +18,11 @@ The fix is to authenticate **once** and share the token:
   secret, make no auth-server calls of their own, and automatically re-read
   the file when the current token expires.
 
-## Workers
-
-Pass the file path to the client, or set the `RAPIDATA_TOKEN_FILE`
-environment variable and construct the client with no arguments:
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient(token_file="/shared/rapidata_token.json")
-```
-
-The SDK reads the token from the file at startup and re-reads it whenever the
-in-memory token is within 60 seconds of expiry (configurable via `leeway`).
-As long as the coordinator keeps the file fresh, workers never need to be
-restarted or re-authenticated.
-
 ## Coordinator
 
-The coordinator authenticates with the client credentials as usual (see
-[Authentication](authentication.md)), exports its token with `get_token()`,
-and rewrites the shared file ahead of expiry:
+Start the coordinator first — it authenticates with the client credentials
+as usual (see [Authentication](authentication.md)), exports its token with
+`get_token()`, and keeps the shared file fresh:
 
 ```python
 import json
@@ -47,9 +31,11 @@ import time
 
 from rapidata import RapidataClient
 
-TOKEN_FILE = "/shared/rapidata_token.json"
+TOKEN_FILE = "/shared/rapidata_token.json"  # (1)!
 
-coordinator = RapidataClient()  # (1)!
+coordinator = RapidataClient(leeway=300)  # (2)!
+
+os.makedirs(os.path.dirname(TOKEN_FILE), exist_ok=True)
 
 
 def write_token(token: dict) -> None:
@@ -62,24 +48,45 @@ def write_token(token: dict) -> None:
 
 
 while True:
-    token = coordinator.get_token()  # (2)!
-    write_token(token)
-    # Rewrite 5 minutes before expiry so workers never read a stale token.
-    time.sleep(max(token["expires_at"] - time.time() - 300, 60))
+    write_token(coordinator.get_token())  # (3)!
+    time.sleep(60)
 ```
 
-1. The coordinator is the only process that holds the client credentials —
+1. For simplicity this example writes to a root-level `/shared` directory —
+   point it at whatever storage all your workers actually mount (an NFS
+   path, a shared volume, …).
+2. The coordinator is the only process that holds the client credentials —
    via `RAPIDATA_CLIENT_ID` / `RAPIDATA_CLIENT_SECRET` or the cached
-   credentials file.
-2. Returns the complete token object, refreshing it first if it has
-   expired. It includes the absolute `expires_at` timestamp workers use to
-   decide when to re-read the file.
+   credentials file. `leeway=300` treats the token as expired once it is
+   within 5 minutes of its actual expiry, so the file is renewed well before
+   workers need it.
+3. `get_token()` returns the current token — including the absolute
+   `expires_at` timestamp workers rely on — and only fetches a new one when
+   it is within `leeway` of expiry. Polling it every minute therefore does
+   **not** spam the auth server; most iterations just rewrite the same token.
 
 **Write the file atomically** (temp file + `os.replace`, as above) so
 workers never parse a half-written file. If you produce the token without
 the SDK (e.g. a `curl` call to the token endpoint), you must also add the
 absolute `expires_at` yourself — the raw response only carries the relative
 `expires_in`, which is meaningless to a later reader.
+
+## Workers
+
+Once the coordinator has written the file, workers pass its path to the
+client — or set the `RAPIDATA_TOKEN_FILE` environment variable and construct
+the client with no arguments:
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient(token_file="/shared/rapidata_token.json")
+```
+
+The SDK reads the token from the file at startup and re-reads it whenever the
+in-memory token is within 60 seconds of expiry (configurable via `leeway`).
+As long as the coordinator keeps the file fresh, workers never need to be
+restarted or re-authenticated.
 
 ## Practical tips
 

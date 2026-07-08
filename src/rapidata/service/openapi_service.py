@@ -113,6 +113,7 @@ class OpenAPIService:
                 client_secret=client_secret,
                 token_endpoint=f"{auth_endpoint}/connect/token",
                 scope=oauth_scope,
+                leeway=leeway,
             )
         except OAuthError as e:
             if e.error != "invalid_client":
@@ -134,6 +135,7 @@ class OpenAPIService:
                 client_secret=credentials.client_secret,
                 token_endpoint=f"{auth_endpoint}/connect/token",
                 scope=oauth_scope,
+                leeway=leeway,
             )
             managed_print("Credentials were reset and re-authenticated successfully")
 
