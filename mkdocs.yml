@@ -80,6 +80,7 @@ plugins:
           - mri_advanced.md
         Flows:
           - flows.md
+          - distributed_training.md
         AI Agents:
           - ai_agents.md
       enable_markdown_urls: true
@@ -138,7 +139,9 @@ nav:
       - Select Words: examples/select_words_job.md
       - Free Text: examples/free_text_job.md
       - Ranking: examples/ranking_job.md
-    - Ranking Flows: flows.md
+    - Ranking Flows:
+      - Getting Started: flows.md
+      - Distributed Training: distributed_training.md
     - Model Ranking:
       - Getting Started: mri.md
       - Advanced: mri_advanced.md

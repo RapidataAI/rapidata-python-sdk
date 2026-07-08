@@ -75,19 +75,23 @@ class RapidataClient:
         oauth_scope: str = "openid roles email api",
         cert_path: str | None = None,
         token: dict | None = None,
+        token_file: str | None = None,
         leeway: int = 60,
     ):
         """Initialize the RapidataClient.
 
         Credentials are resolved in the following order:
 
-        1. ``client_id`` / ``client_secret`` passed explicitly to this
+        1. A ``token`` or ``token_file`` passed explicitly to this
+           constructor (or the ``RAPIDATA_TOKEN_FILE`` environment
+           variable), which bypasses the token exchange entirely.
+        2. ``client_id`` / ``client_secret`` passed explicitly to this
            constructor.
-        2. The ``RAPIDATA_CLIENT_ID`` / ``RAPIDATA_CLIENT_SECRET``
+        3. The ``RAPIDATA_CLIENT_ID`` / ``RAPIDATA_CLIENT_SECRET``
            environment variables (useful for headless / container
            deployments).
-        3. Credentials stored under ``~/.config/rapidata/credentials.json``.
-        4. Interactive browser login, which then saves credentials to the
+        4. Credentials stored under ``~/.config/rapidata/credentials.json``.
+        5. Interactive browser login, which then saves credentials to the
            file above so you don't have to log in again.
 
         The ``environment`` argument follows the same pattern: when omitted
@@ -106,6 +110,7 @@ class RapidataClient:
             oauth_scope (str, optional): The scopes to use for authentication. In general this does not need to be changed.
             cert_path (str, optional): An optional path to a certificate file useful for development.
             token (dict, optional): If you already have a token that the client should use for authentication. Important, if set, this needs to be the complete token object containing the access token, token type and expiration time.
+            token_file (str, optional): Path to a JSON file containing the token object described above (with an absolute ``expires_at`` timestamp). The file is re-read whenever the current token expires, so an external process can keep it fresh — useful to share one token across many workers (e.g. distributed training). Falls back to the ``RAPIDATA_TOKEN_FILE`` environment variable when omitted.
             leeway (int, optional): An optional leeway to use to determine if a token is expired. Defaults to 60 seconds.
 
         Attributes:
@@ -133,6 +138,8 @@ class RapidataClient:
             client_id = os.environ.get("RAPIDATA_CLIENT_ID") or None
         if client_secret is None:
             client_secret = os.environ.get("RAPIDATA_CLIENT_SECRET") or None
+        if token is None and token_file is None:
+            token_file = os.environ.get("RAPIDATA_TOKEN_FILE") or None
         if environment is None:
             environment = os.environ.get("RAPIDATA_ENVIRONMENT") or "rapidata.ai"
 
@@ -155,6 +162,7 @@ class RapidataClient:
                 oauth_scope=oauth_scope,
                 cert_path=cert_path,
                 token=token,
+                token_file=token_file,
                 leeway=leeway,
             )
 
