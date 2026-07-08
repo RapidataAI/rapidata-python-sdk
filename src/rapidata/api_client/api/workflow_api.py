@@ -613,7 +613,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetWorkflowByIdEndpointOutput:
-        """Returns the workflow identified by .
+        """Returns the workflow identified by workflowId.
 
 
         :param workflow_id: Identifier of the workflow to fetch. (required)
@@ -682,7 +682,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetWorkflowByIdEndpointOutput]:
-        """Returns the workflow identified by .
+        """Returns the workflow identified by workflowId.
 
 
         :param workflow_id: Identifier of the workflow to fetch. (required)
@@ -751,7 +751,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Returns the workflow identified by .
+        """Returns the workflow identified by workflowId.
 
 
         :param workflow_id: Identifier of the workflow to fetch. (required)

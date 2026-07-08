@@ -37,7 +37,7 @@ class GetWorkflowResultsEndpointOutput(LazyValidatedModel):
     payload: IRapidPayload = Field(description="The payload of the rapid.")
     asset: IAssetModel = Field(description="The asset of the rapid.")
     responses: List[GetWorkflowResultsResultResponse]
-    total_response_count: StrictInt = Field(description="The true number of matching responses for this rapid, regardless of whether the  returned list was capped.", alias="totalResponseCount")
+    total_response_count: StrictInt = Field(description="The true number of matching responses for this rapid, regardless of whether the  returned Responses list was capped.", alias="totalResponseCount")
     state: RapidState = Field(description="The state of the rapid.")
     context: Optional[StrictStr] = Field(default=None, description="The optional textual context of the rapid.")
     context_asset: Optional[IAssetModel] = Field(default=None, description="The optional asset shown as context to the user.", alias="contextAsset")
