@@ -65,6 +65,7 @@ plugins:
           - understanding_the_results.md
           - error_handling.md
           - confidence_stopping.md
+          - cost_estimates.md
           - human_prompting.md
           - config.md
         Examples:
@@ -128,6 +129,7 @@ nav:
       - Parameter Reference: job_definition_parameters.md
       - Understanding Results: understanding_the_results.md
       - Early Stopping: confidence_stopping.md
+      - Cost Estimates: cost_estimates.md
       - Instruction Design: human_prompting.md
       - Error Handling: error_handling.md
       - Logging & Config: config.md

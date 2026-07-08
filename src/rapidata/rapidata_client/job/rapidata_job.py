@@ -19,6 +19,12 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
+from rapidata.rapidata_client.job.cost import (
+    CostEstimate,
+    DEFAULT_ESTIMATE_POLL_INTERVAL,
+    DEFAULT_ESTIMATE_TIMEOUT,
+    _poll_for_cost_estimate,
+)
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.results.rapidata_results import RapidataResults
@@ -60,6 +66,7 @@ class RapidataJob:
         self.definition_id = definition_id
         self.__pipeline_id = pipeline_id
         self.__completed_at = None
+        self.__estimated_cost: CostEstimate | None = None
         self.job_details_page = f"https://app.{self._openapi_service.environment}/audiences/{self.audience_id}/job/{self.id}"
         logger.debug("RapidataJob initialized")
 
@@ -151,6 +158,29 @@ class RapidataJob:
                 self.id
             ).pipeline_id
         return self.__pipeline_id
+
+    @property
+    def estimated_cost(self) -> CostEstimate:
+        """An approximate estimate of what this job will cost to run to completion.
+
+        This is an estimate, not the final bill - see :class:`CostEstimate`. The
+        estimate is priced shortly after the job is created; this call waits for
+        it to become available.
+
+        Raises:
+            TimeoutError: If the estimate is still not available after a few minutes.
+        """
+        if self.__estimated_cost is None:
+            with tracer.start_as_current_span("RapidataJob.estimated_cost"):
+                model = _poll_for_cost_estimate(
+                    lambda: self._openapi_service.order.job_api.job_job_id_cost_estimate_get(
+                        self.id
+                    ),
+                    timeout=DEFAULT_ESTIMATE_TIMEOUT,
+                    interval=DEFAULT_ESTIMATE_POLL_INTERVAL,
+                )
+                self.__estimated_cost = CostEstimate._from_model(model)
+        return self.__estimated_cost
 
     def get_status(self) -> str:
         """
