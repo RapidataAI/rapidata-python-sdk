@@ -36,37 +36,20 @@ restarted or re-authenticated.
 
 ## Coordinator
 
-The coordinator exchanges the client credentials for a token (see
-[Authentication](authentication.md)) and rewrites the shared file ahead of
-expiry:
+The coordinator authenticates with the client credentials as usual (see
+[Authentication](authentication.md)), exports its token with `get_token()`,
+and rewrites the shared file ahead of expiry:
 
 ```python
 import json
 import os
 import time
 
-import requests
+from rapidata import RapidataClient
 
-TOKEN_URL = "https://auth.rapidata.ai/connect/token"
 TOKEN_FILE = "/shared/rapidata_token.json"
 
-
-def fetch_token() -> dict:
-    response = requests.post(
-        TOKEN_URL,
-        data={
-            "grant_type": "client_credentials",
-            "client_id": os.environ["RAPIDATA_CLIENT_ID"],
-            "client_secret": os.environ["RAPIDATA_CLIENT_SECRET"],
-            "scope": "openid roles email api",
-        },
-    )
-    response.raise_for_status()
-    token = response.json()
-    # Workers decide when to re-read the file based on this absolute
-    # timestamp — the relative expires_in is meaningless to a later reader.
-    token["expires_at"] = int(time.time()) + token["expires_in"]
-    return token
+coordinator = RapidataClient()  # (1)!
 
 
 def write_token(token: dict) -> None:
@@ -79,18 +62,24 @@ def write_token(token: dict) -> None:
 
 
 while True:
-    token = fetch_token()
+    token = coordinator.get_token()  # (2)!
     write_token(token)
-    # Refresh 5 minutes before expiry so workers never read a stale token.
-    time.sleep(max(token["expires_in"] - 300, 60))
+    # Rewrite 5 minutes before expiry so workers never read a stale token.
+    time.sleep(max(token["expires_at"] - time.time() - 300, 60))
 ```
 
-Two details matter:
+1. The coordinator is the only process that holds the client credentials —
+   via `RAPIDATA_CLIENT_ID` / `RAPIDATA_CLIENT_SECRET` or the cached
+   credentials file.
+2. Returns the complete token object, refreshing it first if it has
+   expired. It includes the absolute `expires_at` timestamp workers use to
+   decide when to re-read the file.
 
-1. **Write an absolute `expires_at`** (Unix timestamp, seconds). Without it
-   the SDK cannot tell that a token read from the file is about to expire.
-2. **Write atomically** (temp file + `os.replace`), so workers never parse a
-   half-written file.
+**Write the file atomically** (temp file + `os.replace`, as above) so
+workers never parse a half-written file. If you produce the token without
+the SDK (e.g. a `curl` call to the token endpoint), you must also add the
+absolute `expires_at` yourself — the raw response only carries the relative
+`expires_in`, which is meaningless to a later reader.
 
 ## Practical tips
 

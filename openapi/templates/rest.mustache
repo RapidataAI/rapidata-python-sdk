@@ -111,6 +111,20 @@ class RESTClientObject:
         with open(token_file) as f:
             self.session.token = json.load(f)
 
+    def get_token(self) -> dict:
+        """Return the complete token object, refreshing it first if expired."""
+        if not self.session:
+            raise ApiValueError(
+                "OAuth2 session is not initialized. Please initialize it before making requests."
+            )
+        if self._token_file is not None:
+            self._reload_token_from_file_if_expired(self._token_file)
+        elif self.session.token is None or not self.session.ensure_active_token(
+            self.session.token
+        ):
+            raise ApiValueError("The current token is expired and cannot be refreshed.")
+        return dict(self.session.token)
+
     def request(
         self,
         method,

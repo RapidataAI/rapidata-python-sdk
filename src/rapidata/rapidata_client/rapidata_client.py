@@ -203,6 +203,18 @@ class RapidataClient:
 
         self._check_beta_features()  # can't be in the trace for some reason
 
+    def get_token(self) -> dict[str, Any]:
+        """Return the complete token object this client authenticates with,
+        refreshing it first if it has expired.
+
+        The returned dict has the shape expected by the ``token`` and
+        ``token_file`` constructor arguments (``access_token``, ``token_type``
+        and an absolute ``expires_at`` timestamp), so it can be written to a
+        shared token file that other workers consume — see the Distributed
+        Training guide.
+        """
+        return self._openapi_service.api_client.rest_client.get_token()
+
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
         logger.info("Resetting credentials")
