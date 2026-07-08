@@ -190,6 +190,7 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write bridge token keys for a client.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Stores the referrer in a cookie for later use during sign-up.
+*JobApi* | [**job_definition_definition_id_cost_estimate_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_cost_estimate_get) | **GET** /job/definition/{definitionId}/cost-estimate | Estimates the cost of running a job definition&#39;s latest revision to completion.
 *JobApi* | [**job_definition_definition_id_delete**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_delete) | **DELETE** /job/definition/{definitionId} | Deletes a job definition and all its revisions.
 *JobApi* | [**job_definition_definition_id_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_get) | **GET** /job/definition/{definitionId} | Gets a job definition by its id.
 *JobApi* | [**job_definition_definition_id_patch**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_patch) | **PATCH** /job/definition/{definitionId} | Updates a job definition.
@@ -202,6 +203,7 @@ Class | Method | HTTP request | Description
 *JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions visible to the caller.
 *JobApi* | [**job_definitions_public_get**](rapidata/api_client/docs/JobApi.md#job_definitions_public_get) | **GET** /job/definitions/public | Queries job definitions that have been shared publicly, regardless of owner, so they can be  reused as templates.
 *JobApi* | [**job_job_id_approve_post**](rapidata/api_client/docs/JobApi.md#job_job_id_approve_post) | **POST** /job/{jobId}/approve | Approves a job in manual review so its pipeline can start processing.
+*JobApi* | [**job_job_id_cost_estimate_get**](rapidata/api_client/docs/JobApi.md#job_job_id_cost_estimate_get) | **GET** /job/{jobId}/cost-estimate | Estimates the cost of running a job to completion.
 *JobApi* | [**job_job_id_delete**](rapidata/api_client/docs/JobApi.md#job_job_id_delete) | **DELETE** /job/{jobId} | Deletes a job.
 *JobApi* | [**job_job_id_download_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_download_results_get) | **GET** /job/{jobId}/download-results | Downloads the results of a job as a file attachment.
 *JobApi* | [**job_job_id_get**](rapidata/api_client/docs/JobApi.md#job_job_id_get) | **GET** /job/{jobId} | Gets a job by its id.
@@ -336,7 +338,7 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_sets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_get) | **GET** /validation-sets | Queries available validation sets based on the provided filter, paging and sorting criteria.
 *WorkflowApi* | [**workflow_workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_compare_ab_summary_get) | **GET** /workflow/{workflowId}/compare-ab-summary | Returns the number of times each asset index won across the workflow&#39;s rapids.
 *WorkflowApi* | [**workflow_workflow_id_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_delete) | **DELETE** /workflow/{workflowId} | Deletes a workflow by its id.
-*WorkflowApi* | [**workflow_workflow_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_get) | **GET** /workflow/{workflowId} | Returns the workflow identified by .
+*WorkflowApi* | [**workflow_workflow_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_get) | **GET** /workflow/{workflowId} | Returns the workflow identified by workflowId.
 *WorkflowApi* | [**workflow_workflow_id_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_progress_get) | **GET** /workflow/{workflowId}/progress | Gets the progress of a workflow.
 *WorkflowApi* | [**workflow_workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_responses_get) | **GET** /workflow/{workflowId}/responses | Gets the most recent or oldest responses for a workflow, across any rapid.
 *WorkflowApi* | [**workflows_get**](rapidata/api_client/docs/WorkflowApi.md#workflows_get) | **GET** /workflows | Queries workflows based on the provided filter, page, and sort criteria.
@@ -510,7 +512,9 @@ Class | Method | HTTP request | Description
  - [GetGroupedRankingWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsEndpointOutput.md)
  - [GetGroupedRankingWorkflowResultsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsEndpointPagedResultOfOutput.md)
  - [GetJobByIdEndpointOutput](rapidata/api_client/docs/GetJobByIdEndpointOutput.md)
+ - [GetJobCostEstimateEndpointOutput](rapidata/api_client/docs/GetJobCostEstimateEndpointOutput.md)
  - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
+ - [GetJobDefinitionCostEstimateEndpointOutput](rapidata/api_client/docs/GetJobDefinitionCostEstimateEndpointOutput.md)
  - [GetJobRevisionEndpointOutput](rapidata/api_client/docs/GetJobRevisionEndpointOutput.md)
  - [GetLatestAudienceInactivitySyncEndpointOutput](rapidata/api_client/docs/GetLatestAudienceInactivitySyncEndpointOutput.md)
  - [GetLatestAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/GetLatestAudienceStateRecalculationEndpointOutput.md)

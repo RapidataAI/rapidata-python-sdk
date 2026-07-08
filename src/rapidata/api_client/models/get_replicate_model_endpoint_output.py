@@ -35,7 +35,7 @@ class GetReplicateModelEndpointOutput(LazyValidatedModel):
     cover_image_url: Optional[StrictStr] = Field(default=None, description="URL of a representative cover image, if available.", alias="coverImageUrl")
     run_count: Optional[StrictInt] = Field(default=None, description="Total number of times the model has been run on Replicate, if known.", alias="runCount")
     latest_version: Optional[StrictStr] = Field(default=None, description="The model's latest version id, if reported by Replicate.", alias="latestVersion")
-    supports_image_reference: StrictBool = Field(description="Whether the model accepts a reference image that the platform auto-fills with a prompt's  attached media. When true that input is excluded from .", alias="supportsImageReference")
+    supports_image_reference: StrictBool = Field(description="Whether the model accepts a reference image that the platform auto-fills with a prompt's  attached media. When true that input is excluded from Parameters.", alias="supportsImageReference")
     parameters: List[GetReplicateModelEndpointParameter]
     __properties: ClassVar[List[str]] = ["modelOwner", "modelName", "description", "coverImageUrl", "runCount", "latestVersion", "supportsImageReference", "parameters"]
 

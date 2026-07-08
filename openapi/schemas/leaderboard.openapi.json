@@ -6860,6 +6860,12 @@
             "type": "integer",
             "description": "The total responses to add, shared across all participants.",
             "format": "int32"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection. Use the same value across leaderboards\n of a benchmark to have them boosted on the same image pairs. Omit for random selection.",
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -6897,7 +6903,7 @@
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to . Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via .",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to DefaultInitialBoostLevel. Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via IsAllowedToSetInitialBoostLevel.",
             "format": "int32",
             "nullable": true
           },
@@ -6994,7 +7000,7 @@
           },
           "benchmarkDescription": {
             "type": "string",
-            "description": "Optional plain-text credit for the people or sources behind the benchmark, applied to\n the new benchmark created via . Limited to 2000 characters.\n Ignored when an existing is provided. Leave unset for no\n description.",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark, applied to\n the new benchmark created via BenchmarkName. Limited to 2000 characters.\n Ignored when an existing BenchmarkId is provided. Leave unset for no\n description.",
             "nullable": true
           },
           "name": {
@@ -8083,7 +8089,7 @@
           },
           "supportsImageReference": {
             "type": "boolean",
-            "description": "Whether the model accepts a reference image that the platform auto-fills with a prompt's\n attached media. When true that input is excluded from ."
+            "description": "Whether the model accepts a reference image that the platform auto-fills with a prompt's\n attached media. When true that input is excluded from Parameters."
           },
           "parameters": {
             "allOf": [
@@ -10902,7 +10908,7 @@
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0.. and may not clear\n it. Both restrictions are enforced by\n with a 403 on\n violation.",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0..DefaultInitialBoostLevel and may not clear\n it. Both restrictions are enforced by\n IsAllowedToSetInitialBoostLevel with a 403 on\n violation.",
             "format": "int32",
             "nullable": true
           },

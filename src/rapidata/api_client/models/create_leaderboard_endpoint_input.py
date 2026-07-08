@@ -32,7 +32,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     benchmark_id: Optional[StrictStr] = Field(default=None, description="If the leaderboard should be added to a preexisting benchmark, the benchmark id.", alias="benchmarkId")
     benchmark_name: Optional[StrictStr] = Field(default=None, description="When no BenchmarkId is provided, the name of the new benchmark to create.", alias="benchmarkName")
-    benchmark_description: Optional[StrictStr] = Field(default=None, description="Optional plain-text credit for the people or sources behind the benchmark, applied to  the new benchmark created via . Limited to 2000 characters.  Ignored when an existing is provided. Leave unset for no  description.", alias="benchmarkDescription")
+    benchmark_description: Optional[StrictStr] = Field(default=None, description="Optional plain-text credit for the people or sources behind the benchmark, applied to  the new benchmark created via BenchmarkName. Limited to 2000 characters.  Ignored when an existing BenchmarkId is provided. Leave unset for no  description.", alias="benchmarkDescription")
     name: StrictStr = Field(description="The name of the leaderboard.")
     instruction: StrictStr = Field(description="The instruction datapoints will be matched up against.")
     show_prompt: StrictBool = Field(description="Indicates if the prompt is shown on the rapids.", alias="showPrompt")

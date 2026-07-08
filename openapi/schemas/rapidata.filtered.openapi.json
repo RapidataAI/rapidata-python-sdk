@@ -15958,6 +15958,122 @@
         ]
       }
     },
+    "/job/{jobId}/cost-estimate": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Estimates the cost of running a job to completion.",
+        "description": "The estimate multiplies a representative per-response cost sampled from the job's rapids by\n the total number of responses its referee requires. Returns 409 while the estimate is not\n yet available because the job has no rapids, or when the referee is unbounded.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job to estimate.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobCostEstimateEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/definition/{definitionId}/cost-estimate": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Estimates the cost of running a job definition's latest revision to completion.",
+        "description": "The estimate multiplies a representative per-response cost sampled from the definition's\n rapids by the total number of responses its referee requires. Returns 409 while the estimate\n is not yet available because no rapids exist, or when the referee is unbounded.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "description": "The id of the job definition to estimate.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobDefinitionCostEstimateEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/job/{jobId}/results": {
       "get": {
         "tags": [
@@ -25134,7 +25250,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Returns the workflow identified by .",
+        "summary": "Returns the workflow identified by workflowId.",
         "parameters": [
           {
             "name": "workflowId",
@@ -32608,6 +32724,12 @@
             "type": "integer",
             "description": "The total responses to add, shared across all participants.",
             "format": "int32"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection. Use the same value across leaderboards\n of a benchmark to have them boosted on the same image pairs. Omit for random selection.",
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -32645,7 +32767,7 @@
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to . Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via .",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to DefaultInitialBoostLevel. Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via IsAllowedToSetInitialBoostLevel.",
             "format": "int32",
             "nullable": true
           },
@@ -32742,7 +32864,7 @@
           },
           "benchmarkDescription": {
             "type": "string",
-            "description": "Optional plain-text credit for the people or sources behind the benchmark, applied to\n the new benchmark created via . Limited to 2000 characters.\n Ignored when an existing is provided. Leave unset for no\n description.",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark, applied to\n the new benchmark created via BenchmarkName. Limited to 2000 characters.\n Ignored when an existing BenchmarkId is provided. Leave unset for no\n description.",
             "nullable": true
           },
           "name": {
@@ -33777,7 +33899,7 @@
           },
           "supportsImageReference": {
             "type": "boolean",
-            "description": "Whether the model accepts a reference image that the platform auto-fills with a prompt's\n attached media. When true that input is excluded from ."
+            "description": "Whether the model accepts a reference image that the platform auto-fills with a prompt's\n attached media. When true that input is excluded from Parameters."
           },
           "parameters": {
             "allOf": [
@@ -36009,7 +36131,7 @@
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0.. and may not clear\n it. Both restrictions are enforced by\n with a 403 on\n violation.",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0..DefaultInitialBoostLevel and may not clear\n it. Both restrictions are enforced by\n IsAllowedToSetInitialBoostLevel with a 403 on\n violation.",
             "format": "int32",
             "nullable": true
           },
@@ -36955,6 +37077,38 @@
         },
         "description": "The result when a job has been retrieved."
       },
+      "GetJobCostEstimateEndpoint_Output": {
+        "required": [
+          "estimatedCost",
+          "costPerResponse",
+          "datapointCount",
+          "requiredResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "estimatedCost": {
+            "type": "number",
+            "description": "The estimated total cost of running the job to completion.",
+            "format": "double"
+          },
+          "costPerResponse": {
+            "type": "number",
+            "description": "The representative per-response cost the estimate is based on.",
+            "format": "double"
+          },
+          "datapointCount": {
+            "type": "integer",
+            "description": "The number of datapoints in the job's dataset.",
+            "format": "int64"
+          },
+          "requiredResponses": {
+            "type": "integer",
+            "description": "The total number of responses the job's referee requires to complete.",
+            "format": "int64"
+          }
+        },
+        "description": "The estimated cost of a job."
+      },
       "GetJobDefinitionByIdEndpoint_Output": {
         "required": [
           "definitionId",
@@ -37003,6 +37157,38 @@
           }
         },
         "description": "The result when a job definition has been retrieved."
+      },
+      "GetJobDefinitionCostEstimateEndpoint_Output": {
+        "required": [
+          "estimatedCost",
+          "costPerResponse",
+          "datapointCount",
+          "requiredResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "estimatedCost": {
+            "type": "number",
+            "description": "The estimated total cost of running the definition's latest revision to completion.",
+            "format": "double"
+          },
+          "costPerResponse": {
+            "type": "number",
+            "description": "The representative per-response cost the estimate is based on.",
+            "format": "double"
+          },
+          "datapointCount": {
+            "type": "integer",
+            "description": "The number of datapoints in the definition's dataset.",
+            "format": "int64"
+          },
+          "requiredResponses": {
+            "type": "integer",
+            "description": "The total number of responses the definition's referee requires to complete.",
+            "format": "int64"
+          }
+        },
+        "description": "The estimated cost of a job definition."
       },
       "GetJobRevisionEndpoint_Output": {
         "required": [
@@ -44938,7 +45124,7 @@
           },
           "totalResponseCount": {
             "type": "integer",
-            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned Responses list was capped.",
             "format": "int64"
           },
           "state": {
@@ -45171,7 +45357,7 @@
           },
           "totalResponseCount": {
             "type": "integer",
-            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned Responses list was capped.",
             "format": "int64"
           },
           "state": {

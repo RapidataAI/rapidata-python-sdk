@@ -560,7 +560,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Returns the workflow identified by .",
+        "summary": "Returns the workflow identified by workflowId.",
         "parameters": [
           {
             "name": "workflowId",
@@ -1304,7 +1304,7 @@
           },
           "totalResponseCount": {
             "type": "integer",
-            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned Responses list was capped.",
             "format": "int64"
           },
           "state": {
@@ -1537,7 +1537,7 @@
           },
           "totalResponseCount": {
             "type": "integer",
-            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned list was capped.",
+            "description": "The true number of matching responses for this rapid, regardless of whether the\n returned Responses list was capped.",
             "format": "int64"
           },
           "state": {
