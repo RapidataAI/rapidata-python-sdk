@@ -122,6 +122,38 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the current user.
 *BenchmarkApi* | [**benchmarks_managed_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_managed_get) | **GET** /benchmarks/managed | Queries the curated benchmarks available to every customer.
 *BenchmarkApi* | [**benchmarks_published_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_published_get) | **GET** /benchmarks/published | Queries the benchmarks surfaced in the public benchmark repository.
+*BillingApi* | [**billing_billing_item_billing_item_id_settings_post**](rapidata/api_client/docs/BillingApi.md#billing_billing_item_billing_item_id_settings_post) | **POST** /billing/billing-item/{billingItemId}/settings | Creates a billing setting for a billing item.
+*BillingApi* | [**billing_billing_item_billing_item_id_settings_setting_id_delete**](rapidata/api_client/docs/BillingApi.md#billing_billing_item_billing_item_id_settings_setting_id_delete) | **DELETE** /billing/billing-item/{billingItemId}/settings/{settingId} | Deletes a billing item billing setting.
+*BillingApi* | [**billing_cost_time_series_get**](rapidata/api_client/docs/BillingApi.md#billing_cost_time_series_get) | **GET** /billing/cost/time-series | Gets the billing cost time series.
+*BillingApi* | [**billing_costs_customers_get**](rapidata/api_client/docs/BillingApi.md#billing_costs_customers_get) | **GET** /billing/costs/customers | Returns billing costs aggregated per customer, ranked by cost.
+*BillingApi* | [**billing_costs_groups_get**](rapidata/api_client/docs/BillingApi.md#billing_costs_groups_get) | **GET** /billing/costs/groups | Returns billing costs aggregated per billing group, ranked by cost.
+*BillingApi* | [**billing_costs_organizations_get**](rapidata/api_client/docs/BillingApi.md#billing_costs_organizations_get) | **GET** /billing/costs/organizations | Returns billing costs aggregated per organization, ranked by cost.
+*BillingApi* | [**billing_customer_customer_id_settings_post**](rapidata/api_client/docs/BillingApi.md#billing_customer_customer_id_settings_post) | **POST** /billing/customer/{customerId}/settings | Creates a billing setting for a customer.
+*BillingApi* | [**billing_customer_customer_id_settings_setting_id_delete**](rapidata/api_client/docs/BillingApi.md#billing_customer_customer_id_settings_setting_id_delete) | **DELETE** /billing/customer/{customerId}/settings/{settingId} | Deletes a customer billing setting.
+*BillingApi* | [**billing_external_service_prices_post**](rapidata/api_client/docs/BillingApi.md#billing_external_service_prices_post) | **POST** /billing/external-service-prices | Creates a rate-card price for an external service.
+*BillingApi* | [**billing_manual_charge_post**](rapidata/api_client/docs/BillingApi.md#billing_manual_charge_post) | **POST** /billing/manual-charge | Creates a manual charge billing item for a customer.
+*BillingApi* | [**billing_period_active_billing_items_get**](rapidata/api_client/docs/BillingApi.md#billing_period_active_billing_items_get) | **GET** /billing-period/active/billing-items | Gets the paged billing groups for the active billing period.
+*BillingApi* | [**billing_period_active_get**](rapidata/api_client/docs/BillingApi.md#billing_period_active_get) | **GET** /billing-period/active | Gets the overview for the active billing period.
+*BillingApi* | [**billing_period_billing_period_id_billing_items_get**](rapidata/api_client/docs/BillingApi.md#billing_period_billing_period_id_billing_items_get) | **GET** /billing-period/{billingPeriodId}/billing-items | Gets the paged billing groups for a billing period.
+*BillingApi* | [**billing_period_billing_period_id_get**](rapidata/api_client/docs/BillingApi.md#billing_period_billing_period_id_get) | **GET** /billing-period/{billingPeriodId} | Gets the overview for a billing period by its ID.
+*BillingApi* | [**billing_period_billing_period_id_volume_discounts_get**](rapidata/api_client/docs/BillingApi.md#billing_period_billing_period_id_volume_discounts_get) | **GET** /billing-period/{billingPeriodId}/volume-discounts | Gets all volume discount brackets for a billing period.
+*BillingApi* | [**billing_period_billing_period_id_volume_discounts_post**](rapidata/api_client/docs/BillingApi.md#billing_period_billing_period_id_volume_discounts_post) | **POST** /billing-period/{billingPeriodId}/volume-discounts | Creates a volume discount bracket for a billing period.
+*BillingApi* | [**billing_periods_get**](rapidata/api_client/docs/BillingApi.md#billing_periods_get) | **GET** /billing-periods | Queries billing periods accessible to the current customer.
+*BillingApi* | [**billing_reconcile_post**](rapidata/api_client/docs/BillingApi.md#billing_reconcile_post) | **POST** /billing/reconcile | Starts reconciliation for a single billing item, all items for a customer, or all items in a billing group.
+*BillingApi* | [**billing_reconciliation_bulk_bulk_reconciliation_id_get**](rapidata/api_client/docs/BillingApi.md#billing_reconciliation_bulk_bulk_reconciliation_id_get) | **GET** /billing/reconciliation/bulk/{bulkReconciliationId} | Returns the aggregated status and results of all reconciliation jobs in a bulk operation.
+*BillingApi* | [**billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post**](rapidata/api_client/docs/BillingApi.md#billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post) | **POST** /billing/reconciliation/bulk/{bulkReconciliationId}/redispatch | Redispatches the individual reconciliations contained in the given bulk reconciliation.
+*BillingApi* | [**billing_reconciliation_job_id_get**](rapidata/api_client/docs/BillingApi.md#billing_reconciliation_job_id_get) | **GET** /billing/reconciliation/{jobId} | Returns the status and results of a reconciliation job.
+*BillingApi* | [**billing_settings_post**](rapidata/api_client/docs/BillingApi.md#billing_settings_post) | **POST** /billing/settings | Creates a global billing setting.
+*BillingApi* | [**billing_settings_setting_id_delete**](rapidata/api_client/docs/BillingApi.md#billing_settings_setting_id_delete) | **DELETE** /billing/settings/{settingId} | Deletes a global billing setting.
+*BillingApi* | [**billing_settings_timeline_get**](rapidata/api_client/docs/BillingApi.md#billing_settings_timeline_get) | **GET** /billing/settings/timeline | Gets the billing settings timeline.
+*BillingApi* | [**billing_summary_get**](rapidata/api_client/docs/BillingApi.md#billing_summary_get) | **GET** /billing/summary | Gets the current-period usage and applicable limit for a customer.
+*BillingAccountApi* | [**customer_customer_id_credit_line_put**](rapidata/api_client/docs/BillingAccountApi.md#customer_customer_id_credit_line_put) | **PUT** /customer/{customerId}/credit-line | Sets the spend limit for a customer.
+*BillingAccountApi* | [**customer_customer_id_minimum_spend_commitment_put**](rapidata/api_client/docs/BillingAccountApi.md#customer_customer_id_minimum_spend_commitment_put) | **PUT** /customer/{customerId}/minimum-spend-commitment | Sets the minimum spend commitment for a customer.
+*BillingAccountApi* | [**customer_customer_id_platform_fee_put**](rapidata/api_client/docs/BillingAccountApi.md#customer_customer_id_platform_fee_put) | **PUT** /customer/{customerId}/platform-fee | Sets the platform fee for a customer.
+*BillingAccountApi* | [**customer_unsubscribe_post**](rapidata/api_client/docs/BillingAccountApi.md#customer_unsubscribe_post) | **POST** /customer/unsubscribe | Unsubscribes the current customer.
+*BillingAccountApi* | [**vouchers_get**](rapidata/api_client/docs/BillingAccountApi.md#vouchers_get) | **GET** /vouchers | Queries vouchers with filtering, sorting, and pagination.
+*BillingAccountApi* | [**vouchers_post**](rapidata/api_client/docs/BillingAccountApi.md#vouchers_post) | **POST** /vouchers | Grants a voucher to a customer.
+*BillingAccountApi* | [**vouchers_voucher_id_revoke_post**](rapidata/api_client/docs/BillingAccountApi.md#vouchers_voucher_id_revoke_post) | **POST** /vouchers/{voucherId}/revoke | Revokes a voucher.
 *CacheApi* | [**campaign_cache_campaigns_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_campaigns_get) | **GET** /campaign/cache/campaigns | Returns the current state of the in-memory campaign cache.
 *CacheApi* | [**campaign_cache_user_scores_get**](rapidata/api_client/docs/CacheApi.md#campaign_cache_user_scores_get) | **GET** /campaign/cache/user-scores | Returns the current state of the in-memory default user score cache.
 *CampaignApi* | [**campaign_boost_external_campaign_id_fast_bid_multiplier_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_external_campaign_id_fast_bid_multiplier_get) | **GET** /campaign/boost/{externalCampaignId}/fast-bid-multiplier | Returns the fast bid multiplier currently applied to an external booster campaign.
@@ -168,6 +200,7 @@ Class | Method | HTTP request | Description
 *ExamplesApi* | [**audience_example_example_id_delete**](rapidata/api_client/docs/ExamplesApi.md#audience_example_example_id_delete) | **DELETE** /audience/example/{exampleId} | Deletes the specified audience example.
 *ExternalAudienceApi* | [**campaign_external_audiences_get**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_get) | **GET** /campaign/external-audiences | Queries the cached external audiences available for targeting.
 *ExternalAudienceApi* | [**campaign_external_audiences_sync_post**](rapidata/api_client/docs/ExternalAudienceApi.md#campaign_external_audiences_sync_post) | **POST** /campaign/external-audiences/sync | Enqueues a background job that synchronises external audiences with the cache.
+*ExternalServicePricesApi* | [**billing_external_service_prices_post_0**](rapidata/api_client/docs/ExternalServicePricesApi.md#billing_external_service_prices_post_0) | **POST** /billing/external-service-prices | Creates a rate-card price for an external service.
 *FaucetApi* | [**leaderboard_faucet_replicate_models_get**](rapidata/api_client/docs/FaucetApi.md#leaderboard_faucet_replicate_models_get) | **GET** /leaderboard/faucet/replicate/models | Searches Replicate models by free-text term.
 *FaucetApi* | [**leaderboard_faucet_replicate_models_model_owner_model_name_get**](rapidata/api_client/docs/FaucetApi.md#leaderboard_faucet_replicate_models_model_owner_model_name_get) | **GET** /leaderboard/faucet/replicate/models/{modelOwner}/{modelName} | Returns a single Replicate model with its input parameter schema.
 *FaucetApi* | [**participant_participant_id_faucet_delete_0**](rapidata/api_client/docs/FaucetApi.md#participant_participant_id_faucet_delete_0) | **DELETE** /participant/{participantId}/faucet | Removes the faucet configuration from a participant.
@@ -190,6 +223,11 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write bridge token keys for a client.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Stores the referrer in a cookie for later use during sign-up.
+*InvoiceApi* | [**billing_invoice_post**](rapidata/api_client/docs/InvoiceApi.md#billing_invoice_post) | **POST** /billing/invoice | Creates a Stripe draft invoice for a billing period.
+*InvoiceApi* | [**invoice_invoice_id_finalize_post**](rapidata/api_client/docs/InvoiceApi.md#invoice_invoice_id_finalize_post) | **POST** /invoice/{invoiceId}/finalize | Finalizes a draft invoice.
+*InvoiceApi* | [**invoice_invoice_id_get**](rapidata/api_client/docs/InvoiceApi.md#invoice_invoice_id_get) | **GET** /invoice/{invoiceId} | Gets an invoice by ID.
+*InvoiceApi* | [**invoice_invoice_id_void_post**](rapidata/api_client/docs/InvoiceApi.md#invoice_invoice_id_void_post) | **POST** /invoice/{invoiceId}/void | Voids an invoice.
+*InvoiceApi* | [**invoices_get**](rapidata/api_client/docs/InvoiceApi.md#invoices_get) | **GET** /invoices | Queries invoices with filtering, sorting, and pagination.
 *JobApi* | [**job_definition_definition_id_cost_estimate_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_cost_estimate_get) | **GET** /job/definition/{definitionId}/cost-estimate | Estimates the cost of running a job definition&#39;s latest revision to completion.
 *JobApi* | [**job_definition_definition_id_delete**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_delete) | **DELETE** /job/definition/{definitionId} | Deletes a job definition and all its revisions.
 *JobApi* | [**job_definition_definition_id_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_get) | **GET** /job/definition/{definitionId} | Gets a job definition by its id.
@@ -273,6 +311,10 @@ Class | Method | HTTP request | Description
 *ParticipantApi* | [**participant_participant_id_sample_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_post) | **POST** /participant/{participantId}/sample | Adds a sample to a participant.
 *ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a participant sample.
 *ParticipantApi* | [**participants_participant_id_submit_post**](rapidata/api_client/docs/ParticipantApi.md#participants_participant_id_submit_post) | **POST** /participants/{participantId}/submit | Submits a participant to a benchmark.
+*PaymentApi* | [**payment_checkout_post**](rapidata/api_client/docs/PaymentApi.md#payment_checkout_post) | **POST** /payment/checkout | Creates a new Stripe checkout session for the given price.
+*PaymentApi* | [**payment_session_session_id_get**](rapidata/api_client/docs/PaymentApi.md#payment_session_session_id_get) | **GET** /payment/session/{sessionId} | Gets the current status of a checkout session.
+*PaymentApi* | [**payment_topup_post**](rapidata/api_client/docs/PaymentApi.md#payment_topup_post) | **POST** /payment/topup | Creates a hosted checkout session for the authenticated customer to add the given amount to  their prepaid balance.
+*PaymentApi* | [**payment_webhook_post**](rapidata/api_client/docs/PaymentApi.md#payment_webhook_post) | **POST** /payment/webhook | Processes an incoming Stripe webhook event.
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Streams the preliminary download file when ready.
@@ -289,6 +331,10 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_rapid_id_navigation_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_navigation_get) | **GET** /rapid/{rapidId}/navigation | Gets the anchor rapid and its surrounding rapids within the results slice, in the order  and filter the results grid renders, so the explorer can step neighbour-to-neighbour.
 *RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a completed rapid, marking its results as invalid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
+*ReconciliationApi* | [**billing_reconcile_post_0**](rapidata/api_client/docs/ReconciliationApi.md#billing_reconcile_post_0) | **POST** /billing/reconcile | Starts reconciliation for a single billing item, all items for a customer, or all items in a billing group.
+*ReconciliationApi* | [**billing_reconciliation_bulk_bulk_reconciliation_id_get_0**](rapidata/api_client/docs/ReconciliationApi.md#billing_reconciliation_bulk_bulk_reconciliation_id_get_0) | **GET** /billing/reconciliation/bulk/{bulkReconciliationId} | Returns the aggregated status and results of all reconciliation jobs in a bulk operation.
+*ReconciliationApi* | [**billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0**](rapidata/api_client/docs/ReconciliationApi.md#billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0) | **POST** /billing/reconciliation/bulk/{bulkReconciliationId}/redispatch | Redispatches the individual reconciliations contained in the given bulk reconciliation.
+*ReconciliationApi* | [**billing_reconciliation_job_id_get_0**](rapidata/api_client/docs/ReconciliationApi.md#billing_reconciliation_job_id_get_0) | **GET** /billing/reconciliation/{jobId} | Returns the status and results of a reconciliation job.
 *ReplicateApi* | [**leaderboard_faucet_replicate_models_get_0**](rapidata/api_client/docs/ReplicateApi.md#leaderboard_faucet_replicate_models_get_0) | **GET** /leaderboard/faucet/replicate/models | Searches Replicate models by free-text term.
 *ReplicateApi* | [**leaderboard_faucet_replicate_models_model_owner_model_name_get_0**](rapidata/api_client/docs/ReplicateApi.md#leaderboard_faucet_replicate_models_model_owner_model_name_get_0) | **GET** /leaderboard/faucet/replicate/models/{modelOwner}/{modelName} | Returns a single Replicate model with its input parameter schema.
 *SampleApi* | [**benchmark_benchmark_id_samples_identifier_get**](rapidata/api_client/docs/SampleApi.md#benchmark_benchmark_id_samples_identifier_get) | **GET** /benchmark/{benchmarkId}/samples/{identifier} | Returns the paged samples of a benchmark filtered by an identifier.
@@ -300,6 +346,13 @@ Class | Method | HTTP request | Description
 *SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_get**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_get) | **GET** /benchmark/sample-generation/{sampleGenerationId} | Returns the current status and progress of a sample generation request.
 *SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_items_get**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_items_get) | **GET** /benchmark/sample-generation/{sampleGenerationId}/items | Returns the per-item audit trail for a sample generation request.
 *SampleGenerationApi* | [**benchmark_sample_generation_sample_generation_id_retry_post**](rapidata/api_client/docs/SampleGenerationApi.md#benchmark_sample_generation_sample_generation_id_retry_post) | **POST** /benchmark/sample-generation/{sampleGenerationId}/retry | Re-queues failed items of a sample generation so they run again.
+*SettingsApi* | [**billing_billing_item_billing_item_id_settings_post_0**](rapidata/api_client/docs/SettingsApi.md#billing_billing_item_billing_item_id_settings_post_0) | **POST** /billing/billing-item/{billingItemId}/settings | Creates a billing setting for a billing item.
+*SettingsApi* | [**billing_billing_item_billing_item_id_settings_setting_id_delete_0**](rapidata/api_client/docs/SettingsApi.md#billing_billing_item_billing_item_id_settings_setting_id_delete_0) | **DELETE** /billing/billing-item/{billingItemId}/settings/{settingId} | Deletes a billing item billing setting.
+*SettingsApi* | [**billing_customer_customer_id_settings_post_0**](rapidata/api_client/docs/SettingsApi.md#billing_customer_customer_id_settings_post_0) | **POST** /billing/customer/{customerId}/settings | Creates a billing setting for a customer.
+*SettingsApi* | [**billing_customer_customer_id_settings_setting_id_delete_0**](rapidata/api_client/docs/SettingsApi.md#billing_customer_customer_id_settings_setting_id_delete_0) | **DELETE** /billing/customer/{customerId}/settings/{settingId} | Deletes a customer billing setting.
+*SettingsApi* | [**billing_settings_post_0**](rapidata/api_client/docs/SettingsApi.md#billing_settings_post_0) | **POST** /billing/settings | Creates a global billing setting.
+*SettingsApi* | [**billing_settings_setting_id_delete_0**](rapidata/api_client/docs/SettingsApi.md#billing_settings_setting_id_delete_0) | **DELETE** /billing/settings/{settingId} | Deletes a global billing setting.
+*SettingsApi* | [**billing_settings_timeline_get_0**](rapidata/api_client/docs/SettingsApi.md#billing_settings_timeline_get_0) | **GET** /billing/settings/timeline | Gets the billing settings timeline.
 *SignalApi* | [**signal_get**](rapidata/api_client/docs/SignalApi.md#signal_get) | **GET** /signal | Queries the signals visible to the current caller.
 *SignalApi* | [**signal_post**](rapidata/api_client/docs/SignalApi.md#signal_post) | **POST** /signal | Creates a new signal.
 *SignalApi* | [**signal_run_run_id_get**](rapidata/api_client/docs/SignalApi.md#signal_run_run_id_get) | **GET** /signal/run/{runId} | Gets a single signal run by its id.
@@ -336,6 +389,8 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_sets_available_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_available_get) | **GET** /validation-sets/available | Gets the available validation sets for the current user.
 *ValidationSetApi* | [**validation_sets_compatible_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_compatible_get) | **GET** /validation-sets/compatible | Gets all validation sets available to the user that a rapid with the provided parameters can be added to.
 *ValidationSetApi* | [**validation_sets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_get) | **GET** /validation-sets | Queries available validation sets based on the provided filter, paging and sorting criteria.
+*VolumeDiscountApi* | [**billing_period_billing_period_id_volume_discounts_get_0**](rapidata/api_client/docs/VolumeDiscountApi.md#billing_period_billing_period_id_volume_discounts_get_0) | **GET** /billing-period/{billingPeriodId}/volume-discounts | Gets all volume discount brackets for a billing period.
+*VolumeDiscountApi* | [**billing_period_billing_period_id_volume_discounts_post_0**](rapidata/api_client/docs/VolumeDiscountApi.md#billing_period_billing_period_id_volume_discounts_post_0) | **POST** /billing-period/{billingPeriodId}/volume-discounts | Creates a volume discount bracket for a billing period.
 *WorkflowApi* | [**workflow_workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_compare_ab_summary_get) | **GET** /workflow/{workflowId}/compare-ab-summary | Returns the number of times each asset index won across the workflow&#39;s rapids.
 *WorkflowApi* | [**workflow_workflow_id_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_delete) | **DELETE** /workflow/{workflowId} | Deletes a workflow by its id.
 *WorkflowApi* | [**workflow_workflow_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_get) | **GET** /workflow/{workflowId} | Returns the workflow identified by workflowId.
@@ -367,6 +422,9 @@ Class | Method | HTTP request | Description
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
  - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
  - [BatchUploadUrlStatus](rapidata/api_client/docs/BatchUploadUrlStatus.md)
+ - [BillingPeriodStatus](rapidata/api_client/docs/BillingPeriodStatus.md)
+ - [BillingPeriodStatusModel](rapidata/api_client/docs/BillingPeriodStatusModel.md)
+ - [BillingSummaryMode](rapidata/api_client/docs/BillingSummaryMode.md)
  - [BoostLeaderboardEndpointInput](rapidata/api_client/docs/BoostLeaderboardEndpointInput.md)
  - [BoostLevel](rapidata/api_client/docs/BoostLevel.md)
  - [BoostMode](rapidata/api_client/docs/BoostMode.md)
@@ -375,6 +433,7 @@ Class | Method | HTTP request | Description
  - [BoostingProfileModel](rapidata/api_client/docs/BoostingProfileModel.md)
  - [BoundingBoxResultModelBox](rapidata/api_client/docs/BoundingBoxResultModelBox.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
+ - [BulkReconciliationDispatchState](rapidata/api_client/docs/BulkReconciliationDispatchState.md)
  - [CampaignStatusModel](rapidata/api_client/docs/CampaignStatusModel.md)
  - [ChangeAudienceOwnerEndpointInput](rapidata/api_client/docs/ChangeAudienceOwnerEndpointInput.md)
  - [ChangeBoostEndpointInput](rapidata/api_client/docs/ChangeBoostEndpointInput.md)
@@ -396,11 +455,14 @@ Class | Method | HTTP request | Description
  - [CreateBenchmarkEndpointOutput](rapidata/api_client/docs/CreateBenchmarkEndpointOutput.md)
  - [CreateBenchmarkParticipantEndpointInput](rapidata/api_client/docs/CreateBenchmarkParticipantEndpointInput.md)
  - [CreateBenchmarkParticipantEndpointOutput](rapidata/api_client/docs/CreateBenchmarkParticipantEndpointOutput.md)
+ - [CreateBillingItemBillingSettingEndpointInput](rapidata/api_client/docs/CreateBillingItemBillingSettingEndpointInput.md)
  - [CreateBridgeTokenEndpointOutput](rapidata/api_client/docs/CreateBridgeTokenEndpointOutput.md)
+ - [CreateCheckoutEndpointOutput](rapidata/api_client/docs/CreateCheckoutEndpointOutput.md)
  - [CreateClientEndpointInput](rapidata/api_client/docs/CreateClientEndpointInput.md)
  - [CreateClientEndpointOutput](rapidata/api_client/docs/CreateClientEndpointOutput.md)
  - [CreateComplexOrderEndpointInput](rapidata/api_client/docs/CreateComplexOrderEndpointInput.md)
  - [CreateComplexOrderEndpointOutput](rapidata/api_client/docs/CreateComplexOrderEndpointOutput.md)
+ - [CreateCustomerBillingSettingEndpointInput](rapidata/api_client/docs/CreateCustomerBillingSettingEndpointInput.md)
  - [CreateDatapointEndpointInput](rapidata/api_client/docs/CreateDatapointEndpointInput.md)
  - [CreateDatapointEndpointOutput](rapidata/api_client/docs/CreateDatapointEndpointOutput.md)
  - [CreateDatasetEndpointInput](rapidata/api_client/docs/CreateDatasetEndpointInput.md)
@@ -408,14 +470,18 @@ Class | Method | HTTP request | Description
  - [CreateDatasetGroupEndpointInput](rapidata/api_client/docs/CreateDatasetGroupEndpointInput.md)
  - [CreateDemographicRapidEndpointInput](rapidata/api_client/docs/CreateDemographicRapidEndpointInput.md)
  - [CreateDemographicRapidEndpointOutput](rapidata/api_client/docs/CreateDemographicRapidEndpointOutput.md)
+ - [CreateExternalServicePriceEndpointInput](rapidata/api_client/docs/CreateExternalServicePriceEndpointInput.md)
  - [CreateFilteredAudienceEndpointInput](rapidata/api_client/docs/CreateFilteredAudienceEndpointInput.md)
  - [CreateFilteredAudienceEndpointOutput](rapidata/api_client/docs/CreateFilteredAudienceEndpointOutput.md)
  - [CreateFlowEndpointInput](rapidata/api_client/docs/CreateFlowEndpointInput.md)
  - [CreateFlowEndpointOutput](rapidata/api_client/docs/CreateFlowEndpointOutput.md)
  - [CreateFlowItemEndpointInput](rapidata/api_client/docs/CreateFlowItemEndpointInput.md)
  - [CreateFlowItemEndpointOutput](rapidata/api_client/docs/CreateFlowItemEndpointOutput.md)
+ - [CreateGlobalBillingSettingEndpointInput](rapidata/api_client/docs/CreateGlobalBillingSettingEndpointInput.md)
  - [CreateGlobalTextEndpointInput](rapidata/api_client/docs/CreateGlobalTextEndpointInput.md)
  - [CreateGlobalTextEndpointOutput](rapidata/api_client/docs/CreateGlobalTextEndpointOutput.md)
+ - [CreateInvoiceEndpointInput](rapidata/api_client/docs/CreateInvoiceEndpointInput.md)
+ - [CreateInvoiceEndpointOutput](rapidata/api_client/docs/CreateInvoiceEndpointOutput.md)
  - [CreateJobDefinitionEndpointInput](rapidata/api_client/docs/CreateJobDefinitionEndpointInput.md)
  - [CreateJobDefinitionEndpointOutput](rapidata/api_client/docs/CreateJobDefinitionEndpointOutput.md)
  - [CreateJobEndpointInput](rapidata/api_client/docs/CreateJobEndpointInput.md)
@@ -426,6 +492,8 @@ Class | Method | HTTP request | Description
  - [CreateLeaderboardEndpointOutput](rapidata/api_client/docs/CreateLeaderboardEndpointOutput.md)
  - [CreateLeaderboardParticipantEndpointInput](rapidata/api_client/docs/CreateLeaderboardParticipantEndpointInput.md)
  - [CreateLeaderboardParticipantEndpointOutput](rapidata/api_client/docs/CreateLeaderboardParticipantEndpointOutput.md)
+ - [CreateManualChargeEndpointInput](rapidata/api_client/docs/CreateManualChargeEndpointInput.md)
+ - [CreateManualChargeEndpointOutput](rapidata/api_client/docs/CreateManualChargeEndpointOutput.md)
  - [CreateOrderEndpointOutput](rapidata/api_client/docs/CreateOrderEndpointOutput.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreatePromptForBenchmarkEndpointInput](rapidata/api_client/docs/CreatePromptForBenchmarkEndpointInput.md)
@@ -439,10 +507,14 @@ Class | Method | HTTP request | Description
  - [CreateSampleNewEndpointOutput](rapidata/api_client/docs/CreateSampleNewEndpointOutput.md)
  - [CreateSignalEndpointInput](rapidata/api_client/docs/CreateSignalEndpointInput.md)
  - [CreateSignalEndpointOutput](rapidata/api_client/docs/CreateSignalEndpointOutput.md)
+ - [CreateTopUpEndpointInput](rapidata/api_client/docs/CreateTopUpEndpointInput.md)
+ - [CreateTopUpEndpointOutput](rapidata/api_client/docs/CreateTopUpEndpointOutput.md)
  - [CreateUnsupportedOrderEndpointInput](rapidata/api_client/docs/CreateUnsupportedOrderEndpointInput.md)
  - [CreateValidationFeedbackEndpointInput](rapidata/api_client/docs/CreateValidationFeedbackEndpointInput.md)
  - [CreateValidationSetEndpointInput](rapidata/api_client/docs/CreateValidationSetEndpointInput.md)
  - [CreateValidationSetEndpointOutput](rapidata/api_client/docs/CreateValidationSetEndpointOutput.md)
+ - [CreateVolumeDiscountEndpointInput](rapidata/api_client/docs/CreateVolumeDiscountEndpointInput.md)
+ - [CreateVolumeDiscountEndpointOutput](rapidata/api_client/docs/CreateVolumeDiscountEndpointOutput.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
  - [DefinitionType](rapidata/api_client/docs/DefinitionType.md)
  - [DeleteAudienceExampleEndpointOutput](rapidata/api_client/docs/DeleteAudienceExampleEndpointOutput.md)
@@ -458,12 +530,14 @@ Class | Method | HTTP request | Description
  - [ExampleTranscriptionWord](rapidata/api_client/docs/ExampleTranscriptionWord.md)
  - [ExampleVisibility](rapidata/api_client/docs/ExampleVisibility.md)
  - [ExistingAssetInput](rapidata/api_client/docs/ExistingAssetInput.md)
+ - [ExternalServiceKind](rapidata/api_client/docs/ExternalServiceKind.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
  - [FileType](rapidata/api_client/docs/FileType.md)
  - [FlowItemState](rapidata/api_client/docs/FlowItemState.md)
  - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkEndpointOutput](rapidata/api_client/docs/ForkBenchmarkEndpointOutput.md)
  - [GenderUserFilterModelGender](rapidata/api_client/docs/GenderUserFilterModelGender.md)
+ - [GetActiveBillingPeriodOverviewEndpointOutput](rapidata/api_client/docs/GetActiveBillingPeriodOverviewEndpointOutput.md)
  - [GetAllGlobalTextsEndpointOutput](rapidata/api_client/docs/GetAllGlobalTextsEndpointOutput.md)
  - [GetAllGlobalTextsEndpointOutputItem](rapidata/api_client/docs/GetAllGlobalTextsEndpointOutputItem.md)
  - [GetAudienceByIdEndpointOutput](rapidata/api_client/docs/GetAudienceByIdEndpointOutput.md)
@@ -476,6 +550,10 @@ Class | Method | HTTP request | Description
  - [GetBatchUploadResultEndpointUrlOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointUrlOutput.md)
  - [GetBatchUploadStatusEndpointOutput](rapidata/api_client/docs/GetBatchUploadStatusEndpointOutput.md)
  - [GetBenchmarkByIdEndpointOutput](rapidata/api_client/docs/GetBenchmarkByIdEndpointOutput.md)
+ - [GetBillingPeriodOverviewEndpointOutput](rapidata/api_client/docs/GetBillingPeriodOverviewEndpointOutput.md)
+ - [GetBillingSettingsTimelineEndpointOutput](rapidata/api_client/docs/GetBillingSettingsTimelineEndpointOutput.md)
+ - [GetBillingSettingsTimelineEndpointOutputInterval](rapidata/api_client/docs/GetBillingSettingsTimelineEndpointOutputInterval.md)
+ - [GetBillingSummaryEndpointOutput](rapidata/api_client/docs/GetBillingSummaryEndpointOutput.md)
  - [GetBoostInsightsEndpointAudienceOutput](rapidata/api_client/docs/GetBoostInsightsEndpointAudienceOutput.md)
  - [GetBoostInsightsEndpointContributorOutput](rapidata/api_client/docs/GetBoostInsightsEndpointContributorOutput.md)
  - [GetBoostInsightsEndpointGlobalBoostOutput](rapidata/api_client/docs/GetBoostInsightsEndpointGlobalBoostOutput.md)
@@ -484,9 +562,11 @@ Class | Method | HTTP request | Description
  - [GetBoostInsightsEndpointLeveledAudienceOutput](rapidata/api_client/docs/GetBoostInsightsEndpointLeveledAudienceOutput.md)
  - [GetBoostInsightsEndpointOutput](rapidata/api_client/docs/GetBoostInsightsEndpointOutput.md)
  - [GetBoostStatusEndpointOutput](rapidata/api_client/docs/GetBoostStatusEndpointOutput.md)
+ - [GetBulkReconciliationStatusEndpointOutput](rapidata/api_client/docs/GetBulkReconciliationStatusEndpointOutput.md)
  - [GetCampaignByIdEndpointOutput](rapidata/api_client/docs/GetCampaignByIdEndpointOutput.md)
  - [GetCampaignCacheEndpointCampaignEntry](rapidata/api_client/docs/GetCampaignCacheEndpointCampaignEntry.md)
  - [GetCampaignCacheEndpointOutput](rapidata/api_client/docs/GetCampaignCacheEndpointOutput.md)
+ - [GetCheckoutSessionEndpointOutput](rapidata/api_client/docs/GetCheckoutSessionEndpointOutput.md)
  - [GetCombinedBenchmarkMatrixEndpointOutput](rapidata/api_client/docs/GetCombinedBenchmarkMatrixEndpointOutput.md)
  - [GetCombinedBenchmarkStandingsEndpointOutput](rapidata/api_client/docs/GetCombinedBenchmarkStandingsEndpointOutput.md)
  - [GetCombinedBenchmarkStandingsEndpointOutputItem](rapidata/api_client/docs/GetCombinedBenchmarkStandingsEndpointOutputItem.md)
@@ -498,6 +578,8 @@ Class | Method | HTTP request | Description
  - [GetCompatibleValidationSetsEndpointValidationSetOutputModel](rapidata/api_client/docs/GetCompatibleValidationSetsEndpointValidationSetOutputModel.md)
  - [GetCompletionTimeHistogramEndpointOutput](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutput.md)
  - [GetCompletionTimeHistogramEndpointOutputBucket](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutputBucket.md)
+ - [GetCostTimeSeriesEndpointCostDataPoint](rapidata/api_client/docs/GetCostTimeSeriesEndpointCostDataPoint.md)
+ - [GetCostTimeSeriesEndpointOutput](rapidata/api_client/docs/GetCostTimeSeriesEndpointOutput.md)
  - [GetDatapointEndpointOutput](rapidata/api_client/docs/GetDatapointEndpointOutput.md)
  - [GetDatasetByIdEndpointOutput](rapidata/api_client/docs/GetDatasetByIdEndpointOutput.md)
  - [GetDatasetProgressEndpointOutput](rapidata/api_client/docs/GetDatasetProgressEndpointOutput.md)
@@ -511,6 +593,7 @@ Class | Method | HTTP request | Description
  - [GetGlobalResponsesEndpointOutputResponse](rapidata/api_client/docs/GetGlobalResponsesEndpointOutputResponse.md)
  - [GetGroupedRankingWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsEndpointOutput.md)
  - [GetGroupedRankingWorkflowResultsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsEndpointPagedResultOfOutput.md)
+ - [GetInvoiceEndpointOutput](rapidata/api_client/docs/GetInvoiceEndpointOutput.md)
  - [GetJobByIdEndpointOutput](rapidata/api_client/docs/GetJobByIdEndpointOutput.md)
  - [GetJobCostEstimateEndpointOutput](rapidata/api_client/docs/GetJobCostEstimateEndpointOutput.md)
  - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
@@ -539,6 +622,7 @@ Class | Method | HTTP request | Description
  - [GetRapidNavigationEndpointOutput](rapidata/api_client/docs/GetRapidNavigationEndpointOutput.md)
  - [GetRecommendedValidationSetEndpointOutput](rapidata/api_client/docs/GetRecommendedValidationSetEndpointOutput.md)
  - [GetRecommendedValidationSetEndpointValidationSetOutputModel](rapidata/api_client/docs/GetRecommendedValidationSetEndpointValidationSetOutputModel.md)
+ - [GetReconciliationStatusEndpointOutput](rapidata/api_client/docs/GetReconciliationStatusEndpointOutput.md)
  - [GetReplicateModelEndpointOutput](rapidata/api_client/docs/GetReplicateModelEndpointOutput.md)
  - [GetReplicateModelEndpointParameter](rapidata/api_client/docs/GetReplicateModelEndpointParameter.md)
  - [GetResponseCountHistogramEndpointOutput](rapidata/api_client/docs/GetResponseCountHistogramEndpointOutput.md)
@@ -568,6 +652,8 @@ Class | Method | HTTP request | Description
  - [GetValidationRapidsEndpointOutput](rapidata/api_client/docs/GetValidationRapidsEndpointOutput.md)
  - [GetValidationRapidsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetValidationRapidsEndpointPagedResultOfOutput.md)
  - [GetValidationSetByIdEndpointOutput](rapidata/api_client/docs/GetValidationSetByIdEndpointOutput.md)
+ - [GetVolumeDiscountsEndpointOutput](rapidata/api_client/docs/GetVolumeDiscountsEndpointOutput.md)
+ - [GetVolumeDiscountsEndpointOutputVolumeDiscountItem](rapidata/api_client/docs/GetVolumeDiscountsEndpointOutputVolumeDiscountItem.md)
  - [GetWorkflowByIdEndpointOutput](rapidata/api_client/docs/GetWorkflowByIdEndpointOutput.md)
  - [GetWorkflowProgressEndpointOutput](rapidata/api_client/docs/GetWorkflowProgressEndpointOutput.md)
  - [GetWorkflowResponsesEndpointOutput](rapidata/api_client/docs/GetWorkflowResponsesEndpointOutput.md)
@@ -577,6 +663,8 @@ Class | Method | HTTP request | Description
  - [GetWorkflowResultsResultResponse](rapidata/api_client/docs/GetWorkflowResultsResultResponse.md)
  - [GoogleOneTapLoginEndpointInput](rapidata/api_client/docs/GoogleOneTapLoginEndpointInput.md)
  - [GoogleOneTapLoginEndpointOutput](rapidata/api_client/docs/GoogleOneTapLoginEndpointOutput.md)
+ - [GrantVoucherEndpointInput](rapidata/api_client/docs/GrantVoucherEndpointInput.md)
+ - [GrantVoucherEndpointOutput](rapidata/api_client/docs/GrantVoucherEndpointOutput.md)
  - [IArtifactModel](rapidata/api_client/docs/IArtifactModel.md)
  - [IArtifactModelCampaignArtifactModel](rapidata/api_client/docs/IArtifactModelCampaignArtifactModel.md)
  - [IArtifactModelDatasetArtifactModel](rapidata/api_client/docs/IArtifactModelDatasetArtifactModel.md)
@@ -604,6 +692,13 @@ Class | Method | HTTP request | Description
  - [IAudienceFilterLanguageAudienceFilter](rapidata/api_client/docs/IAudienceFilterLanguageAudienceFilter.md)
  - [IAudienceFilterNotAudienceFilter](rapidata/api_client/docs/IAudienceFilterNotAudienceFilter.md)
  - [IAudienceFilterOrAudienceFilter](rapidata/api_client/docs/IAudienceFilterOrAudienceFilter.md)
+ - [IBillingGroupModel](rapidata/api_client/docs/IBillingGroupModel.md)
+ - [IBillingGroupModelAudienceDistillationBillingGroupModel](rapidata/api_client/docs/IBillingGroupModelAudienceDistillationBillingGroupModel.md)
+ - [IBillingGroupModelAudienceJobBillingGroupModel](rapidata/api_client/docs/IBillingGroupModelAudienceJobBillingGroupModel.md)
+ - [IBillingGroupModelBenchmarkBillingGroupModel](rapidata/api_client/docs/IBillingGroupModelBenchmarkBillingGroupModel.md)
+ - [IBillingGroupModelOrderBillingGroupModel](rapidata/api_client/docs/IBillingGroupModelOrderBillingGroupModel.md)
+ - [IBillingGroupModelRankingFlowBillingGroupModel](rapidata/api_client/docs/IBillingGroupModelRankingFlowBillingGroupModel.md)
+ - [IBillingGroupModelValidationSetBillingGroupModel](rapidata/api_client/docs/IBillingGroupModelValidationSetBillingGroupModel.md)
  - [ICampaignFilterModel](rapidata/api_client/docs/ICampaignFilterModel.md)
  - [ICampaignFilterModelAndFilterModel](rapidata/api_client/docs/ICampaignFilterModelAndFilterModel.md)
  - [ICampaignFilterModelAudienceStateFilterModel](rapidata/api_client/docs/ICampaignFilterModelAudienceStateFilterModel.md)
@@ -657,6 +752,13 @@ Class | Method | HTTP request | Description
  - [IFaucetOutputReplicateFaucetOutput](rapidata/api_client/docs/IFaucetOutputReplicateFaucetOutput.md)
  - [IFlowModel](rapidata/api_client/docs/IFlowModel.md)
  - [IFlowModelRankingFlowModel](rapidata/api_client/docs/IFlowModelRankingFlowModel.md)
+ - [ILineItemModel](rapidata/api_client/docs/ILineItemModel.md)
+ - [ILineItemModelMinimumSpendCommitmentModel](rapidata/api_client/docs/ILineItemModelMinimumSpendCommitmentModel.md)
+ - [ILineItemModelOtherChargeModel](rapidata/api_client/docs/ILineItemModelOtherChargeModel.md)
+ - [ILineItemModelPlatformFeeModel](rapidata/api_client/docs/ILineItemModelPlatformFeeModel.md)
+ - [ILineItemModelRefundModel](rapidata/api_client/docs/ILineItemModelRefundModel.md)
+ - [ILineItemModelRunningCostModel](rapidata/api_client/docs/ILineItemModelRunningCostModel.md)
+ - [ILineItemModelVolumeDiscountModel](rapidata/api_client/docs/ILineItemModelVolumeDiscountModel.md)
  - [IMetadata](rapidata/api_client/docs/IMetadata.md)
  - [IMetadataClassificationMetadata](rapidata/api_client/docs/IMetadataClassificationMetadata.md)
  - [IMetadataCountMetadata](rapidata/api_client/docs/IMetadataCountMetadata.md)
@@ -868,6 +970,7 @@ Class | Method | HTTP request | Description
  - [IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel](rapidata/api_client/docs/IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel.md)
  - [IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel](rapidata/api_client/docs/IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel.md)
  - [InspectReportEndpointOutput](rapidata/api_client/docs/InspectReportEndpointOutput.md)
+ - [InvoiceStatus](rapidata/api_client/docs/InvoiceStatus.md)
  - [IsRapidBagValidEndpointOutput](rapidata/api_client/docs/IsRapidBagValidEndpointOutput.md)
  - [JobDefinitionRevisionState](rapidata/api_client/docs/JobDefinitionRevisionState.md)
  - [JsonWebKey](rapidata/api_client/docs/JsonWebKey.md)
@@ -879,10 +982,12 @@ Class | Method | HTTP request | Description
  - [LocateBoxTruthModelBox](rapidata/api_client/docs/LocateBoxTruthModelBox.md)
  - [LocateCoordinate](rapidata/api_client/docs/LocateCoordinate.md)
  - [LocateCoordinateModel](rapidata/api_client/docs/LocateCoordinateModel.md)
+ - [ManualChargeReason](rapidata/api_client/docs/ManualChargeReason.md)
  - [NamedClassification](rapidata/api_client/docs/NamedClassification.md)
  - [NamedEntityResultModelNamedClassification](rapidata/api_client/docs/NamedEntityResultModelNamedClassification.md)
  - [NamedEntityTruthModelNamedClassification](rapidata/api_client/docs/NamedEntityTruthModelNamedClassification.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
+ - [PagedResultOfIBillingGroupModel](rapidata/api_client/docs/PagedResultOfIBillingGroupModel.md)
  - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
  - [PidBatchMode](rapidata/api_client/docs/PidBatchMode.md)
  - [PolygonCoordinate](rapidata/api_client/docs/PolygonCoordinate.md)
@@ -903,10 +1008,16 @@ Class | Method | HTTP request | Description
  - [QueryBenchmarkStandingsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryBenchmarkStandingsEndpointPagedResultOfOutput.md)
  - [QueryBenchmarksEndpointOutput](rapidata/api_client/docs/QueryBenchmarksEndpointOutput.md)
  - [QueryBenchmarksEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryBenchmarksEndpointPagedResultOfOutput.md)
+ - [QueryBillingPeriodsEndpointOutput](rapidata/api_client/docs/QueryBillingPeriodsEndpointOutput.md)
+ - [QueryBillingPeriodsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryBillingPeriodsEndpointPagedResultOfOutput.md)
  - [QueryCampaignsEndpointOutput](rapidata/api_client/docs/QueryCampaignsEndpointOutput.md)
  - [QueryCampaignsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCampaignsEndpointPagedResultOfOutput.md)
  - [QueryClientsEndpointOutput](rapidata/api_client/docs/QueryClientsEndpointOutput.md)
  - [QueryClientsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryClientsEndpointPagedResultOfOutput.md)
+ - [QueryCostsByCustomerEndpointOutput](rapidata/api_client/docs/QueryCostsByCustomerEndpointOutput.md)
+ - [QueryCostsByCustomerEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCostsByCustomerEndpointPagedResultOfOutput.md)
+ - [QueryCostsByOrganizationEndpointOutput](rapidata/api_client/docs/QueryCostsByOrganizationEndpointOutput.md)
+ - [QueryCostsByOrganizationEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCostsByOrganizationEndpointPagedResultOfOutput.md)
  - [QueryCustomersEndpointOutput](rapidata/api_client/docs/QueryCustomersEndpointOutput.md)
  - [QueryCustomersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryCustomersEndpointPagedResultOfOutput.md)
  - [QueryDatapointsByDatasetIdEndpointOutput](rapidata/api_client/docs/QueryDatapointsByDatasetIdEndpointOutput.md)
@@ -921,6 +1032,8 @@ Class | Method | HTTP request | Description
  - [QueryFlowItemsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryFlowItemsEndpointPagedResultOfOutput.md)
  - [QueryFlowsEndpointOutput](rapidata/api_client/docs/QueryFlowsEndpointOutput.md)
  - [QueryFlowsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryFlowsEndpointPagedResultOfOutput.md)
+ - [QueryInvoicesEndpointOutput](rapidata/api_client/docs/QueryInvoicesEndpointOutput.md)
+ - [QueryInvoicesEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryInvoicesEndpointPagedResultOfOutput.md)
  - [QueryJobDefinitionsEndpointOutput](rapidata/api_client/docs/QueryJobDefinitionsEndpointOutput.md)
  - [QueryJobDefinitionsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryJobDefinitionsEndpointPagedResultOfOutput.md)
  - [QueryJobRevisionsEndpointOutput](rapidata/api_client/docs/QueryJobRevisionsEndpointOutput.md)
@@ -962,6 +1075,8 @@ Class | Method | HTTP request | Description
  - [QueryValidationRapidEligibilityEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryValidationRapidEligibilityEndpointPagedResultOfOutput.md)
  - [QueryValidationSetsEndpointOutput](rapidata/api_client/docs/QueryValidationSetsEndpointOutput.md)
  - [QueryValidationSetsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryValidationSetsEndpointPagedResultOfOutput.md)
+ - [QueryVouchersEndpointOutput](rapidata/api_client/docs/QueryVouchersEndpointOutput.md)
+ - [QueryVouchersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryVouchersEndpointPagedResultOfOutput.md)
  - [QueryWorkflowsEndpointOutput](rapidata/api_client/docs/QueryWorkflowsEndpointOutput.md)
  - [QueryWorkflowsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryWorkflowsEndpointPagedResultOfOutput.md)
  - [RapidIssueModel](rapidata/api_client/docs/RapidIssueModel.md)
@@ -969,6 +1084,8 @@ Class | Method | HTTP request | Description
  - [RapidStateModel](rapidata/api_client/docs/RapidStateModel.md)
  - [ReadBridgeTokenEndpointKeysOutput](rapidata/api_client/docs/ReadBridgeTokenEndpointKeysOutput.md)
  - [ReadBridgeTokenEndpointNotAvailableOutput](rapidata/api_client/docs/ReadBridgeTokenEndpointNotAvailableOutput.md)
+ - [ReconciliationJobState](rapidata/api_client/docs/ReconciliationJobState.md)
+ - [ReconciliationTimestampMode](rapidata/api_client/docs/ReconciliationTimestampMode.md)
  - [RecreateExternalAudiencesEndpointInput](rapidata/api_client/docs/RecreateExternalAudiencesEndpointInput.md)
  - [ReplicateModelParameterType](rapidata/api_client/docs/ReplicateModelParameterType.md)
  - [ReportRapidEndpointInput](rapidata/api_client/docs/ReportRapidEndpointInput.md)
@@ -984,10 +1101,13 @@ Class | Method | HTTP request | Description
  - [SearchReplicateModelsEndpointModel](rapidata/api_client/docs/SearchReplicateModelsEndpointModel.md)
  - [SearchReplicateModelsEndpointOutput](rapidata/api_client/docs/SearchReplicateModelsEndpointOutput.md)
  - [SendSurveyEndpointInput](rapidata/api_client/docs/SendSurveyEndpointInput.md)
+ - [SetCreditLineEndpointInput](rapidata/api_client/docs/SetCreditLineEndpointInput.md)
  - [SetFastBidMultiplierEndpointInput](rapidata/api_client/docs/SetFastBidMultiplierEndpointInput.md)
  - [SetFastBidMultiplierEndpointOutput](rapidata/api_client/docs/SetFastBidMultiplierEndpointOutput.md)
  - [SetManualGlobalBoostLevelEndpointInput](rapidata/api_client/docs/SetManualGlobalBoostLevelEndpointInput.md)
+ - [SetMinimumSpendCommitmentEndpointInput](rapidata/api_client/docs/SetMinimumSpendCommitmentEndpointInput.md)
  - [SetOrganizationSupportSlackChannelEndpointInput](rapidata/api_client/docs/SetOrganizationSupportSlackChannelEndpointInput.md)
+ - [SetPlatformFeeEndpointInput](rapidata/api_client/docs/SetPlatformFeeEndpointInput.md)
  - [ShortenContextEndpointInput](rapidata/api_client/docs/ShortenContextEndpointInput.md)
  - [ShortenContextEndpointInputItem](rapidata/api_client/docs/ShortenContextEndpointInputItem.md)
  - [ShortenContextEndpointOutput](rapidata/api_client/docs/ShortenContextEndpointOutput.md)
@@ -1001,6 +1121,8 @@ Class | Method | HTTP request | Description
  - [StandingStatus](rapidata/api_client/docs/StandingStatus.md)
  - [StartAudienceInactivitySyncEndpointOutput](rapidata/api_client/docs/StartAudienceInactivitySyncEndpointOutput.md)
  - [StartAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/StartAudienceStateRecalculationEndpointOutput.md)
+ - [StartBulkReconciliationEndpointInput](rapidata/api_client/docs/StartBulkReconciliationEndpointInput.md)
+ - [StartBulkReconciliationEndpointOutput](rapidata/api_client/docs/StartBulkReconciliationEndpointOutput.md)
  - [StartPreliminaryDownloadEndpointInput](rapidata/api_client/docs/StartPreliminaryDownloadEndpointInput.md)
  - [StartPreliminaryDownloadEndpointOutput](rapidata/api_client/docs/StartPreliminaryDownloadEndpointOutput.md)
  - [StickyConfig](rapidata/api_client/docs/StickyConfig.md)
@@ -1011,6 +1133,7 @@ Class | Method | HTTP request | Description
  - [SubmitParticipantByBenchmarkEndpointOutput](rapidata/api_client/docs/SubmitParticipantByBenchmarkEndpointOutput.md)
  - [SubmitParticipantEndpointOutput](rapidata/api_client/docs/SubmitParticipantEndpointOutput.md)
  - [SubscribeToNewsletterEndpointInput](rapidata/api_client/docs/SubscribeToNewsletterEndpointInput.md)
+ - [TimeGrouping](rapidata/api_client/docs/TimeGrouping.md)
  - [TranscriptionPayloadModelTranscriptionWord](rapidata/api_client/docs/TranscriptionPayloadModelTranscriptionWord.md)
  - [TranscriptionRapidModelTranscriptionWord](rapidata/api_client/docs/TranscriptionRapidModelTranscriptionWord.md)
  - [TranscriptionResultModelTranscriptionWord](rapidata/api_client/docs/TranscriptionResultModelTranscriptionWord.md)
@@ -1022,6 +1145,7 @@ Class | Method | HTTP request | Description
  - [TranslatorType](rapidata/api_client/docs/TranslatorType.md)
  - [TriggerSignalEndpointOutput](rapidata/api_client/docs/TriggerSignalEndpointOutput.md)
  - [UnlockOrderEndpointOutput](rapidata/api_client/docs/UnlockOrderEndpointOutput.md)
+ - [UnsubscribeEndpointInput](rapidata/api_client/docs/UnsubscribeEndpointInput.md)
  - [UnsubscribeFromNewsletterEndpointInput](rapidata/api_client/docs/UnsubscribeFromNewsletterEndpointInput.md)
  - [UpdateAudienceEndpointInput](rapidata/api_client/docs/UpdateAudienceEndpointInput.md)
  - [UpdateAudienceEndpointOutput](rapidata/api_client/docs/UpdateAudienceEndpointOutput.md)
@@ -1054,6 +1178,8 @@ Class | Method | HTTP request | Description
  - [ValidationProblemDetails](rapidata/api_client/docs/ValidationProblemDetails.md)
  - [VoteAggregation](rapidata/api_client/docs/VoteAggregation.md)
  - [VoteMatrixResult](rapidata/api_client/docs/VoteMatrixResult.md)
+ - [VoucherSource](rapidata/api_client/docs/VoucherSource.md)
+ - [VoucherStatus](rapidata/api_client/docs/VoucherStatus.md)
  - [WorkflowState](rapidata/api_client/docs/WorkflowState.md)
  - [WorkflowStateModel](rapidata/api_client/docs/WorkflowStateModel.md)
 

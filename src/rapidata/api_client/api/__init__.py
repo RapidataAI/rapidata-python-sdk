@@ -5,6 +5,8 @@ from rapidata.api_client.api.asset_api import AssetApi
 from rapidata.api_client.api.audience_api import AudienceApi
 from rapidata.api_client.api.batch_upload_api import BatchUploadApi
 from rapidata.api_client.api.benchmark_api import BenchmarkApi
+from rapidata.api_client.api.billing_api import BillingApi
+from rapidata.api_client.api.billing_account_api import BillingAccountApi
 from rapidata.api_client.api.cache_api import CacheApi
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.client_api import ClientApi
@@ -17,6 +19,7 @@ from rapidata.api_client.api.dataset_group_api import DatasetGroupApi
 from rapidata.api_client.api.evaluation_api import EvaluationApi
 from rapidata.api_client.api.examples_api import ExamplesApi
 from rapidata.api_client.api.external_audience_api import ExternalAudienceApi
+from rapidata.api_client.api.external_service_prices_api import ExternalServicePricesApi
 from rapidata.api_client.api.faucet_api import FaucetApi
 from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.flow_api import FlowApi
@@ -24,12 +27,14 @@ from rapidata.api_client.api.flow_item_api import FlowItemApi
 from rapidata.api_client.api.global_text_api import GlobalTextApi
 from rapidata.api_client.api.grouped_ranking_api import GroupedRankingApi
 from rapidata.api_client.api.identity_api import IdentityApi
+from rapidata.api_client.api.invoice_api import InvoiceApi
 from rapidata.api_client.api.job_api import JobApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.organization_api import OrganizationApi
 from rapidata.api_client.api.participant_api import ParticipantApi
+from rapidata.api_client.api.payment_api import PaymentApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.ranking_api import RankingApi
@@ -37,9 +42,11 @@ from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
 from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
 from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
+from rapidata.api_client.api.reconciliation_api import ReconciliationApi
 from rapidata.api_client.api.replicate_api import ReplicateApi
 from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.sample_generation_api import SampleGenerationApi
+from rapidata.api_client.api.settings_api import SettingsApi
 from rapidata.api_client.api.signal_api import SignalApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.survey_api import SurveyApi
@@ -47,5 +54,6 @@ from rapidata.api_client.api.translation_api import TranslationApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_feedback_api import ValidationFeedbackApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
+from rapidata.api_client.api.volume_discount_api import VolumeDiscountApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
 

@@ -1,0 +1,5456 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Payment API",
+    "description": "The API for the Rapidata Payment service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/billing/manual-charge": {
+      "post": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Creates a manual charge billing item for a customer.",
+        "requestBody": {
+          "description": "The manual charge data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManualChargeEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateManualChargeEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/external-service-prices": {
+      "post": {
+        "tags": [
+          "Billing",
+          "ExternalServicePrices"
+        ],
+        "summary": "Creates a rate-card price for an external service.",
+        "requestBody": {
+          "description": "The external-service price data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExternalServicePriceEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing-period/active/billing-items": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the paged billing groups for the active billing period.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "query",
+            "description": "Optional customer ID. Admins can specify any customer; non-admins see their own.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "gross_cost",
+                  "-gross_cost",
+                  "discount",
+                  "-discount",
+                  "net_cost",
+                  "-net_cost",
+                  "response_count",
+                  "-response_count"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfIBillingGroupModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing-period/active": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the overview for the active billing period.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "query",
+            "description": "Optional customer ID. Admins can specify any customer; non-admins see their own.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetActiveBillingPeriodOverviewEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing-period/{billingPeriodId}/billing-items": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the paged billing groups for a billing period.",
+        "parameters": [
+          {
+            "name": "billingPeriodId",
+            "in": "path",
+            "description": "The ID of the billing period.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "gross_cost",
+                  "-gross_cost",
+                  "discount",
+                  "-discount",
+                  "net_cost",
+                  "-net_cost",
+                  "response_count",
+                  "-response_count"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfIBillingGroupModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing-period/{billingPeriodId}": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the overview for a billing period by its ID.",
+        "parameters": [
+          {
+            "name": "billingPeriodId",
+            "in": "path",
+            "description": "The ID of the billing period to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBillingPeriodOverviewEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/summary": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the current-period usage and applicable limit for a customer.",
+        "description": "Defaults to the authenticated customer when no customerId is provided.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "query",
+            "description": "The id of the customer to get the billing summary for.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBillingSummaryEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/cost/time-series": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the billing cost time series.",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "grouping",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/TimeGrouping"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "customerMail",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeNonBillable",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCostTimeSeriesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing-periods": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Queries billing periods accessible to the current customer.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "start_date",
+                  "-start_date",
+                  "end_date",
+                  "-end_date",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "description": "Filter by owner_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Filter by start_date.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "Filter by end_date.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryBillingPeriodsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/costs/customers": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Returns billing costs aggregated per customer, ranked by cost.",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "customerMail",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeNonBillable",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCostsByCustomerEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/costs/groups": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Returns billing costs aggregated per billing group, ranked by cost.",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "customerMail",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeNonBillable",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "gross_cost",
+                  "-gross_cost",
+                  "discount",
+                  "-discount",
+                  "net_cost",
+                  "-net_cost",
+                  "response_count",
+                  "-response_count"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfIBillingGroupModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/costs/organizations": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Returns billing costs aggregated per organization, ranked by cost.",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "includeNonBillable",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCostsByOrganizationEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/reconciliation/bulk/{bulkReconciliationId}": {
+      "get": {
+        "tags": [
+          "Billing",
+          "Reconciliation"
+        ],
+        "summary": "Returns the aggregated status and results of all reconciliation jobs in a bulk operation.",
+        "parameters": [
+          {
+            "name": "bulkReconciliationId",
+            "in": "path",
+            "description": "The correlation identifier returned from the bulk reconcile endpoint.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBulkReconciliationStatusEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/reconciliation/{jobId}": {
+      "get": {
+        "tags": [
+          "Billing",
+          "Reconciliation"
+        ],
+        "summary": "Returns the status and results of a reconciliation job.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The unique identifier of the reconciliation job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReconciliationStatusEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/reconciliation/bulk/{bulkReconciliationId}/redispatch": {
+      "post": {
+        "tags": [
+          "Billing",
+          "Reconciliation"
+        ],
+        "summary": "Redispatches the individual reconciliations contained in the given bulk reconciliation.",
+        "parameters": [
+          {
+            "name": "bulkReconciliationId",
+            "in": "path",
+            "description": "The bulk reconciliation to redispatch.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/reconcile": {
+      "post": {
+        "tags": [
+          "Billing",
+          "Reconciliation"
+        ],
+        "summary": "Starts reconciliation for a single billing item, all items for a customer, or all items in a billing group.",
+        "description": "Exactly one of BillingItemId, CustomerId, or BillingGroupId must be specified.\n Date range filtering is only available with CustomerId or BillingGroupId.\n Returns a correlation ID that can be used to track progress of the bulk operation.",
+        "requestBody": {
+          "description": "The reconciliation target and configuration options.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartBulkReconciliationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartBulkReconciliationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/billing-item/{billingItemId}/settings": {
+      "post": {
+        "tags": [
+          "Billing",
+          "Settings"
+        ],
+        "summary": "Creates a billing setting for a billing item.",
+        "parameters": [
+          {
+            "name": "billingItemId",
+            "in": "path",
+            "description": "The billing item identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The billing setting data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBillingItemBillingSettingEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/customer/{customerId}/settings": {
+      "post": {
+        "tags": [
+          "Billing",
+          "Settings"
+        ],
+        "summary": "Creates a billing setting for a customer.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer identifier.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The billing setting data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerBillingSettingEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/settings": {
+      "post": {
+        "tags": [
+          "Billing",
+          "Settings"
+        ],
+        "summary": "Creates a global billing setting.",
+        "requestBody": {
+          "description": "The billing setting data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGlobalBillingSettingEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/billing-item/{billingItemId}/settings/{settingId}": {
+      "delete": {
+        "tags": [
+          "Billing",
+          "Settings"
+        ],
+        "summary": "Deletes a billing item billing setting.",
+        "parameters": [
+          {
+            "name": "billingItemId",
+            "in": "path",
+            "description": "The billing item identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "settingId",
+            "in": "path",
+            "description": "The billing setting identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/customer/{customerId}/settings/{settingId}": {
+      "delete": {
+        "tags": [
+          "Billing",
+          "Settings"
+        ],
+        "summary": "Deletes a customer billing setting.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer identifier.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "settingId",
+            "in": "path",
+            "description": "The billing setting identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/settings/{settingId}": {
+      "delete": {
+        "tags": [
+          "Billing",
+          "Settings"
+        ],
+        "summary": "Deletes a global billing setting.",
+        "parameters": [
+          {
+            "name": "settingId",
+            "in": "path",
+            "description": "The billing setting identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/settings/timeline": {
+      "get": {
+        "tags": [
+          "Billing",
+          "Settings"
+        ],
+        "summary": "Gets the billing settings timeline.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "query",
+            "description": "Optional customer identifier to scope the timeline.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "billingItemId",
+            "in": "query",
+            "description": "Optional billing item identifier to scope the timeline.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBillingSettingsTimelineEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing-period/{billingPeriodId}/volume-discounts": {
+      "post": {
+        "tags": [
+          "Billing",
+          "VolumeDiscount"
+        ],
+        "summary": "Creates a volume discount bracket for a billing period.",
+        "parameters": [
+          {
+            "name": "billingPeriodId",
+            "in": "path",
+            "description": "The billing period to add the volume discount to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The volume discount bracket data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVolumeDiscountEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateVolumeDiscountEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Billing",
+          "VolumeDiscount"
+        ],
+        "summary": "Gets all volume discount brackets for a billing period.",
+        "parameters": [
+          {
+            "name": "billingPeriodId",
+            "in": "path",
+            "description": "The billing period to get volume discounts for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetVolumeDiscountsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/vouchers": {
+      "post": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Grants a voucher to a customer.",
+        "description": "Provide exactly one of validity (a duration from now) or expiresAt (an\n explicit instant) — not both, not neither. The grant immediately raises the customer's\n serve allowance.",
+        "requestBody": {
+          "description": "The customer, voucher amount, and expiry.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantVoucherEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrantVoucherEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Queries vouchers with filtering, sorting, and pagination.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "issued_at",
+                  "-issued_at",
+                  "expires_at",
+                  "-expires_at",
+                  "amount",
+                  "-amount"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "customer_id",
+            "in": "query",
+            "description": "Filter by customer_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "description": "Filter by source.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "expires_at",
+            "in": "query",
+            "description": "Filter by expires_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "issued_at",
+            "in": "query",
+            "description": "Filter by issued_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryVouchersEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/vouchers/{voucherId}/revoke": {
+      "post": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Revokes a voucher.",
+        "description": "Lowers the owning customer's serve allowance by the voucher's remaining grant.",
+        "parameters": [
+          {
+            "name": "voucherId",
+            "in": "path",
+            "description": "The id of the voucher to revoke.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customer/{customerId}/credit-line": {
+      "put": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Sets the spend limit for a customer.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer whose credit line to set.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new credit line.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetCreditLineEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customer/{customerId}/minimum-spend-commitment": {
+      "put": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Sets the minimum spend commitment for a customer.",
+        "description": "At invoice time, if the period's measured spend is below the commitment, a top-up charge for\n the shortfall is added so the usage-side bill reaches the commitment. Setting it to 0\n removes the commitment.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer whose minimum spend commitment to set.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new minimum spend commitment.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetMinimumSpendCommitmentEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customer/{customerId}/platform-fee": {
+      "put": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Sets the platform fee for a customer.",
+        "description": "The fee is automatically applied as a charge to the customer's current open billing period\n and to every future period. Setting it to null removes the platform-fee charge from\n the current open period; 0 keeps an explicit $0 charge that is still shown.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer whose platform fee to set.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new platform fee.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPlatformFeeEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customer/unsubscribe": {
+      "post": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Unsubscribes the current customer.",
+        "requestBody": {
+          "description": "Optional reason for unsubscribing.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnsubscribeEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/invoice": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Creates a Stripe draft invoice for a billing period.",
+        "requestBody": {
+          "description": "The invoice creation data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvoiceEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvoiceEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/invoice/{invoiceId}/finalize": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Finalizes a draft invoice.",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "The invoice to finalize.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/invoice/{invoiceId}": {
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Gets an invoice by ID.",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "The invoice ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetInvoiceEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/invoices": {
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Queries invoices with filtering, sorting, and pagination.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "created_at",
+                  "-created_at",
+                  "amount_due",
+                  "-amount_due",
+                  "status",
+                  "-status"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "description": "Filter by owner_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "billing_period_id",
+            "in": "query",
+            "description": "Filter by billing_period_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryInvoicesEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/invoice/{invoiceId}/void": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Voids an invoice.",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "The invoice to void.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/payment/checkout": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Creates a new Stripe checkout session for the given price.",
+        "parameters": [
+          {
+            "name": "priceId",
+            "in": "query",
+            "description": "The Stripe price id to check out.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "The mode in which the payment should be done.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCheckoutEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/payment/topup": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Creates a hosted checkout session for the authenticated customer to add the given amount to\n their prepaid balance.",
+        "description": "Rejected for non-prepaid customers and for amounts below the configured minimum. On\n successful payment a voucher for the amount is minted, which raises the customer's balance.",
+        "requestBody": {
+          "description": "The amount in dollars to add to the balance.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTopUpEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTopUpEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/payment/session/{sessionId}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Gets the current status of a checkout session.",
+        "description": "Used to check whether the payment was successful or is still pending.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "The id of the checkout session to get the status for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCheckoutSessionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/payment/webhook": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Processes an incoming Stripe webhook event.",
+        "description": "Reads the raw request body and the Stripe-Signature header, then dispatches a\n ProcessPaymentEventCommand.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BillingPeriodStatus": {
+        "enum": [
+          "Open",
+          "Invoiced",
+          "Void",
+          "Reconciling"
+        ]
+      },
+      "BillingPeriodStatusModel": {
+        "enum": [
+          "Open",
+          "Invoiced",
+          "Void",
+          "Reconciling"
+        ]
+      },
+      "BillingSummaryMode": {
+        "enum": [
+          "Usage",
+          "Limited",
+          "Prepaid"
+        ]
+      },
+      "BulkReconciliationDispatchState": {
+        "enum": [
+          "Dispatching",
+          "Completed",
+          "Failed"
+        ]
+      },
+      "CreateBillingItemBillingSettingEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "description": "The priority of the setting. Defaults to the configured billing item default if not specified.",
+            "format": "int32",
+            "nullable": true
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "The start of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validTo": {
+            "type": "string",
+            "description": "The end of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "costPerResponseFreeText": {
+            "type": "number",
+            "description": "The cost per free text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseImage": {
+            "type": "number",
+            "description": "The cost per image response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaPerSecond": {
+            "type": "number",
+            "description": "The cost per second of media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaMinimum": {
+            "type": "number",
+            "description": "The minimum cost per media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextImage": {
+            "type": "number",
+            "description": "The cost per context image.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoPerSecond": {
+            "type": "number",
+            "description": "The cost per second of context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "discountRatio": {
+            "type": "number",
+            "description": "The discount ratio (0-1, e.g. 0.10 = 10% off).",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "description": "The billing setting input data."
+      },
+      "CreateCheckoutEndpoint_Output": {
+        "required": [
+          "sessionId"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "The id of the created checkout session."
+          }
+        }
+      },
+      "CreateCustomerBillingSettingEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "description": "The priority of the setting. Defaults to the configured customer default if not specified.",
+            "format": "int32",
+            "nullable": true
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "The start of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validTo": {
+            "type": "string",
+            "description": "The end of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "costPerResponseFreeText": {
+            "type": "number",
+            "description": "The cost per free text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseImage": {
+            "type": "number",
+            "description": "The cost per image response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaPerSecond": {
+            "type": "number",
+            "description": "The cost per second of media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaMinimum": {
+            "type": "number",
+            "description": "The minimum cost per media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextImage": {
+            "type": "number",
+            "description": "The cost per context image.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoPerSecond": {
+            "type": "number",
+            "description": "The cost per second of context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "discountRatio": {
+            "type": "number",
+            "description": "The discount ratio (0-1, e.g. 0.10 = 10% off).",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "description": "The billing setting input data."
+      },
+      "CreateExternalServicePriceEndpoint_Input": {
+        "required": [
+          "serviceKind",
+          "pricingKey",
+          "unitPrice"
+        ],
+        "type": "object",
+        "properties": {
+          "serviceKind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExternalServiceKind"
+              }
+            ],
+            "description": "The service this price applies to."
+          },
+          "pricingKey": {
+            "type": "string",
+            "description": "Hierarchical variant key (e.g. reve, replicate/flux-1.1-pro)."
+          },
+          "customerId": {
+            "type": "string",
+            "description": "Null for the global default; set to scope the price to one customer.",
+            "format": "uuid",
+            "nullable": true
+          },
+          "unitPrice": {
+            "type": "number",
+            "description": "Price per unit (per image / per shortening).",
+            "format": "double"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority; defaults to the configured global/customer default if unset.",
+            "format": "int32",
+            "nullable": true
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "The start of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validTo": {
+            "type": "string",
+            "description": "The end of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "description": "The external-service price input data."
+      },
+      "CreateGlobalBillingSettingEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "description": "The priority of the setting. Defaults to the configured global default if not specified.",
+            "format": "int32",
+            "nullable": true
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "The start of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validTo": {
+            "type": "string",
+            "description": "The end of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "costPerResponseFreeText": {
+            "type": "number",
+            "description": "The cost per free text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseImage": {
+            "type": "number",
+            "description": "The cost per image response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaPerSecond": {
+            "type": "number",
+            "description": "The cost per second of media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaMinimum": {
+            "type": "number",
+            "description": "The minimum cost per media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextImage": {
+            "type": "number",
+            "description": "The cost per context image.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoPerSecond": {
+            "type": "number",
+            "description": "The cost per second of context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "discountRatio": {
+            "type": "number",
+            "description": "The discount ratio (0-1, e.g. 0.10 = 10% off).",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "description": "The billing setting input data."
+      },
+      "CreateInvoiceEndpoint_Input": {
+        "required": [
+          "billingPeriodId"
+        ],
+        "type": "object",
+        "properties": {
+          "billingPeriodId": {
+            "type": "string",
+            "description": "The billing period to create an invoice for."
+          }
+        }
+      },
+      "CreateInvoiceEndpoint_Output": {
+        "required": [
+          "invoiceId"
+        ],
+        "type": "object",
+        "properties": {
+          "invoiceId": {
+            "type": "string",
+            "description": "The created invoice ID."
+          }
+        }
+      },
+      "CreateManualChargeEndpoint_Input": {
+        "required": [
+          "name",
+          "billingPeriodId",
+          "customerId",
+          "customerMail",
+          "amount",
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the manual charge."
+          },
+          "billingPeriodId": {
+            "type": "string",
+            "description": "The billing period to add the charge to."
+          },
+          "customerId": {
+            "type": "string",
+            "description": "The customer to charge.",
+            "format": "uuid"
+          },
+          "customerMail": {
+            "type": "string",
+            "description": "The customer's email address."
+          },
+          "amount": {
+            "type": "number",
+            "description": "The charge amount. Positive for fees, negative for refunds.",
+            "format": "double"
+          },
+          "reason": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ManualChargeReason"
+              }
+            ],
+            "description": "The reason for the manual charge."
+          },
+          "comment": {
+            "type": "string",
+            "description": "An optional comment describing the charge.",
+            "nullable": true
+          }
+        }
+      },
+      "CreateManualChargeEndpoint_Output": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the created billing item."
+          }
+        }
+      },
+      "CreateTopUpEndpoint_Input": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The amount in dollars to add to the prepaid balance.",
+            "format": "double"
+          }
+        }
+      },
+      "CreateTopUpEndpoint_Output": {
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The hosted Stripe checkout url to redirect the customer to."
+          }
+        }
+      },
+      "CreateVolumeDiscountEndpoint_Input": {
+        "required": [
+          "minResponses",
+          "discountRatio"
+        ],
+        "type": "object",
+        "properties": {
+          "minResponses": {
+            "type": "integer",
+            "description": "The minimum number of responses to trigger this discount bracket.",
+            "format": "int64"
+          },
+          "discountRatio": {
+            "type": "number",
+            "description": "The discount ratio for this bracket (e.g., 0.10 for 10%).",
+            "format": "double"
+          }
+        }
+      },
+      "CreateVolumeDiscountEndpoint_Output": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the created volume discount bracket."
+          }
+        }
+      },
+      "ExternalServiceKind": {
+        "enum": [
+          "ContextShortening",
+          "ImageGeneration"
+        ]
+      },
+      "GetActiveBillingPeriodOverviewEndpoint_Output": {
+        "required": [
+          "id",
+          "startDate",
+          "endDate",
+          "status",
+          "totalGrossCost",
+          "totalDiscount",
+          "totalNetCost",
+          "totalResponseCount",
+          "lineItems"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The billing period ID."
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The start date of the billing period.",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The end date of the billing period.",
+            "format": "date-time"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingPeriodStatusModel"
+              }
+            ],
+            "description": "The status of the billing period."
+          },
+          "totalGrossCost": {
+            "type": "number",
+            "description": "The total gross cost before discounts.",
+            "format": "double"
+          },
+          "totalDiscount": {
+            "type": "number",
+            "description": "The total discount amount.",
+            "format": "double"
+          },
+          "totalNetCost": {
+            "type": "number",
+            "description": "The total net cost after discounts.",
+            "format": "double"
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "description": "The total number of billable responses.",
+            "format": "int64"
+          },
+          "lineItems": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ILineItemModel"
+                }
+              }
+            ],
+            "description": "The line items (running cost, platform fees, refunds, volume discounts)."
+          }
+        }
+      },
+      "GetBillingPeriodOverviewEndpoint_Output": {
+        "required": [
+          "id",
+          "startDate",
+          "endDate",
+          "status",
+          "totalGrossCost",
+          "totalDiscount",
+          "totalNetCost",
+          "totalResponseCount",
+          "lineItems"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The billing period ID."
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The start date of the billing period.",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The end date of the billing period.",
+            "format": "date-time"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingPeriodStatusModel"
+              }
+            ],
+            "description": "The status of the billing period."
+          },
+          "totalGrossCost": {
+            "type": "number",
+            "description": "The total gross cost before discounts.",
+            "format": "double"
+          },
+          "totalDiscount": {
+            "type": "number",
+            "description": "The total discount amount.",
+            "format": "double"
+          },
+          "totalNetCost": {
+            "type": "number",
+            "description": "The total net cost after discounts.",
+            "format": "double"
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "description": "The total number of billable responses.",
+            "format": "int64"
+          },
+          "lineItems": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ILineItemModel"
+                }
+              }
+            ],
+            "description": "The line items (running cost, platform fees, refunds, volume discounts)."
+          }
+        }
+      },
+      "GetBillingSettingsTimelineEndpoint_Output": {
+        "required": [
+          "intervals"
+        ],
+        "type": "object",
+        "properties": {
+          "intervals": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBillingSettingsTimelineEndpoint_Output_Interval"
+                }
+              }
+            ],
+            "description": "The billing settings intervals."
+          }
+        }
+      },
+      "GetBillingSettingsTimelineEndpoint_Output_Interval": {
+        "required": [
+          "costPerResponseFreeText",
+          "costPerResponseImage",
+          "costPerResponseMediaPerSecond",
+          "costPerResponseMediaMinimum",
+          "costPerResponseTextPer50Chars",
+          "costPerResponseContextTextPer50Chars",
+          "costPerResponseContextTextMinimum",
+          "costPerResponseContextImage",
+          "costPerResponseContextVideoPerSecond",
+          "costPerResponseContextVideoMinimum",
+          "discountRatio"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "costPerResponseFreeText": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseImage": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseMediaPerSecond": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseMediaMinimum": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseTextPer50Chars": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseContextTextPer50Chars": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseContextTextMinimum": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseContextImage": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseContextVideoPerSecond": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerResponseContextVideoMinimum": {
+            "type": "number",
+            "format": "double"
+          },
+          "discountRatio": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "GetBillingSummaryEndpoint_Output": {
+        "required": [
+          "mode",
+          "currentPeriodUsage",
+          "minimumSpendCommitment"
+        ],
+        "type": "object",
+        "properties": {
+          "mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingSummaryMode"
+              }
+            ],
+            "description": "How the billing summary should be presented (usage, limited, or prepaid)."
+          },
+          "currentPeriodUsage": {
+            "type": "number",
+            "description": "The accumulated billable spend in the current billing period.",
+            "format": "double"
+          },
+          "effectiveLimit": {
+            "type": "number",
+            "description": "The spending cap for the current period, or null when unlimited.",
+            "format": "double",
+            "nullable": true
+          },
+          "availableAmount": {
+            "type": "number",
+            "description": "The remaining prepaid balance, set only for prepaid customers.",
+            "format": "double",
+            "nullable": true
+          },
+          "minimumSpendCommitment": {
+            "type": "number",
+            "description": "Dollars the customer has committed to spend per billing period; 0 means no commitment.",
+            "format": "double"
+          }
+        }
+      },
+      "GetBulkReconciliationStatusEndpoint_Output": {
+        "required": [
+          "bulkReconciliationId",
+          "dispatchState",
+          "expectedTotal",
+          "totalJobs",
+          "pendingJobs",
+          "runningJobs",
+          "completedJobs",
+          "failedJobs",
+          "rapidsProcessed",
+          "rapidsUpdated",
+          "rapidsAlreadyCorrect",
+          "rapidsFailed",
+          "responsesProcessed",
+          "correctionsCreated",
+          "responsesAlreadyCorrect",
+          "responsesFailed",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "bulkReconciliationId": {
+            "type": "string",
+            "description": "The bulk reconciliation identifier for the bulk operation."
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "The correlation identifier for the bulk operation.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "dispatchState": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BulkReconciliationDispatchState"
+              }
+            ],
+            "description": "The current dispatch state (Dispatching, Completed, Failed)."
+          },
+          "expectedTotal": {
+            "type": "integer",
+            "description": "The expected total number of billing items to dispatch.",
+            "format": "int32"
+          },
+          "dispatchCompletedAt": {
+            "type": "string",
+            "description": "The timestamp when dispatching finished. Null if still dispatching.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalJobs": {
+            "type": "integer",
+            "description": "The total number of reconciliation jobs in this bulk operation.",
+            "format": "int32"
+          },
+          "pendingJobs": {
+            "type": "integer",
+            "description": "The number of jobs in Pending state.",
+            "format": "int32"
+          },
+          "runningJobs": {
+            "type": "integer",
+            "description": "The number of jobs in Running state.",
+            "format": "int32"
+          },
+          "completedJobs": {
+            "type": "integer",
+            "description": "The number of jobs in Completed state.",
+            "format": "int32"
+          },
+          "failedJobs": {
+            "type": "integer",
+            "description": "The number of jobs in Failed state.",
+            "format": "int32"
+          },
+          "rapidsProcessed": {
+            "type": "integer",
+            "description": "The total number of rapids processed across all jobs.",
+            "format": "int32"
+          },
+          "rapidsUpdated": {
+            "type": "integer",
+            "description": "The total number of rapids updated across all jobs.",
+            "format": "int32"
+          },
+          "rapidsAlreadyCorrect": {
+            "type": "integer",
+            "description": "The total number of rapids already correct across all jobs.",
+            "format": "int32"
+          },
+          "rapidsFailed": {
+            "type": "integer",
+            "description": "The total number of rapids that failed across all jobs.",
+            "format": "int32"
+          },
+          "responsesProcessed": {
+            "type": "integer",
+            "description": "The total number of responses processed across all jobs.",
+            "format": "int32"
+          },
+          "correctionsCreated": {
+            "type": "integer",
+            "description": "The total number of corrections created across all jobs.",
+            "format": "int32"
+          },
+          "responsesAlreadyCorrect": {
+            "type": "integer",
+            "description": "The total number of responses already correct across all jobs.",
+            "format": "int32"
+          },
+          "responsesFailed": {
+            "type": "integer",
+            "description": "The total number of responses that failed across all jobs.",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the bulk operation was created.",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "The timestamp when all jobs completed. Null if not fully complete.",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "GetCheckoutSessionEndpoint_Output": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The current status of the checkout session."
+          }
+        }
+      },
+      "GetCostTimeSeriesEndpoint_CostDataPoint": {
+        "required": [
+          "periodStart",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "periodStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "grossCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "deprecated": true
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "GetCostTimeSeriesEndpoint_Output": {
+        "required": [
+          "timeSeries",
+          "totalGrossCost",
+          "totalDiscount",
+          "totalNetCost"
+        ],
+        "type": "object",
+        "properties": {
+          "timeSeries": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCostTimeSeriesEndpoint_CostDataPoint"
+                }
+              }
+            ],
+            "description": "The time series data points."
+          },
+          "totalGrossCost": {
+            "type": "number",
+            "description": "The total gross cost across all data points.",
+            "format": "double"
+          },
+          "totalDiscount": {
+            "type": "number",
+            "description": "The total discount across all data points.",
+            "format": "double"
+          },
+          "totalNetCost": {
+            "type": "number",
+            "description": "The total net cost across all data points.",
+            "format": "double"
+          },
+          "totalCost": {
+            "type": "number",
+            "description": "Deprecated. Use TotalNetCost instead.",
+            "format": "double",
+            "deprecated": true
+          }
+        },
+        "description": "The output for the cost time series endpoint."
+      },
+      "GetInvoiceEndpoint_Output": {
+        "required": [
+          "id",
+          "billingPeriodId",
+          "billingPeriodStart",
+          "billingPeriodEnd",
+          "status",
+          "amountDue",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The invoice ID."
+          },
+          "billingPeriodId": {
+            "type": "string",
+            "description": "The billing period this invoice belongs to."
+          },
+          "billingPeriodStart": {
+            "type": "string",
+            "description": "The start date of the billing period.",
+            "format": "date-time"
+          },
+          "billingPeriodEnd": {
+            "type": "string",
+            "description": "The end date of the billing period.",
+            "format": "date-time"
+          },
+          "stripeInvoiceId": {
+            "type": "string",
+            "description": "The Stripe invoice ID.",
+            "nullable": true
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceStatus"
+              }
+            ],
+            "description": "The current invoice status."
+          },
+          "amountDue": {
+            "type": "integer",
+            "description": "The total amount due in cents.",
+            "format": "int64"
+          },
+          "currency": {
+            "type": "string",
+            "description": "The invoice currency.",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the invoice was created.",
+            "format": "date-time"
+          },
+          "finalizedAt": {
+            "type": "string",
+            "description": "When the invoice was finalized.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paidAt": {
+            "type": "string",
+            "description": "When the invoice was paid.",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "GetReconciliationStatusEndpoint_Output": {
+        "required": [
+          "jobId",
+          "billingId",
+          "state",
+          "timestampMode",
+          "rapidsProcessed",
+          "rapidsUpdated",
+          "rapidsAlreadyCorrect",
+          "rapidsFailed",
+          "responsesProcessed",
+          "correctionsCreated",
+          "responsesAlreadyCorrect",
+          "responsesFailed",
+          "createdAt",
+          "createdById",
+          "createdByMail"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The unique identifier of the reconciliation job."
+          },
+          "billingId": {
+            "type": "string",
+            "description": "The billing item identifier this job reconciles."
+          },
+          "bulkReconciliationId": {
+            "type": "string",
+            "description": "The bulk reconciliation identifier if this job was created as part of a bulk operation.",
+            "nullable": true
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "The correlation identifier if this job was created as part of a bulk operation.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReconciliationJobState"
+              }
+            ],
+            "description": "The current state of the reconciliation job."
+          },
+          "timestampMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReconciliationTimestampMode"
+              }
+            ],
+            "description": "The timestamp mode used for correction entries."
+          },
+          "rapidsProcessed": {
+            "type": "integer",
+            "description": "The total number of rapids processed.",
+            "format": "int32"
+          },
+          "rapidsUpdated": {
+            "type": "integer",
+            "description": "The number of rapids that were updated.",
+            "format": "int32"
+          },
+          "rapidsAlreadyCorrect": {
+            "type": "integer",
+            "description": "The number of rapids that were already correct.",
+            "format": "int32"
+          },
+          "rapidsFailed": {
+            "type": "integer",
+            "description": "The number of rapids that failed during reconciliation.",
+            "format": "int32"
+          },
+          "responsesProcessed": {
+            "type": "integer",
+            "description": "The total number of responses processed.",
+            "format": "int32"
+          },
+          "correctionsCreated": {
+            "type": "integer",
+            "description": "The number of correction entries created.",
+            "format": "int32"
+          },
+          "responsesAlreadyCorrect": {
+            "type": "integer",
+            "description": "The number of responses that were already correct.",
+            "format": "int32"
+          },
+          "responsesFailed": {
+            "type": "integer",
+            "description": "The number of responses that failed during reconciliation.",
+            "format": "int32"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "The error message if the job failed.",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "The timestamp when the job completed.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the job was created.",
+            "format": "date-time"
+          },
+          "createdById": {
+            "type": "string",
+            "description": "The identifier of the user who created the job.",
+            "format": "uuid"
+          },
+          "createdByMail": {
+            "type": "string",
+            "description": "The email of the user who created the job."
+          }
+        }
+      },
+      "GetVolumeDiscountsEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetVolumeDiscountsEndpoint_Output_VolumeDiscountItem"
+                }
+              }
+            ],
+            "description": "The volume discount brackets."
+          }
+        }
+      },
+      "GetVolumeDiscountsEndpoint_Output_VolumeDiscountItem": {
+        "required": [
+          "id",
+          "minResponses",
+          "discountRatio"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discountRatio": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "GrantVoucherEndpoint_Input": {
+        "required": [
+          "customerId",
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The id of the customer to grant the voucher to.",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The face value of the voucher in dollars.",
+            "format": "double"
+          },
+          "validity": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string",
+            "description": "How long the voucher stays valid, counted from now. Serialized as a duration string in\n the format [days.]hh:mm:ss (the days part is optional): \"30.00:00:00\" = 30\n days, \"7.00:00:00\" = 7 days, \"12:00:00\" = 12 hours. Must be positive.\n Provide this or expiresAt, not both.",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "An explicit expiry instant as an ISO-8601 timestamp (e.g. \"2026-12-31T23:59:59Z\").\n Use this instead of validity when you know the exact date the\n voucher should expire. Provide this or validity, not both.",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "GrantVoucherEndpoint_Output": {
+        "required": [
+          "voucherId"
+        ],
+        "type": "object",
+        "properties": {
+          "voucherId": {
+            "type": "string",
+            "description": "The id of the granted voucher."
+          }
+        }
+      },
+      "IBillingGroupModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IBillingGroupModelAudienceDistillationBillingGroupModel"
+          },
+          {
+            "$ref": "#/components/schemas/IBillingGroupModelAudienceJobBillingGroupModel"
+          },
+          {
+            "$ref": "#/components/schemas/IBillingGroupModelBenchmarkBillingGroupModel"
+          },
+          {
+            "$ref": "#/components/schemas/IBillingGroupModelOrderBillingGroupModel"
+          },
+          {
+            "$ref": "#/components/schemas/IBillingGroupModelRankingFlowBillingGroupModel"
+          },
+          {
+            "$ref": "#/components/schemas/IBillingGroupModelValidationSetBillingGroupModel"
+          }
+        ],
+        "description": "A billable group of responses on a billing period, identified by a discriminator.\n Implementations describe the source of the charges (order, benchmark, audience job, etc.).",
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AudienceDistillationBillingGroup": "#/components/schemas/IBillingGroupModelAudienceDistillationBillingGroupModel",
+            "AudienceJobBillingGroup": "#/components/schemas/IBillingGroupModelAudienceJobBillingGroupModel",
+            "BenchmarkBillingGroup": "#/components/schemas/IBillingGroupModelBenchmarkBillingGroupModel",
+            "OrderBillingGroup": "#/components/schemas/IBillingGroupModelOrderBillingGroupModel",
+            "RankingFlowBillingGroup": "#/components/schemas/IBillingGroupModelRankingFlowBillingGroupModel",
+            "ValidationSetBillingGroup": "#/components/schemas/IBillingGroupModelValidationSetBillingGroupModel"
+          }
+        }
+      },
+      "IBillingGroupModelAudienceDistillationBillingGroupModel": {
+        "required": [
+          "id",
+          "name",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount",
+          "audienceId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AudienceDistillationBillingGroup"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the billing group."
+          },
+          "name": {
+            "type": "string",
+            "description": "A human-readable name for the billing group."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost of the responses in this group, before any discount.",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The absolute discount applied to the gross cost.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost of the responses in this group after discount.",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The number of responses attributed to this billing group.",
+            "format": "int64"
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The identifier of the audience the distillation run was executed for."
+          }
+        },
+        "description": "A billing group for responses produced by an audience distillation run."
+      },
+      "IBillingGroupModelAudienceJobBillingGroupModel": {
+        "required": [
+          "id",
+          "name",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount",
+          "jobId",
+          "audienceId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AudienceJobBillingGroup"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the billing group."
+          },
+          "name": {
+            "type": "string",
+            "description": "A human-readable name for the billing group."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost of the responses in this group, before any discount.",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The absolute discount applied to the gross cost.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost of the responses in this group after discount.",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The number of responses attributed to this billing group.",
+            "format": "int64"
+          },
+          "jobId": {
+            "type": "string",
+            "description": "The identifier of the audience job that produced the responses."
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The identifier of the audience the job belongs to."
+          }
+        },
+        "description": "A billing group for responses produced by an audience job."
+      },
+      "IBillingGroupModelBenchmarkBillingGroupModel": {
+        "required": [
+          "id",
+          "name",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount",
+          "benchmarkId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BenchmarkBillingGroup"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the billing group."
+          },
+          "name": {
+            "type": "string",
+            "description": "A human-readable name for the billing group."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost of the responses in this group, before any discount.",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The absolute discount applied to the gross cost.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost of the responses in this group after discount.",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The number of responses attributed to this billing group.",
+            "format": "int64"
+          },
+          "benchmarkId": {
+            "type": "string",
+            "description": "The identifier of the benchmark that produced the responses."
+          }
+        },
+        "description": "A billing group for responses produced by a benchmark."
+      },
+      "IBillingGroupModelOrderBillingGroupModel": {
+        "required": [
+          "id",
+          "name",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount",
+          "orderId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrderBillingGroup"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the billing group."
+          },
+          "name": {
+            "type": "string",
+            "description": "A human-readable name for the billing group."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost of the responses in this group, before any discount.",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The absolute discount applied to the gross cost.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost of the responses in this group after discount.",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The number of responses attributed to this billing group.",
+            "format": "int64"
+          },
+          "orderId": {
+            "type": "string",
+            "description": "The identifier of the order that produced the responses."
+          }
+        },
+        "description": "A billing group for responses produced by an order."
+      },
+      "IBillingGroupModelRankingFlowBillingGroupModel": {
+        "required": [
+          "id",
+          "name",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount",
+          "flowId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingFlowBillingGroup"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the billing group."
+          },
+          "name": {
+            "type": "string",
+            "description": "A human-readable name for the billing group."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost of the responses in this group, before any discount.",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The absolute discount applied to the gross cost.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost of the responses in this group after discount.",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The number of responses attributed to this billing group.",
+            "format": "int64"
+          },
+          "flowId": {
+            "type": "string",
+            "description": "The identifier of the ranking flow that produced the responses."
+          }
+        },
+        "description": "A billing group for responses produced by a ranking flow."
+      },
+      "IBillingGroupModelValidationSetBillingGroupModel": {
+        "required": [
+          "id",
+          "name",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount",
+          "validationSetId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ValidationSetBillingGroup"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the billing group."
+          },
+          "name": {
+            "type": "string",
+            "description": "A human-readable name for the billing group."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost of the responses in this group, before any discount.",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The absolute discount applied to the gross cost.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost of the responses in this group after discount.",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The number of responses attributed to this billing group.",
+            "format": "int64"
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "The identifier of the validation set that produced the responses."
+          }
+        },
+        "description": "A billing group for responses produced by a validation set."
+      },
+      "ILineItemModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ILineItemModelMinimumSpendCommitmentModel"
+          },
+          {
+            "$ref": "#/components/schemas/ILineItemModelOtherChargeModel"
+          },
+          {
+            "$ref": "#/components/schemas/ILineItemModelPlatformFeeModel"
+          },
+          {
+            "$ref": "#/components/schemas/ILineItemModelRefundModel"
+          },
+          {
+            "$ref": "#/components/schemas/ILineItemModelRunningCostModel"
+          },
+          {
+            "$ref": "#/components/schemas/ILineItemModelVolumeDiscountModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "MinimumSpendCommitment": "#/components/schemas/ILineItemModelMinimumSpendCommitmentModel",
+            "Other": "#/components/schemas/ILineItemModelOtherChargeModel",
+            "PlatformFee": "#/components/schemas/ILineItemModelPlatformFeeModel",
+            "Refund": "#/components/schemas/ILineItemModelRefundModel",
+            "RunningCost": "#/components/schemas/ILineItemModelRunningCostModel",
+            "VolumeDiscount": "#/components/schemas/ILineItemModelVolumeDiscountModel"
+          }
+        }
+      },
+      "ILineItemModelMinimumSpendCommitmentModel": {
+        "required": [
+          "name",
+          "amount",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MinimumSpendCommitment"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ILineItemModelOtherChargeModel": {
+        "required": [
+          "id",
+          "name",
+          "amount",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Other"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ILineItemModelPlatformFeeModel": {
+        "required": [
+          "id",
+          "name",
+          "amount",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PlatformFee"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ILineItemModelRefundModel": {
+        "required": [
+          "id",
+          "name",
+          "amount",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Refund"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ILineItemModelRunningCostModel": {
+        "required": [
+          "amount",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RunningCost"
+            ],
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ILineItemModelVolumeDiscountModel": {
+        "required": [
+          "amount",
+          "effectiveDiscountRatio",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "VolumeDiscount"
+            ],
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "effectiveDiscountRatio": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "InvoiceStatus": {
+        "enum": [
+          "Generating",
+          "Draft",
+          "Open",
+          "Paid",
+          "Void",
+          "Uncollectible",
+          "Failed"
+        ]
+      },
+      "ManualChargeReason": {
+        "enum": [
+          "PlatformFee",
+          "Refund",
+          "Other",
+          "MinimumSpendCommitment"
+        ]
+      },
+      "PagedResultOfIBillingGroupModel": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IBillingGroupModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryBillingPeriodsEndpoint_Output": {
+        "required": [
+          "id",
+          "ownerId",
+          "startDate",
+          "endDate",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The billing period ID."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The customer ID of the billing period owner.",
+            "format": "uuid"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The start date of the billing period.",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The end date of the billing period.",
+            "format": "date-time"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingPeriodStatus"
+              }
+            ],
+            "description": "The status of the billing period."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The date the billing period was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryBillingPeriodsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryBillingPeriodsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryCostsByCustomerEndpoint_Output": {
+        "required": [
+          "customerId",
+          "customerMail",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The customer identifier.",
+            "format": "uuid"
+          },
+          "customerMail": {
+            "type": "string",
+            "description": "The customer email."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost for this customer (before discount).",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The discount for this customer.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost for this customer (after discount).",
+            "format": "double"
+          },
+          "cost": {
+            "type": "number",
+            "description": "Deprecated. Use NetCost instead.",
+            "format": "double",
+            "deprecated": true
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The total number of responses for this customer.",
+            "format": "int64"
+          }
+        },
+        "description": "Billing cost data aggregated per customer."
+      },
+      "QueryCostsByCustomerEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryCostsByCustomerEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryCostsByOrganizationEndpoint_Output": {
+        "required": [
+          "organizationOwnerId",
+          "organizationName",
+          "grossCost",
+          "discount",
+          "netCost",
+          "responseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationOwnerId": {
+            "type": "string",
+            "description": "The organization owner identifier.",
+            "format": "uuid"
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The organization name."
+          },
+          "grossCost": {
+            "type": "number",
+            "description": "The gross cost for this organization (before discount).",
+            "format": "double"
+          },
+          "discount": {
+            "type": "number",
+            "description": "The discount for this organization.",
+            "format": "double"
+          },
+          "netCost": {
+            "type": "number",
+            "description": "The net cost for this organization (after discount).",
+            "format": "double"
+          },
+          "cost": {
+            "type": "number",
+            "description": "Deprecated. Use NetCost instead.",
+            "format": "double",
+            "deprecated": true
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The total number of responses for this organization.",
+            "format": "int64"
+          }
+        },
+        "description": "Billing cost data aggregated per organization."
+      },
+      "QueryCostsByOrganizationEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryCostsByOrganizationEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryInvoicesEndpoint_Output": {
+        "required": [
+          "id",
+          "billingPeriodId",
+          "billingPeriodStart",
+          "billingPeriodEnd",
+          "status",
+          "amountDue",
+          "ownerId",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The invoice ID."
+          },
+          "billingPeriodId": {
+            "type": "string",
+            "description": "The billing period this invoice belongs to."
+          },
+          "billingPeriodStart": {
+            "type": "string",
+            "description": "The start date of the billing period.",
+            "format": "date-time"
+          },
+          "billingPeriodEnd": {
+            "type": "string",
+            "description": "The end date of the billing period.",
+            "format": "date-time"
+          },
+          "stripeInvoiceId": {
+            "type": "string",
+            "description": "The Stripe invoice ID.",
+            "nullable": true
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceStatus"
+              }
+            ],
+            "description": "The current invoice status."
+          },
+          "amountDue": {
+            "type": "integer",
+            "description": "The total amount due in cents.",
+            "format": "int64"
+          },
+          "currency": {
+            "type": "string",
+            "description": "The invoice currency.",
+            "nullable": true
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The owner customer ID.",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the invoice was created.",
+            "format": "date-time"
+          },
+          "finalizedAt": {
+            "type": "string",
+            "description": "When the invoice was finalized.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paidAt": {
+            "type": "string",
+            "description": "When the invoice was paid.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "voidedAt": {
+            "type": "string",
+            "description": "When the invoice was voided.",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "QueryInvoicesEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryInvoicesEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryVouchersEndpoint_Output": {
+        "required": [
+          "id",
+          "amount",
+          "used",
+          "remaining",
+          "issuedAt",
+          "expiresAt",
+          "status",
+          "source"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The voucher id."
+          },
+          "amount": {
+            "type": "number",
+            "description": "The face value of the voucher in dollars.",
+            "format": "double"
+          },
+          "used": {
+            "type": "number",
+            "description": "The amount already consumed across closed billing periods.",
+            "format": "double"
+          },
+          "remaining": {
+            "type": "number",
+            "description": "The remaining free usage the voucher can still grant.",
+            "format": "double"
+          },
+          "issuedAt": {
+            "type": "string",
+            "description": "When the voucher was issued.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "When the voucher expires.",
+            "format": "date-time"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoucherStatus"
+              }
+            ],
+            "description": "The voucher's lifecycle status."
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoucherSource"
+              }
+            ],
+            "description": "Where the voucher came from."
+          }
+        }
+      },
+      "QueryVouchersEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryVouchersEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ReconciliationJobState": {
+        "enum": [
+          "Pending",
+          "Running",
+          "Completed",
+          "Failed"
+        ]
+      },
+      "ReconciliationTimestampMode": {
+        "enum": [
+          "UseResponseCreatedAt",
+          "UseReconciliationTime"
+        ]
+      },
+      "SetCreditLineEndpoint_Input": {
+        "required": [
+          "creditLine"
+        ],
+        "type": "object",
+        "properties": {
+          "creditLine": {
+            "type": "number",
+            "description": "The new credit line. null means no limit (unlimited), 0 disables all traffic,\n and a positive value caps spend at that amount.",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "SetMinimumSpendCommitmentEndpoint_Input": {
+        "required": [
+          "minimumSpendCommitment"
+        ],
+        "type": "object",
+        "properties": {
+          "minimumSpendCommitment": {
+            "type": "number",
+            "description": "The new minimum spend commitment. 0 means no commitment; a positive value tops up\n the usage-side bill at invoice time when measured spend falls short.",
+            "format": "double"
+          }
+        }
+      },
+      "SetPlatformFeeEndpoint_Input": {
+        "required": [
+          "platformFee"
+        ],
+        "type": "object",
+        "properties": {
+          "platformFee": {
+            "type": "number",
+            "description": "The new platform fee. null removes the platform fee; 0 is an explicit $0\n fee that is still shown; a positive value is charged once per billing period.",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "StartBulkReconciliationEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "billingItemId": {
+            "type": "string",
+            "description": "The identifier of a single billing item to reconcile.",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "string",
+            "description": "The customer identifier to reconcile all billing items for.",
+            "format": "uuid",
+            "nullable": true
+          },
+          "billingGroupId": {
+            "type": "string",
+            "description": "The billing group identifier to reconcile all billing items for.",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Optional start date filter. Only applies with CustomerId or BillingGroupId.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Optional end date filter. Only applies with CustomerId or BillingGroupId.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "timestampMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReconciliationTimestampMode"
+              }
+            ],
+            "description": "Controls the timestamp used for correction entries."
+          }
+        }
+      },
+      "StartBulkReconciliationEndpoint_Output": {
+        "required": [
+          "bulkReconciliationId"
+        ],
+        "type": "object",
+        "properties": {
+          "bulkReconciliationId": {
+            "type": "string",
+            "description": "The bulk reconciliation identifier for all jobs created in this bulk operation."
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "The correlation identifier for all jobs created in this bulk operation.",
+            "nullable": true,
+            "deprecated": true
+          }
+        }
+      },
+      "TimeGrouping": {
+        "enum": [
+          "Hour",
+          "Day",
+          "Week",
+          "Month",
+          "Minute"
+        ]
+      },
+      "UnsubscribeEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "The reason for unsubscribing.",
+            "nullable": true
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "VoucherSource": {
+        "enum": [
+          "Signup",
+          "ManualGrant",
+          "TopUp"
+        ]
+      },
+      "VoucherStatus": {
+        "enum": [
+          "Active",
+          "Exhausted",
+          "Expired",
+          "Revoked"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenID Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      }
+    }
+  },
+  "security": [
+    {
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email",
+        "offline_access"
+      ]
+    }
+  ]
+}
