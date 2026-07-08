@@ -202,11 +202,20 @@ class RapidataJob:
                 IBillingGroupModelAudienceJobBillingGroupModel,
             )
 
+            # The endpoint ranks the customer's billing groups by cost descending
+            # and caps the page size at 100, so an unscoped scan of a cheap job
+            # pages through the customer's whole history to reach its group at the
+            # bottom of the ranking. Scoping to costs since the job was created
+            # drops every older group: the backend filters billable_hour by the
+            # start hour, and a job's responses are only billed at or after
+            # creation, so this narrows the scan without dropping any of its cost.
             page = 1
             page_size = 100
+            seen = 0
             while True:
                 result = (
                     self._openapi_service.billing.billing_api.billing_costs_groups_get(
+                        start_date=self.created_at,
                         page=page,
                         page_size=page_size,
                     )
@@ -225,7 +234,8 @@ class RapidataJob:
                             response_count=instance.response_count,
                         )
 
-                if page * page_size >= result.total:
+                seen += len(result.items)
+                if not result.items or seen >= result.total:
                     return None
                 page += 1
 
