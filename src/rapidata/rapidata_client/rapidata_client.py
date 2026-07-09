@@ -215,6 +215,21 @@ class RapidataClient:
         """
         return self._openapi_service.api_client.rest_client.get_token()
 
+    def set_token(self, token: dict[str, Any]) -> None:
+        """Replace the token this client authenticates with, effective from
+        the next request.
+
+        The counterpart to ``get_token``: inject a fresh token — obtained from
+        another client and distributed through a transport of your choice —
+        into a running client, without reconstructing it. Expects the complete
+        token object (``access_token``, ``token_type`` and an absolute
+        ``expires_at`` timestamp) — see the Distributed Training guide.
+
+        Args:
+            token (dict): The complete token object to authenticate with.
+        """
+        self._openapi_service.api_client.rest_client.set_token(token)
+
     def maintain_token_file(self, path: str, interval: float = 60) -> threading.Thread:
         """Continuously write this client's token to ``path`` so that other
         workers can authenticate from it via ``token_file`` — see the
