@@ -4749,6 +4749,7 @@
           "pipelineId",
           "state",
           "isPublic",
+          "audienceDeleted",
           "createdAt",
           "ownerId",
           "ownerMail"
@@ -4800,6 +4801,10 @@
           "isPublic": {
             "type": "boolean",
             "description": "Whether the job (and its results) is shared publicly."
+          },
+          "audienceDeleted": {
+            "type": "boolean",
+            "description": "Whether the audience backing this job was deleted, meaning the job can never run."
           },
           "completedAt": {
             "type": "string",
