@@ -1256,23 +1256,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Coordinator">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#building-your-own-token-distribution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building your own token distribution
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1298,10 +1281,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#older-sdk-versions" class="md-nav__link">
+  <a href="#building-your-own-token-distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Older SDK versions
+        Building your own token distribution
       
     </span>
   </a>
@@ -1507,23 +1490,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Coordinator">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#building-your-own-token-distribution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building your own token distribution
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1549,10 +1515,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#older-sdk-versions" class="md-nav__link">
+  <a href="#building-your-own-token-distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Older SDK versions
+        Building your own token distribution
       
     </span>
   </a>
@@ -1626,45 +1592,13 @@ your Rapidata account until the token expires. Write it only to storage
 that your training job alone can access, and restrict the file
 permissions accordingly.</p>
 </div>
-<h3 id="building-your-own-token-distribution">Building your own token distribution<a class="headerlink" href="#building-your-own-token-distribution" title="Permanent link">#</a></h3>
-<p>The shared file is just one transport. The SDK exposes the underlying
-primitives directly, so you can move the token around however fits your
-infrastructure — a key-value store, an RPC from the launcher, a secret
-manager, a message queue:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># 1. Export — the credential-holding client hands out its current token,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">#    refreshing it first if it is about to expire.</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">token</span> <span class="o">=</span> <span class="n">coordinator</span><span class="o">.</span><span class="n">get_token</span><span class="p">()</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># ... distribute it through any transport you like ...</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># 2. Bootstrap — create a worker client directly from a token object.</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">worker</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># 3. Renew — inject a newer token into a running client at any time;</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">#    it is used from the next request on.</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">worker</span><span class="o">.</span><span class="n">set_token</span><span class="p">(</span><span class="n">fresh_token</span><span class="p">)</span>
-</span></code></pre></div>
-<p>With these three calls you can build a <strong>push</strong> system (the coordinator
-distributes a fresh token to every worker before the old one expires, each
-worker applies it with <code>set_token</code>) or a <strong>pull</strong> system (each worker
-periodically fetches the current token from your own endpoint). <code>get_token()</code>
-is cheap to call at any frequency: it returns the current token and only
-contacts the auth server once the token is within <code>leeway</code> of expiry.</p>
-<p>Whatever the transport, pass the <strong>complete token object</strong> around and keep
-its absolute <code>expires_at</code> field — it's how a client decides when a token has
-expired. If you produce tokens without the SDK (e.g. a <code>curl</code> call to the
-token endpoint), the response only carries the relative <code>expires_in</code>, so add
-<code>expires_at</code> yourself. And if your transport is a shared file, write it
-atomically (temp file + <code>os.replace</code>) so readers never see a partial token.</p>
 <h2 id="workers">Workers<a class="headerlink" href="#workers" title="Permanent link">#</a></h2>
 <p>Once the coordinator has written the file, workers pass its path to the
 client — or set the <code>RAPIDATA_TOKEN_FILE</code> environment variable and construct
 the client with no arguments:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span><span class="n">token_file</span><span class="o">=</span><span class="s2">"/shared/rapidata_token.json"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span><span class="n">token_file</span><span class="o">=</span><span class="s2">"/shared/rapidata_token.json"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>The SDK reads the token from the file at startup and re-reads it whenever the
 in-memory token is within 60 seconds of expiry (configurable via <code>leeway</code>).
@@ -1682,17 +1616,38 @@ restarted or re-authenticated.</p>
   workers fail with an invalid-token error once the token in the file
   expires.</li>
 </ul>
-<h2 id="older-sdk-versions">Older SDK versions<a class="headerlink" href="#older-sdk-versions" title="Permanent link">#</a></h2>
-<p>Before <code>token_file</code> was available, the same pattern worked by passing the
-token dict directly — but the SDK never re-reads the file, so each worker
-must construct a new client when the token expires:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"/shared/rapidata_token.json"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+<h2 id="building-your-own-token-distribution">Building your own token distribution<a class="headerlink" href="#building-your-own-token-distribution" title="Permanent link">#</a></h2>
+<p>The shared file is just one transport. The SDK exposes the underlying
+primitives directly, so you can move the token around however fits your
+infrastructure — a key-value store, an RPC from the launcher, a secret
+manager, a message queue:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># 1. Export — the credential-holding client hands out its current token,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">#    refreshing it first if it is about to expire.</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">token</span> <span class="o">=</span> <span class="n">coordinator</span><span class="o">.</span><span class="n">get_token</span><span class="p">()</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># ... distribute it through any transport you like ...</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># 2. Bootstrap — create a worker client directly from a token object.</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">worker</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># 3. Renew — inject a newer token into a running client at any time;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#    it is used from the next request on.</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">worker</span><span class="o">.</span><span class="n">set_token</span><span class="p">(</span><span class="n">fresh_token</span><span class="p">)</span>
 </span></code></pre></div>
+<p>With these three calls you can build a <strong>push</strong> system (the coordinator
+distributes a fresh token to every worker before the old one expires, each
+worker applies it with <code>set_token</code>) or a <strong>pull</strong> system (each worker
+periodically fetches the current token from your own endpoint). <code>get_token()</code>
+is cheap to call at any frequency: it returns the current token and only
+contacts the auth server once the token is within <code>leeway</code> of expiry.</p>
+<p>Whatever the transport, pass the <strong>complete token object</strong> around and keep
+its absolute <code>expires_at</code> field — it's how a client decides when a token has
+expired. If you produce tokens without the SDK (e.g. a <code>curl</code> call to the
+token endpoint), the response only carries the relative <code>expires_in</code>, so add
+<code>expires_at</code> yourself. And if your transport is a shared file, write it
+atomically (temp file + <code>os.replace</code>) so readers never see a partial token.</p>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>
