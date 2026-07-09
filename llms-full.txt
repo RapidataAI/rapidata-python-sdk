@@ -3690,50 +3690,43 @@ coordinator.maintain_token_file("/shared/rapidata_token.json").join()  # (2)!
     that your training job alone can access, and restrict the file
     permissions accordingly.
 
-### Writing the file yourself
+### Building your own token distribution
 
-If the built-in helper doesn't fit (different storage backend, custom
-rotation), export the token with `get_token()` and write it however you
-like. `get_token()` is cheap to call at any frequency: it returns the
-current token and only contacts the auth server once the token is within
-`leeway` of expiry.
+The shared file is just one transport. The SDK exposes the underlying
+primitives directly, so you can move the token around however fits your
+infrastructure — a key-value store, an RPC from the launcher, a secret
+manager, a message queue:
 
 ```python
-import json
-import os
-import time
-
 from rapidata import RapidataClient
 
-TOKEN_FILE = "/shared/rapidata_token.json"
+# 1. Export — the credential-holding client hands out its current token,
+#    refreshing it first if it is about to expire.
+token = coordinator.get_token()
 
-coordinator = RapidataClient(leeway=300)
+# ... distribute it through any transport you like ...
 
-os.makedirs(os.path.dirname(TOKEN_FILE), exist_ok=True)
+# 2. Bootstrap — create a worker client directly from a token object.
+worker = RapidataClient(token=token)
 
-
-def write_token(token: dict) -> None:
-    tmp_path = TOKEN_FILE + ".tmp"
-    with open(tmp_path, "w") as f:
-        json.dump(token, f)
-    # Atomic replace: a worker reading concurrently sees either the old
-    # token or the new one, never a partially written file.
-    os.replace(tmp_path, TOKEN_FILE)
-
-
-while True:
-    write_token(coordinator.get_token())
-    time.sleep(60)
+# 3. Renew — inject a newer token into a running client at any time;
+#    it is used from the next request on.
+worker.set_token(fresh_token)
 ```
 
-Two things to keep when rolling your own:
+With these three calls you can build a **push** system (the coordinator
+distributes a fresh token to every worker before the old one expires, each
+worker applies it with `set_token`) or a **pull** system (each worker
+periodically fetches the current token from your own endpoint). `get_token()`
+is cheap to call at any frequency: it returns the current token and only
+contacts the auth server once the token is within `leeway` of expiry.
 
-- **Write atomically** (temp file + `os.replace`, as above) so workers never
-  read a half-written file.
-- **Keep the absolute `expires_at` field** in the JSON — it's how workers
-  decide when to re-read the file. If you produce the token without the SDK
-  (e.g. a `curl` call to the token endpoint), the response only carries the
-  relative `expires_in`, so add `expires_at` yourself.
+Whatever the transport, pass the **complete token object** around and keep
+its absolute `expires_at` field — it's how a client decides when a token has
+expired. If you produce tokens without the SDK (e.g. a `curl` call to the
+token endpoint), the response only carries the relative `expires_in`, so add
+`expires_at` yourself. And if your transport is a shared file, write it
+atomically (temp file + `os.replace`) so readers never see a partial token.
 
 ## Workers
 
