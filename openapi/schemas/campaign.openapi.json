@@ -124,6 +124,54 @@
         "deprecated": true
       }
     },
+    "/campaign/program": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Creates a program campaign from the given stream program.",
+        "description": "The program is validated before the campaign is persisted; a malformed graph\n (missing root, dangling references, cycles, unreachable nodes) is rejected. The\n campaign starts in the Created status; move it to Active to start serving sessions.",
+        "requestBody": {
+          "description": "The campaign and its stream program.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProgramCampaignEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProgramCampaignEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/campaign/boost/insights": {
       "get": {
         "tags": [
@@ -937,6 +985,58 @@
         }
       }
     },
+    "/campaign/{campaignId}/program": {
+      "put": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Replaces the campaign's stream program.",
+        "description": "The program is validated before it is persisted; a malformed graph is rejected.\n The program's version is bumped and republished — running sessions pick up the new\n program on their next response.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "The identifier of the program campaign.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The replacement stream program.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStreamProgramEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/campaign/external-audiences": {
       "get": {
         "tags": [
@@ -1331,6 +1431,65 @@
           "GreaterThan",
           "GreaterThanOrEqual"
         ]
+      },
+      "CreateProgramCampaignEndpoint_Input": {
+        "required": [
+          "name",
+          "priority",
+          "rootNodeId",
+          "nodes",
+          "maxRapids",
+          "maxDurationSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority weight the campaign competes with for sessions.",
+            "format": "int32"
+          },
+          "rootNodeId": {
+            "type": "string",
+            "description": "The node the program's evaluation enters at."
+          },
+          "nodes": {
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/IProgramNodeModel"
+                }
+              }
+            ],
+            "description": "The program's decision graph, keyed by node id."
+          },
+          "maxRapids": {
+            "type": "integer",
+            "description": "The session ends after this many counted responses.",
+            "format": "int32"
+          },
+          "maxDurationSeconds": {
+            "type": "integer",
+            "description": "The session ends after this many seconds.",
+            "format": "int32"
+          }
+        }
+      },
+      "CreateProgramCampaignEndpoint_Output": {
+        "required": [
+          "campaignId"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string",
+            "description": "The id of the created campaign."
+          }
+        }
       },
       "DeviceType": {
         "enum": [
@@ -2639,6 +2798,211 @@
           }
         }
       },
+      "IProgramActionModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IProgramActionModelCompleteActionModel"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramActionModelServeRapidActionModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CompleteAction": "#/components/schemas/IProgramActionModelCompleteActionModel",
+            "ServeRapidAction": "#/components/schemas/IProgramActionModelServeRapidActionModel"
+          }
+        }
+      },
+      "IProgramActionModelCompleteActionModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompleteAction"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IProgramActionModelServeRapidActionModel": {
+        "required": [
+          "routingId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ServeRapidAction"
+            ],
+            "type": "string"
+          },
+          "routingId": {
+            "type": "string"
+          },
+          "retrievalMode": {
+            "$ref": "#/components/schemas/RetrievalMode"
+          }
+        }
+      },
+      "IProgramNodeModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IProgramNodeModelActionNodeModel"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramNodeModelCasesNodeModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ActionNode": "#/components/schemas/IProgramNodeModelActionNodeModel",
+            "CasesNode": "#/components/schemas/IProgramNodeModelCasesNodeModel"
+          }
+        }
+      },
+      "IProgramNodeModelActionNodeModel": {
+        "required": [
+          "action",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ActionNode"
+            ],
+            "type": "string"
+          },
+          "action": {
+            "$ref": "#/components/schemas/IProgramActionModel"
+          }
+        }
+      },
+      "IProgramNodeModelCasesNodeModel": {
+        "required": [
+          "cases",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CasesNode"
+            ],
+            "type": "string"
+          },
+          "cases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProgramCaseModel"
+            }
+          },
+          "defaultNodeId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IProgramPredicateModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IProgramPredicateModelAnsweredCountPredicateModel"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateModelCorrectCountPredicateModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AnsweredCountPredicate": "#/components/schemas/IProgramPredicateModelAnsweredCountPredicateModel",
+            "CorrectCountPredicate": "#/components/schemas/IProgramPredicateModelCorrectCountPredicateModel"
+          }
+        }
+      },
+      "IProgramPredicateModelAnsweredCountPredicateModel": {
+        "required": [
+          "comparison",
+          "value",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AnsweredCountPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparisonModel"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateModelCorrectCountPredicateModel": {
+        "required": [
+          "comparison",
+          "value",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CorrectCountPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparisonModel"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ProgramCaseModel": {
+        "required": [
+          "predicate",
+          "nodeId"
+        ],
+        "type": "object",
+        "properties": {
+          "predicate": {
+            "$ref": "#/components/schemas/IProgramPredicateModel"
+          },
+          "nodeId": {
+            "type": "string"
+          }
+        }
+      },
+      "ProgramComparisonModel": {
+        "enum": [
+          "GreaterThanOrEqual",
+          "GreaterThan",
+          "LessThanOrEqual",
+          "LessThan",
+          "Equal"
+        ]
+      },
       "QueryCampaignsEndpoint_Output": {
         "required": [
           "id",
@@ -2954,6 +3318,42 @@
               }
             ],
             "description": "The feature flags for the campaign."
+          }
+        }
+      },
+      "UpdateStreamProgramEndpoint_Input": {
+        "required": [
+          "rootNodeId",
+          "nodes",
+          "maxRapids",
+          "maxDurationSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "rootNodeId": {
+            "type": "string",
+            "description": "The node the program's evaluation enters at."
+          },
+          "nodes": {
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/IProgramNodeModel"
+                }
+              }
+            ],
+            "description": "The program's decision graph, keyed by node id."
+          },
+          "maxRapids": {
+            "type": "integer",
+            "description": "The session ends after this many counted responses.",
+            "format": "int32"
+          },
+          "maxDurationSeconds": {
+            "type": "integer",
+            "description": "The session ends after this many seconds.",
+            "format": "int32"
           }
         }
       },
