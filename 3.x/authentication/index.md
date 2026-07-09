@@ -39,6 +39,10 @@ with no arguments. On a workstation, calling `RapidataClient()` with no
 credentials instead opens a browser login once and caches the token in
 `~/.config/rapidata/credentials.json`.
 
+Running many workers in parallel (e.g. a distributed training job)? Don't
+give each worker its own credentials — authenticate once and share the token
+via a file, as described in [Distributed Training](distributed_training.md).
+
 ## Direct token request
 
 To call the API without the SDK, request a token from the token endpoint and

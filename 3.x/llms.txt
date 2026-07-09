@@ -11,6 +11,7 @@
 - [Understanding Results](https://docs.rapidata.ai/3.x/understanding_the_results/index.md)
 - [Error Handling](https://docs.rapidata.ai/3.x/error_handling/index.md)
 - [Early Stopping](https://docs.rapidata.ai/3.x/confidence_stopping/index.md)
+- [Cost Estimates](https://docs.rapidata.ai/3.x/cost_estimates/index.md)
 - [Instruction Design](https://docs.rapidata.ai/3.x/human_prompting/index.md)
 - [Logging & Config](https://docs.rapidata.ai/3.x/config/index.md)
 
@@ -31,7 +32,8 @@
 
 ## Flows
 
-- [Ranking Flows](https://docs.rapidata.ai/3.x/flows/index.md)
+- [Getting Started](https://docs.rapidata.ai/3.x/flows/index.md)
+- [Distributed Training](https://docs.rapidata.ai/3.x/distributed_training/index.md)
 
 ## AI Agents
 
