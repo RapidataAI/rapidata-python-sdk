@@ -3690,7 +3690,36 @@ coordinator.maintain_token_file("/shared/rapidata_token.json").join()  # (2)!
     that your training job alone can access, and restrict the file
     permissions accordingly.
 
-### Building your own token distribution
+## Workers
+
+Once the coordinator has written the file, workers pass its path to the
+client — or set the `RAPIDATA_TOKEN_FILE` environment variable and construct
+the client with no arguments:
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient(token_file="/shared/rapidata_token.json")
+```
+
+The SDK reads the token from the file at startup and re-reads it whenever the
+in-memory token is within 60 seconds of expiry (configurable via `leeway`).
+As long as the coordinator keeps the file fresh, workers never need to be
+restarted or re-authenticated.
+
+## Practical tips
+
+- **Stagger worker startup.** Even with a shared token, thousands of workers
+  constructing their first client and firing their first API call in the
+  same second is an unnecessary burst. A few seconds of random jitter before
+  the first call smooths it out.
+- **Create one client per process and keep it.** The client refreshes its
+  token from the file transparently; there is no need to reconstruct it.
+- **Keep the coordinator alive for the whole run.** If it stops refreshing,
+  workers fail with an invalid-token error once the token in the file
+  expires.
+
+## Building your own token distribution
 
 The shared file is just one transport. The SDK exposes the underlying
 primitives directly, so you can move the token around however fits your
@@ -3727,50 +3756,6 @@ expired. If you produce tokens without the SDK (e.g. a `curl` call to the
 token endpoint), the response only carries the relative `expires_in`, so add
 `expires_at` yourself. And if your transport is a shared file, write it
 atomically (temp file + `os.replace`) so readers never see a partial token.
-
-## Workers
-
-Once the coordinator has written the file, workers pass its path to the
-client — or set the `RAPIDATA_TOKEN_FILE` environment variable and construct
-the client with no arguments:
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient(token_file="/shared/rapidata_token.json")
-```
-
-The SDK reads the token from the file at startup and re-reads it whenever the
-in-memory token is within 60 seconds of expiry (configurable via `leeway`).
-As long as the coordinator keeps the file fresh, workers never need to be
-restarted or re-authenticated.
-
-## Practical tips
-
-- **Stagger worker startup.** Even with a shared token, thousands of workers
-  constructing their first client and firing their first API call in the
-  same second is an unnecessary burst. A few seconds of random jitter before
-  the first call smooths it out.
-- **Create one client per process and keep it.** The client refreshes its
-  token from the file transparently; there is no need to reconstruct it.
-- **Keep the coordinator alive for the whole run.** If it stops refreshing,
-  workers fail with an invalid-token error once the token in the file
-  expires.
-
-## Older SDK versions
-
-Before `token_file` was available, the same pattern worked by passing the
-token dict directly — but the SDK never re-reads the file, so each worker
-must construct a new client when the token expires:
-
-```python
-import json
-
-from rapidata import RapidataClient
-
-with open("/shared/rapidata_token.json") as f:
-    client = RapidataClient(token=json.load(f))
-```
 
 
 # AI Agents
