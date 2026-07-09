@@ -132,6 +132,14 @@ class RESTClientObject:
             raise ApiValueError("The current token is expired and cannot be refreshed.")
         return dict(self.session.token)
 
+    def set_token(self, token: dict):
+        """Replace the token the session authenticates with."""
+        if not self.session:
+            raise ApiValueError(
+                "OAuth2 session is not initialized. Please initialize it before making requests."
+            )
+        self.session.token = token
+
     def request(
         self,
         method,
