@@ -148,6 +148,14 @@ class RESTClientObject:
             raise ApiValueError(
                 "OAuth2 session is not initialized. Please initialize it before making requests."
             )
+        missing = [k for k in ("access_token", "token_type", "expires_at") if k not in token]
+        if missing:
+            _logger.warning(
+                "set_token received an incomplete token object (missing %s). "
+                "Expect the complete token from get_token() — access_token, "
+                "token_type, and an absolute expires_at timestamp.",
+                ", ".join(missing),
+            )
         self.session.token = token
 
     def request(
