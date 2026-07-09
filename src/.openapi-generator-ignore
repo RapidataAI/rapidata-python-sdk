@@ -23,3 +23,6 @@
 #!docs/README.md
 
 api_client*.md
+
+# Hand-maintained package root (re-exports + __version__); must not be clobbered by regen
+rapidata/__init__.py
