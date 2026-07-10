@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from rapidata.api_client.models.reconciliation_job_state import ReconciliationJobState
 from rapidata.api_client.models.reconciliation_timestamp_mode import ReconciliationTimestampMode
 from pydantic import ValidationError
@@ -47,7 +47,7 @@ class GetReconciliationStatusEndpointOutput(LazyValidatedModel):
     error_message: Optional[StrictStr] = Field(default=None, description="The error message if the job failed.", alias="errorMessage")
     completed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job completed.", alias="completedAt")
     created_at: datetime = Field(description="The timestamp when the job was created.", alias="createdAt")
-    created_by_id: StrictStr = Field(description="The identifier of the user who created the job.", alias="createdById")
+    created_by_id: UUID = Field(description="The identifier of the user who created the job.", alias="createdById")
     created_by_mail: StrictStr = Field(description="The email of the user who created the job.", alias="createdByMail")
     __properties: ClassVar[List[str]] = ["jobId", "billingId", "bulkReconciliationId", "state", "timestampMode", "rapidsProcessed", "rapidsUpdated", "rapidsAlreadyCorrect", "rapidsFailed", "responsesProcessed", "correctionsCreated", "responsesAlreadyCorrect", "responsesFailed", "errorMessage", "completedAt", "createdAt", "createdById", "createdByMail"]
 

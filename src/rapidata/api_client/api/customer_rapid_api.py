@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -419,7 +418,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('rapid_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('rapid_id[' + _k + ']', _v))
         if response_count is not None:
             _param_val = response_count
@@ -427,7 +433,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('response_count[' + _k + ']', _item))
+                    else:
                         _query_params.append(('response_count[' + _k + ']', _v))
         if confidence is not None:
             _param_val = confidence
@@ -435,7 +448,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('confidence[' + _k + ']', _item))
+                    else:
                         _query_params.append(('confidence[' + _k + ']', _v))
         if logic is not None:
             
@@ -2460,7 +2480,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if correlation_id is not None:
             _param_val = correlation_id
@@ -2468,7 +2495,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('correlation_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('correlation_id[' + _k + ']', _v))
         if owner_id is not None:
             _param_val = owner_id
@@ -2476,7 +2510,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_id[' + _k + ']', _v))
         if key is not None:
             _param_val = key
@@ -2484,7 +2525,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('key[' + _k + ']', _item))
+                    else:
                         _query_params.append(('key[' + _k + ']', _v))
         if completed_at is not None:
             _param_val = completed_at
@@ -2492,7 +2540,14 @@ class CustomerRapidApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('completed_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('completed_at[' + _k + ']', _v))
         if logic is not None:
             

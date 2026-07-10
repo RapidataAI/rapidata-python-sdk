@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_metadata_input import IMetadataInput
+from rapidata.api_client.models.i_metadata_input_text_metadata_input import IMetadataInputTextMetadataInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,7 +30,7 @@ class IAssetInputExistingAssetInput(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     name: StrictStr
-    metadata: Optional[Dict[str, IMetadataInput]] = None
+    metadata: Optional[Dict[str, IMetadataInputTextMetadataInput]] = None
     identifier: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["_t", "name", "metadata", "identifier"]
 
@@ -84,6 +83,11 @@ class IAssetInputExistingAssetInput(LazyValidatedModel):
                 if self.metadata[_key_metadata]:
                     _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
             _dict['metadata'] = _field_dict
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
+
         # set to None if identifier (nullable) is None
         # and model_fields_set contains the field
         if self.identifier is None and "identifier" in self.model_fields_set:
@@ -104,7 +108,7 @@ class IAssetInputExistingAssetInput(LazyValidatedModel):
             "_t": obj.get("_t"),
             "name": obj.get("name"),
             "metadata": dict(
-                (_k, IMetadataInput.from_dict(_v))
+                (_k, IMetadataInputTextMetadataInput.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None

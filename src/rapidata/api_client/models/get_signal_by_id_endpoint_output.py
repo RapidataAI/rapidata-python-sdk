@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -40,7 +40,7 @@ class GetSignalByIdEndpointOutput(LazyValidatedModel):
     last_run_at: Optional[datetime] = Field(default=None, description="Timestamp of the most recent run (null if the signal has never fired).", alias="lastRunAt")
     is_paused: StrictBool = Field(description="Whether the scheduler is currently skipping this signal.", alias="isPaused")
     is_public: StrictBool = Field(description="Whether the signal is readable by every authenticated user.", alias="isPublic")
-    owner_id: StrictStr = Field(description="The customer id of the signal owner.", alias="ownerId")
+    owner_id: UUID = Field(description="The customer id of the signal owner.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the signal owner.", alias="ownerMail")
     created_at: datetime = Field(description="When the signal was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "name", "description", "audienceId", "jobDefinitionId", "revisionNumber", "intervalSeconds", "nextRunAt", "lastRunAt", "isPaused", "isPublic", "ownerId", "ownerMail", "createdAt"]

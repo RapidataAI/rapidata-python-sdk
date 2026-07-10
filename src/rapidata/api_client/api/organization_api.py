@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -19,6 +18,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
+from uuid import UUID
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
 from rapidata.api_client.models.get_my_organization_endpoint_output import GetMyOrganizationEndpointOutput
 from rapidata.api_client.models.query_organizations_endpoint_paged_result_of_output import QueryOrganizationsEndpointPagedResultOfOutput
@@ -367,7 +367,14 @@ class OrganizationApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if domain is not None:
             _param_val = domain
@@ -375,7 +382,14 @@ class OrganizationApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('domain[' + _k + ']', _item))
+                    else:
                         _query_params.append(('domain[' + _k + ']', _v))
         if owner is not None:
             _param_val = owner
@@ -383,7 +397,14 @@ class OrganizationApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner[' + _k + ']', _v))
         if logic is not None:
             
@@ -684,7 +705,7 @@ class OrganizationApi:
     @validate_call
     def organizations_owner_support_slack_channel_put(
         self,
-        owner: Annotated[StrictStr, Field(description="The customer ID that owns the organization.")],
+        owner: Annotated[UUID, Field(description="The customer ID that owns the organization.")],
         set_organization_support_slack_channel_endpoint_input: Annotated[SetOrganizationSupportSlackChannelEndpointInput, Field(description="The support Slack channel URL to set or clear.")],
         _request_timeout: Union[
             None,
@@ -704,7 +725,7 @@ class OrganizationApi:
         A null or empty URL clears the channel. Responds with 404 when no organization is owned by the given customer.
 
         :param owner: The customer ID that owns the organization. (required)
-        :type owner: str
+        :type owner: UUID
         :param set_organization_support_slack_channel_endpoint_input: The support Slack channel URL to set or clear. (required)
         :type set_organization_support_slack_channel_endpoint_input: SetOrganizationSupportSlackChannelEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -758,7 +779,7 @@ class OrganizationApi:
     @validate_call
     def organizations_owner_support_slack_channel_put_with_http_info(
         self,
-        owner: Annotated[StrictStr, Field(description="The customer ID that owns the organization.")],
+        owner: Annotated[UUID, Field(description="The customer ID that owns the organization.")],
         set_organization_support_slack_channel_endpoint_input: Annotated[SetOrganizationSupportSlackChannelEndpointInput, Field(description="The support Slack channel URL to set or clear.")],
         _request_timeout: Union[
             None,
@@ -778,7 +799,7 @@ class OrganizationApi:
         A null or empty URL clears the channel. Responds with 404 when no organization is owned by the given customer.
 
         :param owner: The customer ID that owns the organization. (required)
-        :type owner: str
+        :type owner: UUID
         :param set_organization_support_slack_channel_endpoint_input: The support Slack channel URL to set or clear. (required)
         :type set_organization_support_slack_channel_endpoint_input: SetOrganizationSupportSlackChannelEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -832,7 +853,7 @@ class OrganizationApi:
     @validate_call
     def organizations_owner_support_slack_channel_put_without_preload_content(
         self,
-        owner: Annotated[StrictStr, Field(description="The customer ID that owns the organization.")],
+        owner: Annotated[UUID, Field(description="The customer ID that owns the organization.")],
         set_organization_support_slack_channel_endpoint_input: Annotated[SetOrganizationSupportSlackChannelEndpointInput, Field(description="The support Slack channel URL to set or clear.")],
         _request_timeout: Union[
             None,
@@ -852,7 +873,7 @@ class OrganizationApi:
         A null or empty URL clears the channel. Responds with 404 when no organization is owned by the given customer.
 
         :param owner: The customer ID that owns the organization. (required)
-        :type owner: str
+        :type owner: UUID
         :param set_organization_support_slack_channel_endpoint_input: The support Slack channel URL to set or clear. (required)
         :type set_organization_support_slack_channel_endpoint_input: SetOrganizationSupportSlackChannelEndpointInput
         :param _request_timeout: timeout setting for this request. If one

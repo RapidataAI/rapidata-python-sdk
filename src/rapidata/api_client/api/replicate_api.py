@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -41,7 +40,7 @@ class ReplicateApi:
 
 
     @validate_call
-    def leaderboard_faucet_replicate_models_get_0(
+    def leaderboard_faucet_replicate_models_get(
         self,
         search: Annotated[StrictStr, Field(description="The free-text term to search models by.")],
         cursor: Annotated[Optional[StrictStr], Field(description="Cursor continuing a previous search; omit for the first page.")] = None,
@@ -88,7 +87,7 @@ class ReplicateApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_faucet_replicate_models_get_0_serialize(
+        _param = self._leaderboard_faucet_replicate_models_get_serialize(
             search=search,
             cursor=cursor,
             _request_auth=_request_auth,
@@ -115,7 +114,7 @@ class ReplicateApi:
 
 
     @validate_call
-    def leaderboard_faucet_replicate_models_get_0_with_http_info(
+    def leaderboard_faucet_replicate_models_get_with_http_info(
         self,
         search: Annotated[StrictStr, Field(description="The free-text term to search models by.")],
         cursor: Annotated[Optional[StrictStr], Field(description="Cursor continuing a previous search; omit for the first page.")] = None,
@@ -162,7 +161,7 @@ class ReplicateApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_faucet_replicate_models_get_0_serialize(
+        _param = self._leaderboard_faucet_replicate_models_get_serialize(
             search=search,
             cursor=cursor,
             _request_auth=_request_auth,
@@ -189,7 +188,7 @@ class ReplicateApi:
 
 
     @validate_call
-    def leaderboard_faucet_replicate_models_get_0_without_preload_content(
+    def leaderboard_faucet_replicate_models_get_without_preload_content(
         self,
         search: Annotated[StrictStr, Field(description="The free-text term to search models by.")],
         cursor: Annotated[Optional[StrictStr], Field(description="Cursor continuing a previous search; omit for the first page.")] = None,
@@ -236,7 +235,7 @@ class ReplicateApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_faucet_replicate_models_get_0_serialize(
+        _param = self._leaderboard_faucet_replicate_models_get_serialize(
             search=search,
             cursor=cursor,
             _request_auth=_request_auth,
@@ -258,7 +257,7 @@ class ReplicateApi:
         return response_data.response
 
 
-    def _leaderboard_faucet_replicate_models_get_0_serialize(
+    def _leaderboard_faucet_replicate_models_get_serialize(
         self,
         search,
         cursor,
@@ -330,7 +329,7 @@ class ReplicateApi:
 
 
     @validate_call
-    def leaderboard_faucet_replicate_models_model_owner_model_name_get_0(
+    def leaderboard_faucet_replicate_models_model_owner_model_name_get(
         self,
         model_owner: Annotated[StrictStr, Field(description="The owner of the hosted model.")],
         model_name: Annotated[StrictStr, Field(description="The model name.")],
@@ -377,7 +376,7 @@ class ReplicateApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_faucet_replicate_models_model_owner_model_name_get_0_serialize(
+        _param = self._leaderboard_faucet_replicate_models_model_owner_model_name_get_serialize(
             model_owner=model_owner,
             model_name=model_name,
             _request_auth=_request_auth,
@@ -404,7 +403,7 @@ class ReplicateApi:
 
 
     @validate_call
-    def leaderboard_faucet_replicate_models_model_owner_model_name_get_0_with_http_info(
+    def leaderboard_faucet_replicate_models_model_owner_model_name_get_with_http_info(
         self,
         model_owner: Annotated[StrictStr, Field(description="The owner of the hosted model.")],
         model_name: Annotated[StrictStr, Field(description="The model name.")],
@@ -451,7 +450,7 @@ class ReplicateApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_faucet_replicate_models_model_owner_model_name_get_0_serialize(
+        _param = self._leaderboard_faucet_replicate_models_model_owner_model_name_get_serialize(
             model_owner=model_owner,
             model_name=model_name,
             _request_auth=_request_auth,
@@ -478,7 +477,7 @@ class ReplicateApi:
 
 
     @validate_call
-    def leaderboard_faucet_replicate_models_model_owner_model_name_get_0_without_preload_content(
+    def leaderboard_faucet_replicate_models_model_owner_model_name_get_without_preload_content(
         self,
         model_owner: Annotated[StrictStr, Field(description="The owner of the hosted model.")],
         model_name: Annotated[StrictStr, Field(description="The model name.")],
@@ -525,7 +524,7 @@ class ReplicateApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_faucet_replicate_models_model_owner_model_name_get_0_serialize(
+        _param = self._leaderboard_faucet_replicate_models_model_owner_model_name_get_serialize(
             model_owner=model_owner,
             model_name=model_name,
             _request_auth=_request_auth,
@@ -547,7 +546,7 @@ class ReplicateApi:
         return response_data.response
 
 
-    def _leaderboard_faucet_replicate_models_model_owner_model_name_get_0_serialize(
+    def _leaderboard_faucet_replicate_models_model_owner_model_name_get_serialize(
         self,
         model_owner,
         model_name,

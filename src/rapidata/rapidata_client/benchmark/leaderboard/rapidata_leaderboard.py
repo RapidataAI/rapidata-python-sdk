@@ -9,6 +9,9 @@ from rapidata.rapidata_client.benchmark._detail_mapper import (
     DetailMapper,
     LevelOfDetail,
 )
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+    AudienceAudienceIdJobsGetJobIdParameter,
+)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_endpoint_input import (
     UpdateLeaderboardEndpointInput,
@@ -209,8 +212,10 @@ class RapidataLeaderboard:
             A pandas DataFrame containing the standings of the leaderboard.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_standings"):
-            participants = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_standings_get(
-                leaderboard_id=self.id, tags=tags
+            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
+            tags_filter.var_in = tags
+            participants = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_standings_query_get(
+                leaderboard_id=self.id, tags=tags_filter
             )
 
             import pandas as pd
@@ -252,9 +257,11 @@ class RapidataLeaderboard:
             containing the pairwise win counts.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_win_loss_matrix"):
-            result = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_matrix_get(
+            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
+            tags_filter.var_in = tags
+            result = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_matrix_query_get(
                 leaderboard_id=self.id,
-                tags=tags,
+                tags=tags_filter,
                 use_weighted_scoring=use_weighted_scoring,
             )
 

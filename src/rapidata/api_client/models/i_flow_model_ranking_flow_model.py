@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from uuid import UUID
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.pid_batch_mode import PidBatchMode
 from pydantic import ValidationError
@@ -53,7 +53,7 @@ class IFlowModelRankingFlowModel(LazyValidatedModel):
     max_responses: Optional[StrictInt] = Field(description="Maximum number of responses a ranking item can receive before being removed from active ranking. Null allows unlimited responses.", alias="maxResponses")
     serve_responses: Optional[StrictInt] = Field(description="Number of accepted responses per rapid at which to stop serving. Null defaults to MaxResponses.", alias="serveResponses")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
-    owner_id: StrictStr = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
+    owner_id: UUID = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["_t", "id", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]

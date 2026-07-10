@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -33,7 +32,7 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
     name: Optional[StrictStr] = Field(default=None, description="The new name of the participant.")
     family: Optional[StrictStr] = Field(default=None, description="The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"). Pass null to clear.")
     proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model. Pass null to clear.", alias="proprietaryName")
-    logo: Optional[ExistingAssetInput] = None
+    logo: Optional[ExistingAssetInput] = Field(default=None, description="An image asset for the model's logo. Pass null to clear.")
     faucet: Optional[IFaucetInput] = Field(default=None, description="The faucet to set or replace on the participant.")
     __properties: ClassVar[List[str]] = ["name", "family", "proprietaryName", "logo", "faucet"]
 

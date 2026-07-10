@@ -261,7 +261,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -307,7 +310,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -353,7 +359,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -399,7 +408,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -445,7 +457,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -594,7 +609,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -640,7 +658,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -686,7 +707,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1501,7 +1525,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1547,7 +1574,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1593,7 +1623,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2041,14 +2074,13 @@
             "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "decisiveness": {
             "type": "number",
@@ -2056,14 +2088,13 @@
             "nullable": true
           },
           "aggregation": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IResponseAggregationModel"
               }
-            ]
+            ],
+            "nullable": true
           }
         }
       },
@@ -2311,14 +2342,13 @@
             "type": "string"
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -2345,14 +2375,13 @@
             }
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -2376,14 +2405,13 @@
             "type": "string"
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -2894,24 +2922,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -2946,24 +2972,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -2998,24 +3022,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -3050,24 +3072,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -3102,24 +3122,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -3154,24 +3172,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -3213,24 +3229,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -3265,24 +3279,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -3317,24 +3329,22 @@
             "type": "string"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -3376,24 +3386,22 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "context": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "featureFlags": {
             "type": "array",
@@ -4005,7 +4013,7 @@
             ],
             "type": "string"
           },
-          "guessAmountThreshold": {
+          "responseAmountThreshold": {
             "type": "integer",
             "format": "int32"
           },
@@ -4013,6 +4021,11 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "guessAmountThreshold": {
+            "type": "integer",
+            "format": "int32",
+            "deprecated": true
           }
         }
       },
@@ -5209,15 +5222,14 @@
             "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
-              },
-              {
-                "nullable": true
               }
             ],
-            "description": "An optional asset to use as context to show the user."
+            "description": "An optional asset to use as context to show the user.",
+            "nullable": true
           },
           "randomCorrectProbability": {
             "type": "number",

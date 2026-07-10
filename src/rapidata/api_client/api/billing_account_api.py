@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -19,6 +18,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
+from uuid import UUID
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
 from rapidata.api_client.models.grant_voucher_endpoint_input import GrantVoucherEndpointInput
 from rapidata.api_client.models.grant_voucher_endpoint_output import GrantVoucherEndpointOutput
@@ -49,7 +49,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_credit_line_put(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose credit line to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose credit line to set.")],
         set_credit_line_endpoint_input: Annotated[SetCreditLineEndpointInput, Field(description="The new credit line.")],
         _request_timeout: Union[
             None,
@@ -68,7 +68,7 @@ class BillingAccountApi:
 
 
         :param customer_id: The id of the customer whose credit line to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_credit_line_endpoint_input: The new credit line. (required)
         :type set_credit_line_endpoint_input: SetCreditLineEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -122,7 +122,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_credit_line_put_with_http_info(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose credit line to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose credit line to set.")],
         set_credit_line_endpoint_input: Annotated[SetCreditLineEndpointInput, Field(description="The new credit line.")],
         _request_timeout: Union[
             None,
@@ -141,7 +141,7 @@ class BillingAccountApi:
 
 
         :param customer_id: The id of the customer whose credit line to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_credit_line_endpoint_input: The new credit line. (required)
         :type set_credit_line_endpoint_input: SetCreditLineEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -195,7 +195,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_credit_line_put_without_preload_content(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose credit line to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose credit line to set.")],
         set_credit_line_endpoint_input: Annotated[SetCreditLineEndpointInput, Field(description="The new credit line.")],
         _request_timeout: Union[
             None,
@@ -214,7 +214,7 @@ class BillingAccountApi:
 
 
         :param customer_id: The id of the customer whose credit line to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_credit_line_endpoint_input: The new credit line. (required)
         :type set_credit_line_endpoint_input: SetCreditLineEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -344,7 +344,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_minimum_spend_commitment_put(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose minimum spend commitment to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose minimum spend commitment to set.")],
         set_minimum_spend_commitment_endpoint_input: Annotated[SetMinimumSpendCommitmentEndpointInput, Field(description="The new minimum spend commitment.")],
         _request_timeout: Union[
             None,
@@ -364,7 +364,7 @@ class BillingAccountApi:
         At invoice time, if the period's measured spend is below the commitment, a top-up charge for  the shortfall is added so the usage-side bill reaches the commitment. Setting it to 0  removes the commitment.
 
         :param customer_id: The id of the customer whose minimum spend commitment to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_minimum_spend_commitment_endpoint_input: The new minimum spend commitment. (required)
         :type set_minimum_spend_commitment_endpoint_input: SetMinimumSpendCommitmentEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -418,7 +418,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_minimum_spend_commitment_put_with_http_info(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose minimum spend commitment to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose minimum spend commitment to set.")],
         set_minimum_spend_commitment_endpoint_input: Annotated[SetMinimumSpendCommitmentEndpointInput, Field(description="The new minimum spend commitment.")],
         _request_timeout: Union[
             None,
@@ -438,7 +438,7 @@ class BillingAccountApi:
         At invoice time, if the period's measured spend is below the commitment, a top-up charge for  the shortfall is added so the usage-side bill reaches the commitment. Setting it to 0  removes the commitment.
 
         :param customer_id: The id of the customer whose minimum spend commitment to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_minimum_spend_commitment_endpoint_input: The new minimum spend commitment. (required)
         :type set_minimum_spend_commitment_endpoint_input: SetMinimumSpendCommitmentEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -492,7 +492,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_minimum_spend_commitment_put_without_preload_content(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose minimum spend commitment to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose minimum spend commitment to set.")],
         set_minimum_spend_commitment_endpoint_input: Annotated[SetMinimumSpendCommitmentEndpointInput, Field(description="The new minimum spend commitment.")],
         _request_timeout: Union[
             None,
@@ -512,7 +512,7 @@ class BillingAccountApi:
         At invoice time, if the period's measured spend is below the commitment, a top-up charge for  the shortfall is added so the usage-side bill reaches the commitment. Setting it to 0  removes the commitment.
 
         :param customer_id: The id of the customer whose minimum spend commitment to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_minimum_spend_commitment_endpoint_input: The new minimum spend commitment. (required)
         :type set_minimum_spend_commitment_endpoint_input: SetMinimumSpendCommitmentEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -642,7 +642,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_platform_fee_put(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose platform fee to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose platform fee to set.")],
         set_platform_fee_endpoint_input: Annotated[SetPlatformFeeEndpointInput, Field(description="The new platform fee.")],
         _request_timeout: Union[
             None,
@@ -662,7 +662,7 @@ class BillingAccountApi:
         The fee is automatically applied as a charge to the customer's current open billing period  and to every future period. Setting it to null removes the platform-fee charge from  the current open period; 0 keeps an explicit $0 charge that is still shown.
 
         :param customer_id: The id of the customer whose platform fee to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_platform_fee_endpoint_input: The new platform fee. (required)
         :type set_platform_fee_endpoint_input: SetPlatformFeeEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -716,7 +716,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_platform_fee_put_with_http_info(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose platform fee to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose platform fee to set.")],
         set_platform_fee_endpoint_input: Annotated[SetPlatformFeeEndpointInput, Field(description="The new platform fee.")],
         _request_timeout: Union[
             None,
@@ -736,7 +736,7 @@ class BillingAccountApi:
         The fee is automatically applied as a charge to the customer's current open billing period  and to every future period. Setting it to null removes the platform-fee charge from  the current open period; 0 keeps an explicit $0 charge that is still shown.
 
         :param customer_id: The id of the customer whose platform fee to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_platform_fee_endpoint_input: The new platform fee. (required)
         :type set_platform_fee_endpoint_input: SetPlatformFeeEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -790,7 +790,7 @@ class BillingAccountApi:
     @validate_call
     def customer_customer_id_platform_fee_put_without_preload_content(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The id of the customer whose platform fee to set.")],
+        customer_id: Annotated[UUID, Field(description="The id of the customer whose platform fee to set.")],
         set_platform_fee_endpoint_input: Annotated[SetPlatformFeeEndpointInput, Field(description="The new platform fee.")],
         _request_timeout: Union[
             None,
@@ -810,7 +810,7 @@ class BillingAccountApi:
         The fee is automatically applied as a charge to the customer's current open billing period  and to every future period. Setting it to null removes the platform-fee charge from  the current open period; 0 keeps an explicit $0 charge that is still shown.
 
         :param customer_id: The id of the customer whose platform fee to set. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param set_platform_fee_endpoint_input: The new platform fee. (required)
         :type set_platform_fee_endpoint_input: SetPlatformFeeEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -1568,7 +1568,14 @@ class BillingAccountApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('customer_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('customer_id[' + _k + ']', _v))
         if status is not None:
             _param_val = status
@@ -1576,7 +1583,14 @@ class BillingAccountApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('status[' + _k + ']', _item))
+                    else:
                         _query_params.append(('status[' + _k + ']', _v))
         if source is not None:
             _param_val = source
@@ -1584,7 +1598,14 @@ class BillingAccountApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('source[' + _k + ']', _item))
+                    else:
                         _query_params.append(('source[' + _k + ']', _v))
         if expires_at is not None:
             _param_val = expires_at
@@ -1592,7 +1613,14 @@ class BillingAccountApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('expires_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('expires_at[' + _k + ']', _v))
         if issued_at is not None:
             _param_val = issued_at
@@ -1600,7 +1628,14 @@ class BillingAccountApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('issued_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('issued_at[' + _k + ']', _v))
         if logic is not None:
             

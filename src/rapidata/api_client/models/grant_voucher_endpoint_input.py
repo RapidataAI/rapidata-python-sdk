@@ -11,16 +11,16 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from uuid import UUID
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class GrantVoucherEndpointInput(LazyValidatedModel):
     """
     GrantVoucherEndpointInput
     """ # noqa: E501
-    customer_id: StrictStr = Field(description="The id of the customer to grant the voucher to.", alias="customerId")
+    customer_id: UUID = Field(description="The id of the customer to grant the voucher to.", alias="customerId")
     amount: Union[StrictFloat, StrictInt] = Field(description="The face value of the voucher in dollars.")
     validity: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="How long the voucher stays valid, counted from now. Serialized as a duration string in  the format [days.]hh:mm:ss (the days part is optional): \"30.00:00:00\" = 30  days, \"7.00:00:00\" = 7 days, \"12:00:00\" = 12 hours. Must be positive.  Provide this or expiresAt, not both.")
     expires_at: Optional[datetime] = Field(default=None, description="An explicit expiry instant as an ISO-8601 timestamp (e.g. \"2026-12-31T23:59:59Z\").  Use this instead of validity when you know the exact date the  voucher should expire. Provide this or validity, not both.", alias="expiresAt")

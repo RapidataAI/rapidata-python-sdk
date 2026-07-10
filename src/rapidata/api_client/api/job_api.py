@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -2343,7 +2342,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('revision_number[' + _k + ']', _item))
+                    else:
                         _query_params.append(('revision_number[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -2351,7 +2357,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if state is not None:
             _param_val = state
@@ -2359,7 +2372,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('state[' + _k + ']', _item))
+                    else:
                         _query_params.append(('state[' + _k + ']', _v))
         if logic is not None:
             
@@ -3336,7 +3356,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('definition_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('definition_id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -3344,7 +3371,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if definition_type is not None:
             _param_val = definition_type
@@ -3352,7 +3386,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('definition_type[' + _k + ']', _item))
+                    else:
                         _query_params.append(('definition_type[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -3360,7 +3401,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if owner_id is not None:
             _param_val = owner_id
@@ -3368,7 +3416,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_id[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
@@ -3376,7 +3431,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if logic is not None:
             
@@ -3783,7 +3845,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('definition_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('definition_id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -3791,7 +3860,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if definition_type is not None:
             _param_val = definition_type
@@ -3799,7 +3875,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('definition_type[' + _k + ']', _item))
+                    else:
                         _query_params.append(('definition_type[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -3807,7 +3890,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if owner_id is not None:
             _param_val = owner_id
@@ -3815,7 +3905,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_id[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
@@ -3823,7 +3920,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if logic is not None:
             
@@ -4686,7 +4790,7 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> bytearray:
+    ) -> bytes:
         """Downloads the results of a job as a file attachment.
 
 
@@ -4723,7 +4827,7 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "bytes",
             '401': None,
             '403': None,
         }
@@ -4754,7 +4858,7 @@ class JobApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[bytearray]:
+    ) -> ApiResponse[bytes]:
         """Downloads the results of a job as a file attachment.
 
 
@@ -4791,7 +4895,7 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "bytes",
             '401': None,
             '403': None,
         }
@@ -4859,7 +4963,7 @@ class JobApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "bytes",
             '401': None,
             '403': None,
         }
@@ -7456,7 +7560,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if last_job_date is not None:
             _param_val = last_job_date
@@ -7464,7 +7575,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('last_job_date[' + _k + ']', _item))
+                    else:
                         _query_params.append(('last_job_date[' + _k + ']', _v))
         if last_job_name is not None:
             _param_val = last_job_name
@@ -7472,7 +7590,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('last_job_name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('last_job_name[' + _k + ']', _v))
         if logic is not None:
             
@@ -7895,7 +8020,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -7903,7 +8035,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if job_definition_id is not None:
             _param_val = job_definition_id
@@ -7911,7 +8050,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('job_definition_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('job_definition_id[' + _k + ']', _v))
         if audience_id is not None:
             _param_val = audience_id
@@ -7919,7 +8065,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('audience_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('audience_id[' + _k + ']', _v))
         if state is not None:
             _param_val = state
@@ -7927,7 +8080,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('state[' + _k + ']', _item))
+                    else:
                         _query_params.append(('state[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
@@ -7935,7 +8095,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -7943,7 +8110,14 @@ class JobApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if logic is not None:
             

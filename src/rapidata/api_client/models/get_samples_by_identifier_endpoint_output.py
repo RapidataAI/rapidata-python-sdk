@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -40,7 +40,7 @@ class GetSamplesByIdentifierEndpointOutput(LazyValidatedModel):
     prompt_asset: Optional[IAssetModel] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
     tags: List[StrictStr]
     created_at: Optional[datetime] = Field(default=None, description="The timestamp when the sample was created.", alias="createdAt")
-    owner_id: Optional[StrictStr] = Field(default=None, description="The id of the customer that owns the sample.", alias="ownerId")
+    owner_id: Optional[UUID] = Field(default=None, description="The id of the customer that owns the sample.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer that owns the sample.", alias="ownerMail")
     __properties: ClassVar[List[str]] = ["id", "identifier", "participantId", "participantName", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail"]
 

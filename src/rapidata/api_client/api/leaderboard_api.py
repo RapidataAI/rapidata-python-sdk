@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -26,20 +25,20 @@ from rapidata.api_client.models.create_leaderboard_endpoint_output import Create
 from rapidata.api_client.models.create_leaderboard_participant_endpoint_input import CreateLeaderboardParticipantEndpointInput
 from rapidata.api_client.models.create_leaderboard_participant_endpoint_output import CreateLeaderboardParticipantEndpointOutput
 from rapidata.api_client.models.create_prompt_for_leaderboard_endpoint_output import CreatePromptForLeaderboardEndpointOutput
-from rapidata.api_client.models.get_combined_leaderboard_matrix_endpoint_output import GetCombinedLeaderboardMatrixEndpointOutput
-from rapidata.api_client.models.get_combined_leaderboard_standings_endpoint_output import GetCombinedLeaderboardStandingsEndpointOutput
 from rapidata.api_client.models.get_leaderboard_by_id_endpoint_output import GetLeaderboardByIdEndpointOutput
 from rapidata.api_client.models.get_participant_by_id_obsolete_endpoint_output import GetParticipantByIdObsoleteEndpointOutput
 from rapidata.api_client.models.get_standing_by_id_endpoint_output import GetStandingByIdEndpointOutput
+from rapidata.api_client.models.query_combined_matrix_by_leaderboards_endpoint_output import QueryCombinedMatrixByLeaderboardsEndpointOutput
+from rapidata.api_client.models.query_combined_standings_by_leaderboards_endpoint_output import QueryCombinedStandingsByLeaderboardsEndpointOutput
 from rapidata.api_client.models.query_leaderboard_runs_endpoint_paged_result_of_output import QueryLeaderboardRunsEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_leaderboards_endpoint_paged_result_of_output import QueryLeaderboardsEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_matrix_by_leaderboard_endpoint_output import QueryMatrixByLeaderboardEndpointOutput
 from rapidata.api_client.models.query_participants_obsolete_endpoint_output import QueryParticipantsObsoleteEndpointOutput
-from rapidata.api_client.models.query_standings_endpoint_paged_result_of_output import QueryStandingsEndpointPagedResultOfOutput
+from rapidata.api_client.models.query_standings_by_leaderboard_endpoint_output import QueryStandingsByLeaderboardEndpointOutput
 from rapidata.api_client.models.submit_participant_endpoint_output import SubmitParticipantEndpointOutput
 from rapidata.api_client.models.update_leaderboard_endpoint_input import UpdateLeaderboardEndpointInput
 from rapidata.api_client.models.update_leaderboard_name_endpoint_input import UpdateLeaderboardNameEndpointInput
 from rapidata.api_client.models.update_leaderboard_response_config_endpoint_input import UpdateLeaderboardResponseConfigEndpointInput
-from rapidata.api_client.models.vote_matrix_result import VoteMatrixResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -342,10 +341,21 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_combined_matrix_get(
+    def leaderboard_combined_matrix_query_get(
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -358,14 +368,37 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetCombinedLeaderboardMatrixEndpointOutput:
-        """Returns the combined pairwise vote matrix for multiple leaderboards.
+    ) -> QueryCombinedMatrixByLeaderboardsEndpointOutput:
+        """Queries the combined win matrix of multiple leaderboards.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -388,9 +421,20 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_combined_matrix_get_serialize(
+        _param = self._leaderboard_combined_matrix_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -398,7 +442,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCombinedLeaderboardMatrixEndpointOutput",
+            '200': "QueryCombinedMatrixByLeaderboardsEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -415,10 +459,21 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_combined_matrix_get_with_http_info(
+    def leaderboard_combined_matrix_query_get_with_http_info(
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -431,14 +486,37 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetCombinedLeaderboardMatrixEndpointOutput]:
-        """Returns the combined pairwise vote matrix for multiple leaderboards.
+    ) -> ApiResponse[QueryCombinedMatrixByLeaderboardsEndpointOutput]:
+        """Queries the combined win matrix of multiple leaderboards.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -461,9 +539,20 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_combined_matrix_get_serialize(
+        _param = self._leaderboard_combined_matrix_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -471,7 +560,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCombinedLeaderboardMatrixEndpointOutput",
+            '200': "QueryCombinedMatrixByLeaderboardsEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -488,10 +577,21 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_combined_matrix_get_without_preload_content(
+    def leaderboard_combined_matrix_query_get_without_preload_content(
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -505,13 +605,36 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Returns the combined pairwise vote matrix for multiple leaderboards.
+        """Queries the combined win matrix of multiple leaderboards.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -534,9 +657,20 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_combined_matrix_get_serialize(
+        _param = self._leaderboard_combined_matrix_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -544,7 +678,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCombinedLeaderboardMatrixEndpointOutput",
+            '200': "QueryCombinedMatrixByLeaderboardsEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -556,10 +690,21 @@ class LeaderboardApi:
         return response_data.response
 
 
-    def _leaderboard_combined_matrix_get_serialize(
+    def _leaderboard_combined_matrix_query_get_serialize(
         self,
         leaderboard_ids,
         use_weighted_scoring,
+        country,
+        language,
+        gender,
+        age_bucket,
+        occupation,
+        tags,
+        participant_id,
+        run_id,
+        prompt_identifier,
+        voted_at,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -591,6 +736,160 @@ class LeaderboardApi:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
             
+        if country is not None:
+            _param_val = country
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('country[' + _k + ']', _v))
+        if language is not None:
+            _param_val = language
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('language[' + _k + ']', _v))
+        if gender is not None:
+            _param_val = gender
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('gender[' + _k + ']', _v))
+        if age_bucket is not None:
+            _param_val = age_bucket
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('age_bucket[' + _k + ']', _v))
+        if occupation is not None:
+            _param_val = occupation
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('occupation[' + _k + ']', _v))
+        if tags is not None:
+            _param_val = tags
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('tags[' + _k + ']', _v))
+        if participant_id is not None:
+            _param_val = participant_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_id[' + _k + ']', _v))
+        if run_id is not None:
+            _param_val = run_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('run_id[' + _k + ']', _v))
+        if prompt_identifier is not None:
+            _param_val = prompt_identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('prompt_identifier[' + _k + ']', _v))
+        if voted_at is not None:
+            _param_val = voted_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('voted_at[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -612,7 +911,7 @@ class LeaderboardApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/leaderboard/combined-matrix',
+            resource_path='/leaderboard/combined-matrix/query',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -629,11 +928,22 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_combined_standings_get(
+    def leaderboard_combined_standings_query_get(
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -646,16 +956,39 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetCombinedLeaderboardStandingsEndpointOutput:
-        """Returns the combined standings for multiple leaderboards.
+    ) -> QueryCombinedStandingsByLeaderboardsEndpointOutput:
+        """Queries the combined standings of multiple leaderboards.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -678,10 +1011,21 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_combined_standings_get_serialize(
+        _param = self._leaderboard_combined_standings_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -689,7 +1033,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCombinedLeaderboardStandingsEndpointOutput",
+            '200': "QueryCombinedStandingsByLeaderboardsEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -706,11 +1050,22 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_combined_standings_get_with_http_info(
+    def leaderboard_combined_standings_query_get_with_http_info(
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -723,16 +1078,39 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetCombinedLeaderboardStandingsEndpointOutput]:
-        """Returns the combined standings for multiple leaderboards.
+    ) -> ApiResponse[QueryCombinedStandingsByLeaderboardsEndpointOutput]:
+        """Queries the combined standings of multiple leaderboards.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -755,10 +1133,21 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_combined_standings_get_serialize(
+        _param = self._leaderboard_combined_standings_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -766,7 +1155,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCombinedLeaderboardStandingsEndpointOutput",
+            '200': "QueryCombinedStandingsByLeaderboardsEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -783,11 +1172,22 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_combined_standings_get_without_preload_content(
+    def leaderboard_combined_standings_query_get_without_preload_content(
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -801,15 +1201,38 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Returns the combined standings for multiple leaderboards.
+        """Queries the combined standings of multiple leaderboards.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -832,10 +1255,21 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_combined_standings_get_serialize(
+        _param = self._leaderboard_combined_standings_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -843,7 +1277,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetCombinedLeaderboardStandingsEndpointOutput",
+            '200': "QueryCombinedStandingsByLeaderboardsEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -855,11 +1289,22 @@ class LeaderboardApi:
         return response_data.response
 
 
-    def _leaderboard_combined_standings_get_serialize(
+    def _leaderboard_combined_standings_query_get_serialize(
         self,
         leaderboard_ids,
         use_weighted_scoring,
         include_confidence_intervals,
+        country,
+        language,
+        gender,
+        age_bucket,
+        occupation,
+        tags,
+        participant_id,
+        run_id,
+        prompt_identifier,
+        voted_at,
+        logic,
         _request_auth,
         _content_type,
         _headers,
@@ -895,6 +1340,160 @@ class LeaderboardApi:
             
             _query_params.append(('includeConfidenceIntervals', include_confidence_intervals))
             
+        if country is not None:
+            _param_val = country
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('country[' + _k + ']', _v))
+        if language is not None:
+            _param_val = language
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('language[' + _k + ']', _v))
+        if gender is not None:
+            _param_val = gender
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('gender[' + _k + ']', _v))
+        if age_bucket is not None:
+            _param_val = age_bucket
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('age_bucket[' + _k + ']', _v))
+        if occupation is not None:
+            _param_val = occupation
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('occupation[' + _k + ']', _v))
+        if tags is not None:
+            _param_val = tags
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('tags[' + _k + ']', _v))
+        if participant_id is not None:
+            _param_val = participant_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_id[' + _k + ']', _v))
+        if run_id is not None:
+            _param_val = run_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('run_id[' + _k + ']', _v))
+        if prompt_identifier is not None:
+            _param_val = prompt_identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('prompt_identifier[' + _k + ']', _v))
+        if voted_at is not None:
+            _param_val = voted_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('voted_at[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -916,7 +1515,7 @@ class LeaderboardApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/leaderboard/combined-standings',
+            resource_path='/leaderboard/combined-standings/query',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1762,16 +2361,20 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_matrix_get(
+    def leaderboard_leaderboard_id_matrix_query_get(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
         age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
         occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -1785,16 +2388,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> VoteMatrixResult:
-        """Returns the pairwise vote matrix for a leaderboard.
+    ) -> QueryMatrixByLeaderboardEndpointOutput:
+        """Queries the win matrix of a leaderboard.
 
-        The matrix is returned in pandas split format.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
-        :param leaderboard_id: The identifier of the leaderboard. (required)
+        :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags: Optional tags to filter the matrix entries.
-        :type tags: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
@@ -1806,6 +2407,16 @@ class LeaderboardApi:
         :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
         :param occupation: Filter by occupation.
         :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1830,15 +2441,19 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_matrix_get_serialize(
+        _param = self._leaderboard_leaderboard_id_matrix_query_get_serialize(
             leaderboard_id=leaderboard_id,
-            tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             country=country,
             language=language,
             gender=gender,
             age_bucket=age_bucket,
             occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1847,7 +2462,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "VoteMatrixResult",
+            '200': "QueryMatrixByLeaderboardEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1864,16 +2479,20 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_matrix_get_with_http_info(
+    def leaderboard_leaderboard_id_matrix_query_get_with_http_info(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
         age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
         occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -1887,16 +2506,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[VoteMatrixResult]:
-        """Returns the pairwise vote matrix for a leaderboard.
+    ) -> ApiResponse[QueryMatrixByLeaderboardEndpointOutput]:
+        """Queries the win matrix of a leaderboard.
 
-        The matrix is returned in pandas split format.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
-        :param leaderboard_id: The identifier of the leaderboard. (required)
+        :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags: Optional tags to filter the matrix entries.
-        :type tags: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
@@ -1908,6 +2525,16 @@ class LeaderboardApi:
         :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
         :param occupation: Filter by occupation.
         :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1932,15 +2559,19 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_matrix_get_serialize(
+        _param = self._leaderboard_leaderboard_id_matrix_query_get_serialize(
             leaderboard_id=leaderboard_id,
-            tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             country=country,
             language=language,
             gender=gender,
             age_bucket=age_bucket,
             occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1949,7 +2580,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "VoteMatrixResult",
+            '200': "QueryMatrixByLeaderboardEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1966,16 +2597,20 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_matrix_get_without_preload_content(
+    def leaderboard_leaderboard_id_matrix_query_get_without_preload_content(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
         age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
         occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -1990,15 +2625,13 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Returns the pairwise vote matrix for a leaderboard.
+        """Queries the win matrix of a leaderboard.
 
-        The matrix is returned in pandas split format.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
-        :param leaderboard_id: The identifier of the leaderboard. (required)
+        :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags: Optional tags to filter the matrix entries.
-        :type tags: List[str]
-        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
@@ -2010,6 +2643,16 @@ class LeaderboardApi:
         :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
         :param occupation: Filter by occupation.
         :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2034,15 +2677,19 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_matrix_get_serialize(
+        _param = self._leaderboard_leaderboard_id_matrix_query_get_serialize(
             leaderboard_id=leaderboard_id,
-            tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             country=country,
             language=language,
             gender=gender,
             age_bucket=age_bucket,
             occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2051,7 +2698,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "VoteMatrixResult",
+            '200': "QueryMatrixByLeaderboardEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -2063,16 +2710,20 @@ class LeaderboardApi:
         return response_data.response
 
 
-    def _leaderboard_leaderboard_id_matrix_get_serialize(
+    def _leaderboard_leaderboard_id_matrix_query_get_serialize(
         self,
         leaderboard_id,
-        tags,
         use_weighted_scoring,
         country,
         language,
         gender,
         age_bucket,
         occupation,
+        tags,
+        participant_id,
+        run_id,
+        prompt_identifier,
+        voted_at,
         logic,
         _request_auth,
         _content_type,
@@ -2083,7 +2734,6 @@ class LeaderboardApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'tags': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -2099,10 +2749,6 @@ class LeaderboardApi:
         if leaderboard_id is not None:
             _path_params['leaderboardId'] = leaderboard_id
         # process the query parameters
-        if tags is not None:
-            
-            _query_params.append(('tags', tags))
-            
         if use_weighted_scoring is not None:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
@@ -2113,7 +2759,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
                         _query_params.append(('country[' + _k + ']', _v))
         if language is not None:
             _param_val = language
@@ -2121,7 +2774,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
                         _query_params.append(('language[' + _k + ']', _v))
         if gender is not None:
             _param_val = gender
@@ -2129,7 +2789,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
                         _query_params.append(('gender[' + _k + ']', _v))
         if age_bucket is not None:
             _param_val = age_bucket
@@ -2137,7 +2804,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
                         _query_params.append(('age_bucket[' + _k + ']', _v))
         if occupation is not None:
             _param_val = occupation
@@ -2145,8 +2819,90 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
                         _query_params.append(('occupation[' + _k + ']', _v))
+        if tags is not None:
+            _param_val = tags
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('tags[' + _k + ']', _v))
+        if participant_id is not None:
+            _param_val = participant_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_id[' + _k + ']', _v))
+        if run_id is not None:
+            _param_val = run_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('run_id[' + _k + ']', _v))
+        if prompt_identifier is not None:
+            _param_val = prompt_identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('prompt_identifier[' + _k + ']', _v))
+        if voted_at is not None:
+            _param_val = voted_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('voted_at[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -2172,7 +2928,7 @@ class LeaderboardApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/leaderboard/{leaderboardId}/matrix',
+            resource_path='/leaderboard/{leaderboardId}/matrix/query',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -4860,7 +5616,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -4868,7 +5631,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if status is not None:
             _param_val = status
@@ -4876,7 +5646,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('status[' + _k + ']', _item))
+                    else:
                         _query_params.append(('status[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -4884,7 +5661,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
@@ -4892,7 +5676,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if logic is not None:
             
@@ -4936,17 +5727,21 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_standings_get(
+    def leaderboard_leaderboard_id_standings_query_get(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose standings should be queried.")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
         age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
         occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4960,15 +5755,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> QueryStandingsEndpointPagedResultOfOutput:
-        """Queries all standings for a leaderboard by its id.
+    ) -> QueryStandingsByLeaderboardEndpointOutput:
+        """Queries the standings of a leaderboard.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
-        :param leaderboard_id: The id of the leaderboard whose standings should be queried. (required)
+        :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags: The tags the standings should be filtered by.
-        :type tags: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
@@ -4982,6 +5776,16 @@ class LeaderboardApi:
         :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
         :param occupation: Filter by occupation.
         :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5006,9 +5810,8 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_standings_get_serialize(
+        _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
-            tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
             country=country,
@@ -5016,6 +5819,11 @@ class LeaderboardApi:
             gender=gender,
             age_bucket=age_bucket,
             occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5024,7 +5832,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "QueryStandingsEndpointPagedResultOfOutput",
+            '200': "QueryStandingsByLeaderboardEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -5041,17 +5849,21 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_standings_get_with_http_info(
+    def leaderboard_leaderboard_id_standings_query_get_with_http_info(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose standings should be queried.")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
         age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
         occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -5065,15 +5877,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[QueryStandingsEndpointPagedResultOfOutput]:
-        """Queries all standings for a leaderboard by its id.
+    ) -> ApiResponse[QueryStandingsByLeaderboardEndpointOutput]:
+        """Queries the standings of a leaderboard.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
-        :param leaderboard_id: The id of the leaderboard whose standings should be queried. (required)
+        :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags: The tags the standings should be filtered by.
-        :type tags: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
@@ -5087,6 +5898,16 @@ class LeaderboardApi:
         :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
         :param occupation: Filter by occupation.
         :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5111,9 +5932,8 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_standings_get_serialize(
+        _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
-            tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
             country=country,
@@ -5121,6 +5941,11 @@ class LeaderboardApi:
             gender=gender,
             age_bucket=age_bucket,
             occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5129,7 +5954,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "QueryStandingsEndpointPagedResultOfOutput",
+            '200': "QueryStandingsByLeaderboardEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -5146,17 +5971,21 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_standings_get_without_preload_content(
+    def leaderboard_leaderboard_id_standings_query_get_without_preload_content(
         self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard whose standings should be queried.")],
-        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the standings should be filtered by.")] = None,
-        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores.")] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
         age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
         occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -5171,14 +6000,13 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all standings for a leaderboard by its id.
+        """Queries the standings of a leaderboard.
 
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
 
-        :param leaderboard_id: The id of the leaderboard whose standings should be queried. (required)
+        :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags: The tags the standings should be filtered by.
-        :type tags: List[str]
-        :param use_weighted_scoring: Whether to use weighted scoring based on user scores.
+        :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include confidence intervals in results.
         :type include_confidence_intervals: bool
@@ -5192,6 +6020,16 @@ class LeaderboardApi:
         :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
         :param occupation: Filter by occupation.
         :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5216,9 +6054,8 @@ class LeaderboardApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._leaderboard_leaderboard_id_standings_get_serialize(
+        _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
-            tags=tags,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
             country=country,
@@ -5226,6 +6063,11 @@ class LeaderboardApi:
             gender=gender,
             age_bucket=age_bucket,
             occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5234,7 +6076,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "QueryStandingsEndpointPagedResultOfOutput",
+            '200': "QueryStandingsByLeaderboardEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -5246,10 +6088,9 @@ class LeaderboardApi:
         return response_data.response
 
 
-    def _leaderboard_leaderboard_id_standings_get_serialize(
+    def _leaderboard_leaderboard_id_standings_query_get_serialize(
         self,
         leaderboard_id,
-        tags,
         use_weighted_scoring,
         include_confidence_intervals,
         country,
@@ -5257,6 +6098,11 @@ class LeaderboardApi:
         gender,
         age_bucket,
         occupation,
+        tags,
+        participant_id,
+        run_id,
+        prompt_identifier,
+        voted_at,
         logic,
         _request_auth,
         _content_type,
@@ -5267,7 +6113,6 @@ class LeaderboardApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'tags': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -5283,10 +6128,6 @@ class LeaderboardApi:
         if leaderboard_id is not None:
             _path_params['leaderboardId'] = leaderboard_id
         # process the query parameters
-        if tags is not None:
-            
-            _query_params.append(('tags', tags))
-            
         if use_weighted_scoring is not None:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
@@ -5301,7 +6142,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
                         _query_params.append(('country[' + _k + ']', _v))
         if language is not None:
             _param_val = language
@@ -5309,7 +6157,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
                         _query_params.append(('language[' + _k + ']', _v))
         if gender is not None:
             _param_val = gender
@@ -5317,7 +6172,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
                         _query_params.append(('gender[' + _k + ']', _v))
         if age_bucket is not None:
             _param_val = age_bucket
@@ -5325,7 +6187,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
                         _query_params.append(('age_bucket[' + _k + ']', _v))
         if occupation is not None:
             _param_val = occupation
@@ -5333,8 +6202,90 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
                         _query_params.append(('occupation[' + _k + ']', _v))
+        if tags is not None:
+            _param_val = tags
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('tags[' + _k + ']', _v))
+        if participant_id is not None:
+            _param_val = participant_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_id[' + _k + ']', _v))
+        if run_id is not None:
+            _param_val = run_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('run_id[' + _k + ']', _v))
+        if prompt_identifier is not None:
+            _param_val = prompt_identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('prompt_identifier[' + _k + ']', _v))
+        if voted_at is not None:
+            _param_val = voted_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('voted_at[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -5360,7 +6311,7 @@ class LeaderboardApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/leaderboard/{leaderboardId}/standings',
+            resource_path='/leaderboard/{leaderboardId}/standings/query',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -5994,7 +6945,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -6002,7 +6960,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if benchmark_id is not None:
             _param_val = benchmark_id
@@ -6010,7 +6975,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('benchmark_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('benchmark_id[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -6018,7 +6990,14 @@ class LeaderboardApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if logic is not None:
             

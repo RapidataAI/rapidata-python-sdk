@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -37,7 +36,7 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
     dataset_id: Optional[StrictStr] = Field(default=None, description="The dataset id. If not provided, inherits from the previous revision.", alias="datasetId")
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
-    aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
+    aggregator_type: Optional[AggregatorType] = Field(default=None, description="The aggregator type. If not provided, inherits from the previous revision.", alias="aggregatorType")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set id to pin on this revision. When set, every job run from this  revision uses the specified validation set as the source of validation rapids  instead of audience-derived examples. If not provided, inherits from the previous  revision. Provide a wrapped null value to clear a previously pinned set.", alias="validationSetId")
     __properties: ClassVar[List[str]] = ["workflow", "referee", "datasetId", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType", "validationSetId"]
 

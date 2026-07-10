@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from rapidata.api_client.models.reconciliation_timestamp_mode import ReconciliationTimestampMode
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -31,7 +31,7 @@ class StartBulkReconciliationEndpointInput(LazyValidatedModel):
     StartBulkReconciliationEndpointInput
     """ # noqa: E501
     billing_item_id: Optional[StrictStr] = Field(default=None, description="The identifier of a single billing item to reconcile.", alias="billingItemId")
-    customer_id: Optional[StrictStr] = Field(default=None, description="The customer identifier to reconcile all billing items for.", alias="customerId")
+    customer_id: Optional[UUID] = Field(default=None, description="The customer identifier to reconcile all billing items for.", alias="customerId")
     billing_group_id: Optional[StrictStr] = Field(default=None, description="The billing group identifier to reconcile all billing items for.", alias="billingGroupId")
     start_date: Optional[datetime] = Field(default=None, description="Optional start date filter. Only applies with CustomerId or BillingGroupId.", alias="startDate")
     end_date: Optional[datetime] = Field(default=None, description="Optional end date filter. Only applies with CustomerId or BillingGroupId.", alias="endDate")

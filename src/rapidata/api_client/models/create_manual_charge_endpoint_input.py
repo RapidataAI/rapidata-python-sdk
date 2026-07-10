@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,6 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from uuid import UUID
 from rapidata.api_client.models.manual_charge_reason import ManualChargeReason
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -31,7 +31,7 @@ class CreateManualChargeEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     name: StrictStr = Field(description="The name of the manual charge.")
     billing_period_id: StrictStr = Field(description="The billing period to add the charge to.", alias="billingPeriodId")
-    customer_id: StrictStr = Field(description="The customer to charge.", alias="customerId")
+    customer_id: UUID = Field(description="The customer to charge.", alias="customerId")
     customer_mail: StrictStr = Field(description="The customer's email address.", alias="customerMail")
     amount: Union[StrictFloat, StrictInt] = Field(description="The charge amount. Positive for fees, negative for refunds.")
     reason: ManualChargeReason = Field(description="The reason for the manual charge.")

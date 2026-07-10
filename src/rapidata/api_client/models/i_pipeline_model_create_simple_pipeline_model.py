@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_pipeline_artifact_model import IPipelineArtifactModel
+from rapidata.api_client.models.i_pipeline_artifact_model_create_dataset_artifact_model import IPipelineArtifactModelCreateDatasetArtifactModel
 from rapidata.api_client.models.i_pipeline_step_model import IPipelineStepModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -31,7 +30,7 @@ class IPipelineModelCreateSimplePipelineModel(LazyValidatedModel):
     IPipelineModelCreateSimplePipelineModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    artifacts: List[IPipelineArtifactModel]
+    artifacts: List[IPipelineArtifactModelCreateDatasetArtifactModel]
     pipeline_steps: List[IPipelineStepModel] = Field(alias="pipelineSteps")
     name_prefix: StrictStr = Field(alias="namePrefix")
     __properties: ClassVar[List[str]] = ["_t", "artifacts", "pipelineSteps", "namePrefix"]
@@ -105,7 +104,7 @@ class IPipelineModelCreateSimplePipelineModel(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "artifacts": [IPipelineArtifactModel.from_dict(_item) for _item in obj["artifacts"]] if obj.get("artifacts") is not None else None,
+            "artifacts": [IPipelineArtifactModelCreateDatasetArtifactModel.from_dict(_item) for _item in obj["artifacts"]] if obj.get("artifacts") is not None else None,
             "pipelineSteps": [IPipelineStepModel.from_dict(_item) for _item in obj["pipelineSteps"]] if obj.get("pipelineSteps") is not None else None,
             "namePrefix": obj.get("namePrefix")
         }

@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -398,7 +397,14 @@ class SampleApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if participant_id is not None:
             _param_val = participant_id
@@ -406,7 +412,14 @@ class SampleApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('participant_id[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -414,7 +427,14 @@ class SampleApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -1353,7 +1373,14 @@ class SampleApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('identifier[' + _k + ']', _item))
+                    else:
                         _query_params.append(('identifier[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -1361,7 +1388,14 @@ class SampleApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if logic is not None:
             

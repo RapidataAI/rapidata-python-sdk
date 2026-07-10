@@ -11,114 +11,98 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
-import json
 import pprint
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Any, List, Optional
-from rapidata.api_client.models.i_faucet_input_replicate_faucet_input import IFaucetInputReplicateFaucetInput
-from pydantic import StrictStr, Field
-from rapidata.api_client.lazy_model import LazyValidatedModel
-from typing import Union, List, Set, Optional, Dict
-from typing_extensions import Literal, Self
+import re  # noqa: F401
+import json
 
-IFAUCETINPUT_ONE_OF_SCHEMAS = ["IFaucetInputReplicateFaucetInput"]
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
+from typing import Optional, Set
+from typing_extensions import Self
 
 class IFaucetInput(LazyValidatedModel):
     """
     Polymorphic request body describing a faucet to configure on a participant. The concrete  type is selected by the _t discriminator (e.g. \"Replicate\").
-    """
-    # data type: IFaucetInputReplicateFaucetInput
-    oneof_schema_1_validator: Optional[IFaucetInputReplicateFaucetInput] = None
-    actual_instance: Optional[Union[IFaucetInputReplicateFaucetInput]] = None
-    one_of_schemas: Set[str] = { "IFaucetInputReplicateFaucetInput" }
+    """ # noqa: E501
+    t: StrictStr = Field(alias="_t")
+    model_owner: StrictStr = Field(description="The owner of the hosted model (e.g. \"stability-ai\").", alias="modelOwner")
+    model_name: StrictStr = Field(description="The model name (e.g. \"sdxl\").", alias="modelName")
+    model_version: Optional[StrictStr] = Field(default=None, description="Optional pinned model version hash.", alias="modelVersion")
+    additional_inputs: Optional[Dict[str, Any]] = Field(default=None, description="Extra model inputs keyed by parameter name (e.g. \"aspect_ratio\"). The system-managed keys  (prompt, num_outputs) must not appear here — they are supplied automatically. Values are  validated against the model's live input schema when the faucet is set.", alias="additionalInputs")
+    __properties: ClassVar[List[str]] = ["_t", "modelOwner", "modelName", "modelVersion", "additionalInputs"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['Replicate']):
+            raise ValueError("must be one of enum values ('Replicate')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
 
-    discriminator_value_class_map: Dict[str, str] = {
-    }
-
-    def __init__(self, *args, **kwargs) -> None:
-        if args:
-            if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
-            if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
-            super().__init__(actual_instance=args[0])
-        else:
-            super().__init__(**kwargs)
-
-    @field_validator('actual_instance')
-    def actual_instance_must_validate_oneof(cls, v):
-        instance = IFaucetInput.model_construct()
-        error_messages = []
-        match = 0
-        # validate data type: IFaucetInputReplicateFaucetInput
-        if not isinstance(v, IFaucetInputReplicateFaucetInput):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IFaucetInputReplicateFaucetInput`")
-        else:
-            match += 1
-        if match > 1:
-            # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IFaucetInput with oneOf schemas: IFaucetInputReplicateFaucetInput. Details: " + ", ".join(error_messages))
-        elif match == 0:
-            # no match
-            raise ValueError("No match found when setting `actual_instance` in IFaucetInput with oneOf schemas: IFaucetInputReplicateFaucetInput. Details: " + ", ".join(error_messages))
-        else:
-            return v
-
-    @classmethod
-    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
-        return cls.from_json(json.dumps(obj))
-
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Returns the object represented by the json string"""
-        instance = cls.model_construct()
-        error_messages = []
-        match = 0
-
-        # deserialize data into IFaucetInputReplicateFaucetInput
-        try:
-            instance.actual_instance = IFaucetInputReplicateFaucetInput.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-
-        if match > 1:
-            # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IFaucetInput with oneOf schemas: IFaucetInputReplicateFaucetInput. Details: " + ", ".join(error_messages))
-        elif match == 0:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into IFaucetInput with oneOf schemas: IFaucetInputReplicateFaucetInput. Details: " + ", ".join(error_messages))
-        else:
-            return instance
+    def to_str(self) -> str:
+        """Returns the string representation of the model using alias"""
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
-        """Returns the JSON representation of the actual instance"""
-        if self.actual_instance is None:
-            return "null"
+        """Returns the JSON representation of the model using alias"""
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
-        if hasattr(self.actual_instance, "to_json") and callable(self.actual_instance.to_json):
-            return self.actual_instance.to_json()
-        else:
-            return json.dumps(self.actual_instance)
+    @classmethod
+    def from_json(cls, json_str: str) -> Optional[Self]:
+        """Create an instance of IFaucetInput from a JSON string"""
+        return cls.from_dict(json.loads(json_str))
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IFaucetInputReplicateFaucetInput]]:
-        """Returns the dict representation of the actual instance"""
-        if self.actual_instance is None:
+    def to_dict(self) -> Dict[str, Any]:
+        """Return the dictionary representation of the model using alias.
+
+        This has the following differences from calling pydantic's
+        `self.model_dump(by_alias=True)`:
+
+        * `None` is only added to the output dict for nullable fields that
+          were set at model initialization. Other fields with value `None`
+          are ignored.
+        """
+        excluded_fields: Set[str] = set([
+        ])
+
+        _dict = self.model_dump(
+            by_alias=True,
+            exclude=excluded_fields,
+            exclude_none=True,
+        )
+        # set to None if model_version (nullable) is None
+        # and model_fields_set contains the field
+        if self.model_version is None and "model_version" in self.model_fields_set:
+            _dict['modelVersion'] = None
+
+        return _dict
+
+    @classmethod
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
+        """Create an instance of IFaucetInput from a dict"""
+        if obj is None:
             return None
 
-        if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
-            return self.actual_instance.to_dict()
-        else:
-            # primitive type
-            return self.actual_instance
+        if not isinstance(obj, dict):
+            return cls.model_validate(obj)
 
-    def to_str(self) -> str:
-        """Returns the string representation of the actual instance"""
-        return pprint.pformat(self.model_dump())
+        _data = {
+            "_t": obj.get("_t"),
+            "modelOwner": obj.get("modelOwner"),
+            "modelName": obj.get("modelName"),
+            "modelVersion": obj.get("modelVersion"),
+            "additionalInputs": obj.get("additionalInputs")
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
+        return _obj
 
 

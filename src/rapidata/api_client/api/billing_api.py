@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -20,6 +19,7 @@ from datetime import datetime
 from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
+from uuid import UUID
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
 from rapidata.api_client.models.create_billing_item_billing_setting_endpoint_input import CreateBillingItemBillingSettingEndpointInput
 from rapidata.api_client.models.create_customer_billing_setting_endpoint_input import CreateCustomerBillingSettingEndpointInput
@@ -646,7 +646,7 @@ class BillingApi:
         start_date: datetime,
         end_date: datetime,
         grouping: TimeGrouping,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -672,7 +672,7 @@ class BillingApi:
         :param grouping: (required)
         :type grouping: TimeGrouping
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -735,7 +735,7 @@ class BillingApi:
         start_date: datetime,
         end_date: datetime,
         grouping: TimeGrouping,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -761,7 +761,7 @@ class BillingApi:
         :param grouping: (required)
         :type grouping: TimeGrouping
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -824,7 +824,7 @@ class BillingApi:
         start_date: datetime,
         end_date: datetime,
         grouping: TimeGrouping,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -850,7 +850,7 @@ class BillingApi:
         :param grouping: (required)
         :type grouping: TimeGrouping
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -1019,7 +1019,7 @@ class BillingApi:
         end_date: Optional[datetime] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1047,7 +1047,7 @@ class BillingApi:
         :param page_size:
         :type page_size: int
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -1112,7 +1112,7 @@ class BillingApi:
         end_date: Optional[datetime] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1140,7 +1140,7 @@ class BillingApi:
         :param page_size:
         :type page_size: int
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -1205,7 +1205,7 @@ class BillingApi:
         end_date: Optional[datetime] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1233,7 +1233,7 @@ class BillingApi:
         :param page_size:
         :type page_size: int
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -1406,7 +1406,7 @@ class BillingApi:
         self,
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
@@ -1433,7 +1433,7 @@ class BillingApi:
         :param end_date:
         :type end_date: datetime
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -1503,7 +1503,7 @@ class BillingApi:
         self,
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
@@ -1530,7 +1530,7 @@ class BillingApi:
         :param end_date:
         :type end_date: datetime
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -1600,7 +1600,7 @@ class BillingApi:
         self,
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
-        customer_id: Optional[StrictStr] = None,
+        customer_id: Optional[UUID] = None,
         customer_mail: Optional[StrictStr] = None,
         include_non_billable: Optional[StrictBool] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
@@ -1627,7 +1627,7 @@ class BillingApi:
         :param end_date:
         :type end_date: datetime
         :param customer_id:
-        :type customer_id: str
+        :type customer_id: UUID
         :param customer_mail:
         :type customer_mail: str
         :param include_non_billable:
@@ -2166,7 +2166,7 @@ class BillingApi:
     @validate_call
     def billing_customer_customer_id_settings_post(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         create_customer_billing_setting_endpoint_input: Annotated[CreateCustomerBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
             None,
@@ -2185,7 +2185,7 @@ class BillingApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param create_customer_billing_setting_endpoint_input: The billing setting data. (required)
         :type create_customer_billing_setting_endpoint_input: CreateCustomerBillingSettingEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -2239,7 +2239,7 @@ class BillingApi:
     @validate_call
     def billing_customer_customer_id_settings_post_with_http_info(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         create_customer_billing_setting_endpoint_input: Annotated[CreateCustomerBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
             None,
@@ -2258,7 +2258,7 @@ class BillingApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param create_customer_billing_setting_endpoint_input: The billing setting data. (required)
         :type create_customer_billing_setting_endpoint_input: CreateCustomerBillingSettingEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -2312,7 +2312,7 @@ class BillingApi:
     @validate_call
     def billing_customer_customer_id_settings_post_without_preload_content(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         create_customer_billing_setting_endpoint_input: Annotated[CreateCustomerBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
             None,
@@ -2331,7 +2331,7 @@ class BillingApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param create_customer_billing_setting_endpoint_input: The billing setting data. (required)
         :type create_customer_billing_setting_endpoint_input: CreateCustomerBillingSettingEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -2461,7 +2461,7 @@ class BillingApi:
     @validate_call
     def billing_customer_customer_id_settings_setting_id_delete(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
             None,
@@ -2480,7 +2480,7 @@ class BillingApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param setting_id: The billing setting identifier. (required)
         :type setting_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2534,7 +2534,7 @@ class BillingApi:
     @validate_call
     def billing_customer_customer_id_settings_setting_id_delete_with_http_info(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
             None,
@@ -2553,7 +2553,7 @@ class BillingApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param setting_id: The billing setting identifier. (required)
         :type setting_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2607,7 +2607,7 @@ class BillingApi:
     @validate_call
     def billing_customer_customer_id_settings_setting_id_delete_without_preload_content(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
             None,
@@ -2626,7 +2626,7 @@ class BillingApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param setting_id: The billing setting identifier. (required)
         :type setting_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3303,7 +3303,7 @@ class BillingApi:
     @validate_call
     def billing_period_active_billing_items_get(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
@@ -3324,7 +3324,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer ID. Admins can specify any customer; non-admins see their own.
-        :type customer_id: str
+        :type customer_id: UUID
         :param page: The 1-based page index.
         :type page: int
         :param page_size: The number of items per page.
@@ -3384,7 +3384,7 @@ class BillingApi:
     @validate_call
     def billing_period_active_billing_items_get_with_http_info(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
@@ -3405,7 +3405,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer ID. Admins can specify any customer; non-admins see their own.
-        :type customer_id: str
+        :type customer_id: UUID
         :param page: The 1-based page index.
         :type page: int
         :param page_size: The number of items per page.
@@ -3465,7 +3465,7 @@ class BillingApi:
     @validate_call
     def billing_period_active_billing_items_get_without_preload_content(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
@@ -3486,7 +3486,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer ID. Admins can specify any customer; non-admins see their own.
-        :type customer_id: str
+        :type customer_id: UUID
         :param page: The 1-based page index.
         :type page: int
         :param page_size: The number of items per page.
@@ -3624,7 +3624,7 @@ class BillingApi:
     @validate_call
     def billing_period_active_get(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3642,7 +3642,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer ID. Admins can specify any customer; non-admins see their own.
-        :type customer_id: str
+        :type customer_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3693,7 +3693,7 @@ class BillingApi:
     @validate_call
     def billing_period_active_get_with_http_info(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3711,7 +3711,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer ID. Admins can specify any customer; non-admins see their own.
-        :type customer_id: str
+        :type customer_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3762,7 +3762,7 @@ class BillingApi:
     @validate_call
     def billing_period_active_get_without_preload_content(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer ID. Admins can specify any customer; non-admins see their own.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3780,7 +3780,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer ID. Admins can specify any customer; non-admins see their own.
-        :type customer_id: str
+        :type customer_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5376,7 +5376,14 @@ class BillingApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('status[' + _k + ']', _item))
+                    else:
                         _query_params.append(('status[' + _k + ']', _v))
         if owner_id is not None:
             _param_val = owner_id
@@ -5384,7 +5391,14 @@ class BillingApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_id[' + _k + ']', _v))
         if start_date is not None:
             _param_val = start_date
@@ -5392,7 +5406,14 @@ class BillingApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('start_date[' + _k + ']', _item))
+                    else:
                         _query_params.append(('start_date[' + _k + ']', _v))
         if end_date is not None:
             _param_val = end_date
@@ -5400,7 +5421,14 @@ class BillingApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('end_date[' + _k + ']', _item))
+                    else:
                         _query_params.append(('end_date[' + _k + ']', _v))
         if logic is not None:
             
@@ -7077,7 +7105,7 @@ class BillingApi:
     @validate_call
     def billing_settings_timeline_get(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer identifier to scope the timeline.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer identifier to scope the timeline.")] = None,
         billing_item_id: Annotated[Optional[StrictStr], Field(description="Optional billing item identifier to scope the timeline.")] = None,
         _request_timeout: Union[
             None,
@@ -7096,7 +7124,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer identifier to scope the timeline.
-        :type customer_id: str
+        :type customer_id: UUID
         :param billing_item_id: Optional billing item identifier to scope the timeline.
         :type billing_item_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -7150,7 +7178,7 @@ class BillingApi:
     @validate_call
     def billing_settings_timeline_get_with_http_info(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer identifier to scope the timeline.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer identifier to scope the timeline.")] = None,
         billing_item_id: Annotated[Optional[StrictStr], Field(description="Optional billing item identifier to scope the timeline.")] = None,
         _request_timeout: Union[
             None,
@@ -7169,7 +7197,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer identifier to scope the timeline.
-        :type customer_id: str
+        :type customer_id: UUID
         :param billing_item_id: Optional billing item identifier to scope the timeline.
         :type billing_item_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -7223,7 +7251,7 @@ class BillingApi:
     @validate_call
     def billing_settings_timeline_get_without_preload_content(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer identifier to scope the timeline.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer identifier to scope the timeline.")] = None,
         billing_item_id: Annotated[Optional[StrictStr], Field(description="Optional billing item identifier to scope the timeline.")] = None,
         _request_timeout: Union[
             None,
@@ -7242,7 +7270,7 @@ class BillingApi:
 
 
         :param customer_id: Optional customer identifier to scope the timeline.
-        :type customer_id: str
+        :type customer_id: UUID
         :param billing_item_id: Optional billing item identifier to scope the timeline.
         :type billing_item_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -7363,7 +7391,7 @@ class BillingApi:
     @validate_call
     def billing_summary_get(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="The id of the customer to get the billing summary for.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="The id of the customer to get the billing summary for.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7382,7 +7410,7 @@ class BillingApi:
         Defaults to the authenticated customer when no customerId is provided.
 
         :param customer_id: The id of the customer to get the billing summary for.
-        :type customer_id: str
+        :type customer_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7433,7 +7461,7 @@ class BillingApi:
     @validate_call
     def billing_summary_get_with_http_info(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="The id of the customer to get the billing summary for.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="The id of the customer to get the billing summary for.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7452,7 +7480,7 @@ class BillingApi:
         Defaults to the authenticated customer when no customerId is provided.
 
         :param customer_id: The id of the customer to get the billing summary for.
-        :type customer_id: str
+        :type customer_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7503,7 +7531,7 @@ class BillingApi:
     @validate_call
     def billing_summary_get_without_preload_content(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="The id of the customer to get the billing summary for.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="The id of the customer to get the billing summary for.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7522,7 +7550,7 @@ class BillingApi:
         Defaults to the authenticated customer when no customerId is provided.
 
         :param customer_id: The id of the customer to get the billing summary for.
-        :type customer_id: str
+        :type customer_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

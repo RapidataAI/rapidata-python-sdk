@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -450,7 +449,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -458,7 +464,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if owner_id is not None:
             _param_val = owner_id
@@ -466,7 +479,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_id[' + _k + ']', _v))
         if audience_id is not None:
             _param_val = audience_id
@@ -474,7 +494,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('audience_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('audience_id[' + _k + ']', _v))
         if job_definition_id is not None:
             _param_val = job_definition_id
@@ -482,7 +509,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('job_definition_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('job_definition_id[' + _k + ']', _v))
         if is_paused is not None:
             _param_val = is_paused
@@ -490,7 +524,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('is_paused[' + _k + ']', _item))
+                    else:
                         _query_params.append(('is_paused[' + _k + ']', _v))
         if is_public is not None:
             _param_val = is_public
@@ -498,7 +539,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('is_public[' + _k + ']', _item))
+                    else:
                         _query_params.append(('is_public[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -506,7 +554,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if next_run_at is not None:
             _param_val = next_run_at
@@ -514,7 +569,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('next_run_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('next_run_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -2839,7 +2901,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('status[' + _k + ']', _item))
+                    else:
                         _query_params.append(('status[' + _k + ']', _v))
         if trigger_source is not None:
             _param_val = trigger_source
@@ -2847,7 +2916,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('trigger_source[' + _k + ']', _item))
+                    else:
                         _query_params.append(('trigger_source[' + _k + ']', _v))
         if started_at is not None:
             _param_val = started_at
@@ -2855,7 +2931,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('started_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('started_at[' + _k + ']', _v))
         if completed_at is not None:
             _param_val = completed_at
@@ -2863,7 +2946,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('completed_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('completed_at[' + _k + ']', _v))
         if audience_job_id is not None:
             _param_val = audience_job_id
@@ -2871,7 +2961,14 @@ class SignalApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('audience_job_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('audience_job_id[' + _k + ']', _v))
         if logic is not None:
             

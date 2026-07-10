@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -33,7 +32,7 @@ class UpdateValidationRapidEndpointInput(LazyValidatedModel):
     truth: Optional[IValidationTruthModel] = Field(default=None, description="The truth for the validation rapid.")
     explanation: Optional[StrictStr] = Field(default=None, description="The optional explanation shown when users answer incorrectly.")
     context: Optional[StrictStr] = Field(default=None, description="An optional text context to show the user.")
-    context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
+    context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset to use as context to show the user.", alias="contextAsset")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability that a random answer is correct.", alias="randomCorrectProbability")
     sort_index: Optional[StrictInt] = Field(default=None, description="Controls the serving order of rapids within a target group.", alias="sortIndex")
     __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability", "sortIndex"]

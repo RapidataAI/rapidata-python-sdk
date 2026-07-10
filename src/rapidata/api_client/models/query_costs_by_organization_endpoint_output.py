@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,6 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
+from uuid import UUID
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,7 +28,7 @@ class QueryCostsByOrganizationEndpointOutput(LazyValidatedModel):
     """
     Billing cost data aggregated per organization.
     """ # noqa: E501
-    organization_owner_id: StrictStr = Field(description="The organization owner identifier.", alias="organizationOwnerId")
+    organization_owner_id: UUID = Field(description="The organization owner identifier.", alias="organizationOwnerId")
     organization_name: StrictStr = Field(description="The organization name.", alias="organizationName")
     gross_cost: Union[StrictFloat, StrictInt] = Field(description="The gross cost for this organization (before discount).", alias="grossCost")
     discount: Union[StrictFloat, StrictInt] = Field(description="The discount for this organization.")

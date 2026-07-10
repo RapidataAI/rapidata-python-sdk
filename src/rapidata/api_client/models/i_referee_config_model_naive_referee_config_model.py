@@ -11,14 +11,13 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,8 +28,8 @@ class IRefereeConfigModelNaiveRefereeConfigModel(LazyValidatedModel):
     IRefereeConfigModelNaiveRefereeConfigModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    guesses_required: StrictInt = Field(alias="guessesRequired")
-    __properties: ClassVar[List[str]] = ["_t", "guessesRequired"]
+    responses_required: Optional[StrictInt] = Field(default=None, alias="responsesRequired")
+    __properties: ClassVar[List[str]] = ["_t", "responsesRequired"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,7 +86,7 @@ class IRefereeConfigModelNaiveRefereeConfigModel(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "guessesRequired": obj.get("guessesRequired")
+            "responsesRequired": obj.get("responsesRequired")
         }
         try:
             _obj = cls.model_validate(_data)

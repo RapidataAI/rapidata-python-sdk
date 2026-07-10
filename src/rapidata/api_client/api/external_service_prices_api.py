@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -39,7 +38,7 @@ class ExternalServicePricesApi:
 
 
     @validate_call
-    def billing_external_service_prices_post_0(
+    def billing_external_service_prices_post(
         self,
         create_external_service_price_endpoint_input: Annotated[CreateExternalServicePriceEndpointInput, Field(description="The external-service price data.")],
         _request_timeout: Union[
@@ -82,7 +81,7 @@ class ExternalServicePricesApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_external_service_prices_post_0_serialize(
+        _param = self._billing_external_service_prices_post_serialize(
             create_external_service_price_endpoint_input=create_external_service_price_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -108,7 +107,7 @@ class ExternalServicePricesApi:
 
 
     @validate_call
-    def billing_external_service_prices_post_0_with_http_info(
+    def billing_external_service_prices_post_with_http_info(
         self,
         create_external_service_price_endpoint_input: Annotated[CreateExternalServicePriceEndpointInput, Field(description="The external-service price data.")],
         _request_timeout: Union[
@@ -151,7 +150,7 @@ class ExternalServicePricesApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_external_service_prices_post_0_serialize(
+        _param = self._billing_external_service_prices_post_serialize(
             create_external_service_price_endpoint_input=create_external_service_price_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -177,7 +176,7 @@ class ExternalServicePricesApi:
 
 
     @validate_call
-    def billing_external_service_prices_post_0_without_preload_content(
+    def billing_external_service_prices_post_without_preload_content(
         self,
         create_external_service_price_endpoint_input: Annotated[CreateExternalServicePriceEndpointInput, Field(description="The external-service price data.")],
         _request_timeout: Union[
@@ -220,7 +219,7 @@ class ExternalServicePricesApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_external_service_prices_post_0_serialize(
+        _param = self._billing_external_service_prices_post_serialize(
             create_external_service_price_endpoint_input=create_external_service_price_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -241,7 +240,7 @@ class ExternalServicePricesApi:
         return response_data.response
 
 
-    def _billing_external_service_prices_post_0_serialize(
+    def _billing_external_service_prices_post_serialize(
         self,
         create_external_service_price_endpoint_input,
         _request_auth,

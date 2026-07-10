@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from uuid import UUID
 from rapidata.api_client.models.billing_period_status import BillingPeriodStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -31,7 +31,7 @@ class QueryBillingPeriodsEndpointOutput(LazyValidatedModel):
     QueryBillingPeriodsEndpointOutput
     """ # noqa: E501
     id: StrictStr = Field(description="The billing period ID.")
-    owner_id: StrictStr = Field(description="The customer ID of the billing period owner.", alias="ownerId")
+    owner_id: UUID = Field(description="The customer ID of the billing period owner.", alias="ownerId")
     start_date: datetime = Field(description="The start date of the billing period.", alias="startDate")
     end_date: datetime = Field(description="The end date of the billing period.", alias="endDate")
     status: BillingPeriodStatus = Field(description="The status of the billing period.")

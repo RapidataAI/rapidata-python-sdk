@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from rapidata.api_client.models.sample_generation_status import SampleGenerationStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -40,7 +40,7 @@ class QuerySampleGenerationsByBenchmarkEndpointOutput(LazyValidatedModel):
     participant_id_filter: Optional[List[StrictStr]] = Field(default=None, alias="participantIdFilter")
     prompt_identifier_filter: Optional[List[StrictStr]] = Field(default=None, alias="promptIdentifierFilter")
     tags_filter: Optional[List[StrictStr]] = Field(default=None, alias="tagsFilter")
-    owner_id: StrictStr = Field(description="The id of the customer that started this generation.", alias="ownerId")
+    owner_id: UUID = Field(description="The id of the customer that started this generation.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer that started this generation.", alias="ownerMail")
     created_at: datetime = Field(description="When the generation was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "benchmarkId", "status", "samplesPerPrompt", "totalCount", "completedCount", "failedCount", "participantIdFilter", "promptIdentifierFilter", "tagsFilter", "ownerId", "ownerMail", "createdAt"]

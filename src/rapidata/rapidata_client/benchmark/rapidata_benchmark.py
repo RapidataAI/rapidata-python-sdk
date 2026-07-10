@@ -11,6 +11,9 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
     BenchmarkPrompt,
     BenchmarkPromptUploader,
 )
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+    AudienceAudienceIdJobsGetJobIdParameter,
+)
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -728,10 +731,15 @@ class RapidataBenchmark:
         import pandas as pd
 
         with tracer.start_as_current_span("get_overall_standings"):
-            participants = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_get(
+            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
+            tags_filter.var_in = tags
+            leaderboard_filter = AudienceAudienceIdJobsGetJobIdParameter()
+            leaderboard_filter.var_in = leaderboard_ids
+
+            participants = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_query_get(
                 benchmark_id=self.id,
-                tags=tags,
-                leaderboard_ids=leaderboard_ids,
+                tags=tags_filter,
+                leaderboard_id=leaderboard_filter,
             )
 
             standings = []
@@ -777,11 +785,18 @@ class RapidataBenchmark:
         import pandas as pd
 
         with tracer.start_as_current_span("get_win_loss_matrix"):
-            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_matrix_get(
+            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
+            tags_filter.var_in = tags
+            participant_filter = AudienceAudienceIdJobsGetJobIdParameter()
+            participant_filter.var_in = participant_ids
+            leaderboard_filter = AudienceAudienceIdJobsGetJobIdParameter()
+            leaderboard_filter.var_in = leaderboard_ids
+
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_matrix_query_get(
                 benchmark_id=self.id,
-                tags=tags,
-                participant_ids=participant_ids,
-                leaderboard_ids=leaderboard_ids,
+                tags=tags_filter,
+                participant_id=participant_filter,
+                leaderboard_id=leaderboard_filter,
                 use_weighted_scoring=use_weighted_scoring,
             )
 

@@ -912,7 +912,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -958,7 +961,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1004,7 +1010,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1137,7 +1146,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1183,7 +1195,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1229,7 +1244,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1275,7 +1293,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1321,7 +1342,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1367,7 +1391,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1508,7 +1535,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1554,7 +1584,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1600,7 +1633,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1737,7 +1773,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1783,7 +1822,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1829,7 +1871,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1875,7 +1920,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1921,7 +1969,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1967,7 +2018,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2013,7 +2067,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2145,7 +2202,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2191,7 +2251,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2237,7 +2300,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2283,7 +2349,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2329,7 +2398,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2375,7 +2447,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3196,14 +3271,13 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "oneOf": [
-                  {
-                    "nullable": true
-                  },
                   {
                     "$ref": "#/components/schemas/PreviewOrderEndpoint_Input"
                   }
-                ]
+                ],
+                "nullable": true
               }
             }
           }
@@ -3315,7 +3389,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3361,7 +3438,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3407,7 +3487,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3541,7 +3624,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3587,7 +3673,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3633,7 +3722,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3679,7 +3771,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3725,7 +3820,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -3929,14 +4027,13 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "oneOf": [
-                  {
-                    "nullable": true
-                  },
                   {
                     "$ref": "#/components/schemas/SubmitOrderEndpoint_Input"
                   }
-                ]
+                ],
+                "nullable": true
               }
             }
           }
@@ -4413,15 +4510,14 @@
             "description": "The campaign-level (session-wide) feature flags for this revision.\n If not provided, inherits from the previous revision."
           },
           "aggregatorType": {
+            "type": "string",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AggregatorType"
-              },
-              {
-                "nullable": true
               }
             ],
-            "description": "The aggregator type. If not provided, inherits from the previous revision."
+            "description": "The aggregator type. If not provided, inherits from the previous revision.",
+            "nullable": true
           },
           "validationSetId": {
             "type": "string",
@@ -5188,14 +5284,13 @@
             "type": "string"
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -5222,14 +5317,13 @@
             }
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -5253,14 +5347,13 @@
             "type": "string"
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -5424,14 +5517,13 @@
             "deprecated": true
           },
           "rankingConfig": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IRankingConfigModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "contexts": {
             "type": "object",
