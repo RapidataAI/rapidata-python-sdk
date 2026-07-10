@@ -31,7 +31,7 @@ class NaiveReferee(Referee):
     def _to_dict(self):
         return {
             "_t": "NaiveRefereeConfig",
-            "guessesRequired": self.responses,
+            "responsesRequired": self.responses,
         }
 
     def _to_model(self) -> IRefereeModel:
