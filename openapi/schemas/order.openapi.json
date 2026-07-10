@@ -4393,6 +4393,28 @@
         },
         "description": "The result when a job definition has been created."
       },
+      "CreateJobEndpoint_CostWarningModel": {
+        "required": [
+          "estimatedCost",
+          "availableBalance",
+          "shortfall"
+        ],
+        "type": "object",
+        "properties": {
+          "estimatedCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "availableBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "shortfall": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "CreateJobEndpoint_Input": {
         "required": [
           "jobDefinitionId",
@@ -4450,6 +4472,14 @@
           "recruitingStarted": {
             "type": "boolean",
             "description": "Whether recruiting was automatically started for the audience."
+          },
+          "costWarning": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateJobEndpoint_CostWarningModel"
+              }
+            ],
+            "description": "Present only when the job's estimated cost exceeds the owner's remaining balance.\n Advisory — the job is created and runs regardless; it may pause for funds mid-run."
           }
         },
         "description": "The result when a job has been created."
@@ -4925,6 +4955,14 @@
             "type": "string",
             "description": "The failure message.",
             "nullable": true
+          },
+          "reviewReason": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewReasonModel"
+              }
+            ],
+            "description": "Why the job was routed to manual review, when it is (or was) in\n ManualApproval. Null when no customer-facing reason\n applies."
           },
           "createdAt": {
             "type": "string",
@@ -7524,6 +7562,15 @@
           "Random",
           "Shuffled",
           "Sequential"
+        ]
+      },
+      "ReviewReasonModel": {
+        "enum": [
+          "ContentFlagged",
+          "UnsupportedContentType",
+          "CheckErrored",
+          "ClassificationTimedOut",
+          null
         ]
       },
       "StickyConfig": {

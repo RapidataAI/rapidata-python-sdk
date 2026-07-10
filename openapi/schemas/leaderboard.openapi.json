@@ -6451,118 +6451,6 @@
         "deprecated": true
       }
     },
-    "/leaderboard/{leaderboardId}/participant/{participantId}": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Gets a participant by its id.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard the participant belongs to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to retrieve.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdObsoleteEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/benchmark/standing/{leaderboardId}/{participantId}": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Gets a standing by leaderboard id and participant id.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard the standing belongs to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant whose standing should be retrieved.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetStandingByIdEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
     "/leaderboard/combined-matrix/query": {
       "get": {
         "tags": [
@@ -12752,42 +12640,6 @@
           }
         }
       },
-      "GetParticipantByIdObsoleteEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "benchmarkId",
-          "status",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the standing."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          },
-          "benchmarkId": {
-            "type": "string",
-            "description": "The id of the benchmark this standing belongs to."
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StandingStatus"
-              }
-            ],
-            "description": "The status of the standing."
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "description": "Whether the participant is disabled."
-          }
-        }
-      },
       "GetPromptsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
@@ -13718,42 +13570,6 @@
           "totalPages": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "GetStandingByIdEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "benchmarkId",
-          "status",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the standing."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          },
-          "benchmarkId": {
-            "type": "string",
-            "description": "The id of the benchmark this standing belongs to."
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StandingStatus"
-              }
-            ],
-            "description": "The status of the standing."
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "description": "Whether the participant is disabled."
           }
         }
       },

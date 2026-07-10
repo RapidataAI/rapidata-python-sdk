@@ -16,22 +16,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.create_job_endpoint_cost_warning_model import CreateJobEndpointCostWarningModel
+from uuid import UUID
+from rapidata.api_client.models.membership_status import MembershipStatus
+from rapidata.api_client.models.org_role import OrgRole
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateJobEndpointOutput(LazyValidatedModel):
+class ListOrgMembersEndpointOutputMember(LazyValidatedModel):
     """
-    The result when a job has been created.
+    ListOrgMembersEndpointOutputMember
     """ # noqa: E501
-    job_id: StrictStr = Field(description="The id of the created job.", alias="jobId")
-    recruiting_started: StrictBool = Field(description="Whether recruiting was automatically started for the audience.", alias="recruitingStarted")
-    cost_warning: Optional[CreateJobEndpointCostWarningModel] = Field(default=None, description="Present only when the job's estimated cost exceeds the owner's remaining balance.  Advisory — the job is created and runs regardless; it may pause for funds mid-run.", alias="costWarning")
-    __properties: ClassVar[List[str]] = ["jobId", "recruitingStarted", "costWarning"]
+    customer_id: UUID = Field(alias="customerId")
+    email: Optional[StrictStr]
+    role: OrgRole
+    status: MembershipStatus
+    __properties: ClassVar[List[str]] = ["customerId", "email", "role", "status"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +50,7 @@ class CreateJobEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointOutput from a JSON string"""
+        """Create an instance of ListOrgMembersEndpointOutputMember from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,14 +71,16 @@ class CreateJobEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of cost_warning
-        if self.cost_warning:
-            _dict['costWarning'] = self.cost_warning.to_dict()
+        # set to None if email (nullable) is None
+        # and model_fields_set contains the field
+        if self.email is None and "email" in self.model_fields_set:
+            _dict['email'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointOutput from a dict"""
+        """Create an instance of ListOrgMembersEndpointOutputMember from a dict"""
         if obj is None:
             return None
 
@@ -83,9 +88,10 @@ class CreateJobEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "jobId": obj.get("jobId"),
-            "recruitingStarted": obj.get("recruitingStarted"),
-            "costWarning": CreateJobEndpointCostWarningModel.from_dict(obj["costWarning"]) if obj.get("costWarning") is not None else None
+            "customerId": obj.get("customerId"),
+            "email": obj.get("email"),
+            "role": obj.get("role"),
+            "status": obj.get("status")
         }
         try:
             _obj = cls.model_validate(_data)

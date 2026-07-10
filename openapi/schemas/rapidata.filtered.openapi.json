@@ -7631,20 +7631,31 @@
         ]
       }
     },
-    "/organizations/mine": {
-      "get": {
+    "/organizations/accept-invitation": {
+      "post": {
         "tags": [
           "Organization"
         ],
-        "summary": "Returns the organization resolved from the calling customer's email domain.",
-        "description": "Responds with 404 when the caller's email domain does not match a registered organization.",
+        "summary": "Accepts the invitation identified by the token.",
+        "description": "Responds with 409 when the invitation is expired, already used, or was issued to a different\n email than the calling customer's.",
+        "requestBody": {
+          "description": "The invitation token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptOrgInvitationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetMyOrganizationEndpoint_Output"
+                  "$ref": "#/components/schemas/AcceptOrgInvitationEndpoint_Output"
                 }
               }
             }
@@ -7679,6 +7690,62 @@
       }
     },
     "/organizations": {
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Creates an organization and makes the calling customer its owner.",
+        "description": "The calling customer becomes both the owner and the billing customer. Responds with 400 when\n the slug is already taken.",
+        "requestBody": {
+          "description": "The organization to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrganizationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
       "get": {
         "tags": [
           "Organization"
@@ -7891,6 +7958,297 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/mine": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns the organization resolved from the calling customer's email domain.",
+        "description": "Responds with 404 when the caller's email domain does not match a registered organization.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMyOrganizationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns the organization with the given id.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrganizationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}/invitations": {
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Creates an invitation to join the organization.",
+        "description": "Returns a single-use token the invitee presents to the accept-invitation endpoint.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to invite into.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The invitee email and role.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteOrgMemberEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteOrgMemberEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}/members": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns the members of the given organization.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization whose members to list.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOrgMembersEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}/members/{customerId}": {
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Removes the given customer's membership from the organization.",
+        "description": "Responds with 404 when the customer is not a member and 409 when removing the organization's\n last owner.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer to remove.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -13540,138 +13898,6 @@
     "/leaderboard/combined-matrix": {},
     "/leaderboard/combined-standings": {},
     "/leaderboard/{leaderboardId}/matrix": {},
-    "/leaderboard/{leaderboardId}/participant/{participantId}": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Gets a participant by its id.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard the participant belongs to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to retrieve.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdObsoleteEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access"
-            ]
-          }
-        ]
-      }
-    },
-    "/benchmark/standing/{leaderboardId}/{participantId}": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Gets a standing by leaderboard id and participant id.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard the standing belongs to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant whose standing should be retrieved.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetStandingByIdEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access"
-            ]
-          }
-        ]
-      }
-    },
     "/leaderboard/combined-matrix/query": {
       "get": {
         "tags": [
@@ -28114,6 +28340,57 @@
         ]
       }
     },
+    "/rapid/compare-ab-summary/{correlationId}/recalculate": {
+      "post": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Recalculates the compare AB summary counters of a correlation from scratch.",
+        "description": "Admin-only verification/repair tool. The counters are normally maintained by rapid\n completion and rejection events; this overwrites them with freshly aggregated values.",
+        "parameters": [
+          {
+            "name": "correlationId",
+            "in": "path",
+            "description": "The correlation (workflow) id to recalculate.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/rapid/{rapidId}/reject": {
       "post": {
         "tags": [
@@ -39379,6 +39656,35 @@
           }
         }
       },
+      "AcceptOrgInvitationEndpoint_Input": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The single-use invitation token."
+          }
+        }
+      },
+      "AcceptOrgInvitationEndpoint_Output": {
+        "required": [
+          "organizationId",
+          "membershipId"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The organization the customer joined."
+          },
+          "membershipId": {
+            "type": "string",
+            "description": "The id of the created membership."
+          }
+        }
+      },
       "ClientModel": {
         "required": [
           "client_id",
@@ -39544,6 +39850,40 @@
           }
         }
       },
+      "CreateOrganizationEndpoint_Input": {
+        "required": [
+          "name",
+          "slug"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the organization."
+          },
+          "slug": {
+            "type": "string",
+            "description": "A URL-safe unique identifier for the organization."
+          },
+          "primaryDomain": {
+            "type": "string",
+            "description": "The primary email domain associated with the organization, if any.",
+            "nullable": true
+          }
+        }
+      },
+      "CreateOrganizationEndpoint_Output": {
+        "required": [
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the created organization."
+          }
+        }
+      },
       "DynamicClientRegistrationRequest": {
         "type": "object",
         "properties": {
@@ -39642,6 +39982,40 @@
           }
         }
       },
+      "GetOrganizationEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "billingCustomerId",
+          "primaryDomain"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the organization."
+          },
+          "name": {
+            "type": "string",
+            "description": "The human-readable name of the organization."
+          },
+          "slug": {
+            "type": "string",
+            "description": "The URL-safe unique identifier of the organization."
+          },
+          "billingCustomerId": {
+            "type": "string",
+            "description": "The customer that owns billing for the organization.",
+            "format": "uuid"
+          },
+          "primaryDomain": {
+            "type": "string",
+            "description": "The primary email domain associated with the organization, if any.",
+            "nullable": true
+          }
+        }
+      },
       "GoogleOneTapLoginEndpoint_Input": {
         "required": [
           "idToken"
@@ -39668,6 +40042,50 @@
             "type": "string",
             "description": "The email of the signed-in user, if available.",
             "nullable": true
+          }
+        }
+      },
+      "InviteOrgMemberEndpoint_Input": {
+        "required": [
+          "email",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email address to invite."
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrgRole"
+              }
+            ],
+            "description": "The org-scoped role the resulting membership will confer."
+          }
+        }
+      },
+      "InviteOrgMemberEndpoint_Output": {
+        "required": [
+          "invitationId",
+          "token",
+          "expiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "invitationId": {
+            "type": "string",
+            "description": "The id of the created invitation."
+          },
+          "token": {
+            "type": "string",
+            "description": "The single-use token used to accept the invitation."
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "The instant after which the invitation can no longer be accepted.",
+            "format": "date-time"
           }
         }
       },
@@ -39792,6 +40210,64 @@
             "nullable": true
           }
         }
+      },
+      "ListOrgMembersEndpoint_Output": {
+        "required": [
+          "members"
+        ],
+        "type": "object",
+        "properties": {
+          "members": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ListOrgMembersEndpoint_Output_Member"
+                }
+              }
+            ],
+            "description": "The members of the organization."
+          }
+        }
+      },
+      "ListOrgMembersEndpoint_Output_Member": {
+        "required": [
+          "customerId",
+          "email",
+          "role",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "$ref": "#/components/schemas/OrgRole"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MembershipStatus"
+          }
+        }
+      },
+      "MembershipStatus": {
+        "enum": [
+          "Active",
+          "Suspended"
+        ]
+      },
+      "OrgRole": {
+        "enum": [
+          "Owner",
+          "Admin",
+          "Editor",
+          "Viewer"
+        ]
       },
       "QueryClientsEndpoint_Output": {
         "required": [
@@ -41125,42 +41601,6 @@
           }
         }
       },
-      "GetParticipantByIdObsoleteEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "benchmarkId",
-          "status",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the standing."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          },
-          "benchmarkId": {
-            "type": "string",
-            "description": "The id of the benchmark this standing belongs to."
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StandingStatus"
-              }
-            ],
-            "description": "The status of the standing."
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "description": "Whether the participant is disabled."
-          }
-        }
-      },
       "GetPromptsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
@@ -42056,42 +42496,6 @@
           "totalPages": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "GetStandingByIdEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "benchmarkId",
-          "status",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the standing."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          },
-          "benchmarkId": {
-            "type": "string",
-            "description": "The id of the benchmark this standing belongs to."
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StandingStatus"
-              }
-            ],
-            "description": "The status of the standing."
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "description": "Whether the participant is disabled."
           }
         }
       },
@@ -44489,6 +44893,28 @@
         },
         "description": "The result when a job definition has been created."
       },
+      "CreateJobEndpoint_CostWarningModel": {
+        "required": [
+          "estimatedCost",
+          "availableBalance",
+          "shortfall"
+        ],
+        "type": "object",
+        "properties": {
+          "estimatedCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "availableBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "shortfall": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "CreateJobEndpoint_Input": {
         "required": [
           "jobDefinitionId",
@@ -44546,6 +44972,14 @@
           "recruitingStarted": {
             "type": "boolean",
             "description": "Whether recruiting was automatically started for the audience."
+          },
+          "costWarning": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateJobEndpoint_CostWarningModel"
+              }
+            ],
+            "description": "Present only when the job's estimated cost exceeds the owner's remaining balance.\n Advisory — the job is created and runs regardless; it may pause for funds mid-run."
           }
         },
         "description": "The result when a job has been created."
@@ -44956,6 +45390,14 @@
             "type": "string",
             "description": "The failure message.",
             "nullable": true
+          },
+          "reviewReason": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewReasonModel"
+              }
+            ],
+            "description": "Why the job was routed to manual review, when it is (or was) in\n ManualApproval. Null when no customer-facing reason\n applies."
           },
           "createdAt": {
             "type": "string",
@@ -47349,6 +47791,15 @@
             "format": "int32"
           }
         }
+      },
+      "ReviewReasonModel": {
+        "enum": [
+          "ContentFlagged",
+          "UnsupportedContentType",
+          "CheckErrored",
+          "ClassificationTimedOut",
+          null
+        ]
       },
       "StickyConfig": {
         "required": [
