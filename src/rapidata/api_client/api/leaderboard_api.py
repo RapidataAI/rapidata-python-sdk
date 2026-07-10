@@ -932,7 +932,6 @@ class LeaderboardApi:
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -965,8 +964,6 @@ class LeaderboardApi:
         :type leaderboard_ids: List[str]
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include confidence intervals in results.
-        :type include_confidence_intervals: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -1014,7 +1011,6 @@ class LeaderboardApi:
         _param = self._leaderboard_combined_standings_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
-            include_confidence_intervals=include_confidence_intervals,
             country=country,
             language=language,
             gender=gender,
@@ -1054,7 +1050,6 @@ class LeaderboardApi:
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -1087,8 +1082,6 @@ class LeaderboardApi:
         :type leaderboard_ids: List[str]
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include confidence intervals in results.
-        :type include_confidence_intervals: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -1136,7 +1129,6 @@ class LeaderboardApi:
         _param = self._leaderboard_combined_standings_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
-            include_confidence_intervals=include_confidence_intervals,
             country=country,
             language=language,
             gender=gender,
@@ -1176,7 +1168,6 @@ class LeaderboardApi:
         self,
         leaderboard_ids: Annotated[List[StrictStr], Field(description="The identifiers of the leaderboards to combine.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -1209,8 +1200,6 @@ class LeaderboardApi:
         :type leaderboard_ids: List[str]
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include confidence intervals in results.
-        :type include_confidence_intervals: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -1258,7 +1247,6 @@ class LeaderboardApi:
         _param = self._leaderboard_combined_standings_query_get_serialize(
             leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
-            include_confidence_intervals=include_confidence_intervals,
             country=country,
             language=language,
             gender=gender,
@@ -1293,7 +1281,6 @@ class LeaderboardApi:
         self,
         leaderboard_ids,
         use_weighted_scoring,
-        include_confidence_intervals,
         country,
         language,
         gender,
@@ -1335,10 +1322,6 @@ class LeaderboardApi:
         if use_weighted_scoring is not None:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
-            
-        if include_confidence_intervals is not None:
-            
-            _query_params.append(('includeConfidenceIntervals', include_confidence_intervals))
             
         if country is not None:
             _param_val = country
@@ -5731,7 +5714,6 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -5764,8 +5746,6 @@ class LeaderboardApi:
         :type leaderboard_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include confidence intervals in results.
-        :type include_confidence_intervals: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -5813,7 +5793,6 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
             use_weighted_scoring=use_weighted_scoring,
-            include_confidence_intervals=include_confidence_intervals,
             country=country,
             language=language,
             gender=gender,
@@ -5853,7 +5832,6 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -5886,8 +5864,6 @@ class LeaderboardApi:
         :type leaderboard_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include confidence intervals in results.
-        :type include_confidence_intervals: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -5935,7 +5911,6 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
             use_weighted_scoring=use_weighted_scoring,
-            include_confidence_intervals=include_confidence_intervals,
             country=country,
             language=language,
             gender=gender,
@@ -5975,7 +5950,6 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include confidence intervals in results.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -6008,8 +5982,6 @@ class LeaderboardApi:
         :type leaderboard_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals: Whether to include confidence intervals in results.
-        :type include_confidence_intervals: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -6057,7 +6029,6 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
             use_weighted_scoring=use_weighted_scoring,
-            include_confidence_intervals=include_confidence_intervals,
             country=country,
             language=language,
             gender=gender,
@@ -6092,7 +6063,6 @@ class LeaderboardApi:
         self,
         leaderboard_id,
         use_weighted_scoring,
-        include_confidence_intervals,
         country,
         language,
         gender,
@@ -6131,10 +6101,6 @@ class LeaderboardApi:
         if use_weighted_scoring is not None:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
-            
-        if include_confidence_intervals is not None:
-            
-            _query_params.append(('includeConfidenceIntervals', include_confidence_intervals))
             
         if country is not None:
             _param_val = country
