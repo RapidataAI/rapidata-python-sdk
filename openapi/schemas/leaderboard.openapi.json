@@ -1081,15 +1081,6 @@
               "type": "boolean",
               "default": false
             }
-          },
-          {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
           }
         ],
         "responses": {
@@ -1516,15 +1507,6 @@
             "name": "useWeightedScoring",
             "in": "query",
             "description": "Whether to apply weighted scoring based on user scores.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
             "schema": {
               "type": "boolean",
               "default": false
@@ -2738,15 +2720,6 @@
             "name": "useWeightedScoring",
             "in": "query",
             "description": "Whether to apply weighted scoring based on user scores.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
             "schema": {
               "type": "boolean",
               "default": false
@@ -4730,15 +4703,6 @@
             }
           },
           {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
             "name": "country",
             "in": "query",
             "description": "Filter by country.",
@@ -6128,15 +6092,6 @@
               "type": "boolean",
               "default": false
             }
-          },
-          {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
           }
         ],
         "responses": {
@@ -7194,15 +7149,6 @@
             "name": "useWeightedScoring",
             "in": "query",
             "description": "Whether to apply weighted scoring based on user scores.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
             "schema": {
               "type": "boolean",
               "default": false
@@ -8953,15 +8899,6 @@
             }
           },
           {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
             "name": "country",
             "in": "query",
             "description": "Filter by country.",
@@ -9525,15 +9462,6 @@
             "name": "useWeightedScoring",
             "in": "query",
             "description": "Whether to use weighted scoring based on user scores.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "includeConfidenceIntervals",
-            "in": "query",
-            "description": "Whether to include confidence intervals in results.",
             "schema": {
               "type": "boolean",
               "default": false
