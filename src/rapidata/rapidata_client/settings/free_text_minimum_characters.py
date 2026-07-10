@@ -4,7 +4,11 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 from rapidata.rapidata_client.config import managed_print
 
 
@@ -12,9 +16,13 @@ class FreeTextMinimumCharactersSetting(RapidataSetting):
     """
     Set the minimum number of characters a user has to type.
 
+    Supported task types: Free Text.
+
     Args:
         value (int): The minimum number of characters for free text.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Free Text",)
 
     def __init__(self, value: int):
         if value < 1:

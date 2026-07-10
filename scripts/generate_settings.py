@@ -5,6 +5,7 @@ Usage:
     uv run python scripts/generate_settings.py <path-to-settings.json>          # Generate all files
     uv run python scripts/generate_settings.py <path-to-settings.json> --check  # Verify files are up-to-date
 """
+
 from __future__ import annotations
 
 import json
@@ -26,6 +27,40 @@ HANDWRITTEN_FILES = {
     "_rapidata_setting.py",
     "custom_setting.py",
 }
+
+# The support matrix (which task types honor each setting) is NOT defined here.
+# It is the source of truth in rapids-frontend's settings.ts and ships in
+# settings.json per setting as a `supported_rapid_types` field (rapids-frontend
+# `type` names, or "all"/omitted for global). We only translate those native
+# names into the SDK public task-type names below.
+#
+# Keep this map in sync with the RapidType union in rapids-frontend.
+RAPID_TYPE_TO_SDK_TASK_TYPE: dict[str, str] = {
+    "Classify": "Classification",
+    "Compare": "Compare",
+    "FreeText": "Free Text",
+    "Locate": "Locate",
+    "Line": "Draw",
+    "Transcription": "Select Words",
+    "Scrub": "Timestamp",
+}
+
+
+def supported_rapid_types_for(s: dict[str, Any]) -> tuple[str, ...] | str:
+    """Return the setting's supported task types as SDK public names, or "all".
+
+    Reads the ``supported_rapid_types`` field baked into settings.json by
+    rapids-frontend. A missing field (older settings.json) defaults to "all".
+    """
+    raw = s.get("supported_rapid_types", "all")
+    if raw == "all" or not isinstance(raw, list):
+        return "all"
+    mapped: list[str] = []
+    for name in raw:
+        sdk_name = RAPID_TYPE_TO_SDK_TASK_TYPE.get(name, name)
+        if sdk_name not in mapped:
+            mapped.append(sdk_name)
+    return tuple(mapped) if mapped else "all"
 
 
 def class_name_to_file_name(class_name: str) -> str:
@@ -57,15 +92,24 @@ def generate_setting_module(s: dict[str, Any]) -> str:
     lines.append("from __future__ import annotations\n")
 
     has_warnings = s.get("warnings") is not None
+    supported = supported_rapid_types_for(s)
+    has_supported = supported != "all"
 
-    lines.append(
-        "from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting"
-    )
+    if has_supported:
+        lines.append("from typing import ClassVar")
+        lines.append(
+            "from rapidata.rapidata_client.settings._rapidata_setting import (\n"
+            "    RapidataSetting,\n"
+            "    SupportedRapidTypes,\n"
+            ")"
+        )
+    else:
+        lines.append(
+            "from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting"
+        )
 
     if has_warnings:
-        lines.append(
-            "from rapidata.rapidata_client.config import managed_print"
-        )
+        lines.append("from rapidata.rapidata_client.config import managed_print")
 
     lines.append("")
     lines.append("")
@@ -86,6 +130,9 @@ def generate_setting_module(s: dict[str, Any]) -> str:
         else:
             lines.append("")
     lines.append("")
+    supported_str = "all" if supported == "all" else ", ".join(supported)
+    lines.append(f"    Supported task types: {supported_str}.")
+    lines.append("")
     lines.append("    Args:")
 
     # Build type annotation string for docstring
@@ -95,12 +142,22 @@ def generate_setting_module(s: dict[str, Any]) -> str:
             f"        {param_name} ({type_str}, optional): {param_description}"
         )
     else:
-        lines.append(
-            f"        {param_name} ({type_str}): {param_description}"
-        )
+        lines.append(f"        {param_name} ({type_str}): {param_description}")
 
     lines.append('    """')
     lines.append("")
+
+    # Machine-readable support matrix (metadata only; not serialized).
+    if has_supported:
+        # Match black's tuple formatting so regeneration stays idempotent.
+        if len(supported) == 1:
+            tuple_repr = f'("{supported[0]}",)'
+        else:
+            tuple_repr = "(" + ", ".join(f'"{t}"' for t in supported) + ")"
+        lines.append(
+            f"    supported_rapid_types: ClassVar[SupportedRapidTypes] = {tuple_repr}"
+        )
+        lines.append("")
 
     # __init__ signature
     if default is not None:
@@ -117,9 +174,7 @@ def generate_setting_module(s: dict[str, Any]) -> str:
     # Validation
     if value_type == "bool":
         lines.append(f"        if not isinstance({param_name}, bool):")
-        lines.append(
-            f'            raise ValueError("The value must be a boolean.")'
-        )
+        lines.append(f'            raise ValueError("The value must be a boolean.")')
 
     validation = s.get("validation")
     if validation:
@@ -164,14 +219,10 @@ def generate_setting_module(s: dict[str, Any]) -> str:
 
     # super().__init__
     if validation or warnings_def:
-        lines.append(
-            f'        super().__init__(key="{s["key"]}", value={param_name})'
-        )
+        lines.append(f'        super().__init__(key="{s["key"]}", value={param_name})')
     else:
         lines.append("")
-        lines.append(
-            f'        super().__init__(key="{s["key"]}", value={param_name})'
-        )
+        lines.append(f'        super().__init__(key="{s["key"]}", value={param_name})')
 
     lines.append("")
     return "\n".join(lines)
@@ -203,15 +254,15 @@ def generate_rapidata_settings(settings: list[dict[str, Any]]) -> str:
     for s in settings:
         file_name = s["file_name"]
         class_name = s["class_name"]
-        lines.append(f"from rapidata.rapidata_client.settings.{file_name} import {class_name}")
+        lines.append(
+            f"from rapidata.rapidata_client.settings.{file_name} import {class_name}"
+        )
 
     lines.append("")
     lines.append("")
     lines.append("class RapidataSettings:")
     lines.append('    """')
-    lines.append(
-        "    Container class for all setting factory functions"
-    )
+    lines.append("    Container class for all setting factory functions")
     lines.append("")
     lines.append(
         "    Settings can be added to an order to determine the behaviour of the task."
@@ -223,9 +274,7 @@ def generate_rapidata_settings(settings: list[dict[str, Any]]) -> str:
         container_name = s["container_name"]
         class_name = s["class_name"]
         short_desc = s["description"].split("\n")[0]
-        lines.append(
-            f"        {container_name} ({class_name}): {short_desc}"
-        )
+        lines.append(f"        {container_name} ({class_name}): {short_desc}")
 
     lines.append("")
     lines.append("    Example:")
@@ -279,8 +328,12 @@ def generate_types_imports_block(settings: list[dict[str, Any]]) -> str:
         lines.append(
             f"from rapidata.rapidata_client.settings.{s['file_name']} import {s['class_name']}"
         )
-    lines.append("from rapidata.rapidata_client.settings.custom_setting import CustomSetting")
-    lines.append("from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings")
+    lines.append(
+        "from rapidata.rapidata_client.settings.custom_setting import CustomSetting"
+    )
+    lines.append(
+        "from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings"
+    )
     return "\n".join(lines)
 
 
@@ -296,7 +349,11 @@ def generate_types_all_block(settings: list[dict[str, Any]]) -> str:
 
 
 def replace_between_markers(
-    file_path: Path, start_marker: str, end_marker: str, new_content: str, check_mode: bool
+    file_path: Path,
+    start_marker: str,
+    end_marker: str,
+    new_content: str,
+    check_mode: bool,
 ) -> bool:
     """Replace content between marker comments. Returns True if changed."""
     text = file_path.read_text(encoding="utf-8")
@@ -417,7 +474,9 @@ def main():
     # types/__init__.py — imports section
     types_init = REPO_ROOT / "src" / "rapidata" / "types" / "__init__.py"
     block = generate_types_imports_block(settings)
-    if replace_between_markers(types_init, IMPORTS_START, IMPORTS_END, block, check_mode):
+    if replace_between_markers(
+        types_init, IMPORTS_START, IMPORTS_END, block, check_mode
+    ):
         changed_files.append(str(types_init.relative_to(REPO_ROOT)))
     else:
         unchanged_files.append(str(types_init.relative_to(REPO_ROOT)))

@@ -19,6 +19,7 @@ from rapidata.api_client.models.rapid_modality import RapidModality
 
 class DrawWorkflow(Workflow):
     modality = RapidModality.LINE
+    task_type = "Draw"
 
     def __init__(self, target: str):
         super().__init__(type="SimpleWorkflowConfig")

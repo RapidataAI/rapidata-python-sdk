@@ -1,12 +1,20 @@
 from __future__ import annotations
 from pydantic import BaseModel
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Any, ClassVar, Literal, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.feature_flag import FeatureFlag
 
 
 FeatureFlagTarget = Literal["rapids", "campaign"]
+
+# Which task types honor a given setting. ``"all"`` means every task type.
+# This is metadata only and is NOT serialized into the FeatureFlag sent to the
+# API. The per-setting values are generated (see scripts/generate_settings.py)
+# from the source-of-truth `supported_rapid_types` in rapids-frontend's
+# settings.ts (via settings.json), translated into the SDK public task-type
+# names (e.g. "Compare", "Free Text").
+SupportedRapidTypes = tuple[str, ...] | Literal["all"]
 
 
 class RapidataSetting(BaseModel):
@@ -24,6 +32,10 @@ class RapidataSetting(BaseModel):
     key: str
     value: Any
     target: FeatureFlagTarget = "rapids"
+
+    # Task types that honor this setting; ``"all"`` == every task type.
+    # Subclasses narrow this (see ``SupportedRapidTypes``). Metadata only.
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = "all"
 
     def _to_feature_flag(self) -> FeatureFlag:
         from rapidata.api_client.models.feature_flag import FeatureFlag

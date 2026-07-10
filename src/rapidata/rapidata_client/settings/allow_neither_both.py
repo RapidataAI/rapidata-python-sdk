@@ -4,7 +4,11 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 
 
 class AllowNeitherBothSetting(RapidataSetting):
@@ -13,9 +17,13 @@ class AllowNeitherBothSetting(RapidataSetting):
 
     The delay controls how many milliseconds before the unsure button appears.
 
+    Supported task types: Compare.
+
     Args:
         delay_ms (int, optional): Delay in milliseconds before the unsure button appears. Defaults to 5000.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Compare",)
 
     def __init__(self, delay_ms: int = 5000):
         if delay_ms < 0:

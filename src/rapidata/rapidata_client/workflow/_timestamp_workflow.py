@@ -32,6 +32,7 @@ class TimestampWorkflow(Workflow):
     """
 
     modality = RapidModality.SCRUB
+    task_type = "Timestamp"
 
     def __init__(self, instruction: str):
         super().__init__(type="SimpleWorkflowConfig")

@@ -15,6 +15,8 @@ class SwapContextInstructionSetting(RapidataSetting):
 
     By default, the context will be shown on top and the instruction below.
 
+    Supported task types: all.
+
     Args:
         value (bool, optional): Whether to swap the place of the context and instruction.
     """

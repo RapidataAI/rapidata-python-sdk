@@ -4,7 +4,11 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 
 
 class NoShuffleSetting(RapidataSetting):
@@ -13,9 +17,13 @@ class NoShuffleSetting(RapidataSetting):
 
     If this is not added to the order, the shuffling will be active.
 
+    Supported task types: Classification, Compare.
+
     Args:
         value (bool, optional): Whether to disable shuffling. Defaults to True for function call.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Classification", "Compare")
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):

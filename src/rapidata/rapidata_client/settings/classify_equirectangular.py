@@ -4,16 +4,24 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 
 
 class ClassifyEquirectangularSetting(RapidataSetting):
     """
     Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
 
+    Supported task types: Classification.
+
     Args:
         value (bool, optional): Whether to enable 360-degree classify mode. Defaults to True.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Classification",)
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):

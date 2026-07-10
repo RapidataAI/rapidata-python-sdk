@@ -19,6 +19,7 @@ from rapidata.api_client.models.rapid_modality import RapidModality
 
 class LocateWorkflow(Workflow):
     modality = RapidModality.LOCATE
+    task_type = "Locate"
 
     def __init__(self, target: str):
         super().__init__(type="SimpleWorkflowConfig")

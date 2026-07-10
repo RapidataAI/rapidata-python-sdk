@@ -4,16 +4,24 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 
 
 class FreeTextMaxCharactersSetting(RapidataSetting):
     """
     Set the maximum number of characters allowed in a free text answer.
 
+    Supported task types: Free Text.
+
     Args:
         value (int, optional): The maximum number of characters for free text. Defaults to 1024.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Free Text",)
 
     def __init__(self, value: int = 1024):
         if value < 1:

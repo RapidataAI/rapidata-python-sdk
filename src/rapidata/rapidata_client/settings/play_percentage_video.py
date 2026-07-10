@@ -11,6 +11,8 @@ class PlayPercentageVideoSetting(RapidataSetting):
     """
     Requires users to watch a certain percentage of the video before they can submit their answer.
 
+    Supported task types: all.
+
     Args:
         percentage (int, optional): The percentage of the video that must be played before the user can submit. Must be between 0 and 95.
     """

@@ -4,16 +4,24 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 
 
 class LocateMaxPointsSetting(RapidataSetting):
     """
     Sets the maximum number of points a user can place on a locate task. Once the limit is reached, no more points can be added.
 
+    Supported task types: Locate.
+
     Args:
         value (int, optional): The maximum number of points allowed. Defaults to 3.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Locate",)
 
     def __init__(self, value: int = 3):
         if value < 1:

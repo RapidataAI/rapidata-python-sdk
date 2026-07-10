@@ -11,6 +11,8 @@ class DisableAutoloopSetting(RapidataSetting):
     """
     Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.
 
+    Supported task types: all.
+
     Args:
         value (bool, optional): Whether to disable video autoloop. Defaults to True.
     """
