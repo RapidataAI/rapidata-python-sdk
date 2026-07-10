@@ -11,9 +11,9 @@ FeatureFlagTarget = Literal["rapids", "campaign"]
 # Which task types honor a given setting. ``"all"`` means every task type.
 # This is metadata only and is NOT serialized into the FeatureFlag sent to the
 # API. The per-setting values are generated (see scripts/generate_settings.py)
-# from the source-of-truth support matrix in rapids-frontend
-# (FEATURE_FLAG_SUPPORTED_RAPID_TYPES in src/types/rapid.ts), translated into the
-# SDK public task-type names (e.g. "Compare", "Free Text").
+# from the source-of-truth `supported_rapid_types` in rapids-frontend's
+# settings.ts (via settings.json), translated into the SDK public task-type
+# names (e.g. "Compare", "Free Text").
 SupportedRapidTypes = tuple[str, ...] | Literal["all"]
 
 

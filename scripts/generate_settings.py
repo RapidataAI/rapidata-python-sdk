@@ -29,12 +29,12 @@ HANDWRITTEN_FILES = {
 }
 
 # The support matrix (which task types honor each setting) is NOT defined here.
-# It is the source of truth in rapids-frontend (FEATURE_FLAG_SUPPORTED_RAPID_TYPES
-# in src/types/rapid.ts) and is baked into settings.json per setting as a
-# `supported_rapid_types` field (rapids-frontend `type` names, or "all"). We only
-# translate those native names into the SDK public task-type names below.
+# It is the source of truth in rapids-frontend's settings.ts and ships in
+# settings.json per setting as a `supported_rapid_types` field (rapids-frontend
+# `type` names, or "all"/omitted for global). We only translate those native
+# names into the SDK public task-type names below.
 #
-# Keep this map in sync with the RapidType union in rapids-frontend's rapid.ts.
+# Keep this map in sync with the RapidType union in rapids-frontend.
 RAPID_TYPE_TO_SDK_TASK_TYPE: dict[str, str] = {
     "Classify": "Classification",
     "Compare": "Compare",
