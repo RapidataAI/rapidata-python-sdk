@@ -17,8 +17,8 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.audience_job_state import AudienceJobState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -38,7 +38,8 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
     state: AudienceJobState = Field(description="The current state of the job.")
     owner_mail: StrictStr = Field(description="The email of the job's owner.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the job was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "state", "ownerMail", "createdAt"]
+    progress: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Labeling completion as a ratio in the range 0–1, or null when no progress has  been reported yet (completion sets it to 1). Sortable via ?sort=progress.")
+    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "state", "ownerMail", "createdAt", "progress"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -75,6 +76,11 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if progress (nullable) is None
+        # and model_fields_set contains the field
+        if self.progress is None and "progress" in self.model_fields_set:
+            _dict['progress'] = None
+
         return _dict
 
     @classmethod
@@ -95,7 +101,8 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
             "pipelineId": obj.get("pipelineId"),
             "state": obj.get("state"),
             "ownerMail": obj.get("ownerMail"),
-            "createdAt": obj.get("createdAt")
+            "createdAt": obj.get("createdAt"),
+            "progress": obj.get("progress")
         }
         try:
             _obj = cls.model_validate(_data)
