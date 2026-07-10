@@ -305,10 +305,10 @@ class RapidataAudience(RapidataAudienceBase):
                 instruction,
                 datapoint,
                 truths,
-                context,
-                media_context,
-                explanation,
-                settings,
+                context=context,
+                media_context=media_context,
+                explanation=explanation,
+                settings=settings,
             )
             self._try_start_recruiting()
             return self
@@ -349,10 +349,10 @@ class RapidataAudience(RapidataAudienceBase):
                 instruction,
                 datapoint,
                 truths,
-                context,
-                media_context,
-                explanation,
-                settings,
+                context=context,
+                media_context=media_context,
+                explanation=explanation,
+                settings=settings,
             )
             self._try_start_recruiting()
             return self

@@ -53,6 +53,11 @@ from rapidata.rapidata_client.datapoints._truth_translator import (
 )
 
 
+def _validate_ratio(name: str, value: float | None) -> None:
+    if value is not None and not 0 <= value <= 1:
+        raise ValueError(f"{name} must be between 0 and 1, got {value}")
+
+
 class AudienceExampleHandler:
     """
     Can be used to build different types of examples. That can then be added to Example sets
@@ -211,6 +216,8 @@ class AudienceExampleHandler:
         instruction: str,
         datapoint: str,
         truths: list[Box],
+        required_precision: float | None = None,
+        required_completeness: float | None = None,
         context: str | None = None,
         media_context: list[str] | None = None,
         explanation: str | None = None,
@@ -222,6 +229,8 @@ class AudienceExampleHandler:
             instruction (str): The instruction telling the labeler what to locate.
             datapoint (str): The media datapoint the labeler will be locating the target in.
             truths (list[Box]): The bounding boxes covering the correct regions to tap. Coordinates are ratios of the image size (0.0 to 1.0).
+            required_precision (float, optional): Minimum ratio of the labeler's taps that fall inside a correct region required to pass. Defaults to None (backend default).
+            required_completeness (float, optional): Minimum ratio of the correct regions that must be hit. Defaults to None (backend default).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
             media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
@@ -234,6 +243,9 @@ class AudienceExampleHandler:
         if not truths:
             raise ValueError("Locate example requires at least one truth bounding box")
 
+        _validate_ratio("required_precision", required_precision)
+        _validate_ratio("required_completeness", required_completeness)
+
         asset_input = self._asset_uploader.upload_and_map_asset(datapoint)
 
         payload = IExamplePayload(
@@ -245,6 +257,8 @@ class AudienceExampleHandler:
             actual_instance=IExampleTruthLocateExampleTruth(
                 _t="LocateExampleTruth",
                 boundingBoxes=[truth.to_example_model() for truth in truths],
+                requiredPrecision=required_precision,
+                requiredCompleteness=required_completeness,
             )
         )
 
@@ -273,6 +287,8 @@ class AudienceExampleHandler:
         instruction: str,
         datapoint: str,
         truths: list[Box],
+        required_precision: float | None = None,
+        required_completeness: float | None = None,
         context: str | None = None,
         media_context: list[str] | None = None,
         explanation: str | None = None,
@@ -284,6 +300,8 @@ class AudienceExampleHandler:
             instruction (str): The instruction telling the labeler what to draw.
             datapoint (str): The media datapoint the labeler will be drawing on.
             truths (list[Box]): The bounding boxes covering the correct regions — labelers are graded on whether their drawn lines fall within any of these boxes. Coordinates are ratios of the image size (0.0 to 1.0).
+            required_precision (float, optional): Minimum ratio of the labeler's lines that fall inside a correct region required to pass. Defaults to None (backend default).
+            required_completeness (float, optional): Minimum ratio of the correct regions that must be hit. Defaults to None (backend default).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
             media_context (list[str], optional): A list of image URLs / paths that will be shown in addition to the instruction (can be combined with context). Pass a single-element list for one image, or multiple to display several images. Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
@@ -296,6 +314,9 @@ class AudienceExampleHandler:
         if not truths:
             raise ValueError("Draw example requires at least one truth bounding box")
 
+        _validate_ratio("required_precision", required_precision)
+        _validate_ratio("required_completeness", required_completeness)
+
         asset_input = self._asset_uploader.upload_and_map_asset(datapoint)
 
         payload = IExamplePayload(
@@ -307,6 +328,8 @@ class AudienceExampleHandler:
             actual_instance=IExampleTruthLineExampleTruth(
                 _t="LineExampleTruth",
                 boundingBoxes=[truth.to_example_model() for truth in truths],
+                requiredPrecision=required_precision,
+                requiredCompleteness=required_completeness,
             )
         )
 
