@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -31,10 +30,10 @@ class UpdateAudienceExampleEndpointInput(LazyValidatedModel):
     """
     Input model for updating an audience example.
     """ # noqa: E501
-    truth: Optional[IExampleTruth] = None
+    truth: Optional[IExampleTruth] = Field(default=None, description="The truth for the example.")
     explanation: Optional[StrictStr] = Field(default=None, description="The optional explanation that will be shown to the user when answering wrong.")
     context: Optional[StrictStr] = Field(default=None, description="An optional text context that will be shown to the user.")
-    context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
+    context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset that will be used as context to show to the user.", alias="contextAsset")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability that if the user answers at random that they'll be correct.", alias="randomCorrectProbability")
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example should be treated as commonsense validation.", alias="isCommonSense")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls the serving order of this example.", alias="sortIndex")

@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_order_workflow_input_model import IOrderWorkflowInputModel
@@ -44,7 +44,7 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
     referee: IRefereeModel = Field(description="The referee configuration. Can be used directly to create a new revision.")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
-    created_by_id: StrictStr = Field(description="The id of the user who created the revision.", alias="createdById")
+    created_by_id: UUID = Field(description="The id of the user who created the revision.", alias="createdById")
     created_by_mail: StrictStr = Field(description="The email of the user who created the revision.", alias="createdByMail")
     is_instruction_complex: Optional[StrictBool] = Field(default=None, description="Whether the instruction was flagged as too complex for the average annotator to  understand. Null until the asynchronous complexity check has completed.", alias="isInstructionComplex")
     instruction_complexity_reason: Optional[StrictStr] = Field(default=None, description="A short explanation of why the instruction was flagged, when applicable.", alias="instructionComplexityReason")

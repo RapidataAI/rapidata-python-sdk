@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from rapidata.api_client.models.audience_job_state import AudienceJobState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -44,7 +44,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job failed.", alias="failedAt")
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message.", alias="failureMessage")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
-    owner_id: StrictStr = Field(description="The owner id.", alias="ownerId")
+    owner_id: UUID = Field(description="The owner id.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")
     __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "state", "isPublic", "audienceDeleted", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt", "ownerId", "ownerMail"]
 

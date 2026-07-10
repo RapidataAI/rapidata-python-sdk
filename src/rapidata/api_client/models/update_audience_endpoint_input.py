@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -34,7 +33,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
     name: Optional[StrictStr] = Field(default=None, description="The new name to give to this audience.")
     description: Optional[StrictStr] = Field(default=None, description="The new description for the audience. Supports markdown. Set to null to remove.")
     filters: Optional[List[IAudienceFilter]] = None
-    logo: Optional[ExistingAssetInput] = None
+    logo: Optional[ExistingAssetInput] = Field(default=None, description="The new logo image for the audience. Must be an existing image asset.  Set to null to remove the logo.")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  When graduated count is below this, external distilling audience ID is added to campaign boosting.", alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  When distilling count is below this, GlobalBoostLevel is set above zero.", alias="minDistillingForGlobalBoost")
     graduation_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The score used to determine whether a user graduates from the distilling campaign.", alias="graduationScore")

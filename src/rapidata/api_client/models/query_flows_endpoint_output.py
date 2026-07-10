@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from uuid import UUID
 from rapidata.api_client.models.flow_type import FlowType
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -33,7 +33,7 @@ class QueryFlowsEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The unique identifier of the flow.")
     name: StrictStr = Field(description="The name of the flow.")
     type: FlowType = Field(description="The type of the flow.")
-    owner_id: StrictStr = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
+    owner_id: UUID = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]

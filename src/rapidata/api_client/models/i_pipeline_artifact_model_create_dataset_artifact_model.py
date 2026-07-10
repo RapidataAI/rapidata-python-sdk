@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_dataset_model import IDatasetModel
+from rapidata.api_client.models.i_dataset_model_clone_dataset_model import IDatasetModelCloneDatasetModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,7 +30,7 @@ class IPipelineArtifactModelCreateDatasetArtifactModel(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     identifier: StrictStr
-    dataset: IDatasetModel
+    dataset: IDatasetModelCloneDatasetModel
     __properties: ClassVar[List[str]] = ["_t", "identifier", "dataset"]
 
     @field_validator('t')
@@ -93,7 +92,7 @@ class IPipelineArtifactModelCreateDatasetArtifactModel(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "identifier": obj.get("identifier"),
-            "dataset": IDatasetModel.from_dict(obj["dataset"]) if obj.get("dataset") is not None else None
+            "dataset": IDatasetModelCloneDatasetModel.from_dict(obj["dataset"]) if obj.get("dataset") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

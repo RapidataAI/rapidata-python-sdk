@@ -142,7 +142,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -188,7 +191,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -234,7 +240,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -280,7 +289,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -326,7 +338,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -372,7 +387,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -418,7 +436,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -464,7 +485,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -510,7 +534,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -876,7 +903,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -922,7 +952,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -968,7 +1001,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1014,7 +1050,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1060,7 +1099,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"

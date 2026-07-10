@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -42,7 +41,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconcile_post_0(
+    def billing_reconcile_post(
         self,
         start_bulk_reconciliation_endpoint_input: Annotated[StartBulkReconciliationEndpointInput, Field(description="The reconciliation target and configuration options.")],
         _request_timeout: Union[
@@ -86,7 +85,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconcile_post_0_serialize(
+        _param = self._billing_reconcile_post_serialize(
             start_bulk_reconciliation_endpoint_input=start_bulk_reconciliation_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -112,7 +111,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconcile_post_0_with_http_info(
+    def billing_reconcile_post_with_http_info(
         self,
         start_bulk_reconciliation_endpoint_input: Annotated[StartBulkReconciliationEndpointInput, Field(description="The reconciliation target and configuration options.")],
         _request_timeout: Union[
@@ -156,7 +155,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconcile_post_0_serialize(
+        _param = self._billing_reconcile_post_serialize(
             start_bulk_reconciliation_endpoint_input=start_bulk_reconciliation_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -182,7 +181,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconcile_post_0_without_preload_content(
+    def billing_reconcile_post_without_preload_content(
         self,
         start_bulk_reconciliation_endpoint_input: Annotated[StartBulkReconciliationEndpointInput, Field(description="The reconciliation target and configuration options.")],
         _request_timeout: Union[
@@ -226,7 +225,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconcile_post_0_serialize(
+        _param = self._billing_reconcile_post_serialize(
             start_bulk_reconciliation_endpoint_input=start_bulk_reconciliation_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -247,7 +246,7 @@ class ReconciliationApi:
         return response_data.response
 
 
-    def _billing_reconcile_post_0_serialize(
+    def _billing_reconcile_post_serialize(
         self,
         start_bulk_reconciliation_endpoint_input,
         _request_auth,
@@ -325,7 +324,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_bulk_bulk_reconciliation_id_get_0(
+    def billing_reconciliation_bulk_bulk_reconciliation_id_get(
         self,
         bulk_reconciliation_id: Annotated[StrictStr, Field(description="The correlation identifier returned from the bulk reconcile endpoint.")],
         _request_timeout: Union[
@@ -368,7 +367,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_get_0_serialize(
+        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_get_serialize(
             bulk_reconciliation_id=bulk_reconciliation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -394,7 +393,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_bulk_bulk_reconciliation_id_get_0_with_http_info(
+    def billing_reconciliation_bulk_bulk_reconciliation_id_get_with_http_info(
         self,
         bulk_reconciliation_id: Annotated[StrictStr, Field(description="The correlation identifier returned from the bulk reconcile endpoint.")],
         _request_timeout: Union[
@@ -437,7 +436,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_get_0_serialize(
+        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_get_serialize(
             bulk_reconciliation_id=bulk_reconciliation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -463,7 +462,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_bulk_bulk_reconciliation_id_get_0_without_preload_content(
+    def billing_reconciliation_bulk_bulk_reconciliation_id_get_without_preload_content(
         self,
         bulk_reconciliation_id: Annotated[StrictStr, Field(description="The correlation identifier returned from the bulk reconcile endpoint.")],
         _request_timeout: Union[
@@ -506,7 +505,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_get_0_serialize(
+        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_get_serialize(
             bulk_reconciliation_id=bulk_reconciliation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -527,7 +526,7 @@ class ReconciliationApi:
         return response_data.response
 
 
-    def _billing_reconciliation_bulk_bulk_reconciliation_id_get_0_serialize(
+    def _billing_reconciliation_bulk_bulk_reconciliation_id_get_serialize(
         self,
         bulk_reconciliation_id,
         _request_auth,
@@ -592,7 +591,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0(
+    def billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post(
         self,
         bulk_reconciliation_id: Annotated[StrictStr, Field(description="The bulk reconciliation to redispatch.")],
         _request_timeout: Union[
@@ -635,7 +634,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0_serialize(
+        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_serialize(
             bulk_reconciliation_id=bulk_reconciliation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -661,7 +660,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0_with_http_info(
+    def billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_with_http_info(
         self,
         bulk_reconciliation_id: Annotated[StrictStr, Field(description="The bulk reconciliation to redispatch.")],
         _request_timeout: Union[
@@ -704,7 +703,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0_serialize(
+        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_serialize(
             bulk_reconciliation_id=bulk_reconciliation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -730,7 +729,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0_without_preload_content(
+    def billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_without_preload_content(
         self,
         bulk_reconciliation_id: Annotated[StrictStr, Field(description="The bulk reconciliation to redispatch.")],
         _request_timeout: Union[
@@ -773,7 +772,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0_serialize(
+        _param = self._billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_serialize(
             bulk_reconciliation_id=bulk_reconciliation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -794,7 +793,7 @@ class ReconciliationApi:
         return response_data.response
 
 
-    def _billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_0_serialize(
+    def _billing_reconciliation_bulk_bulk_reconciliation_id_redispatch_post_serialize(
         self,
         bulk_reconciliation_id,
         _request_auth,
@@ -859,7 +858,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_job_id_get_0(
+    def billing_reconciliation_job_id_get(
         self,
         job_id: Annotated[StrictStr, Field(description="The unique identifier of the reconciliation job.")],
         _request_timeout: Union[
@@ -902,7 +901,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_job_id_get_0_serialize(
+        _param = self._billing_reconciliation_job_id_get_serialize(
             job_id=job_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -928,7 +927,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_job_id_get_0_with_http_info(
+    def billing_reconciliation_job_id_get_with_http_info(
         self,
         job_id: Annotated[StrictStr, Field(description="The unique identifier of the reconciliation job.")],
         _request_timeout: Union[
@@ -971,7 +970,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_job_id_get_0_serialize(
+        _param = self._billing_reconciliation_job_id_get_serialize(
             job_id=job_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -997,7 +996,7 @@ class ReconciliationApi:
 
 
     @validate_call
-    def billing_reconciliation_job_id_get_0_without_preload_content(
+    def billing_reconciliation_job_id_get_without_preload_content(
         self,
         job_id: Annotated[StrictStr, Field(description="The unique identifier of the reconciliation job.")],
         _request_timeout: Union[
@@ -1040,7 +1039,7 @@ class ReconciliationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_reconciliation_job_id_get_0_serialize(
+        _param = self._billing_reconciliation_job_id_get_serialize(
             job_id=job_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1061,7 +1060,7 @@ class ReconciliationApi:
         return response_data.response
 
 
-    def _billing_reconciliation_job_id_get_0_serialize(
+    def _billing_reconciliation_job_id_get_serialize(
         self,
         job_id,
         _request_auth,

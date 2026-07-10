@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,6 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from uuid import UUID
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,7 +28,7 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
     """
     QueryOrganizationsEndpointOutput
     """ # noqa: E501
-    owner: StrictStr = Field(description="The customer ID of the organization owner.")
+    owner: UUID = Field(description="The customer ID of the organization owner.")
     name: StrictStr = Field(description="The name of the organization.")
     domain: StrictStr = Field(description="The domain associated with this organization.")
     __properties: ClassVar[List[str]] = ["owner", "name", "domain"]

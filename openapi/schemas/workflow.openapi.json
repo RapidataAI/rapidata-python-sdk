@@ -194,7 +194,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -240,7 +243,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -286,7 +292,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -852,7 +861,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -898,7 +910,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -944,7 +959,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -990,7 +1008,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2835,7 +2856,6 @@
       },
       "IRefereeConfigModelNaiveRefereeConfigModel": {
         "required": [
-          "guessesRequired",
           "_t"
         ],
         "properties": {
@@ -2845,9 +2865,14 @@
             ],
             "type": "string"
           },
-          "guessesRequired": {
+          "responsesRequired": {
             "type": "integer",
             "format": "int32"
+          },
+          "guessesRequired": {
+            "type": "integer",
+            "format": "int32",
+            "deprecated": true
           }
         }
       },
@@ -3075,14 +3100,13 @@
             "nullable": true
           },
           "rankingConfig": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IRankingConfigModel"
               }
-            ]
+            ],
+            "nullable": true
           }
         }
       },
@@ -3125,28 +3149,26 @@
             "type": "string"
           },
           "rankingConfig": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IRankingConfigModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "context": {
             "type": "string",
             "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAssetModel"
               }
-            ]
+            ],
+            "nullable": true
           },
           "ownerMail": {
             "type": "string",

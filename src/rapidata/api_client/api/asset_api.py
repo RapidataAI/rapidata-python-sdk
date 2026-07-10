@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -58,13 +57,13 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> bytearray:
+    ) -> bytes:
         """Compresses an uploaded image and returns the WebP result.
 
         Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
 
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param quality: The compression quality from 1 to 100.
         :type quality: int
         :param maxdim: The maximum dimension (width or height) of the output image.
@@ -102,7 +101,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "bytes",
             '400': "str",
             '401': None,
             '403': None,
@@ -136,13 +135,13 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[bytearray]:
+    ) -> ApiResponse[bytes]:
         """Compresses an uploaded image and returns the WebP result.
 
         Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
 
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param quality: The compression quality from 1 to 100.
         :type quality: int
         :param maxdim: The maximum dimension (width or height) of the output image.
@@ -180,7 +179,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "bytes",
             '400': "str",
             '401': None,
             '403': None,
@@ -220,7 +219,7 @@ class AssetApi:
         Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
 
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param quality: The compression quality from 1 to 100.
         :type quality: int
         :param maxdim: The maximum dimension (width or height) of the output image.
@@ -258,7 +257,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            '200': "bytes",
             '400': "str",
             '401': None,
             '403': None,
@@ -382,7 +381,7 @@ class AssetApi:
 
 
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
         :type compress: bool
         :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
@@ -463,7 +462,7 @@ class AssetApi:
 
 
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
         :type compress: bool
         :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.
@@ -544,7 +543,7 @@ class AssetApi:
 
 
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param compress: When set, forces image compression on or off for this upload, overriding the configured default.
         :type compress: bool
         :param quality: WebP quality (1..100) to use when compression runs. Falls back to the configured default when null.

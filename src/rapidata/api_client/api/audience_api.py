@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -1449,7 +1448,7 @@ class AudienceApi:
         :param audience_id: The unique identifier of the audience to initialize. (required)
         :type audience_id: str
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1522,7 +1521,7 @@ class AudienceApi:
         :param audience_id: The unique identifier of the audience to initialize. (required)
         :type audience_id: str
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1595,7 +1594,7 @@ class AudienceApi:
         :param audience_id: The unique identifier of the audience to initialize. (required)
         :type audience_id: str
         :param file: (required)
-        :type file: bytearray
+        :type file: bytes
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

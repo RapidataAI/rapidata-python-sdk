@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -19,6 +18,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
+from uuid import UUID
 from rapidata.api_client.models.create_billing_item_billing_setting_endpoint_input import CreateBillingItemBillingSettingEndpointInput
 from rapidata.api_client.models.create_customer_billing_setting_endpoint_input import CreateCustomerBillingSettingEndpointInput
 from rapidata.api_client.models.create_global_billing_setting_endpoint_input import CreateGlobalBillingSettingEndpointInput
@@ -43,7 +43,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_billing_item_billing_item_id_settings_post_0(
+    def billing_billing_item_billing_item_id_settings_post(
         self,
         billing_item_id: Annotated[StrictStr, Field(description="The billing item identifier.")],
         create_billing_item_billing_setting_endpoint_input: Annotated[CreateBillingItemBillingSettingEndpointInput, Field(description="The billing setting data.")],
@@ -89,7 +89,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_billing_item_billing_item_id_settings_post_0_serialize(
+        _param = self._billing_billing_item_billing_item_id_settings_post_serialize(
             billing_item_id=billing_item_id,
             create_billing_item_billing_setting_endpoint_input=create_billing_item_billing_setting_endpoint_input,
             _request_auth=_request_auth,
@@ -116,7 +116,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_billing_item_billing_item_id_settings_post_0_with_http_info(
+    def billing_billing_item_billing_item_id_settings_post_with_http_info(
         self,
         billing_item_id: Annotated[StrictStr, Field(description="The billing item identifier.")],
         create_billing_item_billing_setting_endpoint_input: Annotated[CreateBillingItemBillingSettingEndpointInput, Field(description="The billing setting data.")],
@@ -162,7 +162,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_billing_item_billing_item_id_settings_post_0_serialize(
+        _param = self._billing_billing_item_billing_item_id_settings_post_serialize(
             billing_item_id=billing_item_id,
             create_billing_item_billing_setting_endpoint_input=create_billing_item_billing_setting_endpoint_input,
             _request_auth=_request_auth,
@@ -189,7 +189,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_billing_item_billing_item_id_settings_post_0_without_preload_content(
+    def billing_billing_item_billing_item_id_settings_post_without_preload_content(
         self,
         billing_item_id: Annotated[StrictStr, Field(description="The billing item identifier.")],
         create_billing_item_billing_setting_endpoint_input: Annotated[CreateBillingItemBillingSettingEndpointInput, Field(description="The billing setting data.")],
@@ -235,7 +235,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_billing_item_billing_item_id_settings_post_0_serialize(
+        _param = self._billing_billing_item_billing_item_id_settings_post_serialize(
             billing_item_id=billing_item_id,
             create_billing_item_billing_setting_endpoint_input=create_billing_item_billing_setting_endpoint_input,
             _request_auth=_request_auth,
@@ -257,7 +257,7 @@ class SettingsApi:
         return response_data.response
 
 
-    def _billing_billing_item_billing_item_id_settings_post_0_serialize(
+    def _billing_billing_item_billing_item_id_settings_post_serialize(
         self,
         billing_item_id,
         create_billing_item_billing_setting_endpoint_input,
@@ -338,7 +338,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_billing_item_billing_item_id_settings_setting_id_delete_0(
+    def billing_billing_item_billing_item_id_settings_setting_id_delete(
         self,
         billing_item_id: Annotated[StrictStr, Field(description="The billing item identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
@@ -384,7 +384,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_billing_item_billing_item_id_settings_setting_id_delete_0_serialize(
+        _param = self._billing_billing_item_billing_item_id_settings_setting_id_delete_serialize(
             billing_item_id=billing_item_id,
             setting_id=setting_id,
             _request_auth=_request_auth,
@@ -411,7 +411,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_billing_item_billing_item_id_settings_setting_id_delete_0_with_http_info(
+    def billing_billing_item_billing_item_id_settings_setting_id_delete_with_http_info(
         self,
         billing_item_id: Annotated[StrictStr, Field(description="The billing item identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
@@ -457,7 +457,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_billing_item_billing_item_id_settings_setting_id_delete_0_serialize(
+        _param = self._billing_billing_item_billing_item_id_settings_setting_id_delete_serialize(
             billing_item_id=billing_item_id,
             setting_id=setting_id,
             _request_auth=_request_auth,
@@ -484,7 +484,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_billing_item_billing_item_id_settings_setting_id_delete_0_without_preload_content(
+    def billing_billing_item_billing_item_id_settings_setting_id_delete_without_preload_content(
         self,
         billing_item_id: Annotated[StrictStr, Field(description="The billing item identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
@@ -530,7 +530,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_billing_item_billing_item_id_settings_setting_id_delete_0_serialize(
+        _param = self._billing_billing_item_billing_item_id_settings_setting_id_delete_serialize(
             billing_item_id=billing_item_id,
             setting_id=setting_id,
             _request_auth=_request_auth,
@@ -552,7 +552,7 @@ class SettingsApi:
         return response_data.response
 
 
-    def _billing_billing_item_billing_item_id_settings_setting_id_delete_0_serialize(
+    def _billing_billing_item_billing_item_id_settings_setting_id_delete_serialize(
         self,
         billing_item_id,
         setting_id,
@@ -620,9 +620,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_customer_customer_id_settings_post_0(
+    def billing_customer_customer_id_settings_post(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         create_customer_billing_setting_endpoint_input: Annotated[CreateCustomerBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
             None,
@@ -641,7 +641,7 @@ class SettingsApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param create_customer_billing_setting_endpoint_input: The billing setting data. (required)
         :type create_customer_billing_setting_endpoint_input: CreateCustomerBillingSettingEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -666,7 +666,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_customer_customer_id_settings_post_0_serialize(
+        _param = self._billing_customer_customer_id_settings_post_serialize(
             customer_id=customer_id,
             create_customer_billing_setting_endpoint_input=create_customer_billing_setting_endpoint_input,
             _request_auth=_request_auth,
@@ -693,9 +693,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_customer_customer_id_settings_post_0_with_http_info(
+    def billing_customer_customer_id_settings_post_with_http_info(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         create_customer_billing_setting_endpoint_input: Annotated[CreateCustomerBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
             None,
@@ -714,7 +714,7 @@ class SettingsApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param create_customer_billing_setting_endpoint_input: The billing setting data. (required)
         :type create_customer_billing_setting_endpoint_input: CreateCustomerBillingSettingEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -739,7 +739,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_customer_customer_id_settings_post_0_serialize(
+        _param = self._billing_customer_customer_id_settings_post_serialize(
             customer_id=customer_id,
             create_customer_billing_setting_endpoint_input=create_customer_billing_setting_endpoint_input,
             _request_auth=_request_auth,
@@ -766,9 +766,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_customer_customer_id_settings_post_0_without_preload_content(
+    def billing_customer_customer_id_settings_post_without_preload_content(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         create_customer_billing_setting_endpoint_input: Annotated[CreateCustomerBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
             None,
@@ -787,7 +787,7 @@ class SettingsApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param create_customer_billing_setting_endpoint_input: The billing setting data. (required)
         :type create_customer_billing_setting_endpoint_input: CreateCustomerBillingSettingEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -812,7 +812,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_customer_customer_id_settings_post_0_serialize(
+        _param = self._billing_customer_customer_id_settings_post_serialize(
             customer_id=customer_id,
             create_customer_billing_setting_endpoint_input=create_customer_billing_setting_endpoint_input,
             _request_auth=_request_auth,
@@ -834,7 +834,7 @@ class SettingsApi:
         return response_data.response
 
 
-    def _billing_customer_customer_id_settings_post_0_serialize(
+    def _billing_customer_customer_id_settings_post_serialize(
         self,
         customer_id,
         create_customer_billing_setting_endpoint_input,
@@ -915,9 +915,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_customer_customer_id_settings_setting_id_delete_0(
+    def billing_customer_customer_id_settings_setting_id_delete(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
             None,
@@ -936,7 +936,7 @@ class SettingsApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param setting_id: The billing setting identifier. (required)
         :type setting_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -961,7 +961,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_customer_customer_id_settings_setting_id_delete_0_serialize(
+        _param = self._billing_customer_customer_id_settings_setting_id_delete_serialize(
             customer_id=customer_id,
             setting_id=setting_id,
             _request_auth=_request_auth,
@@ -988,9 +988,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_customer_customer_id_settings_setting_id_delete_0_with_http_info(
+    def billing_customer_customer_id_settings_setting_id_delete_with_http_info(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
             None,
@@ -1009,7 +1009,7 @@ class SettingsApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param setting_id: The billing setting identifier. (required)
         :type setting_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1034,7 +1034,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_customer_customer_id_settings_setting_id_delete_0_serialize(
+        _param = self._billing_customer_customer_id_settings_setting_id_delete_serialize(
             customer_id=customer_id,
             setting_id=setting_id,
             _request_auth=_request_auth,
@@ -1061,9 +1061,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_customer_customer_id_settings_setting_id_delete_0_without_preload_content(
+    def billing_customer_customer_id_settings_setting_id_delete_without_preload_content(
         self,
-        customer_id: Annotated[StrictStr, Field(description="The customer identifier.")],
+        customer_id: Annotated[UUID, Field(description="The customer identifier.")],
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
             None,
@@ -1082,7 +1082,7 @@ class SettingsApi:
 
 
         :param customer_id: The customer identifier. (required)
-        :type customer_id: str
+        :type customer_id: UUID
         :param setting_id: The billing setting identifier. (required)
         :type setting_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1107,7 +1107,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_customer_customer_id_settings_setting_id_delete_0_serialize(
+        _param = self._billing_customer_customer_id_settings_setting_id_delete_serialize(
             customer_id=customer_id,
             setting_id=setting_id,
             _request_auth=_request_auth,
@@ -1129,7 +1129,7 @@ class SettingsApi:
         return response_data.response
 
 
-    def _billing_customer_customer_id_settings_setting_id_delete_0_serialize(
+    def _billing_customer_customer_id_settings_setting_id_delete_serialize(
         self,
         customer_id,
         setting_id,
@@ -1197,7 +1197,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_post_0(
+    def billing_settings_post(
         self,
         create_global_billing_setting_endpoint_input: Annotated[CreateGlobalBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
@@ -1240,7 +1240,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_post_0_serialize(
+        _param = self._billing_settings_post_serialize(
             create_global_billing_setting_endpoint_input=create_global_billing_setting_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1266,7 +1266,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_post_0_with_http_info(
+    def billing_settings_post_with_http_info(
         self,
         create_global_billing_setting_endpoint_input: Annotated[CreateGlobalBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
@@ -1309,7 +1309,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_post_0_serialize(
+        _param = self._billing_settings_post_serialize(
             create_global_billing_setting_endpoint_input=create_global_billing_setting_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1335,7 +1335,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_post_0_without_preload_content(
+    def billing_settings_post_without_preload_content(
         self,
         create_global_billing_setting_endpoint_input: Annotated[CreateGlobalBillingSettingEndpointInput, Field(description="The billing setting data.")],
         _request_timeout: Union[
@@ -1378,7 +1378,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_post_0_serialize(
+        _param = self._billing_settings_post_serialize(
             create_global_billing_setting_endpoint_input=create_global_billing_setting_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1399,7 +1399,7 @@ class SettingsApi:
         return response_data.response
 
 
-    def _billing_settings_post_0_serialize(
+    def _billing_settings_post_serialize(
         self,
         create_global_billing_setting_endpoint_input,
         _request_auth,
@@ -1477,7 +1477,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_setting_id_delete_0(
+    def billing_settings_setting_id_delete(
         self,
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
@@ -1520,7 +1520,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_setting_id_delete_0_serialize(
+        _param = self._billing_settings_setting_id_delete_serialize(
             setting_id=setting_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1546,7 +1546,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_setting_id_delete_0_with_http_info(
+    def billing_settings_setting_id_delete_with_http_info(
         self,
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
@@ -1589,7 +1589,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_setting_id_delete_0_serialize(
+        _param = self._billing_settings_setting_id_delete_serialize(
             setting_id=setting_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1615,7 +1615,7 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_setting_id_delete_0_without_preload_content(
+    def billing_settings_setting_id_delete_without_preload_content(
         self,
         setting_id: Annotated[StrictStr, Field(description="The billing setting identifier.")],
         _request_timeout: Union[
@@ -1658,7 +1658,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_setting_id_delete_0_serialize(
+        _param = self._billing_settings_setting_id_delete_serialize(
             setting_id=setting_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1679,7 +1679,7 @@ class SettingsApi:
         return response_data.response
 
 
-    def _billing_settings_setting_id_delete_0_serialize(
+    def _billing_settings_setting_id_delete_serialize(
         self,
         setting_id,
         _request_auth,
@@ -1744,9 +1744,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_timeline_get_0(
+    def billing_settings_timeline_get(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer identifier to scope the timeline.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer identifier to scope the timeline.")] = None,
         billing_item_id: Annotated[Optional[StrictStr], Field(description="Optional billing item identifier to scope the timeline.")] = None,
         _request_timeout: Union[
             None,
@@ -1765,7 +1765,7 @@ class SettingsApi:
 
 
         :param customer_id: Optional customer identifier to scope the timeline.
-        :type customer_id: str
+        :type customer_id: UUID
         :param billing_item_id: Optional billing item identifier to scope the timeline.
         :type billing_item_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1790,7 +1790,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_timeline_get_0_serialize(
+        _param = self._billing_settings_timeline_get_serialize(
             customer_id=customer_id,
             billing_item_id=billing_item_id,
             _request_auth=_request_auth,
@@ -1817,9 +1817,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_timeline_get_0_with_http_info(
+    def billing_settings_timeline_get_with_http_info(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer identifier to scope the timeline.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer identifier to scope the timeline.")] = None,
         billing_item_id: Annotated[Optional[StrictStr], Field(description="Optional billing item identifier to scope the timeline.")] = None,
         _request_timeout: Union[
             None,
@@ -1838,7 +1838,7 @@ class SettingsApi:
 
 
         :param customer_id: Optional customer identifier to scope the timeline.
-        :type customer_id: str
+        :type customer_id: UUID
         :param billing_item_id: Optional billing item identifier to scope the timeline.
         :type billing_item_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1863,7 +1863,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_timeline_get_0_serialize(
+        _param = self._billing_settings_timeline_get_serialize(
             customer_id=customer_id,
             billing_item_id=billing_item_id,
             _request_auth=_request_auth,
@@ -1890,9 +1890,9 @@ class SettingsApi:
 
 
     @validate_call
-    def billing_settings_timeline_get_0_without_preload_content(
+    def billing_settings_timeline_get_without_preload_content(
         self,
-        customer_id: Annotated[Optional[StrictStr], Field(description="Optional customer identifier to scope the timeline.")] = None,
+        customer_id: Annotated[Optional[UUID], Field(description="Optional customer identifier to scope the timeline.")] = None,
         billing_item_id: Annotated[Optional[StrictStr], Field(description="Optional billing item identifier to scope the timeline.")] = None,
         _request_timeout: Union[
             None,
@@ -1911,7 +1911,7 @@ class SettingsApi:
 
 
         :param customer_id: Optional customer identifier to scope the timeline.
-        :type customer_id: str
+        :type customer_id: UUID
         :param billing_item_id: Optional billing item identifier to scope the timeline.
         :type billing_item_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1936,7 +1936,7 @@ class SettingsApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_settings_timeline_get_0_serialize(
+        _param = self._billing_settings_timeline_get_serialize(
             customer_id=customer_id,
             billing_item_id=billing_item_id,
             _request_auth=_request_auth,
@@ -1958,7 +1958,7 @@ class SettingsApi:
         return response_data.response
 
 
-    def _billing_settings_timeline_get_0_serialize(
+    def _billing_settings_timeline_get_serialize(
         self,
         customer_id,
         billing_item_id,

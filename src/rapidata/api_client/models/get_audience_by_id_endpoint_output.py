@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from uuid import UUID
 from rapidata.api_client.models.audience_status import AudienceStatus
 from rapidata.api_client.models.boost_level import BoostLevel
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
@@ -41,7 +41,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     filters: List[IAudienceFilter]
     logo: Optional[StrictStr] = Field(default=None, description="The URL of the audience logo, if any.")
     created_at: datetime = Field(description="The timestamp when the audience was created.", alias="createdAt")
-    owner_id: StrictStr = Field(description="The unique identifier of the audience owner.", alias="ownerId")
+    owner_id: UUID = Field(description="The unique identifier of the audience owner.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the audience owner.", alias="ownerMail")
     is_public: StrictBool = Field(description="Whether the audience is publicly visible.", alias="isPublic")
     is_distilling: StrictBool = Field(description="Whether the audience is currently distilling users.", alias="isDistilling")

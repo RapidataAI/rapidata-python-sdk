@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from rapidata.api_client.models.invoice_status import InvoiceStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -38,7 +38,7 @@ class QueryInvoicesEndpointOutput(LazyValidatedModel):
     status: InvoiceStatus = Field(description="The current invoice status.")
     amount_due: StrictInt = Field(description="The total amount due in cents.", alias="amountDue")
     currency: Optional[StrictStr] = Field(default=None, description="The invoice currency.")
-    owner_id: StrictStr = Field(description="The owner customer ID.", alias="ownerId")
+    owner_id: UUID = Field(description="The owner customer ID.", alias="ownerId")
     created_at: datetime = Field(description="When the invoice was created.", alias="createdAt")
     finalized_at: Optional[datetime] = Field(default=None, description="When the invoice was finalized.", alias="finalizedAt")
     paid_at: Optional[datetime] = Field(default=None, description="When the invoice was paid.", alias="paidAt")

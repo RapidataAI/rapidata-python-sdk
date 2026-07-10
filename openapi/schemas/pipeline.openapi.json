@@ -1241,7 +1241,7 @@
       },
       "IRefereeConfigNaiveRefereeConfig": {
         "required": [
-          "guessesRequired",
+          "responsesRequired",
           "_t"
         ],
         "properties": {
@@ -1251,9 +1251,14 @@
             ],
             "type": "string"
           },
-          "guessesRequired": {
+          "responsesRequired": {
             "type": "integer",
             "format": "int32"
+          },
+          "guessesRequired": {
+            "type": "integer",
+            "format": "int32",
+            "deprecated": true
           }
         }
       },
@@ -1426,14 +1431,13 @@
             "format": "int32"
           },
           "rankingConfig": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IRankingConfig"
               }
-            ]
+            ],
+            "nullable": true
           },
           "eloConfig": {
             "allOf": [
@@ -1480,24 +1484,22 @@
             "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IAsset"
               }
-            ]
+            ],
+            "nullable": true
           },
           "rankingConfig": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/IRankingConfig"
               }
-            ]
+            ],
+            "nullable": true
           },
           "eloConfig": {
             "allOf": [

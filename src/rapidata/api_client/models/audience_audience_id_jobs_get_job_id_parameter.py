@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -37,7 +36,7 @@ class AudienceAudienceIdJobsGetJobIdParameter(LazyValidatedModel):
     contains: Optional[StrictStr] = None
     starts_with: Optional[StrictStr] = None
     ends_with: Optional[StrictStr] = None
-    var_in: Optional[StrictStr] = Field(default=None, alias="in")
+    var_in: Optional[List[StrictStr]] = Field(default=None, alias="in")
     not_contains: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["eq", "neq", "gt", "gte", "lt", "lte", "contains", "starts_with", "ends_with", "in", "not_contains"]
 

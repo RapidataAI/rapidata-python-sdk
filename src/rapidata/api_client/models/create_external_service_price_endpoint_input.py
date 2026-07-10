@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from uuid import UUID
 from rapidata.api_client.models.external_service_kind import ExternalServiceKind
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -32,7 +32,7 @@ class CreateExternalServicePriceEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     service_kind: ExternalServiceKind = Field(description="The service this price applies to.", alias="serviceKind")
     pricing_key: StrictStr = Field(description="Hierarchical variant key (e.g. reve, replicate/flux-1.1-pro).", alias="pricingKey")
-    customer_id: Optional[StrictStr] = Field(default=None, description="Null for the global default; set to scope the price to one customer.", alias="customerId")
+    customer_id: Optional[UUID] = Field(default=None, description="Null for the global default; set to scope the price to one customer.", alias="customerId")
     unit_price: Union[StrictFloat, StrictInt] = Field(description="Price per unit (per image / per shortening).", alias="unitPrice")
     priority: Optional[StrictInt] = Field(default=None, description="Priority; defaults to the configured global/customer default if unset.")
     valid_from: Optional[datetime] = Field(default=None, description="The start of the validity window.", alias="validFrom")

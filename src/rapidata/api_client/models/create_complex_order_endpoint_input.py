@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_pipeline_model import IPipelineModel
+from rapidata.api_client.models.i_pipeline_model_create_simple_pipeline_model import IPipelineModelCreateSimplePipelineModel
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +29,7 @@ class CreateComplexOrderEndpointInput(LazyValidatedModel):
     CreateComplexOrderEndpointInput
     """ # noqa: E501
     order_name: StrictStr = Field(description="The name of the order.", alias="orderName")
-    pipeline: IPipelineModel = Field(description="The pipeline configuration to use.")
+    pipeline: IPipelineModelCreateSimplePipelineModel = Field(description="The pipeline configuration to use.")
     is_demo: Optional[StrictBool] = Field(default=None, description="Whether the order is a demo.", alias="isDemo")
     preceding_order_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the order that must complete before this order starts processing.", alias="precedingOrderId")
     __properties: ClassVar[List[str]] = ["orderName", "pipeline", "isDemo", "precedingOrderId"]
@@ -91,7 +90,7 @@ class CreateComplexOrderEndpointInput(LazyValidatedModel):
 
         _data = {
             "orderName": obj.get("orderName"),
-            "pipeline": IPipelineModel.from_dict(obj["pipeline"]) if obj.get("pipeline") is not None else None,
+            "pipeline": IPipelineModelCreateSimplePipelineModel.from_dict(obj["pipeline"]) if obj.get("pipeline") is not None else None,
             "isDemo": obj.get("isDemo"),
             "precedingOrderId": obj.get("precedingOrderId")
         }

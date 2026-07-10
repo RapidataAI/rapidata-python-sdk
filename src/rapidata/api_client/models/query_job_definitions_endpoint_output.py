@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from uuid import UUID
 from rapidata.api_client.models.definition_type import DefinitionType
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -35,7 +35,7 @@ class QueryJobDefinitionsEndpointOutput(LazyValidatedModel):
     definition_type: DefinitionType = Field(description="The type of the job definition.", alias="definitionType")
     created_at: datetime = Field(description="The creation timestamp of the job definition.", alias="createdAt")
     revision_count: StrictInt = Field(description="The number of revisions for this job definition.", alias="revisionCount")
-    owner_id: StrictStr = Field(description="The id of the owner of the job definition.", alias="ownerId")
+    owner_id: UUID = Field(description="The id of the owner of the job definition.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the owner of the job definition.", alias="ownerMail")
     __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "createdAt", "revisionCount", "ownerId", "ownerMail"]
 

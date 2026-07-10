@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -41,7 +40,7 @@ class VolumeDiscountApi:
 
 
     @validate_call
-    def billing_period_billing_period_id_volume_discounts_get_0(
+    def billing_period_billing_period_id_volume_discounts_get(
         self,
         billing_period_id: Annotated[StrictStr, Field(description="The billing period to get volume discounts for.")],
         _request_timeout: Union[
@@ -84,7 +83,7 @@ class VolumeDiscountApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_period_billing_period_id_volume_discounts_get_0_serialize(
+        _param = self._billing_period_billing_period_id_volume_discounts_get_serialize(
             billing_period_id=billing_period_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -110,7 +109,7 @@ class VolumeDiscountApi:
 
 
     @validate_call
-    def billing_period_billing_period_id_volume_discounts_get_0_with_http_info(
+    def billing_period_billing_period_id_volume_discounts_get_with_http_info(
         self,
         billing_period_id: Annotated[StrictStr, Field(description="The billing period to get volume discounts for.")],
         _request_timeout: Union[
@@ -153,7 +152,7 @@ class VolumeDiscountApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_period_billing_period_id_volume_discounts_get_0_serialize(
+        _param = self._billing_period_billing_period_id_volume_discounts_get_serialize(
             billing_period_id=billing_period_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -179,7 +178,7 @@ class VolumeDiscountApi:
 
 
     @validate_call
-    def billing_period_billing_period_id_volume_discounts_get_0_without_preload_content(
+    def billing_period_billing_period_id_volume_discounts_get_without_preload_content(
         self,
         billing_period_id: Annotated[StrictStr, Field(description="The billing period to get volume discounts for.")],
         _request_timeout: Union[
@@ -222,7 +221,7 @@ class VolumeDiscountApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_period_billing_period_id_volume_discounts_get_0_serialize(
+        _param = self._billing_period_billing_period_id_volume_discounts_get_serialize(
             billing_period_id=billing_period_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -243,7 +242,7 @@ class VolumeDiscountApi:
         return response_data.response
 
 
-    def _billing_period_billing_period_id_volume_discounts_get_0_serialize(
+    def _billing_period_billing_period_id_volume_discounts_get_serialize(
         self,
         billing_period_id,
         _request_auth,
@@ -308,7 +307,7 @@ class VolumeDiscountApi:
 
 
     @validate_call
-    def billing_period_billing_period_id_volume_discounts_post_0(
+    def billing_period_billing_period_id_volume_discounts_post(
         self,
         billing_period_id: Annotated[StrictStr, Field(description="The billing period to add the volume discount to.")],
         create_volume_discount_endpoint_input: Annotated[CreateVolumeDiscountEndpointInput, Field(description="The volume discount bracket data.")],
@@ -354,7 +353,7 @@ class VolumeDiscountApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_period_billing_period_id_volume_discounts_post_0_serialize(
+        _param = self._billing_period_billing_period_id_volume_discounts_post_serialize(
             billing_period_id=billing_period_id,
             create_volume_discount_endpoint_input=create_volume_discount_endpoint_input,
             _request_auth=_request_auth,
@@ -381,7 +380,7 @@ class VolumeDiscountApi:
 
 
     @validate_call
-    def billing_period_billing_period_id_volume_discounts_post_0_with_http_info(
+    def billing_period_billing_period_id_volume_discounts_post_with_http_info(
         self,
         billing_period_id: Annotated[StrictStr, Field(description="The billing period to add the volume discount to.")],
         create_volume_discount_endpoint_input: Annotated[CreateVolumeDiscountEndpointInput, Field(description="The volume discount bracket data.")],
@@ -427,7 +426,7 @@ class VolumeDiscountApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_period_billing_period_id_volume_discounts_post_0_serialize(
+        _param = self._billing_period_billing_period_id_volume_discounts_post_serialize(
             billing_period_id=billing_period_id,
             create_volume_discount_endpoint_input=create_volume_discount_endpoint_input,
             _request_auth=_request_auth,
@@ -454,7 +453,7 @@ class VolumeDiscountApi:
 
 
     @validate_call
-    def billing_period_billing_period_id_volume_discounts_post_0_without_preload_content(
+    def billing_period_billing_period_id_volume_discounts_post_without_preload_content(
         self,
         billing_period_id: Annotated[StrictStr, Field(description="The billing period to add the volume discount to.")],
         create_volume_discount_endpoint_input: Annotated[CreateVolumeDiscountEndpointInput, Field(description="The volume discount bracket data.")],
@@ -500,7 +499,7 @@ class VolumeDiscountApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._billing_period_billing_period_id_volume_discounts_post_0_serialize(
+        _param = self._billing_period_billing_period_id_volume_discounts_post_serialize(
             billing_period_id=billing_period_id,
             create_volume_discount_endpoint_input=create_volume_discount_endpoint_input,
             _request_auth=_request_auth,
@@ -522,7 +521,7 @@ class VolumeDiscountApi:
         return response_data.response
 
 
-    def _billing_period_billing_period_id_volume_discounts_post_0_serialize(
+    def _billing_period_billing_period_id_volume_discounts_post_serialize(
         self,
         billing_period_id,
         create_volume_discount_endpoint_input,

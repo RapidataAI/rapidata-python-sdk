@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -47,7 +46,7 @@ class SampleGenerationApi:
 
 
     @validate_call
-    def benchmark_benchmark_id_sample_generation_post_0(
+    def benchmark_benchmark_id_sample_generation_post(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants should run their faucets.")],
         create_sample_generation_endpoint_input: Annotated[CreateSampleGenerationEndpointInput, Field(description="The generation configuration.")],
@@ -93,7 +92,7 @@ class SampleGenerationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._benchmark_benchmark_id_sample_generation_post_0_serialize(
+        _param = self._benchmark_benchmark_id_sample_generation_post_serialize(
             benchmark_id=benchmark_id,
             create_sample_generation_endpoint_input=create_sample_generation_endpoint_input,
             _request_auth=_request_auth,
@@ -120,7 +119,7 @@ class SampleGenerationApi:
 
 
     @validate_call
-    def benchmark_benchmark_id_sample_generation_post_0_with_http_info(
+    def benchmark_benchmark_id_sample_generation_post_with_http_info(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants should run their faucets.")],
         create_sample_generation_endpoint_input: Annotated[CreateSampleGenerationEndpointInput, Field(description="The generation configuration.")],
@@ -166,7 +165,7 @@ class SampleGenerationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._benchmark_benchmark_id_sample_generation_post_0_serialize(
+        _param = self._benchmark_benchmark_id_sample_generation_post_serialize(
             benchmark_id=benchmark_id,
             create_sample_generation_endpoint_input=create_sample_generation_endpoint_input,
             _request_auth=_request_auth,
@@ -193,7 +192,7 @@ class SampleGenerationApi:
 
 
     @validate_call
-    def benchmark_benchmark_id_sample_generation_post_0_without_preload_content(
+    def benchmark_benchmark_id_sample_generation_post_without_preload_content(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants should run their faucets.")],
         create_sample_generation_endpoint_input: Annotated[CreateSampleGenerationEndpointInput, Field(description="The generation configuration.")],
@@ -239,7 +238,7 @@ class SampleGenerationApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._benchmark_benchmark_id_sample_generation_post_0_serialize(
+        _param = self._benchmark_benchmark_id_sample_generation_post_serialize(
             benchmark_id=benchmark_id,
             create_sample_generation_endpoint_input=create_sample_generation_endpoint_input,
             _request_auth=_request_auth,
@@ -261,7 +260,7 @@ class SampleGenerationApi:
         return response_data.response
 
 
-    def _benchmark_benchmark_id_sample_generation_post_0_serialize(
+    def _benchmark_benchmark_id_sample_generation_post_serialize(
         self,
         benchmark_id,
         create_sample_generation_endpoint_input,

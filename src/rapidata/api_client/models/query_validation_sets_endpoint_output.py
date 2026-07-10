@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -20,6 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -36,7 +36,7 @@ class QueryValidationSetsEndpointOutput(LazyValidatedModel):
     prompt_type: List[StrictStr] = Field(description="The prompt types contained in the validation set.", alias="promptType")
     dimensions: Optional[List[StrictStr]]
     is_public: StrictBool = Field(description="Whether the validation set is public.", alias="isPublic")
-    owner_id: StrictStr = Field(description="The id of the owning customer.", alias="ownerId")
+    owner_id: UUID = Field(description="The id of the owning customer.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the owning customer.", alias="ownerMail")
     created_at: datetime = Field(description="The time at which the validation set was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "name", "assetType", "modality", "promptType", "dimensions", "isPublic", "ownerId", "ownerMail", "createdAt"]

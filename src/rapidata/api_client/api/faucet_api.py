@@ -10,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -616,7 +615,7 @@ class FaucetApi:
 
 
     @validate_call
-    def participant_participant_id_faucet_delete_0(
+    def participant_participant_id_faucet_delete(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant.")],
         _request_timeout: Union[
@@ -659,7 +658,7 @@ class FaucetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_faucet_delete_0_serialize(
+        _param = self._participant_participant_id_faucet_delete_serialize(
             participant_id=participant_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -685,7 +684,7 @@ class FaucetApi:
 
 
     @validate_call
-    def participant_participant_id_faucet_delete_0_with_http_info(
+    def participant_participant_id_faucet_delete_with_http_info(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant.")],
         _request_timeout: Union[
@@ -728,7 +727,7 @@ class FaucetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_faucet_delete_0_serialize(
+        _param = self._participant_participant_id_faucet_delete_serialize(
             participant_id=participant_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -754,7 +753,7 @@ class FaucetApi:
 
 
     @validate_call
-    def participant_participant_id_faucet_delete_0_without_preload_content(
+    def participant_participant_id_faucet_delete_without_preload_content(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant.")],
         _request_timeout: Union[
@@ -797,7 +796,7 @@ class FaucetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_faucet_delete_0_serialize(
+        _param = self._participant_participant_id_faucet_delete_serialize(
             participant_id=participant_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -818,7 +817,7 @@ class FaucetApi:
         return response_data.response
 
 
-    def _participant_participant_id_faucet_delete_0_serialize(
+    def _participant_participant_id_faucet_delete_serialize(
         self,
         participant_id,
         _request_auth,
@@ -883,7 +882,7 @@ class FaucetApi:
 
 
     @validate_call
-    def participant_participant_id_faucet_put_0(
+    def participant_participant_id_faucet_put(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant whose faucet to set.")],
         i_faucet_input: Annotated[IFaucetInput, Field(description="The faucet configuration payload.")],
@@ -929,7 +928,7 @@ class FaucetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_faucet_put_0_serialize(
+        _param = self._participant_participant_id_faucet_put_serialize(
             participant_id=participant_id,
             i_faucet_input=i_faucet_input,
             _request_auth=_request_auth,
@@ -956,7 +955,7 @@ class FaucetApi:
 
 
     @validate_call
-    def participant_participant_id_faucet_put_0_with_http_info(
+    def participant_participant_id_faucet_put_with_http_info(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant whose faucet to set.")],
         i_faucet_input: Annotated[IFaucetInput, Field(description="The faucet configuration payload.")],
@@ -1002,7 +1001,7 @@ class FaucetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_faucet_put_0_serialize(
+        _param = self._participant_participant_id_faucet_put_serialize(
             participant_id=participant_id,
             i_faucet_input=i_faucet_input,
             _request_auth=_request_auth,
@@ -1029,7 +1028,7 @@ class FaucetApi:
 
 
     @validate_call
-    def participant_participant_id_faucet_put_0_without_preload_content(
+    def participant_participant_id_faucet_put_without_preload_content(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant whose faucet to set.")],
         i_faucet_input: Annotated[IFaucetInput, Field(description="The faucet configuration payload.")],
@@ -1075,7 +1074,7 @@ class FaucetApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_faucet_put_0_serialize(
+        _param = self._participant_participant_id_faucet_put_serialize(
             participant_id=participant_id,
             i_faucet_input=i_faucet_input,
             _request_auth=_request_auth,
@@ -1097,7 +1096,7 @@ class FaucetApi:
         return response_data.response
 
 
-    def _participant_participant_id_faucet_put_0_serialize(
+    def _participant_participant_id_faucet_put_serialize(
         self,
         participant_id,
         i_faucet_input,

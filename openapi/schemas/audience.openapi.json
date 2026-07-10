@@ -825,7 +825,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -871,7 +874,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -917,7 +923,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -963,7 +972,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1009,7 +1021,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1145,7 +1160,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1191,7 +1209,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1237,7 +1258,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1283,7 +1307,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1329,7 +1356,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1375,7 +1405,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1878,7 +1911,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -1924,7 +1960,10 @@
                   "type": "string"
                 },
                 "in": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "not_contains": {
                   "type": "string"
@@ -2489,14 +2528,13 @@
             "type": "string"
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -3123,14 +3161,13 @@
             "type": "string"
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -3157,14 +3194,13 @@
             }
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -3188,14 +3224,13 @@
             "type": "string"
           },
           "metadata": {
+            "type": "object",
             "oneOf": [
-              {
-                "nullable": true
-              },
               {
                 "$ref": "#/components/schemas/MetadataInputCollection"
               }
-            ]
+            ],
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -4564,15 +4599,14 @@
             "description": "The new filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
           },
           "logo": {
+            "type": "object",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ExistingAssetInput"
-              },
-              {
-                "nullable": true
               }
             ],
-            "description": "The new logo image for the audience. Must be an existing image asset.\n Set to null to remove the logo."
+            "description": "The new logo image for the audience. Must be an existing image asset.\n Set to null to remove the logo.",
+            "nullable": true
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
@@ -4680,15 +4714,14 @@
         "type": "object",
         "properties": {
           "truth": {
+            "type": "object",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/IExampleTruth"
-              },
-              {
-                "nullable": true
               }
             ],
-            "description": "The truth for the example."
+            "description": "The truth for the example.",
+            "nullable": true
           },
           "explanation": {
             "type": "string",
@@ -4701,15 +4734,14 @@
             "nullable": true
           },
           "contextAsset": {
+            "type": "object",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
-              },
-              {
-                "nullable": true
               }
             ],
-            "description": "An optional asset that will be used as context to show to the user."
+            "description": "An optional asset that will be used as context to show to the user.",
+            "nullable": true
           },
           "randomCorrectProbability": {
             "type": "number",

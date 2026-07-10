@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -29,8 +28,8 @@ class IRefereeConfigNaiveRefereeConfig(LazyValidatedModel):
     IRefereeConfigNaiveRefereeConfig
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    guesses_required: StrictInt = Field(alias="guessesRequired")
-    __properties: ClassVar[List[str]] = ["_t", "guessesRequired"]
+    responses_required: StrictInt = Field(alias="responsesRequired")
+    __properties: ClassVar[List[str]] = ["_t", "responsesRequired"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,7 +86,7 @@ class IRefereeConfigNaiveRefereeConfig(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "guessesRequired": obj.get("guessesRequired")
+            "responsesRequired": obj.get("responsesRequired")
         }
         try:
             _obj = cls.model_validate(_data)
