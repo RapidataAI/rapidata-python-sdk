@@ -11,6 +11,8 @@ class MuteVideoSetting(RapidataSetting):
     """
     Mute the video. If this setting is not supplied, the video will not be muted.
 
+    Supported task types: all.
+
     Args:
         value (bool, optional): Whether to mute the video. Defaults to True.
     """

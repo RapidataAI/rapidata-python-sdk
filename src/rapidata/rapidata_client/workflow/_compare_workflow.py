@@ -33,6 +33,7 @@ class CompareWorkflow(Workflow):
     """
 
     modality = RapidModality.COMPARE
+    task_type = "Compare"
 
     def __init__(self, instruction: str, a_b_names: list[str] | None = None):
         super().__init__(type="CompareWorkflowConfig")

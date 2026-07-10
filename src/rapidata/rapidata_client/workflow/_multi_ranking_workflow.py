@@ -18,6 +18,7 @@ BRADLEY_TERRY_DEFAULT_STARTING_SCORE = 1200
 
 class MultiRankingWorkflow(Workflow):
     modality = RapidModality.COMPARE
+    task_type = "Ranking"
 
     def __init__(
         self,

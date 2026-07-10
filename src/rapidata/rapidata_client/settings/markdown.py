@@ -12,6 +12,8 @@ class MarkdownSetting(RapidataSetting):
     Enables limited markdown rendering for text datapoints.
     Useful when comparing formatted text like LLM outputs.
 
+    Supported task types: all.
+
     Args:
         value (bool, optional): Whether to enable markdown rendering. Defaults to True.
     """

@@ -39,6 +39,7 @@ class ClassifyWorkflow(Workflow):
     """
 
     modality = RapidModality.CLASSIFY
+    task_type = "Classification"
 
     def __init__(self, instruction: str, answer_options: list[str]):
         super().__init__(type="SimpleWorkflowConfig")

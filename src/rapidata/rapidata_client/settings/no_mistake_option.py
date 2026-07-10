@@ -11,6 +11,8 @@ class NoMistakeOptionSetting(RapidataSetting):
     """
     Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.
 
+    Supported task types: all.
+
     Args:
         value (bool, optional): Whether to enable the no mistakes button. Defaults to True.
     """

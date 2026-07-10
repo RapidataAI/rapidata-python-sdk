@@ -12,6 +12,12 @@ from rapidata.api_client.models.rapid_modality import RapidModality
 class Workflow(ABC):
     modality: RapidModality
 
+    # SDK public task-type name used to filter task-type-aware settings.
+    # ``None`` means the workflow has no rapid task type (e.g. evaluation) and
+    # is never checked. Keep the values in sync with the settings support matrix
+    # mirrored across the other two repos (rapids-frontend / app-frontend).
+    task_type: str | None = None
+
     def __init__(self, type: str):
         self._type = type
 

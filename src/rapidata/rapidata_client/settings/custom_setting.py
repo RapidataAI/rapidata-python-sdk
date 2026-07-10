@@ -12,6 +12,9 @@ class CustomSetting(RapidataSetting):
     """
     Set a custom setting with the given key and value. Use this to enable features that do not have a dedicated method (yet).
 
+    Supported task types: all. As an arbitrary escape hatch it is never filtered
+    by task type and never triggers a support warning.
+
     Args:
         key (str): The key for the custom setting.
         value (str): The value for the custom setting.

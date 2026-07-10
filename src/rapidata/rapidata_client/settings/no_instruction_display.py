@@ -13,6 +13,8 @@ class NoInstructionDisplaySetting(RapidataSetting):
 
     Note: If SwapContextInstructionSetting is also applied, this will hide the context instead, since the positions are swapped.
 
+    Supported task types: all.
+
     Args:
         value (bool, optional): Whether to hide the instruction display. Defaults to True.
     """

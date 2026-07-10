@@ -4,16 +4,24 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 
 
 class CompareEquirectangularSetting(RapidataSetting):
     """
     Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
 
+    Supported task types: Compare.
+
     Args:
         value (bool, optional): Whether to enable 360-degree comparison mode. Defaults to True.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Compare",)
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):

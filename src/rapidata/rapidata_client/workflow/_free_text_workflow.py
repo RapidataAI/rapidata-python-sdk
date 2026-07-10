@@ -35,6 +35,7 @@ class FreeTextWorkflow(Workflow):
     """
 
     modality = RapidModality.FREETEXT
+    task_type = "Free Text"
 
     def __init__(self, instruction: str, validation_system_prompt: str | None = None):
         super().__init__(type="SimpleWorkflowConfig")

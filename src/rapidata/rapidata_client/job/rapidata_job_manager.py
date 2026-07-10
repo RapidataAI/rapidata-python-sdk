@@ -37,6 +37,34 @@ class RapidataJobManager:
         self.__priority: int | None = None
         logger.debug("JobManager initialized")
 
+    @staticmethod
+    def _warn_unsupported_settings(
+        workflow: Workflow, settings: Sequence[RapidataSetting]
+    ) -> None:
+        """Warn (never raise) about settings the job's task type does not honor.
+
+        Task-type-agnostic settings (``supported_rapid_types == "all"``, incl.
+        CustomSetting) are skipped. Ranking is compare-based, so it honors
+        Compare-scoped settings. The flag is still sent regardless.
+        """
+        if workflow.task_type is None:
+            return
+
+        effective_task_type = (
+            "Compare" if workflow.task_type == "Ranking" else workflow.task_type
+        )
+        for setting in settings:
+            supported = setting.supported_rapid_types
+            if supported == "all" or effective_task_type in supported:
+                continue
+            logger.warning(
+                "%s is not supported for %s tasks (supported task types: %s). "
+                "The setting will still be sent but may have no effect.",
+                type(setting).__name__,
+                workflow.task_type,
+                ", ".join(supported),
+            )
+
     def _create_general_job_definition(
         self,
         name: str,
@@ -49,6 +77,8 @@ class RapidataJobManager:
     ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
+
+        self._warn_unsupported_settings(workflow, settings)
 
         self.__context_manager._enforce_context_length(
             datapoints=datapoints,

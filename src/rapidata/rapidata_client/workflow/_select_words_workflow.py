@@ -33,6 +33,7 @@ class SelectWordsWorkflow(Workflow):
     """
 
     modality = RapidModality.TRANSCRIPTION
+    task_type = "Select Words"
 
     def __init__(self, instruction: str):
         super().__init__(type="SimpleWorkflowConfig")

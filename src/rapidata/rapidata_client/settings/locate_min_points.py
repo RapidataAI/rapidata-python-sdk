@@ -4,16 +4,24 @@
 
 from __future__ import annotations
 
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import ClassVar
+from rapidata.rapidata_client.settings._rapidata_setting import (
+    RapidataSetting,
+    SupportedRapidTypes,
+)
 
 
 class LocateMinPointsSetting(RapidataSetting):
     """
     Sets the minimum number of points required for a valid locate submission. The submit button is disabled until enough points are placed.
 
+    Supported task types: Locate.
+
     Args:
         value (int, optional): The minimum number of points required. Defaults to 1.
     """
+
+    supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Locate",)
 
     def __init__(self, value: int = 1):
         if value < 1:
