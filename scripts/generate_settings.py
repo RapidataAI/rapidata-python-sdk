@@ -28,26 +28,39 @@ HANDWRITTEN_FILES = {
     "custom_setting.py",
 }
 
-# Which task types honor each setting, keyed by class_name. Absent == "all"
-# (every task type). Values use the SDK public task-type names.
+# The support matrix (which task types honor each setting) is NOT defined here.
+# It is the source of truth in rapids-frontend (FEATURE_FLAG_SUPPORTED_RAPID_TYPES
+# in src/types/rapid.ts) and is baked into settings.json per setting as a
+# `supported_rapid_types` field (rapids-frontend `type` names, or "all"). We only
+# translate those native names into the SDK public task-type names below.
 #
-# This is the SDK's hand-mirrored copy of the shared support matrix. There is no
-# package shared across the three repos, so keep this in sync with rapids-frontend's
-# FEATURE_FLAG_SUPPORTED_RAPID_TYPES (src/types/rapid.ts, the source of truth) and
-# app-frontend's supportedRapidTypes catalog field. New settings not listed here
-# default to "all" (no filtering / no warning), which is the safe fallback.
-SUPPORTED_RAPID_TYPES: dict[str, tuple[str, ...]] = {
-    "NoShuffleSetting": ("Classification", "Compare"),
-    "AllowNeitherBothSetting": ("Compare",),
-    "ComparePanoramaSetting": ("Compare",),
-    "CompareEquirectangularSetting": ("Compare",),
-    "ClassifyEquirectangularSetting": ("Classification",),
-    "FreeTextMinimumCharactersSetting": ("Free Text",),
-    "FreeTextMaxCharactersSetting": ("Free Text",),
-    "KeyboardNumericSetting": ("Free Text",),
-    "LocateMaxPointsSetting": ("Locate",),
-    "LocateMinPointsSetting": ("Locate",),
+# Keep this map in sync with the RapidType union in rapids-frontend's rapid.ts.
+RAPID_TYPE_TO_SDK_TASK_TYPE: dict[str, str] = {
+    "Classify": "Classification",
+    "Compare": "Compare",
+    "FreeText": "Free Text",
+    "Locate": "Locate",
+    "Line": "Draw",
+    "Transcription": "Select Words",
+    "Scrub": "Timestamp",
 }
+
+
+def supported_rapid_types_for(s: dict[str, Any]) -> tuple[str, ...] | str:
+    """Return the setting's supported task types as SDK public names, or "all".
+
+    Reads the ``supported_rapid_types`` field baked into settings.json by
+    rapids-frontend. A missing field (older settings.json) defaults to "all".
+    """
+    raw = s.get("supported_rapid_types", "all")
+    if raw == "all" or not isinstance(raw, list):
+        return "all"
+    mapped: list[str] = []
+    for name in raw:
+        sdk_name = RAPID_TYPE_TO_SDK_TASK_TYPE.get(name, name)
+        if sdk_name not in mapped:
+            mapped.append(sdk_name)
+    return tuple(mapped) if mapped else "all"
 
 
 def class_name_to_file_name(class_name: str) -> str:
@@ -79,7 +92,7 @@ def generate_setting_module(s: dict[str, Any]) -> str:
     lines.append("from __future__ import annotations\n")
 
     has_warnings = s.get("warnings") is not None
-    supported = SUPPORTED_RAPID_TYPES.get(s["class_name"], "all")
+    supported = supported_rapid_types_for(s)
     has_supported = supported != "all"
 
     if has_supported:
