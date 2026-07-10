@@ -975,7 +975,14 @@ class ExamplesApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('visibility[' + _k + ']', _item))
+                    else:
                         _query_params.append(('visibility[' + _k + ']', _v))
         if is_common_sense is not None:
             _param_val = is_common_sense
@@ -983,7 +990,14 @@ class ExamplesApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('is_common_sense[' + _k + ']', _item))
+                    else:
                         _query_params.append(('is_common_sense[' + _k + ']', _v))
         if logic is not None:
             

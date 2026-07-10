@@ -1190,7 +1190,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -1198,7 +1205,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if logic is not None:
             
@@ -1653,7 +1667,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
                         _query_params.append(('country[' + _k + ']', _v))
         if language is not None:
             _param_val = language
@@ -1661,7 +1682,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
                         _query_params.append(('language[' + _k + ']', _v))
         if gender is not None:
             _param_val = gender
@@ -1669,7 +1697,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
                         _query_params.append(('gender[' + _k + ']', _v))
         if age_bucket is not None:
             _param_val = age_bucket
@@ -1677,7 +1712,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
                         _query_params.append(('age_bucket[' + _k + ']', _v))
         if occupation is not None:
             _param_val = occupation
@@ -1685,7 +1727,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
                         _query_params.append(('occupation[' + _k + ']', _v))
         if tags is not None:
             _param_val = tags
@@ -1693,7 +1742,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
                         _query_params.append(('tags[' + _k + ']', _v))
         if participant_id is not None:
             _param_val = participant_id
@@ -1701,7 +1757,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('participant_id[' + _k + ']', _v))
         if leaderboard_id is not None:
             _param_val = leaderboard_id
@@ -1709,7 +1772,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('leaderboard_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('leaderboard_id[' + _k + ']', _v))
         if run_id is not None:
             _param_val = run_id
@@ -1717,7 +1787,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('run_id[' + _k + ']', _v))
         if prompt_identifier is not None:
             _param_val = prompt_identifier
@@ -1725,7 +1802,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
                         _query_params.append(('prompt_identifier[' + _k + ']', _v))
         if voted_at is not None:
             _param_val = voted_at
@@ -1733,7 +1817,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -2693,7 +2784,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -2701,7 +2799,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if status is not None:
             _param_val = status
@@ -2709,7 +2814,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('status[' + _k + ']', _item))
+                    else:
                         _query_params.append(('status[' + _k + ']', _v))
         if logic is not None:
             
@@ -4285,7 +4397,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -4293,7 +4412,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if identifier is not None:
             _param_val = identifier
@@ -4301,7 +4427,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('identifier[' + _k + ']', _item))
+                    else:
                         _query_params.append(('identifier[' + _k + ']', _v))
         if english_prompt is not None:
             _param_val = english_prompt
@@ -4309,7 +4442,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('english_prompt[' + _k + ']', _item))
+                    else:
                         _query_params.append(('english_prompt[' + _k + ']', _v))
         if original_prompt is not None:
             _param_val = original_prompt
@@ -4317,7 +4457,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('original_prompt[' + _k + ']', _item))
+                    else:
                         _query_params.append(('original_prompt[' + _k + ']', _v))
         if logic is not None:
             
@@ -5084,7 +5231,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
                         _query_params.append(('country[' + _k + ']', _v))
         if language is not None:
             _param_val = language
@@ -5092,7 +5246,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
                         _query_params.append(('language[' + _k + ']', _v))
         if gender is not None:
             _param_val = gender
@@ -5100,7 +5261,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
                         _query_params.append(('gender[' + _k + ']', _v))
         if age_bucket is not None:
             _param_val = age_bucket
@@ -5108,7 +5276,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
                         _query_params.append(('age_bucket[' + _k + ']', _v))
         if occupation is not None:
             _param_val = occupation
@@ -5116,7 +5291,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
                         _query_params.append(('occupation[' + _k + ']', _v))
         if tags is not None:
             _param_val = tags
@@ -5124,7 +5306,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
                         _query_params.append(('tags[' + _k + ']', _v))
         if participant_id is not None:
             _param_val = participant_id
@@ -5132,7 +5321,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('participant_id[' + _k + ']', _v))
         if leaderboard_id is not None:
             _param_val = leaderboard_id
@@ -5140,7 +5336,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('leaderboard_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('leaderboard_id[' + _k + ']', _v))
         if run_id is not None:
             _param_val = run_id
@@ -5148,7 +5351,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('run_id[' + _k + ']', _v))
         if prompt_identifier is not None:
             _param_val = prompt_identifier
@@ -5156,7 +5366,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
                         _query_params.append(('prompt_identifier[' + _k + ']', _v))
         if voted_at is not None:
             _param_val = voted_at
@@ -5164,7 +5381,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -5889,7 +6113,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
                         _query_params.append(('country[' + _k + ']', _v))
         if language is not None:
             _param_val = language
@@ -5897,7 +6128,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
                         _query_params.append(('language[' + _k + ']', _v))
         if gender is not None:
             _param_val = gender
@@ -5905,7 +6143,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
                         _query_params.append(('gender[' + _k + ']', _v))
         if age_bucket is not None:
             _param_val = age_bucket
@@ -5913,7 +6158,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
                         _query_params.append(('age_bucket[' + _k + ']', _v))
         if occupation is not None:
             _param_val = occupation
@@ -5921,7 +6173,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
                         _query_params.append(('occupation[' + _k + ']', _v))
         if tags is not None:
             _param_val = tags
@@ -5929,7 +6188,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
                         _query_params.append(('tags[' + _k + ']', _v))
         if participant_id is not None:
             _param_val = participant_id
@@ -5937,7 +6203,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('participant_id[' + _k + ']', _v))
         if leaderboard_id is not None:
             _param_val = leaderboard_id
@@ -5945,7 +6218,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('leaderboard_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('leaderboard_id[' + _k + ']', _v))
         if run_id is not None:
             _param_val = run_id
@@ -5953,7 +6233,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('run_id[' + _k + ']', _v))
         if prompt_identifier is not None:
             _param_val = prompt_identifier
@@ -5961,7 +6248,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
                         _query_params.append(('prompt_identifier[' + _k + ']', _v))
         if voted_at is not None:
             _param_val = voted_at
@@ -5969,7 +6263,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -6444,7 +6745,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
                         _query_params.append(('country[' + _k + ']', _v))
         if language is not None:
             _param_val = language
@@ -6452,7 +6760,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
                         _query_params.append(('language[' + _k + ']', _v))
         if gender is not None:
             _param_val = gender
@@ -6460,7 +6775,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
                         _query_params.append(('gender[' + _k + ']', _v))
         if age_bucket is not None:
             _param_val = age_bucket
@@ -6468,7 +6790,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
                         _query_params.append(('age_bucket[' + _k + ']', _v))
         if occupation is not None:
             _param_val = occupation
@@ -6476,7 +6805,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
                         _query_params.append(('occupation[' + _k + ']', _v))
         if tags is not None:
             _param_val = tags
@@ -6484,7 +6820,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
                         _query_params.append(('tags[' + _k + ']', _v))
         if participant_id is not None:
             _param_val = participant_id
@@ -6492,7 +6835,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('participant_id[' + _k + ']', _v))
         if leaderboard_id is not None:
             _param_val = leaderboard_id
@@ -6500,7 +6850,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('leaderboard_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('leaderboard_id[' + _k + ']', _v))
         if run_id is not None:
             _param_val = run_id
@@ -6508,7 +6865,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('run_id[' + _k + ']', _v))
         if prompt_identifier is not None:
             _param_val = prompt_identifier
@@ -6516,7 +6880,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
                         _query_params.append(('prompt_identifier[' + _k + ']', _v))
         if voted_at is not None:
             _param_val = voted_at
@@ -6524,7 +6895,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -7185,7 +7563,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -7193,7 +7578,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
@@ -7201,7 +7593,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -7209,7 +7608,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -7590,7 +7996,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -7598,7 +8011,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
@@ -7606,7 +8026,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -7614,7 +8041,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if logic is not None:
             
@@ -7995,7 +8429,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('id[' + _k + ']', _item))
+                    else:
                         _query_params.append(('id[' + _k + ']', _v))
         if name is not None:
             _param_val = name
@@ -8003,7 +8444,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('name[' + _k + ']', _item))
+                    else:
                         _query_params.append(('name[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
@@ -8011,7 +8459,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('owner_mail[' + _k + ']', _item))
+                    else:
                         _query_params.append(('owner_mail[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
@@ -8019,7 +8474,14 @@ class BenchmarkApi:
                 _param_val = _param_val.to_dict()
             if isinstance(_param_val, dict):
                 for _k, _v in _param_val.items():
-                    if _v is not None:
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('created_at[' + _k + ']', _item))
+                    else:
                         _query_params.append(('created_at[' + _k + ']', _v))
         if logic is not None:
             

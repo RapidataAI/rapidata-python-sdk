@@ -67,7 +67,7 @@ class BenchmarkParticipant:
         # to the whole field on every call, so filtering to a single participant
         # would yield a meaningless score.
         with tracer.start_as_current_span("BenchmarkParticipant.get_elo"):
-            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_get(
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_query_get(
                 benchmark_id=self._benchmark_id,
             )
 
