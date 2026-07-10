@@ -20692,7 +20692,9 @@
                   "state",
                   "-state",
                   "owner_mail",
-                  "-owner_mail"
+                  "-owner_mail",
+                  "progress",
+                  "-progress"
                 ],
                 "type": "string"
               }
@@ -47138,6 +47140,12 @@
             "type": "string",
             "description": "The timestamp when the job was created.",
             "format": "date-time"
+          },
+          "progress": {
+            "type": "number",
+            "description": "Labeling completion as a ratio in the range 0–1, or null when no progress has\n been reported yet (completion sets it to 1). Sortable via ?sort=progress.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
