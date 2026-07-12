@@ -70,6 +70,12 @@ class RapidataJob:
         self.job_details_page = f"https://app.{self._openapi_service.environment}/audiences/{self.audience_id}/job/{self.id}"
         logger.debug("RapidataJob initialized")
 
+    # States a job can settle into that will never progress to Completed/Failed on
+    # their own: ManualApproval needs a Rapidata reviewer to act, SpendLimited needs
+    # an account top-up. Waiting on either (e.g. from get_results) would hang the
+    # caller forever, so we surface them as informative errors instead.
+    _BLOCKING_STATUSES = ("ManualApproval", "SpendLimited")
+
     def _get_job_failure_message(self) -> str | None:
         """Retrieves the failure message from the job if available."""
         try:
@@ -78,6 +84,36 @@ class RapidataJob:
         except Exception:
             logger.debug("Failed to get job failure message", self, exc_info=True)
             return None
+
+    def _get_review_reason(self) -> str | None:
+        """Retrieves the manual-review reason from the job if the API exposes one."""
+        try:
+            job = self._openapi_service.order.job_api.job_job_id_get(self.id)
+            reason = job.review_reason
+            return reason.value if reason is not None else None
+        except Exception:
+            logger.debug("Failed to get job review reason", self, exc_info=True)
+            return None
+
+    def _raise_for_blocking_status(self, status: str) -> None:
+        """Raises an informative error for a job state that can't reach completion
+        on its own, instead of letting the caller block on it indefinitely."""
+        if status == "SpendLimited":
+            raise Exception(
+                f"Job '{self}' is spend-limited: the account ran out of funds while "
+                f"running, so it stopped collecting responses. Partial results remain "
+                f"available; top up the account to resume and let the job finish."
+            )
+
+        # ManualApproval — reviewReason is optional; a job can legitimately be under
+        # review with no customer-facing reason recorded yet.
+        reason = self._get_review_reason()
+        reason_detail = f" ({reason})" if reason else ""
+        raise Exception(
+            f"Job '{self}' is being reviewed{reason_detail}: a Rapidata reviewer "
+            f"needs to approve it before it runs. This can take a couple of hours; "
+            f"once approved, call this again."
+        )
 
     def _retry_operation(
         self,
@@ -133,8 +169,15 @@ class RapidataJob:
 
         Returns:
             The final status reached
+
+        Raises:
+            Exception: If the job enters a state it can't progress out of on its own
+                (``ManualApproval`` or ``SpendLimited``) while a different status is
+                being awaited — with the review reason when the API provides one.
         """
         while (current_status := self.get_status()) not in target_statuses:
+            if current_status in self._BLOCKING_STATUSES:
+                self._raise_for_blocking_status(current_status)
             if status_message:
                 logger.debug(status_message, self, current_status)
             sleep(check_interval)
@@ -221,7 +264,9 @@ class RapidataJob:
             RapidataResults: The results of the job.
 
         Raises:
-            Exception: If failed to get job results.
+            Exception: If failed to get job results, or if the job is in manual
+                review (``ManualApproval``) or spend-limited (``SpendLimited``) and
+                therefore cannot complete without intervention.
         """
         with tracer.start_as_current_span("RapidataJob.get_results"):
             from rapidata.api_client.exceptions import ApiException
@@ -260,6 +305,8 @@ class RapidataJob:
 
         Raises:
             ValueError: If refresh_rate is less than 1.
+            Exception: If the job has failed, or is in a state it can't progress out
+                of on its own (``ManualApproval`` or ``SpendLimited``).
         """
         if refresh_rate < 1:
             raise ValueError("refresh_rate must be at least 1")
@@ -272,6 +319,9 @@ class RapidataJob:
         if current_status == "Failed":
             failure_message = self._get_job_failure_message()
             raise Exception(f"Job '{self}' has failed: {failure_message}")
+
+        if current_status in self._BLOCKING_STATUSES:
+            self._raise_for_blocking_status(current_status)
 
         # Get progress from pipeline if available
         with tqdm(
@@ -292,6 +342,9 @@ class RapidataJob:
                 if current_status == "Failed":
                     failure_message = self._get_job_failure_message()
                     raise Exception(f"Job '{self}' has failed: {failure_message}")
+
+                if current_status in self._BLOCKING_STATUSES:
+                    self._raise_for_blocking_status(current_status)
 
                 # Try to get progress from workflow
                 try:

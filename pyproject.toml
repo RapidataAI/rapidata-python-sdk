@@ -34,6 +34,7 @@ dev = [
     "ipykernel>=7.1.0,<8",
     "jupyter>=1.1.1,<2",
     "pyright>=1.1.407",
+    "pytest>=8.0.0,<9",
 ]
 docs = [
     "mkdocs-material>=9.5.34,<10",
@@ -48,6 +49,9 @@ docs = [
     "mkdocs-glightbox>=0.4.0,<1",
     "mkdocs-llmstxt-md>=0.1.0",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.hatch.build.targets.sdist]
 include = ["src/rapidata"]
