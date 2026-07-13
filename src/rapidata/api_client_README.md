@@ -255,7 +255,6 @@ Class | Method | HTTP request | Description
 *JobApi* | [**job_post**](rapidata/api_client/docs/JobApi.md#job_post) | **POST** /job | Creates a new job from a job definition and audience.
 *JobApi* | [**jobs_aggregated_overview_get**](rapidata/api_client/docs/JobApi.md#jobs_aggregated_overview_get) | **GET** /jobs/aggregated-overview | Retrieves jobs aggregated by customer with total counts and most recent job information.
 *JobApi* | [**jobs_get**](rapidata/api_client/docs/JobApi.md#jobs_get) | **GET** /jobs | Queries jobs visible to the caller.
-*LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboard id and participant id.
 *LeaderboardApi* | [**leaderboard_combined_matrix_query_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_combined_matrix_query_get) | **GET** /leaderboard/combined-matrix/query | Queries the combined win matrix of multiple leaderboards.
 *LeaderboardApi* | [**leaderboard_combined_standings_query_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_combined_standings_query_get) | **GET** /leaderboard/combined-standings/query | Queries the combined standings of multiple leaderboards.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_boost_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_boost_post) | **POST** /leaderboard/{leaderboardId}/boost | Boosts a subset of participants within a leaderboard.
@@ -263,7 +262,6 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its id.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_matrix_query_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_matrix_query_get) | **GET** /leaderboard/{leaderboardId}/matrix/query | Queries the win matrix of a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_name_put**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_name_put) | **PUT** /leaderboard/{leaderboardId}/name | Updates the name of a leaderboard.
-*LeaderboardApi* | [**leaderboard_leaderboard_id_participant_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participant_participant_id_get) | **GET** /leaderboard/{leaderboardId}/participant/{participantId} | Gets a participant by its id.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_get) | **GET** /leaderboard/{leaderboardId}/participants | Queries all participants connected to a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_participant_id_submit_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_participant_id_submit_post) | **POST** /leaderboard/{leaderboardId}/participants/{participantId}/submit | Submits a participant to a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_post) | **POST** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
@@ -297,9 +295,15 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_aggregated_overview_get**](rapidata/api_client/docs/OrderApi.md#orders_aggregated_overview_get) | **GET** /orders/aggregated-overview | Retrieves orders aggregated by customer with total amounts and most recent order information.
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders with filtering and pagination.
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves all publicly available orders.
+*OrganizationApi* | [**organizations_accept_invitation_post**](rapidata/api_client/docs/OrganizationApi.md#organizations_accept_invitation_post) | **POST** /organizations/accept-invitation | Accepts the invitation identified by the token.
 *OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations.
 *OrganizationApi* | [**organizations_mine_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_mine_get) | **GET** /organizations/mine | Returns the organization resolved from the calling customer&#39;s email domain.
+*OrganizationApi* | [**organizations_organization_id_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_get) | **GET** /organizations/{organizationId} | Returns the organization with the given id.
+*OrganizationApi* | [**organizations_organization_id_invitations_post**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_invitations_post) | **POST** /organizations/{organizationId}/invitations | Creates an invitation to join the organization.
+*OrganizationApi* | [**organizations_organization_id_members_customer_id_delete**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_members_customer_id_delete) | **DELETE** /organizations/{organizationId}/members/{customerId} | Removes the given customer&#39;s membership from the organization.
+*OrganizationApi* | [**organizations_organization_id_members_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_members_get) | **GET** /organizations/{organizationId}/members | Returns the members of the given organization.
 *OrganizationApi* | [**organizations_owner_support_slack_channel_put**](rapidata/api_client/docs/OrganizationApi.md#organizations_owner_support_slack_channel_put) | **PUT** /organizations/{owner}/support-slack-channel | Sets the support Slack channel URL for the organization owned by the given customer.
+*OrganizationApi* | [**organizations_post**](rapidata/api_client/docs/OrganizationApi.md#organizations_post) | **POST** /organizations | Creates an organization and makes the calling customer its owner.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | Disables a participant in a benchmark.
 *ParticipantApi* | [**participant_participant_id_enable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_enable_post) | **POST** /participant/{participantId}/enable | Enables a previously disabled participant in a benchmark.
@@ -329,6 +333,7 @@ Class | Method | HTTP request | Description
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_get) | **GET** /flow/ranking/item/{flowItemId} | Retrieves a flow item by its ID.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_results_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_results_get) | **GET** /flow/ranking/item/{flowItemId}/results | Returns ranking results with Elo scores for a completed flow item.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_vote_matrix_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_vote_matrix_get) | **GET** /flow/ranking/item/{flowItemId}/vote-matrix | Retrieves the pairwise vote matrix for a completed flow item.
+*RapidApi* | [**rapid_compare_ab_summary_correlation_id_recalculate_post**](rapidata/api_client/docs/RapidApi.md#rapid_compare_ab_summary_correlation_id_recalculate_post) | **POST** /rapid/compare-ab-summary/{correlationId}/recalculate | Recalculates the compare AB summary counters of a correlation from scratch.
 *RapidApi* | [**rapid_rapid_id_navigation_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_navigation_get) | **GET** /rapid/{rapidId}/navigation | Gets the anchor rapid and its surrounding rapids within the results slice, in the order  and filter the results grid renders, so the explorer can step neighbour-to-neighbour.
 *RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a completed rapid, marking its results as invalid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
@@ -402,6 +407,8 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AcceptOrgInvitationEndpointInput](rapidata/api_client/docs/AcceptOrgInvitationEndpointInput.md)
+ - [AcceptOrgInvitationEndpointOutput](rapidata/api_client/docs/AcceptOrgInvitationEndpointOutput.md)
  - [AddExampleToAudienceEndpointInput](rapidata/api_client/docs/AddExampleToAudienceEndpointInput.md)
  - [AddExampleToAudienceEndpointOutput](rapidata/api_client/docs/AddExampleToAudienceEndpointOutput.md)
  - [AddUserResponseEndpointInput](rapidata/api_client/docs/AddUserResponseEndpointInput.md)
@@ -485,6 +492,7 @@ Class | Method | HTTP request | Description
  - [CreateInvoiceEndpointOutput](rapidata/api_client/docs/CreateInvoiceEndpointOutput.md)
  - [CreateJobDefinitionEndpointInput](rapidata/api_client/docs/CreateJobDefinitionEndpointInput.md)
  - [CreateJobDefinitionEndpointOutput](rapidata/api_client/docs/CreateJobDefinitionEndpointOutput.md)
+ - [CreateJobEndpointCostWarningModel](rapidata/api_client/docs/CreateJobEndpointCostWarningModel.md)
  - [CreateJobEndpointInput](rapidata/api_client/docs/CreateJobEndpointInput.md)
  - [CreateJobEndpointOutput](rapidata/api_client/docs/CreateJobEndpointOutput.md)
  - [CreateJobRevisionEndpointInput](rapidata/api_client/docs/CreateJobRevisionEndpointInput.md)
@@ -497,6 +505,8 @@ Class | Method | HTTP request | Description
  - [CreateManualChargeEndpointOutput](rapidata/api_client/docs/CreateManualChargeEndpointOutput.md)
  - [CreateOrderEndpointOutput](rapidata/api_client/docs/CreateOrderEndpointOutput.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
+ - [CreateOrganizationEndpointInput](rapidata/api_client/docs/CreateOrganizationEndpointInput.md)
+ - [CreateOrganizationEndpointOutput](rapidata/api_client/docs/CreateOrganizationEndpointOutput.md)
  - [CreateProgramCampaignEndpointInput](rapidata/api_client/docs/CreateProgramCampaignEndpointInput.md)
  - [CreateProgramCampaignEndpointOutput](rapidata/api_client/docs/CreateProgramCampaignEndpointOutput.md)
  - [CreatePromptForBenchmarkEndpointInput](rapidata/api_client/docs/CreatePromptForBenchmarkEndpointInput.md)
@@ -607,8 +617,8 @@ Class | Method | HTTP request | Description
  - [GetLeaderboardByIdEndpointOutput](rapidata/api_client/docs/GetLeaderboardByIdEndpointOutput.md)
  - [GetMyOrganizationEndpointOutput](rapidata/api_client/docs/GetMyOrganizationEndpointOutput.md)
  - [GetOrderByIdEndpointOutput](rapidata/api_client/docs/GetOrderByIdEndpointOutput.md)
+ - [GetOrganizationEndpointOutput](rapidata/api_client/docs/GetOrganizationEndpointOutput.md)
  - [GetParticipantByIdEndpointOutput](rapidata/api_client/docs/GetParticipantByIdEndpointOutput.md)
- - [GetParticipantByIdObsoleteEndpointOutput](rapidata/api_client/docs/GetParticipantByIdObsoleteEndpointOutput.md)
  - [GetPipelineByIdEndpointOutput](rapidata/api_client/docs/GetPipelineByIdEndpointOutput.md)
  - [GetPromptsByBenchmarkEndpointOutput](rapidata/api_client/docs/GetPromptsByBenchmarkEndpointOutput.md)
  - [GetPromptsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/GetPromptsByBenchmarkEndpointPagedResultOfOutput.md)
@@ -650,7 +660,6 @@ Class | Method | HTTP request | Description
  - [GetSignalRunByIdEndpointOutput](rapidata/api_client/docs/GetSignalRunByIdEndpointOutput.md)
  - [GetSimpleWorkflowResultsEndpointOutput](rapidata/api_client/docs/GetSimpleWorkflowResultsEndpointOutput.md)
  - [GetSimpleWorkflowResultsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetSimpleWorkflowResultsEndpointPagedResultOfOutput.md)
- - [GetStandingByIdEndpointOutput](rapidata/api_client/docs/GetStandingByIdEndpointOutput.md)
  - [GetUserScoreCacheEndpointOutput](rapidata/api_client/docs/GetUserScoreCacheEndpointOutput.md)
  - [GetValidationRapidsEndpointOutput](rapidata/api_client/docs/GetValidationRapidsEndpointOutput.md)
  - [GetValidationRapidsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetValidationRapidsEndpointPagedResultOfOutput.md)
@@ -978,6 +987,8 @@ Class | Method | HTTP request | Description
  - [IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel](rapidata/api_client/docs/IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel.md)
  - [IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel](rapidata/api_client/docs/IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel.md)
  - [InspectReportEndpointOutput](rapidata/api_client/docs/InspectReportEndpointOutput.md)
+ - [InviteOrgMemberEndpointInput](rapidata/api_client/docs/InviteOrgMemberEndpointInput.md)
+ - [InviteOrgMemberEndpointOutput](rapidata/api_client/docs/InviteOrgMemberEndpointOutput.md)
  - [InvoiceStatus](rapidata/api_client/docs/InvoiceStatus.md)
  - [IsRapidBagValidEndpointOutput](rapidata/api_client/docs/IsRapidBagValidEndpointOutput.md)
  - [JobDefinitionRevisionState](rapidata/api_client/docs/JobDefinitionRevisionState.md)
@@ -987,14 +998,18 @@ Class | Method | HTTP request | Description
  - [LinePoint](rapidata/api_client/docs/LinePoint.md)
  - [LineResultModelLine](rapidata/api_client/docs/LineResultModelLine.md)
  - [LineResultModelLinePoint](rapidata/api_client/docs/LineResultModelLinePoint.md)
+ - [ListOrgMembersEndpointOutput](rapidata/api_client/docs/ListOrgMembersEndpointOutput.md)
+ - [ListOrgMembersEndpointOutputMember](rapidata/api_client/docs/ListOrgMembersEndpointOutputMember.md)
  - [LocateBoxTruthModelBox](rapidata/api_client/docs/LocateBoxTruthModelBox.md)
  - [LocateCoordinate](rapidata/api_client/docs/LocateCoordinate.md)
  - [LocateCoordinateModel](rapidata/api_client/docs/LocateCoordinateModel.md)
  - [ManualChargeReason](rapidata/api_client/docs/ManualChargeReason.md)
+ - [MembershipStatus](rapidata/api_client/docs/MembershipStatus.md)
  - [NamedClassification](rapidata/api_client/docs/NamedClassification.md)
  - [NamedEntityResultModelNamedClassification](rapidata/api_client/docs/NamedEntityResultModelNamedClassification.md)
  - [NamedEntityTruthModelNamedClassification](rapidata/api_client/docs/NamedEntityTruthModelNamedClassification.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
+ - [OrgRole](rapidata/api_client/docs/OrgRole.md)
  - [PagedResultOfIBillingGroupModel](rapidata/api_client/docs/PagedResultOfIBillingGroupModel.md)
  - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
  - [PidBatchMode](rapidata/api_client/docs/PidBatchMode.md)
@@ -1116,6 +1131,7 @@ Class | Method | HTTP request | Description
  - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
  - [RetrySampleGenerationEndpointInput](rapidata/api_client/docs/RetrySampleGenerationEndpointInput.md)
  - [RetrySampleGenerationEndpointOutput](rapidata/api_client/docs/RetrySampleGenerationEndpointOutput.md)
+ - [ReviewReasonModel](rapidata/api_client/docs/ReviewReasonModel.md)
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
  - [SampleGenerationItemStatus](rapidata/api_client/docs/SampleGenerationItemStatus.md)
  - [SampleGenerationStatus](rapidata/api_client/docs/SampleGenerationStatus.md)

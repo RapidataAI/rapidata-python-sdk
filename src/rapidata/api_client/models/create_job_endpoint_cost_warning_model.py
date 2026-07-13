@@ -16,22 +16,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.create_job_endpoint_cost_warning_model import CreateJobEndpointCostWarningModel
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
+from typing import Any, ClassVar, Dict, List, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateJobEndpointOutput(LazyValidatedModel):
+class CreateJobEndpointCostWarningModel(LazyValidatedModel):
     """
-    The result when a job has been created.
+    CreateJobEndpointCostWarningModel
     """ # noqa: E501
-    job_id: StrictStr = Field(description="The id of the created job.", alias="jobId")
-    recruiting_started: StrictBool = Field(description="Whether recruiting was automatically started for the audience.", alias="recruitingStarted")
-    cost_warning: Optional[CreateJobEndpointCostWarningModel] = Field(default=None, description="Present only when the job's estimated cost exceeds the owner's remaining balance.  Advisory — the job is created and runs regardless; it may pause for funds mid-run.", alias="costWarning")
-    __properties: ClassVar[List[str]] = ["jobId", "recruitingStarted", "costWarning"]
+    estimated_cost: Union[StrictFloat, StrictInt] = Field(alias="estimatedCost")
+    available_balance: Union[StrictFloat, StrictInt] = Field(alias="availableBalance")
+    shortfall: Union[StrictFloat, StrictInt]
+    __properties: ClassVar[List[str]] = ["estimatedCost", "availableBalance", "shortfall"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +46,7 @@ class CreateJobEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointOutput from a JSON string"""
+        """Create an instance of CreateJobEndpointCostWarningModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,14 +67,11 @@ class CreateJobEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of cost_warning
-        if self.cost_warning:
-            _dict['costWarning'] = self.cost_warning.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointOutput from a dict"""
+        """Create an instance of CreateJobEndpointCostWarningModel from a dict"""
         if obj is None:
             return None
 
@@ -83,9 +79,9 @@ class CreateJobEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "jobId": obj.get("jobId"),
-            "recruitingStarted": obj.get("recruitingStarted"),
-            "costWarning": CreateJobEndpointCostWarningModel.from_dict(obj["costWarning"]) if obj.get("costWarning") is not None else None
+            "estimatedCost": obj.get("estimatedCost"),
+            "availableBalance": obj.get("availableBalance"),
+            "shortfall": obj.get("shortfall")
         }
         try:
             _obj = cls.model_validate(_data)
