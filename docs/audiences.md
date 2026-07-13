@@ -244,7 +244,6 @@ a way that's better expressed as a single combined filter on the base.
 |---|---|
 | `CountryFilter` | ISO-3166 country code (e.g. `["US", "CA"]`) |
 | `LanguageFilter` | Spoken / device language (e.g. `["en", "de"]`) |
-| `DemographicFilter` | Demographic attribute (e.g. `DemographicFilter("age", ["18-29"])`) |
 | `DeviceFilter` | Device type (e.g. `DeviceFilter([DeviceType.PHONE])`) |
 
 ### Combining filters
