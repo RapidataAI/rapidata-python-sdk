@@ -111,7 +111,13 @@ contacts the auth server once the token is within `leeway` of expiry.
 
 Whatever the transport, pass the **complete token object** around and keep
 its absolute `expires_at` field — it's how a client decides when a token has
-expired. If you produce tokens without the SDK (e.g. a `curl` call to the
-token endpoint), the response only carries the relative `expires_in`, so add
-`expires_at` yourself. And if your transport is a shared file, write it
-atomically (temp file + `os.replace`) so readers never see a partial token.
+expired. `expires_at` is **Unix epoch seconds** (`time.time()`-style), which
+is timezone-independent: the coordinator and the workers can run in
+different timezones or regions without any conversion. If you produce tokens
+without the SDK (e.g. a `curl` call to the token endpoint), the response
+only carries the relative `expires_in`, so add
+`expires_at = time.time() + expires_in` yourself — as epoch seconds, never a
+formatted datetime string or local wall-clock arithmetic, otherwise clients
+cannot check expiry and keep using the token after it has expired. And if
+your transport is a shared file, write it atomically (temp file +
+`os.replace`) so readers never see a partial token.

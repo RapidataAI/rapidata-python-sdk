@@ -1644,10 +1644,16 @@ is cheap to call at any frequency: it returns the current token and only
 contacts the auth server once the token is within <code>leeway</code> of expiry.</p>
 <p>Whatever the transport, pass the <strong>complete token object</strong> around and keep
 its absolute <code>expires_at</code> field — it's how a client decides when a token has
-expired. If you produce tokens without the SDK (e.g. a <code>curl</code> call to the
-token endpoint), the response only carries the relative <code>expires_in</code>, so add
-<code>expires_at</code> yourself. And if your transport is a shared file, write it
-atomically (temp file + <code>os.replace</code>) so readers never see a partial token.</p>
+expired. <code>expires_at</code> is <strong>Unix epoch seconds</strong> (<code>time.time()</code>-style), which
+is timezone-independent: the coordinator and the workers can run in
+different timezones or regions without any conversion. If you produce tokens
+without the SDK (e.g. a <code>curl</code> call to the token endpoint), the response
+only carries the relative <code>expires_in</code>, so add
+<code>expires_at = time.time() + expires_in</code> yourself — as epoch seconds, never a
+formatted datetime string or local wall-clock arithmetic, otherwise clients
+cannot check expiry and keep using the token after it has expired. And if
+your transport is a shared file, write it atomically (temp file +
+<code>os.replace</code>) so readers never see a partial token.</p>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>
