@@ -99,6 +99,19 @@ results = job.get_results()
 print(results)
 ```
 
+### Cost warnings and jobs under review
+
+`assign_job` never blocks on funds: the job is always created. If its estimated cost
+exceeds your account balance, `assign_job` logs a warning with the estimate, your
+balance, and the expected shortfall — the job still runs, but may pause partway until
+you top up.
+
+Some jobs don't go straight to running. A job can enter manual review
+(`ManualApproval`) or, once out of funds mid-run, become spend-limited
+(`SpendLimited`). Neither state completes on its own, so `get_results()` raises an
+informative error naming the state (and the review reason, when available) instead of
+blocking indefinitely — top up or wait for a reviewer, then call it again.
+
 ## Complete Example
 
 Here's the full workflow — creating a custom audience, adding qualification examples, and running a labeling job:

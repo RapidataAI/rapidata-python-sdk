@@ -10,6 +10,9 @@ if TYPE_CHECKING:
         RapidataJobDefinition,
     )
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+    from rapidata.api_client.models.create_job_endpoint_cost_warning_model import (
+        CreateJobEndpointCostWarningModel,
+    )
 
 
 class RapidataAudienceBase:
@@ -89,7 +92,30 @@ class RapidataAudienceBase:
             managed_print(
                 f"Job '{job.name}' is now viewable under: {job.job_details_page}"
             )
+            self._warn_if_cost_exceeds_balance(job, response.cost_warning)
             return job
+
+    @staticmethod
+    def _warn_if_cost_exceeds_balance(
+        job: RapidataJob, cost_warning: CreateJobEndpointCostWarningModel | None
+    ) -> None:
+        """Surface the create response's optional cost warning via the SDK logger.
+
+        The job is created and runs regardless — this is an advisory estimate that it
+        may pause for funds before finishing, not an error.
+        """
+        if cost_warning is None:
+            return
+        logger.warning(
+            "Job '%s' has an estimated cost of %.2f, but the account balance is %.2f — "
+            "it will likely pause about %.2f short of finishing. The job was created and "
+            "runs as far as the balance allows; top up the account to let it complete. "
+            "This is an estimate.",
+            job.name,
+            cost_warning.estimated_cost,
+            cost_warning.available_balance,
+            cost_warning.shortfall,
+        )
 
     def find_jobs(
         self, name: str = "", amount: int = 10, page: int = 1

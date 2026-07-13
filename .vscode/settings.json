@@ -6,8 +6,8 @@
         "-p",
         "test_*.py"
     ],
-    "python.testing.unittestEnabled": true,
-    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
     "python.autoComplete.extraPaths": [
         "./src"
     ],
@@ -19,5 +19,8 @@
     "cursorpyright.analysis.extraPaths": [
         "./src"
     ],
-    "cursorpyright.analysis.typeCheckingMode": "basic"
+    "cursorpyright.analysis.typeCheckingMode": "basic",
+    "python.testing.pytestArgs": [
+        "tests"
+    ]
 }
