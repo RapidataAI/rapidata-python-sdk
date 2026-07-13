@@ -31,9 +31,24 @@ class DeviceFilter(RapidataFilter, BaseModel):
         return IUserFilterModel(
             actual_instance=IUserFilterModelDeviceUserFilterModel(
                 _t="DeviceFilter",
-                deviceTypes=[ApiDeviceType(dt._to_backend_model()) for dt in self.device_types],
+                deviceTypes=[
+                    ApiDeviceType(dt._to_backend_model()) for dt in self.device_types
+                ],
             )
         )
 
     def _to_audience_model(self):
-        raise NotImplementedError("DeviceFilter is not supported for audiences")
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_device_audience_filter import (
+            IAudienceFilterDeviceAudienceFilter,
+        )
+        from rapidata.api_client.models.device_type import DeviceType as ApiDeviceType
+
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterDeviceAudienceFilter(
+                _t="DeviceFilter",
+                deviceTypes=[
+                    ApiDeviceType(dt._to_backend_model()) for dt in self.device_types
+                ],
+            )
+        )

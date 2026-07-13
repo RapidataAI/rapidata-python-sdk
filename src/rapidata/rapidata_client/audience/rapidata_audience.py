@@ -61,8 +61,8 @@ class RapidataAudience(RapidataAudienceBase):
         be passed to job and leaderboard creation in place of a regular audience id.
 
         Supported filter types: ``CountryFilter``, ``LanguageFilter``, ``DemographicFilter``,
-        and the combinators ``AndFilter`` / ``OrFilter`` / ``NotFilter`` (also via the
-        ``&`` / ``|`` / ``~`` operators).
+        ``DeviceFilter``, and the combinators ``AndFilter`` / ``OrFilter`` / ``NotFilter``
+        (also via the ``&`` / ``|`` / ``~`` operators).
 
         Args:
             filters (list[RapidataFilter]): One or more filters to apply. Multiple filters are
