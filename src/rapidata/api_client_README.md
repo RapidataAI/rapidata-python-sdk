@@ -701,6 +701,7 @@ Class | Method | HTTP request | Description
  - [IAudienceFilterAndAudienceFilter](rapidata/api_client/docs/IAudienceFilterAndAudienceFilter.md)
  - [IAudienceFilterCountryAudienceFilter](rapidata/api_client/docs/IAudienceFilterCountryAudienceFilter.md)
  - [IAudienceFilterDemographicAudienceFilter](rapidata/api_client/docs/IAudienceFilterDemographicAudienceFilter.md)
+ - [IAudienceFilterDeviceAudienceFilter](rapidata/api_client/docs/IAudienceFilterDeviceAudienceFilter.md)
  - [IAudienceFilterLanguageAudienceFilter](rapidata/api_client/docs/IAudienceFilterLanguageAudienceFilter.md)
  - [IAudienceFilterNotAudienceFilter](rapidata/api_client/docs/IAudienceFilterNotAudienceFilter.md)
  - [IAudienceFilterOrAudienceFilter](rapidata/api_client/docs/IAudienceFilterOrAudienceFilter.md)

@@ -35548,6 +35548,13 @@
           }
         }
       },
+      "DeviceType": {
+        "enum": [
+          "Unknown",
+          "Phone",
+          "Tablet"
+        ]
+      },
       "ExampleBoxShape": {
         "type": "object",
         "properties": {
@@ -36491,6 +36498,9 @@
             "$ref": "#/components/schemas/IAudienceFilterDemographicAudienceFilter"
           },
           {
+            "$ref": "#/components/schemas/IAudienceFilterDeviceAudienceFilter"
+          },
+          {
             "$ref": "#/components/schemas/IAudienceFilterLanguageAudienceFilter"
           },
           {
@@ -36506,6 +36516,7 @@
             "AndFilter": "#/components/schemas/IAudienceFilterAndAudienceFilter",
             "CountryFilter": "#/components/schemas/IAudienceFilterCountryAudienceFilter",
             "DemographicFilter": "#/components/schemas/IAudienceFilterDemographicAudienceFilter",
+            "DeviceFilter": "#/components/schemas/IAudienceFilterDeviceAudienceFilter",
             "LanguageFilter": "#/components/schemas/IAudienceFilterLanguageAudienceFilter",
             "NotFilter": "#/components/schemas/IAudienceFilterNotAudienceFilter",
             "OrFilter": "#/components/schemas/IAudienceFilterOrAudienceFilter"
@@ -36572,6 +36583,26 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "IAudienceFilterDeviceAudienceFilter": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceType"
             }
           }
         }
@@ -38097,13 +38128,6 @@
             "description": "The id of the created campaign."
           }
         }
-      },
-      "DeviceType": {
-        "enum": [
-          "Unknown",
-          "Phone",
-          "Tablet"
-        ]
       },
       "GetBoostInsightsEndpoint_AudienceOutput": {
         "required": [
