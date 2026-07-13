@@ -147,8 +147,12 @@ class BackendFilterMapper:
         elif isinstance(actual_instance, BackendCountryAudienceFilter):
             return ClientCountryFilter(actual_instance.countries)  # type: ignore[attr-defined]
         elif isinstance(actual_instance, BackendDemographicAudienceFilter):
+            from rapidata.rapidata_client.filter.models.demographic_identifier import (
+                DemographicIdentifier,
+            )
+
             return ClientDemographicFilter(
-                identifier=actual_instance.identifier,  # type: ignore[attr-defined]
+                identifier=DemographicIdentifier(actual_instance.identifier),  # type: ignore[attr-defined]
                 values=actual_instance.values,  # type: ignore[attr-defined]
             )
         elif isinstance(actual_instance, BackendLanguageAudienceFilter):

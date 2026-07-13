@@ -61,6 +61,7 @@ from .settings import (
 from .filter import (
     CountryFilter,
     DemographicFilter,
+    DemographicIdentifier,
     LanguageFilter,
     NotFilter,
     OrFilter,

@@ -1,35 +1,39 @@
 from __future__ import annotations
 
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from pydantic import BaseModel
+from rapidata.rapidata_client.filter.models.demographic_identifier import (
+    DemographicIdentifier,
+)
+from pydantic import BaseModel, ConfigDict
 
 
 class DemographicFilter(RapidataFilter, BaseModel):
     """DemographicFilter Class
 
-    Filters the graduates of an audience by a demographic attribute (e.g. age, gender,
+    Filters the graduates of an audience by a demographic attribute (age, gender,
     occupation). Used when deriving a filtered audience from an existing dimension audience
     via :py:meth:`RapidataAudience.filter`.
 
     Args:
-        identifier (str): The demographic key to filter on (e.g. ``"age"``, ``"gender"``,
-            ``"occupation"``).
+        identifier (DemographicIdentifier): The demographic attribute to filter on.
         values (list[str]): The accepted values for that demographic. A graduate is included
             if any of their stored demographic values for ``identifier`` matches one of these.
 
     Example:
         ```python
-        from rapidata import DemographicFilter
+        from rapidata import DemographicFilter, DemographicIdentifier
 
         # Keep graduates who are between 18 and 39 years old.
-        DemographicFilter("age", ["18-29", "30-39"])
+        DemographicFilter(DemographicIdentifier.AGE, ["18-29", "30-39"])
         ```
     """
 
-    identifier: str
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    identifier: DemographicIdentifier
     values: list[str]
 
-    def __init__(self, identifier: str, values: list[str]):
+    def __init__(self, identifier: DemographicIdentifier, values: list[str]):
         super().__init__(identifier=identifier, values=values)
 
     def _to_model(self):
@@ -46,7 +50,7 @@ class DemographicFilter(RapidataFilter, BaseModel):
         return IAudienceFilter(
             actual_instance=IAudienceFilterDemographicAudienceFilter(
                 _t="DemographicFilter",
-                identifier=self.identifier,
+                identifier=self.identifier._to_backend_model(),
                 values=self.values,
             )
         )

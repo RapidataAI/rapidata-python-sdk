@@ -50,6 +50,7 @@ from .rapidata_client import (
 # --- GENERATED SETTINGS IMPORTS END ---
     CountryFilter,
     DemographicFilter,
+    DemographicIdentifier,
     LanguageFilter,
     NotFilter,
     OrFilter,

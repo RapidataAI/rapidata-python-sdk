@@ -78,11 +78,11 @@ class RapidataAudience(RapidataAudienceBase):
 
         Example:
             ```python
-            from rapidata import CountryFilter, DemographicFilter
+            from rapidata import CountryFilter, DemographicFilter, DemographicIdentifier
 
             base = client.audience.get_audience_by_id("aud_...")
             us_under_30 = base.filter(
-                [CountryFilter(["US"]), DemographicFilter("age", ["18-29"])]
+                [CountryFilter(["US"]), DemographicFilter(DemographicIdentifier.AGE, ["18-29"])]
             )
             benchmark.create_leaderboard(
                 name="my-leaderboard",
