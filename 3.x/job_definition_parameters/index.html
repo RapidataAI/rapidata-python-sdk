@@ -2620,6 +2620,7 @@
 </tr>
 </tbody>
 </table>
+<p>Most settings only apply to specific task types (see each setting's docstring, e.g. <em>"Supported task types: Compare."</em>). If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.</p>
 <h3 id="commonly-used-settings">Commonly Used Settings<a class="headerlink" href="#commonly-used-settings" title="Permanent link">#</a></h3>
 <h4 id="noshufflesetting"><code>NoShuffleSetting()</code><a class="headerlink" href="#noshufflesetting" title="Permanent link">#</a></h4>
 <p>Keeps answer options in the order you specified. By default, options are randomized to reduce bias. Use this for Likert scales or any ordered options.</p>

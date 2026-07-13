@@ -295,6 +295,8 @@ Settings allow you to customize how tasks are displayed.
 | **Required** | No |
 | **Default** | `[]` |
 
+Most settings only apply to specific task types (see each setting's docstring, e.g. *"Supported task types: Compare."*). If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.
+
 ### Commonly Used Settings
 
 #### `NoShuffleSetting()`
