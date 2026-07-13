@@ -102,9 +102,9 @@ print(results)
 ### Cost warnings and jobs under review
 
 `assign_job` never blocks on funds: the job is always created. If its estimated cost
-exceeds your account balance, `assign_job` emits a Python warning with the estimate,
-your balance, and the expected shortfall — the job still runs, but may pause partway
-until you top up.
+exceeds your account balance, `assign_job` logs a warning with the estimate, your
+balance, and the expected shortfall — the job still runs, but may pause partway until
+you top up.
 
 Some jobs don't go straight to running. A job can enter manual review
 (`ManualApproval`) or, once out of funds mid-run, become spend-limited

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import warnings
 from typing import TYPE_CHECKING
 from rapidata.rapidata_client.config import logger, managed_print, tracer
 
@@ -100,20 +99,22 @@ class RapidataAudienceBase:
     def _warn_if_cost_exceeds_balance(
         job: RapidataJob, cost_warning: CreateJobEndpointCostWarningModel | None
     ) -> None:
-        """Surface the create response's optional cost warning as a Python warning.
+        """Surface the create response's optional cost warning via the SDK logger.
 
         The job is created and runs regardless — this is an advisory estimate that it
         may pause for funds before finishing, not an error.
         """
         if cost_warning is None:
             return
-        warnings.warn(
-            f"Job '{job.name}' has an estimated cost of {cost_warning.estimated_cost:.2f}, "
-            f"but the account balance is {cost_warning.available_balance:.2f} — it will "
-            f"likely pause about {cost_warning.shortfall:.2f} short of finishing. The job "
-            f"was created and runs as far as the balance allows; top up the account to let "
-            f"it complete. This is an estimate.",
-            stacklevel=3,
+        logger.warning(
+            "Job '%s' has an estimated cost of %.2f, but the account balance is %.2f — "
+            "it will likely pause about %.2f short of finishing. The job was created and "
+            "runs as far as the balance allows; top up the account to let it complete. "
+            "This is an estimate.",
+            job.name,
+            cost_warning.estimated_cost,
+            cost_warning.available_balance,
+            cost_warning.shortfall,
         )
 
     def find_jobs(
