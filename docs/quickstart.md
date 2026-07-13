@@ -105,7 +105,7 @@ results = job.get_results() # (3)!
 
 1. Assigns the job definition to the audience and starts collecting responses.
 2. Opens your browser on the running job, where you can watch responses come in and monitor progress.
-3. Blocks until the job is complete and returns the results. You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
+3. Blocks until the job is complete and returns the results. If the job needs manual review or runs out of funds, this raises an informative error instead of blocking — see [Cost warnings and jobs under review](audiences.md#cost-warnings-and-jobs-under-review). You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
 
 To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
 

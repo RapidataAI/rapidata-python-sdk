@@ -13,6 +13,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from rapidata.api_client.models.audience_job_state import AudienceJobState
 from rapidata.api_client.models.create_job_endpoint_cost_warning_model import (
     CreateJobEndpointCostWarningModel,
 )
@@ -24,7 +25,7 @@ from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 def _job_get(state: str, review_reason: ReviewReasonModel | None = None) -> MagicMock:
     """A stand-in for the job GET response with just the fields the code reads."""
     job = MagicMock()
-    job.state.value = state
+    job.state = AudienceJobState(state)
     job.review_reason = review_reason
     job.failure_message = None
     return job

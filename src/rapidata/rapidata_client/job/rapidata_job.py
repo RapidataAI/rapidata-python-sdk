@@ -9,6 +9,7 @@ from typing import Callable, TypeVar, TYPE_CHECKING
 from colorama import Fore
 from tqdm.auto import tqdm
 
+from rapidata.api_client.models.audience_job_state import AudienceJobState
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import (
     logger,
@@ -27,6 +28,9 @@ from rapidata.rapidata_client.job.cost import (
 )
 
 if TYPE_CHECKING:
+    from rapidata.api_client.models.get_job_by_id_endpoint_output import (
+        GetJobByIdEndpointOutput,
+    )
     from rapidata.rapidata_client.results.rapidata_results import RapidataResults
 
 T = TypeVar("T")
@@ -74,31 +78,27 @@ class RapidataJob:
     # their own: ManualApproval needs a Rapidata reviewer to act, SpendLimited needs
     # an account top-up. Waiting on either (e.g. from get_results) would hang the
     # caller forever, so we surface them as informative errors instead.
-    _BLOCKING_STATUSES = ("ManualApproval", "SpendLimited")
+    _BLOCKING_STATUSES = (
+        AudienceJobState.MANUALAPPROVAL,
+        AudienceJobState.SPENDLIMITED,
+    )
+
+    def _fetch_job(self) -> GetJobByIdEndpointOutput:
+        """Fetches the job's GET output (state, failure message, review reason)."""
+        return self._openapi_service.order.job_api.job_job_id_get(self.id)
 
     def _get_job_failure_message(self) -> str | None:
         """Retrieves the failure message from the job if available."""
         try:
-            job = self._openapi_service.order.job_api.job_job_id_get(self.id)
-            return job.failure_message
+            return self._fetch_job().failure_message
         except Exception:
             logger.debug("Failed to get job failure message", self, exc_info=True)
             return None
 
-    def _get_review_reason(self) -> str | None:
-        """Retrieves the manual-review reason from the job if the API exposes one."""
-        try:
-            job = self._openapi_service.order.job_api.job_job_id_get(self.id)
-            reason = job.review_reason
-            return reason.value if reason is not None else None
-        except Exception:
-            logger.debug("Failed to get job review reason", self, exc_info=True)
-            return None
-
-    def _raise_for_blocking_status(self, status: str) -> None:
+    def _raise_for_blocking_status(self, job: GetJobByIdEndpointOutput) -> None:
         """Raises an informative error for a job state that can't reach completion
         on its own, instead of letting the caller block on it indefinitely."""
-        if status == "SpendLimited":
+        if job.state == AudienceJobState.SPENDLIMITED:
             raise Exception(
                 f"Job '{self}' is spend-limited: the account ran out of funds while "
                 f"running, so it stopped collecting responses. Partial results remain "
@@ -107,8 +107,8 @@ class RapidataJob:
 
         # ManualApproval — reviewReason is optional; a job can legitimately be under
         # review with no customer-facing reason recorded yet.
-        reason = self._get_review_reason()
-        reason_detail = f" ({reason})" if reason else ""
+        reason = job.review_reason
+        reason_detail = f" ({reason.value})" if reason else ""
         raise Exception(
             f"Job '{self}' is being reviewed{reason_detail}: a Rapidata reviewer "
             f"needs to approve it before it runs. This can take a couple of hours; "
@@ -175,14 +175,16 @@ class RapidataJob:
                 (``ManualApproval`` or ``SpendLimited``) while a different status is
                 being awaited — with the review reason when the API provides one.
         """
-        while (current_status := self.get_status()) not in target_statuses:
+        while True:
+            job = self._fetch_job()
+            current_status = job.state.value
+            if current_status in target_statuses:
+                return current_status
             if current_status in self._BLOCKING_STATUSES:
-                self._raise_for_blocking_status(current_status)
+                self._raise_for_blocking_status(job)
             if status_message:
                 logger.debug(status_message, self, current_status)
             sleep(check_interval)
-
-        return current_status
 
     @property
     def completed_at(self) -> datetime | None:
@@ -233,9 +235,7 @@ class RapidataJob:
             The current status of the job as a string.
         """
         with tracer.start_as_current_span("RapidataJob.get_status"):
-            return self._openapi_service.order.job_api.job_job_id_get(
-                self.id
-            ).state.value
+            return self._fetch_job().state.value
 
     def _regenerate_results(self) -> None:
         """Triggers regeneration of a job whose results have gone stale.
@@ -311,17 +311,16 @@ class RapidataJob:
         if refresh_rate < 1:
             raise ValueError("refresh_rate must be at least 1")
 
-        current_status = self.get_status()
-        if current_status == "Completed":
+        job = self._fetch_job()
+        if job.state == AudienceJobState.COMPLETED:
             managed_print(f"Job '{self}' is already completed.")
             return
 
-        if current_status == "Failed":
-            failure_message = self._get_job_failure_message()
-            raise Exception(f"Job '{self}' has failed: {failure_message}")
+        if job.state == AudienceJobState.FAILED:
+            raise Exception(f"Job '{self}' has failed: {job.failure_message}")
 
-        if current_status in self._BLOCKING_STATUSES:
-            self._raise_for_blocking_status(current_status)
+        if job.state in self._BLOCKING_STATUSES:
+            self._raise_for_blocking_status(job)
 
         # Get progress from pipeline if available
         with tqdm(
@@ -333,18 +332,17 @@ class RapidataJob:
         ) as pbar:
             last_percentage = 0
             while True:
-                current_status = self.get_status()
+                job = self._fetch_job()
 
-                if current_status == "Completed":
+                if job.state == AudienceJobState.COMPLETED:
                     pbar.update(100 - last_percentage)
                     break
 
-                if current_status == "Failed":
-                    failure_message = self._get_job_failure_message()
-                    raise Exception(f"Job '{self}' has failed: {failure_message}")
+                if job.state == AudienceJobState.FAILED:
+                    raise Exception(f"Job '{self}' has failed: {job.failure_message}")
 
-                if current_status in self._BLOCKING_STATUSES:
-                    self._raise_for_blocking_status(current_status)
+                if job.state in self._BLOCKING_STATUSES:
+                    self._raise_for_blocking_status(job)
 
                 # Try to get progress from workflow
                 try:
