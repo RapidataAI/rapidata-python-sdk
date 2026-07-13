@@ -18,13 +18,14 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_audience_filter_country_audience_filter import IAudienceFilterCountryAudienceFilter
 from rapidata.api_client.models.i_audience_filter_demographic_audience_filter import IAudienceFilterDemographicAudienceFilter
+from rapidata.api_client.models.i_audience_filter_device_audience_filter import IAudienceFilterDeviceAudienceFilter
 from rapidata.api_client.models.i_audience_filter_language_audience_filter import IAudienceFilterLanguageAudienceFilter
 from pydantic import StrictStr, Field
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IAUDIENCEFILTER_ONE_OF_SCHEMAS = ["IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterDemographicAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter"]
+IAUDIENCEFILTER_ONE_OF_SCHEMAS = ["IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterDemographicAudienceFilter", "IAudienceFilterDeviceAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter"]
 
 class IAudienceFilter(LazyValidatedModel):
     """
@@ -36,14 +37,16 @@ class IAudienceFilter(LazyValidatedModel):
     oneof_schema_2_validator: Optional[IAudienceFilterCountryAudienceFilter] = None
     # data type: IAudienceFilterDemographicAudienceFilter
     oneof_schema_3_validator: Optional[IAudienceFilterDemographicAudienceFilter] = None
+    # data type: IAudienceFilterDeviceAudienceFilter
+    oneof_schema_4_validator: Optional[IAudienceFilterDeviceAudienceFilter] = None
     # data type: IAudienceFilterLanguageAudienceFilter
-    oneof_schema_4_validator: Optional[IAudienceFilterLanguageAudienceFilter] = None
+    oneof_schema_5_validator: Optional[IAudienceFilterLanguageAudienceFilter] = None
     # data type: IAudienceFilterNotAudienceFilter
-    oneof_schema_5_validator: Optional[IAudienceFilterNotAudienceFilter] = None
+    oneof_schema_6_validator: Optional[IAudienceFilterNotAudienceFilter] = None
     # data type: IAudienceFilterOrAudienceFilter
-    oneof_schema_6_validator: Optional[IAudienceFilterOrAudienceFilter] = None
-    actual_instance: Optional[Union[IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter]] = None
-    one_of_schemas: Set[str] = { "IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterDemographicAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter" }
+    oneof_schema_7_validator: Optional[IAudienceFilterOrAudienceFilter] = None
+    actual_instance: Optional[Union[IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterDeviceAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter]] = None
+    one_of_schemas: Set[str] = { "IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterDemographicAudienceFilter", "IAudienceFilterDeviceAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,6 +84,11 @@ class IAudienceFilter(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterDemographicAudienceFilter`")
         else:
             match += 1
+        # validate data type: IAudienceFilterDeviceAudienceFilter
+        if not isinstance(v, IAudienceFilterDeviceAudienceFilter):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterDeviceAudienceFilter`")
+        else:
+            match += 1
         # validate data type: IAudienceFilterLanguageAudienceFilter
         if not isinstance(v, IAudienceFilterLanguageAudienceFilter):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterLanguageAudienceFilter`")
@@ -98,10 +106,10 @@ class IAudienceFilter(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterDeviceAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterDeviceAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -134,6 +142,12 @@ class IAudienceFilter(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IAudienceFilterDeviceAudienceFilter
+        try:
+            instance.actual_instance = IAudienceFilterDeviceAudienceFilter.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IAudienceFilterLanguageAudienceFilter
         try:
             instance.actual_instance = IAudienceFilterLanguageAudienceFilter.from_json(json_str)
@@ -155,10 +169,10 @@ class IAudienceFilter(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterDeviceAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterDeviceAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -172,7 +186,7 @@ class IAudienceFilter(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterDemographicAudienceFilter, IAudienceFilterDeviceAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
