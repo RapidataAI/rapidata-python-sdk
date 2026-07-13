@@ -35,4 +35,15 @@ class GenderFilter(RapidataFilter, BaseModel):
         )
 
     def _to_audience_model(self):
-        raise NotImplementedError("GenderFilter is not supported for audiences")
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_demographic_audience_filter import (
+            IAudienceFilterDemographicAudienceFilter,
+        )
+
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterDemographicAudienceFilter(
+                _t="DemographicFilter",
+                identifier="gender",
+                values=[gender._to_backend_model().value for gender in self.genders],
+            )
+        )

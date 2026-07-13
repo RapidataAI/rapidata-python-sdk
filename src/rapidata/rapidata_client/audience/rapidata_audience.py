@@ -60,9 +60,9 @@ class RapidataAudience(RapidataAudienceBase):
         qualified annotators — no new recruiting or onboarding takes place. The returned id can
         be passed to job and leaderboard creation in place of a regular audience id.
 
-        Supported filter types: ``CountryFilter``, ``LanguageFilter``, ``DemographicFilter``,
-        ``DeviceFilter``, and the combinators ``AndFilter`` / ``OrFilter`` / ``NotFilter``
-        (also via the ``&`` / ``|`` / ``~`` operators).
+        Supported filter types: ``CountryFilter``, ``LanguageFilter``, ``AgeFilter``,
+        ``GenderFilter``, ``DeviceFilter``, and the combinators ``AndFilter`` / ``OrFilter`` /
+        ``NotFilter`` (also via the ``&`` / ``|`` / ``~`` operators).
 
         Args:
             filters (list[RapidataFilter]): One or more filters to apply. Multiple filters are
@@ -78,11 +78,11 @@ class RapidataAudience(RapidataAudienceBase):
 
         Example:
             ```python
-            from rapidata import CountryFilter, DemographicFilter, DemographicIdentifier
+            from rapidata import CountryFilter, AgeFilter, AgeGroup
 
             base = client.audience.get_audience_by_id("aud_...")
             us_under_30 = base.filter(
-                [CountryFilter(["US"]), DemographicFilter(DemographicIdentifier.AGE, ["18-29"])]
+                [CountryFilter(["US"]), AgeFilter([AgeGroup.BETWEEN_18_29])]
             )
             benchmark.create_leaderboard(
                 name="my-leaderboard",
