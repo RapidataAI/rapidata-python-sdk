@@ -9,7 +9,7 @@ Here's an example of the results you might receive when running a COMPARE task (
   "info": {
     "createdAt": "2026-07-13T11:07:53.577348+00:00",
     "version": "4.0.0",
-    "orderType": "Compare",
+    "type": "Compare",
     "name": "Example Image Comparison",
     "instruction": "Which image shows: 'A small blue book sitting on a large red book.'?"
   },
@@ -98,7 +98,7 @@ Here's an example of the results you might receive when running a COMPARE task (
 1. `info`
     - `createdAt`: The timestamp indicating when the results overview was generated, in UTC time.
     - `version`: The version of the aggregator system that produced the results.
-    - `orderType`: The type of task that was run (e.g. `Compare`, `Classify`).
+    - `type`: The type of task that was run (e.g. `Compare`, `Classify`).
     - `name`: The name given to the job or order.
     - `instruction`: The instruction that was shown to the labelers.
 
