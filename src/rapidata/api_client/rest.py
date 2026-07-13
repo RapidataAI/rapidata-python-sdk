@@ -120,9 +120,12 @@ class RESTClientObject:
     def _reload_token_from_file_if_expired(self, token_file: str):
         # A pre-supplied token has no refresh path of its own; an external
         # process keeps the token file fresh, so re-read it once ours expires.
+        # is_expired() returns None when expires_at is missing or not epoch
+        # seconds — treat that as expired so a malformed token keeps being
+        # re-read instead of being trusted as never expiring.
         assert self.session is not None
         token = self.session.token
-        if token is not None and not token.is_expired(leeway=self._token_leeway):
+        if token is not None and token.is_expired(leeway=self._token_leeway) is False:
             return
         with open(token_file) as f:
             self.session.token = json.load(f)
@@ -155,6 +158,18 @@ class RESTClientObject:
                 "token_type, and an absolute expires_at timestamp.",
                 ", ".join(missing),
             )
+        else:
+            try:
+                int(token["expires_at"])
+            except (TypeError, ValueError):
+                _logger.warning(
+                    "set_token received a token whose expires_at (%r) is not "
+                    "Unix epoch seconds, so its expiry cannot be checked and "
+                    "it will be treated as never expiring. Produce expires_at "
+                    "with time.time()-style epoch seconds, not a formatted "
+                    "datetime.",
+                    token["expires_at"],
+                )
         self.session.token = token
 
     def request(
