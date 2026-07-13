@@ -16,30 +16,30 @@ Here's an example of the results you might receive when running a COMPARE task (
   "results": [
     {
       "winner_index": 1,
-      "winner": "https://assets.rapidata.ai/flux-1-pro_37_0.jpg",
+      "winner": "flux-1-pro_37_0.jpg",
       "assetUrls": {
-        "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
-        "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
+        "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
+        "flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
       },
       "aggregatedResults": {
-        "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0,
-        "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 3
+        "midjourney-5.2_37_3.jpg": 0,
+        "flux-1-pro_37_0.jpg": 3
       },
       "aggregatedResultsRatios": {
-        "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0.0,
-        "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 1.0
+        "midjourney-5.2_37_3.jpg": 0.0,
+        "flux-1-pro_37_0.jpg": 1.0
       },
       "summedUserScores": {
-        "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0.0,
-        "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 2.552
+        "midjourney-5.2_37_3.jpg": 0.0,
+        "flux-1-pro_37_0.jpg": 2.552
       },
       "summedUserScoresRatios": {
-        "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0.0,
-        "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 1.0
+        "midjourney-5.2_37_3.jpg": 0.0,
+        "flux-1-pro_37_0.jpg": 1.0
       },
       "detailedResults": [
           {
-              "votedFor": "https://assets.rapidata.ai/flux-1-pro_37_0.jpg",
+              "votedFor": "flux-1-pro_37_0.jpg",
               "userDetails": {
                   "country": "EG",
                   "language": "ar",
@@ -54,7 +54,7 @@ Here's an example of the results you might receive when running a COMPARE task (
               }
           },
           {
-              "votedFor": "https://assets.rapidata.ai/flux-1-pro_37_0.jpg",
+              "votedFor": "flux-1-pro_37_0.jpg",
               "userDetails": {
                   "country": "BD",
                   "language": "en",
@@ -69,7 +69,7 @@ Here's an example of the results you might receive when running a COMPARE task (
               }
           },
           {
-              "votedFor": "https://assets.rapidata.ai/flux-1-pro_37_0.jpg",
+              "votedFor": "flux-1-pro_37_0.jpg",
               "userDetails": {
                   "country": "ES",
                   "language": "es",
@@ -105,44 +105,44 @@ Here's an example of the results you might receive when running a COMPARE task (
 2. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
 
     - `winner_index`: Index of the winning option (0 for first option, 1 for second option)
-    - `winner`: URL of the winning option
+    - `winner`: Filename or identifier of the winning option
     - `assetUrls`: Maps each option to the URL under which the asset is hosted by Rapidata — the exact file that was shown to the labelers.
         ```json
         "assetUrls": {
-            "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
-            "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
+            "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
+            "flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
         }
         ```
 
     - `aggregatedResults`: The total number of responses each option received for this specific comparison.
         ```json
         "aggregatedResults": {
-            "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0,
-            "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 3
+            "midjourney-5.2_37_3.jpg": 0,
+            "flux-1-pro_37_0.jpg": 3
         }
         ```
 
     - `aggregatedResultsRatios`: The proportion of responses each option received, calculated as the number of responses for the option divided by the total number of responses.
         ```json
         "aggregatedResultsRatios": {
-            "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0.0,
-            "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 1.0
+            "midjourney-5.2_37_3.jpg": 0.0,
+            "flux-1-pro_37_0.jpg": 1.0
         }
         ```
 
     - `summedUserScores`: The sum of the labelers' global userScore values for each option. This metric accounts for the reliability of each labeler's response.
         ```json
         "summedUserScores": {
-            "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0.0,
-            "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 2.552
+            "midjourney-5.2_37_3.jpg": 0.0,
+            "flux-1-pro_37_0.jpg": 2.552
         }
         ```
 
     - `summedUserScoresRatios`: The proportion of the summed global userScores for each option, providing a weighted ratio based on labeler reliability.
         ```json
         "summedUserScoresRatios": {
-            "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg": 0.0,
-            "https://assets.rapidata.ai/flux-1-pro_37_0.jpg": 1.0
+            "midjourney-5.2_37_3.jpg": 0.0,
+            "flux-1-pro_37_0.jpg": 1.0
         }
         ```
 
