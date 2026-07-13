@@ -10,11 +10,12 @@ Here's an example of the results you might receive when running a COMPARE task (
     "createdAt": "2026-07-13T11:07:53.577348+00:00",
     "version": "4.0.0",
     "type": "Compare",
-    "name": "Example Image Comparison",
-    "instruction": "Which image shows: 'A small blue book sitting on a large red book.'?"
+    "name": "Example Image Prompt Alignment",
+    "instruction": "Which image matches the description better?"
   },
   "results": [
     {
+      "context": "A small blue book sitting on a large red book.",
       "winner_index": 1,
       "winner": "flux-1-pro_37_0.jpg",
       "assetUrls": {
@@ -104,9 +105,10 @@ Here's an example of the results you might receive when running a COMPARE task (
 
 2. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
 
+    - `context`: The context shown alongside this datapoint (present when `contexts` were provided for the job)
     - `winner_index`: Index of the winning option (0 for first option, 1 for second option)
     - `winner`: Filename or identifier of the winning option
-    - `assetUrls`: Maps each option to the URL under which the asset is hosted by Rapidata — the exact file that was shown to the labelers.
+    - `assetUrls`: Maps each option to the URL under which the asset is hosted by Rapidata — the exact file that was shown to the labelers. The hosted files are not encrypted, but are assigned a random UUID name so they can't be accessed by guessing URLs.
         ```json
         "assetUrls": {
             "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
