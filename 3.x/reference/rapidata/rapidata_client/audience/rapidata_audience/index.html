@@ -1701,9 +1701,9 @@ without new recruiting.</p>
 a lightweight, filtered audience. The filtered audience reuses this audience's pool of
 qualified annotators — no new recruiting or onboarding takes place. The returned id can
 be passed to job and leaderboard creation in place of a regular audience id.</p>
-<p>Supported filter types: <code>CountryFilter</code>, <code>LanguageFilter</code>, <code>DemographicFilter</code>,
-and the combinators <code>AndFilter</code> / <code>OrFilter</code> / <code>NotFilter</code> (also via the
-<code>&amp;</code> / <code>|</code> / <code>~</code> operators).</p>
+<p>Supported filter types: <code>CountryFilter</code>, <code>LanguageFilter</code>, <code>AgeFilter</code>,
+<code>GenderFilter</code>, <code>DeviceFilter</code>, and the combinators <code>AndFilter</code> / <code>OrFilter</code> /
+<code>NotFilter</code> (also via the <code>&amp;</code> / <code>|</code> / <code>~</code> operators).</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1804,11 +1804,11 @@ combined with a logical AND. Pass a single <code>AndFilter</code> / <code>OrFilt
 
 <details class="example" open>
   <summary>Example</summary>
-  <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">DemographicFilter</span>
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">AgeGroup</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">base</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"aud_..."</span><span class="p">)</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">us_under_30</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="p">[</span><span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span> <span class="n">DemographicFilter</span><span class="p">(</span><span class="s2">"age"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"18-29"</span><span class="p">])]</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="p">[</span><span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span> <span class="n">AgeFilter</span><span class="p">([</span><span class="n">AgeGroup</span><span class="o">.</span><span class="n">BETWEEN_18_29</span><span class="p">])]</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"my-leaderboard"</span><span class="p">,</span>
@@ -1898,9 +1898,9 @@ combined with a logical AND. Pass a single <code>AndFilter</code> / <code>OrFilt
 </span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    qualified annotators — no new recruiting or onboarding takes place. The returned id can</span>
 </span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">    be passed to job and leaderboard creation in place of a regular audience id.</span>
 </span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">    Supported filter types: ``CountryFilter``, ``LanguageFilter``, ``DemographicFilter``,</span>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    and the combinators ``AndFilter`` / ``OrFilter`` / ``NotFilter`` (also via the</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    ``&amp;`` / ``|`` / ``~`` operators).</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">    Supported filter types: ``CountryFilter``, ``LanguageFilter``, ``AgeFilter``,</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    ``GenderFilter``, ``DeviceFilter``, and the combinators ``AndFilter`` / ``OrFilter`` /</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    ``NotFilter`` (also via the ``&amp;`` / ``|`` / ``~`` operators).</span>
 </span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 </span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    Args:</span>
 </span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        filters (list[RapidataFilter]): One or more filters to apply. Multiple filters are</span>
@@ -1916,11 +1916,11 @@ combined with a logical AND. Pass a single <code>AndFilter</code> / <code>OrFilt
 </span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>
 </span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">    Example:</span>
 </span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">        ```python</span>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">        from rapidata import CountryFilter, DemographicFilter</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">        from rapidata import CountryFilter, AgeFilter, AgeGroup</span>
 </span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a>
 </span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">        base = client.audience.get_audience_by_id("aud_...")</span>
 </span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">        us_under_30 = base.filter(</span>
-</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">            [CountryFilter(["US"]), DemographicFilter("age", ["18-29"])]</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">            [CountryFilter(["US"]), AgeFilter([AgeGroup.BETWEEN_18_29])]</span>
 </span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="sd">        )</span>
 </span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="sd">        benchmark.create_leaderboard(</span>
 </span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">            name="my-leaderboard",</span>

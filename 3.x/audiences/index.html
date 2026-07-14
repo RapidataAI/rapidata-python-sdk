@@ -687,6 +687,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cost-warnings-and-jobs-under-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost warnings and jobs under review
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1659,6 +1670,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cost-warnings-and-jobs-under-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost warnings and jobs under review
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1901,6 +1923,16 @@
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </span></code></pre></div>
+<h3 id="cost-warnings-and-jobs-under-review">Cost warnings and jobs under review<a class="headerlink" href="#cost-warnings-and-jobs-under-review" title="Permanent link">#</a></h3>
+<p><code>assign_job</code> never blocks on funds: the job is always created. If its estimated cost
+exceeds your account balance, <code>assign_job</code> logs a warning with the estimate, your
+balance, and the expected shortfall — the job still runs, but may pause partway until
+you top up.</p>
+<p>Some jobs don't go straight to running. A job can enter manual review
+(<code>ManualApproval</code>) or, once out of funds mid-run, become spend-limited
+(<code>SpendLimited</code>). Neither state completes on its own, so <code>get_results()</code> raises an
+informative error naming the state (and the review reason, when available) instead of
+blocking indefinitely — top up or wait for a reviewer, then call it again.</p>
 <h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">#</a></h2>
 <p>Here's the full workflow — creating a custom audience, adding qualification examples, and running a labeling job:</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
@@ -2038,6 +2070,18 @@ a way that's better expressed as a single combined filter on the base.</p>
 <tr>
 <td><code>LanguageFilter</code></td>
 <td>Spoken / device language (e.g. <code>["en", "de"]</code>)</td>
+</tr>
+<tr>
+<td><code>AgeFilter</code></td>
+<td>Age group (e.g. <code>AgeFilter([AgeGroup.BETWEEN_18_29])</code>)</td>
+</tr>
+<tr>
+<td><code>GenderFilter</code></td>
+<td>Gender (e.g. <code>GenderFilter([Gender.FEMALE])</code>)</td>
+</tr>
+<tr>
+<td><code>DeviceFilter</code></td>
+<td>Device type (e.g. <code>DeviceFilter([DeviceType.PHONE])</code>)</td>
 </tr>
 </tbody>
 </table>

@@ -1807,7 +1807,7 @@
 <ol>
 <li>Assigns the job definition to the audience and starts collecting responses.</li>
 <li>Opens your browser on the running job, where you can watch responses come in and monitor progress.</li>
-<li>Blocks until the job is complete and returns the results. You can also monitor progress on the <a href="https://app.rapidata.ai/dashboard">Rapidata Dashboard</a>.</li>
+<li>Blocks until the job is complete and returns the results. If the job needs manual review or runs out of funds, this raises an informative error instead of blocking — see <a href="../audiences/#cost-warnings-and-jobs-under-review">Cost warnings and jobs under review</a>. You can also monitor progress on the <a href="https://app.rapidata.ai/dashboard">Rapidata Dashboard</a>.</li>
 </ol>
 <p>To understand the results format, see the <a href="../understanding_the_results/">Understanding the Results</a> guide.</p>
 <h2 id="retrieve-existing-resources">Retrieve Existing Resources<a class="headerlink" href="#retrieve-existing-resources" title="Permanent link">#</a></h2>
