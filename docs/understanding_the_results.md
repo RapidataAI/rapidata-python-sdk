@@ -7,79 +7,90 @@ Here's an example of the results you might receive when running a COMPARE task (
 ```json
 {
   "info": {
-    "createdAt": "2025-02-11T07:31:59.353232+00:00",
-    "version": "3.0.0"
-  },
-  "summary": {
-    "A_wins_total": 0,
-    "B_wins_total": 1
+    "createdAt": "2026-07-13T11:07:53.577348+00:00",
+    "version": "4.0.0",
+    "type": "Compare",
+    "name": "Example Image Prompt Alignment",
+    "instruction": "Which image matches the description better?"
   },
   "results": [
     {
       "context": "A small blue book sitting on a large red book.",
       "winner_index": 1,
-      "winner": "dalle-3_37_2.jpg",
+      "winner": "flux-1-pro_37_0.jpg",
+      "assetUrls": {
+        "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
+        "flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
+      },
       "aggregatedResults": {
-        "aurora-20-1-25_37_4.png": 0,
-        "dalle-3_37_2.jpg": 3
+        "midjourney-5.2_37_3.jpg": 0,
+        "flux-1-pro_37_0.jpg": 3
       },
       "aggregatedResultsRatios": {
-        "aurora-20-1-25_37_4.png": 0.0,
-        "dalle-3_37_2.jpg": 1.0
+        "midjourney-5.2_37_3.jpg": 0.0,
+        "flux-1-pro_37_0.jpg": 1.0
       },
       "summedUserScores": {
-        "aurora-20-1-25_37_4.png": 0.0,
-        "dalle-3_37_2.jpg": 1.196
+        "midjourney-5.2_37_3.jpg": 0.0,
+        "flux-1-pro_37_0.jpg": 2.552
       },
       "summedUserScoresRatios": {
-        "aurora-20-1-25_37_4.png": 0.0,
-        "dalle-3_37_2.jpg": 1.0
+        "midjourney-5.2_37_3.jpg": 0.0,
+        "flux-1-pro_37_0.jpg": 1.0
       },
       "detailedResults": [
           {
-              "votedFor": "dalle-3_37_2.jpg",
+              "votedFor": "flux-1-pro_37_0.jpg",
               "userDetails": {
-                  "country": "BY",
-                  "language": "ru",
-                  "userScores": {
-                      "global": 0.4469
-                  },
-                  "demographics": {}
-              }
-          },
-          {
-              "votedFor": "dalle-3_37_2.jpg",
-              "userDetails": {
-                  "country": "LY",
+                  "country": "EG",
                   "language": "ar",
                   "userScores": {
-                      "global": 0.3923
+                      "global": 0.845
                   },
                   "demographics": {
-                      "age": "0-17",
+                      "age": "18-29",
                       "gender": "Other",
-                      "occupation": "Other Employment"
+                      "occupation": "Not currently working"
                   }
               }
           },
           {
-              "votedFor": "dalle-3_37_2.jpg",
+              "votedFor": "flux-1-pro_37_0.jpg",
               "userDetails": {
-                  "country": "BY",
-                  "language": "ru",
+                  "country": "BD",
+                  "language": "en",
                   "userScores": {
-                      "global": 0.3568
+                      "global": 0.8349
+                  },
+                  "demographics": {
+                      "age": "65+",
+                      "gender": "Other",
+                      "occupation": "Retired"
+                  }
+              }
+          },
+          {
+              "votedFor": "flux-1-pro_37_0.jpg",
+              "userDetails": {
+                  "country": "ES",
+                  "language": "es",
+                  "userScores": {
+                      "global": 0.8721
                   },
                   "demographics": {
                       "age": "0-17",
-                      "gender": "Other",
-                      "occupation": "Healthcare"
+                      "gender": "Female",
+                      "occupation": "Not currently working"
                   }
               }
           }
       ]
     }
-  ]
+  ],
+  "summary": {
+    "A_wins_total": 0,
+    "B_wins_total": 1
+  }
 }
 ```
 
@@ -88,46 +99,52 @@ Here's an example of the results you might receive when running a COMPARE task (
 1. `info`
     - `createdAt`: The timestamp indicating when the results overview was generated, in UTC time.
     - `version`: The version of the aggregator system that produced the results.
+    - `type`: The type of task that was run (e.g. `Compare`, `Classify`).
+    - `name`: The name given to the job or order.
+    - `instruction`: The instruction that was shown to the labelers.
 
-2. `summary`
-    - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
-    - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs
+2. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
 
-3. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
-
-    - `context`: The prompt or description provided for the comparison task
+    - `context`: The context shown alongside this datapoint (present when `contexts` were provided for the job)
     - `winner_index`: Index of the winning option (0 for first option, 1 for second option)
     - `winner`: Filename or identifier of the winning option
-    
+    - `assetUrls`: Maps each option to the URL under which the asset is hosted by Rapidata — the exact file that was shown to the labelers. The hosted files are not encrypted, but are assigned a random UUID name so they can't be accessed by guessing URLs.
+        ```json
+        "assetUrls": {
+            "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
+            "flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
+        }
+        ```
+
     - `aggregatedResults`: The total number of responses each option received for this specific comparison.
         ```json
         "aggregatedResults": {
-            "aurora-20-1-25_37_4.png": 0,
-            "dalle-3_37_2.jpg": 3
+            "midjourney-5.2_37_3.jpg": 0,
+            "flux-1-pro_37_0.jpg": 3
         }
         ```
 
     - `aggregatedResultsRatios`: The proportion of responses each option received, calculated as the number of responses for the option divided by the total number of responses.
         ```json
         "aggregatedResultsRatios": {
-            "aurora-20-1-25_37_4.png": 0.0,
-            "dalle-3_37_2.jpg": 1.0
+            "midjourney-5.2_37_3.jpg": 0.0,
+            "flux-1-pro_37_0.jpg": 1.0
         }
         ```
 
     - `summedUserScores`: The sum of the labelers' global userScore values for each option. This metric accounts for the reliability of each labeler's response.
         ```json
         "summedUserScores": {
-            "aurora-20-1-25_37_4.png": 0.0,
-            "dalle-3_37_2.jpg": 1.196
+            "midjourney-5.2_37_3.jpg": 0.0,
+            "flux-1-pro_37_0.jpg": 2.552
         }
         ```
 
     - `summedUserScoresRatios`: The proportion of the summed global userScores for each option, providing a weighted ratio based on labeler reliability.
         ```json
         "summedUserScoresRatios": {
-            "aurora-20-1-25_37_4.png": 0.0,
-            "dalle-3_37_2.jpg": 1.0
+            "midjourney-5.2_37_3.jpg": 0.0,
+            "flux-1-pro_37_0.jpg": 1.0
         }
         ```
 
@@ -138,7 +155,11 @@ Here's an example of the results you might receive when running a COMPARE task (
             - `language`: Language in which the labeler viewed the task
             - `userScores`: A score representing the labeler's reliability across different dimensions
                 - `global`: The global userScore of the labeler, which is a measure of their overall reliability
-            - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`).
+            - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`). May be empty if no demographic data was collected for the labeler.
+
+3. `summary`
+    - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
+    - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs
 
 ## Understanding the User Scores
 
