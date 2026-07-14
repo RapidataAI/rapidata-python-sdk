@@ -40,6 +40,9 @@ class BackendFilterMapper:
         from rapidata.api_client.models.i_audience_filter_language_audience_filter import (
             IAudienceFilterLanguageAudienceFilter,
         )
+        from rapidata.api_client.models.i_audience_filter_device_audience_filter import (
+            IAudienceFilterDeviceAudienceFilter,
+        )
 
         cls._imported_backend_filters = {
             "AndAudienceFilter": IAudienceFilterAndAudienceFilter,
@@ -48,6 +51,7 @@ class BackendFilterMapper:
             "CountryAudienceFilter": IAudienceFilterCountryAudienceFilter,
             "DemographicAudienceFilter": IAudienceFilterDemographicAudienceFilter,
             "LanguageAudienceFilter": IAudienceFilterLanguageAudienceFilter,
+            "DeviceAudienceFilter": IAudienceFilterDeviceAudienceFilter,
         }
 
     @classmethod
@@ -58,18 +62,22 @@ class BackendFilterMapper:
 
         from rapidata.rapidata_client.filter.and_filter import AndFilter
         from rapidata.rapidata_client.filter.country_filter import CountryFilter
-        from rapidata.rapidata_client.filter.demographic_filter import DemographicFilter
+        from rapidata.rapidata_client.filter.age_filter import AgeFilter
+        from rapidata.rapidata_client.filter.gender_filter import GenderFilter
         from rapidata.rapidata_client.filter.language_filter import LanguageFilter
         from rapidata.rapidata_client.filter.not_filter import NotFilter
         from rapidata.rapidata_client.filter.or_filter import OrFilter
+        from rapidata.rapidata_client.filter.device_filter import DeviceFilter
 
         cls._imported_client_filters = {
             "AndFilter": AndFilter,
             "CountryFilter": CountryFilter,
-            "DemographicFilter": DemographicFilter,
+            "AgeFilter": AgeFilter,
+            "GenderFilter": GenderFilter,
             "LanguageFilter": LanguageFilter,
             "NotFilter": NotFilter,
             "OrFilter": OrFilter,
+            "DeviceFilter": DeviceFilter,
         }
 
     @classmethod
@@ -104,14 +112,19 @@ class BackendFilterMapper:
         BackendLanguageAudienceFilter = cls._imported_backend_filters[
             "LanguageAudienceFilter"
         ]
+        BackendDeviceAudienceFilter = cls._imported_backend_filters[
+            "DeviceAudienceFilter"
+        ]
 
         # Import client models
         ClientAndFilter = cls._imported_client_filters["AndFilter"]
         ClientOrFilter = cls._imported_client_filters["OrFilter"]
         ClientNotFilter = cls._imported_client_filters["NotFilter"]
         ClientCountryFilter = cls._imported_client_filters["CountryFilter"]
-        ClientDemographicFilter = cls._imported_client_filters["DemographicFilter"]
+        ClientAgeFilter = cls._imported_client_filters["AgeFilter"]
+        ClientGenderFilter = cls._imported_client_filters["GenderFilter"]
         ClientLanguageFilter = cls._imported_client_filters["LanguageFilter"]
+        ClientDeviceFilter = cls._imported_client_filters["DeviceFilter"]
 
         # Handle recursive filters (AndFilter, OrFilter, NotFilter)
         if isinstance(actual_instance, BackendAndAudienceFilter):
@@ -137,12 +150,36 @@ class BackendFilterMapper:
         elif isinstance(actual_instance, BackendCountryAudienceFilter):
             return ClientCountryFilter(actual_instance.countries)  # type: ignore[attr-defined]
         elif isinstance(actual_instance, BackendDemographicAudienceFilter):
-            return ClientDemographicFilter(
-                identifier=actual_instance.identifier,  # type: ignore[attr-defined]
-                values=actual_instance.values,  # type: ignore[attr-defined]
+            from rapidata.rapidata_client.filter.models.age_group import AgeGroup
+            from rapidata.rapidata_client.filter.models.gender import Gender
+            from rapidata.api_client.models.age_user_filter_model_age_group import (
+                AgeUserFilterModelAgeGroup,
+            )
+            from rapidata.api_client.models.gender_user_filter_model_gender import (
+                GenderUserFilterModelGender,
+            )
+
+            identifier = actual_instance.identifier  # type: ignore[attr-defined]
+            values = actual_instance.values  # type: ignore[attr-defined]
+            if identifier == "age":
+                return ClientAgeFilter(
+                    [AgeGroup(AgeUserFilterModelAgeGroup(value)) for value in values]
+                )
+            if identifier == "gender":
+                return ClientGenderFilter(
+                    [Gender(GenderUserFilterModelGender(value)) for value in values]
+                )
+            raise ValueError(
+                f"Unsupported demographic filter identifier '{identifier}'. Only 'age' and 'gender' are supported."
             )
         elif isinstance(actual_instance, BackendLanguageAudienceFilter):
             return ClientLanguageFilter(actual_instance.languages)  # type: ignore[attr-defined]
+        elif isinstance(actual_instance, BackendDeviceAudienceFilter):
+            from rapidata.rapidata_client.filter.models.device_type import DeviceType
+
+            return ClientDeviceFilter(
+                [DeviceType(getattr(dt, "value", dt)) for dt in actual_instance.device_types]  # type: ignore[attr-defined]
+            )
 
         else:
             backend_type_name = type(actual_instance).__name__

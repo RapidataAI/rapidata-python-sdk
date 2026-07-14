@@ -257,6 +257,9 @@ a way that's better expressed as a single combined filter on the base.
 |---|---|
 | `CountryFilter` | ISO-3166 country code (e.g. `["US", "CA"]`) |
 | `LanguageFilter` | Spoken / device language (e.g. `["en", "de"]`) |
+| `AgeFilter` | Age group (e.g. `AgeFilter([AgeGroup.BETWEEN_18_29])`) |
+| `GenderFilter` | Gender (e.g. `GenderFilter([Gender.FEMALE])`) |
+| `DeviceFilter` | Device type (e.g. `DeviceFilter([DeviceType.PHONE])`) |
 
 ### Combining filters
 

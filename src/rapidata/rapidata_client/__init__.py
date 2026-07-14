@@ -60,7 +60,6 @@ from .settings import (
 # --- GENERATED SETTINGS IMPORTS END ---
 from .filter import (
     CountryFilter,
-    DemographicFilter,
     LanguageFilter,
     NotFilter,
     OrFilter,
