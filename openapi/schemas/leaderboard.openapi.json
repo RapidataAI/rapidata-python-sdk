@@ -12210,6 +12210,11 @@
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "initialBoostLevel": {
             "type": "integer",
             "description": "The initial boost level applied to the campaign of every run created from this\n benchmark. Null means the benchmark default is used.",
@@ -12921,6 +12926,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that owns the sample."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -13019,6 +13029,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that started this generation."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -13258,6 +13273,10 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -13345,6 +13364,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that owns the sample."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -13537,6 +13561,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that owns the sample."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -14295,6 +14324,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -14734,6 +14768,11 @@
             "type": "string",
             "description": "The mail of the owner of the run."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "orderId": {
             "type": "string",
             "description": "The id of the associated order, if any.",
@@ -15096,6 +15135,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -15416,6 +15460,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -15547,6 +15596,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that started this generation."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",

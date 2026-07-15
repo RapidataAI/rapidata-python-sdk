@@ -1926,6 +1926,11 @@
             "type": "string",
             "description": "The email of the campaign owner."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the campaign was created.",
@@ -3095,6 +3100,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the campaign owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",

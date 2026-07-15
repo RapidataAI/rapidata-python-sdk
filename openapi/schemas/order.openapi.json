@@ -5029,6 +5029,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The owner email."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         },
         "description": "The result when a job has been retrieved."
@@ -5110,6 +5115,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the job definition's owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         },
         "description": "The result when a job definition has been retrieved."
@@ -7072,6 +7082,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The customer's email address."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -7227,6 +7242,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the owner of the job definition."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -7394,6 +7414,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the job's owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -7573,6 +7598,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the owner of the job definition."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },

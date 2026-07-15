@@ -3047,6 +3047,10 @@
           "ownerMail": {
             "type": "string",
             "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -3083,6 +3087,10 @@
             "type": "string"
           },
           "ownerMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationId": {
             "type": "string",
             "nullable": true
           },
@@ -3158,6 +3166,10 @@
             "nullable": true
           },
           "ownerMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationId": {
             "type": "string",
             "nullable": true
           }
@@ -3448,6 +3460,10 @@
             "type": "string"
           },
           "ownerMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationId": {
             "type": "string",
             "nullable": true
           }

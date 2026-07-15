@@ -36021,6 +36021,11 @@
             "type": "string",
             "description": "The email of the audience owner."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "isPublic": {
             "type": "boolean",
             "description": "Whether the audience is publicly visible."
@@ -37739,6 +37744,11 @@
             "type": "string",
             "description": "The email of the audience owner."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "isPublic": {
             "type": "boolean",
             "description": "Whether the audience is publicly visible."
@@ -38779,6 +38789,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the campaign owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -39949,6 +39964,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the campaign owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -41448,6 +41468,11 @@
             "type": "string",
             "description": "The email of the customer who owns the flow."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the flow was created.",
@@ -41629,6 +41654,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the customer who owns the flow."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -43372,6 +43402,11 @@
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "initialBoostLevel": {
             "type": "integer",
             "description": "The initial boost level applied to the campaign of every run created from this\n benchmark. Null means the benchmark default is used.",
@@ -44083,6 +44118,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that owns the sample."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -44181,6 +44221,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that started this generation."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -44420,6 +44465,10 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -44507,6 +44556,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that owns the sample."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -44699,6 +44753,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that owns the sample."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -44902,6 +44961,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -45341,6 +45405,11 @@
             "type": "string",
             "description": "The mail of the owner of the run."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "orderId": {
             "type": "string",
             "description": "The id of the associated order, if any.",
@@ -45703,6 +45772,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -46023,6 +46097,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer owning the benchmark."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -46154,6 +46233,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the customer that started this generation."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -47704,6 +47788,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The owner email."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         },
         "description": "The result when a job has been retrieved."
@@ -47785,6 +47874,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the job definition's owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         },
         "description": "The result when a job definition has been retrieved."
@@ -49570,6 +49664,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The customer's email address."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -49725,6 +49824,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the owner of the job definition."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -49892,6 +49996,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the job's owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -50071,6 +50180,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the owner of the job definition."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           }
         }
       },
@@ -56941,6 +57055,11 @@
             "type": "string",
             "description": "The email of the signal owner."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "When the signal was created.",
@@ -57190,6 +57309,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the signal owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -57577,6 +57701,10 @@
           "ownerMail": {
             "type": "string"
           },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -57648,6 +57776,10 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -57804,6 +57936,11 @@
             "type": "string",
             "description": "The mail of the owning customer."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "ownerId": {
             "type": "string",
             "description": "The id of the owning customer.",
@@ -57909,6 +58046,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the owning customer."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -58769,6 +58911,10 @@
           "ownerMail": {
             "type": "string",
             "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -58805,6 +58951,10 @@
             "type": "string"
           },
           "ownerMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationId": {
             "type": "string",
             "nullable": true
           },
@@ -58880,6 +59030,10 @@
             "nullable": true
           },
           "ownerMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationId": {
             "type": "string",
             "nullable": true
           }
@@ -59170,6 +59324,10 @@
             "type": "string"
           },
           "ownerMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationId": {
             "type": "string",
             "nullable": true
           }

@@ -2647,6 +2647,11 @@
             "type": "string",
             "description": "The email of the audience owner."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "isPublic": {
             "type": "boolean",
             "description": "Whether the audience is publicly visible."
@@ -4368,6 +4373,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the audience owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "isPublic": {
             "type": "boolean",

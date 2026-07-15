@@ -43,6 +43,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The timestamp when the audience was created.", alias="createdAt")
     owner_id: UUID = Field(description="The unique identifier of the audience owner.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the audience owner.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     is_public: StrictBool = Field(description="Whether the audience is publicly visible.", alias="isPublic")
     is_distilling: StrictBool = Field(description="Whether the audience is currently distilling users.", alias="isDistilling")
     distilling_campaign_id: StrictStr = Field(description="The id of the distilling campaign associated with the audience.", alias="distillingCampaignId")
@@ -65,7 +66,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     health: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The health score of the audience.")
     graduated: Optional[StrictInt] = Field(default=None, description="The number of graduated users.")
     dropped: Optional[StrictInt] = Field(default=None, description="The number of dropped users.")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerId", "ownerMail", "isPublic", "isDistilling", "distillingCampaignId", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationScore", "demotionScore", "maxDistillingResponses", "minResponsesToGraduate", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "boostLevel", "randomAdmissionProbability", "health", "graduated", "dropped"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerId", "ownerMail", "organizationId", "isPublic", "isDistilling", "distillingCampaignId", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationScore", "demotionScore", "maxDistillingResponses", "minResponsesToGraduate", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "boostLevel", "randomAdmissionProbability", "health", "graduated", "dropped"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -118,6 +119,11 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
             _dict['logo'] = None
+
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
 
         # set to None if min_graduated_for_distilling_boost (nullable) is None
         # and model_fields_set contains the field
@@ -211,6 +217,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "isPublic": obj.get("isPublic"),
             "isDistilling": obj.get("isDistilling"),
             "distillingCampaignId": obj.get("distillingCampaignId"),

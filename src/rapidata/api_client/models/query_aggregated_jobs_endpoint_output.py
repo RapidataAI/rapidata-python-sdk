@@ -18,7 +18,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -34,7 +34,8 @@ class QueryAggregatedJobsEndpointOutput(LazyValidatedModel):
     last_job_name: StrictStr = Field(description="The name of the most recent job.", alias="lastJobName")
     last_job_id: StrictStr = Field(description="The ID of the most recent job.", alias="lastJobId")
     owner_mail: StrictStr = Field(description="The customer's email address.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["amount", "last7Days", "lastJobDate", "lastJobName", "lastJobId", "ownerMail"]
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
+    __properties: ClassVar[List[str]] = ["amount", "last7Days", "lastJobDate", "lastJobName", "lastJobId", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -71,6 +72,11 @@ class QueryAggregatedJobsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -88,7 +94,8 @@ class QueryAggregatedJobsEndpointOutput(LazyValidatedModel):
             "lastJobDate": obj.get("lastJobDate"),
             "lastJobName": obj.get("lastJobName"),
             "lastJobId": obj.get("lastJobId"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId")
         }
         try:
             _obj = cls.model_validate(_data)

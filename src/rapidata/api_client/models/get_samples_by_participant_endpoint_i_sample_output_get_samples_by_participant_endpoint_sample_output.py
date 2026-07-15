@@ -41,7 +41,8 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
     created_at: Optional[datetime] = Field(default=None, description="The timestamp when the sample was created.", alias="createdAt")
     owner_id: Optional[UUID] = Field(default=None, description="The id of the customer that owns the sample.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer that owns the sample.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["_t", "id", "identifier", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail"]
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
+    __properties: ClassVar[List[str]] = ["_t", "id", "identifier", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail", "organizationId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -101,6 +102,11 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
         if self.original_prompt is None and "original_prompt" in self.model_fields_set:
             _dict['originalPrompt'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -123,7 +129,8 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
             "tags": obj.get("tags"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId")
         }
         try:
             _obj = cls.model_validate(_data)

@@ -18,7 +18,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -33,10 +33,11 @@ class GetValidationSetByIdEndpointOutput(LazyValidatedModel):
     name: StrictStr = Field(description="The name of the validation set.")
     is_public: StrictBool = Field(description="Whether the validation set is public.", alias="isPublic")
     owner_mail: StrictStr = Field(description="The mail of the owning customer.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     owner_id: UUID = Field(description="The id of the owning customer.", alias="ownerId")
     dimensions: List[StrictStr]
     created_at: datetime = Field(description="The time at which the validation set was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "ownerMail", "ownerId", "dimensions", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "ownerMail", "organizationId", "ownerId", "dimensions", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -73,6 +74,11 @@ class GetValidationSetByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -89,6 +95,7 @@ class GetValidationSetByIdEndpointOutput(LazyValidatedModel):
             "name": obj.get("name"),
             "isPublic": obj.get("isPublic"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "ownerId": obj.get("ownerId"),
             "dimensions": obj.get("dimensions"),
             "createdAt": obj.get("createdAt")

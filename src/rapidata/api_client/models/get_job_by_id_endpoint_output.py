@@ -48,7 +48,8 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     owner_id: UUID = Field(description="The owner id.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "state", "isPublic", "audienceDeleted", "completedAt", "resultFileName", "failedAt", "failureMessage", "reviewReason", "createdAt", "ownerId", "ownerMail"]
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "state", "isPublic", "audienceDeleted", "completedAt", "resultFileName", "failedAt", "failureMessage", "reviewReason", "createdAt", "ownerId", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -105,6 +106,11 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
         if self.failure_message is None and "failure_message" in self.model_fields_set:
             _dict['failureMessage'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -133,7 +139,8 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
             "reviewReason": obj.get("reviewReason"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId")
         }
         try:
             _obj = cls.model_validate(_data)

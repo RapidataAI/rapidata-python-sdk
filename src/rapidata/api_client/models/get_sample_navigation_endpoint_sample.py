@@ -42,7 +42,8 @@ class GetSampleNavigationEndpointSample(LazyValidatedModel):
     created_at: Optional[datetime] = Field(default=None, alias="createdAt")
     owner_id: Optional[UUID] = Field(default=None, alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "identifier", "participantId", "participantName", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail"]
+    organization_id: Optional[StrictStr] = Field(default=None, alias="organizationId")
+    __properties: ClassVar[List[str]] = ["id", "identifier", "participantId", "participantName", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -100,6 +101,11 @@ class GetSampleNavigationEndpointSample(LazyValidatedModel):
         if self.prompt_asset is None and "prompt_asset" in self.model_fields_set:
             _dict['promptAsset'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -123,7 +129,8 @@ class GetSampleNavigationEndpointSample(LazyValidatedModel):
             "tags": obj.get("tags"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId")
         }
         try:
             _obj = cls.model_validate(_data)

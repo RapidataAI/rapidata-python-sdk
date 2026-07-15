@@ -36,7 +36,8 @@ class IWorkflowEvaluationWorkflow(LazyValidatedModel):
     referee: IRefereeConfig
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["_t", "id", "validationSetId", "state", "referee", "name", "ownerMail"]
+    organization_id: Optional[StrictStr] = Field(default=None, alias="organizationId")
+    __properties: ClassVar[List[str]] = ["_t", "id", "validationSetId", "state", "referee", "name", "ownerMail", "organizationId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -88,6 +89,11 @@ class IWorkflowEvaluationWorkflow(LazyValidatedModel):
         if self.owner_mail is None and "owner_mail" in self.model_fields_set:
             _dict['ownerMail'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -106,7 +112,8 @@ class IWorkflowEvaluationWorkflow(LazyValidatedModel):
             "state": obj.get("state"),
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "name": obj.get("name"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId")
         }
         try:
             _obj = cls.model_validate(_data)
