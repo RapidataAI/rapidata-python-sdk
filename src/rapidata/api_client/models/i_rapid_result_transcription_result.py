@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.transcription_result_transcription_word import TranscriptionResultTranscriptionWord
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,9 +29,9 @@ class IRapidResultTranscriptionResult(LazyValidatedModel):
     IRapidResultTranscriptionResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    selected_words: List[TranscriptionWord] = Field(alias="selectedWords")
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "selectedWords", "rapidId"]
+    selected_words: List[TranscriptionResultTranscriptionWord] = Field(alias="selectedWords")
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "selectedWords"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,8 +95,8 @@ class IRapidResultTranscriptionResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "selectedWords": [TranscriptionWord.from_dict(_item) for _item in obj["selectedWords"]] if obj.get("selectedWords") is not None else None,
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "selectedWords": [TranscriptionResultTranscriptionWord.from_dict(_item) for _item in obj["selectedWords"]] if obj.get("selectedWords") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

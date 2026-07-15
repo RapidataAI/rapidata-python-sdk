@@ -31,7 +31,8 @@ class IAssetTextAsset(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     text: StrictStr
     metadata: Dict[str, IMetadata]
-    __properties: ClassVar[List[str]] = ["_t", "text", "metadata"]
+    identifier: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "text", "metadata", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -101,7 +102,8 @@ class IAssetTextAsset(LazyValidatedModel):
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
-            else None
+            else None,
+            "identifier": obj.get("identifier")
         }
         try:
             _obj = cls.model_validate(_data)

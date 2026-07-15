@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.create_job_endpoint_cost_warning_model import CreateJobEndpointCostWarningModel
+from rapidata.api_client.models.create_job_endpoint_cost_warning import CreateJobEndpointCostWarning
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class CreateJobEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     job_id: StrictStr = Field(description="The id of the created job.", alias="jobId")
     recruiting_started: StrictBool = Field(description="Whether recruiting was automatically started for the audience.", alias="recruitingStarted")
-    cost_warning: Optional[CreateJobEndpointCostWarningModel] = Field(default=None, description="Present only when the job's estimated cost exceeds the owner's remaining balance.  Advisory — the job is created and runs regardless; it may pause for funds mid-run.", alias="costWarning")
+    cost_warning: Optional[CreateJobEndpointCostWarning] = Field(default=None, description="Present only when the job's estimated cost exceeds the owner's remaining balance.  Advisory — the job is created and runs regardless; it may pause for funds mid-run.", alias="costWarning")
     __properties: ClassVar[List[str]] = ["jobId", "recruitingStarted", "costWarning"]
 
     # model_config is inherited from LazyValidatedModel
@@ -85,7 +85,7 @@ class CreateJobEndpointOutput(LazyValidatedModel):
         _data = {
             "jobId": obj.get("jobId"),
             "recruitingStarted": obj.get("recruitingStarted"),
-            "costWarning": CreateJobEndpointCostWarningModel.from_dict(obj["costWarning"]) if obj.get("costWarning") is not None else None
+            "costWarning": CreateJobEndpointCostWarning.from_dict(obj["costWarning"]) if obj.get("costWarning") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

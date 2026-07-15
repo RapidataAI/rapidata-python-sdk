@@ -19,10 +19,10 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.get_rapid_navigation_endpoint_card_response import GetRapidNavigationEndpointCardResponse
-from rapidata.api_client.models.i_asset_model import IAssetModel
-from rapidata.api_client.models.i_rapid_payload_model import IRapidPayloadModel
-from rapidata.api_client.models.i_response_aggregation_model import IResponseAggregationModel
-from rapidata.api_client.models.rapid_state_model import RapidStateModel
+from rapidata.api_client.models.i_asset import IAsset
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_response_aggregation import IResponseAggregation
+from rapidata.api_client.models.rapid_state import RapidState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -33,15 +33,15 @@ class GetRapidNavigationEndpointCard(LazyValidatedModel):
     GetRapidNavigationEndpointCard
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
-    asset: IAssetModel
-    state: RapidStateModel
-    payload: IRapidPayloadModel
+    asset: IAsset
+    state: RapidState
+    payload: IRapidPayload
     responses: List[GetRapidNavigationEndpointCardResponse]
     total_response_count: StrictInt = Field(alias="totalResponseCount")
     context: Optional[StrictStr] = None
-    context_asset: Optional[IAssetModel] = Field(default=None, alias="contextAsset")
+    context_asset: Optional[IAsset] = Field(default=None, alias="contextAsset")
     decisiveness: Optional[Union[StrictFloat, StrictInt]] = None
-    aggregation: Optional[IResponseAggregationModel] = None
+    aggregation: Optional[IResponseAggregation] = None
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "state", "payload", "responses", "totalResponseCount", "context", "contextAsset", "decisiveness", "aggregation"]
 
     # model_config is inherited from LazyValidatedModel
@@ -131,15 +131,15 @@ class GetRapidNavigationEndpointCard(LazyValidatedModel):
 
         _data = {
             "rapidId": obj.get("rapidId"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "state": obj.get("state"),
-            "payload": IRapidPayloadModel.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "responses": [GetRapidNavigationEndpointCardResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
             "totalResponseCount": obj.get("totalResponseCount"),
             "context": obj.get("context"),
-            "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "decisiveness": obj.get("decisiveness"),
-            "aggregation": IResponseAggregationModel.from_dict(obj["aggregation"]) if obj.get("aggregation") is not None else None
+            "aggregation": IResponseAggregation.from_dict(obj["aggregation"]) if obj.get("aggregation") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

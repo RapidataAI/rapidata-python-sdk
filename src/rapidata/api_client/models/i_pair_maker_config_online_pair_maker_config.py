@@ -17,7 +17,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,15 +28,15 @@ class IPairMakerConfigOnlinePairMakerConfig(LazyValidatedModel):
     IPairMakerConfigOnlinePairMakerConfig
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    random_matches_ratio: Union[StrictFloat, StrictInt] = Field(alias="randomMatchesRatio")
-    total_comparison_budget: StrictInt = Field(alias="totalComparisonBudget")
+    random_matches_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomMatchesRatio")
+    total_comparison_budget: Optional[StrictInt] = Field(default=None, alias="totalComparisonBudget")
     __properties: ClassVar[List[str]] = ["_t", "randomMatchesRatio", "totalComparisonBudget"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OnlinePairMakerConfig']):
-            raise ValueError("must be one of enum values ('OnlinePairMakerConfig')")
+        if value not in set(['OnlinePairMaker']):
+            raise ValueError("must be one of enum values ('OnlinePairMaker')")
         return value
 
     # model_config is inherited from LazyValidatedModel

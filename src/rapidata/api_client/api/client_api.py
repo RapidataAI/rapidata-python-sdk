@@ -19,7 +19,7 @@ from pydantic import Field, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
-from rapidata.api_client.models.client_model import ClientModel
+from rapidata.api_client.models.client import Client
 from rapidata.api_client.models.create_client_endpoint_input import CreateClientEndpointInput
 from rapidata.api_client.models.create_client_endpoint_output import CreateClientEndpointOutput
 from rapidata.api_client.models.dynamic_client_registration_request import DynamicClientRegistrationRequest
@@ -1281,7 +1281,7 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ClientModel:
+    ) -> Client:
         """Gets the details of a specific client.
 
 
@@ -1318,7 +1318,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientModel",
+            '200': "Client",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1350,7 +1350,7 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ClientModel]:
+    ) -> ApiResponse[Client]:
         """Gets the details of a specific client.
 
 
@@ -1387,7 +1387,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientModel",
+            '200': "Client",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1456,7 +1456,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientModel",
+            '200': "Client",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,

@@ -11,14 +11,13 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,11 +27,10 @@ class EloConfig(LazyValidatedModel):
     """
     EloConfig
     """ # noqa: E501
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    starting_score: Optional[StrictInt] = Field(default=None, alias="startingScore")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "startingScore", "kFactor", "scalingFactor"]
+    starting_score: StrictInt = Field(alias="startingScore")
+    k_factor: StrictInt = Field(alias="kFactor")
+    scaling_factor: StrictInt = Field(alias="scalingFactor")
+    __properties: ClassVar[List[str]] = ["startingScore", "kFactor", "scalingFactor"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,7 +79,6 @@ class EloConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
             "startingScore": obj.get("startingScore"),
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor")

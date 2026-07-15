@@ -854,7 +854,7 @@
           "asset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The asset that will be displayed to the users."
@@ -937,7 +937,7 @@
             "nullable": true
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "createdAt": {
             "type": "string",
@@ -961,6 +961,60 @@
               }
             ],
             "description": "The list of failed datapoints."
+          }
+        }
+      },
+      "IAsset": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetFileAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetMultiAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetNullAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetTextAsset"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FileAsset": "#/components/schemas/IAssetFileAsset",
+            "MultiAsset": "#/components/schemas/IAssetMultiAsset",
+            "NullAsset": "#/components/schemas/IAssetNullAsset",
+            "TextAsset": "#/components/schemas/IAssetTextAsset"
+          }
+        }
+      },
+      "IAssetFileAsset": {
+        "required": [
+          "fileName",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
           }
         }
       },
@@ -1082,61 +1136,7 @@
           }
         }
       },
-      "IAssetModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IAssetModelFileAssetModel"
-          },
-          {
-            "$ref": "#/components/schemas/IAssetModelMultiAssetModel"
-          },
-          {
-            "$ref": "#/components/schemas/IAssetModelNullAssetModel"
-          },
-          {
-            "$ref": "#/components/schemas/IAssetModelTextAssetModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "FileAsset": "#/components/schemas/IAssetModelFileAssetModel",
-            "MultiAsset": "#/components/schemas/IAssetModelMultiAssetModel",
-            "NullAsset": "#/components/schemas/IAssetModelNullAssetModel",
-            "TextAsset": "#/components/schemas/IAssetModelTextAssetModel"
-          }
-        }
-      },
-      "IAssetModelFileAssetModel": {
-        "required": [
-          "fileName",
-          "metadata",
-          "identifier",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileAsset"
-            ],
-            "type": "string"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/MetadataModelCollection"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        }
-      },
-      "IAssetModelMultiAssetModel": {
+      "IAssetMultiAsset": {
         "required": [
           "assets",
           "metadata",
@@ -1153,7 +1153,7 @@
           "assets": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IAssetModel"
+              "$ref": "#/components/schemas/IAsset"
             }
           },
           "metadata": {
@@ -1164,7 +1164,7 @@
           }
         }
       },
-      "IAssetModelNullAssetModel": {
+      "IAssetNullAsset": {
         "required": [
           "metadata",
           "identifier",
@@ -1185,7 +1185,7 @@
           }
         }
       },
-      "IAssetModelTextAssetModel": {
+      "IAssetTextAsset": {
         "required": [
           "text",
           "metadata",
@@ -1207,6 +1207,132 @@
           },
           "identifier": {
             "type": "string"
+          }
+        }
+      },
+      "IMetadata": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataClassificationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataCountMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataImageDimensionMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataLocationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataOriginalFilenameMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataSourceUrlMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataStreamsMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataTextMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
+            "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
+            "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
+            "SourceUrlMetadataModel": "#/components/schemas/IMetadataSourceUrlMetadata",
+            "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        }
+      },
+      "IMetadataClassificationMetadata": {
+        "required": [
+          "classification",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataCountMetadata": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataFileTypeMetadata": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          }
+        }
+      },
+      "IMetadataImageDimensionMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1249,133 +1375,7 @@
           }
         }
       },
-      "IMetadataModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IMetadataModelClassificationMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelCountMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelFileTypeMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelImageDimensionMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelLocationMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelSourceUrlMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelStreamsMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelTextMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "ClassificationMetadata": "#/components/schemas/IMetadataModelClassificationMetadataModel",
-            "CountMetadata": "#/components/schemas/IMetadataModelCountMetadataModel",
-            "FileTypeMetadata": "#/components/schemas/IMetadataModelFileTypeMetadataModel",
-            "ImageDimensionMetadata": "#/components/schemas/IMetadataModelImageDimensionMetadataModel",
-            "LocationMetadata": "#/components/schemas/IMetadataModelLocationMetadataModel",
-            "OriginalFilenameMetadata": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel",
-            "SourceUrlMetadataModel": "#/components/schemas/IMetadataModelSourceUrlMetadataModel",
-            "StreamsMetadata": "#/components/schemas/IMetadataModelStreamsMetadataModel",
-            "TextMetadata": "#/components/schemas/IMetadataModelTextMetadataModel",
-            "VideoDurationMetadata": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
-          }
-        }
-      },
-      "IMetadataModelClassificationMetadataModel": {
-        "required": [
-          "classification",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassificationMetadata"
-            ],
-            "type": "string"
-          },
-          "classification": {
-            "type": "string"
-          }
-        }
-      },
-      "IMetadataModelCountMetadataModel": {
-        "required": [
-          "count",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CountMetadata"
-            ],
-            "type": "string"
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "IMetadataModelFileTypeMetadataModel": {
-        "required": [
-          "fileType",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileTypeMetadata"
-            ],
-            "type": "string"
-          },
-          "fileType": {
-            "$ref": "#/components/schemas/FileType"
-          }
-        }
-      },
-      "IMetadataModelImageDimensionMetadataModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ImageDimensionMetadata"
-            ],
-            "type": "string"
-          },
-          "height": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "width": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "IMetadataModelLocationMetadataModel": {
+      "IMetadataLocationMetadata": {
         "required": [
           "x",
           "y",
@@ -1398,7 +1398,7 @@
           }
         }
       },
-      "IMetadataModelOriginalFilenameMetadataModel": {
+      "IMetadataOriginalFilenameMetadata": {
         "required": [
           "originalFilename",
           "_t"
@@ -1415,7 +1415,7 @@
           }
         }
       },
-      "IMetadataModelSourceUrlMetadataModel": {
+      "IMetadataSourceUrlMetadata": {
         "required": [
           "url",
           "_t"
@@ -1432,7 +1432,7 @@
           }
         }
       },
-      "IMetadataModelStreamsMetadataModel": {
+      "IMetadataStreamsMetadata": {
         "required": [
           "hasVideo",
           "hasAudio",
@@ -1457,7 +1457,7 @@
           }
         }
       },
-      "IMetadataModelTextMetadataModel": {
+      "IMetadataTextMetadata": {
         "required": [
           "text",
           "_t"
@@ -1475,7 +1475,7 @@
           }
         }
       },
-      "IMetadataModelVideoDurationMetadataModel": {
+      "IMetadataVideoDurationMetadata": {
         "required": [
           "duration",
           "_t"
@@ -1502,7 +1502,7 @@
       "MetadataModelCollection": {
         "type": "object",
         "additionalProperties": {
-          "$ref": "#/components/schemas/IMetadataModel"
+          "$ref": "#/components/schemas/IMetadata"
         }
       },
       "MetadataVisibilities": {
@@ -1538,7 +1538,7 @@
           "asset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The asset that will be displayed to the users."

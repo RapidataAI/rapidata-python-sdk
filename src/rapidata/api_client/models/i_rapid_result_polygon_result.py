@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.polygon_shape import PolygonShape
+from rapidata.api_client.models.polygon_result_shape import PolygonResultShape
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,9 +29,9 @@ class IRapidResultPolygonResult(LazyValidatedModel):
     IRapidResultPolygonResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    shapes: List[PolygonShape]
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "shapes", "rapidId"]
+    shapes: List[PolygonResultShape]
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "shapes"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,8 +95,8 @@ class IRapidResultPolygonResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "shapes": [PolygonShape.from_dict(_item) for _item in obj["shapes"]] if obj.get("shapes") is not None else None,
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "shapes": [PolygonResultShape.from_dict(_item) for _item in obj["shapes"]] if obj.get("shapes") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

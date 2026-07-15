@@ -20,7 +20,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -34,10 +34,10 @@ class GetSamplesByIdentifierEndpointOutput(LazyValidatedModel):
     identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
     participant_id: StrictStr = Field(description="The id of the participant that owns the sample.", alias="participantId")
     participant_name: StrictStr = Field(description="The name of the participant that owns the sample.", alias="participantName")
-    asset: IAssetModel = Field(description="The asset associated with the sample.")
+    asset: IAsset = Field(description="The asset associated with the sample.")
     english_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text translated to English.", alias="englishPrompt")
     original_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text as originally provided.", alias="originalPrompt")
-    prompt_asset: Optional[IAssetModel] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
+    prompt_asset: Optional[IAsset] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
     tags: List[StrictStr]
     created_at: Optional[datetime] = Field(default=None, description="The timestamp when the sample was created.", alias="createdAt")
     owner_id: Optional[UUID] = Field(default=None, description="The id of the customer that owns the sample.", alias="ownerId")
@@ -111,10 +111,10 @@ class GetSamplesByIdentifierEndpointOutput(LazyValidatedModel):
             "identifier": obj.get("identifier"),
             "participantId": obj.get("participantId"),
             "participantName": obj.get("participantName"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "englishPrompt": obj.get("englishPrompt"),
             "originalPrompt": obj.get("originalPrompt"),
-            "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
+            "promptAsset": IAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "tags": obj.get("tags"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),

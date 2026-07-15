@@ -162,7 +162,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfIBillingGroupModel"
+                  "$ref": "#/components/schemas/PagedResultOfIBillingGroup"
                 }
               }
             }
@@ -296,7 +296,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfIBillingGroupModel"
+                  "$ref": "#/components/schemas/PagedResultOfIBillingGroup"
                 }
               }
             }
@@ -969,7 +969,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfIBillingGroupModel"
+                  "$ref": "#/components/schemas/PagedResultOfIBillingGroup"
                 }
               }
             }
@@ -2957,14 +2957,6 @@
           "Reconciling"
         ]
       },
-      "BillingPeriodStatusModel": {
-        "enum": [
-          "Open",
-          "Invoiced",
-          "Void",
-          "Reconciling"
-        ]
-      },
       "BillingSummaryMode": {
         "enum": [
           "Usage",
@@ -3490,7 +3482,7 @@
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/BillingPeriodStatusModel"
+                "$ref": "#/components/schemas/BillingPeriodStatus"
               }
             ],
             "description": "The status of the billing period."
@@ -3520,7 +3512,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ILineItemModel"
+                  "$ref": "#/components/schemas/ILineItem"
                 }
               }
             ],
@@ -3559,7 +3551,7 @@
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/BillingPeriodStatusModel"
+                "$ref": "#/components/schemas/BillingPeriodStatus"
               }
             ],
             "description": "The status of the billing period."
@@ -3589,7 +3581,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ILineItemModel"
+                  "$ref": "#/components/schemas/ILineItem"
                 }
               }
             ],
@@ -4227,45 +4219,45 @@
           }
         }
       },
-      "IBillingGroupModel": {
+      "IBillingGroup": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IBillingGroupModelAudienceDistillationBillingGroupModel"
+            "$ref": "#/components/schemas/IBillingGroupAudienceDistillationBillingGroup"
           },
           {
-            "$ref": "#/components/schemas/IBillingGroupModelAudienceJobBillingGroupModel"
+            "$ref": "#/components/schemas/IBillingGroupAudienceJobBillingGroup"
           },
           {
-            "$ref": "#/components/schemas/IBillingGroupModelBenchmarkBillingGroupModel"
+            "$ref": "#/components/schemas/IBillingGroupBenchmarkBillingGroup"
           },
           {
-            "$ref": "#/components/schemas/IBillingGroupModelOrderBillingGroupModel"
+            "$ref": "#/components/schemas/IBillingGroupOrderBillingGroup"
           },
           {
-            "$ref": "#/components/schemas/IBillingGroupModelRankingFlowBillingGroupModel"
+            "$ref": "#/components/schemas/IBillingGroupRankingFlowBillingGroup"
           },
           {
-            "$ref": "#/components/schemas/IBillingGroupModelValidationSetBillingGroupModel"
+            "$ref": "#/components/schemas/IBillingGroupValidationSetBillingGroup"
           }
         ],
         "description": "A billable group of responses on a billing period, identified by a discriminator.\n Implementations describe the source of the charges (order, benchmark, audience job, etc.).",
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "AudienceDistillationBillingGroup": "#/components/schemas/IBillingGroupModelAudienceDistillationBillingGroupModel",
-            "AudienceJobBillingGroup": "#/components/schemas/IBillingGroupModelAudienceJobBillingGroupModel",
-            "BenchmarkBillingGroup": "#/components/schemas/IBillingGroupModelBenchmarkBillingGroupModel",
-            "OrderBillingGroup": "#/components/schemas/IBillingGroupModelOrderBillingGroupModel",
-            "RankingFlowBillingGroup": "#/components/schemas/IBillingGroupModelRankingFlowBillingGroupModel",
-            "ValidationSetBillingGroup": "#/components/schemas/IBillingGroupModelValidationSetBillingGroupModel"
+            "AudienceDistillationBillingGroup": "#/components/schemas/IBillingGroupAudienceDistillationBillingGroup",
+            "AudienceJobBillingGroup": "#/components/schemas/IBillingGroupAudienceJobBillingGroup",
+            "BenchmarkBillingGroup": "#/components/schemas/IBillingGroupBenchmarkBillingGroup",
+            "OrderBillingGroup": "#/components/schemas/IBillingGroupOrderBillingGroup",
+            "RankingFlowBillingGroup": "#/components/schemas/IBillingGroupRankingFlowBillingGroup",
+            "ValidationSetBillingGroup": "#/components/schemas/IBillingGroupValidationSetBillingGroup"
           }
         }
       },
-      "IBillingGroupModelAudienceDistillationBillingGroupModel": {
+      "IBillingGroupAudienceDistillationBillingGroup": {
         "required": [
           "id",
           "name",
@@ -4318,7 +4310,7 @@
         },
         "description": "A billing group for responses produced by an audience distillation run."
       },
-      "IBillingGroupModelAudienceJobBillingGroupModel": {
+      "IBillingGroupAudienceJobBillingGroup": {
         "required": [
           "id",
           "name",
@@ -4376,7 +4368,7 @@
         },
         "description": "A billing group for responses produced by an audience job."
       },
-      "IBillingGroupModelBenchmarkBillingGroupModel": {
+      "IBillingGroupBenchmarkBillingGroup": {
         "required": [
           "id",
           "name",
@@ -4429,7 +4421,7 @@
         },
         "description": "A billing group for responses produced by a benchmark."
       },
-      "IBillingGroupModelOrderBillingGroupModel": {
+      "IBillingGroupOrderBillingGroup": {
         "required": [
           "id",
           "name",
@@ -4482,7 +4474,7 @@
         },
         "description": "A billing group for responses produced by an order."
       },
-      "IBillingGroupModelRankingFlowBillingGroupModel": {
+      "IBillingGroupRankingFlowBillingGroup": {
         "required": [
           "id",
           "name",
@@ -4535,7 +4527,7 @@
         },
         "description": "A billing group for responses produced by a ranking flow."
       },
-      "IBillingGroupModelValidationSetBillingGroupModel": {
+      "IBillingGroupValidationSetBillingGroup": {
         "required": [
           "id",
           "name",
@@ -4588,44 +4580,44 @@
         },
         "description": "A billing group for responses produced by a validation set."
       },
-      "ILineItemModel": {
+      "ILineItem": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/ILineItemModelMinimumSpendCommitmentModel"
+            "$ref": "#/components/schemas/ILineItemMinimumSpendCommitment"
           },
           {
-            "$ref": "#/components/schemas/ILineItemModelOtherChargeModel"
+            "$ref": "#/components/schemas/ILineItemOtherCharge"
           },
           {
-            "$ref": "#/components/schemas/ILineItemModelPlatformFeeModel"
+            "$ref": "#/components/schemas/ILineItemPlatformFee"
           },
           {
-            "$ref": "#/components/schemas/ILineItemModelRefundModel"
+            "$ref": "#/components/schemas/ILineItemRefund"
           },
           {
-            "$ref": "#/components/schemas/ILineItemModelRunningCostModel"
+            "$ref": "#/components/schemas/ILineItemRunningCost"
           },
           {
-            "$ref": "#/components/schemas/ILineItemModelVolumeDiscountModel"
+            "$ref": "#/components/schemas/ILineItemVolumeDiscount"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "MinimumSpendCommitment": "#/components/schemas/ILineItemModelMinimumSpendCommitmentModel",
-            "Other": "#/components/schemas/ILineItemModelOtherChargeModel",
-            "PlatformFee": "#/components/schemas/ILineItemModelPlatformFeeModel",
-            "Refund": "#/components/schemas/ILineItemModelRefundModel",
-            "RunningCost": "#/components/schemas/ILineItemModelRunningCostModel",
-            "VolumeDiscount": "#/components/schemas/ILineItemModelVolumeDiscountModel"
+            "MinimumSpendCommitment": "#/components/schemas/ILineItemMinimumSpendCommitment",
+            "Other": "#/components/schemas/ILineItemOtherCharge",
+            "PlatformFee": "#/components/schemas/ILineItemPlatformFee",
+            "Refund": "#/components/schemas/ILineItemRefund",
+            "RunningCost": "#/components/schemas/ILineItemRunningCost",
+            "VolumeDiscount": "#/components/schemas/ILineItemVolumeDiscount"
           }
         }
       },
-      "ILineItemModelMinimumSpendCommitmentModel": {
+      "ILineItemMinimumSpendCommitment": {
         "required": [
           "name",
           "amount",
@@ -4655,7 +4647,7 @@
           }
         }
       },
-      "ILineItemModelOtherChargeModel": {
+      "ILineItemOtherCharge": {
         "required": [
           "id",
           "name",
@@ -4685,7 +4677,7 @@
           }
         }
       },
-      "ILineItemModelPlatformFeeModel": {
+      "ILineItemPlatformFee": {
         "required": [
           "id",
           "name",
@@ -4715,7 +4707,7 @@
           }
         }
       },
-      "ILineItemModelRefundModel": {
+      "ILineItemRefund": {
         "required": [
           "id",
           "name",
@@ -4745,7 +4737,7 @@
           }
         }
       },
-      "ILineItemModelRunningCostModel": {
+      "ILineItemRunningCost": {
         "required": [
           "amount",
           "_t"
@@ -4763,7 +4755,7 @@
           }
         }
       },
-      "ILineItemModelVolumeDiscountModel": {
+      "ILineItemVolumeDiscount": {
         "required": [
           "amount",
           "effectiveDiscountRatio",
@@ -4805,7 +4797,7 @@
           "MinimumSpendCommitment"
         ]
       },
-      "PagedResultOfIBillingGroupModel": {
+      "PagedResultOfIBillingGroup": {
         "required": [
           "total",
           "page",
@@ -4829,7 +4821,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IBillingGroupModel"
+              "$ref": "#/components/schemas/IBillingGroup"
             }
           },
           "totalPages": {
@@ -5411,7 +5403,8 @@
           "Week",
           "Month",
           "Minute"
-        ]
+        ],
+        "description": "The time interval used to aggregate a time series."
       },
       "UnsubscribeEndpoint_Input": {
         "type": "object",

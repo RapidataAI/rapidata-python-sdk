@@ -185,28 +185,6 @@
           }
         }
       },
-      "EloRankingConfig": {
-        "required": [
-          "startingElo",
-          "kFactor",
-          "scalingFactor"
-        ],
-        "type": "object",
-        "properties": {
-          "startingElo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "FeatureFlag": {
         "required": [
           "key",
@@ -242,7 +220,7 @@
               {
                 "type": "object",
                 "additionalProperties": {
-                  "$ref": "#/components/schemas/IArtifactModel"
+                  "$ref": "#/components/schemas/IArtifact"
                 }
               }
             ],
@@ -261,40 +239,40 @@
           }
         }
       },
-      "IArtifactModel": {
+      "IArtifact": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IArtifactModelCampaignArtifactModel"
+            "$ref": "#/components/schemas/IArtifactCampaignArtifact"
           },
           {
-            "$ref": "#/components/schemas/IArtifactModelDatasetArtifactModel"
+            "$ref": "#/components/schemas/IArtifactDatasetArtifact"
           },
           {
-            "$ref": "#/components/schemas/IArtifactModelFileArtifactModel"
+            "$ref": "#/components/schemas/IArtifactFileArtifact"
           },
           {
-            "$ref": "#/components/schemas/IArtifactModelWorkflowArtifactModel"
+            "$ref": "#/components/schemas/IArtifactWorkflowArtifact"
           },
           {
-            "$ref": "#/components/schemas/IArtifactModelWorkflowConfigArtifactModel"
+            "$ref": "#/components/schemas/IArtifactWorkflowConfigArtifact"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CampaignArtifactModel": "#/components/schemas/IArtifactModelCampaignArtifactModel",
-            "DatasetArtifactModel": "#/components/schemas/IArtifactModelDatasetArtifactModel",
-            "FileArtifactModel": "#/components/schemas/IArtifactModelFileArtifactModel",
-            "WorkflowArtifactModel": "#/components/schemas/IArtifactModelWorkflowArtifactModel",
-            "WorkflowConfigArtifactModel": "#/components/schemas/IArtifactModelWorkflowConfigArtifactModel"
+            "CampaignArtifactModel": "#/components/schemas/IArtifactCampaignArtifact",
+            "DatasetArtifactModel": "#/components/schemas/IArtifactDatasetArtifact",
+            "FileArtifactModel": "#/components/schemas/IArtifactFileArtifact",
+            "WorkflowArtifactModel": "#/components/schemas/IArtifactWorkflowArtifact",
+            "WorkflowConfigArtifactModel": "#/components/schemas/IArtifactWorkflowConfigArtifact"
           }
         }
       },
-      "IArtifactModelCampaignArtifactModel": {
+      "IArtifactCampaignArtifact": {
         "required": [
           "campaignId",
           "identifier",
@@ -315,7 +293,7 @@
           }
         }
       },
-      "IArtifactModelDatasetArtifactModel": {
+      "IArtifactDatasetArtifact": {
         "required": [
           "datasetId",
           "identifier",
@@ -336,7 +314,7 @@
           }
         }
       },
-      "IArtifactModelFileArtifactModel": {
+      "IArtifactFileArtifact": {
         "required": [
           "fileName",
           "identifier",
@@ -357,7 +335,7 @@
           }
         }
       },
-      "IArtifactModelWorkflowArtifactModel": {
+      "IArtifactWorkflowArtifact": {
         "required": [
           "workflowId",
           "identifier",
@@ -378,7 +356,7 @@
           }
         }
       },
-      "IArtifactModelWorkflowConfigArtifactModel": {
+      "IArtifactWorkflowConfigArtifact": {
         "required": [
           "workflowConfig",
           "identifier",
@@ -399,36 +377,36 @@
           }
         }
       },
-      "IAsset": {
+      "IPipelineAsset": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IAssetFileAsset"
+            "$ref": "#/components/schemas/IPipelineAssetPipelineFileAsset"
           },
           {
-            "$ref": "#/components/schemas/IAssetMultiAsset"
+            "$ref": "#/components/schemas/IPipelineAssetPipelineMultiAsset"
           },
           {
-            "$ref": "#/components/schemas/IAssetNullAsset"
+            "$ref": "#/components/schemas/IPipelineAssetPipelineNullAsset"
           },
           {
-            "$ref": "#/components/schemas/IAssetTextAsset"
+            "$ref": "#/components/schemas/IPipelineAssetPipelineTextAsset"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "FileAsset": "#/components/schemas/IAssetFileAsset",
-            "MultiAsset": "#/components/schemas/IAssetMultiAsset",
-            "NullAsset": "#/components/schemas/IAssetNullAsset",
-            "TextAsset": "#/components/schemas/IAssetTextAsset"
+            "FileAsset": "#/components/schemas/IPipelineAssetPipelineFileAsset",
+            "MultiAsset": "#/components/schemas/IPipelineAssetPipelineMultiAsset",
+            "NullAsset": "#/components/schemas/IPipelineAssetPipelineNullAsset",
+            "TextAsset": "#/components/schemas/IPipelineAssetPipelineTextAsset"
           }
         }
       },
-      "IAssetFileAsset": {
+      "IPipelineAssetPipelineFileAsset": {
         "required": [
           "fileName",
           "metadata",
@@ -447,12 +425,12 @@
           "metadata": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/IMetadata"
+              "$ref": "#/components/schemas/IPipelineMetadata"
             }
           }
         }
       },
-      "IAssetMultiAsset": {
+      "IPipelineAssetPipelineMultiAsset": {
         "required": [
           "assets",
           "metadata",
@@ -468,18 +446,18 @@
           "assets": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IAsset"
+              "$ref": "#/components/schemas/IPipelineAsset"
             }
           },
           "metadata": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/IMetadata"
+              "$ref": "#/components/schemas/IPipelineMetadata"
             }
           }
         }
       },
-      "IAssetNullAsset": {
+      "IPipelineAssetPipelineNullAsset": {
         "required": [
           "metadata",
           "_t"
@@ -494,12 +472,12 @@
           "metadata": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/IMetadata"
+              "$ref": "#/components/schemas/IPipelineMetadata"
             }
           }
         }
       },
-      "IAssetTextAsset": {
+      "IPipelineAssetPipelineTextAsset": {
         "required": [
           "text",
           "metadata",
@@ -518,65 +496,65 @@
           "metadata": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/IMetadata"
+              "$ref": "#/components/schemas/IPipelineMetadata"
             }
           }
         }
       },
-      "IMetadata": {
+      "IPipelineMetadata": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IMetadataClassificationMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineClassificationMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataCountMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineCountMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataDurationMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineDurationMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineFileTypeMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataImageDimensionMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineImageDimensionMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataLocationMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineLocationMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataOriginalFilenameMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineOriginalFilenameMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataSourceUrlMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineSourceUrlMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataStreamsMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineStreamsMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataTextMetadata"
+            "$ref": "#/components/schemas/IPipelineMetadataPipelineTextMetadata"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
-            "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
-            "DurationMetadata": "#/components/schemas/IMetadataDurationMetadata",
-            "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
-            "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
-            "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
-            "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
-            "SourceUrlMetadata": "#/components/schemas/IMetadataSourceUrlMetadata",
-            "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
-            "TextMetadata": "#/components/schemas/IMetadataTextMetadata"
+            "ClassificationMetadata": "#/components/schemas/IPipelineMetadataPipelineClassificationMetadata",
+            "CountMetadata": "#/components/schemas/IPipelineMetadataPipelineCountMetadata",
+            "DurationMetadata": "#/components/schemas/IPipelineMetadataPipelineDurationMetadata",
+            "FileTypeMetadata": "#/components/schemas/IPipelineMetadataPipelineFileTypeMetadata",
+            "ImageDimensionMetadata": "#/components/schemas/IPipelineMetadataPipelineImageDimensionMetadata",
+            "LocationMetadata": "#/components/schemas/IPipelineMetadataPipelineLocationMetadata",
+            "OriginalFilenameMetadata": "#/components/schemas/IPipelineMetadataPipelineOriginalFilenameMetadata",
+            "SourceUrlMetadata": "#/components/schemas/IPipelineMetadataPipelineSourceUrlMetadata",
+            "StreamsMetadata": "#/components/schemas/IPipelineMetadataPipelineStreamsMetadata",
+            "TextMetadata": "#/components/schemas/IPipelineMetadataPipelineTextMetadata"
           }
         }
       },
-      "IMetadataClassificationMetadata": {
+      "IPipelineMetadataPipelineClassificationMetadata": {
         "required": [
           "classification",
           "visibilities",
@@ -597,7 +575,7 @@
           }
         }
       },
-      "IMetadataCountMetadata": {
+      "IPipelineMetadataPipelineCountMetadata": {
         "required": [
           "visibilities",
           "_t"
@@ -618,7 +596,7 @@
           }
         }
       },
-      "IMetadataDurationMetadata": {
+      "IPipelineMetadataPipelineDurationMetadata": {
         "required": [
           "duration",
           "visibilities",
@@ -640,7 +618,7 @@
           }
         }
       },
-      "IMetadataFileTypeMetadata": {
+      "IPipelineMetadataPipelineFileTypeMetadata": {
         "required": [
           "fileType",
           "visibilities",
@@ -661,7 +639,7 @@
           }
         }
       },
-      "IMetadataImageDimensionMetadata": {
+      "IPipelineMetadataPipelineImageDimensionMetadata": {
         "required": [
           "visibilities",
           "_t"
@@ -686,7 +664,7 @@
           }
         }
       },
-      "IMetadataLocationMetadata": {
+      "IPipelineMetadataPipelineLocationMetadata": {
         "required": [
           "visibilities",
           "_t"
@@ -711,7 +689,7 @@
           }
         }
       },
-      "IMetadataOriginalFilenameMetadata": {
+      "IPipelineMetadataPipelineOriginalFilenameMetadata": {
         "required": [
           "originalFilename",
           "visibilities",
@@ -732,7 +710,7 @@
           }
         }
       },
-      "IMetadataSourceUrlMetadata": {
+      "IPipelineMetadataPipelineSourceUrlMetadata": {
         "required": [
           "url",
           "visibilities",
@@ -753,7 +731,7 @@
           }
         }
       },
-      "IMetadataStreamsMetadata": {
+      "IPipelineMetadataPipelineStreamsMetadata": {
         "required": [
           "visibilities",
           "_t"
@@ -779,7 +757,7 @@
           }
         }
       },
-      "IMetadataTextMetadata": {
+      "IPipelineMetadataPipelineTextMetadata": {
         "required": [
           "visibilities",
           "_t"
@@ -800,28 +778,28 @@
           }
         }
       },
-      "IPairMakerConfig": {
+      "IPipelinePairMakerConfig": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IPairMakerConfigFullPermutationPairMakerConfig"
+            "$ref": "#/components/schemas/IPipelinePairMakerConfigPipelineFullPermutationPairMakerConfig"
           },
           {
-            "$ref": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
+            "$ref": "#/components/schemas/IPipelinePairMakerConfigPipelineOnlinePairMakerConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "FullPermutationPairMakerConfig": "#/components/schemas/IPairMakerConfigFullPermutationPairMakerConfig",
-            "OnlinePairMakerConfig": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
+            "FullPermutationPairMakerConfig": "#/components/schemas/IPipelinePairMakerConfigPipelineFullPermutationPairMakerConfig",
+            "OnlinePairMakerConfig": "#/components/schemas/IPipelinePairMakerConfigPipelineOnlinePairMakerConfig"
           }
         }
       },
-      "IPairMakerConfigFullPermutationPairMakerConfig": {
+      "IPipelinePairMakerConfigPipelineFullPermutationPairMakerConfig": {
         "required": [
           "_t"
         ],
@@ -834,7 +812,7 @@
           }
         }
       },
-      "IPairMakerConfigOnlinePairMakerConfig": {
+      "IPipelinePairMakerConfigPipelineOnlinePairMakerConfig": {
         "required": [
           "randomMatchesRatio",
           "totalComparisonBudget",
@@ -857,28 +835,28 @@
           }
         }
       },
-      "IRankingConfig": {
+      "IPipelineRankingConfig": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig"
+            "$ref": "#/components/schemas/IPipelineRankingConfigPipelineBradleyTerryRankingConfig"
           },
           {
-            "$ref": "#/components/schemas/IRankingConfigEloRankingConfig"
+            "$ref": "#/components/schemas/IPipelineRankingConfigPipelineEloRankingConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig",
-            "EloRankingConfig": "#/components/schemas/IRankingConfigEloRankingConfig"
+            "BradleyTerryRankingConfig": "#/components/schemas/IPipelineRankingConfigPipelineBradleyTerryRankingConfig",
+            "EloRankingConfig": "#/components/schemas/IPipelineRankingConfigPipelineEloRankingConfig"
           }
         }
       },
-      "IRankingConfigBradleyTerryRankingConfig": {
+      "IPipelineRankingConfigPipelineBradleyTerryRankingConfig": {
         "required": [
           "startingScore",
           "_t"
@@ -896,7 +874,7 @@
           }
         }
       },
-      "IRankingConfigEloRankingConfig": {
+      "IPipelineRankingConfigPipelineEloRankingConfig": {
         "required": [
           "startingElo",
           "kFactor",
@@ -1241,7 +1219,6 @@
       },
       "IRefereeConfigNaiveRefereeConfig": {
         "required": [
-          "responsesRequired",
           "_t"
         ],
         "properties": {
@@ -1421,7 +1398,7 @@
           "contextAssets": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/IAsset"
+              "$ref": "#/components/schemas/IPipelineAsset"
             },
             "nullable": true,
             "deprecated": true
@@ -1434,7 +1411,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IRankingConfig"
+                "$ref": "#/components/schemas/IPipelineRankingConfig"
               }
             ],
             "nullable": true
@@ -1442,13 +1419,13 @@
           "eloConfig": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/EloRankingConfig"
+                "$ref": "#/components/schemas/PipelineEloRankingConfig"
               }
             ],
             "deprecated": true
           },
           "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfig"
+            "$ref": "#/components/schemas/IPipelinePairMakerConfig"
           },
           "featureFlags": {
             "type": "array",
@@ -1487,7 +1464,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAsset"
+                "$ref": "#/components/schemas/IPipelineAsset"
               }
             ],
             "nullable": true
@@ -1496,7 +1473,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IRankingConfig"
+                "$ref": "#/components/schemas/IPipelineRankingConfig"
               }
             ],
             "nullable": true
@@ -1504,13 +1481,13 @@
           "eloConfig": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/EloRankingConfig"
+                "$ref": "#/components/schemas/PipelineEloRankingConfig"
               }
             ],
             "deprecated": true
           },
           "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfig"
+            "$ref": "#/components/schemas/IPipelinePairMakerConfig"
           },
           "featureFlags": {
             "type": "array",
@@ -1566,6 +1543,28 @@
             "All"
           ],
           "type": "string"
+        }
+      },
+      "PipelineEloRankingConfig": {
+        "required": [
+          "startingElo",
+          "kFactor",
+          "scalingFactor"
+        ],
+        "type": "object",
+        "properties": {
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          }
         }
       },
       "StartPreliminaryDownloadEndpoint_Input": {

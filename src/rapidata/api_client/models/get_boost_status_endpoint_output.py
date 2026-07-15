@@ -19,7 +19,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.boost_mode import BoostMode
-from rapidata.api_client.models.boost_status_model import BoostStatusModel
+from rapidata.api_client.models.boost_status import BoostStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class GetBoostStatusEndpointOutput(LazyValidatedModel):
     """
     GetBoostStatusEndpointOutput
     """ # noqa: E501
-    status: BoostStatusModel = Field(description="The current boost status.")
+    status: BoostStatus = Field(description="The current boost status.")
     mode: BoostMode = Field(description="The current boost mode.")
     active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
     inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")

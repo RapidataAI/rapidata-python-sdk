@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import json
 import pprint
@@ -32,14 +31,14 @@ class IRefereeInfo(LazyValidatedModel):
     """
     IRefereeInfo
     """
-    # data type: IRefereeInfoQuorumRefereeInfo
-    oneof_schema_1_validator: Optional[IRefereeInfoQuorumRefereeInfo] = None
-    # data type: IRefereeInfoProbabilisticAttachCategoryRefereeInfo
-    oneof_schema_2_validator: Optional[IRefereeInfoProbabilisticAttachCategoryRefereeInfo] = None
-    # data type: IRefereeInfoNeverEndingRefereeInfo
-    oneof_schema_3_validator: Optional[IRefereeInfoNeverEndingRefereeInfo] = None
     # data type: IRefereeInfoNaiveRefereeInfo
-    oneof_schema_4_validator: Optional[IRefereeInfoNaiveRefereeInfo] = None
+    oneof_schema_1_validator: Optional[IRefereeInfoNaiveRefereeInfo] = None
+    # data type: IRefereeInfoNeverEndingRefereeInfo
+    oneof_schema_2_validator: Optional[IRefereeInfoNeverEndingRefereeInfo] = None
+    # data type: IRefereeInfoProbabilisticAttachCategoryRefereeInfo
+    oneof_schema_3_validator: Optional[IRefereeInfoProbabilisticAttachCategoryRefereeInfo] = None
+    # data type: IRefereeInfoQuorumRefereeInfo
+    oneof_schema_4_validator: Optional[IRefereeInfoQuorumRefereeInfo] = None
     actual_instance: Optional[Union[IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]] = None
     one_of_schemas: Set[str] = { "IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo" }
 
@@ -64,14 +63,9 @@ class IRefereeInfo(LazyValidatedModel):
         instance = IRefereeInfo.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IRefereeInfoQuorumRefereeInfo
-        if not isinstance(v, IRefereeInfoQuorumRefereeInfo):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoQuorumRefereeInfo`")
-        else:
-            match += 1
-        # validate data type: IRefereeInfoProbabilisticAttachCategoryRefereeInfo
-        if not isinstance(v, IRefereeInfoProbabilisticAttachCategoryRefereeInfo):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoProbabilisticAttachCategoryRefereeInfo`")
+        # validate data type: IRefereeInfoNaiveRefereeInfo
+        if not isinstance(v, IRefereeInfoNaiveRefereeInfo):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoNaiveRefereeInfo`")
         else:
             match += 1
         # validate data type: IRefereeInfoNeverEndingRefereeInfo
@@ -79,9 +73,14 @@ class IRefereeInfo(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoNeverEndingRefereeInfo`")
         else:
             match += 1
-        # validate data type: IRefereeInfoNaiveRefereeInfo
-        if not isinstance(v, IRefereeInfoNaiveRefereeInfo):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoNaiveRefereeInfo`")
+        # validate data type: IRefereeInfoProbabilisticAttachCategoryRefereeInfo
+        if not isinstance(v, IRefereeInfoProbabilisticAttachCategoryRefereeInfo):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoProbabilisticAttachCategoryRefereeInfo`")
+        else:
+            match += 1
+        # validate data type: IRefereeInfoQuorumRefereeInfo
+        if not isinstance(v, IRefereeInfoQuorumRefereeInfo):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoQuorumRefereeInfo`")
         else:
             match += 1
         if match > 1:
@@ -104,15 +103,9 @@ class IRefereeInfo(LazyValidatedModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IRefereeInfoQuorumRefereeInfo
+        # deserialize data into IRefereeInfoNaiveRefereeInfo
         try:
-            instance.actual_instance = IRefereeInfoQuorumRefereeInfo.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IRefereeInfoProbabilisticAttachCategoryRefereeInfo
-        try:
-            instance.actual_instance = IRefereeInfoProbabilisticAttachCategoryRefereeInfo.from_json(json_str)
+            instance.actual_instance = IRefereeInfoNaiveRefereeInfo.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -122,9 +115,15 @@ class IRefereeInfo(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into IRefereeInfoNaiveRefereeInfo
+        # deserialize data into IRefereeInfoProbabilisticAttachCategoryRefereeInfo
         try:
-            instance.actual_instance = IRefereeInfoNaiveRefereeInfo.from_json(json_str)
+            instance.actual_instance = IRefereeInfoProbabilisticAttachCategoryRefereeInfo.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IRefereeInfoQuorumRefereeInfo
+        try:
+            instance.actual_instance = IRefereeInfoQuorumRefereeInfo.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

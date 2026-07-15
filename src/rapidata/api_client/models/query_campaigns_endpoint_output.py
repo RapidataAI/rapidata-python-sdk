@@ -20,7 +20,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.boosting_control_mode import BoostingControlMode
-from rapidata.api_client.models.campaign_status_model import CampaignStatusModel
+from rapidata.api_client.models.campaign_status import CampaignStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +32,7 @@ class QueryCampaignsEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the campaign.")
     name: StrictStr = Field(description="The name of the campaign.")
-    status: CampaignStatusModel = Field(description="The current status of the campaign.")
+    status: CampaignStatus = Field(description="The current status of the campaign.")
     priority: StrictInt = Field(description="The priority level of the campaign.")
     has_booster: StrictBool = Field(description="Whether the campaign has a booster.", alias="hasBooster")
     boost_level: StrictInt = Field(description="The campaign's effective boost level (0-10). 0 when no boost is active.  Lets clients render and edit the level without unpacking the boosting profile.", alias="boostLevel")

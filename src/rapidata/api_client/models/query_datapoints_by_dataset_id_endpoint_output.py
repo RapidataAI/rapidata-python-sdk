@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The id of the datapoint.")
     dataset_id: StrictStr = Field(description="The id of the dataset this datapoint belongs to.", alias="datasetId")
-    asset: IAssetModel = Field(description="The asset that will be displayed to the users.")
+    asset: IAsset = Field(description="The asset that will be displayed to the users.")
     __properties: ClassVar[List[str]] = ["id", "datasetId", "asset"]
 
     # model_config is inherited from LazyValidatedModel
@@ -85,7 +85,7 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

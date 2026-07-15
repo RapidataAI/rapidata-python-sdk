@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,18 +18,19 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IMetadataVideoDurationMetadata(BaseModel):
+class IMetadataVideoDurationMetadata(LazyValidatedModel):
     """
     IMetadataVideoDurationMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     duration: datetime
-    visibilities: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["_t", "duration", "visibilities"]
+    __properties: ClassVar[List[str]] = ["_t", "duration"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -39,22 +39,7 @@ class IMetadataVideoDurationMetadata(BaseModel):
             raise ValueError("must be one of enum values ('VideoDurationMetadata')")
         return value
 
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        for i in value:
-            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
-                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
-        return value
-
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -100,11 +85,14 @@ class IMetadataVideoDurationMetadata(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
-            "duration": obj.get("duration"),
-            "visibilities": obj.get("visibilities")
-        })
+            "duration": obj.get("duration")
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

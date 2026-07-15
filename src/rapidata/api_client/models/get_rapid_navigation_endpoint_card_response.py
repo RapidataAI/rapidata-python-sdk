@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
-from rapidata.api_client.models.i_rapid_result_model import IRapidResultModel
+from rapidata.api_client.models.i_rapid_result import IRapidResult
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +32,7 @@ class GetRapidNavigationEndpointCardResponse(LazyValidatedModel):
     user_id: StrictStr = Field(alias="userId")
     country: StrictStr
     language: StrictStr
-    result: IRapidResultModel
+    result: IRapidResult
     user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
     user_scores: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="userScores")
     demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
@@ -92,7 +92,7 @@ class GetRapidNavigationEndpointCardResponse(LazyValidatedModel):
             "userId": obj.get("userId"),
             "country": obj.get("country"),
             "language": obj.get("language"),
-            "result": IRapidResultModel.from_dict(obj["result"]) if obj.get("result") is not None else None,
+            "result": IRapidResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
             "userScore": obj.get("userScore"),
             "userScores": obj.get("userScores"),
             "demographicInformation": obj.get("demographicInformation")

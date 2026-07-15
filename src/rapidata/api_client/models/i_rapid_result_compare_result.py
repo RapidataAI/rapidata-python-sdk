@@ -17,7 +17,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,9 +28,9 @@ class IRapidResultCompareResult(LazyValidatedModel):
     IRapidResultCompareResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    winners: List[StrictStr]
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "winners", "rapidId"]
+    winners: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "winners"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,8 +87,8 @@ class IRapidResultCompareResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "winners": obj.get("winners"),
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "winners": obj.get("winners")
         }
         try:
             _obj = cls.model_validate(_data)

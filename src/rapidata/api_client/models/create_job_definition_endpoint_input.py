@@ -20,8 +20,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_order_workflow_input_model import IOrderWorkflowInputModel
-from rapidata.api_client.models.i_referee_model import IRefereeModel
+from rapidata.api_client.models.i_order_workflow_input import IOrderWorkflowInput
+from rapidata.api_client.models.i_referee import IReferee
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,8 +32,8 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
     The input for the create job definition endpoint.
     """ # noqa: E501
     definition_name: StrictStr = Field(description="The name of the definition.", alias="definitionName")
-    workflow: IOrderWorkflowInputModel = Field(description="The workflow configuration.")
-    referee: IRefereeModel = Field(description="The referee configuration.")
+    workflow: IOrderWorkflowInput = Field(description="The workflow configuration.")
+    referee: IReferee = Field(description="The referee configuration.")
     dataset_id: StrictStr = Field(description="The dataset id.", alias="datasetId")
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
@@ -108,8 +108,8 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
 
         _data = {
             "definitionName": obj.get("definitionName"),
-            "workflow": IOrderWorkflowInputModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
-            "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "workflow": IOrderWorkflowInput.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
+            "referee": IReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "datasetId": obj.get("datasetId"),
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,

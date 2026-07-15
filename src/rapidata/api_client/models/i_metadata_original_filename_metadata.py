@@ -29,22 +29,13 @@ class IMetadataOriginalFilenameMetadata(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     original_filename: StrictStr = Field(alias="originalFilename")
-    visibilities: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities"]
+    __properties: ClassVar[List[str]] = ["_t", "originalFilename"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['OriginalFilenameMetadata']):
             raise ValueError("must be one of enum values ('OriginalFilenameMetadata')")
-        return value
-
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
-                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     # model_config is inherited from LazyValidatedModel
@@ -95,8 +86,7 @@ class IMetadataOriginalFilenameMetadata(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "originalFilename": obj.get("originalFilename"),
-            "visibilities": obj.get("visibilities")
+            "originalFilename": obj.get("originalFilename")
         }
         try:
             _obj = cls.model_validate(_data)

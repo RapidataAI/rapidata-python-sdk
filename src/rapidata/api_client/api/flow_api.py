@@ -24,7 +24,7 @@ from rapidata.api_client.models.get_completion_time_histogram_endpoint_output im
 from rapidata.api_client.models.get_flow_item_creation_timeseries_endpoint_output import GetFlowItemCreationTimeseriesEndpointOutput
 from rapidata.api_client.models.get_response_count_histogram_endpoint_output import GetResponseCountHistogramEndpointOutput
 from rapidata.api_client.models.get_response_count_timeseries_endpoint_output import GetResponseCountTimeseriesEndpointOutput
-from rapidata.api_client.models.i_flow_model import IFlowModel
+from rapidata.api_client.models.i_flow import IFlow
 from rapidata.api_client.models.query_flows_endpoint_paged_result_of_output import QueryFlowsEndpointPagedResultOfOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -328,7 +328,7 @@ class FlowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> IFlowModel:
+    ) -> IFlow:
         """Retrieves a flow by its ID.
 
 
@@ -365,7 +365,7 @@ class FlowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "IFlowModel",
+            '200': "IFlow",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -397,7 +397,7 @@ class FlowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[IFlowModel]:
+    ) -> ApiResponse[IFlow]:
         """Retrieves a flow by its ID.
 
 
@@ -434,7 +434,7 @@ class FlowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "IFlowModel",
+            '200': "IFlow",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -503,7 +503,7 @@ class FlowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "IFlowModel",
+            '200': "IFlow",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,

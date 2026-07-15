@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_workflow_model import IWorkflowModel
+from rapidata.api_client.models.i_workflow import IWorkflow
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,7 +28,7 @@ class QueryWorkflowsEndpointOutput(LazyValidatedModel):
     """
     QueryWorkflowsEndpointOutput
     """ # noqa: E501
-    workflow: IWorkflowModel = Field(description="The workflow.")
+    workflow: IWorkflow = Field(description="The workflow.")
     __properties: ClassVar[List[str]] = ["workflow"]
 
     # model_config is inherited from LazyValidatedModel
@@ -81,7 +81,7 @@ class QueryWorkflowsEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "workflow": IWorkflowModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None
+            "workflow": IWorkflow.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -20,8 +20,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_order_workflow_input_model import IOrderWorkflowInputModel
-from rapidata.api_client.models.i_referee_model import IRefereeModel
+from rapidata.api_client.models.i_order_workflow_input import IOrderWorkflowInput
+from rapidata.api_client.models.i_referee import IReferee
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,8 +31,8 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
     """
     The input for the create job revision endpoint.
     """ # noqa: E501
-    workflow: Optional[IOrderWorkflowInputModel] = Field(default=None, description="The workflow configuration. If not provided, inherits from the previous revision.  Must be provided together with Referee if either is specified.")
-    referee: Optional[IRefereeModel] = Field(default=None, description="The referee configuration. If not provided, inherits from the previous revision.  Must be provided together with Workflow if either is specified.")
+    workflow: Optional[IOrderWorkflowInput] = Field(default=None, description="The workflow configuration. If not provided, inherits from the previous revision.  Must be provided together with Referee if either is specified.")
+    referee: Optional[IReferee] = Field(default=None, description="The referee configuration. If not provided, inherits from the previous revision.  Must be provided together with Workflow if either is specified.")
     dataset_id: Optional[StrictStr] = Field(default=None, description="The dataset id. If not provided, inherits from the previous revision.", alias="datasetId")
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
@@ -117,8 +117,8 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "workflow": IOrderWorkflowInputModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
-            "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "workflow": IOrderWorkflowInput.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
+            "referee": IReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "datasetId": obj.get("datasetId"),
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,

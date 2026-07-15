@@ -1066,7 +1066,7 @@
   },
   "components": {
     "schemas": {
-      "AttachCategoryWorkflowRapidBlueprintModel_Category": {
+      "AttachCategoryWorkflowRapidBlueprint_Category": {
         "required": [
           "label",
           "value"
@@ -1081,7 +1081,7 @@
           }
         }
       },
-      "BoxShape": {
+      "BoundingBoxResult_Box": {
         "type": "object",
         "properties": {
           "xMin": {
@@ -1106,10 +1106,9 @@
           }
         }
       },
-      "ClassifyCategory": {
+      "ClassifyPayload_Category": {
         "required": [
-          "label",
-          "value"
+          "label"
         ],
         "type": "object",
         "properties": {
@@ -1117,7 +1116,8 @@
             "type": "string"
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1230,7 +1230,7 @@
             "type": "string"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "elo": {
             "type": "integer",
@@ -1307,7 +1307,7 @@
           "asset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The asset of the rapid."
@@ -1317,7 +1317,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
+                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsEndpoint_ResponseOutput"
                 }
               }
             ],
@@ -1344,7 +1344,7 @@
           "contextAsset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The optional asset shown as context to the user."
@@ -1398,6 +1398,53 @@
           }
         }
       },
+      "GetSimpleWorkflowResultsEndpoint_ResponseOutput": {
+        "required": [
+          "id",
+          "userId",
+          "country",
+          "language",
+          "result",
+          "userScore",
+          "userScores",
+          "demographicInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/IRapidResult"
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "GetWorkflowByIdEndpoint_Output": {
         "required": [
           "workflow"
@@ -1407,7 +1454,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IWorkflowModel"
+                "$ref": "#/components/schemas/IWorkflow"
               }
             ],
             "description": "The workflow."
@@ -1540,7 +1587,7 @@
           "asset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The asset of the rapid."
@@ -1550,7 +1597,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/GetWorkflowResultsResult_Response"
+                  "$ref": "#/components/schemas/GetWorkflowResultsEndpoint_ResponseOutput"
                 }
               }
             ],
@@ -1577,7 +1624,7 @@
           "contextAsset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The optional asset shown as context to the user."
@@ -1631,7 +1678,7 @@
           }
         }
       },
-      "GetWorkflowResultsResult_Response": {
+      "GetWorkflowResultsEndpoint_ResponseOutput": {
         "required": [
           "id",
           "userId",
@@ -1678,36 +1725,36 @@
           }
         }
       },
-      "IAssetModel": {
+      "IAsset": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IAssetModelFileAssetModel"
+            "$ref": "#/components/schemas/IAssetFileAsset"
           },
           {
-            "$ref": "#/components/schemas/IAssetModelMultiAssetModel"
+            "$ref": "#/components/schemas/IAssetMultiAsset"
           },
           {
-            "$ref": "#/components/schemas/IAssetModelNullAssetModel"
+            "$ref": "#/components/schemas/IAssetNullAsset"
           },
           {
-            "$ref": "#/components/schemas/IAssetModelTextAssetModel"
+            "$ref": "#/components/schemas/IAssetTextAsset"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "FileAsset": "#/components/schemas/IAssetModelFileAssetModel",
-            "MultiAsset": "#/components/schemas/IAssetModelMultiAssetModel",
-            "NullAsset": "#/components/schemas/IAssetModelNullAssetModel",
-            "TextAsset": "#/components/schemas/IAssetModelTextAssetModel"
+            "FileAsset": "#/components/schemas/IAssetFileAsset",
+            "MultiAsset": "#/components/schemas/IAssetMultiAsset",
+            "NullAsset": "#/components/schemas/IAssetNullAsset",
+            "TextAsset": "#/components/schemas/IAssetTextAsset"
           }
         }
       },
-      "IAssetModelFileAssetModel": {
+      "IAssetFileAsset": {
         "required": [
           "fileName",
           "metadata",
@@ -1732,7 +1779,7 @@
           }
         }
       },
-      "IAssetModelMultiAssetModel": {
+      "IAssetMultiAsset": {
         "required": [
           "assets",
           "metadata",
@@ -1749,7 +1796,7 @@
           "assets": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IAssetModel"
+              "$ref": "#/components/schemas/IAsset"
             }
           },
           "metadata": {
@@ -1760,7 +1807,7 @@
           }
         }
       },
-      "IAssetModelNullAssetModel": {
+      "IAssetNullAsset": {
         "required": [
           "metadata",
           "identifier",
@@ -1781,7 +1828,7 @@
           }
         }
       },
-      "IAssetModelTextAssetModel": {
+      "IAssetTextAsset": {
         "required": [
           "text",
           "metadata",
@@ -1806,60 +1853,60 @@
           }
         }
       },
-      "IMetadataModel": {
+      "IMetadata": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IMetadataModelClassificationMetadataModel"
+            "$ref": "#/components/schemas/IMetadataClassificationMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelCountMetadataModel"
+            "$ref": "#/components/schemas/IMetadataCountMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelFileTypeMetadataModel"
+            "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelImageDimensionMetadataModel"
+            "$ref": "#/components/schemas/IMetadataImageDimensionMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelLocationMetadataModel"
+            "$ref": "#/components/schemas/IMetadataLocationMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel"
+            "$ref": "#/components/schemas/IMetadataOriginalFilenameMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelSourceUrlMetadataModel"
+            "$ref": "#/components/schemas/IMetadataSourceUrlMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelStreamsMetadataModel"
+            "$ref": "#/components/schemas/IMetadataStreamsMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelTextMetadataModel"
+            "$ref": "#/components/schemas/IMetadataTextMetadata"
           },
           {
-            "$ref": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "ClassificationMetadata": "#/components/schemas/IMetadataModelClassificationMetadataModel",
-            "CountMetadata": "#/components/schemas/IMetadataModelCountMetadataModel",
-            "FileTypeMetadata": "#/components/schemas/IMetadataModelFileTypeMetadataModel",
-            "ImageDimensionMetadata": "#/components/schemas/IMetadataModelImageDimensionMetadataModel",
-            "LocationMetadata": "#/components/schemas/IMetadataModelLocationMetadataModel",
-            "OriginalFilenameMetadata": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel",
-            "SourceUrlMetadataModel": "#/components/schemas/IMetadataModelSourceUrlMetadataModel",
-            "StreamsMetadata": "#/components/schemas/IMetadataModelStreamsMetadataModel",
-            "TextMetadata": "#/components/schemas/IMetadataModelTextMetadataModel",
-            "VideoDurationMetadata": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+            "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
+            "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
+            "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
+            "SourceUrlMetadataModel": "#/components/schemas/IMetadataSourceUrlMetadata",
+            "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
           }
         }
       },
-      "IMetadataModelClassificationMetadataModel": {
+      "IMetadataClassificationMetadata": {
         "required": [
           "classification",
           "_t"
@@ -1876,7 +1923,7 @@
           }
         }
       },
-      "IMetadataModelCountMetadataModel": {
+      "IMetadataCountMetadata": {
         "required": [
           "count",
           "_t"
@@ -1894,7 +1941,7 @@
           }
         }
       },
-      "IMetadataModelFileTypeMetadataModel": {
+      "IMetadataFileTypeMetadata": {
         "required": [
           "fileType",
           "_t"
@@ -1911,7 +1958,7 @@
           }
         }
       },
-      "IMetadataModelImageDimensionMetadataModel": {
+      "IMetadataImageDimensionMetadata": {
         "required": [
           "_t"
         ],
@@ -1932,7 +1979,7 @@
           }
         }
       },
-      "IMetadataModelLocationMetadataModel": {
+      "IMetadataLocationMetadata": {
         "required": [
           "x",
           "y",
@@ -1955,7 +2002,7 @@
           }
         }
       },
-      "IMetadataModelOriginalFilenameMetadataModel": {
+      "IMetadataOriginalFilenameMetadata": {
         "required": [
           "originalFilename",
           "_t"
@@ -1972,7 +2019,7 @@
           }
         }
       },
-      "IMetadataModelSourceUrlMetadataModel": {
+      "IMetadataSourceUrlMetadata": {
         "required": [
           "url",
           "_t"
@@ -1989,7 +2036,7 @@
           }
         }
       },
-      "IMetadataModelStreamsMetadataModel": {
+      "IMetadataStreamsMetadata": {
         "required": [
           "hasVideo",
           "hasAudio",
@@ -2014,7 +2061,7 @@
           }
         }
       },
-      "IMetadataModelTextMetadataModel": {
+      "IMetadataTextMetadata": {
         "required": [
           "text",
           "_t"
@@ -2032,7 +2079,7 @@
           }
         }
       },
-      "IMetadataModelVideoDurationMetadataModel": {
+      "IMetadataVideoDurationMetadata": {
         "required": [
           "duration",
           "_t"
@@ -2084,41 +2131,7 @@
           }
         }
       },
-      "IPairMakerInformationModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IPairMakerInformationModelFullPermutationPairMakerInformationModel"
-          },
-          {
-            "$ref": "#/components/schemas/IPairMakerInformationModelOnlinePairMakerInformationModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "FullPermutationPairMakerInformation": "#/components/schemas/IPairMakerInformationModelFullPermutationPairMakerInformationModel",
-            "OnlinePairMakerInformation": "#/components/schemas/IPairMakerInformationModelOnlinePairMakerInformationModel"
-          }
-        }
-      },
-      "IPairMakerInformationModelFullPermutationPairMakerInformationModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FullPermutationPairMakerInformation"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IPairMakerInformationModelOnlinePairMakerInformationModel": {
+      "IPairMakerInformationOnlinePairMakerInformation": {
         "required": [
           "randomMatchesRatio",
           "totalComparisonBudget",
@@ -2146,53 +2159,28 @@
           }
         }
       },
-      "IPairMakerInformationOnlinePairMakerInformation": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "OnlinePairMakerInformation"
-            ],
-            "type": "string"
-          },
-          "randomMatchesRatio": {
-            "type": "number",
-            "format": "float"
-          },
-          "totalComparisonBudget": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "currentComparisonBudget": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "IRankingConfigModel": {
+      "IRankingConfig": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel"
+            "$ref": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig"
           },
           {
-            "$ref": "#/components/schemas/IRankingConfigModelEloConfigModel"
+            "$ref": "#/components/schemas/IRankingConfigEloConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel",
-            "EloConfig": "#/components/schemas/IRankingConfigModelEloConfigModel"
+            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig",
+            "EloConfig": "#/components/schemas/IRankingConfigEloConfig"
           }
         }
       },
-      "IRankingConfigModelBradleyTerryRankingConfigModel": {
+      "IRankingConfigBradleyTerryRankingConfig": {
         "required": [
           "startingScore",
           "_t"
@@ -2210,7 +2198,7 @@
           }
         }
       },
-      "IRankingConfigModelEloConfigModel": {
+      "IRankingConfigEloConfig": {
         "required": [
           "startingScore",
           "kFactor",
@@ -2324,7 +2312,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyCategory"
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
             }
           },
           "title": {
@@ -2484,7 +2472,7 @@
           "transcription": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionPayload_TranscriptionWord"
             }
           }
         }
@@ -2548,8 +2536,8 @@
       },
       "IRapidResultAttachCategoryResult": {
         "required": [
-          "category",
           "rapidId",
+          "category",
           "_t"
         ],
         "properties": {
@@ -2559,18 +2547,18 @@
             ],
             "type": "string"
           },
-          "category": {
+          "rapidId": {
             "type": "string"
           },
-          "rapidId": {
+          "category": {
             "type": "string"
           }
         }
       },
       "IRapidResultBoundingBoxResult": {
         "required": [
-          "boundingBoxes",
           "rapidId",
+          "boundingBoxes",
           "_t"
         ],
         "properties": {
@@ -2580,20 +2568,19 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "boundingBoxes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BoxShape"
+              "$ref": "#/components/schemas/BoundingBoxResult_Box"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
       "IRapidResultCompareResult": {
         "required": [
-          "winners",
           "rapidId",
           "_t"
         ],
@@ -2604,21 +2591,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "winners": {
             "type": "array",
             "items": {
               "type": "string"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
       "IRapidResultFreeTextResult": {
         "required": [
-          "answer",
           "rapidId",
+          "answer",
           "_t"
         ],
         "properties": {
@@ -2628,18 +2615,18 @@
             ],
             "type": "string"
           },
-          "answer": {
+          "rapidId": {
             "type": "string"
           },
-          "rapidId": {
+          "answer": {
             "type": "string"
           }
         }
       },
       "IRapidResultLineResult": {
         "required": [
-          "lines",
           "rapidId",
+          "lines",
           "_t"
         ],
         "properties": {
@@ -2649,21 +2636,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "lines": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Line"
+              "$ref": "#/components/schemas/LineResult_Line"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
       "IRapidResultLocateResult": {
         "required": [
-          "coordinates",
           "rapidId",
+          "coordinates",
           "_t"
         ],
         "properties": {
@@ -2673,21 +2660,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "coordinates": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/LocateCoordinate"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
       "IRapidResultNamedEntityResult": {
         "required": [
-          "classifications",
           "rapidId",
+          "classifications",
           "_t"
         ],
         "properties": {
@@ -2697,21 +2684,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "classifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NamedClassification"
+              "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
       "IRapidResultPolygonResult": {
         "required": [
-          "shapes",
           "rapidId",
+          "shapes",
           "_t"
         ],
         "properties": {
@@ -2721,21 +2708,21 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "shapes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonShape"
+              "$ref": "#/components/schemas/PolygonResult_Shape"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
       "IRapidResultScrubResult": {
         "required": [
-          "timestamps",
           "rapidId",
+          "timestamps",
           "_t"
         ],
         "properties": {
@@ -2745,15 +2732,15 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "timestamps": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
@@ -2776,8 +2763,8 @@
       },
       "IRapidResultTranscriptionResult": {
         "required": [
-          "selectedWords",
           "rapidId",
+          "selectedWords",
           "_t"
         ],
         "properties": {
@@ -2787,51 +2774,51 @@
             ],
             "type": "string"
           },
+          "rapidId": {
+            "type": "string"
+          },
           "selectedWords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionResult_TranscriptionWord"
             }
-          },
-          "rapidId": {
-            "type": "string"
           }
         }
       },
-      "IRefereeConfigModel": {
+      "IRefereeConfig": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRefereeConfigModelBudgetRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfigBudgetRefereeConfig"
           },
           {
-            "$ref": "#/components/schemas/IRefereeConfigModelNaiveRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfigNaiveRefereeConfig"
           },
           {
-            "$ref": "#/components/schemas/IRefereeConfigModelNeverEndingRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig"
           },
           {
-            "$ref": "#/components/schemas/IRefereeConfigModelProbabilisticAttachCategoryRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
           },
           {
-            "$ref": "#/components/schemas/IRefereeConfigModelQuorumRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "BudgetRefereeConfig": "#/components/schemas/IRefereeConfigModelBudgetRefereeConfigModel",
-            "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigModelNaiveRefereeConfigModel",
-            "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigModelNeverEndingRefereeConfigModel",
-            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigModelProbabilisticAttachCategoryRefereeConfigModel",
-            "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigModelQuorumRefereeConfigModel"
+            "BudgetRefereeConfig": "#/components/schemas/IRefereeConfigBudgetRefereeConfig",
+            "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
+            "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
+            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig",
+            "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
           }
         }
       },
-      "IRefereeConfigModelBudgetRefereeConfigModel": {
+      "IRefereeConfigBudgetRefereeConfig": {
         "required": [
           "totalBudget",
           "_t"
@@ -2854,7 +2841,7 @@
           }
         }
       },
-      "IRefereeConfigModelNaiveRefereeConfigModel": {
+      "IRefereeConfigNaiveRefereeConfig": {
         "required": [
           "_t"
         ],
@@ -2876,7 +2863,7 @@
           }
         }
       },
-      "IRefereeConfigModelNeverEndingRefereeConfigModel": {
+      "IRefereeConfigNeverEndingRefereeConfig": {
         "required": [
           "_t"
         ],
@@ -2889,7 +2876,7 @@
           }
         }
       },
-      "IRefereeConfigModelProbabilisticAttachCategoryRefereeConfigModel": {
+      "IRefereeConfigProbabilisticAttachCategoryRefereeConfig": {
         "required": [
           "threshold",
           "maxVotes",
@@ -2912,7 +2899,7 @@
           }
         }
       },
-      "IRefereeConfigModelQuorumRefereeConfigModel": {
+      "IRefereeConfigQuorumRefereeConfig": {
         "required": [
           "maxVotes",
           "threshold",
@@ -2996,36 +2983,36 @@
           }
         }
       },
-      "IWorkflowModel": {
+      "IWorkflow": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IWorkflowModelEvaluationWorkflowModel"
+            "$ref": "#/components/schemas/IWorkflowEvaluationWorkflow"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowModelGroupedRankingWorkflowModel"
+            "$ref": "#/components/schemas/IWorkflowGroupedRankingWorkflow"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowModelRankingWorkflowModel"
+            "$ref": "#/components/schemas/IWorkflowRankingWorkflow"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowModelSimpleWorkflowModel"
+            "$ref": "#/components/schemas/IWorkflowSimpleWorkflow"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "EvaluationWorkflow": "#/components/schemas/IWorkflowModelEvaluationWorkflowModel",
-            "GroupedRankingWorkflowModel": "#/components/schemas/IWorkflowModelGroupedRankingWorkflowModel",
-            "RankingWorkflowModel": "#/components/schemas/IWorkflowModelRankingWorkflowModel",
-            "SimpleWorkflowModel": "#/components/schemas/IWorkflowModelSimpleWorkflowModel"
+            "EvaluationWorkflow": "#/components/schemas/IWorkflowEvaluationWorkflow",
+            "GroupedRankingWorkflowModel": "#/components/schemas/IWorkflowGroupedRankingWorkflow",
+            "RankingWorkflowModel": "#/components/schemas/IWorkflowRankingWorkflow",
+            "SimpleWorkflowModel": "#/components/schemas/IWorkflowSimpleWorkflow"
           }
         }
       },
-      "IWorkflowModelEvaluationWorkflowModel": {
+      "IWorkflowEvaluationWorkflow": {
         "required": [
           "id",
           "validationSetId",
@@ -3049,10 +3036,10 @@
             "type": "string"
           },
           "state": {
-            "$ref": "#/components/schemas/WorkflowStateModel"
+            "$ref": "#/components/schemas/WorkflowState"
           },
           "referee": {
-            "$ref": "#/components/schemas/IRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfig"
           },
           "name": {
             "type": "string"
@@ -3063,7 +3050,7 @@
           }
         }
       },
-      "IWorkflowModelGroupedRankingWorkflowModel": {
+      "IWorkflowGroupedRankingWorkflow": {
         "required": [
           "id",
           "referee",
@@ -3084,10 +3071,10 @@
             "type": "string"
           },
           "referee": {
-            "$ref": "#/components/schemas/IRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfig"
           },
           "state": {
-            "$ref": "#/components/schemas/WorkflowStateModel"
+            "$ref": "#/components/schemas/WorkflowState"
           },
           "criteria": {
             "type": "string"
@@ -3103,14 +3090,14 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IRankingConfigModel"
+                "$ref": "#/components/schemas/IRankingConfig"
               }
             ],
             "nullable": true
           }
         }
       },
-      "IWorkflowModelRankingWorkflowModel": {
+      "IWorkflowRankingWorkflow": {
         "required": [
           "id",
           "referee",
@@ -3134,13 +3121,13 @@
             "type": "string"
           },
           "referee": {
-            "$ref": "#/components/schemas/IRefereeConfigModel"
+            "$ref": "#/components/schemas/IRefereeConfig"
           },
           "pairMakerInformation": {
-            "$ref": "#/components/schemas/IPairMakerInformationModel"
+            "$ref": "#/components/schemas/IPairMakerInformation"
           },
           "state": {
-            "$ref": "#/components/schemas/WorkflowStateModel"
+            "$ref": "#/components/schemas/WorkflowState"
           },
           "criteria": {
             "type": "string"
@@ -3152,7 +3139,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IRankingConfigModel"
+                "$ref": "#/components/schemas/IRankingConfig"
               }
             ],
             "nullable": true
@@ -3165,7 +3152,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3176,98 +3163,60 @@
           }
         }
       },
-      "IWorkflowModelSimpleWorkflowModel": {
-        "required": [
-          "id",
-          "state",
-          "blueprint",
-          "referee",
-          "name",
-          "ownerMail",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SimpleWorkflowModel"
-            ],
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "state": {
-            "$ref": "#/components/schemas/WorkflowStateModel"
-          },
-          "blueprint": {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModel"
-          },
-          "referee": {
-            "$ref": "#/components/schemas/IRefereeConfigModel"
-          },
-          "name": {
-            "type": "string"
-          },
-          "ownerMail": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "IWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprint": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelAttachCategoryWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintAttachCategoryWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelBoundingBoxWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintBoundingBoxWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelCompareWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintCompareWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelFreeTextWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintFreeTextWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelLineWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintLineWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelLocateWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintLocateWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelNamedEntityWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintNamedEntityWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelPolygonWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintPolygonWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintScrubWorkflowRapidBlueprint"
           },
           {
-            "$ref": "#/components/schemas/IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel"
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprintTranscriptionWorkflowRapidBlueprint"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "ClassifyBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelAttachCategoryWorkflowRapidBlueprintModel",
-            "BoundingBoxBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelBoundingBoxWorkflowRapidBlueprintModel",
-            "CompareBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelCompareWorkflowRapidBlueprintModel",
-            "FreeTextBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelFreeTextWorkflowRapidBlueprintModel",
-            "LineBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelLineWorkflowRapidBlueprintModel",
-            "LocateBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelLocateWorkflowRapidBlueprintModel",
-            "NamedEntityBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelNamedEntityWorkflowRapidBlueprintModel",
-            "PolygonBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelPolygonWorkflowRapidBlueprintModel",
-            "ScrubBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel",
-            "TranscriptionBlueprint": "#/components/schemas/IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel"
+            "ClassifyBlueprint": "#/components/schemas/IWorkflowRapidBlueprintAttachCategoryWorkflowRapidBlueprint",
+            "BoundingBoxBlueprint": "#/components/schemas/IWorkflowRapidBlueprintBoundingBoxWorkflowRapidBlueprint",
+            "CompareBlueprint": "#/components/schemas/IWorkflowRapidBlueprintCompareWorkflowRapidBlueprint",
+            "FreeTextBlueprint": "#/components/schemas/IWorkflowRapidBlueprintFreeTextWorkflowRapidBlueprint",
+            "LineBlueprint": "#/components/schemas/IWorkflowRapidBlueprintLineWorkflowRapidBlueprint",
+            "LocateBlueprint": "#/components/schemas/IWorkflowRapidBlueprintLocateWorkflowRapidBlueprint",
+            "NamedEntityBlueprint": "#/components/schemas/IWorkflowRapidBlueprintNamedEntityWorkflowRapidBlueprint",
+            "PolygonBlueprint": "#/components/schemas/IWorkflowRapidBlueprintPolygonWorkflowRapidBlueprint",
+            "ScrubBlueprint": "#/components/schemas/IWorkflowRapidBlueprintScrubWorkflowRapidBlueprint",
+            "TranscriptionBlueprint": "#/components/schemas/IWorkflowRapidBlueprintTranscriptionWorkflowRapidBlueprint"
           }
         }
       },
-      "IWorkflowRapidBlueprintModelAttachCategoryWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintAttachCategoryWorkflowRapidBlueprint": {
         "required": [
           "categories",
           "title",
@@ -3283,7 +3232,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AttachCategoryWorkflowRapidBlueprintModel_Category"
+              "$ref": "#/components/schemas/AttachCategoryWorkflowRapidBlueprint_Category"
             }
           },
           "title": {
@@ -3291,7 +3240,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelBoundingBoxWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintBoundingBoxWorkflowRapidBlueprint": {
         "required": [
           "target",
           "_t"
@@ -3308,7 +3257,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelCompareWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintCompareWorkflowRapidBlueprint": {
         "required": [
           "criteria",
           "indexIdentifiers",
@@ -3332,7 +3281,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelFreeTextWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintFreeTextWorkflowRapidBlueprint": {
         "required": [
           "question",
           "shouldValidateResponse",
@@ -3357,7 +3306,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelLineWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintLineWorkflowRapidBlueprint": {
         "required": [
           "target",
           "_t"
@@ -3374,7 +3323,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelLocateWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintLocateWorkflowRapidBlueprint": {
         "required": [
           "target",
           "_t"
@@ -3391,7 +3340,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelNamedEntityWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintNamedEntityWorkflowRapidBlueprint": {
         "required": [
           "target",
           "classes",
@@ -3415,7 +3364,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelPolygonWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintPolygonWorkflowRapidBlueprint": {
         "required": [
           "target",
           "_t"
@@ -3432,7 +3381,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelScrubWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintScrubWorkflowRapidBlueprint": {
         "required": [
           "target",
           "_t"
@@ -3449,7 +3398,7 @@
           }
         }
       },
-      "IWorkflowRapidBlueprintModelTranscriptionWorkflowRapidBlueprintModel": {
+      "IWorkflowRapidBlueprintTranscriptionWorkflowRapidBlueprint": {
         "required": [
           "title",
           "_t"
@@ -3466,8 +3415,47 @@
           }
         }
       },
-      "Line": {
+      "IWorkflowSimpleWorkflow": {
         "required": [
+          "id",
+          "state",
+          "blueprint",
+          "referee",
+          "name",
+          "ownerMail",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowModel"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/WorkflowState"
+          },
+          "blueprint": {
+            "$ref": "#/components/schemas/IWorkflowRapidBlueprint"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerMail": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "LineResult_Line": {
+        "required": [
+          "size",
           "points"
         ],
         "type": "object",
@@ -3479,12 +3467,16 @@
           "points": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LinePoint"
+              "$ref": "#/components/schemas/LineResult_LinePoint"
             }
           }
         }
       },
-      "LinePoint": {
+      "LineResult_LinePoint": {
+        "required": [
+          "x",
+          "y"
+        ],
         "type": "object",
         "properties": {
           "x": {
@@ -3498,6 +3490,10 @@
         }
       },
       "LocateCoordinate": {
+        "required": [
+          "x",
+          "y"
+        ],
         "type": "object",
         "properties": {
           "x": {
@@ -3513,11 +3509,13 @@
       "MetadataModelCollection": {
         "type": "object",
         "additionalProperties": {
-          "$ref": "#/components/schemas/IMetadataModel"
+          "$ref": "#/components/schemas/IMetadata"
         }
       },
-      "NamedClassification": {
+      "NamedEntityResult_NamedClassification": {
         "required": [
+          "start",
+          "end",
           "classification"
         ],
         "type": "object",
@@ -3535,7 +3533,11 @@
           }
         }
       },
-      "PolygonCoordinate": {
+      "PolygonResult_Coordinate": {
+        "required": [
+          "x",
+          "y"
+        ],
         "type": "object",
         "properties": {
           "x": {
@@ -3550,7 +3552,7 @@
           }
         }
       },
-      "PolygonShape": {
+      "PolygonResult_Shape": {
         "required": [
           "edges"
         ],
@@ -3559,7 +3561,7 @@
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonCoordinate"
+              "$ref": "#/components/schemas/PolygonResult_Coordinate"
             }
           }
         }
@@ -3573,7 +3575,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IWorkflowModel"
+                "$ref": "#/components/schemas/IWorkflow"
               }
             ],
             "description": "The workflow."
@@ -3625,6 +3627,10 @@
         ]
       },
       "ResponseTally": {
+        "required": [
+          "count",
+          "userScoreSum"
+        ],
         "type": "object",
         "properties": {
           "count": {
@@ -3643,9 +3649,26 @@
           "Desc"
         ]
       },
-      "TranscriptionWord": {
+      "TranscriptionPayload_TranscriptionWord": {
         "required": [
-          "word"
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionResult_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
         ],
         "type": "object",
         "properties": {
@@ -3694,16 +3717,6 @@
         }
       },
       "WorkflowState": {
-        "enum": [
-          "Created",
-          "Started",
-          "Labeling",
-          "Paused",
-          "Done",
-          "Failed"
-        ]
-      },
-      "WorkflowStateModel": {
         "enum": [
           "Created",
           "Started",

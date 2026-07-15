@@ -28,9 +28,9 @@ class IRapidResultAttachCategoryResult(LazyValidatedModel):
     IRapidResultAttachCategoryResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    category: StrictStr
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "category", "rapidId"]
+    category: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "category"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,8 +87,8 @@ class IRapidResultAttachCategoryResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "category": obj.get("category"),
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "category": obj.get("category")
         }
         try:
             _obj = cls.model_validate(_data)

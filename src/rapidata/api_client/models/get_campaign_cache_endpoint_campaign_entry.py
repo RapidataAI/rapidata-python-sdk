@@ -19,7 +19,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.boosting_control_mode import BoostingControlMode
-from rapidata.api_client.models.campaign_status_model import CampaignStatusModel
+from rapidata.api_client.models.campaign_status import CampaignStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,7 +31,7 @@ class GetCampaignCacheEndpointCampaignEntry(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
-    status: CampaignStatusModel
+    status: CampaignStatus
     priority: StrictInt
     filter_count: StrictInt = Field(alias="filterCount")
     selection_count: StrictInt = Field(alias="selectionCount")

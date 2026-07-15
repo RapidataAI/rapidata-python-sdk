@@ -17,7 +17,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,8 +27,8 @@ class LocateCoordinate(LazyValidatedModel):
     """
     LocateCoordinate
     """ # noqa: E501
-    x: Optional[Union[StrictFloat, StrictInt]] = None
-    y: Optional[Union[StrictFloat, StrictInt]] = None
+    x: Union[StrictFloat, StrictInt]
+    y: Union[StrictFloat, StrictInt]
     __properties: ClassVar[List[str]] = ["x", "y"]
 
     # model_config is inherited from LazyValidatedModel

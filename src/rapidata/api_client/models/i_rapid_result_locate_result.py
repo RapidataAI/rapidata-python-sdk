@@ -29,9 +29,9 @@ class IRapidResultLocateResult(LazyValidatedModel):
     IRapidResultLocateResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    coordinates: List[LocateCoordinate]
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "coordinates", "rapidId"]
+    coordinates: List[LocateCoordinate]
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "coordinates"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,8 +95,8 @@ class IRapidResultLocateResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "coordinates": [LocateCoordinate.from_dict(_item) for _item in obj["coordinates"]] if obj.get("coordinates") is not None else None,
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "coordinates": [LocateCoordinate.from_dict(_item) for _item in obj["coordinates"]] if obj.get("coordinates") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

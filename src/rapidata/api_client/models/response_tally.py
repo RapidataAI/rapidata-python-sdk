@@ -17,7 +17,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,8 +27,8 @@ class ResponseTally(LazyValidatedModel):
     """
     ResponseTally
     """ # noqa: E501
-    count: Optional[StrictInt] = None
-    user_score_sum: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="userScoreSum")
+    count: StrictInt
+    user_score_sum: Union[StrictFloat, StrictInt] = Field(alias="userScoreSum")
     __properties: ClassVar[List[str]] = ["count", "userScoreSum"]
 
     # model_config is inherited from LazyValidatedModel

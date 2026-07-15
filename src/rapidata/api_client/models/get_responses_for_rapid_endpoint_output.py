@@ -19,8 +19,8 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.get_responses_for_rapid_endpoint_output_response import GetResponsesForRapidEndpointOutputResponse
-from rapidata.api_client.models.i_asset_model import IAssetModel
-from rapidata.api_client.models.rapid_state_model import RapidStateModel
+from rapidata.api_client.models.i_asset import IAsset
+from rapidata.api_client.models.rapid_state import RapidState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,9 +31,9 @@ class GetResponsesForRapidEndpointOutput(LazyValidatedModel):
     GetResponsesForRapidEndpointOutput
     """ # noqa: E501
     rapid_id: StrictStr = Field(description="The id of the rapid.", alias="rapidId")
-    asset: IAssetModel = Field(description="The asset of the rapid.")
+    asset: IAsset = Field(description="The asset of the rapid.")
     responses: List[GetResponsesForRapidEndpointOutputResponse]
-    state: RapidStateModel = Field(description="The state of the rapid.")
+    state: RapidState = Field(description="The state of the rapid.")
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "state"]
 
     # model_config is inherited from LazyValidatedModel
@@ -94,7 +94,7 @@ class GetResponsesForRapidEndpointOutput(LazyValidatedModel):
 
         _data = {
             "rapidId": obj.get("rapidId"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "responses": [GetResponsesForRapidEndpointOutputResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
             "state": obj.get("state")
         }

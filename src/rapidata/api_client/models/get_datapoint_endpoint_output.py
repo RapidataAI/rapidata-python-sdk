@@ -20,7 +20,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.datapoint_state import DatapointState
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -33,7 +33,7 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The id of the datapoint.")
     dataset_id: StrictStr = Field(description="The id of the dataset this datapoint belongs to.", alias="datasetId")
     state: DatapointState = Field(description="The current state of the datapoint.")
-    asset: IAssetModel = Field(description="The asset that will be displayed to the users.")
+    asset: IAsset = Field(description="The asset that will be displayed to the users.")
     sort_index: Optional[StrictInt] = Field(default=None, description="An optional upload index used to force a certain order.", alias="sortIndex")
     created_at: datetime = Field(description="The timestamp when the datapoint was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "datasetId", "state", "asset", "sortIndex", "createdAt"]
@@ -96,7 +96,7 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "state": obj.get("state"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "sortIndex": obj.get("sortIndex"),
             "createdAt": obj.get("createdAt")
         }

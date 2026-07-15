@@ -19,7 +19,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_artifact_model import IArtifactModel
+from rapidata.api_client.models.i_artifact import IArtifact
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class GetPipelineByIdEndpointOutput(LazyValidatedModel):
     """
     GetPipelineByIdEndpointOutput
     """ # noqa: E501
-    artifacts: Dict[str, IArtifactModel] = Field(description="The artifacts attached to the pipeline, keyed by their role.")
+    artifacts: Dict[str, IArtifact] = Field(description="The artifacts attached to the pipeline, keyed by their role.")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     __properties: ClassVar[List[str]] = ["artifacts", "featureFlags"]
 
@@ -95,7 +95,7 @@ class GetPipelineByIdEndpointOutput(LazyValidatedModel):
 
         _data = {
             "artifacts": dict(
-                (_k, IArtifactModel.from_dict(_v))
+                (_k, IArtifact.from_dict(_v))
                 for _k, _v in obj["artifacts"].items()
             )
             if obj.get("artifacts") is not None

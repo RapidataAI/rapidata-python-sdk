@@ -28,7 +28,7 @@ class StickyConfig(LazyValidatedModel):
     StickyConfig
     """ # noqa: E501
     is_enabled: Optional[StrictBool] = Field(default=None, alias="isEnabled")
-    dimension: StrictStr
+    dimension: Optional[StrictStr] = None
     bypass_filters: Optional[StrictBool] = Field(default=None, alias="bypassFilters")
     bypass_priority_selection: Optional[StrictBool] = Field(default=None, alias="bypassPrioritySelection")
     block_other_sticky_campaigns: Optional[StrictBool] = Field(default=None, alias="blockOtherStickyCampaigns")

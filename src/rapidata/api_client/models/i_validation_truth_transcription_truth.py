@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -19,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.transcription_truth_transcription_word import TranscriptionTruthTranscriptionWord
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +29,7 @@ class IValidationTruthTranscriptionTruth(LazyValidatedModel):
     IValidationTruthTranscriptionTruth
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    correct_words: List[TranscriptionWord] = Field(alias="correctWords")
+    correct_words: List[TranscriptionTruthTranscriptionWord] = Field(alias="correctWords")
     strict_grading: Optional[StrictBool] = Field(default=None, alias="strictGrading")
     required_precision: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredPrecision")
     required_completeness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredCompleteness")
@@ -90,6 +89,16 @@ class IValidationTruthTranscriptionTruth(LazyValidatedModel):
         if self.strict_grading is None and "strict_grading" in self.model_fields_set:
             _dict['strictGrading'] = None
 
+        # set to None if required_precision (nullable) is None
+        # and model_fields_set contains the field
+        if self.required_precision is None and "required_precision" in self.model_fields_set:
+            _dict['requiredPrecision'] = None
+
+        # set to None if required_completeness (nullable) is None
+        # and model_fields_set contains the field
+        if self.required_completeness is None and "required_completeness" in self.model_fields_set:
+            _dict['requiredCompleteness'] = None
+
         return _dict
 
     @classmethod
@@ -103,7 +112,7 @@ class IValidationTruthTranscriptionTruth(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "correctWords": [TranscriptionWord.from_dict(_item) for _item in obj["correctWords"]] if obj.get("correctWords") is not None else None,
+            "correctWords": [TranscriptionTruthTranscriptionWord.from_dict(_item) for _item in obj["correctWords"]] if obj.get("correctWords") is not None else None,
             "strictGrading": obj.get("strictGrading"),
             "requiredPrecision": obj.get("requiredPrecision"),
             "requiredCompleteness": obj.get("requiredCompleteness")

@@ -20,8 +20,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
-from rapidata.api_client.models.i_rapid_payload_model import IRapidPayloadModel
-from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,8 +32,8 @@ class AddValidationRapidEndpointInput(LazyValidatedModel):
     AddValidationRapidEndpointInput
     """ # noqa: E501
     asset: IAssetInput = Field(description="The asset to use for the rapid.")
-    payload: IRapidPayloadModel = Field(description="The payload to use for the rapid.")
-    truth: Optional[IValidationTruthModel] = Field(default=None, description="The ground truth for the rapid.")
+    payload: IRapidPayload = Field(description="The payload to use for the rapid.")
+    truth: Optional[IValidationTruth] = Field(default=None, description="The ground truth for the rapid.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation shown to the users if they answer the rapid incorrectly.")
     context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user about the rapid.")
@@ -128,8 +128,8 @@ class AddValidationRapidEndpointInput(LazyValidatedModel):
 
         _data = {
             "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "payload": IRapidPayloadModel.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
