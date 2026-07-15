@@ -248,6 +248,7 @@ Class | Method | HTTP request | Description
 *JobApi* | [**job_job_id_get**](rapidata/api_client/docs/JobApi.md#job_job_id_get) | **GET** /job/{jobId} | Gets a job by its id.
 *JobApi* | [**job_job_id_patch**](rapidata/api_client/docs/JobApi.md#job_job_id_patch) | **PATCH** /job/{jobId} | Updates a job.
 *JobApi* | [**job_job_id_pause_post**](rapidata/api_client/docs/JobApi.md#job_job_id_pause_post) | **POST** /job/{jobId}/pause | Pauses a job, stopping all of its campaigns from processing.
+*JobApi* | [**job_job_id_rapids_restart_post**](rapidata/api_client/docs/JobApi.md#job_job_id_rapids_restart_post) | **POST** /job/{jobId}/rapids/restart | Restarts the given rapids of a job.
 *JobApi* | [**job_job_id_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_results_get) | **GET** /job/{jobId}/results | Gets the results of a job as a JSON string.
 *JobApi* | [**job_job_id_resume_post**](rapidata/api_client/docs/JobApi.md#job_job_id_resume_post) | **POST** /job/{jobId}/resume | Resumes a job, restarting all of its campaigns.
 *JobApi* | [**job_job_id_retry_post**](rapidata/api_client/docs/JobApi.md#job_job_id_retry_post) | **POST** /job/{jobId}/retry | Retries processing of a failed job.
@@ -1090,6 +1091,7 @@ Class | Method | HTTP request | Description
  - [ReplicateModelParameterType](rapidata/api_client/docs/ReplicateModelParameterType.md)
  - [ReportRapidEndpointInput](rapidata/api_client/docs/ReportRapidEndpointInput.md)
  - [ResponseTally](rapidata/api_client/docs/ResponseTally.md)
+ - [RestartRapidsEndpointInput](rapidata/api_client/docs/RestartRapidsEndpointInput.md)
  - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
  - [RetrySampleGenerationEndpointInput](rapidata/api_client/docs/RetrySampleGenerationEndpointInput.md)
  - [RetrySampleGenerationEndpointOutput](rapidata/api_client/docs/RetrySampleGenerationEndpointOutput.md)
