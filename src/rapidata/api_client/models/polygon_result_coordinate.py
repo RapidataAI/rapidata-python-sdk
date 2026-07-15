@@ -11,14 +11,13 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,8 +27,8 @@ class PolygonResultCoordinate(LazyValidatedModel):
     """
     PolygonResultCoordinate
     """ # noqa: E501
-    x: Union[StrictFloat, StrictInt]
-    y: Union[StrictFloat, StrictInt]
+    x: Optional[Union[StrictFloat, StrictInt]]
+    y: Optional[Union[StrictFloat, StrictInt]]
     __properties: ClassVar[List[str]] = ["x", "y"]
 
     # model_config is inherited from LazyValidatedModel
@@ -67,6 +66,16 @@ class PolygonResultCoordinate(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if x (nullable) is None
+        # and model_fields_set contains the field
+        if self.x is None and "x" in self.model_fields_set:
+            _dict['x'] = None
+
+        # set to None if y (nullable) is None
+        # and model_fields_set contains the field
+        if self.y is None and "y" in self.model_fields_set:
+            _dict['y'] = None
+
         return _dict
 
     @classmethod

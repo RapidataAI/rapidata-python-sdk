@@ -23,8 +23,8 @@ from rapidata.api_client.models.clone_order_endpoint_input import CloneOrderEndp
 from rapidata.api_client.models.clone_order_endpoint_output import CloneOrderEndpointOutput
 from rapidata.api_client.models.create_complex_order_endpoint_input import CreateComplexOrderEndpointInput
 from rapidata.api_client.models.create_complex_order_endpoint_output import CreateComplexOrderEndpointOutput
+from rapidata.api_client.models.create_order import CreateOrder
 from rapidata.api_client.models.create_order_endpoint_output import CreateOrderEndpointOutput
-from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_unsupported_order_endpoint_input import CreateUnsupportedOrderEndpointInput
 from rapidata.api_client.models.get_order_by_id_endpoint_output import GetOrderByIdEndpointOutput
 from rapidata.api_client.models.get_public_orders_endpoint_output import GetPublicOrdersEndpointOutput
@@ -4493,7 +4493,7 @@ class OrderApi:
     @validate_call
     def order_post(
         self,
-        create_order_model: Annotated[CreateOrderModel, Field(description="The order creation configuration.")],
+        create_order: Annotated[CreateOrder, Field(description="The order creation configuration.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4511,8 +4511,8 @@ class OrderApi:
 
         Once created, use the returned dataset ID to fill the dataset with datapoints,  then submit the order for processing.
 
-        :param create_order_model: The order creation configuration. (required)
-        :type create_order_model: CreateOrderModel
+        :param create_order: The order creation configuration. (required)
+        :type create_order: CreateOrder
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4536,7 +4536,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_post_serialize(
-            create_order_model=create_order_model,
+            create_order=create_order,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4563,7 +4563,7 @@ class OrderApi:
     @validate_call
     def order_post_with_http_info(
         self,
-        create_order_model: Annotated[CreateOrderModel, Field(description="The order creation configuration.")],
+        create_order: Annotated[CreateOrder, Field(description="The order creation configuration.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4581,8 +4581,8 @@ class OrderApi:
 
         Once created, use the returned dataset ID to fill the dataset with datapoints,  then submit the order for processing.
 
-        :param create_order_model: The order creation configuration. (required)
-        :type create_order_model: CreateOrderModel
+        :param create_order: The order creation configuration. (required)
+        :type create_order: CreateOrder
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4606,7 +4606,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_post_serialize(
-            create_order_model=create_order_model,
+            create_order=create_order,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4633,7 +4633,7 @@ class OrderApi:
     @validate_call
     def order_post_without_preload_content(
         self,
-        create_order_model: Annotated[CreateOrderModel, Field(description="The order creation configuration.")],
+        create_order: Annotated[CreateOrder, Field(description="The order creation configuration.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4651,8 +4651,8 @@ class OrderApi:
 
         Once created, use the returned dataset ID to fill the dataset with datapoints,  then submit the order for processing.
 
-        :param create_order_model: The order creation configuration. (required)
-        :type create_order_model: CreateOrderModel
+        :param create_order: The order creation configuration. (required)
+        :type create_order: CreateOrder
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4676,7 +4676,7 @@ class OrderApi:
         """ # noqa: E501
 
         _param = self._order_post_serialize(
-            create_order_model=create_order_model,
+            create_order=create_order,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4698,7 +4698,7 @@ class OrderApi:
 
     def _order_post_serialize(
         self,
-        create_order_model,
+        create_order,
         _request_auth,
         _content_type,
         _headers,
@@ -4724,8 +4724,8 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_order_model is not None:
-            _body_params = create_order_model
+        if create_order is not None:
+            _body_params = create_order
 
 
         # set the HTTP header `Accept`

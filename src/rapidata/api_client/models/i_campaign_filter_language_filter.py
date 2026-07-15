@@ -11,25 +11,25 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterLanguageFilter(BaseModel):
+class ICampaignFilterLanguageFilter(LazyValidatedModel):
     """
     ICampaignFilterLanguageFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     languages: List[StrictStr]
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "languages", "executionOrder"]
+    __properties: ClassVar[List[str]] = ["_t", "languages"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -38,11 +38,7 @@ class ICampaignFilterLanguageFilter(BaseModel):
             raise ValueError("must be one of enum values ('LanguageFilter')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -88,11 +84,14 @@ class ICampaignFilterLanguageFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
-            "languages": obj.get("languages"),
-            "executionOrder": obj.get("executionOrder")
-        })
+            "languages": obj.get("languages")
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

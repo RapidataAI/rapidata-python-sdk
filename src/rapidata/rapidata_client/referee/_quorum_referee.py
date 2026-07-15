@@ -4,7 +4,7 @@ from rapidata.rapidata_client.referee._base_referee import Referee
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from rapidata.api_client.models.i_referee_model import IRefereeModel
+    from rapidata.api_client.models.i_referee import IReferee
 
 
 class QuorumReferee(Referee):
@@ -54,14 +54,14 @@ class QuorumReferee(Referee):
             "threshold": self.threshold,
         }
 
-    def _to_model(self) -> IRefereeModel:
-        from rapidata.api_client.models.i_referee_model_quorum_referee_model import (
-            IRefereeModelQuorumRefereeModel,
+    def _to_model(self) -> IReferee:
+        from rapidata.api_client.models.i_referee_quorum_referee import (
+            IRefereeQuorumReferee,
         )
-        from rapidata.api_client.models.i_referee_model import IRefereeModel
+        from rapidata.api_client.models.i_referee import IReferee
 
-        return IRefereeModel(
-            actual_instance=IRefereeModelQuorumRefereeModel(
+        return IReferee(
+            actual_instance=IRefereeQuorumReferee(
                 _t="QuorumReferee",
                 maxVotes=self.max_votes,
                 threshold=self.threshold,

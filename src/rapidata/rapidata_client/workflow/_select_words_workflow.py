@@ -1,8 +1,8 @@
-from rapidata.api_client.models.i_order_workflow_input_model import (
-    IOrderWorkflowInputModel,
+from rapidata.api_client.models.i_order_workflow_input import (
+    IOrderWorkflowInput,
 )
-from rapidata.api_client.models.i_order_workflow_input_model_simple_workflow_input_model import (
-    IOrderWorkflowInputModelSimpleWorkflowInputModel,
+from rapidata.api_client.models.i_order_workflow_input_simple_workflow_input import (
+    IOrderWorkflowInputSimpleWorkflowInput,
 )
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
 from rapidata.api_client.models.i_rapid_blueprint_transcription_rapid_blueprint import (
@@ -12,7 +12,9 @@ from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_transcription_payload import (
     IRapidPayloadTranscriptionPayload,
 )
-from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.transcription_payload_transcription_word import (
+    TranscriptionPayloadTranscriptionWord,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
@@ -42,13 +44,13 @@ class SelectWordsWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self._instruction
 
-    def _to_model(self) -> IOrderWorkflowInputModel:
+    def _to_model(self) -> IOrderWorkflowInput:
         blueprint = IRapidBlueprintTranscriptionRapidBlueprint(
             _t="TranscriptionBlueprint", title=self._instruction
         )
 
-        return IOrderWorkflowInputModel(
-            actual_instance=IOrderWorkflowInputModelSimpleWorkflowInputModel(
+        return IOrderWorkflowInput(
+            actual_instance=IOrderWorkflowInputSimpleWorkflowInput(
                 _t="SimpleWorkflow",
                 blueprint=IRapidBlueprint(actual_instance=blueprint),
             )
@@ -64,7 +66,7 @@ class SelectWordsWorkflow(Workflow):
                 _t="TranscriptionPayload",
                 title=self._instruction,
                 transcription=[
-                    TranscriptionWord(word=word, wordIndex=i)
+                    TranscriptionPayloadTranscriptionWord(word=word, wordIndex=i)
                     for i, word in enumerate(datapoint.sentence.split())
                 ],
             )

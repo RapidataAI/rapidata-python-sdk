@@ -18,8 +18,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_asset_model import IAssetModel
-from rapidata.api_client.models.rapid_state_model import RapidStateModel
+from rapidata.api_client.models.i_asset import IAsset
+from rapidata.api_client.models.rapid_state import RapidState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,8 +30,8 @@ class GetRapidNavigationEndpointItem(LazyValidatedModel):
     GetRapidNavigationEndpointItem
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
-    asset: IAssetModel
-    state: RapidStateModel
+    asset: IAsset
+    state: RapidState
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "state"]
 
     # model_config is inherited from LazyValidatedModel
@@ -85,7 +85,7 @@ class GetRapidNavigationEndpointItem(LazyValidatedModel):
 
         _data = {
             "rapidId": obj.get("rapidId"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "state": obj.get("state")
         }
         try:

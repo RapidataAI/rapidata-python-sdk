@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import json
 from enum import Enum
@@ -32,10 +31,10 @@ class CampaignStatus(str, Enum):
     ANALYSIS = 'Analysis'
     PAUSED = 'Paused'
     COMPLETED = 'Completed'
+    SPENDLIMITED = 'SpendLimited'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Create an instance of CampaignStatus from a JSON string"""
         return cls(json.loads(json_str))
-
 

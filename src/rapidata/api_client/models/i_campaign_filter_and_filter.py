@@ -11,25 +11,25 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterAndFilter(BaseModel):
+class ICampaignFilterAndFilter(LazyValidatedModel):
     """
     ICampaignFilterAndFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     filters: List[ICampaignFilter]
-    inner_filters: Optional[List[ICampaignFilter]] = Field(default=None, alias="innerFilters")
-    __properties: ClassVar[List[str]] = ["_t", "filters", "innerFilters"]
+    __properties: ClassVar[List[str]] = ["_t", "filters"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -38,11 +38,7 @@ class ICampaignFilterAndFilter(BaseModel):
             raise ValueError("must be one of enum values ('AndFilter')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -84,18 +80,6 @@ class ICampaignFilterAndFilter(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in inner_filters (list)
-        _items = []
-        if self.inner_filters:
-            for _item_inner_filters in self.inner_filters:
-                if _item_inner_filters:
-                    _items.append(_item_inner_filters.to_dict())
-            _dict['innerFilters'] = _items
-        # set to None if inner_filters (nullable) is None
-        # and model_fields_set contains the field
-        if self.inner_filters is None and "inner_filters" in self.model_fields_set:
-            _dict['innerFilters'] = None
-
         return _dict
 
     @classmethod
@@ -107,11 +91,14 @@ class ICampaignFilterAndFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
-            "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "innerFilters": [ICampaignFilter.from_dict(_item) for _item in obj["innerFilters"]] if obj.get("innerFilters") is not None else None
-        })
+            "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 from rapidata.api_client.models.i_campaign_filter import ICampaignFilter

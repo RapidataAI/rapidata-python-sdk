@@ -2840,7 +2840,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateOrderModel"
+                "$ref": "#/components/schemas/CreateOrder"
               }
             }
           },
@@ -4114,7 +4114,7 @@
   },
   "components": {
     "schemas": {
-      "AgeUserFilterModel_AgeGroup": {
+      "AgeUserFilter_AgeGroup": {
         "enum": [
           "0-17",
           "18-29",
@@ -4253,7 +4253,7 @@
           "pipeline": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IPipelineModel"
+                "$ref": "#/components/schemas/IPipeline"
               }
             ],
             "description": "The pipeline configuration to use."
@@ -4312,7 +4312,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInput"
               }
             ],
             "description": "The workflow configuration."
@@ -4320,7 +4320,7 @@
           "referee": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRefereeModel"
+                "$ref": "#/components/schemas/IReferee"
               }
             ],
             "description": "The referee configuration."
@@ -4393,7 +4393,7 @@
         },
         "description": "The result when a job definition has been created."
       },
-      "CreateJobEndpoint_CostWarningModel": {
+      "CreateJobEndpoint_CostWarning": {
         "required": [
           "estimatedCost",
           "availableBalance",
@@ -4476,7 +4476,7 @@
           "costWarning": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/CreateJobEndpoint_CostWarningModel"
+                "$ref": "#/components/schemas/CreateJobEndpoint_CostWarning"
               }
             ],
             "description": "Present only when the job's estimated cost exceeds the owner's remaining balance.\n Advisory — the job is created and runs regardless; it may pause for funds mid-run."
@@ -4490,7 +4490,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInput"
               }
             ],
             "description": "The workflow configuration. If not provided, inherits from the previous revision.\n Must be provided together with Referee if either is specified."
@@ -4498,7 +4498,7 @@
           "referee": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRefereeModel"
+                "$ref": "#/components/schemas/IReferee"
               }
             ],
             "description": "The referee configuration. If not provided, inherits from the previous revision.\n Must be provided together with Workflow if either is specified."
@@ -4578,34 +4578,7 @@
         },
         "description": "The result when a job revision has been created."
       },
-      "CreateOrderEndpoint_Output": {
-        "required": [
-          "orderId",
-          "pipelineId"
-        ],
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string",
-            "description": "The dataset ID of the created order.",
-            "nullable": true
-          },
-          "orderId": {
-            "type": "string",
-            "description": "The ID of the created order."
-          },
-          "campaignId": {
-            "type": "string",
-            "description": "The campaign ID of the created order.",
-            "nullable": true
-          },
-          "pipelineId": {
-            "type": "string",
-            "description": "The pipeline ID of the created order."
-          }
-        }
-      },
-      "CreateOrderModel": {
+      "CreateOrder": {
         "required": [
           "orderName",
           "workflow",
@@ -4620,7 +4593,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInput"
               }
             ],
             "description": "The workflow helps to determine the tasks that need to be completed by the users."
@@ -4628,7 +4601,7 @@
           "referee": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRefereeModel"
+                "$ref": "#/components/schemas/IReferee"
               }
             ],
             "description": "The referee is used to determine how many votes will be collected."
@@ -4730,7 +4703,7 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/IUserFilterModel"
+                  "$ref": "#/components/schemas/IUserFilter"
                 },
                 "nullable": true
               }
@@ -4775,6 +4748,33 @@
           }
         },
         "description": "This model is used to create a simple order"
+      },
+      "CreateOrderEndpoint_Output": {
+        "required": [
+          "orderId",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "description": "The dataset ID of the created order.",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "description": "The ID of the created order."
+          },
+          "campaignId": {
+            "type": "string",
+            "description": "The campaign ID of the created order.",
+            "nullable": true
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The pipeline ID of the created order."
+          }
+        }
       },
       "CreateUnsupportedOrderEndpoint_Input": {
         "required": [
@@ -4823,7 +4823,7 @@
           "Tablet"
         ]
       },
-      "EloConfigModel": {
+      "EloConfig": {
         "required": [
           "startingScore",
           "kFactor",
@@ -4860,7 +4860,7 @@
           }
         }
       },
-      "GenderUserFilterModel_Gender": {
+      "GenderUserFilter_Gender": {
         "enum": [
           "Male",
           "Female",
@@ -4959,7 +4959,7 @@
           "reviewReason": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ReviewReasonModel"
+                "$ref": "#/components/schemas/ReviewReason"
               }
             ],
             "description": "Why the job was routed to manual review, when it is (or was) in\n ManualApproval. Null when no customer-facing reason\n applies."
@@ -5146,7 +5146,7 @@
           "workflow": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IOrderWorkflowInputModel"
+                "$ref": "#/components/schemas/IOrderWorkflowInput"
               }
             ],
             "description": "The workflow configuration. Can be used directly to create a new revision."
@@ -5154,7 +5154,7 @@
           "referee": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRefereeModel"
+                "$ref": "#/components/schemas/IReferee"
               }
             ],
             "description": "The referee configuration. Can be used directly to create a new revision."
@@ -5401,24 +5401,24 @@
           }
         }
       },
-      "IDatasetModel": {
+      "IDataset": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IDatasetModelCloneDatasetModel"
+            "$ref": "#/components/schemas/IDatasetCloneDataset"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CloneDatasetModel": "#/components/schemas/IDatasetModelCloneDatasetModel"
+            "CloneDatasetModel": "#/components/schemas/IDatasetCloneDataset"
           }
         }
       },
-      "IDatasetModelCloneDatasetModel": {
+      "IDatasetCloneDataset": {
         "required": [
           "datasetToCloneId",
           "datasetName",
@@ -5478,32 +5478,32 @@
           }
         }
       },
-      "IOrderWorkflowInputModel": {
+      "IOrderWorkflowInput": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IOrderWorkflowInputModelEvaluationWorkflowInputModel"
+            "$ref": "#/components/schemas/IOrderWorkflowInputEvaluationWorkflowInput"
           },
           {
-            "$ref": "#/components/schemas/IOrderWorkflowInputModelGroupedRankingWorkflowInputModel"
+            "$ref": "#/components/schemas/IOrderWorkflowInputGroupedRankingWorkflowInput"
           },
           {
-            "$ref": "#/components/schemas/IOrderWorkflowInputModelSimpleWorkflowInputModel"
+            "$ref": "#/components/schemas/IOrderWorkflowInputSimpleWorkflowInput"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "EvaluationWorkflow": "#/components/schemas/IOrderWorkflowInputModelEvaluationWorkflowInputModel",
-            "GroupedRankingWorkflow": "#/components/schemas/IOrderWorkflowInputModelGroupedRankingWorkflowInputModel",
-            "SimpleWorkflow": "#/components/schemas/IOrderWorkflowInputModelSimpleWorkflowInputModel"
+            "EvaluationWorkflow": "#/components/schemas/IOrderWorkflowInputEvaluationWorkflowInput",
+            "GroupedRankingWorkflow": "#/components/schemas/IOrderWorkflowInputGroupedRankingWorkflowInput",
+            "SimpleWorkflow": "#/components/schemas/IOrderWorkflowInputSimpleWorkflowInput"
           }
         }
       },
-      "IOrderWorkflowInputModelEvaluationWorkflowInputModel": {
+      "IOrderWorkflowInputEvaluationWorkflowInput": {
         "required": [
           "validationSetId",
           "shouldAcceptIncorrect",
@@ -5530,7 +5530,7 @@
           }
         }
       },
-      "IOrderWorkflowInputModelGroupedRankingWorkflowInputModel": {
+      "IOrderWorkflowInputGroupedRankingWorkflowInput": {
         "required": [
           "criteria",
           "_t"
@@ -5546,12 +5546,12 @@
             "type": "string"
           },
           "pairMakerConfig": {
-            "$ref": "#/components/schemas/IPairMakerConfigModel"
+            "$ref": "#/components/schemas/IPairMakerConfig"
           },
           "eloConfig": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/EloConfigModel"
+                "$ref": "#/components/schemas/EloConfig"
               }
             ],
             "deprecated": true
@@ -5560,7 +5560,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IRankingConfigModel"
+                "$ref": "#/components/schemas/IRankingConfig"
               }
             ],
             "nullable": true
@@ -5591,7 +5591,7 @@
           }
         }
       },
-      "IOrderWorkflowInputModelSimpleWorkflowInputModel": {
+      "IOrderWorkflowInputSimpleWorkflowInput": {
         "required": [
           "blueprint",
           "_t"
@@ -5619,28 +5619,28 @@
           }
         }
       },
-      "IPairMakerConfigModel": {
+      "IPairMakerConfig": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IPairMakerConfigModelFullPermutationPairMakerConfigModel"
+            "$ref": "#/components/schemas/IPairMakerConfigFullPermutationPairMakerConfig"
           },
           {
-            "$ref": "#/components/schemas/IPairMakerConfigModelOnlinePairMakerConfigModel"
+            "$ref": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "FullPermutationPairMaker": "#/components/schemas/IPairMakerConfigModelFullPermutationPairMakerConfigModel",
-            "OnlinePairMaker": "#/components/schemas/IPairMakerConfigModelOnlinePairMakerConfigModel"
+            "FullPermutationPairMaker": "#/components/schemas/IPairMakerConfigFullPermutationPairMakerConfig",
+            "OnlinePairMaker": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
           }
         }
       },
-      "IPairMakerConfigModelFullPermutationPairMakerConfigModel": {
+      "IPairMakerConfigFullPermutationPairMakerConfig": {
         "required": [
           "_t"
         ],
@@ -5653,7 +5653,7 @@
           }
         }
       },
-      "IPairMakerConfigModelOnlinePairMakerConfigModel": {
+      "IPairMakerConfigOnlinePairMakerConfig": {
         "required": [
           "_t"
         ],
@@ -5674,24 +5674,41 @@
           }
         }
       },
-      "IPipelineArtifactModel": {
+      "IPipeline": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IPipelineArtifactModelCreateDatasetArtifactModel"
+            "$ref": "#/components/schemas/IPipelineCreateSimplePipeline"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CreateDatasetArtifactModel": "#/components/schemas/IPipelineArtifactModelCreateDatasetArtifactModel"
+            "CreateSimplePipelineModel": "#/components/schemas/IPipelineCreateSimplePipeline"
           }
         }
       },
-      "IPipelineArtifactModelCreateDatasetArtifactModel": {
+      "IPipelineArtifact": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPipelineArtifactCreateDatasetArtifact"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CreateDatasetArtifactModel": "#/components/schemas/IPipelineArtifactCreateDatasetArtifact"
+          }
+        }
+      },
+      "IPipelineArtifactCreateDatasetArtifact": {
         "required": [
           "identifier",
           "dataset",
@@ -5708,28 +5725,11 @@
             "type": "string"
           },
           "dataset": {
-            "$ref": "#/components/schemas/IDatasetModel"
+            "$ref": "#/components/schemas/IDataset"
           }
         }
       },
-      "IPipelineModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IPipelineModelCreateSimplePipelineModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "CreateSimplePipelineModel": "#/components/schemas/IPipelineModelCreateSimplePipelineModel"
-          }
-        }
-      },
-      "IPipelineModelCreateSimplePipelineModel": {
+      "IPipelineCreateSimplePipeline": {
         "required": [
           "artifacts",
           "pipelineSteps",
@@ -5746,13 +5746,13 @@
           "artifacts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IPipelineArtifactModel"
+              "$ref": "#/components/schemas/IPipelineArtifact"
             }
           },
           "pipelineSteps": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IPipelineStepModel"
+              "$ref": "#/components/schemas/IPipelineStep"
             }
           },
           "namePrefix": {
@@ -5760,36 +5760,36 @@
           }
         }
       },
-      "IPipelineStepModel": {
+      "IPipelineStep": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IPipelineStepModelDatasetEvaluationStepModel"
+            "$ref": "#/components/schemas/IPipelineStepDatasetEvaluationStep"
           },
           {
-            "$ref": "#/components/schemas/IPipelineStepModelSendCompletionMailStepModel"
+            "$ref": "#/components/schemas/IPipelineStepSendCompletionMailStep"
           },
           {
-            "$ref": "#/components/schemas/IPipelineStepModelWorkflowAggregationStepModel"
+            "$ref": "#/components/schemas/IPipelineStepWorkflowAggregationStep"
           },
           {
-            "$ref": "#/components/schemas/IPipelineStepModelWorkflowLabelingStepModel"
+            "$ref": "#/components/schemas/IPipelineStepWorkflowLabelingStep"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "DatasetEvaluationStepModel": "#/components/schemas/IPipelineStepModelDatasetEvaluationStepModel",
-            "SendCompletionMailStepModel": "#/components/schemas/IPipelineStepModelSendCompletionMailStepModel",
-            "WorkflowAggregationStepModel": "#/components/schemas/IPipelineStepModelWorkflowAggregationStepModel",
-            "WorkflowLabelingStepModel": "#/components/schemas/IPipelineStepModelWorkflowLabelingStepModel"
+            "DatasetEvaluationStepModel": "#/components/schemas/IPipelineStepDatasetEvaluationStep",
+            "SendCompletionMailStepModel": "#/components/schemas/IPipelineStepSendCompletionMailStep",
+            "WorkflowAggregationStepModel": "#/components/schemas/IPipelineStepWorkflowAggregationStep",
+            "WorkflowLabelingStepModel": "#/components/schemas/IPipelineStepWorkflowLabelingStep"
           }
         }
       },
-      "IPipelineStepModelDatasetEvaluationStepModel": {
+      "IPipelineStepDatasetEvaluationStep": {
         "required": [
           "datasetArtifactId",
           "aggregationResultFileArtifactId",
@@ -5818,7 +5818,7 @@
           }
         }
       },
-      "IPipelineStepModelSendCompletionMailStepModel": {
+      "IPipelineStepSendCompletionMailStep": {
         "required": [
           "receiver",
           "resultsFileArtifactIdentifier",
@@ -5839,7 +5839,7 @@
           }
         }
       },
-      "IPipelineStepModelWorkflowAggregationStepModel": {
+      "IPipelineStepWorkflowAggregationStep": {
         "required": [
           "campaignArtifactId",
           "workflowArtifactId",
@@ -5874,7 +5874,7 @@
           }
         }
       },
-      "IPipelineStepModelWorkflowLabelingStepModel": {
+      "IPipelineStepWorkflowLabelingStep": {
         "required": [
           "workflowArtifactId",
           "_t"
@@ -5891,28 +5891,28 @@
           }
         }
       },
-      "IRankingConfigModel": {
+      "IRankingConfig": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel"
+            "$ref": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig"
           },
           {
-            "$ref": "#/components/schemas/IRankingConfigModelEloConfigModel"
+            "$ref": "#/components/schemas/IRankingConfigEloConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel",
-            "EloConfig": "#/components/schemas/IRankingConfigModelEloConfigModel"
+            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig",
+            "EloConfig": "#/components/schemas/IRankingConfigEloConfig"
           }
         }
       },
-      "IRankingConfigModelBradleyTerryRankingConfigModel": {
+      "IRankingConfigBradleyTerryRankingConfig": {
         "required": [
           "startingScore",
           "_t"
@@ -5930,7 +5930,7 @@
           }
         }
       },
-      "IRankingConfigModelEloConfigModel": {
+      "IRankingConfigEloConfig": {
         "required": [
           "startingScore",
           "kFactor",
@@ -6217,36 +6217,36 @@
           }
         }
       },
-      "IRefereeModel": {
+      "IReferee": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRefereeModelBudgetRefereeModel"
+            "$ref": "#/components/schemas/IRefereeBudgetReferee"
           },
           {
-            "$ref": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel"
+            "$ref": "#/components/schemas/IRefereeEarlyStoppingReferee"
           },
           {
-            "$ref": "#/components/schemas/IRefereeModelNaiveRefereeModel"
+            "$ref": "#/components/schemas/IRefereeNaiveReferee"
           },
           {
-            "$ref": "#/components/schemas/IRefereeModelQuorumRefereeModel"
+            "$ref": "#/components/schemas/IRefereeQuorumReferee"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "BudgetReferee": "#/components/schemas/IRefereeModelBudgetRefereeModel",
-            "EarlyStoppingReferee": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel",
-            "NaiveReferee": "#/components/schemas/IRefereeModelNaiveRefereeModel",
-            "QuorumReferee": "#/components/schemas/IRefereeModelQuorumRefereeModel"
+            "BudgetReferee": "#/components/schemas/IRefereeBudgetReferee",
+            "EarlyStoppingReferee": "#/components/schemas/IRefereeEarlyStoppingReferee",
+            "NaiveReferee": "#/components/schemas/IRefereeNaiveReferee",
+            "QuorumReferee": "#/components/schemas/IRefereeQuorumReferee"
           }
         }
       },
-      "IRefereeModelBudgetRefereeModel": {
+      "IRefereeBudgetReferee": {
         "required": [
           "totalBudget",
           "_t"
@@ -6264,7 +6264,7 @@
           }
         }
       },
-      "IRefereeModelEarlyStoppingRefereeModel": {
+      "IRefereeEarlyStoppingReferee": {
         "required": [
           "maxVotes",
           "threshold",
@@ -6287,7 +6287,7 @@
           }
         }
       },
-      "IRefereeModelNaiveRefereeModel": {
+      "IRefereeNaiveReferee": {
         "required": [
           "totalVotes",
           "_t"
@@ -6305,7 +6305,7 @@
           }
         }
       },
-      "IRefereeModelQuorumRefereeModel": {
+      "IRefereeQuorumReferee": {
         "required": [
           "maxVotes",
           "threshold",
@@ -6601,72 +6601,72 @@
           }
         }
       },
-      "IUserFilterModel": {
+      "IUserFilter": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IUserFilterModelAgeUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterAgeUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelAndUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterAndUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelCampaignUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterCampaignUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelCountryUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterCountryUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterCustomUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelDeviceUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterDeviceUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterGenderUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelLanguageUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterLanguageUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelNewUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterNewUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelNotUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterNotUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelOrUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterOrUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterResponseCountUserFilter"
           },
           {
-            "$ref": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilterUserScoreUserFilter"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "AgeFilter": "#/components/schemas/IUserFilterModelAgeUserFilterModel",
-            "AndFilter": "#/components/schemas/IUserFilterModelAndUserFilterModel",
-            "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
-            "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
-            "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
-            "DeviceFilter": "#/components/schemas/IUserFilterModelDeviceUserFilterModel",
-            "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
-            "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
-            "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
-            "NotFilter": "#/components/schemas/IUserFilterModelNotUserFilterModel",
-            "OrFilter": "#/components/schemas/IUserFilterModelOrUserFilterModel",
-            "ResponseCountFilter": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel",
-            "UserScoreFilter": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+            "AgeFilter": "#/components/schemas/IUserFilterAgeUserFilter",
+            "AndFilter": "#/components/schemas/IUserFilterAndUserFilter",
+            "CampaignFilter": "#/components/schemas/IUserFilterCampaignUserFilter",
+            "CountryFilter": "#/components/schemas/IUserFilterCountryUserFilter",
+            "CustomFilter": "#/components/schemas/IUserFilterCustomUserFilter",
+            "DeviceFilter": "#/components/schemas/IUserFilterDeviceUserFilter",
+            "GenderFilter": "#/components/schemas/IUserFilterGenderUserFilter",
+            "LanguageFilter": "#/components/schemas/IUserFilterLanguageUserFilter",
+            "NewUserFilter": "#/components/schemas/IUserFilterNewUserFilter",
+            "NotFilter": "#/components/schemas/IUserFilterNotUserFilter",
+            "OrFilter": "#/components/schemas/IUserFilterOrUserFilter",
+            "ResponseCountFilter": "#/components/schemas/IUserFilterResponseCountUserFilter",
+            "UserScoreFilter": "#/components/schemas/IUserFilterUserScoreUserFilter"
           }
         }
       },
-      "IUserFilterModelAgeUserFilterModel": {
+      "IUserFilterAgeUserFilter": {
         "required": [
           "ageGroups",
           "_t"
@@ -6681,12 +6681,12 @@
           "ageGroups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AgeUserFilterModel_AgeGroup"
+              "$ref": "#/components/schemas/AgeUserFilter_AgeGroup"
             }
           }
         }
       },
-      "IUserFilterModelAndUserFilterModel": {
+      "IUserFilterAndUserFilter": {
         "required": [
           "filters",
           "_t"
@@ -6701,12 +6701,12 @@
           "filters": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IUserFilterModel"
+              "$ref": "#/components/schemas/IUserFilter"
             }
           }
         }
       },
-      "IUserFilterModelCampaignUserFilterModel": {
+      "IUserFilterCampaignUserFilter": {
         "required": [
           "campaignIds",
           "_t"
@@ -6726,7 +6726,7 @@
           }
         }
       },
-      "IUserFilterModelCountryUserFilterModel": {
+      "IUserFilterCountryUserFilter": {
         "required": [
           "countries",
           "_t"
@@ -6746,7 +6746,7 @@
           }
         }
       },
-      "IUserFilterModelCustomUserFilterModel": {
+      "IUserFilterCustomUserFilter": {
         "required": [
           "identifier",
           "values",
@@ -6770,7 +6770,7 @@
           }
         }
       },
-      "IUserFilterModelDeviceUserFilterModel": {
+      "IUserFilterDeviceUserFilter": {
         "required": [
           "deviceTypes",
           "_t"
@@ -6790,7 +6790,7 @@
           }
         }
       },
-      "IUserFilterModelGenderUserFilterModel": {
+      "IUserFilterGenderUserFilter": {
         "required": [
           "genders",
           "_t"
@@ -6805,12 +6805,12 @@
           "genders": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GenderUserFilterModel_Gender"
+              "$ref": "#/components/schemas/GenderUserFilter_Gender"
             }
           }
         }
       },
-      "IUserFilterModelLanguageUserFilterModel": {
+      "IUserFilterLanguageUserFilter": {
         "required": [
           "languages",
           "_t"
@@ -6830,7 +6830,7 @@
           }
         }
       },
-      "IUserFilterModelNewUserFilterModel": {
+      "IUserFilterNewUserFilter": {
         "required": [
           "_t"
         ],
@@ -6843,7 +6843,7 @@
           }
         }
       },
-      "IUserFilterModelNotUserFilterModel": {
+      "IUserFilterNotUserFilter": {
         "required": [
           "filter",
           "_t"
@@ -6856,11 +6856,11 @@
             "type": "string"
           },
           "filter": {
-            "$ref": "#/components/schemas/IUserFilterModel"
+            "$ref": "#/components/schemas/IUserFilter"
           }
         }
       },
-      "IUserFilterModelOrUserFilterModel": {
+      "IUserFilterOrUserFilter": {
         "required": [
           "filters",
           "_t"
@@ -6875,12 +6875,12 @@
           "filters": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IUserFilterModel"
+              "$ref": "#/components/schemas/IUserFilter"
             }
           }
         }
       },
-      "IUserFilterModelResponseCountUserFilterModel": {
+      "IUserFilterResponseCountUserFilter": {
         "required": [
           "responseCount",
           "dimension",
@@ -6906,7 +6906,7 @@
           }
         }
       },
-      "IUserFilterModelUserScoreUserFilterModel": {
+      "IUserFilterUserScoreUserFilter": {
         "required": [
           "_t"
         ],
@@ -7564,7 +7564,7 @@
           "Sequential"
         ]
       },
-      "ReviewReasonModel": {
+      "ReviewReason": {
         "enum": [
           "ContentFlagged",
           "UnsupportedContentType",
@@ -7574,9 +7574,6 @@
         ]
       },
       "StickyConfig": {
-        "required": [
-          "dimension"
-        ],
         "type": "object",
         "properties": {
           "isEnabled": {

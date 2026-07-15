@@ -29,22 +29,13 @@ class IMetadataSourceUrlMetadata(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     url: StrictStr
-    visibilities: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["_t", "url", "visibilities"]
+    __properties: ClassVar[List[str]] = ["_t", "url"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['SourceUrlMetadata']):
-            raise ValueError("must be one of enum values ('SourceUrlMetadata')")
-        return value
-
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
-                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
+        if value not in set(['SourceUrlMetadataModel']):
+            raise ValueError("must be one of enum values ('SourceUrlMetadataModel')")
         return value
 
     # model_config is inherited from LazyValidatedModel
@@ -95,8 +86,7 @@ class IMetadataSourceUrlMetadata(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "url": obj.get("url"),
-            "visibilities": obj.get("visibilities")
+            "url": obj.get("url")
         }
         try:
             _obj = cls.model_validate(_data)

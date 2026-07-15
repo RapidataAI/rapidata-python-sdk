@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.classify_payload_model import ClassifyPayloadModel
+from rapidata.api_client.models.classify_payload import ClassifyPayload
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from pydantic import ValidationError
@@ -31,7 +31,7 @@ class CreateDemographicRapidEndpointInput(LazyValidatedModel):
     CreateDemographicRapidEndpointInput
     """ # noqa: E501
     key: StrictStr = Field(description="The identifier of the demographic classification.")
-    payload: ClassifyPayloadModel = Field(description="The payload for the classification.")
+    payload: ClassifyPayload = Field(description="The payload for the classification.")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     asset: Optional[IAssetInput] = Field(default=None, description="An optional asset to associate with the rapid.")
     context: Optional[StrictStr] = Field(default=None, description="An optional text context to show to the user.")
@@ -112,7 +112,7 @@ class CreateDemographicRapidEndpointInput(LazyValidatedModel):
 
         _data = {
             "key": obj.get("key"),
-            "payload": ClassifyPayloadModel.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "payload": ClassifyPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "context": obj.get("context"),

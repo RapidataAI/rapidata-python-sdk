@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.query_examples_for_audience_endpoint_output import (
         QueryExamplesForAudienceEndpointOutput,
     )
-    from rapidata.api_client.models.i_asset_model import IAssetModel
+    from rapidata.api_client.models.i_asset import IAsset
     from rapidata.api_client.models.i_example_truth import IExampleTruth
 
 
@@ -33,31 +33,31 @@ class ExampleFormatter:
         return rows
 
     @staticmethod
-    def _format_asset(asset: IAssetModel | None, asset_url_prefix: str) -> str | None:
+    def _format_asset(asset: IAsset | None, asset_url_prefix: str) -> str | None:
         if asset is None or asset.actual_instance is None:
             return None
 
-        from rapidata.api_client.models.i_asset_model_file_asset_model import (
-            IAssetModelFileAssetModel,
+        from rapidata.api_client.models.i_asset_file_asset import (
+            IAssetFileAsset,
         )
-        from rapidata.api_client.models.i_asset_model_multi_asset_model import (
-            IAssetModelMultiAssetModel,
+        from rapidata.api_client.models.i_asset_multi_asset import (
+            IAssetMultiAsset,
         )
-        from rapidata.api_client.models.i_asset_model_text_asset_model import (
-            IAssetModelTextAssetModel,
+        from rapidata.api_client.models.i_asset_text_asset import (
+            IAssetTextAsset,
         )
 
         instance = asset.actual_instance
-        if isinstance(instance, IAssetModelFileAssetModel):
+        if isinstance(instance, IAssetFileAsset):
             return f"{asset_url_prefix}{instance.file_name}"
-        if isinstance(instance, IAssetModelMultiAssetModel):
+        if isinstance(instance, IAssetMultiAsset):
             return str(
                 [
                     ExampleFormatter._format_asset(a, asset_url_prefix)
                     for a in instance.assets
                 ]
             )
-        if isinstance(instance, IAssetModelTextAssetModel):
+        if isinstance(instance, IAssetTextAsset):
             return instance.text
         return None
 

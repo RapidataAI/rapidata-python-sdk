@@ -19,8 +19,8 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
-from rapidata.api_client.models.billing_period_status_model import BillingPeriodStatusModel
-from rapidata.api_client.models.i_line_item_model import ILineItemModel
+from rapidata.api_client.models.billing_period_status import BillingPeriodStatus
+from rapidata.api_client.models.i_line_item import ILineItem
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -33,12 +33,12 @@ class GetActiveBillingPeriodOverviewEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The billing period ID.")
     start_date: datetime = Field(description="The start date of the billing period.", alias="startDate")
     end_date: datetime = Field(description="The end date of the billing period.", alias="endDate")
-    status: BillingPeriodStatusModel = Field(description="The status of the billing period.")
+    status: BillingPeriodStatus = Field(description="The status of the billing period.")
     total_gross_cost: Union[StrictFloat, StrictInt] = Field(description="The total gross cost before discounts.", alias="totalGrossCost")
     total_discount: Union[StrictFloat, StrictInt] = Field(description="The total discount amount.", alias="totalDiscount")
     total_net_cost: Union[StrictFloat, StrictInt] = Field(description="The total net cost after discounts.", alias="totalNetCost")
     total_response_count: StrictInt = Field(description="The total number of billable responses.", alias="totalResponseCount")
-    line_items: List[ILineItemModel] = Field(alias="lineItems")
+    line_items: List[ILineItem] = Field(alias="lineItems")
     __properties: ClassVar[List[str]] = ["id", "startDate", "endDate", "status", "totalGrossCost", "totalDiscount", "totalNetCost", "totalResponseCount", "lineItems"]
 
     # model_config is inherited from LazyValidatedModel
@@ -103,7 +103,7 @@ class GetActiveBillingPeriodOverviewEndpointOutput(LazyValidatedModel):
             "totalDiscount": obj.get("totalDiscount"),
             "totalNetCost": obj.get("totalNetCost"),
             "totalResponseCount": obj.get("totalResponseCount"),
-            "lineItems": [ILineItemModel.from_dict(_item) for _item in obj["lineItems"]] if obj.get("lineItems") is not None else None
+            "lineItems": [ILineItem.from_dict(_item) for _item in obj["lineItems"]] if obj.get("lineItems") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

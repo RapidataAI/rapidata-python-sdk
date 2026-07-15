@@ -19,7 +19,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_input import IAssetInput
-from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class UpdateValidationRapidEndpointInput(LazyValidatedModel):
     """
     UpdateValidationRapidEndpointInput
     """ # noqa: E501
-    truth: Optional[IValidationTruthModel] = Field(default=None, description="The truth for the validation rapid.")
+    truth: Optional[IValidationTruth] = Field(default=None, description="The truth for the validation rapid.")
     explanation: Optional[StrictStr] = Field(default=None, description="The optional explanation shown when users answer incorrectly.")
     context: Optional[StrictStr] = Field(default=None, description="An optional text context to show the user.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset to use as context to show the user.", alias="contextAsset")
@@ -110,7 +110,7 @@ class UpdateValidationRapidEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,

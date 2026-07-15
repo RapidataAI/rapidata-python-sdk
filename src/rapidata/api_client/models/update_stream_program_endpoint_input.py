@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_program_node_model import IProgramNodeModel
+from rapidata.api_client.models.i_program_node import IProgramNode
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class UpdateStreamProgramEndpointInput(LazyValidatedModel):
     UpdateStreamProgramEndpointInput
     """ # noqa: E501
     root_node_id: StrictStr = Field(description="The node the program's evaluation enters at.", alias="rootNodeId")
-    nodes: Dict[str, IProgramNodeModel] = Field(description="The program's decision graph, keyed by node id.")
+    nodes: Dict[str, IProgramNode] = Field(description="The program's decision graph, keyed by node id.")
     max_rapids: StrictInt = Field(description="The session ends after this many counted responses.", alias="maxRapids")
     max_duration_seconds: StrictInt = Field(description="The session ends after this many seconds.", alias="maxDurationSeconds")
     __properties: ClassVar[List[str]] = ["rootNodeId", "nodes", "maxRapids", "maxDurationSeconds"]
@@ -90,7 +90,7 @@ class UpdateStreamProgramEndpointInput(LazyValidatedModel):
         _data = {
             "rootNodeId": obj.get("rootNodeId"),
             "nodes": dict(
-                (_k, IProgramNodeModel.from_dict(_v))
+                (_k, IProgramNode.from_dict(_v))
                 for _k, _v in obj["nodes"].items()
             )
             if obj.get("nodes") is not None

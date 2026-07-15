@@ -19,7 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +32,7 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The unique identifier of the prompt.")
     english_prompt: Optional[StrictStr] = Field(default=None, description="The prompt text translated to English.", alias="englishPrompt")
     original_prompt: Optional[StrictStr] = Field(default=None, description="The prompt text as originally provided.", alias="originalPrompt")
-    prompt_asset: Optional[IAssetModel] = Field(default=None, description="The optional asset associated with the prompt.", alias="promptAsset")
+    prompt_asset: Optional[IAsset] = Field(default=None, description="The optional asset associated with the prompt.", alias="promptAsset")
     identifier: StrictStr = Field(description="The identifier associated with the prompt.")
     created_at: datetime = Field(description="The timestamp when the prompt was created.", alias="createdAt")
     tags: List[StrictStr]
@@ -101,7 +101,7 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
             "id": obj.get("id"),
             "englishPrompt": obj.get("englishPrompt"),
             "originalPrompt": obj.get("originalPrompt"),
-            "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
+            "promptAsset": IAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "identifier": obj.get("identifier"),
             "createdAt": obj.get("createdAt"),
             "tags": obj.get("tags")

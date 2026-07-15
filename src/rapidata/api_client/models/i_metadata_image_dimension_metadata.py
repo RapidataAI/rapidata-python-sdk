@@ -30,22 +30,13 @@ class IMetadataImageDimensionMetadata(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     height: Optional[StrictInt] = None
     width: Optional[StrictInt] = None
-    visibilities: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["_t", "height", "width", "visibilities"]
+    __properties: ClassVar[List[str]] = ["_t", "height", "width"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['ImageDimensionMetadata']):
             raise ValueError("must be one of enum values ('ImageDimensionMetadata')")
-        return value
-
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
-                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     # model_config is inherited from LazyValidatedModel
@@ -97,8 +88,7 @@ class IMetadataImageDimensionMetadata(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "height": obj.get("height"),
-            "width": obj.get("width"),
-            "visibilities": obj.get("visibilities")
+            "width": obj.get("width")
         }
         try:
             _obj = cls.model_validate(_data)

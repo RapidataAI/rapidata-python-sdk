@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_recommended_validation_set_endpoint_validation_set_output_model import GetRecommendedValidationSetEndpointValidationSetOutputModel
+from rapidata.api_client.models.get_recommended_validation_set_endpoint_validation_set_output import GetRecommendedValidationSetEndpointValidationSetOutput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,7 +28,7 @@ class GetRecommendedValidationSetEndpointOutput(LazyValidatedModel):
     """
     GetRecommendedValidationSetEndpointOutput
     """ # noqa: E501
-    validation_sets: List[GetRecommendedValidationSetEndpointValidationSetOutputModel] = Field(alias="validationSets")
+    validation_sets: List[GetRecommendedValidationSetEndpointValidationSetOutput] = Field(alias="validationSets")
     __properties: ClassVar[List[str]] = ["validationSets"]
 
     # model_config is inherited from LazyValidatedModel
@@ -85,7 +85,7 @@ class GetRecommendedValidationSetEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "validationSets": [GetRecommendedValidationSetEndpointValidationSetOutputModel.from_dict(_item) for _item in obj["validationSets"]] if obj.get("validationSets") is not None else None
+            "validationSets": [GetRecommendedValidationSetEndpointValidationSetOutput.from_dict(_item) for _item in obj["validationSets"]] if obj.get("validationSets") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

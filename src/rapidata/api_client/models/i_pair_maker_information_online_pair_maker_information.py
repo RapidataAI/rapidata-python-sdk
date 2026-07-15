@@ -17,7 +17,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,9 +28,9 @@ class IPairMakerInformationOnlinePairMakerInformation(LazyValidatedModel):
     IPairMakerInformationOnlinePairMakerInformation
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    random_matches_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomMatchesRatio")
-    total_comparison_budget: Optional[StrictInt] = Field(default=None, alias="totalComparisonBudget")
-    current_comparison_budget: Optional[StrictInt] = Field(default=None, alias="currentComparisonBudget")
+    random_matches_ratio: Union[StrictFloat, StrictInt] = Field(alias="randomMatchesRatio")
+    total_comparison_budget: StrictInt = Field(alias="totalComparisonBudget")
+    current_comparison_budget: StrictInt = Field(alias="currentComparisonBudget")
     __properties: ClassVar[List[str]] = ["_t", "randomMatchesRatio", "totalComparisonBudget", "currentComparisonBudget"]
 
     @field_validator('t')

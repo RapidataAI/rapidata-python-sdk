@@ -19,7 +19,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +32,7 @@ class GetFailedDatapointsEndpointDatapoint(LazyValidatedModel):
     id: StrictStr
     dataset_id: StrictStr = Field(alias="datasetId")
     sort_index: Optional[StrictInt] = Field(alias="sortIndex")
-    asset: IAssetModel
+    asset: IAsset
     created_at: datetime = Field(alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "datasetId", "sortIndex", "asset", "createdAt"]
 
@@ -94,7 +94,7 @@ class GetFailedDatapointsEndpointDatapoint(LazyValidatedModel):
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "sortIndex": obj.get("sortIndex"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "createdAt": obj.get("createdAt")
         }
         try:

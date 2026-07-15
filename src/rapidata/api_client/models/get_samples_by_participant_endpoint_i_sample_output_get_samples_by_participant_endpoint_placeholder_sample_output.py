@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +32,7 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
     identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
     english_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text translated to English.", alias="englishPrompt")
     original_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text as originally provided.", alias="originalPrompt")
-    prompt_asset: Optional[IAssetModel] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
+    prompt_asset: Optional[IAsset] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
     tags: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "identifier", "englishPrompt", "originalPrompt", "promptAsset", "tags"]
 
@@ -107,7 +107,7 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
             "identifier": obj.get("identifier"),
             "englishPrompt": obj.get("englishPrompt"),
             "originalPrompt": obj.get("originalPrompt"),
-            "promptAsset": IAssetModel.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
+            "promptAsset": IAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "tags": obj.get("tags")
         }
         try:

@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import json
 import pprint
@@ -19,6 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_validation_truth_attach_category_truth import IValidationTruthAttachCategoryTruth
 from rapidata.api_client.models.i_validation_truth_bounding_box_truth import IValidationTruthBoundingBoxTruth
+from rapidata.api_client.models.i_validation_truth_classify_truth import IValidationTruthClassifyTruth
 from rapidata.api_client.models.i_validation_truth_compare_truth import IValidationTruthCompareTruth
 from rapidata.api_client.models.i_validation_truth_empty_validation_truth import IValidationTruthEmptyValidationTruth
 from rapidata.api_client.models.i_validation_truth_line_truth import IValidationTruthLineTruth
@@ -34,38 +34,40 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IVALIDATIONTRUTH_ONE_OF_SCHEMAS = ["IValidationTruthAttachCategoryTruth", "IValidationTruthBoundingBoxTruth", "IValidationTruthCompareTruth", "IValidationTruthEmptyValidationTruth", "IValidationTruthLineTruth", "IValidationTruthLocateBoxTruth", "IValidationTruthMultiCompareTruth", "IValidationTruthNamedEntityTruth", "IValidationTruthPolygonTruth", "IValidationTruthScrubTruth", "IValidationTruthSkipTruth", "IValidationTruthTranscriptionTruth"]
+IVALIDATIONTRUTH_ONE_OF_SCHEMAS = ["IValidationTruthAttachCategoryTruth", "IValidationTruthBoundingBoxTruth", "IValidationTruthClassifyTruth", "IValidationTruthCompareTruth", "IValidationTruthEmptyValidationTruth", "IValidationTruthLineTruth", "IValidationTruthLocateBoxTruth", "IValidationTruthMultiCompareTruth", "IValidationTruthNamedEntityTruth", "IValidationTruthPolygonTruth", "IValidationTruthScrubTruth", "IValidationTruthSkipTruth", "IValidationTruthTranscriptionTruth"]
 
 class IValidationTruth(LazyValidatedModel):
     """
     IValidationTruth
     """
-    # data type: IValidationTruthTranscriptionTruth
-    oneof_schema_1_validator: Optional[IValidationTruthTranscriptionTruth] = None
-    # data type: IValidationTruthScrubTruth
-    oneof_schema_2_validator: Optional[IValidationTruthScrubTruth] = None
-    # data type: IValidationTruthPolygonTruth
-    oneof_schema_3_validator: Optional[IValidationTruthPolygonTruth] = None
-    # data type: IValidationTruthNamedEntityTruth
-    oneof_schema_4_validator: Optional[IValidationTruthNamedEntityTruth] = None
-    # data type: IValidationTruthLocateBoxTruth
-    oneof_schema_5_validator: Optional[IValidationTruthLocateBoxTruth] = None
+    # data type: IValidationTruthAttachCategoryTruth
+    oneof_schema_1_validator: Optional[IValidationTruthAttachCategoryTruth] = None
+    # data type: IValidationTruthBoundingBoxTruth
+    oneof_schema_2_validator: Optional[IValidationTruthBoundingBoxTruth] = None
+    # data type: IValidationTruthClassifyTruth
+    oneof_schema_3_validator: Optional[IValidationTruthClassifyTruth] = None
+    # data type: IValidationTruthCompareTruth
+    oneof_schema_4_validator: Optional[IValidationTruthCompareTruth] = None
+    # data type: IValidationTruthEmptyValidationTruth
+    oneof_schema_5_validator: Optional[IValidationTruthEmptyValidationTruth] = None
     # data type: IValidationTruthLineTruth
     oneof_schema_6_validator: Optional[IValidationTruthLineTruth] = None
-    # data type: IValidationTruthEmptyValidationTruth
-    oneof_schema_7_validator: Optional[IValidationTruthEmptyValidationTruth] = None
-    # data type: IValidationTruthCompareTruth
-    oneof_schema_8_validator: Optional[IValidationTruthCompareTruth] = None
+    # data type: IValidationTruthLocateBoxTruth
+    oneof_schema_7_validator: Optional[IValidationTruthLocateBoxTruth] = None
     # data type: IValidationTruthMultiCompareTruth
-    oneof_schema_9_validator: Optional[IValidationTruthMultiCompareTruth] = None
+    oneof_schema_8_validator: Optional[IValidationTruthMultiCompareTruth] = None
+    # data type: IValidationTruthNamedEntityTruth
+    oneof_schema_9_validator: Optional[IValidationTruthNamedEntityTruth] = None
+    # data type: IValidationTruthPolygonTruth
+    oneof_schema_10_validator: Optional[IValidationTruthPolygonTruth] = None
+    # data type: IValidationTruthScrubTruth
+    oneof_schema_11_validator: Optional[IValidationTruthScrubTruth] = None
     # data type: IValidationTruthSkipTruth
-    oneof_schema_10_validator: Optional[IValidationTruthSkipTruth] = None
-    # data type: IValidationTruthAttachCategoryTruth
-    oneof_schema_11_validator: Optional[IValidationTruthAttachCategoryTruth] = None
-    # data type: IValidationTruthBoundingBoxTruth
-    oneof_schema_12_validator: Optional[IValidationTruthBoundingBoxTruth] = None
-    actual_instance: Optional[Union[IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth]] = None
-    one_of_schemas: Set[str] = { "IValidationTruthAttachCategoryTruth", "IValidationTruthBoundingBoxTruth", "IValidationTruthCompareTruth", "IValidationTruthEmptyValidationTruth", "IValidationTruthLineTruth", "IValidationTruthLocateBoxTruth", "IValidationTruthMultiCompareTruth", "IValidationTruthNamedEntityTruth", "IValidationTruthPolygonTruth", "IValidationTruthScrubTruth", "IValidationTruthSkipTruth", "IValidationTruthTranscriptionTruth" }
+    oneof_schema_12_validator: Optional[IValidationTruthSkipTruth] = None
+    # data type: IValidationTruthTranscriptionTruth
+    oneof_schema_13_validator: Optional[IValidationTruthTranscriptionTruth] = None
+    actual_instance: Optional[Union[IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthClassifyTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth]] = None
+    one_of_schemas: Set[str] = { "IValidationTruthAttachCategoryTruth", "IValidationTruthBoundingBoxTruth", "IValidationTruthClassifyTruth", "IValidationTruthCompareTruth", "IValidationTruthEmptyValidationTruth", "IValidationTruthLineTruth", "IValidationTruthLocateBoxTruth", "IValidationTruthMultiCompareTruth", "IValidationTruthNamedEntityTruth", "IValidationTruthPolygonTruth", "IValidationTruthScrubTruth", "IValidationTruthSkipTruth", "IValidationTruthTranscriptionTruth" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -88,56 +90,6 @@ class IValidationTruth(LazyValidatedModel):
         instance = IValidationTruth.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IValidationTruthTranscriptionTruth
-        if not isinstance(v, IValidationTruthTranscriptionTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthTranscriptionTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthScrubTruth
-        if not isinstance(v, IValidationTruthScrubTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthScrubTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthPolygonTruth
-        if not isinstance(v, IValidationTruthPolygonTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthPolygonTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthNamedEntityTruth
-        if not isinstance(v, IValidationTruthNamedEntityTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthNamedEntityTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthLocateBoxTruth
-        if not isinstance(v, IValidationTruthLocateBoxTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthLocateBoxTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthLineTruth
-        if not isinstance(v, IValidationTruthLineTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthLineTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthEmptyValidationTruth
-        if not isinstance(v, IValidationTruthEmptyValidationTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthEmptyValidationTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthCompareTruth
-        if not isinstance(v, IValidationTruthCompareTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthCompareTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthMultiCompareTruth
-        if not isinstance(v, IValidationTruthMultiCompareTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthMultiCompareTruth`")
-        else:
-            match += 1
-        # validate data type: IValidationTruthSkipTruth
-        if not isinstance(v, IValidationTruthSkipTruth):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthSkipTruth`")
-        else:
-            match += 1
         # validate data type: IValidationTruthAttachCategoryTruth
         if not isinstance(v, IValidationTruthAttachCategoryTruth):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthAttachCategoryTruth`")
@@ -148,12 +100,67 @@ class IValidationTruth(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthBoundingBoxTruth`")
         else:
             match += 1
+        # validate data type: IValidationTruthClassifyTruth
+        if not isinstance(v, IValidationTruthClassifyTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthClassifyTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthCompareTruth
+        if not isinstance(v, IValidationTruthCompareTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthCompareTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthEmptyValidationTruth
+        if not isinstance(v, IValidationTruthEmptyValidationTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthEmptyValidationTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthLineTruth
+        if not isinstance(v, IValidationTruthLineTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthLineTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthLocateBoxTruth
+        if not isinstance(v, IValidationTruthLocateBoxTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthLocateBoxTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthMultiCompareTruth
+        if not isinstance(v, IValidationTruthMultiCompareTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthMultiCompareTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthNamedEntityTruth
+        if not isinstance(v, IValidationTruthNamedEntityTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthNamedEntityTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthPolygonTruth
+        if not isinstance(v, IValidationTruthPolygonTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthPolygonTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthScrubTruth
+        if not isinstance(v, IValidationTruthScrubTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthScrubTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthSkipTruth
+        if not isinstance(v, IValidationTruthSkipTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthSkipTruth`")
+        else:
+            match += 1
+        # validate data type: IValidationTruthTranscriptionTruth
+        if not isinstance(v, IValidationTruthTranscriptionTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IValidationTruthTranscriptionTruth`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthClassifyTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthClassifyTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -168,66 +175,6 @@ class IValidationTruth(LazyValidatedModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IValidationTruthTranscriptionTruth
-        try:
-            instance.actual_instance = IValidationTruthTranscriptionTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthScrubTruth
-        try:
-            instance.actual_instance = IValidationTruthScrubTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthPolygonTruth
-        try:
-            instance.actual_instance = IValidationTruthPolygonTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthNamedEntityTruth
-        try:
-            instance.actual_instance = IValidationTruthNamedEntityTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthLocateBoxTruth
-        try:
-            instance.actual_instance = IValidationTruthLocateBoxTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthLineTruth
-        try:
-            instance.actual_instance = IValidationTruthLineTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthEmptyValidationTruth
-        try:
-            instance.actual_instance = IValidationTruthEmptyValidationTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthCompareTruth
-        try:
-            instance.actual_instance = IValidationTruthCompareTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthMultiCompareTruth
-        try:
-            instance.actual_instance = IValidationTruthMultiCompareTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into IValidationTruthSkipTruth
-        try:
-            instance.actual_instance = IValidationTruthSkipTruth.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into IValidationTruthAttachCategoryTruth
         try:
             instance.actual_instance = IValidationTruthAttachCategoryTruth.from_json(json_str)
@@ -240,13 +187,79 @@ class IValidationTruth(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IValidationTruthClassifyTruth
+        try:
+            instance.actual_instance = IValidationTruthClassifyTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthCompareTruth
+        try:
+            instance.actual_instance = IValidationTruthCompareTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthEmptyValidationTruth
+        try:
+            instance.actual_instance = IValidationTruthEmptyValidationTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthLineTruth
+        try:
+            instance.actual_instance = IValidationTruthLineTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthLocateBoxTruth
+        try:
+            instance.actual_instance = IValidationTruthLocateBoxTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthMultiCompareTruth
+        try:
+            instance.actual_instance = IValidationTruthMultiCompareTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthNamedEntityTruth
+        try:
+            instance.actual_instance = IValidationTruthNamedEntityTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthPolygonTruth
+        try:
+            instance.actual_instance = IValidationTruthPolygonTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthScrubTruth
+        try:
+            instance.actual_instance = IValidationTruthScrubTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthSkipTruth
+        try:
+            instance.actual_instance = IValidationTruthSkipTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IValidationTruthTranscriptionTruth
+        try:
+            instance.actual_instance = IValidationTruthTranscriptionTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthClassifyTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IValidationTruth with oneOf schemas: IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthClassifyTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -260,7 +273,7 @@ class IValidationTruth(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IValidationTruthAttachCategoryTruth, IValidationTruthBoundingBoxTruth, IValidationTruthClassifyTruth, IValidationTruthCompareTruth, IValidationTruthEmptyValidationTruth, IValidationTruthLineTruth, IValidationTruthLocateBoxTruth, IValidationTruthMultiCompareTruth, IValidationTruthNamedEntityTruth, IValidationTruthPolygonTruth, IValidationTruthScrubTruth, IValidationTruthSkipTruth, IValidationTruthTranscriptionTruth]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

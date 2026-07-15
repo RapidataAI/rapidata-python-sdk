@@ -33,8 +33,8 @@ class IPairMakerConfigFullPermutationPairMakerConfig(LazyValidatedModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['FullPermutationPairMakerConfig']):
-            raise ValueError("must be one of enum values ('FullPermutationPairMakerConfig')")
+        if value not in set(['FullPermutationPairMaker']):
+            raise ValueError("must be one of enum values ('FullPermutationPairMaker')")
         return value
 
     # model_config is inherited from LazyValidatedModel

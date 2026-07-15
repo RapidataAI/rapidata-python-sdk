@@ -19,9 +19,9 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_asset import IAsset
-from rapidata.api_client.models.i_pair_maker_config import IPairMakerConfig
-from rapidata.api_client.models.i_ranking_config import IRankingConfig
+from rapidata.api_client.models.i_pipeline_asset import IPipelineAsset
+from rapidata.api_client.models.i_pipeline_pair_maker_config import IPipelinePairMakerConfig
+from rapidata.api_client.models.i_pipeline_ranking_config import IPipelineRankingConfig
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -36,9 +36,9 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
     criteria: StrictStr
     referee: IRefereeConfig
     context: Optional[StrictStr] = None
-    context_asset: Optional[IAsset] = Field(default=None, alias="contextAsset")
-    ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
-    pair_maker_config: IPairMakerConfig = Field(alias="pairMakerConfig")
+    context_asset: Optional[IPipelineAsset] = Field(default=None, alias="contextAsset")
+    ranking_config: Optional[IPipelineRankingConfig] = Field(default=None, alias="rankingConfig")
+    pair_maker_config: IPipelinePairMakerConfig = Field(alias="pairMakerConfig")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "context", "contextAsset", "rankingConfig", "pairMakerConfig", "featureFlags"]
 
@@ -139,9 +139,9 @@ class IWorkflowConfigRankingWorkflowConfig(LazyValidatedModel):
             "criteria": obj.get("criteria"),
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "context": obj.get("context"),
-            "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
-            "pairMakerConfig": IPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
+            "contextAsset": IPipelineAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "rankingConfig": IPipelineRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
+            "pairMakerConfig": IPipelinePairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }
         try:

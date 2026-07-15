@@ -11,35 +11,32 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.audience_boost import AudienceBoost
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BoostingProfile(BaseModel):
+class BoostingProfile(LazyValidatedModel):
     """
     BoostingProfile
     """ # noqa: E501
-    global_boost_level: Optional[StrictInt] = Field(default=None, alias="globalBoostLevel")
-    language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
-    kayzen_audience_ids: Optional[List[StrictInt]] = Field(default=None, alias="kayzenAudienceIds")
-    prospect_blacklist: Optional[List[StrictInt]] = Field(default=None, alias="prospectBlacklist")
-    distilling_boosts: Optional[List[AudienceBoost]] = Field(default=None, alias="distillingBoosts")
-    labeling_boosts: Optional[List[AudienceBoost]] = Field(default=None, alias="labelingBoosts")
-    __properties: ClassVar[List[str]] = ["globalBoostLevel", "languageBoosts", "kayzenAudienceIds", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
+    global_boost_level: StrictInt = Field(alias="globalBoostLevel")
+    min_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="minAutoAdjustLevel")
+    max_auto_adjust_level: Optional[StrictInt] = Field(default=None, alias="maxAutoAdjustLevel")
+    prospect_blacklist: List[StrictInt] = Field(alias="prospectBlacklist")
+    distilling_boosts: List[AudienceBoost] = Field(alias="distillingBoosts")
+    labeling_boosts: List[AudienceBoost] = Field(alias="labelingBoosts")
+    __properties: ClassVar[List[str]] = ["globalBoostLevel", "minAutoAdjustLevel", "maxAutoAdjustLevel", "prospectBlacklist", "distillingBoosts", "labelingBoosts"]
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -88,6 +85,16 @@ class BoostingProfile(BaseModel):
                 if _item_labeling_boosts:
                     _items.append(_item_labeling_boosts.to_dict())
             _dict['labelingBoosts'] = _items
+        # set to None if min_auto_adjust_level (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_auto_adjust_level is None and "min_auto_adjust_level" in self.model_fields_set:
+            _dict['minAutoAdjustLevel'] = None
+
+        # set to None if max_auto_adjust_level (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_auto_adjust_level is None and "max_auto_adjust_level" in self.model_fields_set:
+            _dict['maxAutoAdjustLevel'] = None
+
         return _dict
 
     @classmethod
@@ -99,14 +106,18 @@ class BoostingProfile(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "globalBoostLevel": obj.get("globalBoostLevel"),
-            "languageBoosts": obj.get("languageBoosts"),
-            "kayzenAudienceIds": obj.get("kayzenAudienceIds"),
+            "minAutoAdjustLevel": obj.get("minAutoAdjustLevel"),
+            "maxAutoAdjustLevel": obj.get("maxAutoAdjustLevel"),
             "prospectBlacklist": obj.get("prospectBlacklist"),
             "distillingBoosts": [AudienceBoost.from_dict(_item) for _item in obj["distillingBoosts"]] if obj.get("distillingBoosts") is not None else None,
             "labelingBoosts": [AudienceBoost.from_dict(_item) for _item in obj["labelingBoosts"]] if obj.get("labelingBoosts") is not None else None
-        })
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

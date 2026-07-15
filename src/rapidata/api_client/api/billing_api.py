@@ -37,7 +37,7 @@ from rapidata.api_client.models.get_bulk_reconciliation_status_endpoint_output i
 from rapidata.api_client.models.get_cost_time_series_endpoint_output import GetCostTimeSeriesEndpointOutput
 from rapidata.api_client.models.get_reconciliation_status_endpoint_output import GetReconciliationStatusEndpointOutput
 from rapidata.api_client.models.get_volume_discounts_endpoint_output import GetVolumeDiscountsEndpointOutput
-from rapidata.api_client.models.paged_result_of_i_billing_group_model import PagedResultOfIBillingGroupModel
+from rapidata.api_client.models.paged_result_of_i_billing_group import PagedResultOfIBillingGroup
 from rapidata.api_client.models.query_billing_periods_endpoint_paged_result_of_output import QueryBillingPeriodsEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_costs_by_customer_endpoint_paged_result_of_output import QueryCostsByCustomerEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_costs_by_organization_endpoint_paged_result_of_output import QueryCostsByOrganizationEndpointPagedResultOfOutput
@@ -1424,7 +1424,7 @@ class BillingApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfIBillingGroupModel:
+    ) -> PagedResultOfIBillingGroup:
         """Returns billing costs aggregated per billing group, ranked by cost.
 
 
@@ -1482,7 +1482,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1521,7 +1521,7 @@ class BillingApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfIBillingGroupModel]:
+    ) -> ApiResponse[PagedResultOfIBillingGroup]:
         """Returns billing costs aggregated per billing group, ranked by cost.
 
 
@@ -1579,7 +1579,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1676,7 +1676,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -3319,7 +3319,7 @@ class BillingApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfIBillingGroupModel:
+    ) -> PagedResultOfIBillingGroup:
         """Gets the paged billing groups for the active billing period.
 
 
@@ -3365,7 +3365,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -3400,7 +3400,7 @@ class BillingApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfIBillingGroupModel]:
+    ) -> ApiResponse[PagedResultOfIBillingGroup]:
         """Gets the paged billing groups for the active billing period.
 
 
@@ -3446,7 +3446,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -3527,7 +3527,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -3909,7 +3909,7 @@ class BillingApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfIBillingGroupModel:
+    ) -> PagedResultOfIBillingGroup:
         """Gets the paged billing groups for a billing period.
 
 
@@ -3955,7 +3955,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -3990,7 +3990,7 @@ class BillingApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfIBillingGroupModel]:
+    ) -> ApiResponse[PagedResultOfIBillingGroup]:
         """Gets the paged billing groups for a billing period.
 
 
@@ -4036,7 +4036,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -4117,7 +4117,7 @@ class BillingApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfIBillingGroupModel",
+            '200': "PagedResultOfIBillingGroup",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,

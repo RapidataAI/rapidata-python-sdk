@@ -18,8 +18,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
-from rapidata.api_client.models.i_rapid_payload_model import IRapidPayloadModel
-from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,10 +30,10 @@ class QueryValidationRapidEligibilityEndpointOutput(LazyValidatedModel):
     QueryValidationRapidEligibilityEndpointOutput
     """ # noqa: E501
     rapid_id: StrictStr = Field(description="The id of the rapid.", alias="rapidId")
-    payload: IRapidPayloadModel = Field(description="The payload of the rapid.")
+    payload: IRapidPayload = Field(description="The payload of the rapid.")
     response_count: StrictInt = Field(description="The number of responses that the rapid has received.", alias="responseCount")
     confidence: Union[StrictFloat, StrictInt] = Field(description="The confidence of the rapid's aggregated response.")
-    truth: IValidationTruthModel = Field(description="The derived validation truth for the rapid.")
+    truth: IValidationTruth = Field(description="The derived validation truth for the rapid.")
     __properties: ClassVar[List[str]] = ["rapidId", "payload", "responseCount", "confidence", "truth"]
 
     # model_config is inherited from LazyValidatedModel
@@ -90,10 +90,10 @@ class QueryValidationRapidEligibilityEndpointOutput(LazyValidatedModel):
 
         _data = {
             "rapidId": obj.get("rapidId"),
-            "payload": IRapidPayloadModel.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "responseCount": obj.get("responseCount"),
             "confidence": obj.get("confidence"),
-            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None
+            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

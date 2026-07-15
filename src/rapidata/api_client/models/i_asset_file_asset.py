@@ -31,7 +31,8 @@ class IAssetFileAsset(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     file_name: StrictStr = Field(alias="fileName")
     metadata: Dict[str, IMetadata]
-    __properties: ClassVar[List[str]] = ["_t", "fileName", "metadata"]
+    identifier: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "fileName", "metadata", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -101,7 +102,8 @@ class IAssetFileAsset(LazyValidatedModel):
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
-            else None
+            else None,
+            "identifier": obj.get("identifier")
         }
         try:
             _obj = cls.model_validate(_data)

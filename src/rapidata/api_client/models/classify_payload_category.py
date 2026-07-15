@@ -11,14 +11,13 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +28,7 @@ class ClassifyPayloadCategory(LazyValidatedModel):
     ClassifyPayloadCategory
     """ # noqa: E501
     label: StrictStr
-    value: StrictStr
+    value: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["label", "value"]
 
     # model_config is inherited from LazyValidatedModel
@@ -67,6 +66,11 @@ class ClassifyPayloadCategory(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if value (nullable) is None
+        # and model_fields_set contains the field
+        if self.value is None and "value" in self.model_fields_set:
+            _dict['value'] = None
+
         return _dict
 
     @classmethod

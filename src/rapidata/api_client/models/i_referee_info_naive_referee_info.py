@@ -11,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -29,9 +28,9 @@ class IRefereeInfoNaiveRefereeInfo(LazyValidatedModel):
     IRefereeInfoNaiveRefereeInfo
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    guess_amount_threshold: Optional[StrictInt] = Field(default=None, alias="guessAmountThreshold")
+    response_amount_threshold: Optional[StrictInt] = Field(default=None, alias="responseAmountThreshold")
     serve_threshold: Optional[StrictInt] = Field(default=None, alias="serveThreshold")
-    __properties: ClassVar[List[str]] = ["_t", "guessAmountThreshold", "serveThreshold"]
+    __properties: ClassVar[List[str]] = ["_t", "responseAmountThreshold", "serveThreshold"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -75,6 +74,11 @@ class IRefereeInfoNaiveRefereeInfo(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if serve_threshold (nullable) is None
+        # and model_fields_set contains the field
+        if self.serve_threshold is None and "serve_threshold" in self.model_fields_set:
+            _dict['serveThreshold'] = None
+
         return _dict
 
     @classmethod
@@ -88,7 +92,7 @@ class IRefereeInfoNaiveRefereeInfo(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "guessAmountThreshold": obj.get("guessAmountThreshold"),
+            "responseAmountThreshold": obj.get("responseAmountThreshold"),
             "serveThreshold": obj.get("serveThreshold")
         }
         try:

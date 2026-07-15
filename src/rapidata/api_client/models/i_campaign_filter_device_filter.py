@@ -11,26 +11,26 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.device_type import DeviceType
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterDeviceFilter(BaseModel):
+class ICampaignFilterDeviceFilter(LazyValidatedModel):
     """
     ICampaignFilterDeviceFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     device_types: List[DeviceType] = Field(alias="deviceTypes")
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "deviceTypes", "executionOrder"]
+    __properties: ClassVar[List[str]] = ["_t", "deviceTypes"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -39,11 +39,7 @@ class ICampaignFilterDeviceFilter(BaseModel):
             raise ValueError("must be one of enum values ('DeviceFilter')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -89,11 +85,14 @@ class ICampaignFilterDeviceFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
-            "deviceTypes": obj.get("deviceTypes"),
-            "executionOrder": obj.get("executionOrder")
-        })
+            "deviceTypes": obj.get("deviceTypes")
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

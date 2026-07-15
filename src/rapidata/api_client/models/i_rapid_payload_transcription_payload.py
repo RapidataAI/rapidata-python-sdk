@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.transcription_payload_transcription_word import TranscriptionPayloadTranscriptionWord
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class IRapidPayloadTranscriptionPayload(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     title: StrictStr
-    transcription: List[TranscriptionWord]
+    transcription: List[TranscriptionPayloadTranscriptionWord]
     __properties: ClassVar[List[str]] = ["_t", "title", "transcription"]
 
     @field_validator('t')
@@ -96,7 +96,7 @@ class IRapidPayloadTranscriptionPayload(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "title": obj.get("title"),
-            "transcription": [TranscriptionWord.from_dict(_item) for _item in obj["transcription"]] if obj.get("transcription") is not None else None
+            "transcription": [TranscriptionPayloadTranscriptionWord.from_dict(_item) for _item in obj["transcription"]] if obj.get("transcription") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
-from rapidata.api_client.models.i_validation_truth_model_compare_truth_model import (
-    IValidationTruthModelCompareTruthModel,
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.i_validation_truth_compare_truth import (
+    IValidationTruthCompareTruth,
 )
-from rapidata.api_client.models.i_validation_truth_model_multi_compare_truth_model import (
-    IValidationTruthModelMultiCompareTruthModel,
+from rapidata.api_client.models.i_validation_truth_multi_compare_truth import (
+    IValidationTruthMultiCompareTruth,
 )
 
 
 def translate_compare_truth(
-    truth: IValidationTruthModel | None,
+    truth: IValidationTruth | None,
     asset_to_uploaded: dict[str, str],
-) -> IValidationTruthModel | None:
+) -> IValidationTruth | None:
     """Rewrite compare-truth asset references from original paths/URLs to uploaded names.
 
     Compare truths are built before upload, so ``winnerId`` /
@@ -27,20 +27,20 @@ def translate_compare_truth(
 
     instance = truth.actual_instance
 
-    if isinstance(instance, IValidationTruthModelCompareTruthModel):
+    if isinstance(instance, IValidationTruthCompareTruth):
         winner_id = instance.winner_id
         if winner_id not in asset_to_uploaded:
             raise ValueError(
                 f"Compare truth winner '{winner_id}' is not one of the rapid's "
                 f"assets: {list(asset_to_uploaded)}"
             )
-        return IValidationTruthModel(
-            actual_instance=IValidationTruthModelCompareTruthModel(
+        return IValidationTruth(
+            actual_instance=IValidationTruthCompareTruth(
                 _t="CompareTruth", winnerId=asset_to_uploaded[winner_id]
             )
         )
 
-    if isinstance(instance, IValidationTruthModelMultiCompareTruthModel):
+    if isinstance(instance, IValidationTruthMultiCompareTruth):
         translated_combinations: list[list[str]] = []
         for combination in instance.correct_combinations:
             translated_combination: list[str] = []
@@ -52,8 +52,8 @@ def translate_compare_truth(
                     )
                 translated_combination.append(asset_to_uploaded[asset_id])
             translated_combinations.append(translated_combination)
-        return IValidationTruthModel(
-            actual_instance=IValidationTruthModelMultiCompareTruthModel(
+        return IValidationTruth(
+            actual_instance=IValidationTruthMultiCompareTruth(
                 _t="MultiCompareTruth", correctCombinations=translated_combinations
             )
         )

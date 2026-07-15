@@ -11,28 +11,28 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.simplified_audience_user_state import SimplifiedAudienceUserState
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterAudienceStateFilter(BaseModel):
+class ICampaignFilterAudienceStateFilter(LazyValidatedModel):
     """
     ICampaignFilterAudienceStateFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     audience_id: StrictStr = Field(alias="audienceId")
-    allowed_states: Optional[List[SimplifiedAudienceUserState]] = Field(default=None, alias="allowedStates")
-    include_unknown_state: Optional[StrictBool] = Field(default=None, alias="includeUnknownState")
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "audienceId", "allowedStates", "includeUnknownState", "executionOrder"]
+    allowed_states: List[SimplifiedAudienceUserState] = Field(alias="allowedStates")
+    include_unknown_state: StrictBool = Field(alias="includeUnknownState")
+    __properties: ClassVar[List[str]] = ["_t", "audienceId", "allowedStates", "includeUnknownState"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -41,11 +41,7 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
             raise ValueError("must be one of enum values ('AudienceStateFilter')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -91,13 +87,16 @@ class ICampaignFilterAudienceStateFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
             "audienceId": obj.get("audienceId"),
             "allowedStates": obj.get("allowedStates"),
-            "includeUnknownState": obj.get("includeUnknownState"),
-            "executionOrder": obj.get("executionOrder")
-        })
+            "includeUnknownState": obj.get("includeUnknownState")
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

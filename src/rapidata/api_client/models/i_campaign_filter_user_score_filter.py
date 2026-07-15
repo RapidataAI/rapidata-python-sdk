@@ -11,27 +11,27 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Union
+from pydantic import ValidationError
+from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ICampaignFilterUserScoreFilter(BaseModel):
+class ICampaignFilterUserScoreFilter(LazyValidatedModel):
     """
     ICampaignFilterUserScoreFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
+    dimension: StrictStr
     lowerbound: Union[StrictFloat, StrictInt]
     upperbound: Union[StrictFloat, StrictInt]
-    dimension: StrictStr
-    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
-    __properties: ClassVar[List[str]] = ["_t", "lowerbound", "upperbound", "dimension", "executionOrder"]
+    __properties: ClassVar[List[str]] = ["_t", "dimension", "lowerbound", "upperbound"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -40,11 +40,7 @@ class ICampaignFilterUserScoreFilter(BaseModel):
             raise ValueError("must be one of enum values ('UserScoreFilter')")
         return value
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # model_config is inherited from LazyValidatedModel
 
 
     def to_str(self) -> str:
@@ -90,13 +86,16 @@ class ICampaignFilterUserScoreFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
+        _data = {
             "_t": obj.get("_t"),
-            "lowerbound": obj.get("lowerbound"),
-            "upperbound": obj.get("upperbound"),
             "dimension": obj.get("dimension"),
-            "executionOrder": obj.get("executionOrder")
-        })
+            "lowerbound": obj.get("lowerbound"),
+            "upperbound": obj.get("upperbound")
+        }
+        try:
+            _obj = cls.model_validate(_data)
+        except ValidationError as _val_error:
+            _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
 

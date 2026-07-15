@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from uuid import UUID
+from rapidata.api_client.models.org_role import OrgRole
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,10 +28,11 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
     """
     QueryOrganizationsEndpointOutput
     """ # noqa: E501
-    owner: UUID = Field(description="The customer ID of the organization owner.")
-    name: StrictStr = Field(description="The name of the organization.")
-    domain: StrictStr = Field(description="The domain associated with this organization.")
-    __properties: ClassVar[List[str]] = ["owner", "name", "domain"]
+    id: StrictStr = Field(description="The id of the organization.")
+    name: StrictStr = Field(description="The human-readable name of the organization.")
+    slug: StrictStr = Field(description="The URL-safe unique identifier of the organization.")
+    role: OrgRole = Field(description="The caller's role in the organization, if they are a member.")
+    __properties: ClassVar[List[str]] = ["id", "name", "slug", "role"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -80,9 +81,10 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "owner": obj.get("owner"),
+            "id": obj.get("id"),
             "name": obj.get("name"),
-            "domain": obj.get("domain")
+            "slug": obj.get("slug"),
+            "role": obj.get("role")
         }
         try:
             _obj = cls.model_validate(_data)

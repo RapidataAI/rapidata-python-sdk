@@ -28,9 +28,9 @@ class IRapidResultScrubResult(LazyValidatedModel):
     IRapidResultScrubResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    timestamps: List[StrictInt]
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "timestamps", "rapidId"]
+    timestamps: List[StrictInt]
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "timestamps"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,8 +87,8 @@ class IRapidResultScrubResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "timestamps": obj.get("timestamps"),
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "timestamps": obj.get("timestamps")
         }
         try:
             _obj = cls.model_validate(_data)

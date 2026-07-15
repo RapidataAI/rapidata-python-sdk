@@ -6,7 +6,7 @@ import secrets
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 if TYPE_CHECKING:
-    from rapidata.api_client.models.create_order_model import CreateOrderModel
+    from rapidata.api_client.models.create_order import CreateOrder
     from rapidata.api_client.models.sticky_config import StickyConfig
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
@@ -35,6 +35,7 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
+
 
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
@@ -67,15 +68,15 @@ class RapidataOrderBuilder:
             self._openapi_service
         )
 
-    def _to_model(self) -> CreateOrderModel:
+    def _to_model(self) -> CreateOrder:
         """
-        Convert the builder configuration to a CreateOrderModel.
+        Convert the builder configuration to a CreateOrder.
 
         Raises:
             ValueError: If no workflow is provided.
 
         Returns:
-            CreateOrderModel: The model representing the order configuration.
+            CreateOrder: The model representing the order configuration.
         """
         if self._workflow is None:
             raise ValueError("You must provide a workflow to create an order.")
@@ -89,7 +90,7 @@ class RapidataOrderBuilder:
             if (self._validation_set and not self._selections)
             else None
         )
-        from rapidata.api_client.models.create_order_model import CreateOrderModel
+        from rapidata.api_client.models.create_order import CreateOrder
 
         rapid_feature_flags = (
             [
@@ -110,7 +111,7 @@ class RapidataOrderBuilder:
             else None
         )
 
-        return CreateOrderModel(
+        return CreateOrder(
             orderName=self._name,
             workflow=self._workflow._to_model(),
             userFilters=[user_filter._to_model() for user_filter in self._user_filters],
@@ -149,7 +150,7 @@ class RapidataOrderBuilder:
         logger.debug("Creating order with model: %s", order_model)
 
         result = self._openapi_service.order.order_api.order_post(
-            create_order_model=order_model
+            create_order=order_model
         )
 
         order = RapidataOrder(

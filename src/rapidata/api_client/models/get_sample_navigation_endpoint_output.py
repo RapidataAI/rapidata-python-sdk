@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_sample_navigation_endpoint_sample_model import GetSampleNavigationEndpointSampleModel
+from rapidata.api_client.models.get_sample_navigation_endpoint_sample import GetSampleNavigationEndpointSample
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,10 +28,10 @@ class GetSampleNavigationEndpointOutput(LazyValidatedModel):
     """
     GetSampleNavigationEndpointOutput
     """ # noqa: E501
-    current: GetSampleNavigationEndpointSampleModel = Field(description="The current sample that navigation is anchored on.")
-    previous: List[GetSampleNavigationEndpointSampleModel]
-    next: List[GetSampleNavigationEndpointSampleModel]
-    related: List[GetSampleNavigationEndpointSampleModel]
+    current: GetSampleNavigationEndpointSample = Field(description="The current sample that navigation is anchored on.")
+    previous: List[GetSampleNavigationEndpointSample]
+    next: List[GetSampleNavigationEndpointSample]
+    related: List[GetSampleNavigationEndpointSample]
     __properties: ClassVar[List[str]] = ["current", "previous", "next", "related"]
 
     # model_config is inherited from LazyValidatedModel
@@ -105,10 +105,10 @@ class GetSampleNavigationEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "current": GetSampleNavigationEndpointSampleModel.from_dict(obj["current"]) if obj.get("current") is not None else None,
-            "previous": [GetSampleNavigationEndpointSampleModel.from_dict(_item) for _item in obj["previous"]] if obj.get("previous") is not None else None,
-            "next": [GetSampleNavigationEndpointSampleModel.from_dict(_item) for _item in obj["next"]] if obj.get("next") is not None else None,
-            "related": [GetSampleNavigationEndpointSampleModel.from_dict(_item) for _item in obj["related"]] if obj.get("related") is not None else None
+            "current": GetSampleNavigationEndpointSample.from_dict(obj["current"]) if obj.get("current") is not None else None,
+            "previous": [GetSampleNavigationEndpointSample.from_dict(_item) for _item in obj["previous"]] if obj.get("previous") is not None else None,
+            "next": [GetSampleNavigationEndpointSample.from_dict(_item) for _item in obj["next"]] if obj.get("next") is not None else None,
+            "related": [GetSampleNavigationEndpointSample.from_dict(_item) for _item in obj["related"]] if obj.get("related") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -4,7 +4,7 @@ from rapidata.rapidata_client.referee._base_referee import Referee
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from rapidata.api_client.models.i_referee_model import IRefereeModel
+    from rapidata.api_client.models.i_referee import IReferee
 
 
 class NaiveReferee(Referee):
@@ -34,14 +34,14 @@ class NaiveReferee(Referee):
             "responsesRequired": self.responses,
         }
 
-    def _to_model(self) -> IRefereeModel:
-        from rapidata.api_client.models.i_referee_model_naive_referee_model import (
-            IRefereeModelNaiveRefereeModel,
+    def _to_model(self) -> IReferee:
+        from rapidata.api_client.models.i_referee_naive_referee import (
+            IRefereeNaiveReferee,
         )
-        from rapidata.api_client.models.i_referee_model import IRefereeModel
+        from rapidata.api_client.models.i_referee import IReferee
 
-        return IRefereeModel(
-            actual_instance=IRefereeModelNaiveRefereeModel(
+        return IReferee(
+            actual_instance=IRefereeNaiveReferee(
                 _t="NaiveReferee",
                 totalVotes=self.responses,
             )

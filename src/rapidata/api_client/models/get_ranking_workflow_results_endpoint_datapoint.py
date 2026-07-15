@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,7 +29,7 @@ class GetRankingWorkflowResultsEndpointDatapoint(LazyValidatedModel):
     GetRankingWorkflowResultsEndpointDatapoint
     """ # noqa: E501
     workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: IAssetModel
+    asset: IAsset
     elo: StrictInt
     __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
 
@@ -84,7 +84,7 @@ class GetRankingWorkflowResultsEndpointDatapoint(LazyValidatedModel):
 
         _data = {
             "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "elo": obj.get("elo")
         }
         try:

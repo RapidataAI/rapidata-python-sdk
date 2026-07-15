@@ -1,9 +1,9 @@
 from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
-from rapidata.api_client.models.i_order_workflow_input_model import (
-    IOrderWorkflowInputModel,
+from rapidata.api_client.models.i_order_workflow_input import (
+    IOrderWorkflowInput,
 )
-from rapidata.api_client.models.i_order_workflow_input_model_grouped_ranking_workflow_input_model import (
-    IOrderWorkflowInputModelGroupedRankingWorkflowInputModel,
+from rapidata.api_client.models.i_order_workflow_input_grouped_ranking_workflow_input import (
+    IOrderWorkflowInputGroupedRankingWorkflowInput,
 )
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_compare_payload import (
@@ -27,8 +27,8 @@ class MultiRankingWorkflow(Workflow):
         random_comparisons_ratio: float,
         max_group_size: int,
     ):
-        from rapidata.api_client.models.i_pair_maker_config_model import (
-            IPairMakerConfigModel,
+        from rapidata.api_client.models.i_pair_maker_config import (
+            IPairMakerConfig,
         )
         from rapidata.api_client.models.i_pair_maker_config_model_online_pair_maker_config_model import (
             IPairMakerConfigModelOnlinePairMakerConfigModel,
@@ -36,8 +36,8 @@ class MultiRankingWorkflow(Workflow):
         from rapidata.api_client.models.i_pair_maker_config_model_full_permutation_pair_maker_config_model import (
             IPairMakerConfigModelFullPermutationPairMakerConfigModel,
         )
-        from rapidata.api_client.models.i_ranking_config_model import (
-            IRankingConfigModel,
+        from rapidata.api_client.models.i_ranking_config import (
+            IRankingConfig,
         )
         from rapidata.api_client.models.i_ranking_config_model_bradley_terry_ranking_config_model import (
             IRankingConfigModelBradleyTerryRankingConfigModel,
@@ -51,13 +51,13 @@ class MultiRankingWorkflow(Workflow):
         self.max_group_size = max_group_size
 
         if max_group_size <= FULL_PERMUTATION_GROUP_SIZE_THRESHOLD:
-            self.pair_maker_config = IPairMakerConfigModel(
+            self.pair_maker_config = IPairMakerConfig(
                 actual_instance=IPairMakerConfigModelFullPermutationPairMakerConfigModel(
                     _t="FullPermutationPairMaker",
                 ),
             )
         else:
-            self.pair_maker_config = IPairMakerConfigModel(
+            self.pair_maker_config = IPairMakerConfig(
                 actual_instance=IPairMakerConfigModelOnlinePairMakerConfigModel(
                     _t="OnlinePairMaker",
                     totalComparisonBudget=comparison_budget_per_ranking,
@@ -65,16 +65,16 @@ class MultiRankingWorkflow(Workflow):
                 ),
             )
 
-        self.ranking_config = IRankingConfigModel(
+        self.ranking_config = IRankingConfig(
             actual_instance=IRankingConfigModelBradleyTerryRankingConfigModel(
                 _t="BradleyTerryRankingConfig",
                 startingScore=BRADLEY_TERRY_DEFAULT_STARTING_SCORE,
             ),
         )
 
-    def _to_model(self) -> IOrderWorkflowInputModel:
-        return IOrderWorkflowInputModel(
-            actual_instance=IOrderWorkflowInputModelGroupedRankingWorkflowInputModel(
+    def _to_model(self) -> IOrderWorkflowInput:
+        return IOrderWorkflowInput(
+            actual_instance=IOrderWorkflowInputGroupedRankingWorkflowInput(
                 _t="GroupedRankingWorkflow",
                 criteria=self.instruction,
                 pairMakerConfig=self.pair_maker_config,

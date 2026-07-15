@@ -18,7 +18,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.box_shape import BoxShape
+from rapidata.api_client.models.bounding_box_result_box import BoundingBoxResultBox
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,9 +29,9 @@ class IRapidResultBoundingBoxResult(LazyValidatedModel):
     IRapidResultBoundingBoxResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    bounding_boxes: List[BoxShape] = Field(alias="boundingBoxes")
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "boundingBoxes", "rapidId"]
+    bounding_boxes: List[BoundingBoxResultBox] = Field(alias="boundingBoxes")
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "boundingBoxes"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,8 +95,8 @@ class IRapidResultBoundingBoxResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "boundingBoxes": [BoundingBoxResultBox.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

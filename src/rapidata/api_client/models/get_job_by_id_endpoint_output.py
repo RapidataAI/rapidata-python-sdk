@@ -21,7 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, Strict
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from rapidata.api_client.models.audience_job_state import AudienceJobState
-from rapidata.api_client.models.review_reason_model import ReviewReasonModel
+from rapidata.api_client.models.review_reason import ReviewReason
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -44,7 +44,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     result_file_name: Optional[StrictStr] = Field(default=None, description="The file name of the result.", alias="resultFileName")
     failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job failed.", alias="failedAt")
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message.", alias="failureMessage")
-    review_reason: Optional[ReviewReasonModel] = Field(default=None, description="Why the job was routed to manual review, when it is (or was) in  ManualApproval. Null when no customer-facing reason  applies.", alias="reviewReason")
+    review_reason: Optional[ReviewReason] = Field(default=None, description="Why the job was routed to manual review, when it is (or was) in  ManualApproval. Null when no customer-facing reason  applies.", alias="reviewReason")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     owner_id: UUID = Field(description="The owner id.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")

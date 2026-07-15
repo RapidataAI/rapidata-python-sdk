@@ -19,7 +19,7 @@ from typing_extensions import Self
 
 class TimeGrouping(str, Enum):
     """
-    TimeGrouping
+    The time interval used to aggregate a time series.
     """
 
     """

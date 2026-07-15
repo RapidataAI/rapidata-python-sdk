@@ -19,7 +19,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.example_visibility import ExampleVisibility
-from rapidata.api_client.models.i_asset_model import IAssetModel
+from rapidata.api_client.models.i_asset import IAsset
 from rapidata.api_client.models.i_example_payload import IExamplePayload
 from rapidata.api_client.models.i_example_truth import IExampleTruth
 from pydantic import ValidationError
@@ -33,13 +33,13 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The unique identifier of the example.")
     rapid_id: Optional[StrictStr] = Field(default=None, description="The ID of the rapid associated with this example.", alias="rapidId")
-    asset: IAssetModel = Field(description="The asset associated with this example.")
+    asset: IAsset = Field(description="The asset associated with this example.")
     payload: IExamplePayload = Field(description="The payload of the example.")
     correct_count: StrictInt = Field(description="The number of correct responses.", alias="correctCount")
     incorrect_count: StrictInt = Field(description="The number of incorrect responses.", alias="incorrectCount")
     truth: Optional[IExampleTruth] = Field(default=None, description="The truth value of the example.")
     context: Optional[StrictStr] = Field(default=None, description="The context text for the example.")
-    context_asset: Optional[IAssetModel] = Field(default=None, description="The context asset for the example.", alias="contextAsset")
+    context_asset: Optional[IAsset] = Field(default=None, description="The context asset for the example.", alias="contextAsset")
     explanation: Optional[StrictStr] = Field(default=None, description="The explanation for the example.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of a random correct answer.", alias="randomCorrectProbability")
     is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example is common sense.", alias="isCommonSense")
@@ -128,13 +128,13 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "rapidId": obj.get("rapidId"),
-            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "payload": IExamplePayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "correctCount": obj.get("correctCount"),
             "incorrectCount": obj.get("incorrectCount"),
             "truth": IExampleTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "context": obj.get("context"),
-            "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "explanation": obj.get("explanation"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "isCommonSense": obj.get("isCommonSense"),

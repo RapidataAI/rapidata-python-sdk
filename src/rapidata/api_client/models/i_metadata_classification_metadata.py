@@ -29,22 +29,13 @@ class IMetadataClassificationMetadata(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     classification: StrictStr
-    visibilities: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["_t", "classification", "visibilities"]
+    __properties: ClassVar[List[str]] = ["_t", "classification"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['ClassificationMetadata']):
             raise ValueError("must be one of enum values ('ClassificationMetadata')")
-        return value
-
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
-                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     # model_config is inherited from LazyValidatedModel
@@ -95,8 +86,7 @@ class IMetadataClassificationMetadata(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "classification": obj.get("classification"),
-            "visibilities": obj.get("visibilities")
+            "classification": obj.get("classification")
         }
         try:
             _obj = cls.model_validate(_data)

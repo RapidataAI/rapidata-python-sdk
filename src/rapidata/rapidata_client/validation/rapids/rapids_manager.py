@@ -47,14 +47,14 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_classify_payload import (
             IRapidPayloadClassifyPayload,
         )
-        from rapidata.api_client.models.classify_category import (
-            ClassifyCategory,
+        from rapidata.api_client.models.classify_payload_category import (
+            ClassifyPayloadCategory,
         )
-        from rapidata.api_client.models.i_validation_truth_model import (
-            IValidationTruthModel,
+        from rapidata.api_client.models.i_validation_truth import (
+            IValidationTruth,
         )
-        from rapidata.api_client.models.i_validation_truth_model_attach_category_truth_model import (
-            IValidationTruthModelAttachCategoryTruthModel,
+        from rapidata.api_client.models.i_validation_truth_attach_category_truth import (
+            IValidationTruthAttachCategoryTruth,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
@@ -68,14 +68,14 @@ class RapidsManager:
             actual_instance=IRapidPayloadClassifyPayload(
                 _t="ClassifyPayload",
                 categories=[
-                    ClassifyCategory(label=option, value=option)
+                    ClassifyPayloadCategory(label=option, value=option)
                     for option in answer_options
                 ],
                 title=instruction,
             )
         )
-        model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelAttachCategoryTruthModel(
+        model_truth = IValidationTruth(
+            actual_instance=IValidationTruthAttachCategoryTruth(
                 correctCategories=truths, _t="AttachCategoryTruth"
             )
         )
@@ -116,11 +116,11 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_compare_payload import (
             IRapidPayloadComparePayload,
         )
-        from rapidata.api_client.models.i_validation_truth_model import (
-            IValidationTruthModel,
+        from rapidata.api_client.models.i_validation_truth import (
+            IValidationTruth,
         )
-        from rapidata.api_client.models.i_validation_truth_model_compare_truth_model import (
-            IValidationTruthModelCompareTruthModel,
+        from rapidata.api_client.models.i_validation_truth_compare_truth import (
+            IValidationTruthCompareTruth,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
@@ -138,8 +138,8 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelCompareTruthModel(
+        model_truth = IValidationTruth(
+            actual_instance=IValidationTruthCompareTruth(
                 _t="CompareTruth", winnerId=truth
             )
         )
@@ -180,27 +180,29 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_transcription_payload import (
             IRapidPayloadTranscriptionPayload,
         )
-        from rapidata.api_client.models.transcription_word import TranscriptionWord
-        from rapidata.api_client.models.transcription_truth_model_transcription_word import (
-            TranscriptionTruthModelTranscriptionWord,
+        from rapidata.api_client.models.transcription_payload_transcription_word import (
+            TranscriptionPayloadTranscriptionWord,
         )
-        from rapidata.api_client.models.i_validation_truth_model import (
-            IValidationTruthModel,
+        from rapidata.api_client.models.transcription_truth_transcription_word import (
+            TranscriptionTruthTranscriptionWord,
         )
-        from rapidata.api_client.models.i_validation_truth_model_transcription_truth_model import (
-            IValidationTruthModelTranscriptionTruthModel,
+        from rapidata.api_client.models.i_validation_truth import (
+            IValidationTruth,
+        )
+        from rapidata.api_client.models.i_validation_truth_transcription_truth import (
+            IValidationTruthTranscriptionTruth,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
         transcription_words = [
-            TranscriptionWord(word=word, wordIndex=i)
+            TranscriptionPayloadTranscriptionWord(word=word, wordIndex=i)
             for i, word in enumerate(sentence.split(" "))
         ]
 
-        correct_transcription_words: list[TranscriptionTruthModelTranscriptionWord] = []
+        correct_transcription_words: list[TranscriptionTruthTranscriptionWord] = []
         for index in truths:
             correct_transcription_words.append(
-                TranscriptionTruthModelTranscriptionWord(
+                TranscriptionTruthTranscriptionWord(
                     word=transcription_words[index].word, wordIndex=index
                 )
             )
@@ -213,8 +215,8 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelTranscriptionTruthModel(
+        model_truth = IValidationTruth(
+            actual_instance=IValidationTruthTranscriptionTruth(
                 _t="TranscriptionTruth",
                 correctWords=correct_transcription_words,
                 requiredPrecision=required_precision,
@@ -255,11 +257,11 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_locate_payload import (
             IRapidPayloadLocatePayload,
         )
-        from rapidata.api_client.models.i_validation_truth_model import (
-            IValidationTruthModel,
+        from rapidata.api_client.models.i_validation_truth import (
+            IValidationTruth,
         )
-        from rapidata.api_client.models.i_validation_truth_model_locate_box_truth_model import (
-            IValidationTruthModelLocateBoxTruthModel,
+        from rapidata.api_client.models.i_validation_truth_locate_box_truth import (
+            IValidationTruthLocateBoxTruth,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
@@ -269,8 +271,8 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelLocateBoxTruthModel(
+        model_truth = IValidationTruth(
+            actual_instance=IValidationTruthLocateBoxTruth(
                 _t="LocateBoxTruth",
                 boundingBoxes=[truth.to_model() for truth in truths],
             )
@@ -315,11 +317,11 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_line_payload import (
             IRapidPayloadLinePayload,
         )
-        from rapidata.api_client.models.i_validation_truth_model import (
-            IValidationTruthModel,
+        from rapidata.api_client.models.i_validation_truth import (
+            IValidationTruth,
         )
-        from rapidata.api_client.models.i_validation_truth_model_locate_box_truth_model import (
-            IValidationTruthModelLocateBoxTruthModel,
+        from rapidata.api_client.models.i_validation_truth_locate_box_truth import (
+            IValidationTruthLocateBoxTruth,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
@@ -332,8 +334,8 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelLocateBoxTruthModel(
+        model_truth = IValidationTruth(
+            actual_instance=IValidationTruthLocateBoxTruth(
                 _t="LocateBoxTruth",
                 boundingBoxes=[truth.to_model() for truth in truths],
             )
@@ -377,14 +379,14 @@ class RapidsManager:
         from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
             IRapidPayloadScrubPayload,
         )
-        from rapidata.api_client.models.scrub_truth_model_scrub_range import (
-            ScrubTruthModelScrubRange,
+        from rapidata.api_client.models.scrub_truth_scrub_range import (
+            ScrubTruthScrubRange,
         )
-        from rapidata.api_client.models.i_validation_truth_model import (
-            IValidationTruthModel,
+        from rapidata.api_client.models.i_validation_truth import (
+            IValidationTruth,
         )
-        from rapidata.api_client.models.i_validation_truth_model_scrub_truth_model import (
-            IValidationTruthModelScrubTruthModel,
+        from rapidata.api_client.models.i_validation_truth_scrub_truth import (
+            IValidationTruthScrubTruth,
         )
         from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
@@ -404,11 +406,11 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthModel(
-            actual_instance=IValidationTruthModelScrubTruthModel(
+        model_truth = IValidationTruth(
+            actual_instance=IValidationTruthScrubTruth(
                 _t="ScrubTruth",
                 validRanges=[
-                    ScrubTruthModelScrubRange(start=truth[0], end=truth[1])
+                    ScrubTruthScrubRange(start=truth[0], end=truth[1])
                     for truth in truths
                 ],
             )

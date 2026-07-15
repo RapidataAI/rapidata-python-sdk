@@ -1057,7 +1057,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/RapidStateModel"
+                "$ref": "#/components/schemas/RapidState"
               }
             }
           },
@@ -1737,7 +1737,7 @@
           "result": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidResultModel"
+                "$ref": "#/components/schemas/IRapidResult"
               }
             ],
             "description": "The result submitted by the user."
@@ -1758,7 +1758,7 @@
           "validationTruth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruthModel"
+                "$ref": "#/components/schemas/IValidationTruth"
               }
             ],
             "description": "The validation truth applied to the response, if any."
@@ -1779,14 +1779,14 @@
           "nextRapid": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidModel"
+                "$ref": "#/components/schemas/IRapid"
               }
             ],
             "description": "The next rapid to solve when the session streams its rapids and continues.\n Null when there is nothing further to solve."
           }
         }
       },
-      "AttachCategoryRapidModel_Category": {
+      "AttachCategoryRapid_Category": {
         "required": [
           "value",
           "label"
@@ -1801,7 +1801,7 @@
           }
         }
       },
-      "BoundingBoxResultModel_Box": {
+      "BoundingBoxResult_Box": {
         "type": "object",
         "properties": {
           "xMin": {
@@ -1826,7 +1826,7 @@
           }
         }
       },
-      "ClassifyPayloadModel": {
+      "ClassifyPayload": {
         "required": [
           "categories",
           "title"
@@ -1836,7 +1836,7 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClassifyPayloadModel_Category"
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
             }
           },
           "title": {
@@ -1844,7 +1844,7 @@
           }
         }
       },
-      "ClassifyPayloadModel_Category": {
+      "ClassifyPayload_Category": {
         "required": [
           "label"
         ],
@@ -1873,7 +1873,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ClassifyPayloadModel"
+                "$ref": "#/components/schemas/ClassifyPayload"
               }
             ],
             "description": "The payload for the classification."
@@ -2092,13 +2092,13 @@
             "type": "string"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "state": {
-            "$ref": "#/components/schemas/RapidStateModel"
+            "$ref": "#/components/schemas/RapidState"
           },
           "payload": {
-            "$ref": "#/components/schemas/IRapidPayloadModel"
+            "$ref": "#/components/schemas/IRapidPayload"
           },
           "responses": {
             "type": "array",
@@ -2118,7 +2118,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -2132,7 +2132,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IResponseAggregationModel"
+                "$ref": "#/components/schemas/IResponseAggregation"
               }
             ],
             "nullable": true
@@ -2165,7 +2165,7 @@
             "type": "string"
           },
           "result": {
-            "$ref": "#/components/schemas/IRapidResultModel"
+            "$ref": "#/components/schemas/IRapidResult"
           },
           "userScore": {
             "type": "number",
@@ -2198,10 +2198,10 @@
             "type": "string"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "state": {
-            "$ref": "#/components/schemas/RapidStateModel"
+            "$ref": "#/components/schemas/RapidState"
           }
         }
       },
@@ -2273,7 +2273,7 @@
           "asset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The asset of the rapid."
@@ -2292,7 +2292,7 @@
           "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidStateModel"
+                "$ref": "#/components/schemas/RapidState"
               }
             ],
             "description": "The state of the rapid."
@@ -2321,7 +2321,7 @@
             "type": "string"
           },
           "result": {
-            "$ref": "#/components/schemas/IRapidResultModel"
+            "$ref": "#/components/schemas/IRapidResult"
           },
           "userScore": {
             "type": "number",
@@ -2339,6 +2339,60 @@
             "additionalProperties": {
               "type": "string"
             }
+          }
+        }
+      },
+      "IAsset": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetFileAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetMultiAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetNullAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetTextAsset"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FileAsset": "#/components/schemas/IAssetFileAsset",
+            "MultiAsset": "#/components/schemas/IAssetMultiAsset",
+            "NullAsset": "#/components/schemas/IAssetNullAsset",
+            "TextAsset": "#/components/schemas/IAssetTextAsset"
+          }
+        }
+      },
+      "IAssetFileAsset": {
+        "required": [
+          "fileName",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
           }
         }
       },
@@ -2460,61 +2514,7 @@
           }
         }
       },
-      "IAssetModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IAssetModelFileAssetModel"
-          },
-          {
-            "$ref": "#/components/schemas/IAssetModelMultiAssetModel"
-          },
-          {
-            "$ref": "#/components/schemas/IAssetModelNullAssetModel"
-          },
-          {
-            "$ref": "#/components/schemas/IAssetModelTextAssetModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "FileAsset": "#/components/schemas/IAssetModelFileAssetModel",
-            "MultiAsset": "#/components/schemas/IAssetModelMultiAssetModel",
-            "NullAsset": "#/components/schemas/IAssetModelNullAssetModel",
-            "TextAsset": "#/components/schemas/IAssetModelTextAssetModel"
-          }
-        }
-      },
-      "IAssetModelFileAssetModel": {
-        "required": [
-          "fileName",
-          "metadata",
-          "identifier",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileAsset"
-            ],
-            "type": "string"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/MetadataModelCollection"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        }
-      },
-      "IAssetModelMultiAssetModel": {
+      "IAssetMultiAsset": {
         "required": [
           "assets",
           "metadata",
@@ -2531,7 +2531,7 @@
           "assets": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IAssetModel"
+              "$ref": "#/components/schemas/IAsset"
             }
           },
           "metadata": {
@@ -2542,7 +2542,7 @@
           }
         }
       },
-      "IAssetModelNullAssetModel": {
+      "IAssetNullAsset": {
         "required": [
           "metadata",
           "identifier",
@@ -2563,7 +2563,7 @@
           }
         }
       },
-      "IAssetModelTextAssetModel": {
+      "IAssetTextAsset": {
         "required": [
           "text",
           "metadata",
@@ -2585,6 +2585,132 @@
           },
           "identifier": {
             "type": "string"
+          }
+        }
+      },
+      "IMetadata": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataClassificationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataCountMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataImageDimensionMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataLocationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataOriginalFilenameMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataSourceUrlMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataStreamsMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataTextMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
+            "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
+            "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
+            "SourceUrlMetadataModel": "#/components/schemas/IMetadataSourceUrlMetadata",
+            "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        }
+      },
+      "IMetadataClassificationMetadata": {
+        "required": [
+          "classification",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataCountMetadata": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataFileTypeMetadata": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          }
+        }
+      },
+      "IMetadataImageDimensionMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -2627,133 +2753,7 @@
           }
         }
       },
-      "IMetadataModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IMetadataModelClassificationMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelCountMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelFileTypeMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelImageDimensionMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelLocationMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelSourceUrlMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelStreamsMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelTextMetadataModel"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "ClassificationMetadata": "#/components/schemas/IMetadataModelClassificationMetadataModel",
-            "CountMetadata": "#/components/schemas/IMetadataModelCountMetadataModel",
-            "FileTypeMetadata": "#/components/schemas/IMetadataModelFileTypeMetadataModel",
-            "ImageDimensionMetadata": "#/components/schemas/IMetadataModelImageDimensionMetadataModel",
-            "LocationMetadata": "#/components/schemas/IMetadataModelLocationMetadataModel",
-            "OriginalFilenameMetadata": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel",
-            "SourceUrlMetadataModel": "#/components/schemas/IMetadataModelSourceUrlMetadataModel",
-            "StreamsMetadata": "#/components/schemas/IMetadataModelStreamsMetadataModel",
-            "TextMetadata": "#/components/schemas/IMetadataModelTextMetadataModel",
-            "VideoDurationMetadata": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
-          }
-        }
-      },
-      "IMetadataModelClassificationMetadataModel": {
-        "required": [
-          "classification",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassificationMetadata"
-            ],
-            "type": "string"
-          },
-          "classification": {
-            "type": "string"
-          }
-        }
-      },
-      "IMetadataModelCountMetadataModel": {
-        "required": [
-          "count",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CountMetadata"
-            ],
-            "type": "string"
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "IMetadataModelFileTypeMetadataModel": {
-        "required": [
-          "fileType",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileTypeMetadata"
-            ],
-            "type": "string"
-          },
-          "fileType": {
-            "$ref": "#/components/schemas/FileType"
-          }
-        }
-      },
-      "IMetadataModelImageDimensionMetadataModel": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ImageDimensionMetadata"
-            ],
-            "type": "string"
-          },
-          "height": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "width": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "IMetadataModelLocationMetadataModel": {
+      "IMetadataLocationMetadata": {
         "required": [
           "x",
           "y",
@@ -2776,7 +2776,7 @@
           }
         }
       },
-      "IMetadataModelOriginalFilenameMetadataModel": {
+      "IMetadataOriginalFilenameMetadata": {
         "required": [
           "originalFilename",
           "_t"
@@ -2793,7 +2793,7 @@
           }
         }
       },
-      "IMetadataModelSourceUrlMetadataModel": {
+      "IMetadataSourceUrlMetadata": {
         "required": [
           "url",
           "_t"
@@ -2810,7 +2810,7 @@
           }
         }
       },
-      "IMetadataModelStreamsMetadataModel": {
+      "IMetadataStreamsMetadata": {
         "required": [
           "hasVideo",
           "hasAudio",
@@ -2835,7 +2835,7 @@
           }
         }
       },
-      "IMetadataModelTextMetadataModel": {
+      "IMetadataTextMetadata": {
         "required": [
           "text",
           "_t"
@@ -2853,7 +2853,7 @@
           }
         }
       },
-      "IMetadataModelVideoDurationMetadataModel": {
+      "IMetadataVideoDurationMetadata": {
         "required": [
           "duration",
           "_t"
@@ -2881,60 +2881,60 @@
           }
         }
       },
-      "IRapidModel": {
+      "IRapid": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidModelAttachCategoryRapidModel"
+            "$ref": "#/components/schemas/IRapidAttachCategoryRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelBoundingBoxRapidModel"
+            "$ref": "#/components/schemas/IRapidBoundingBoxRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelCompareRapidModel"
+            "$ref": "#/components/schemas/IRapidCompareRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelFreeTextRapidModel"
+            "$ref": "#/components/schemas/IRapidFreeTextRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelLineRapidModel"
+            "$ref": "#/components/schemas/IRapidLineRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelLocateRapidModel"
+            "$ref": "#/components/schemas/IRapidLocateRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelNamedEntityRapidModel"
+            "$ref": "#/components/schemas/IRapidNamedEntityRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelPolygonRapidModel"
+            "$ref": "#/components/schemas/IRapidPolygonRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelScrubRapidModel"
+            "$ref": "#/components/schemas/IRapidScrubRapid"
           },
           {
-            "$ref": "#/components/schemas/IRapidModelTranscriptionRapidModel"
+            "$ref": "#/components/schemas/IRapidTranscriptionRapid"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "AttachCategoryRapidModel": "#/components/schemas/IRapidModelAttachCategoryRapidModel",
-            "BoundingBoxRapidModel": "#/components/schemas/IRapidModelBoundingBoxRapidModel",
-            "CompareRapidModel": "#/components/schemas/IRapidModelCompareRapidModel",
-            "FreeTextRapidModel": "#/components/schemas/IRapidModelFreeTextRapidModel",
-            "LineRapidModel": "#/components/schemas/IRapidModelLineRapidModel",
-            "LocateRapidModel": "#/components/schemas/IRapidModelLocateRapidModel",
-            "NamedEntityRapidModel": "#/components/schemas/IRapidModelNamedEntityRapidModel",
-            "PolygonRapidModel": "#/components/schemas/IRapidModelPolygonRapidModel",
-            "ScrubRapidModel": "#/components/schemas/IRapidModelScrubRapidModel",
-            "TranscriptionRapidModel": "#/components/schemas/IRapidModelTranscriptionRapidModel"
+            "AttachCategoryRapidModel": "#/components/schemas/IRapidAttachCategoryRapid",
+            "BoundingBoxRapidModel": "#/components/schemas/IRapidBoundingBoxRapid",
+            "CompareRapidModel": "#/components/schemas/IRapidCompareRapid",
+            "FreeTextRapidModel": "#/components/schemas/IRapidFreeTextRapid",
+            "LineRapidModel": "#/components/schemas/IRapidLineRapid",
+            "LocateRapidModel": "#/components/schemas/IRapidLocateRapid",
+            "NamedEntityRapidModel": "#/components/schemas/IRapidNamedEntityRapid",
+            "PolygonRapidModel": "#/components/schemas/IRapidPolygonRapid",
+            "ScrubRapidModel": "#/components/schemas/IRapidScrubRapid",
+            "TranscriptionRapidModel": "#/components/schemas/IRapidTranscriptionRapid"
           }
         }
       },
-      "IRapidModelAttachCategoryRapidModel": {
+      "IRapidAttachCategoryRapid": {
         "required": [
           "categories",
           "title",
@@ -2953,14 +2953,14 @@
           "categories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AttachCategoryRapidModel_Category"
+              "$ref": "#/components/schemas/AttachCategoryRapid_Category"
             }
           },
           "title": {
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -2975,7 +2975,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -2991,7 +2991,7 @@
           }
         }
       },
-      "IRapidModelBoundingBoxRapidModel": {
+      "IRapidBoundingBoxRapid": {
         "required": [
           "target",
           "asset",
@@ -3010,7 +3010,7 @@
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3025,7 +3025,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3041,7 +3041,7 @@
           }
         }
       },
-      "IRapidModelCompareRapidModel": {
+      "IRapidCompareRapid": {
         "required": [
           "criteria",
           "asset",
@@ -3060,7 +3060,7 @@
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3075,7 +3075,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3091,7 +3091,7 @@
           }
         }
       },
-      "IRapidModelFreeTextRapidModel": {
+      "IRapidFreeTextRapid": {
         "required": [
           "question",
           "asset",
@@ -3110,7 +3110,7 @@
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3125,7 +3125,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3141,7 +3141,7 @@
           }
         }
       },
-      "IRapidModelLineRapidModel": {
+      "IRapidLineRapid": {
         "required": [
           "target",
           "asset",
@@ -3160,7 +3160,7 @@
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3175,7 +3175,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3191,7 +3191,7 @@
           }
         }
       },
-      "IRapidModelLocateRapidModel": {
+      "IRapidLocateRapid": {
         "required": [
           "target",
           "asset",
@@ -3210,7 +3210,7 @@
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3225,7 +3225,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3241,7 +3241,7 @@
           }
         }
       },
-      "IRapidModelNamedEntityRapidModel": {
+      "IRapidNamedEntityRapid": {
         "required": [
           "target",
           "classes",
@@ -3267,7 +3267,7 @@
             }
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3282,7 +3282,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3298,7 +3298,258 @@
           }
         }
       },
-      "IRapidModelPolygonRapidModel": {
+      "IRapidPayload": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload",
+            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
+            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
+            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
+            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+          }
+        }
+      },
+      "IRapidPayloadBoundingBoxPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadClassifyPayload": {
+        "required": [
+          "categories",
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyPayload"
+            ],
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadComparePayload": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ComparePayload"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadFreeTextPayload": {
+        "required": [
+          "question",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextPayload"
+            ],
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IRapidPayloadLinePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LinePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadLocatePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocatePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadNamedEntityPayload": {
+        "required": [
+          "target",
+          "classes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidPayloadPolygonPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadScrubPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadTranscriptionPayload": {
+        "required": [
+          "title",
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionPayload"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "transcription": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionPayload_TranscriptionWord"
+            }
+          }
+        }
+      },
+      "IRapidPolygonRapid": {
         "required": [
           "target",
           "asset",
@@ -3317,7 +3568,7 @@
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3332,7 +3583,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3348,7 +3599,315 @@
           }
         }
       },
-      "IRapidModelScrubRapidModel": {
+      "IRapidResult": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidResultAttachCategoryResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultBoundingBoxResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultCompareResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultFreeTextResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultLineResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultLocateResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultPolygonResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultScrubResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultSkipResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultTranscriptionResult"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AttachCategoryResult": "#/components/schemas/IRapidResultAttachCategoryResult",
+            "BoundingBoxResult": "#/components/schemas/IRapidResultBoundingBoxResult",
+            "CompareResult": "#/components/schemas/IRapidResultCompareResult",
+            "FreeTextResult": "#/components/schemas/IRapidResultFreeTextResult",
+            "LineResult": "#/components/schemas/IRapidResultLineResult",
+            "LocateResult": "#/components/schemas/IRapidResultLocateResult",
+            "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
+            "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
+            "SkipResult": "#/components/schemas/IRapidResultSkipResult",
+            "TranscriptionResult": "#/components/schemas/IRapidResultTranscriptionResult"
+          }
+        }
+      },
+      "IRapidResultAttachCategoryResult": {
+        "required": [
+          "rapidId",
+          "category",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidResultBoundingBoxResult": {
+        "required": [
+          "rapidId",
+          "boundingBoxes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoundingBoxResult_Box"
+            }
+          }
+        }
+      },
+      "IRapidResultCompareResult": {
+        "required": [
+          "rapidId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "winners": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidResultFreeTextResult": {
+        "required": [
+          "rapidId",
+          "answer",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidResultLineResult": {
+        "required": [
+          "rapidId",
+          "lines",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_Line"
+            }
+          }
+        }
+      },
+      "IRapidResultLocateResult": {
+        "required": [
+          "rapidId",
+          "coordinates",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocateCoordinate"
+            }
+          }
+        }
+      },
+      "IRapidResultNamedEntityResult": {
+        "required": [
+          "rapidId",
+          "classifications",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
+            }
+          }
+        }
+      },
+      "IRapidResultPolygonResult": {
+        "required": [
+          "rapidId",
+          "shapes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "shapes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Shape"
+            }
+          }
+        }
+      },
+      "IRapidResultScrubResult": {
+        "required": [
+          "rapidId",
+          "timestamps",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "timestamps": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "IRapidResultSkipResult": {
+        "required": [
+          "rapidId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidResultTranscriptionResult": {
+        "required": [
+          "rapidId",
+          "selectedWords",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "selectedWords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionResult_TranscriptionWord"
+            }
+          }
+        }
+      },
+      "IRapidScrubRapid": {
         "required": [
           "target",
           "id",
@@ -3382,7 +3941,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3394,11 +3953,11 @@
             }
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           }
         }
       },
-      "IRapidModelTranscriptionRapidModel": {
+      "IRapidTranscriptionRapid": {
         "required": [
           "transcription",
           "title",
@@ -3417,14 +3976,14 @@
           "transcription": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionRapidModel_TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionRapid_TranscriptionWord"
             }
           },
           "title": {
             "$ref": "#/components/schemas/TranslatedString"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetModel"
+            "$ref": "#/components/schemas/IAsset"
           },
           "context": {
             "type": "object",
@@ -3439,7 +3998,7 @@
             "type": "object",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "nullable": true
@@ -3455,595 +4014,36 @@
           }
         }
       },
-      "IRapidPayloadModel": {
+      "IRefereeInfo": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel"
+            "$ref": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel"
+            "$ref": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadModelComparePayloadModel"
+            "$ref": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo"
           },
           {
-            "$ref": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadModelLinePayloadModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadModelLocatePayloadModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadModelScrubPayloadModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
+            "$ref": "#/components/schemas/IRefereeInfoQuorumRefereeInfo"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadModelBoundingBoxPayloadModel",
-            "ClassifyPayload": "#/components/schemas/IRapidPayloadModelClassifyPayloadModel",
-            "ComparePayload": "#/components/schemas/IRapidPayloadModelComparePayloadModel",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadModelFreeTextPayloadModel",
-            "LinePayload": "#/components/schemas/IRapidPayloadModelLinePayloadModel",
-            "LocatePayload": "#/components/schemas/IRapidPayloadModelLocatePayloadModel",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadModelNamedEntityPayloadModel",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadModelPolygonPayloadModel",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadModelScrubPayloadModel",
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadModelTranscriptionPayloadModel"
+            "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoNaiveRefereeInfo",
+            "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo",
+            "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo",
+            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoQuorumRefereeInfo"
           }
         }
       },
-      "IRapidPayloadModelBoundingBoxPayloadModel": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadModelClassifyPayloadModel": {
-        "required": [
-          "categories",
-          "title",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassifyPayload"
-            ],
-            "type": "string"
-          },
-          "categories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClassifyPayloadModel_Category"
-            }
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadModelComparePayloadModel": {
-        "required": [
-          "criteria",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ComparePayload"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadModelFreeTextPayloadModel": {
-        "required": [
-          "question",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FreeTextPayload"
-            ],
-            "type": "string"
-          },
-          "question": {
-            "type": "string"
-          },
-          "shouldValidateResponse": {
-            "type": "boolean"
-          },
-          "validationSystemPrompt": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "IRapidPayloadModelLinePayloadModel": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LinePayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadModelLocatePayloadModel": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocatePayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadModelNamedEntityPayloadModel": {
-        "required": [
-          "target",
-          "classes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          },
-          "classes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IRapidPayloadModelPolygonPayloadModel": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadModelScrubPayloadModel": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadModelTranscriptionPayloadModel": {
-        "required": [
-          "title",
-          "transcription",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionPayload"
-            ],
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "transcription": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionPayloadModel_TranscriptionWord"
-            }
-          }
-        }
-      },
-      "IRapidResultModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IRapidResultModelAttachCategoryResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelBoundingBoxResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelCompareResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelFreeTextResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelLineResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelLocateResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelNamedEntityResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelPolygonResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelScrubResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelSkipResultModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultModelTranscriptionResultModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "AttachCategoryResult": "#/components/schemas/IRapidResultModelAttachCategoryResultModel",
-            "BoundingBoxResult": "#/components/schemas/IRapidResultModelBoundingBoxResultModel",
-            "CompareResult": "#/components/schemas/IRapidResultModelCompareResultModel",
-            "FreeTextResult": "#/components/schemas/IRapidResultModelFreeTextResultModel",
-            "LineResult": "#/components/schemas/IRapidResultModelLineResultModel",
-            "LocateResult": "#/components/schemas/IRapidResultModelLocateResultModel",
-            "NamedEntityResult": "#/components/schemas/IRapidResultModelNamedEntityResultModel",
-            "PolygonResult": "#/components/schemas/IRapidResultModelPolygonResultModel",
-            "ScrubResult": "#/components/schemas/IRapidResultModelScrubResultModel",
-            "SkipResult": "#/components/schemas/IRapidResultModelSkipResultModel",
-            "TranscriptionResult": "#/components/schemas/IRapidResultModelTranscriptionResultModel"
-          }
-        }
-      },
-      "IRapidResultModelAttachCategoryResultModel": {
-        "required": [
-          "rapidId",
-          "category",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AttachCategoryResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "category": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidResultModelBoundingBoxResultModel": {
-        "required": [
-          "rapidId",
-          "boundingBoxes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "boundingBoxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BoundingBoxResultModel_Box"
-            }
-          }
-        }
-      },
-      "IRapidResultModelCompareResultModel": {
-        "required": [
-          "rapidId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "winners": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IRapidResultModelFreeTextResultModel": {
-        "required": [
-          "rapidId",
-          "answer",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FreeTextResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "answer": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidResultModelLineResultModel": {
-        "required": [
-          "rapidId",
-          "lines",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LineResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "lines": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LineResultModel_Line"
-            }
-          }
-        }
-      },
-      "IRapidResultModelLocateResultModel": {
-        "required": [
-          "rapidId",
-          "coordinates",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocateResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "coordinates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LocateCoordinateModel"
-            }
-          }
-        }
-      },
-      "IRapidResultModelNamedEntityResultModel": {
-        "required": [
-          "rapidId",
-          "classifications",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "classifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NamedEntityResultModel_NamedClassification"
-            }
-          }
-        }
-      },
-      "IRapidResultModelPolygonResultModel": {
-        "required": [
-          "rapidId",
-          "shapes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "shapes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PolygonResultModel_Shape"
-            }
-          }
-        }
-      },
-      "IRapidResultModelScrubResultModel": {
-        "required": [
-          "rapidId",
-          "timestamps",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "timestamps": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      },
-      "IRapidResultModelSkipResultModel": {
-        "required": [
-          "rapidId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SkipResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidResultModelTranscriptionResultModel": {
-        "required": [
-          "rapidId",
-          "selectedWords",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "selectedWords": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionResultModel_TranscriptionWord"
-            }
-          }
-        }
-      },
-      "IRefereeInfoModel": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IRefereeInfoModelNaiveRefereeInfoModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRefereeInfoModelNeverEndingRefereeInfoModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel"
-          },
-          {
-            "$ref": "#/components/schemas/IRefereeInfoModelQuorumRefereeInfoModel"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoModelNaiveRefereeInfoModel",
-            "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoModelNeverEndingRefereeInfoModel",
-            "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel",
-            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoModelQuorumRefereeInfoModel"
-          }
-        }
-      },
-      "IRefereeInfoModelNaiveRefereeInfoModel": {
+      "IRefereeInfoNaiveRefereeInfo": {
         "required": [
           "_t"
         ],
@@ -4070,7 +4070,7 @@
           }
         }
       },
-      "IRefereeInfoModelNeverEndingRefereeInfoModel": {
+      "IRefereeInfoNeverEndingRefereeInfo": {
         "required": [
           "_t"
         ],
@@ -4083,7 +4083,7 @@
           }
         }
       },
-      "IRefereeInfoModelProbabilisticAttachCategoryRefereeInfoModel": {
+      "IRefereeInfoProbabilisticAttachCategoryRefereeInfo": {
         "required": [
           "threshold",
           "maxVotes",
@@ -4106,7 +4106,7 @@
           }
         }
       },
-      "IRefereeInfoModelQuorumRefereeInfoModel": {
+      "IRefereeInfoQuorumRefereeInfo": {
         "required": [
           "maxVotes",
           "threshold",
@@ -4129,28 +4129,28 @@
           }
         }
       },
-      "IResponseAggregationModel": {
+      "IResponseAggregation": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IResponseAggregationModelClassifyAggregationModel"
+            "$ref": "#/components/schemas/IResponseAggregationClassifyAggregation"
           },
           {
-            "$ref": "#/components/schemas/IResponseAggregationModelCompareAggregationModel"
+            "$ref": "#/components/schemas/IResponseAggregationCompareAggregation"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "ClassifyAggregation": "#/components/schemas/IResponseAggregationModelClassifyAggregationModel",
-            "CompareAggregation": "#/components/schemas/IResponseAggregationModelCompareAggregationModel"
+            "ClassifyAggregation": "#/components/schemas/IResponseAggregationClassifyAggregation",
+            "CompareAggregation": "#/components/schemas/IResponseAggregationCompareAggregation"
           }
         }
       },
-      "IResponseAggregationModelClassifyAggregationModel": {
+      "IResponseAggregationClassifyAggregation": {
         "required": [
           "categoryTallies",
           "_t"
@@ -4165,12 +4165,12 @@
           "categoryTallies": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/ResponseTallyModel"
+              "$ref": "#/components/schemas/ResponseTally"
             }
           }
         }
       },
-      "IResponseAggregationModelCompareAggregationModel": {
+      "IResponseAggregationCompareAggregation": {
         "required": [
           "winnerTallies",
           "_t"
@@ -4185,7 +4185,7 @@
           "winnerTallies": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/ResponseTallyModel"
+              "$ref": "#/components/schemas/ResponseTally"
             }
           }
         }
@@ -4202,72 +4202,72 @@
           }
         }
       },
-      "IValidationTruthModel": {
+      "IValidationTruth": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthAttachCategoryTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthBoundingBoxTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelClassifyTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthClassifyTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelCompareTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthCompareTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthEmptyValidationTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelLineTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthLineTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthLocateBoxTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthMultiCompareTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthNamedEntityTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelPolygonTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthPolygonTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelScrubTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthScrubTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelSkipTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthSkipTruth"
           },
           {
-            "$ref": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
+            "$ref": "#/components/schemas/IValidationTruthTranscriptionTruth"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "AttachCategoryTruth": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel",
-            "BoundingBoxTruth": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel",
-            "ClassifyTruth": "#/components/schemas/IValidationTruthModelClassifyTruthModel",
-            "CompareTruth": "#/components/schemas/IValidationTruthModelCompareTruthModel",
-            "EmptyValidationTruth": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel",
-            "LineTruth": "#/components/schemas/IValidationTruthModelLineTruthModel",
-            "LocateBoxTruth": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel",
-            "MultiCompareTruth": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel",
-            "NamedEntityTruth": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel",
-            "PolygonTruth": "#/components/schemas/IValidationTruthModelPolygonTruthModel",
-            "ScrubTruth": "#/components/schemas/IValidationTruthModelScrubTruthModel",
-            "SkipTruth": "#/components/schemas/IValidationTruthModelSkipTruthModel",
-            "TranscriptionTruth": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
+            "AttachCategoryTruth": "#/components/schemas/IValidationTruthAttachCategoryTruth",
+            "BoundingBoxTruth": "#/components/schemas/IValidationTruthBoundingBoxTruth",
+            "ClassifyTruth": "#/components/schemas/IValidationTruthClassifyTruth",
+            "CompareTruth": "#/components/schemas/IValidationTruthCompareTruth",
+            "EmptyValidationTruth": "#/components/schemas/IValidationTruthEmptyValidationTruth",
+            "LineTruth": "#/components/schemas/IValidationTruthLineTruth",
+            "LocateBoxTruth": "#/components/schemas/IValidationTruthLocateBoxTruth",
+            "MultiCompareTruth": "#/components/schemas/IValidationTruthMultiCompareTruth",
+            "NamedEntityTruth": "#/components/schemas/IValidationTruthNamedEntityTruth",
+            "PolygonTruth": "#/components/schemas/IValidationTruthPolygonTruth",
+            "ScrubTruth": "#/components/schemas/IValidationTruthScrubTruth",
+            "SkipTruth": "#/components/schemas/IValidationTruthSkipTruth",
+            "TranscriptionTruth": "#/components/schemas/IValidationTruthTranscriptionTruth"
           }
         }
       },
-      "IValidationTruthModelAttachCategoryTruthModel": {
+      "IValidationTruthAttachCategoryTruth": {
         "required": [
           "correctCategories",
           "_t"
@@ -4287,7 +4287,7 @@
           }
         }
       },
-      "IValidationTruthModelBoundingBoxTruthModel": {
+      "IValidationTruthBoundingBoxTruth": {
         "required": [
           "xMin",
           "yMin",
@@ -4320,7 +4320,7 @@
           }
         }
       },
-      "IValidationTruthModelClassifyTruthModel": {
+      "IValidationTruthClassifyTruth": {
         "required": [
           "correctCategories",
           "_t"
@@ -4340,7 +4340,7 @@
           }
         }
       },
-      "IValidationTruthModelCompareTruthModel": {
+      "IValidationTruthCompareTruth": {
         "required": [
           "winnerId",
           "_t"
@@ -4357,7 +4357,7 @@
           }
         }
       },
-      "IValidationTruthModelEmptyValidationTruthModel": {
+      "IValidationTruthEmptyValidationTruth": {
         "required": [
           "_t"
         ],
@@ -4370,7 +4370,7 @@
           }
         }
       },
-      "IValidationTruthModelLineTruthModel": {
+      "IValidationTruthLineTruth": {
         "required": [
           "_t"
         ],
@@ -4383,7 +4383,7 @@
           }
         }
       },
-      "IValidationTruthModelLocateBoxTruthModel": {
+      "IValidationTruthLocateBoxTruth": {
         "required": [
           "boundingBoxes",
           "_t"
@@ -4398,7 +4398,7 @@
           "boundingBoxes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LocateBoxTruthModel_Box"
+              "$ref": "#/components/schemas/LocateBoxTruth_Box"
             }
           },
           "requiredPrecision": {
@@ -4411,7 +4411,7 @@
           }
         }
       },
-      "IValidationTruthModelMultiCompareTruthModel": {
+      "IValidationTruthMultiCompareTruth": {
         "required": [
           "correctCombinations",
           "_t"
@@ -4434,7 +4434,7 @@
           }
         }
       },
-      "IValidationTruthModelNamedEntityTruthModel": {
+      "IValidationTruthNamedEntityTruth": {
         "required": [
           "classifications",
           "_t"
@@ -4449,12 +4449,12 @@
           "classifications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NamedEntityTruthModel_NamedClassification"
+              "$ref": "#/components/schemas/NamedEntityTruth_NamedClassification"
             }
           }
         }
       },
-      "IValidationTruthModelPolygonTruthModel": {
+      "IValidationTruthPolygonTruth": {
         "required": [
           "_t"
         ],
@@ -4467,7 +4467,7 @@
           }
         }
       },
-      "IValidationTruthModelScrubTruthModel": {
+      "IValidationTruthScrubTruth": {
         "required": [
           "validRanges",
           "_t"
@@ -4482,12 +4482,12 @@
           "validRanges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ScrubTruthModel_ScrubRange"
+              "$ref": "#/components/schemas/ScrubTruth_ScrubRange"
             }
           }
         }
       },
-      "IValidationTruthModelSkipTruthModel": {
+      "IValidationTruthSkipTruth": {
         "required": [
           "_t"
         ],
@@ -4500,7 +4500,7 @@
           }
         }
       },
-      "IValidationTruthModelTranscriptionTruthModel": {
+      "IValidationTruthTranscriptionTruth": {
         "required": [
           "correctWords",
           "_t"
@@ -4515,7 +4515,7 @@
           "correctWords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TranscriptionTruthModel_TranscriptionWord"
+              "$ref": "#/components/schemas/TranscriptionTruth_TranscriptionWord"
             }
           },
           "strictGrading": {
@@ -4534,7 +4534,7 @@
           }
         }
       },
-      "LineResultModel_Line": {
+      "LineResult_Line": {
         "required": [
           "size",
           "points"
@@ -4548,12 +4548,12 @@
           "points": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LineResultModel_LinePoint"
+              "$ref": "#/components/schemas/LineResult_LinePoint"
             }
           }
         }
       },
-      "LineResultModel_LinePoint": {
+      "LineResult_LinePoint": {
         "required": [
           "x",
           "y"
@@ -4570,7 +4570,7 @@
           }
         }
       },
-      "LocateBoxTruthModel_Box": {
+      "LocateBoxTruth_Box": {
         "type": "object",
         "properties": {
           "xMin": {
@@ -4595,7 +4595,7 @@
           }
         }
       },
-      "LocateCoordinateModel": {
+      "LocateCoordinate": {
         "required": [
           "x",
           "y"
@@ -4621,7 +4621,7 @@
       "MetadataModelCollection": {
         "type": "object",
         "additionalProperties": {
-          "$ref": "#/components/schemas/IMetadataModel"
+          "$ref": "#/components/schemas/IMetadata"
         }
       },
       "MetadataVisibilities": {
@@ -4638,7 +4638,7 @@
           "type": "string"
         }
       },
-      "NamedEntityResultModel_NamedClassification": {
+      "NamedEntityResult_NamedClassification": {
         "required": [
           "start",
           "end",
@@ -4659,7 +4659,7 @@
           }
         }
       },
-      "NamedEntityTruthModel_NamedClassification": {
+      "NamedEntityTruth_NamedClassification": {
         "required": [
           "start",
           "end",
@@ -4680,7 +4680,7 @@
           }
         }
       },
-      "PolygonResultModel_Coordinate": {
+      "PolygonResult_Coordinate": {
         "required": [
           "x",
           "y"
@@ -4699,7 +4699,7 @@
           }
         }
       },
-      "PolygonResultModel_Shape": {
+      "PolygonResult_Shape": {
         "required": [
           "edges"
         ],
@@ -4708,7 +4708,7 @@
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PolygonResultModel_Coordinate"
+              "$ref": "#/components/schemas/PolygonResult_Coordinate"
             }
           }
         }
@@ -4738,7 +4738,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidPayloadModel"
+                "$ref": "#/components/schemas/IRapidPayload"
               }
             ],
             "description": "The payload of the rapid."
@@ -4746,7 +4746,7 @@
           "referee": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRefereeInfoModel"
+                "$ref": "#/components/schemas/IRefereeInfo"
               }
             ],
             "description": "The referee that created the rapid."
@@ -4754,7 +4754,7 @@
           "asset": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetModel"
+                "$ref": "#/components/schemas/IAsset"
               }
             ],
             "description": "The asset associated with the rapid."
@@ -4762,7 +4762,7 @@
           "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidStateModel"
+                "$ref": "#/components/schemas/RapidState"
               }
             ],
             "description": "The state of the rapid."
@@ -4778,7 +4778,7 @@
           "truth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruthModel"
+                "$ref": "#/components/schemas/IValidationTruth"
               }
             ],
             "description": "The optional validation truth of the rapid."
@@ -4934,7 +4934,7 @@
           "payload": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidPayloadModel"
+                "$ref": "#/components/schemas/IRapidPayload"
               }
             ],
             "description": "The payload of the rapid."
@@ -4952,7 +4952,7 @@
           "truth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruthModel"
+                "$ref": "#/components/schemas/IValidationTruth"
               }
             ],
             "description": "The derived validation truth for the rapid."
@@ -4992,7 +4992,7 @@
           }
         }
       },
-      "RapidIssueModel": {
+      "RapidIssue": {
         "enum": [
           "Other",
           "CannotSubmit",
@@ -5006,7 +5006,7 @@
           "MyAnswerIsCorrect"
         ]
       },
-      "RapidStateModel": {
+      "RapidState": {
         "enum": [
           "Labeling",
           "Paused",
@@ -5026,7 +5026,7 @@
           "issue": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidIssueModel"
+                "$ref": "#/components/schemas/RapidIssue"
               }
             ],
             "description": "A streamlined enum representing common issues."
@@ -5048,7 +5048,7 @@
           }
         }
       },
-      "ResponseTallyModel": {
+      "ResponseTally": {
         "required": [
           "count",
           "userScoreSum"
@@ -5065,7 +5065,7 @@
           }
         }
       },
-      "ScrubTruthModel_ScrubRange": {
+      "ScrubTruth_ScrubRange": {
         "required": [
           "start",
           "end"
@@ -5114,7 +5114,7 @@
           "validationTruth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruthModel"
+                "$ref": "#/components/schemas/IValidationTruth"
               }
             ],
             "description": "The validation truth applied, if any."
@@ -5135,14 +5135,14 @@
           "nextRapid": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IRapidModel"
+                "$ref": "#/components/schemas/IRapid"
               }
             ],
             "description": "The next rapid to solve when the session streams its rapids and continues.\n Null when there is nothing further to solve."
           }
         }
       },
-      "TranscriptionPayloadModel_TranscriptionWord": {
+      "TranscriptionPayload_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"
@@ -5158,7 +5158,7 @@
           }
         }
       },
-      "TranscriptionRapidModel_TranscriptionWord": {
+      "TranscriptionRapid_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"
@@ -5174,7 +5174,7 @@
           }
         }
       },
-      "TranscriptionResultModel_TranscriptionWord": {
+      "TranscriptionResult_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"
@@ -5190,7 +5190,7 @@
           }
         }
       },
-      "TranscriptionTruthModel_TranscriptionWord": {
+      "TranscriptionTruth_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"
@@ -5247,7 +5247,7 @@
           "truth": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IValidationTruthModel"
+                "$ref": "#/components/schemas/IValidationTruth"
               }
             ],
             "description": "The truth for the validation rapid."

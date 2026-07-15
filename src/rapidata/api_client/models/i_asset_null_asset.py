@@ -30,7 +30,8 @@ class IAssetNullAsset(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     metadata: Dict[str, IMetadata]
-    __properties: ClassVar[List[str]] = ["_t", "metadata"]
+    identifier: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "metadata", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -99,7 +100,8 @@ class IAssetNullAsset(LazyValidatedModel):
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
-            else None
+            else None,
+            "identifier": obj.get("identifier")
         }
         try:
             _obj = cls.model_validate(_data)

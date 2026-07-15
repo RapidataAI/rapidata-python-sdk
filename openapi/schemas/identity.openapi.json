@@ -132,7 +132,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientModel"
+                  "$ref": "#/components/schemas/Client"
                 }
               }
             }
@@ -996,6 +996,68 @@
         }
       }
     },
+    "/organizations/{organizationId}/members/{customerId}/role": {
+      "put": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Sets the given member's org-scoped role.",
+        "description": "Responds with 404 when the customer is not a member and 409 when changing the role of the\n organization's last owner.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the member whose role changes.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new role.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeOrgMemberRoleEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/organizations": {
       "post": {
         "tags": [
@@ -1047,7 +1109,8 @@
         "tags": [
           "Organization"
         ],
-        "summary": "Returns a paged list of organizations.",
+        "summary": "Returns a paged list of organizations, each with the caller's own role.",
+        "description": "A normal caller sees the organizations they belong to; platform staff see every organization,\n with a null role for those they are not a member of.",
         "parameters": [
           {
             "name": "page",
@@ -1077,8 +1140,8 @@
                 "enum": [
                   "name",
                   "-name",
-                  "domain",
-                  "-domain"
+                  "slug",
+                  "-slug"
                 ],
                 "type": "string"
               }
@@ -1135,58 +1198,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "domain",
+            "name": "slug",
             "in": "query",
-            "description": "Filter by domain.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "owner",
-            "in": "query",
-            "description": "Filter by owner.",
+            "description": "Filter by slug.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -1275,43 +1289,6 @@
         }
       }
     },
-    "/organizations/mine": {
-      "get": {
-        "tags": [
-          "Organization"
-        ],
-        "summary": "Returns the organization resolved from the calling customer's email domain.",
-        "description": "Responds with 404 when the caller's email domain does not match a registered organization.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetMyOrganizationEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
     "/organizations/{organizationId}": {
       "get": {
         "tags": [
@@ -1339,6 +1316,56 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Updates the given organization's provided fields.",
+        "description": "Only the fields present in the body are changed. Responds with 400 when the slug is already\n taken by another organization.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The fields to change.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrganizationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -1395,6 +1422,51 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/InviteOrgMemberEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns the pending invitations of the given organization.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization whose invitations to list.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOrgInvitationsEndpoint_Output"
                 }
               }
             }
@@ -1516,6 +1588,56 @@
         }
       }
     },
+    "/organizations/{organizationId}/invitations/{invitationId}": {
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Revokes the given invitation so its token can no longer be accepted.",
+        "description": "Responds with 404 when the invitation does not belong to the organization and 409 when it is\n not pending.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "invitationId",
+            "in": "path",
+            "description": "The id of the invitation to revoke.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/organizations/{owner}/support-slack-channel": {
       "put": {
         "tags": [
@@ -1541,6 +1663,47 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SetOrganizationSupportSlackChannelEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/organizations/active": {
+      "put": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Switches the calling customer's active organization to the given one.",
+        "description": "The active organization determines the token's org claim; the change takes effect the next time\n the client refreshes its token. Responds with 403 when the caller is not a member of the target\n organization.",
+        "requestBody": {
+          "description": "The organization to activate.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchActiveOrganizationEndpoint_Input"
               }
             }
           },
@@ -1641,7 +1804,23 @@
           }
         }
       },
-      "ClientModel": {
+      "ChangeOrgMemberRoleEndpoint_Input": {
+        "required": [
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrgRole"
+              }
+            ],
+            "description": "The org-scoped role to assign to the member."
+          }
+        }
+      },
+      "Client": {
         "required": [
           "client_id",
           "client_secret",
@@ -1920,24 +2099,6 @@
         },
         "description": "The request body for dynamic client registration."
       },
-      "GetMyOrganizationEndpoint_Output": {
-        "required": [
-          "name",
-          "supportSlackChannelUrl"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the organization."
-          },
-          "supportSlackChannelUrl": {
-            "type": "string",
-            "description": "The support Slack channel URL of the organization, if one has been configured.",
-            "nullable": true
-          }
-        }
-      },
       "GetOrganizationEndpoint_Output": {
         "required": [
           "id",
@@ -2167,6 +2328,54 @@
           }
         }
       },
+      "ListOrgInvitationsEndpoint_Output": {
+        "required": [
+          "invitations"
+        ],
+        "type": "object",
+        "properties": {
+          "invitations": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ListOrgInvitationsEndpoint_Output_Invitation"
+                }
+              }
+            ],
+            "description": "The pending invitations of the organization."
+          }
+        }
+      },
+      "ListOrgInvitationsEndpoint_Output_Invitation": {
+        "required": [
+          "invitationId",
+          "email",
+          "role",
+          "expiresAt",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "invitationId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/OrgRole"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "ListOrgMembersEndpoint_Output": {
         "required": [
           "members"
@@ -2351,24 +2560,32 @@
       },
       "QueryOrganizationsEndpoint_Output": {
         "required": [
-          "owner",
+          "id",
           "name",
-          "domain"
+          "slug",
+          "role"
         ],
         "type": "object",
         "properties": {
-          "owner": {
+          "id": {
             "type": "string",
-            "description": "The customer ID of the organization owner.",
-            "format": "uuid"
+            "description": "The id of the organization."
           },
           "name": {
             "type": "string",
-            "description": "The name of the organization."
+            "description": "The human-readable name of the organization."
           },
-          "domain": {
+          "slug": {
             "type": "string",
-            "description": "The domain associated with this organization."
+            "description": "The URL-safe unique identifier of the organization."
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrgRole"
+              }
+            ],
+            "description": "The caller's role in the organization, if they are a member."
           }
         }
       },
@@ -2507,6 +2724,18 @@
           }
         }
       },
+      "SwitchActiveOrganizationEndpoint_Input": {
+        "required": [
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization to activate."
+          }
+        }
+      },
       "UnsubscribeFromNewsletterEndpoint_Input": {
         "required": [
           "email",
@@ -2521,6 +2750,19 @@
           "token": {
             "type": "string",
             "description": "The recaptcha token used to verify the caller is not a bot."
+          }
+        }
+      },
+      "UpdateOrganizationEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new human-readable name, if changing it."
+          },
+          "slug": {
+            "type": "string",
+            "description": "The new URL-safe unique identifier, if changing it."
           }
         }
       },

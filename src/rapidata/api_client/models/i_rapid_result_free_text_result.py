@@ -28,9 +28,9 @@ class IRapidResultFreeTextResult(LazyValidatedModel):
     IRapidResultFreeTextResult
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    answer: StrictStr
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "answer", "rapidId"]
+    answer: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "rapidId", "answer"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,8 +87,8 @@ class IRapidResultFreeTextResult(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "answer": obj.get("answer"),
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "answer": obj.get("answer")
         }
         try:
             _obj = cls.model_validate(_data)

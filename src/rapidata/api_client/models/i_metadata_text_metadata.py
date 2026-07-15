@@ -28,23 +28,14 @@ class IMetadataTextMetadata(LazyValidatedModel):
     IMetadataTextMetadata
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    text: Optional[StrictStr] = None
-    visibilities: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["_t", "text", "visibilities"]
+    text: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "text"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['TextMetadata']):
             raise ValueError("must be one of enum values ('TextMetadata')")
-        return value
-
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
-                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     # model_config is inherited from LazyValidatedModel
@@ -100,8 +91,7 @@ class IMetadataTextMetadata(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "text": obj.get("text"),
-            "visibilities": obj.get("visibilities")
+            "text": obj.get("text")
         }
         try:
             _obj = cls.model_validate(_data)

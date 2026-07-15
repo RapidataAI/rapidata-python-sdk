@@ -22,8 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_order_workflow_input_model import IOrderWorkflowInputModel
-from rapidata.api_client.models.i_referee_model import IRefereeModel
+from rapidata.api_client.models.i_order_workflow_input import IOrderWorkflowInput
+from rapidata.api_client.models.i_referee import IReferee
 from rapidata.api_client.models.job_definition_revision_state import JobDefinitionRevisionState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -40,8 +40,8 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
     pipeline_id: StrictStr = Field(description="The pipeline id.", alias="pipelineId")
     dataset_id: StrictStr = Field(description="The dataset id.", alias="datasetId")
     aggregator_type: Optional[AggregatorType] = Field(default=None, description="The aggregator type.", alias="aggregatorType")
-    workflow: IOrderWorkflowInputModel = Field(description="The workflow configuration. Can be used directly to create a new revision.")
-    referee: IRefereeModel = Field(description="The referee configuration. Can be used directly to create a new revision.")
+    workflow: IOrderWorkflowInput = Field(description="The workflow configuration. Can be used directly to create a new revision.")
+    referee: IReferee = Field(description="The referee configuration. Can be used directly to create a new revision.")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     created_by_id: UUID = Field(description="The id of the user who created the revision.", alias="createdById")
@@ -126,8 +126,8 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
             "pipelineId": obj.get("pipelineId"),
             "datasetId": obj.get("datasetId"),
             "aggregatorType": obj.get("aggregatorType"),
-            "workflow": IOrderWorkflowInputModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
-            "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "workflow": IOrderWorkflowInput.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
+            "referee": IReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "createdAt": obj.get("createdAt"),
             "createdById": obj.get("createdById"),
