@@ -10,8 +10,8 @@ if TYPE_CHECKING:
         RapidataJobDefinition,
     )
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
-    from rapidata.api_client.models.create_job_endpoint_cost_warning_model import (
-        CreateJobEndpointCostWarningModel,
+    from rapidata.api_client.models.create_job_endpoint_cost_warning import (
+        CreateJobEndpointCostWarning,
     )
 
 
@@ -97,7 +97,7 @@ class RapidataAudienceBase:
 
     @staticmethod
     def _warn_if_cost_exceeds_balance(
-        job: RapidataJob, cost_warning: CreateJobEndpointCostWarningModel | None
+        job: RapidataJob, cost_warning: CreateJobEndpointCostWarning | None
     ) -> None:
         """Surface the create response's optional cost warning via the SDK logger.
 

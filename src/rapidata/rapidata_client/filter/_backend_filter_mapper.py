@@ -152,22 +152,22 @@ class BackendFilterMapper:
         elif isinstance(actual_instance, BackendDemographicAudienceFilter):
             from rapidata.rapidata_client.filter.models.age_group import AgeGroup
             from rapidata.rapidata_client.filter.models.gender import Gender
-            from rapidata.api_client.models.age_user_filter_model_age_group import (
-                AgeUserFilterModelAgeGroup,
+            from rapidata.api_client.models.age_user_filter_age_group import (
+                AgeUserFilterAgeGroup,
             )
-            from rapidata.api_client.models.gender_user_filter_model_gender import (
-                GenderUserFilterModelGender,
+            from rapidata.api_client.models.gender_user_filter_gender import (
+                GenderUserFilterGender,
             )
 
             identifier = actual_instance.identifier  # type: ignore[attr-defined]
             values = actual_instance.values  # type: ignore[attr-defined]
             if identifier == "age":
                 return ClientAgeFilter(
-                    [AgeGroup(AgeUserFilterModelAgeGroup(value)) for value in values]
+                    [AgeGroup(AgeUserFilterAgeGroup(value)) for value in values]
                 )
             if identifier == "gender":
                 return ClientGenderFilter(
-                    [Gender(GenderUserFilterModelGender(value)) for value in values]
+                    [Gender(GenderUserFilterGender(value)) for value in values]
                 )
             raise ValueError(
                 f"Unsupported demographic filter identifier '{identifier}'. Only 'age' and 'gender' are supported."

@@ -29,13 +29,13 @@ class OrFilter(RapidataFilter, BaseModel):
         super().__init__(filters=filters)
 
     def _to_model(self):
-        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
-        from rapidata.api_client.models.i_user_filter_model_or_user_filter_model import (
-            IUserFilterModelOrUserFilterModel,
+        from rapidata.api_client.models.i_user_filter import IUserFilter
+        from rapidata.api_client.models.i_user_filter_or_user_filter import (
+            IUserFilterOrUserFilter,
         )
 
-        return IUserFilterModel(
-            actual_instance=IUserFilterModelOrUserFilterModel(
+        return IUserFilter(
+            actual_instance=IUserFilterOrUserFilter(
                 _t="OrFilter",
                 filters=[filter._to_model() for filter in self.filters],
             )

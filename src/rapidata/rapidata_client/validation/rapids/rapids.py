@@ -5,14 +5,14 @@ from rapidata.rapidata_client.datapoints._datapoint import coerce_media_context
 from typing import Literal, Sequence
 from pydantic import BaseModel, model_validator, field_validator, ConfigDict
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
-from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
 
 
 class Rapid(BaseModel):
     asset: str | list[str]
     payload: IRapidPayload
     data_type: Literal["media", "text"] = "media"
-    truth: IValidationTruthModel | None = None
+    truth: IValidationTruth | None = None
     context: str | None = None
     media_context: list[str] | None = None
     sentence: str | None = None

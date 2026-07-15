@@ -21,13 +21,13 @@ class AgeFilter(RapidataFilter, BaseModel):
         super().__init__(age_groups=age_groups)
 
     def _to_model(self):
-        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
-        from rapidata.api_client.models.i_user_filter_model_age_user_filter_model import (
-            IUserFilterModelAgeUserFilterModel,
+        from rapidata.api_client.models.i_user_filter import IUserFilter
+        from rapidata.api_client.models.i_user_filter_age_user_filter import (
+            IUserFilterAgeUserFilter,
         )
 
-        return IUserFilterModel(
-            actual_instance=IUserFilterModelAgeUserFilterModel(
+        return IUserFilter(
+            actual_instance=IUserFilterAgeUserFilter(
                 _t="AgeFilter",
                 ageGroups=[
                     age_group._to_backend_model() for age_group in self.age_groups

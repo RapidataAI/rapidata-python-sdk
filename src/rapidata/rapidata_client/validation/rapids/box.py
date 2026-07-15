@@ -1,5 +1,5 @@
-from rapidata.api_client.models.locate_box_truth_model_box import (
-    LocateBoxTruthModelBox,
+from rapidata.api_client.models.locate_box_truth_box import (
+    LocateBoxTruthBox,
 )
 from rapidata.api_client.models.example_box_shape import ExampleBoxShape
 from pydantic import BaseModel, field_validator, model_validator
@@ -36,8 +36,8 @@ class Box(BaseModel):
             raise ValueError("y_min must be less than y_max")
         return self
 
-    def to_model(self) -> LocateBoxTruthModelBox:
-        return LocateBoxTruthModelBox(
+    def to_model(self) -> LocateBoxTruthBox:
+        return LocateBoxTruthBox(
             xMin=self.x_min * 100,
             yMin=self.y_min * 100,
             xMax=self.x_max * 100,
@@ -80,9 +80,7 @@ def calculate_boxes_coverage(boxes: list[Box]) -> float:
 
     for x, event_type, box_id in events:
         if active_boxes and x > prev_x:
-            y_intervals = sorted(
-                (boxes[i].y_min, boxes[i].y_max) for i in active_boxes
-            )
+            y_intervals = sorted((boxes[i].y_min, boxes[i].y_max) for i in active_boxes)
             merged: list[tuple[float, float]] = []
             for start, end in y_intervals:
                 if merged and start <= merged[-1][1]:

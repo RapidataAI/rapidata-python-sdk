@@ -6,11 +6,11 @@ from rapidata.api_client.models.i_rapid_payload_free_text_payload import (
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
-from rapidata.api_client.models.i_order_workflow_input_model import (
-    IOrderWorkflowInputModel,
+from rapidata.api_client.models.i_order_workflow_input import (
+    IOrderWorkflowInput,
 )
-from rapidata.api_client.models.i_order_workflow_input_model_simple_workflow_input_model import (
-    IOrderWorkflowInputModelSimpleWorkflowInputModel,
+from rapidata.api_client.models.i_order_workflow_input_simple_workflow_input import (
+    IOrderWorkflowInputSimpleWorkflowInput,
 )
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
 from rapidata.api_client.models.i_rapid_blueprint_free_text_rapid_blueprint import (
@@ -55,15 +55,15 @@ class FreeTextWorkflow(Workflow):
             },
         }
 
-    def _to_model(self) -> IOrderWorkflowInputModel:
+    def _to_model(self) -> IOrderWorkflowInput:
         blueprint = IRapidBlueprintFreeTextRapidBlueprint(
             _t="FreeTextBlueprint",
             question=self._instruction,
             validationSystemPrompt=self._validation_system_prompt,
         )
 
-        return IOrderWorkflowInputModel(
-            actual_instance=IOrderWorkflowInputModelSimpleWorkflowInputModel(
+        return IOrderWorkflowInput(
+            actual_instance=IOrderWorkflowInputSimpleWorkflowInput(
                 _t="SimpleWorkflow",
                 blueprint=IRapidBlueprint(actual_instance=blueprint),
             )

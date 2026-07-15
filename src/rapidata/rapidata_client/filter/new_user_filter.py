@@ -10,14 +10,12 @@ class NewUserFilter(RapidataFilter):
     """
 
     def _to_model(self):
-        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
-        from rapidata.api_client.models.i_user_filter_model_new_user_filter_model import (
-            IUserFilterModelNewUserFilterModel,
+        from rapidata.api_client.models.i_user_filter import IUserFilter
+        from rapidata.api_client.models.i_user_filter_new_user_filter import (
+            IUserFilterNewUserFilter,
         )
 
-        return IUserFilterModel(
-            actual_instance=IUserFilterModelNewUserFilterModel(_t="NewUserFilter")
-        )
+        return IUserFilter(actual_instance=IUserFilterNewUserFilter(_t="NewUserFilter"))
 
     def _to_audience_model(self):
         raise NotImplementedError("NewUserFilter is not supported for audiences")

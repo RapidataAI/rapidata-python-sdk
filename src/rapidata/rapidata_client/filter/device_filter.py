@@ -22,14 +22,14 @@ class DeviceFilter(RapidataFilter, BaseModel):
         super().__init__(device_types=device_types)
 
     def _to_model(self):
-        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
-        from rapidata.api_client.models.i_user_filter_model_device_user_filter_model import (
-            IUserFilterModelDeviceUserFilterModel,
+        from rapidata.api_client.models.i_user_filter import IUserFilter
+        from rapidata.api_client.models.i_user_filter_device_user_filter import (
+            IUserFilterDeviceUserFilter,
         )
         from rapidata.api_client.models.device_type import DeviceType as ApiDeviceType
 
-        return IUserFilterModel(
-            actual_instance=IUserFilterModelDeviceUserFilterModel(
+        return IUserFilter(
+            actual_instance=IUserFilterDeviceUserFilter(
                 _t="DeviceFilter",
                 deviceTypes=[
                     ApiDeviceType(dt._to_backend_model()) for dt in self.device_types

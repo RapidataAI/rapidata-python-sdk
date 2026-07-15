@@ -29,13 +29,13 @@ class NotFilter(RapidataFilter, BaseModel):
         super().__init__(filter=filter)
 
     def _to_model(self):
-        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
-        from rapidata.api_client.models.i_user_filter_model_not_user_filter_model import (
-            IUserFilterModelNotUserFilterModel,
+        from rapidata.api_client.models.i_user_filter import IUserFilter
+        from rapidata.api_client.models.i_user_filter_not_user_filter import (
+            IUserFilterNotUserFilter,
         )
 
-        return IUserFilterModel(
-            actual_instance=IUserFilterModelNotUserFilterModel(
+        return IUserFilter(
+            actual_instance=IUserFilterNotUserFilter(
                 _t="NotFilter",
                 filter=self.filter._to_model(),
             )
