@@ -1167,7 +1167,7 @@
           "Rapid"
         ],
         "summary": "Rejects a completed rapid, marking its results as invalid.",
-        "description": "The rapid must be in the Done state. Rejection propagates staleness to dependent entities.",
+        "description": "Valid from the Done, Labeling, Paused or Flagged state. Rejection propagates staleness to\n dependent entities.",
         "parameters": [
           {
             "name": "rapidId",

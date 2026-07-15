@@ -684,7 +684,7 @@ class RapidApi:
     ) -> None:
         """Rejects a completed rapid, marking its results as invalid.
 
-        The rapid must be in the Done state. Rejection propagates staleness to dependent entities.
+        Valid from the Done, Labeling, Paused or Flagged state. Rejection propagates staleness to  dependent entities.
 
         :param rapid_id: The identifier of the rapid to reject. (required)
         :type rapid_id: str
@@ -754,7 +754,7 @@ class RapidApi:
     ) -> ApiResponse[None]:
         """Rejects a completed rapid, marking its results as invalid.
 
-        The rapid must be in the Done state. Rejection propagates staleness to dependent entities.
+        Valid from the Done, Labeling, Paused or Flagged state. Rejection propagates staleness to  dependent entities.
 
         :param rapid_id: The identifier of the rapid to reject. (required)
         :type rapid_id: str
@@ -824,7 +824,7 @@ class RapidApi:
     ) -> RESTResponseType:
         """Rejects a completed rapid, marking its results as invalid.
 
-        The rapid must be in the Done state. Rejection propagates staleness to dependent entities.
+        Valid from the Done, Labeling, Paused or Flagged state. Rejection propagates staleness to  dependent entities.
 
         :param rapid_id: The identifier of the rapid to reject. (required)
         :type rapid_id: str
