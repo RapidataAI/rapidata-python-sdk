@@ -42,8 +42,9 @@ class GetSignalByIdEndpointOutput(LazyValidatedModel):
     is_public: StrictBool = Field(description="Whether the signal is readable by every authenticated user.", alias="isPublic")
     owner_id: UUID = Field(description="The customer id of the signal owner.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the signal owner.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     created_at: datetime = Field(description="When the signal was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "audienceId", "jobDefinitionId", "revisionNumber", "intervalSeconds", "nextRunAt", "lastRunAt", "isPaused", "isPublic", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "audienceId", "jobDefinitionId", "revisionNumber", "intervalSeconds", "nextRunAt", "lastRunAt", "isPaused", "isPublic", "ownerId", "ownerMail", "organizationId", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -95,6 +96,11 @@ class GetSignalByIdEndpointOutput(LazyValidatedModel):
         if self.last_run_at is None and "last_run_at" in self.model_fields_set:
             _dict['lastRunAt'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -120,6 +126,7 @@ class GetSignalByIdEndpointOutput(LazyValidatedModel):
             "isPublic": obj.get("isPublic"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt")
         }
         try:

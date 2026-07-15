@@ -43,7 +43,8 @@ class IWorkflowRankingWorkflow(LazyValidatedModel):
     context: Optional[StrictStr]
     context_asset: Optional[IAsset] = Field(alias="contextAsset")
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "rankingConfig", "context", "contextAsset", "ownerMail"]
+    organization_id: Optional[StrictStr] = Field(default=None, alias="organizationId")
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "rankingConfig", "context", "contextAsset", "ownerMail", "organizationId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -119,6 +120,11 @@ class IWorkflowRankingWorkflow(LazyValidatedModel):
         if self.owner_mail is None and "owner_mail" in self.model_fields_set:
             _dict['ownerMail'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -141,7 +147,8 @@ class IWorkflowRankingWorkflow(LazyValidatedModel):
             "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId")
         }
         try:
             _obj = cls.model_validate(_data)

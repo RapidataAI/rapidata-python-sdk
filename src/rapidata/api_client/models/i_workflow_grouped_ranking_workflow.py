@@ -37,8 +37,9 @@ class IWorkflowGroupedRankingWorkflow(LazyValidatedModel):
     criteria: StrictStr
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, alias="organizationId")
     ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "state", "criteria", "name", "ownerMail", "rankingConfig"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "state", "criteria", "name", "ownerMail", "organizationId", "rankingConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -93,6 +94,11 @@ class IWorkflowGroupedRankingWorkflow(LazyValidatedModel):
         if self.owner_mail is None and "owner_mail" in self.model_fields_set:
             _dict['ownerMail'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         # set to None if ranking_config (nullable) is None
         # and model_fields_set contains the field
         if self.ranking_config is None and "ranking_config" in self.model_fields_set:
@@ -117,6 +123,7 @@ class IWorkflowGroupedRankingWorkflow(LazyValidatedModel):
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None
         }
         try:

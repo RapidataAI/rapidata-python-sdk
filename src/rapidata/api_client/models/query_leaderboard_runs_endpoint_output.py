@@ -34,10 +34,11 @@ class QueryLeaderboardRunsEndpointOutput(LazyValidatedModel):
     status: RunStatus = Field(description="The status of the run.")
     created_at: datetime = Field(description="The timestamp when the run was created.", alias="createdAt")
     owner_mail: StrictStr = Field(description="The mail of the owner of the run.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     order_id: Optional[StrictStr] = Field(description="The id of the associated order, if any.", alias="orderId")
     job_id: Optional[StrictStr] = Field(description="The id of the associated job, if any.", alias="jobId")
     audience_id: StrictStr = Field(description="The id of the audience associated with the run.", alias="audienceId")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "createdAt", "ownerMail", "orderId", "jobId", "audienceId"]
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "createdAt", "ownerMail", "organizationId", "orderId", "jobId", "audienceId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -74,6 +75,11 @@ class QueryLeaderboardRunsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         # set to None if order_id (nullable) is None
         # and model_fields_set contains the field
         if self.order_id is None and "order_id" in self.model_fields_set:
@@ -101,6 +107,7 @@ class QueryLeaderboardRunsEndpointOutput(LazyValidatedModel):
             "status": obj.get("status"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "orderId": obj.get("orderId"),
             "jobId": obj.get("jobId"),
             "audienceId": obj.get("audienceId")

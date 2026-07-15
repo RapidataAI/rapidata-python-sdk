@@ -37,9 +37,10 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
     pipeline_id: StrictStr = Field(description="The id of the pipeline executing the job.", alias="pipelineId")
     state: AudienceJobState = Field(description="The current state of the job.")
     owner_mail: StrictStr = Field(description="The email of the job's owner.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the job was created.", alias="createdAt")
     progress: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Labeling completion as a ratio in the range 0–1, or null when no progress has  been reported yet (completion sets it to 1). Sortable via ?sort=progress.")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "state", "ownerMail", "createdAt", "progress"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "state", "ownerMail", "organizationId", "createdAt", "progress"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -76,6 +77,11 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         # set to None if progress (nullable) is None
         # and model_fields_set contains the field
         if self.progress is None and "progress" in self.model_fields_set:
@@ -101,6 +107,7 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
             "pipelineId": obj.get("pipelineId"),
             "state": obj.get("state"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt"),
             "progress": obj.get("progress")
         }

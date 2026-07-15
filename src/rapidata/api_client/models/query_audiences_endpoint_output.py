@@ -39,13 +39,14 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
     logo: Optional[StrictStr] = Field(default=None, description="The URL of the audience logo, if any.")
     created_at: datetime = Field(description="The timestamp when the audience was created.", alias="createdAt")
     owner_mail: StrictStr = Field(description="The email of the audience owner.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     is_public: StrictBool = Field(description="Whether the audience is publicly visible.", alias="isPublic")
     is_distilling: StrictBool = Field(description="Whether the audience is currently distilling users.", alias="isDistilling")
     random_admission_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of admitting a random user to the audience.", alias="randomAdmissionProbability")
     health: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The health score of the audience.")
     graduated: Optional[StrictInt] = Field(default=None, description="The number of graduated users.")
     dropped: Optional[StrictInt] = Field(default=None, description="The number of dropped users.")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "randomAdmissionProbability", "health", "graduated", "dropped"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "organizationId", "isPublic", "isDistilling", "randomAdmissionProbability", "health", "graduated", "dropped"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -99,6 +100,11 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
         if self.logo is None and "logo" in self.model_fields_set:
             _dict['logo'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         # set to None if random_admission_probability (nullable) is None
         # and model_fields_set contains the field
         if self.random_admission_probability is None and "random_admission_probability" in self.model_fields_set:
@@ -130,6 +136,7 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
             "logo": obj.get("logo"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "isPublic": obj.get("isPublic"),
             "isDistilling": obj.get("isDistilling"),
             "randomAdmissionProbability": obj.get("randomAdmissionProbability"),

@@ -1644,6 +1644,10 @@
           "ownerMail": {
             "type": "string"
           },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -1715,6 +1719,10 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -1870,6 +1878,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the owning customer."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "ownerId": {
             "type": "string",
@@ -3160,6 +3173,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The mail of the owning customer."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",

@@ -18,7 +18,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from rapidata.api_client.models.flow_type import FlowType
 from pydantic import ValidationError
@@ -35,8 +35,9 @@ class QueryFlowsEndpointOutput(LazyValidatedModel):
     type: FlowType = Field(description="The type of the flow.")
     owner_id: UUID = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "organizationId", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -73,6 +74,11 @@ class QueryFlowsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -90,6 +96,7 @@ class QueryFlowsEndpointOutput(LazyValidatedModel):
             "type": obj.get("type"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt")
         }
         try:

@@ -1382,6 +1382,11 @@
             "type": "string",
             "description": "The email of the signal owner."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "When the signal was created.",
@@ -1631,6 +1636,11 @@
           "ownerMail": {
             "type": "string",
             "description": "The email of the signal owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the entity.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",

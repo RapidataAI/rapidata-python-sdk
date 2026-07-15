@@ -38,8 +38,9 @@ class GetRecommendedValidationSetEndpointValidationSetOutput(LazyValidatedModel)
     is_public: StrictBool = Field(alias="isPublic")
     owner_id: UUID = Field(alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, alias="organizationId")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "assetType", "modality", "promptType", "dimensions", "isPublic", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "assetType", "modality", "promptType", "dimensions", "isPublic", "ownerId", "ownerMail", "organizationId", "createdAt"]
 
     @field_validator('asset_type')
     def asset_type_validate_enum(cls, value):
@@ -105,6 +106,11 @@ class GetRecommendedValidationSetEndpointValidationSetOutput(LazyValidatedModel)
         if self.dimensions is None and "dimensions" in self.model_fields_set:
             _dict['dimensions'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -126,6 +132,7 @@ class GetRecommendedValidationSetEndpointValidationSetOutput(LazyValidatedModel)
             "isPublic": obj.get("isPublic"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt")
         }
         try:

@@ -55,8 +55,9 @@ class IFlow(LazyValidatedModel):
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     owner_id: UUID = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "id", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "criteria", "startingElo", "minResponses", "maxResponses", "serveResponses", "featureFlags", "ownerId", "ownerMail", "organizationId", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -137,6 +138,11 @@ class IFlow(LazyValidatedModel):
         if self.serve_responses is None and "serve_responses" in self.model_fields_set:
             _dict['serveResponses'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -173,6 +179,7 @@ class IFlow(LazyValidatedModel):
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt")
         }
         try:

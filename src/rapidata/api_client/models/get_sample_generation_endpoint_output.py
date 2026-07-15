@@ -42,8 +42,9 @@ class GetSampleGenerationEndpointOutput(LazyValidatedModel):
     tags_filter: Optional[List[StrictStr]] = Field(default=None, alias="tagsFilter")
     owner_id: UUID = Field(description="The id of the customer that started this generation.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer that started this generation.", alias="ownerMail")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     created_at: datetime = Field(description="When the generation was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "status", "samplesPerPrompt", "totalCount", "completedCount", "failedCount", "participantIdFilter", "promptIdentifierFilter", "tagsFilter", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "status", "samplesPerPrompt", "totalCount", "completedCount", "failedCount", "participantIdFilter", "promptIdentifierFilter", "tagsFilter", "ownerId", "ownerMail", "organizationId", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -95,6 +96,11 @@ class GetSampleGenerationEndpointOutput(LazyValidatedModel):
         if self.tags_filter is None and "tags_filter" in self.model_fields_set:
             _dict['tagsFilter'] = None
 
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -119,6 +125,7 @@ class GetSampleGenerationEndpointOutput(LazyValidatedModel):
             "tagsFilter": obj.get("tagsFilter"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt")
         }
         try:

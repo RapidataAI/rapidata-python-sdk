@@ -18,7 +18,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -35,7 +35,8 @@ class QueryPublishedBenchmarksEndpointOutput(LazyValidatedModel):
     is_published: StrictBool = Field(description="Whether the benchmark is published to the public benchmark repository.", alias="isPublished")
     created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
     owner_mail: StrictStr = Field(description="The mail of the customer owning the benchmark.", alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "isPublished", "createdAt", "ownerMail"]
+    organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
+    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "isPublished", "createdAt", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -72,6 +73,11 @@ class QueryPublishedBenchmarksEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if organization_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.organization_id is None and "organization_id" in self.model_fields_set:
+            _dict['organizationId'] = None
+
         return _dict
 
     @classmethod
@@ -90,7 +96,8 @@ class QueryPublishedBenchmarksEndpointOutput(LazyValidatedModel):
             "isPublic": obj.get("isPublic"),
             "isPublished": obj.get("isPublished"),
             "createdAt": obj.get("createdAt"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "organizationId": obj.get("organizationId")
         }
         try:
             _obj = cls.model_validate(_data)
