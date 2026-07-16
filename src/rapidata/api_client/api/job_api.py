@@ -7968,7 +7968,6 @@ class JobApi:
     ) -> QueryJobsEndpointPagedResultOfOutput:
         """Queries jobs visible to the caller.
 
-        Results are scoped to the caller's customer unless the caller is allowed to view all jobs.
 
         :param page: The 1-based page index.
         :type page: int
@@ -8078,7 +8077,6 @@ class JobApi:
     ) -> ApiResponse[QueryJobsEndpointPagedResultOfOutput]:
         """Queries jobs visible to the caller.
 
-        Results are scoped to the caller's customer unless the caller is allowed to view all jobs.
 
         :param page: The 1-based page index.
         :type page: int
@@ -8188,7 +8186,6 @@ class JobApi:
     ) -> RESTResponseType:
         """Queries jobs visible to the caller.
 
-        Results are scoped to the caller's customer unless the caller is allowed to view all jobs.
 
         :param page: The 1-based page index.
         :type page: int
