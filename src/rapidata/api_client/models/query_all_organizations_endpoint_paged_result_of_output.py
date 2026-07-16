@@ -16,23 +16,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.org_role import OrgRole
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.query_all_organizations_endpoint_output import QueryAllOrganizationsEndpointOutput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryOrganizationsEndpointOutput(LazyValidatedModel):
+class QueryAllOrganizationsEndpointPagedResultOfOutput(LazyValidatedModel):
     """
-    QueryOrganizationsEndpointOutput
+    QueryAllOrganizationsEndpointPagedResultOfOutput
     """ # noqa: E501
-    id: StrictStr = Field(description="The id of the organization.")
-    name: StrictStr = Field(description="The human-readable name of the organization.")
-    slug: StrictStr = Field(description="The URL-safe unique identifier of the organization.")
-    role: OrgRole = Field(description="The caller's role in the organization.")
-    __properties: ClassVar[List[str]] = ["id", "name", "slug", "role"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[QueryAllOrganizationsEndpointOutput]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -48,7 +49,7 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryOrganizationsEndpointOutput from a JSON string"""
+        """Create an instance of QueryAllOrganizationsEndpointPagedResultOfOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +70,18 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryOrganizationsEndpointOutput from a dict"""
+        """Create an instance of QueryAllOrganizationsEndpointPagedResultOfOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,10 +89,11 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "slug": obj.get("slug"),
-            "role": obj.get("role")
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [QueryAllOrganizationsEndpointOutput.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         }
         try:
             _obj = cls.model_validate(_data)
