@@ -36,7 +36,7 @@ Frame questions in the positive rather than negative. Positive questions are eas
 ```
 
 ### Limit Decision Criteria
-Don't overload labelers with multiple criteria in a single question. The instruction and the answer options are two separate fields (`instruction` and `answer_options`) — keep them distinct.
+Don't overload labelers with multiple criteria in a single question.
 
 **Better:**
 ```
