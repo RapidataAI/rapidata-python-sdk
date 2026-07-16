@@ -36,16 +36,18 @@ Frame questions in the positive rather than negative. Positive questions are eas
 ```
 
 ### Limit Decision Criteria
-Don't overload labelers with multiple criteria in a single question.
+Don't overload labelers with multiple criteria in a single question. The instruction and the answer options are two separate fields (`instruction` and `answer_options`) — keep them distinct.
 
 **Better:**
 ```
-"What animal is in the image? - rabbit/dog/cat/other"
+Instruction:    "What animal is in the image?"
+Answer options: rabbit / dog / cat / other
 ```
 
 **Avoid:**
 ```
-"Does this image contain a rabbit, a dog, or a cat? - yes/no"
+Instruction:    "Does this image contain a rabbit, a dog, or a cat?"
+Answer options: yes / no
 ```
 
 ### Use Clear Response Options
@@ -53,12 +55,14 @@ Provide distinct, non-overlapping response options.
 
 **Better:**
 ```
-"Rate the image quality: poor/acceptable/excellent"
+Instruction:    "Rate the image quality"
+Answer options: poor / acceptable / excellent
 ```
 
 **Avoid:**
 ```
-"Rate the image quality: bad/not good/fine/good/great"
+Instruction:    "Rate the image quality"
+Answer options: bad / not good / fine / good / great
 ```
 
 ## Example Implementation
