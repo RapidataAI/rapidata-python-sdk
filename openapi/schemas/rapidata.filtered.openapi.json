@@ -21279,7 +21279,6 @@
           "Job"
         ],
         "summary": "Queries jobs visible to the caller.",
-        "description": "Results are scoped to the caller's customer unless the caller is allowed to view all jobs.",
         "parameters": [
           {
             "name": "page",
