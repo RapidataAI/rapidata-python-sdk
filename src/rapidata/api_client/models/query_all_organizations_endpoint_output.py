@@ -18,21 +18,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.org_role import OrgRole
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryOrganizationsEndpointOutput(LazyValidatedModel):
+class QueryAllOrganizationsEndpointOutput(LazyValidatedModel):
     """
-    QueryOrganizationsEndpointOutput
+    QueryAllOrganizationsEndpointOutput
     """ # noqa: E501
     id: StrictStr = Field(description="The id of the organization.")
     name: StrictStr = Field(description="The human-readable name of the organization.")
     slug: StrictStr = Field(description="The URL-safe unique identifier of the organization.")
-    role: OrgRole = Field(description="The caller's role in the organization.")
-    __properties: ClassVar[List[str]] = ["id", "name", "slug", "role"]
+    __properties: ClassVar[List[str]] = ["id", "name", "slug"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -48,7 +46,7 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryOrganizationsEndpointOutput from a JSON string"""
+        """Create an instance of QueryAllOrganizationsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +71,7 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryOrganizationsEndpointOutput from a dict"""
+        """Create an instance of QueryAllOrganizationsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -83,8 +81,7 @@ class QueryOrganizationsEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
-            "slug": obj.get("slug"),
-            "role": obj.get("role")
+            "slug": obj.get("slug")
         }
         try:
             _obj = cls.model_validate(_data)

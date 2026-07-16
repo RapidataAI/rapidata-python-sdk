@@ -298,7 +298,8 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves all publicly available orders.
 *OrganizationApi* | [**organizations_accept_invitation_post**](rapidata/api_client/docs/OrganizationApi.md#organizations_accept_invitation_post) | **POST** /organizations/accept-invitation | Accepts the invitation identified by the token.
 *OrganizationApi* | [**organizations_active_put**](rapidata/api_client/docs/OrganizationApi.md#organizations_active_put) | **PUT** /organizations/active | Switches the calling customer&#39;s active organization to the given one.
-*OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of organizations, each with the caller&#39;s own role.
+*OrganizationApi* | [**organizations_all_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_all_get) | **GET** /organizations/all | Returns a paged list of every organization.
+*OrganizationApi* | [**organizations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_get) | **GET** /organizations | Returns a paged list of the caller&#39;s organizations, each with the caller&#39;s role.
 *OrganizationApi* | [**organizations_organization_id_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_get) | **GET** /organizations/{organizationId} | Returns the organization with the given id.
 *OrganizationApi* | [**organizations_organization_id_invitations_get**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_invitations_get) | **GET** /organizations/{organizationId}/invitations | Returns the pending invitations of the given organization.
 *OrganizationApi* | [**organizations_organization_id_invitations_invitation_id_delete**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_invitations_invitation_id_delete) | **DELETE** /organizations/{organizationId}/invitations/{invitationId} | Revokes the given invitation so its token can no longer be accepted.
@@ -990,6 +991,8 @@ Class | Method | HTTP request | Description
  - [QueryAggregatedJobsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAggregatedJobsEndpointPagedResultOfOutput.md)
  - [QueryAggregatedOrdersEndpointOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointOutput.md)
  - [QueryAggregatedOrdersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAggregatedOrdersEndpointPagedResultOfOutput.md)
+ - [QueryAllOrganizationsEndpointOutput](rapidata/api_client/docs/QueryAllOrganizationsEndpointOutput.md)
+ - [QueryAllOrganizationsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAllOrganizationsEndpointPagedResultOfOutput.md)
  - [QueryAudienceJobsEndpointOutput](rapidata/api_client/docs/QueryAudienceJobsEndpointOutput.md)
  - [QueryAudienceJobsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryAudienceJobsEndpointPagedResultOfOutput.md)
  - [QueryAudiencesEndpointOutput](rapidata/api_client/docs/QueryAudiencesEndpointOutput.md)
