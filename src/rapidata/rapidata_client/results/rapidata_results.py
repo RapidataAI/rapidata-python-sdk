@@ -42,7 +42,8 @@ class RapidataResults(dict):
         if "results" not in self or not self["results"]:
             return pd.DataFrame()
 
-        if self["info"].get("orderType") is None:
+        task_type = self._task_type()
+        if task_type is None:
             managed_print(
                 "Warning: Results are old and Order type is not specified. Dataframe might be wrong."
             )
@@ -53,7 +54,7 @@ class RapidataResults(dict):
         # Compare/Ranking have an asset-aware shape; route them to the
         # compare-specific path even when split_details=True so we keep the
         # A_/B_ (or per-asset) column splitting.
-        if self["info"].get("orderType") in ("Compare", "Ranking"):
+        if task_type in ("Compare", "Ranking"):
             return self._compare_to_pandas(split_details=split_details)
 
         if split_details:
@@ -77,6 +78,16 @@ class RapidataResults(dict):
             data.append(row)
 
         return pd.DataFrame(data, columns=Index(columns))
+
+    def _task_type(self) -> str | None:
+        """Return the task type from ``info``, tolerant of the field rename.
+
+        The aggregator emits it as ``type`` (canonical). ``orderType`` is an
+        older name kept as a read fallback so results generated before the
+        rename still route correctly.
+        """
+        info = self.get("info", {})
+        return info.get("type") or info.get("orderType")
 
     def _has_detailed_results(self) -> bool:
         """
