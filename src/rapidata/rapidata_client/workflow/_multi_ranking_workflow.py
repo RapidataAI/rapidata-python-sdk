@@ -30,17 +30,17 @@ class MultiRankingWorkflow(Workflow):
         from rapidata.api_client.models.i_pair_maker_config import (
             IPairMakerConfig,
         )
-        from rapidata.api_client.models.i_pair_maker_config_model_online_pair_maker_config_model import (
-            IPairMakerConfigModelOnlinePairMakerConfigModel,
+        from rapidata.api_client.models.i_pair_maker_config_online_pair_maker_config import (
+            IPairMakerConfigOnlinePairMakerConfig,
         )
-        from rapidata.api_client.models.i_pair_maker_config_model_full_permutation_pair_maker_config_model import (
-            IPairMakerConfigModelFullPermutationPairMakerConfigModel,
+        from rapidata.api_client.models.i_pair_maker_config_full_permutation_pair_maker_config import (
+            IPairMakerConfigFullPermutationPairMakerConfig,
         )
         from rapidata.api_client.models.i_ranking_config import (
             IRankingConfig,
         )
-        from rapidata.api_client.models.i_ranking_config_model_bradley_terry_ranking_config_model import (
-            IRankingConfigModelBradleyTerryRankingConfigModel,
+        from rapidata.api_client.models.i_ranking_config_bradley_terry_ranking_config import (
+            IRankingConfigBradleyTerryRankingConfig,
         )
 
         super().__init__(type="CompareWorkflowConfig")
@@ -52,13 +52,13 @@ class MultiRankingWorkflow(Workflow):
 
         if max_group_size <= FULL_PERMUTATION_GROUP_SIZE_THRESHOLD:
             self.pair_maker_config = IPairMakerConfig(
-                actual_instance=IPairMakerConfigModelFullPermutationPairMakerConfigModel(
+                actual_instance=IPairMakerConfigFullPermutationPairMakerConfig(
                     _t="FullPermutationPairMaker",
                 ),
             )
         else:
             self.pair_maker_config = IPairMakerConfig(
-                actual_instance=IPairMakerConfigModelOnlinePairMakerConfigModel(
+                actual_instance=IPairMakerConfigOnlinePairMakerConfig(
                     _t="OnlinePairMaker",
                     totalComparisonBudget=comparison_budget_per_ranking,
                     randomMatchesRatio=random_comparisons_ratio,
@@ -66,7 +66,7 @@ class MultiRankingWorkflow(Workflow):
             )
 
         self.ranking_config = IRankingConfig(
-            actual_instance=IRankingConfigModelBradleyTerryRankingConfigModel(
+            actual_instance=IRankingConfigBradleyTerryRankingConfig(
                 _t="BradleyTerryRankingConfig",
                 startingScore=BRADLEY_TERRY_DEFAULT_STARTING_SCORE,
             ),
