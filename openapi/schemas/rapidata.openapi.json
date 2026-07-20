@@ -44875,7 +44875,20 @@
                 "nullable": true
               }
             ],
-            "description": "Optional participant id filter that was applied when this generation was created."
+            "description": "Optional participant id filter that was applied when this generation was created.",
+            "deprecated": true
+          },
+          "participantFilter": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetSampleGenerationEndpoint_Output_Participant"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The participants (id + display name) this generation was filtered to when it was\n created, or null when no participant filter was applied. A since-deleted participant\n keeps its id with a null name."
           },
           "promptIdentifierFilter": {
             "allOf": [
@@ -44922,6 +44935,21 @@
           }
         }
       },
+      "GetSampleGenerationEndpoint_Output_Participant": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "GetSampleGenerationItemsEndpoint_Output": {
         "required": [
           "id",
@@ -44948,6 +44976,11 @@
           "participantId": {
             "type": "string",
             "description": "The participant whose faucet is producing this sample."
+          },
+          "participantName": {
+            "type": "string",
+            "description": "The participant's display name, or null if the participant no longer exists.",
+            "nullable": true
           },
           "benchmarkPromptId": {
             "type": "string",

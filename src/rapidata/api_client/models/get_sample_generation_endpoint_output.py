@@ -20,6 +20,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
+from rapidata.api_client.models.get_sample_generation_endpoint_output_participant import GetSampleGenerationEndpointOutputParticipant
 from rapidata.api_client.models.sample_generation_status import SampleGenerationStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -37,14 +38,14 @@ class GetSampleGenerationEndpointOutput(LazyValidatedModel):
     total_count: StrictInt = Field(description="The total number of items queued.", alias="totalCount")
     completed_count: StrictInt = Field(description="The number of items that have succeeded so far.", alias="completedCount")
     failed_count: StrictInt = Field(description="The number of items that have failed.", alias="failedCount")
-    participant_id_filter: Optional[List[StrictStr]] = Field(default=None, alias="participantIdFilter")
+    participant_filter: Optional[List[GetSampleGenerationEndpointOutputParticipant]] = Field(default=None, alias="participantFilter")
     prompt_identifier_filter: Optional[List[StrictStr]] = Field(default=None, alias="promptIdentifierFilter")
     tags_filter: Optional[List[StrictStr]] = Field(default=None, alias="tagsFilter")
     owner_id: UUID = Field(description="The id of the customer that started this generation.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The mail of the customer that started this generation.", alias="ownerMail")
     organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     created_at: datetime = Field(description="When the generation was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "status", "samplesPerPrompt", "totalCount", "completedCount", "failedCount", "participantIdFilter", "promptIdentifierFilter", "tagsFilter", "ownerId", "ownerMail", "organizationId", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "status", "samplesPerPrompt", "totalCount", "completedCount", "failedCount", "participantFilter", "promptIdentifierFilter", "tagsFilter", "ownerId", "ownerMail", "organizationId", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,10 +82,17 @@ class GetSampleGenerationEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if participant_id_filter (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of each item in participant_filter (list)
+        _items = []
+        if self.participant_filter:
+            for _item_participant_filter in self.participant_filter:
+                if _item_participant_filter:
+                    _items.append(_item_participant_filter.to_dict())
+            _dict['participantFilter'] = _items
+        # set to None if participant_filter (nullable) is None
         # and model_fields_set contains the field
-        if self.participant_id_filter is None and "participant_id_filter" in self.model_fields_set:
-            _dict['participantIdFilter'] = None
+        if self.participant_filter is None and "participant_filter" in self.model_fields_set:
+            _dict['participantFilter'] = None
 
         # set to None if prompt_identifier_filter (nullable) is None
         # and model_fields_set contains the field
@@ -120,7 +128,7 @@ class GetSampleGenerationEndpointOutput(LazyValidatedModel):
             "totalCount": obj.get("totalCount"),
             "completedCount": obj.get("completedCount"),
             "failedCount": obj.get("failedCount"),
-            "participantIdFilter": obj.get("participantIdFilter"),
+            "participantFilter": [GetSampleGenerationEndpointOutputParticipant.from_dict(_item) for _item in obj["participantFilter"]] if obj.get("participantFilter") is not None else None,
             "promptIdentifierFilter": obj.get("promptIdentifierFilter"),
             "tagsFilter": obj.get("tagsFilter"),
             "ownerId": obj.get("ownerId"),

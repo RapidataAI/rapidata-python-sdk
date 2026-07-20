@@ -32,6 +32,7 @@ class GetSampleGenerationItemsEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The id of the generation item.")
     sample_generation_id: StrictStr = Field(description="The id of the parent sample generation.", alias="sampleGenerationId")
     participant_id: StrictStr = Field(description="The participant whose faucet is producing this sample.", alias="participantId")
+    participant_name: Optional[StrictStr] = Field(default=None, description="The participant's display name, or null if the participant no longer exists.", alias="participantName")
     benchmark_prompt_id: StrictStr = Field(description="The benchmark prompt this item targets.", alias="benchmarkPromptId")
     prompt_identifier: StrictStr = Field(description="The identifier of the prompt being generated.", alias="promptIdentifier")
     sample_count: StrictInt = Field(description="How many samples this item produces for its (participant, prompt) pair.", alias="sampleCount")
@@ -41,7 +42,7 @@ class GetSampleGenerationItemsEndpointOutput(LazyValidatedModel):
     failure_reason: Optional[StrictStr] = Field(default=None, description="Failure reason if the item is in a failed state.", alias="failureReason")
     sample_ids: List[StrictStr] = Field(alias="sampleIds")
     created_at: datetime = Field(description="When the item was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "sampleGenerationId", "participantId", "benchmarkPromptId", "promptIdentifier", "sampleCount", "status", "attemptCount", "providerRequestId", "failureReason", "sampleIds", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "sampleGenerationId", "participantId", "participantName", "benchmarkPromptId", "promptIdentifier", "sampleCount", "status", "attemptCount", "providerRequestId", "failureReason", "sampleIds", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -78,6 +79,11 @@ class GetSampleGenerationItemsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if participant_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.participant_name is None and "participant_name" in self.model_fields_set:
+            _dict['participantName'] = None
+
         # set to None if provider_request_id (nullable) is None
         # and model_fields_set contains the field
         if self.provider_request_id is None and "provider_request_id" in self.model_fields_set:
@@ -103,6 +109,7 @@ class GetSampleGenerationItemsEndpointOutput(LazyValidatedModel):
             "id": obj.get("id"),
             "sampleGenerationId": obj.get("sampleGenerationId"),
             "participantId": obj.get("participantId"),
+            "participantName": obj.get("participantName"),
             "benchmarkPromptId": obj.get("benchmarkPromptId"),
             "promptIdentifier": obj.get("promptIdentifier"),
             "sampleCount": obj.get("sampleCount"),
