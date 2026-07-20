@@ -87,6 +87,8 @@ In this example, we rate images on a Likert scale to assess how well generated i
             settings=[NoShuffleSetting()] # (2)!
         )
 
+    audience.start_recruiting() # (3)!
+
     job_definition = client.job.create_classification_job_definition(
         name="Likert Scale Example",
         instruction="How well does the image match the description?",
@@ -106,6 +108,7 @@ In this example, we rate images on a Likert scale to assess how well generated i
 
     1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it.
     2. Qualify labelers on the same UI they'll see in the job. Since the job uses `NoShuffleSetting`, the examples use it too — see [Custom Audiences](../audiences.md#matching-the-job-ui-with-settings).
+    3. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
         Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.

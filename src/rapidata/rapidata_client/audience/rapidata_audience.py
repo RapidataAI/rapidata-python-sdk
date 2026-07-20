@@ -219,7 +219,6 @@ class RapidataAudience(RapidataAudienceBase):
                 explanation,
                 settings,
             )
-            self._try_start_recruiting()
             return self
 
     def add_compare_example(
@@ -266,7 +265,6 @@ class RapidataAudience(RapidataAudienceBase):
                 explanation,
                 settings,
             )
-            self._try_start_recruiting()
             return self
 
     def add_locate_example(
@@ -310,7 +308,6 @@ class RapidataAudience(RapidataAudienceBase):
                 explanation=explanation,
                 settings=settings,
             )
-            self._try_start_recruiting()
             return self
 
     def add_draw_example(
@@ -354,7 +351,6 @@ class RapidataAudience(RapidataAudienceBase):
                 explanation=explanation,
                 settings=settings,
             )
-            self._try_start_recruiting()
             return self
 
     def add_select_words_example(
@@ -400,7 +396,6 @@ class RapidataAudience(RapidataAudienceBase):
                 explanation,
                 settings,
             )
-            self._try_start_recruiting()
             return self
 
     def get_examples(
@@ -448,35 +443,32 @@ class RapidataAudience(RapidataAudienceBase):
         with tracer.start_as_current_span("RapidataAudience._add_rapid_example"):
             logger.debug(f"Adding rapid example to audience: {self.id}")
             self._example_handler._add_rapid_example(rapid)
-            self._try_start_recruiting()
             return self
 
-    def _try_start_recruiting(self) -> None:
-        """Try to start recruiting annotators for this audience.
+    def start_recruiting(self) -> RapidataAudience:
+        """Start recruiting annotators for this audience.
 
-        This will begin the process of onboarding annotators for this audience.
-        If the recruiting has already started, it will do nothing.
+        This begins the distilling/onboarding campaign that qualifies annotators
+        against the examples added to this audience. Call it once — after all
+        qualification examples have been added and reviewed. Until it is called,
+        the audience stays in its ``Created`` status and recruits nobody, so adding
+        examples never implicitly starts recruiting.
+
+        Calling this more than once on the same instance is a no-op. A genuine
+        backend failure is raised so the caller knows recruiting did not start.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
         """
-        from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
-
         if self._recruiting_started:
             logger.debug(f"Recruiting already started for audience: {self.id}")
-            return
+            return self
 
-        with tracer.start_as_current_span("RapidataAudience._try_start_recruiting"):
-            from rapidata.rapidata_client.api.rapidata_api_client import (
-                suppress_rapidata_error_logging,
-            )
-
+        with tracer.start_as_current_span("RapidataAudience.start_recruiting"):
             logger.debug(f"Sending request to start recruiting for audience: {self.id}")
-            with suppress_rapidata_error_logging():
-                try:
-                    self._openapi_service.audience.audience_api.audience_audience_id_recruit_post(
-                        audience_id=self.id,
-                    )
-                    logger.info(f"Started recruiting for audience: {self.id}")
-                    self._recruiting_started = True
-                except RapidataError as e:
-                    logger.debug(
-                        f"Error starting recruiting for audience: {self.id} - {e}"
-                    )
+            self._openapi_service.audience.audience_api.audience_audience_id_recruit_post(
+                audience_id=self.id,
+            )
+            logger.info(f"Started recruiting for audience: {self.id}")
+            self._recruiting_started = True
+            return self

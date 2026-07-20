@@ -45,6 +45,7 @@ class MultiRankingWorkflow(Workflow):
 
         super().__init__(type="CompareWorkflowConfig")
 
+        self._validate_instruction(instruction)
         self.instruction = instruction
         self.comparison_budget_per_ranking = comparison_budget_per_ranking
         self.random_comparisons_ratio = random_comparisons_ratio

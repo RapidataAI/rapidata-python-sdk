@@ -39,6 +39,7 @@ class FreeTextWorkflow(Workflow):
 
     def __init__(self, instruction: str, validation_system_prompt: str | None = None):
         super().__init__(type="SimpleWorkflowConfig")
+        self._validate_instruction(instruction)
         self._instruction = instruction
         self._validation_system_prompt = validation_system_prompt
 

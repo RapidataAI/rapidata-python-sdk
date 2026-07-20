@@ -43,6 +43,7 @@ class ClassifyWorkflow(Workflow):
 
     def __init__(self, instruction: str, answer_options: list[str]):
         super().__init__(type="SimpleWorkflowConfig")
+        self._validate_instruction(instruction)
         self._instruction = instruction
         self._answer_options = answer_options
 

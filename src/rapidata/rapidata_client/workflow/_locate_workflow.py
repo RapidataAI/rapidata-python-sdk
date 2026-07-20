@@ -23,6 +23,7 @@ class LocateWorkflow(Workflow):
 
     def __init__(self, target: str):
         super().__init__(type="SimpleWorkflowConfig")
+        self._validate_instruction(target)
         self._target = target
 
     def _get_instruction(self) -> str:

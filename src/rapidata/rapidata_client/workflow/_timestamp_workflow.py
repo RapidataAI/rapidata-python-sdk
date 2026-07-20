@@ -36,6 +36,7 @@ class TimestampWorkflow(Workflow):
 
     def __init__(self, instruction: str):
         super().__init__(type="SimpleWorkflowConfig")
+        self._validate_instruction(instruction)
         self._instruction = instruction
 
     def _get_instruction(self) -> str:

@@ -87,6 +87,8 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
             truths=truths,
         )
 
+    audience.start_recruiting() # (2)!
+
     job_definition = client.job.create_draw_job_definition(
         name="Artifact Drawing Example",
         instruction="Color in the visual glitches or errors in the image.",
@@ -102,6 +104,7 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
     ```
 
     1. Creates a new, empty audience. The `add_draw_example` calls train and filter the labelers who join it.
+    2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
         Review every qualification example and its truth regions carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
