@@ -103,6 +103,12 @@ class UploadConfig(BaseModel):
             maximum length is automatically shortened for the order/job instruction before
             upload. When False (default), an over-long context is left unchanged and a
             warning is logged that the backend would reject it. Defaults to False.
+        failureTolerance (float): The fraction of a job's datapoints allowed to fail while
+            still creating the job definition (0.0-1.0). 0.0 (default) is strict: any failed
+            upload aborts creation so no incomplete definition is left behind, and the failed
+            datapoints can be retried into the same dataset. 1.0 creates the definition
+            regardless of how many datapoints failed. Overridable per call via the
+            ``failure_tolerance`` argument on ``create_*_job_definition``. Defaults to 0.0.
     """
 
     model_config = ConfigDict(validate_assignment=True)
@@ -145,6 +151,10 @@ class UploadConfig(BaseModel):
         default=False,
         description="Automatically shorten over-long datapoint contexts for the instruction before upload.",
     )
+    failureTolerance: float = Field(
+        default=0.0,
+        description="Fraction of a job's datapoints allowed to fail while still creating the definition (0.0-1.0).",
+    )
 
     @field_validator("maxWorkers")
     @classmethod
@@ -172,6 +182,13 @@ class UploadConfig(BaseModel):
     def validate_batch_size(cls, v: int) -> int:
         if v < 100:
             raise ValueError("batchSize must be at least 100")
+        return v
+
+    @field_validator("failureTolerance")
+    @classmethod
+    def validate_failure_tolerance(cls, v: float) -> float:
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("failureTolerance must be between 0.0 and 1.0")
         return v
 
     def __init__(self, **kwargs):
