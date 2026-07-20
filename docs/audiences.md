@@ -79,22 +79,20 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
 
 ### Step 3: Start Recruiting
 
-Adding examples no longer starts recruiting on its own. Once all your
-qualification examples are added **and reviewed**, call `start_recruiting()`
-to begin the distilling/onboarding campaign that qualifies labelers against
-them. Until you call it, the audience stays in its `Created` state and
-recruits nobody — so a mid-upload failure never leaves you with a partially
-configured, live audience.
+Once all your qualification examples are added **and reviewed**, call
+`start_recruiting()` to begin the distilling/onboarding campaign that qualifies
+labelers against them. Recruiting starts only when you call this — until then,
+the audience stays in its `Created` state and recruits nobody, so a mid-upload
+failure never leaves you with a partially configured, live audience.
 
 ```py
 audience.start_recruiting()
 ```
 
 !!! warning "Recruiting is explicit"
-    Earlier SDK versions started recruiting automatically on the first
-    qualification example. That is no longer the case: you must call
-    `start_recruiting()` yourself, after the examples are reviewed. Calling it
-    more than once on the same audience is a no-op.
+    Adding qualification examples does not start recruiting; it is a deliberate
+    step you trigger yourself with `start_recruiting()` once the examples are
+    reviewed. Calling it more than once on the same audience is a no-op.
 
 ### Step 4: Create and Assign a Job
 

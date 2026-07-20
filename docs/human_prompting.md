@@ -84,7 +84,7 @@ audience.add_compare_example(
     truth="https://assets.rapidata.ai/bad_ai_generated_image.png"
 )
 
-audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+audience.start_recruiting() # (1)!
 
 job_definition = client.job.create_compare_job_definition(
     name="Image Coherence Comparison",
@@ -98,6 +98,8 @@ job_definition = client.job.create_compare_job_definition(
 job = audience.assign_job(job_definition)
 job.view()
 ```
+
+1. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
 ## Common Task Types and Recommended Instructions
 

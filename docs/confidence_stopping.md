@@ -74,15 +74,15 @@ audience.add_classification_example(
     truth=["Cat"]
 )
 
-audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+audience.start_recruiting() # (1)!
 
 job_definition = client.job.create_classification_job_definition(
     name="Test Classification with Early Stopping",
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
     datapoints=["https://assets.rapidata.ai/dog.jpeg"],
-    responses_per_datapoint=50, # (1)!
-    confidence_threshold=0.99, # (2)!
+    responses_per_datapoint=50, # (2)!
+    confidence_threshold=0.99, # (3)!
 )
 
 job = audience.assign_job(job_definition)
@@ -92,8 +92,9 @@ results = job.get_results()
 print(results)
 ```
 
-1. Sets the **maximum** number of responses per datapoint.
-2. Stops collecting once 99% confidence is reached — for clear-cut tasks like this, expect roughly 4 responses.
+1. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
+2. Sets the **maximum** number of responses per datapoint.
+3. Stops collecting once 99% confidence is reached — for clear-cut tasks like this, expect roughly 4 responses.
 
 ### When to Use Confidence Stopping
 
@@ -222,15 +223,15 @@ audience.add_classification_example(
     truth=["Cat"]
 )
 
-audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+audience.start_recruiting() # (1)!
 
 job_definition = client.job.create_classification_job_definition(
     name="Test Classification with Quorum Stopping",
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
     datapoints=["https://assets.rapidata.ai/dog.jpeg"],
-    responses_per_datapoint=10, # (1)!
-    quorum_threshold=7, # (2)!
+    responses_per_datapoint=10, # (2)!
+    quorum_threshold=7, # (3)!
 )
 
 job = audience.assign_job(job_definition)
@@ -240,8 +241,9 @@ results = job.get_results()
 print(results)
 ```
 
-1. Sets the **maximum** number of responses per datapoint.
-2. Stops collecting once 7 responses agree on the same answer.
+1. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
+2. Sets the **maximum** number of responses per datapoint.
+3. Stops collecting once 7 responses agree on the same answer.
 
 ### When to Use Quorum Stopping
 
