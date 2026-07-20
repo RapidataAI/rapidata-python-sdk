@@ -658,6 +658,7 @@ Class | Method | HTTP request | Description
  - [GetResponsesForRapidEndpointOutputResponse](rapidata/api_client/docs/GetResponsesForRapidEndpointOutputResponse.md)
  - [GetSampleByIdEndpointOutput](rapidata/api_client/docs/GetSampleByIdEndpointOutput.md)
  - [GetSampleGenerationEndpointOutput](rapidata/api_client/docs/GetSampleGenerationEndpointOutput.md)
+ - [GetSampleGenerationEndpointOutputParticipant](rapidata/api_client/docs/GetSampleGenerationEndpointOutputParticipant.md)
  - [GetSampleGenerationItemsEndpointOutput](rapidata/api_client/docs/GetSampleGenerationItemsEndpointOutput.md)
  - [GetSampleGenerationItemsEndpointPagedResultOfOutput](rapidata/api_client/docs/GetSampleGenerationItemsEndpointPagedResultOfOutput.md)
  - [GetSampleNavigationEndpointOutput](rapidata/api_client/docs/GetSampleNavigationEndpointOutput.md)
