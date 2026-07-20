@@ -37,6 +37,7 @@ class CompareWorkflow(Workflow):
 
     def __init__(self, instruction: str, a_b_names: list[str] | None = None):
         super().__init__(type="CompareWorkflowConfig")
+        self._validate_instruction(instruction)
         self._instruction = instruction
         self._a_b_names = a_b_names
 

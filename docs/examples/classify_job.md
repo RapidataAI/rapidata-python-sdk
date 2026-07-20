@@ -87,6 +87,8 @@ In this example, we rate images on a Likert scale to assess how well generated i
             settings=[NoShuffleSetting()] # (2)!
         )
 
+    audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+
     job_definition = client.job.create_classification_job_definition(
         name="Likert Scale Example",
         instruction="How well does the image match the description?",

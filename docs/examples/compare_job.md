@@ -108,6 +108,8 @@ In this example, we compare images from two image generation models (Flux and Mi
             context=prompt
         )
 
+    audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+
     job_definition = client.job.create_compare_job_definition(
         name="Example Image Prompt Alignment Job",
         instruction="Which image follows the prompt more accurately?",

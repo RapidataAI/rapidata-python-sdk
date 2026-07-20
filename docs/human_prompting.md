@@ -84,6 +84,8 @@ audience.add_compare_example(
     truth="https://assets.rapidata.ai/bad_ai_generated_image.png"
 )
 
+audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+
 job_definition = client.job.create_compare_job_definition(
     name="Image Coherence Comparison",
     instruction="Which image has more glitches and is more likely to be AI generated?",

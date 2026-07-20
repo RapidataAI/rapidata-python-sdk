@@ -77,9 +77,28 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
 !!! note
     In practice you'd want to add more examples to the audience to improve the quality of the results.
 
-### Step 3: Create and Assign a Job
+### Step 3: Start Recruiting
 
-Once your audience is set up, create a job definition and assign it to the audience:
+Adding examples no longer starts recruiting on its own. Once all your
+qualification examples are added **and reviewed**, call `start_recruiting()`
+to begin the distilling/onboarding campaign that qualifies labelers against
+them. Until you call it, the audience stays in its `Created` state and
+recruits nobody — so a mid-upload failure never leaves you with a partially
+configured, live audience.
+
+```py
+audience.start_recruiting()
+```
+
+!!! warning "Recruiting is explicit"
+    Earlier SDK versions started recruiting automatically on the first
+    qualification example. That is no longer the case: you must call
+    `start_recruiting()` yourself, after the examples are reviewed. Calling it
+    more than once on the same audience is a no-op.
+
+### Step 4: Create and Assign a Job
+
+Once recruiting has started, create a job definition and assign it to the audience:
 
 ```py
 job_definition = client.job.create_compare_job_definition(
@@ -152,6 +171,8 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
         context=prompt
     )
 
+audience.start_recruiting() # (1)!
+
 job_definition = client.job.create_compare_job_definition(
     name="Prompt Alignment Job",
     instruction="Which image follows the prompt more accurately?",
@@ -168,6 +189,8 @@ job.display_progress_bar()
 results = job.get_results()
 print(results)
 ```
+
+1. Recruiting is explicit: call `start_recruiting()` once all qualification examples are added and reviewed, before assigning a job.
 
 ## Matching the Job UI with Settings
 

@@ -122,6 +122,8 @@ Like any other job, a select words job can be assigned to any audience — a rea
             truths=truths,
         )
 
+    audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+
     job_definition = client.job.create_select_words_job_definition(
         name="Image-Text Alignment Example",
         instruction="The image is based on the text below. Select mistakes, i.e., words that are not aligned with the image.",

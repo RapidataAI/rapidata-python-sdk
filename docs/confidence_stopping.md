@@ -74,6 +74,8 @@ audience.add_classification_example(
     truth=["Cat"]
 )
 
+audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+
 job_definition = client.job.create_classification_job_definition(
     name="Test Classification with Early Stopping",
     instruction="What do you see in the image?",
@@ -219,6 +221,8 @@ audience.add_classification_example(
     datapoint="https://assets.rapidata.ai/cat.jpeg",
     truth=["Cat"]
 )
+
+audience.start_recruiting()  # begin recruiting once examples are added and reviewed
 
 job_definition = client.job.create_classification_job_definition(
     name="Test Classification with Quorum Stopping",

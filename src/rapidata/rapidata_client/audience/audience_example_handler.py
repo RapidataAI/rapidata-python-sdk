@@ -51,6 +51,9 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints._truth_translator import (
     translate_compare_truth,
 )
+from rapidata.rapidata_client.workflow._base_workflow import (
+    validate_instruction_length,
+)
 
 
 def _validate_ratio(name: str, value: float | None) -> None:
@@ -96,6 +99,8 @@ class AudienceExampleHandler:
         from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
             AddExampleToAudienceEndpointInput,
         )
+
+        validate_instruction_length(instruction)
 
         if not isinstance(truth, list):
             raise ValueError("Truth must be a list of strings")
@@ -167,6 +172,8 @@ class AudienceExampleHandler:
         from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
             AddExampleToAudienceEndpointInput,
         )
+
+        validate_instruction_length(instruction)
 
         if truth not in datapoint:
             raise ValueError("Truth must be one of the datapoints")
@@ -240,6 +247,8 @@ class AudienceExampleHandler:
             AddExampleToAudienceEndpointInput,
         )
 
+        validate_instruction_length(instruction)
+
         if not truths:
             raise ValueError("Locate example requires at least one truth bounding box")
 
@@ -311,6 +320,8 @@ class AudienceExampleHandler:
             AddExampleToAudienceEndpointInput,
         )
 
+        validate_instruction_length(instruction)
+
         if not truths:
             raise ValueError("Draw example requires at least one truth bounding box")
 
@@ -379,6 +390,8 @@ class AudienceExampleHandler:
         from rapidata.api_client.models.add_example_to_audience_endpoint_input import (
             AddExampleToAudienceEndpointInput,
         )
+
+        validate_instruction_length(instruction)
 
         transcription_words = [
             ExampleTranscriptionWord(word=word, wordIndex=i)

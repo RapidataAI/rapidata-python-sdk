@@ -87,6 +87,8 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
             truths=truths,
         )
 
+    audience.start_recruiting()  # begin recruiting once examples are added and reviewed
+
     job_definition = client.job.create_draw_job_definition(
         name="Artifact Drawing Example",
         instruction="Color in the visual glitches or errors in the image.",
