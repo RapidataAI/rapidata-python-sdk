@@ -23,6 +23,264 @@
         }
       }
     },
+    "/capabilities/{capability}/grantees": {
+      "get": {
+        "tags": [
+          "Capabilities"
+        ],
+        "summary": "Lists the grant tuples on a capability, one cursor page at a time.",
+        "description": "Covers both organization-level and direct customer grants. Follow nextCursor to page.",
+        "parameters": [
+          {
+            "name": "capability",
+            "in": "path",
+            "description": "The capability to inspect.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Capability"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "The opaque cursor from the previous page; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCapabilityGranteesEndpoint_CursorPagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/capabilities": {
+      "get": {
+        "tags": [
+          "Capabilities"
+        ],
+        "summary": "Lists the capabilities a customer holds.",
+        "description": "explicitCapabilities are grants held directly or through organization membership;\n effectiveCapabilities also folds in platform-admin access.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer to inspect.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomerCapabilitiesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/organizations/{organizationId}/capabilities": {
+      "get": {
+        "tags": [
+          "Capabilities"
+        ],
+        "summary": "Lists the capabilities granted to an organization.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization to inspect.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrganizationCapabilitiesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/organizations/{organizationId}/capabilities/{capability}": {
+      "put": {
+        "tags": [
+          "Capabilities"
+        ],
+        "summary": "Grants a capability to an organization.",
+        "description": "Idempotent: re-granting an existing grant is a no-op.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization to grant the capability to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "capability",
+            "in": "path",
+            "description": "The capability to grant.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Capability"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Capabilities"
+        ],
+        "summary": "Revokes an organization's capability grant.",
+        "description": "Idempotent: revoking a grant that does not exist is a no-op.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization to revoke the capability from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "capability",
+            "in": "path",
+            "description": "The capability to revoke.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Capability"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/client": {
       "post": {
         "tags": [
@@ -1987,6 +2245,12 @@
           }
         }
       },
+      "Capability": {
+        "enum": [
+          "SkipContentCheck"
+        ],
+        "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
+      },
       "ChangeOrgMemberRoleEndpoint_Input": {
         "required": [
           "role"
@@ -2281,6 +2545,103 @@
           }
         },
         "description": "The request body for dynamic client registration."
+      },
+      "GetCapabilityGranteesEndpoint_CursorPagedResultOfOutput": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCapabilityGranteesEndpoint_Output"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
+      },
+      "GetCapabilityGranteesEndpoint_Output": {
+        "required": [
+          "object",
+          "relation",
+          "user",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "The object, as type:id."
+          },
+          "relation": {
+            "type": "string",
+            "description": "The relation."
+          },
+          "user": {
+            "type": "string",
+            "description": "The subject, as type:id[#relation]."
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "When the grant was written.",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetCustomerCapabilitiesEndpoint_Output": {
+        "required": [
+          "explicitCapabilities",
+          "effectiveCapabilities"
+        ],
+        "type": "object",
+        "properties": {
+          "explicitCapabilities": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Capability"
+                }
+              }
+            ],
+            "description": "Capability granted to the customer directly or through organization membership."
+          },
+          "effectiveCapabilities": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Capability"
+                }
+              }
+            ],
+            "description": "Capability the customer effectively holds, including platform-admin fold-in."
+          }
+        }
+      },
+      "GetOrganizationCapabilitiesEndpoint_Output": {
+        "required": [
+          "capabilities"
+        ],
+        "type": "object",
+        "properties": {
+          "capabilities": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Capability"
+                }
+              }
+            ],
+            "description": "The capabilities granted to the organization, held by all of its members."
+          }
+        }
       },
       "GetOrganizationEndpoint_Output": {
         "required": [

@@ -169,6 +169,11 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | Exercises the rapid-bag pipeline with a synthetic user profile so the health of  the campaign monitoring path can be probed externally.
 *CampaignApi* | [**campaign_program_post**](rapidata/api_client/docs/CampaignApi.md#campaign_program_post) | **POST** /campaign/program | Creates a program campaign from the given stream program.
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries campaigns with optional filtering, sorting, and pagination.
+*CapabilitiesApi* | [**capabilities_capability_grantees_get**](rapidata/api_client/docs/CapabilitiesApi.md#capabilities_capability_grantees_get) | **GET** /capabilities/{capability}/grantees | Lists the grant tuples on a capability, one cursor page at a time.
+*CapabilitiesApi* | [**customers_customer_id_capabilities_get**](rapidata/api_client/docs/CapabilitiesApi.md#customers_customer_id_capabilities_get) | **GET** /customers/{customerId}/capabilities | Lists the capabilities a customer holds.
+*CapabilitiesApi* | [**organizations_organization_id_capabilities_capability_delete**](rapidata/api_client/docs/CapabilitiesApi.md#organizations_organization_id_capabilities_capability_delete) | **DELETE** /organizations/{organizationId}/capabilities/{capability} | Revokes an organization&#39;s capability grant.
+*CapabilitiesApi* | [**organizations_organization_id_capabilities_capability_put**](rapidata/api_client/docs/CapabilitiesApi.md#organizations_organization_id_capabilities_capability_put) | **PUT** /organizations/{organizationId}/capabilities/{capability} | Grants a capability to an organization.
+*CapabilitiesApi* | [**organizations_organization_id_capabilities_get**](rapidata/api_client/docs/CapabilitiesApi.md#organizations_organization_id_capabilities_get) | **GET** /organizations/{organizationId}/capabilities | Lists the capabilities granted to an organization.
 *ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a client.
 *ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
 *ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client using the OpenID Connect Dynamic Client Registration protocol.
@@ -447,6 +452,7 @@ Class | Method | HTTP request | Description
  - [BoundingBoxResultBox](rapidata/api_client/docs/BoundingBoxResultBox.md)
  - [BulkReconciliationDispatchState](rapidata/api_client/docs/BulkReconciliationDispatchState.md)
  - [CampaignStatus](rapidata/api_client/docs/CampaignStatus.md)
+ - [Capability](rapidata/api_client/docs/Capability.md)
  - [ChangeAudienceOwnerEndpointInput](rapidata/api_client/docs/ChangeAudienceOwnerEndpointInput.md)
  - [ChangeBoostEndpointInput](rapidata/api_client/docs/ChangeBoostEndpointInput.md)
  - [ChangeOrgMemberRoleEndpointInput](rapidata/api_client/docs/ChangeOrgMemberRoleEndpointInput.md)
@@ -582,6 +588,8 @@ Class | Method | HTTP request | Description
  - [GetCampaignByIdEndpointOutput](rapidata/api_client/docs/GetCampaignByIdEndpointOutput.md)
  - [GetCampaignCacheEndpointCampaignEntry](rapidata/api_client/docs/GetCampaignCacheEndpointCampaignEntry.md)
  - [GetCampaignCacheEndpointOutput](rapidata/api_client/docs/GetCampaignCacheEndpointOutput.md)
+ - [GetCapabilityGranteesEndpointCursorPagedResultOfOutput](rapidata/api_client/docs/GetCapabilityGranteesEndpointCursorPagedResultOfOutput.md)
+ - [GetCapabilityGranteesEndpointOutput](rapidata/api_client/docs/GetCapabilityGranteesEndpointOutput.md)
  - [GetCheckoutSessionEndpointOutput](rapidata/api_client/docs/GetCheckoutSessionEndpointOutput.md)
  - [GetCombinedBenchmarkMatrixEndpointOutput](rapidata/api_client/docs/GetCombinedBenchmarkMatrixEndpointOutput.md)
  - [GetCombinedBenchmarkStandingsEndpointOutput](rapidata/api_client/docs/GetCombinedBenchmarkStandingsEndpointOutput.md)
@@ -596,6 +604,7 @@ Class | Method | HTTP request | Description
  - [GetCompletionTimeHistogramEndpointOutputBucket](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutputBucket.md)
  - [GetCostTimeSeriesEndpointCostDataPoint](rapidata/api_client/docs/GetCostTimeSeriesEndpointCostDataPoint.md)
  - [GetCostTimeSeriesEndpointOutput](rapidata/api_client/docs/GetCostTimeSeriesEndpointOutput.md)
+ - [GetCustomerCapabilitiesEndpointOutput](rapidata/api_client/docs/GetCustomerCapabilitiesEndpointOutput.md)
  - [GetDatapointEndpointOutput](rapidata/api_client/docs/GetDatapointEndpointOutput.md)
  - [GetDatasetByIdEndpointOutput](rapidata/api_client/docs/GetDatasetByIdEndpointOutput.md)
  - [GetDatasetProgressEndpointOutput](rapidata/api_client/docs/GetDatasetProgressEndpointOutput.md)
@@ -619,6 +628,7 @@ Class | Method | HTTP request | Description
  - [GetLatestAudienceStateRecalculationEndpointOutput](rapidata/api_client/docs/GetLatestAudienceStateRecalculationEndpointOutput.md)
  - [GetLeaderboardByIdEndpointOutput](rapidata/api_client/docs/GetLeaderboardByIdEndpointOutput.md)
  - [GetOrderByIdEndpointOutput](rapidata/api_client/docs/GetOrderByIdEndpointOutput.md)
+ - [GetOrganizationCapabilitiesEndpointOutput](rapidata/api_client/docs/GetOrganizationCapabilitiesEndpointOutput.md)
  - [GetOrganizationEndpointOutput](rapidata/api_client/docs/GetOrganizationEndpointOutput.md)
  - [GetParticipantByIdEndpointOutput](rapidata/api_client/docs/GetParticipantByIdEndpointOutput.md)
  - [GetPipelineByIdEndpointOutput](rapidata/api_client/docs/GetPipelineByIdEndpointOutput.md)
