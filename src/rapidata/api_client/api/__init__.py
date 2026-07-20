@@ -9,6 +9,7 @@ from rapidata.api_client.api.billing_api import BillingApi
 from rapidata.api_client.api.billing_account_api import BillingAccountApi
 from rapidata.api_client.api.cache_api import CacheApi
 from rapidata.api_client.api.campaign_api import CampaignApi
+from rapidata.api_client.api.capabilities_api import CapabilitiesApi
 from rapidata.api_client.api.client_api import ClientApi
 from rapidata.api_client.api.context_shortening_api import ContextShorteningApi
 from rapidata.api_client.api.customer_api import CustomerApi

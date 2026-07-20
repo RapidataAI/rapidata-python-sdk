@@ -16,24 +16,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset import IAsset
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.capability import Capability
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
+class GetOrganizationCapabilitiesEndpointOutput(LazyValidatedModel):
     """
-    QueryDatapointsByDatasetIdEndpointOutput
+    GetOrganizationCapabilitiesEndpointOutput
     """ # noqa: E501
-    id: StrictStr = Field(description="The id of the datapoint.")
-    dataset_id: StrictStr = Field(description="The id of the dataset this datapoint belongs to.", alias="datasetId")
-    asset: IAsset = Field(description="The asset that will be displayed to the users.")
-    context: Optional[StrictStr] = Field(default=None, description="Optional context text shown to annotators alongside the datapoint.")
-    context_asset: Optional[IAsset] = Field(default=None, description="Optional context media (reference image/audio/video) shown alongside the datapoint.", alias="contextAsset")
-    __properties: ClassVar[List[str]] = ["id", "datasetId", "asset", "context", "contextAsset"]
+    capabilities: List[Capability]
+    __properties: ClassVar[List[str]] = ["capabilities"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -49,7 +45,7 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryDatapointsByDatasetIdEndpointOutput from a JSON string"""
+        """Create an instance of GetOrganizationCapabilitiesEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,22 +66,11 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # set to None if context (nullable) is None
-        # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryDatapointsByDatasetIdEndpointOutput from a dict"""
+        """Create an instance of GetOrganizationCapabilitiesEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -93,11 +78,7 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "datasetId": obj.get("datasetId"),
-            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "context": obj.get("context"),
-            "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
+            "capabilities": obj.get("capabilities")
         }
         try:
             _obj = cls.model_validate(_data)
