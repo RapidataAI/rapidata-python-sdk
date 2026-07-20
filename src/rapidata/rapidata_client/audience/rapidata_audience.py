@@ -14,6 +14,7 @@ if TYPE_CHECKING:
         RapidataFilteredAudience,
     )
     from rapidata.rapidata_client.filter import RapidataFilter
+    from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.rapidata_client.validation.rapids.box import Box
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
@@ -51,6 +52,27 @@ class RapidataAudience(RapidataAudienceBase):
             )
             logger.debug("Audience '%s' has been deleted.", self)
             managed_print(f"Audience '{self}' has been deleted.")
+
+    def get_recruiting_metrics(self) -> RecruitingMetrics:
+        """Gets a snapshot of this audience's recruiting funnel.
+
+        Reports how the audience's annotators are distributed across the recruiting
+        funnel — graduated, distilling, dropped, and inactive — so you can tell a
+        healthy pool from one that is still filling up or has stalled. The counts are
+        all zero for audiences that have not recruited anyone yet.
+
+        Returns:
+            RecruitingMetrics: The current recruiting funnel of the audience.
+        """
+        with tracer.start_as_current_span("RapidataAudience.get_recruiting_metrics"):
+            from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
+
+            metrics = self._openapi_service.audience.audience_api.audience_audience_id_user_metrics_get(
+                self.id
+            )
+            return RecruitingMetrics._from_users_per_state(
+                metrics.users_per_state or {}
+            )
 
     def filter(self, filters: list[RapidataFilter]) -> RapidataFilteredAudience:
         """Derive a filtered audience from this audience.

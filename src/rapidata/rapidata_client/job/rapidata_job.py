@@ -32,6 +32,8 @@ if TYPE_CHECKING:
         GetJobByIdEndpointOutput,
     )
     from rapidata.rapidata_client.results.rapidata_results import RapidataResults
+    from rapidata.rapidata_client.job.progress import JobProgress
+    from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
 
 T = TypeVar("T")
 
@@ -236,6 +238,57 @@ class RapidataJob:
         """
         with tracer.start_as_current_span("RapidataJob.get_status"):
             return self._fetch_job().state.value
+
+    def get_progress(self) -> JobProgress:
+        """Gets a snapshot of how far along the job is.
+
+        Unlike :py:meth:`get_status`, which only reports the coarse job state, this
+        returns the labeling completion percentage and — for custom audiences — the
+        recruiting funnel of the annotator pool behind the job, so you can tell normal
+        labeling from a job that is waiting on recruiting or has stalled.
+
+        This does not block: it reports the current progress and returns immediately.
+
+        Returns:
+            JobProgress: The current progress of the job.
+        """
+        with tracer.start_as_current_span("RapidataJob.get_progress"):
+            from rapidata.rapidata_client.job.progress import JobProgress
+
+            job = self._fetch_job()
+            workflow_progress = self._get_workflow_progress()
+
+            return JobProgress(
+                state=job.state.value,
+                completion_percentage=(
+                    float(workflow_progress.completion_percentage)
+                    if workflow_progress
+                    else 0.0
+                ),
+                recruiting=self._get_recruiting_metrics(),
+            )
+
+    def _get_recruiting_metrics(self) -> RecruitingMetrics | None:
+        """Gets the recruiting funnel for the job's audience, or ``None`` for curated
+        audiences (which report no per-state users because they do not recruit)."""
+        from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
+
+        try:
+            with suppress_rapidata_error_logging():
+                metrics = self._openapi_service.audience.audience_api.audience_audience_id_user_metrics_get(
+                    self.audience_id
+                )
+        except Exception:
+            logger.debug(
+                "Failed to get recruiting metrics for job '%s'", self, exc_info=True
+            )
+            return None
+
+        users_per_state = metrics.users_per_state or {}
+        if not users_per_state:
+            return None
+
+        return RecruitingMetrics._from_users_per_state(users_per_state)
 
     def _regenerate_results(self) -> None:
         """Triggers regeneration of a job whose results have gone stale.

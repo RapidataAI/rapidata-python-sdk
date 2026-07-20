@@ -66,6 +66,7 @@ plugins:
           - error_handling.md
           - confidence_stopping.md
           - cost_estimates.md
+          - job_progress.md
           - human_prompting.md
           - config.md
         Examples:
@@ -130,6 +131,7 @@ nav:
       - Understanding Results: understanding_the_results.md
       - Early Stopping: confidence_stopping.md
       - Cost Estimates: cost_estimates.md
+      - Job Progress: job_progress.md
       - Instruction Design: human_prompting.md
       - Error Handling: error_handling.md
       - Logging & Config: config.md

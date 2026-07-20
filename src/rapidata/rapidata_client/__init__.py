@@ -4,6 +4,7 @@ from .audience import (
     RapidataAudienceBase,
     RapidataAudienceManager,
     RapidataFilteredAudience,
+    RecruitingMetrics,
 )
 from .order import RapidataOrderManager, RapidataOrder
 from .job import (
@@ -11,6 +12,7 @@ from .job import (
     RapidataJobDefinition,
     RapidataJobManager,
     CostEstimate,
+    JobProgress,
 )
 from .signal import RapidataSignal, RapidataSignalManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box

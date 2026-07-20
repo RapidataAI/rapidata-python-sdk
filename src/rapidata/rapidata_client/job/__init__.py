@@ -2,3 +2,4 @@ from .rapidata_job_definition import RapidataJobDefinition
 from .rapidata_job_manager import RapidataJobManager
 from .rapidata_job import RapidataJob
 from .cost import CostEstimate
+from .progress import JobProgress
