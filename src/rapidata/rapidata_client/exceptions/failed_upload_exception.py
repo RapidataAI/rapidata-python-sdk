@@ -9,6 +9,9 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.job.rapidata_job_definition import (
         RapidataJobDefinition,
     )
+    from rapidata.rapidata_client.job._job_creation_state_machine import (
+        JobDefinitionCreationMachine,
+    )
     from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 
@@ -21,12 +24,43 @@ class FailedUploadException(Exception):
         failed_uploads: list[FailedUpload[Datapoint]],
         order: Optional[RapidataOrder] = None,
         job_definition: Optional[RapidataJobDefinition] = None,
+        machine: Optional[JobDefinitionCreationMachine] = None,
     ):
         self.dataset = dataset
         self.order = order
         self.job_definition = job_definition
         self._failed_uploads = failed_uploads
+        self._machine = machine
         super().__init__(str(self))
+
+    def retry(self) -> RapidataJobDefinition:
+        """Retry the failed datapoints and finish creating the job definition.
+
+        Re-uploads only the datapoints that failed into the **same** dataset
+        (never a new one), then creates the job definition once the upload is
+        within the configured failure tolerance. Returns the created
+        ``RapidataJobDefinition``. If some datapoints still fail beyond the
+        tolerance, this raises ``FailedUploadException`` again (with the same
+        dataset attached) so it can be caught and retried in a loop.
+
+        This is the intended recovery path for a failed job-definition
+        creation: fix whatever caused the failures (e.g. correct file paths),
+        then call ``retry()`` - no need to re-specify the datapoints or drop
+        down to ``dataset.add_datapoints`` manually.
+        """
+        if self._machine is None:
+            raise RuntimeError(
+                "retry() is only available for failed job-definition creation. "
+                "To re-upload the failed datapoints manually, use "
+                "dataset.add_datapoints(exception.failed_uploads)."
+            )
+        return self._machine.resume()
+
+    @property
+    def machine(self) -> Optional[JobDefinitionCreationMachine]:
+        """The creation state machine backing ``retry()``, when this failure
+        came from job-definition creation (``None`` for order uploads)."""
+        return self._machine
 
     @property
     def failed_uploads(self) -> list[Datapoint]:
@@ -85,6 +119,13 @@ class FailedUploadException(Exception):
             lines.append("  ]")
 
         failed_upload_message = "\n".join(lines)
+        if self.machine is not None:
+            failed_upload_message += (
+                "\n\nNo job definition was created because the upload stayed outside the "
+                "failure tolerance. Fix the failed datapoints and retry them into the same "
+                "dataset (no new dataset is created) by catching this exception and calling: "
+                "\n\tjob_definition = exception.retry()"
+            )
         if self.order:
             failed_upload_message += f"\n\nTo run the order without the failed datapoints, call: \n\trapidata_client.order.get_order_by_id('{self.order.id}').run()"
         if self.job_definition:
