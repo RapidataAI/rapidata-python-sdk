@@ -174,3 +174,9 @@ except FailedUploadException as e:
 ```
 
 Note that this only re-uploads the datapoints; it does not create the job definition. Prefer `exception.retry()` unless you specifically need the lower-level control.
+
+## Too many open files
+
+If uploads fail with `OSError: [Errno 24] Too many open files`, the process has hit its file-descriptor limit — the upload cache, worker pool, and HTTP connections all consume descriptors. When the SDK detects this it appends a hint to the `FailedUploadException` message pointing at the relevant knobs.
+
+Raise the OS limit (`ulimit -n 8192`) or lower the SDK's footprint with `RAPIDATA_cacheShards` / `RAPIDATA_maxWorkers`. See [Too many open files](config.md#too-many-open-files) in the configuration guide for details.
