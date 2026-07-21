@@ -30,8 +30,9 @@ class CreateJobEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     job_id: StrictStr = Field(description="The id of the created job.", alias="jobId")
     recruiting_started: StrictBool = Field(description="Whether recruiting was automatically started for the audience.", alias="recruitingStarted")
+    content_check_skip_denied: Optional[StrictBool] = Field(default=None, description="True when the caller asked to skip the explicit-content check but is not permitted  to; the check runs regardless. Advisory — the job is created and runs either way.", alias="contentCheckSkipDenied")
     cost_warning: Optional[CreateJobEndpointCostWarning] = Field(default=None, description="Present only when the job's estimated cost exceeds the owner's remaining balance.  Advisory — the job is created and runs regardless; it may pause for funds mid-run.", alias="costWarning")
-    __properties: ClassVar[List[str]] = ["jobId", "recruitingStarted", "costWarning"]
+    __properties: ClassVar[List[str]] = ["jobId", "recruitingStarted", "contentCheckSkipDenied", "costWarning"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -85,6 +86,7 @@ class CreateJobEndpointOutput(LazyValidatedModel):
         _data = {
             "jobId": obj.get("jobId"),
             "recruitingStarted": obj.get("recruitingStarted"),
+            "contentCheckSkipDenied": obj.get("contentCheckSkipDenied"),
             "costWarning": CreateJobEndpointCostWarning.from_dict(obj["costWarning"]) if obj.get("costWarning") is not None else None
         }
         try:
