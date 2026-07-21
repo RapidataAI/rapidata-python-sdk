@@ -6939,7 +6939,7 @@
           "Capabilities"
         ],
         "summary": "Lists the capabilities a customer holds.",
-        "description": "The capabilities the customer effectively holds: granted directly, through organization membership, or folded in from platform-admin access.",
+        "description": "capabilities are grants held through organization membership.",
         "parameters": [
           {
             "name": "customerId",
@@ -43058,7 +43058,7 @@
                 }
               }
             ],
-            "description": "The capabilities the customer effectively holds: granted directly, through organization membership, or folded in from platform-admin access."
+            "description": "Capabilities granted to the customer through organization membership."
           }
         }
       },
