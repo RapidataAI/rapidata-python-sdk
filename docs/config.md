@@ -71,7 +71,7 @@ Any field left as `None` falls back to the server-side default. Currently applie
 
 Uploading local files opens file descriptors — for the on-disk upload cache (one set of handles per `cacheShards`), the worker pool (`maxWorkers`), and the HTTP connections. On systems with a low `ulimit -n` (1024 is common), a large or highly concurrent upload can exhaust the limit and fail with `OSError: [Errno 24] Too many open files`.
 
-Two ways to resolve it:
+Ways to resolve it:
 
 - **Raise the OS limit** (per shell): `ulimit -n 8192`.
 - **Lower the SDK's footprint** — reduce the cache shards and/or the worker pool:
@@ -83,7 +83,16 @@ Two ways to resolve it:
 
     `cacheShards` is immutable at runtime, so set it via the environment variable (or a `.env` file); `maxWorkers` can also be set in code (`rapidata_config.upload.maxWorkers = 10`).
 
-The default `cacheShards` of 32 keeps a single upload well under a 1024 limit; lower it further only if you run many upload processes concurrently against the same limit.
+- **Turn the disk cache off entirely** — the simplest fix if descriptors are still tight. `cacheToDisk=False` switches file uploads to an in-memory cache, which opens **no** cache file descriptors at all:
+
+    ```python
+    from rapidata import rapidata_config
+    rapidata_config.upload.cacheToDisk = False   # or RAPIDATA_cacheToDisk=false
+    ```
+
+    The tradeoff is only mild: the upload cache no longer persists across runs, so re-running the same upload re-uploads files it would otherwise have skipped (dedup within a single run still works). For a one-off large or highly concurrent submission this is usually the easiest way out.
+
+The default `cacheShards` of 32 keeps a single upload well under a 1024 limit; lower it further, or turn off `cacheToDisk`, only if you run many upload processes concurrently against the same limit.
 
 ## Environment Variables
 
