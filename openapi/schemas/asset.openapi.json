@@ -592,6 +592,15 @@
           "errorMessage": {
             "type": "string",
             "nullable": true
+          },
+          "stage": {
+            "type": "string",
+            "nullable": true
+          },
+          "upstreamHttpStatus": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },

@@ -16,6 +16,7 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.participant_status import ParticipantStatus
@@ -35,7 +36,8 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
     proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model, or null if unset.", alias="proprietaryName")
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     status: ParticipantStatus = Field(description="The status of the participant.")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "proprietaryName", "logo", "status"]
+    created_at: datetime = Field(description="When the participant was added to the benchmark.", alias="createdAt")
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "proprietaryName", "logo", "status", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -105,7 +107,8 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
             "family": obj.get("family"),
             "proprietaryName": obj.get("proprietaryName"),
             "logo": obj.get("logo"),
-            "status": obj.get("status")
+            "status": obj.get("status"),
+            "createdAt": obj.get("createdAt")
         }
         try:
             _obj = cls.model_validate(_data)

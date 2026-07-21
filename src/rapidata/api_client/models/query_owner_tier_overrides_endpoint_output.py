@@ -16,25 +16,25 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.batch_upload_url_status import BatchUploadUrlStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetBatchUploadResultEndpointUrlOutput(LazyValidatedModel):
+class QueryOwnerTierOverridesEndpointOutput(LazyValidatedModel):
     """
-    GetBatchUploadResultEndpointUrlOutput
+    QueryOwnerTierOverridesEndpointOutput
     """ # noqa: E501
-    url: StrictStr
-    file_name: Optional[StrictStr] = Field(default=None, alias="fileName")
-    status: BatchUploadUrlStatus
-    error_message: Optional[StrictStr] = Field(default=None, alias="errorMessage")
-    stage: Optional[StrictStr] = None
-    upstream_http_status: Optional[StrictInt] = Field(default=None, alias="upstreamHttpStatus")
-    __properties: ClassVar[List[str]] = ["url", "fileName", "status", "errorMessage", "stage", "upstreamHttpStatus"]
+    id: StrictStr = Field(description="The id of the override.")
+    pattern: StrictStr = Field(description="The owner-email pattern the override applies to.")
+    priority_override: Optional[StrictInt] = Field(default=None, description="The priority matching owners' jobs are created with, or null.", alias="priorityOverride")
+    boost_override: Optional[StrictInt] = Field(default=None, description="The global boost level matching owners' campaigns are created with, or null.", alias="boostOverride")
+    owner_mail: StrictStr = Field(description="The email of the admin who created the override.", alias="ownerMail")
+    created_at: datetime = Field(description="When the override was created.", alias="createdAt")
+    __properties: ClassVar[List[str]] = ["id", "pattern", "priorityOverride", "boostOverride", "ownerMail", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -50,7 +50,7 @@ class GetBatchUploadResultEndpointUrlOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetBatchUploadResultEndpointUrlOutput from a JSON string"""
+        """Create an instance of QueryOwnerTierOverridesEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,31 +71,21 @@ class GetBatchUploadResultEndpointUrlOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if file_name (nullable) is None
+        # set to None if priority_override (nullable) is None
         # and model_fields_set contains the field
-        if self.file_name is None and "file_name" in self.model_fields_set:
-            _dict['fileName'] = None
+        if self.priority_override is None and "priority_override" in self.model_fields_set:
+            _dict['priorityOverride'] = None
 
-        # set to None if error_message (nullable) is None
+        # set to None if boost_override (nullable) is None
         # and model_fields_set contains the field
-        if self.error_message is None and "error_message" in self.model_fields_set:
-            _dict['errorMessage'] = None
-
-        # set to None if stage (nullable) is None
-        # and model_fields_set contains the field
-        if self.stage is None and "stage" in self.model_fields_set:
-            _dict['stage'] = None
-
-        # set to None if upstream_http_status (nullable) is None
-        # and model_fields_set contains the field
-        if self.upstream_http_status is None and "upstream_http_status" in self.model_fields_set:
-            _dict['upstreamHttpStatus'] = None
+        if self.boost_override is None and "boost_override" in self.model_fields_set:
+            _dict['boostOverride'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetBatchUploadResultEndpointUrlOutput from a dict"""
+        """Create an instance of QueryOwnerTierOverridesEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -103,12 +93,12 @@ class GetBatchUploadResultEndpointUrlOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "url": obj.get("url"),
-            "fileName": obj.get("fileName"),
-            "status": obj.get("status"),
-            "errorMessage": obj.get("errorMessage"),
-            "stage": obj.get("stage"),
-            "upstreamHttpStatus": obj.get("upstreamHttpStatus")
+            "id": obj.get("id"),
+            "pattern": obj.get("pattern"),
+            "priorityOverride": obj.get("priorityOverride"),
+            "boostOverride": obj.get("boostOverride"),
+            "ownerMail": obj.get("ownerMail"),
+            "createdAt": obj.get("createdAt")
         }
         try:
             _obj = cls.model_validate(_data)
