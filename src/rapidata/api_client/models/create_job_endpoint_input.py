@@ -31,7 +31,7 @@ class CreateJobEndpointInput(LazyValidatedModel):
     audience_id: StrictStr = Field(description="The id of the audience to target.", alias="audienceId")
     revision_number: Optional[StrictInt] = Field(default=None, description="The revision number to use. If not specified, the latest revision will be used.", alias="revisionNumber")
     name: Optional[StrictStr] = Field(default=None, description="The name of the job. If not specified, defaults to \"{definition name}:{revision number}\".")
-    priority: Optional[StrictInt] = Field(default=None, description="The priority of the job. Higher values mean higher priority. Default is 50.")
+    priority: Optional[StrictInt] = Field(default=None, description="The priority of the job. Higher values mean higher priority. When omitted, a  per-owner default is applied server-side. A requested value is capped for  non-admin customers.")
     preceding_job_id: Optional[StrictStr] = Field(default=None, description="Optional id of a job that must finish before this job starts. When set, this job is  queued until the preceding job completes or fails.", alias="precedingJobId")
     notify_owner_on_completion: Optional[StrictBool] = Field(default=None, description="Whether the job's owner should be emailed when the job completes. Defaults to false.", alias="notifyOwnerOnCompletion")
     __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority", "precedingJobId", "notifyOwnerOnCompletion"]
@@ -80,6 +80,11 @@ class CreateJobEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.name is None and "name" in self.model_fields_set:
             _dict['name'] = None
+
+        # set to None if priority (nullable) is None
+        # and model_fields_set contains the field
+        if self.priority is None and "priority" in self.model_fields_set:
+            _dict['priority'] = None
 
         # set to None if preceding_job_id (nullable) is None
         # and model_fields_set contains the field

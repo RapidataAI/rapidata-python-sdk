@@ -40,6 +40,10 @@
       "x-displayName": "ExternalAudience"
     },
     {
+      "name": "OwnerTierOverride",
+      "x-displayName": "OwnerTierOverride"
+    },
+    {
       "name": "ContextShortening",
       "x-displayName": "ContextShortening"
     },
@@ -4488,6 +4492,221 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/owner-tier-overrides": {
+      "post": {
+        "tags": [
+          "OwnerTierOverride"
+        ],
+        "summary": "Creates an owner-tier override.",
+        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "requestBody": {
+          "description": "The override to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOwnerTierOverrideEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOwnerTierOverrideEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "OwnerTierOverride"
+        ],
+        "summary": "Returns all owner-tier overrides.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QueryOwnerTierOverridesEndpoint_Output"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/owner-tier-overrides/{ownerTierOverrideId}": {
+      "delete": {
+        "tags": [
+          "OwnerTierOverride"
+        ],
+        "summary": "Deletes an owner-tier override.",
+        "parameters": [
+          {
+            "name": "ownerTierOverrideId",
+            "in": "path",
+            "description": "The id of the override to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "OwnerTierOverride"
+        ],
+        "summary": "Replaces an owner-tier override.",
+        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "parameters": [
+          {
+            "name": "ownerTierOverrideId",
+            "in": "path",
+            "description": "The id of the override to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new pattern and override values.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOwnerTierOverrideEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -34078,6 +34297,15 @@
           "errorMessage": {
             "type": "string",
             "nullable": true
+          },
+          "stage": {
+            "type": "string",
+            "nullable": true
+          },
+          "upstreamHttpStatus": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -37115,6 +37343,42 @@
           "GreaterThanOrEqual"
         ]
       },
+      "CreateOwnerTierOverrideEndpoint_Input": {
+        "required": [
+          "pattern"
+        ],
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Exact matches win over wildcard matches."
+          },
+          "priorityOverride": {
+            "type": "integer",
+            "description": "The priority matching owners' jobs are created with. Null for no priority override.",
+            "format": "int32",
+            "nullable": true
+          },
+          "boostOverride": {
+            "type": "integer",
+            "description": "The global boost level matching owners' campaigns are created with (0-10). Null for none.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "CreateOwnerTierOverrideEndpoint_Output": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the created override."
+          }
+        }
+      },
       "CreateProgramCampaignEndpoint_Input": {
         "required": [
           "name",
@@ -38801,6 +39065,46 @@
           }
         }
       },
+      "QueryOwnerTierOverridesEndpoint_Output": {
+        "required": [
+          "id",
+          "pattern",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the override."
+          },
+          "pattern": {
+            "type": "string",
+            "description": "The owner-email pattern the override applies to."
+          },
+          "priorityOverride": {
+            "type": "integer",
+            "description": "The priority matching owners' jobs are created with, or null.",
+            "format": "int32",
+            "nullable": true
+          },
+          "boostOverride": {
+            "type": "integer",
+            "description": "The global boost level matching owners' campaigns are created with, or null.",
+            "format": "int32",
+            "nullable": true
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the admin who created the override."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the override was created.",
+            "format": "date-time"
+          }
+        }
+      },
       "SetFastBidMultiplierEndpoint_Input": {
         "required": [
           "multiplier"
@@ -38939,6 +39243,30 @@
               }
             ],
             "description": "The feature flags for the campaign."
+          }
+        }
+      },
+      "UpdateOwnerTierOverrideEndpoint_Input": {
+        "required": [
+          "pattern"
+        ],
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com)."
+          },
+          "priorityOverride": {
+            "type": "integer",
+            "description": "The priority matching owners' jobs are created with. Null for no priority override.",
+            "format": "int32",
+            "nullable": true
+          },
+          "boostOverride": {
+            "type": "integer",
+            "description": "The global boost level matching owners' campaigns are created with (0-10). Null for none.",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -44750,7 +45078,8 @@
           "id",
           "name",
           "benchmarkId",
-          "status"
+          "status",
+          "createdAt"
         ],
         "type": "object",
         "properties": {
@@ -44788,6 +45117,11 @@
               }
             ],
             "description": "The status of the participant."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the participant was added to the benchmark.",
+            "format": "date-time"
           }
         }
       },
@@ -46101,8 +46435,9 @@
           },
           "priority": {
             "type": "integer",
-            "description": "The priority of the job. Higher values mean higher priority. Default is 50.",
-            "format": "int32"
+            "description": "The priority of the job. Higher values mean higher priority. When omitted, a\n per-owner default is applied server-side. A requested value is capped for\n non-admin customers.",
+            "format": "int32",
+            "nullable": true
           },
           "precedingJobId": {
             "type": "string",
@@ -58103,7 +58438,8 @@
       "tags": [
         "Cache",
         "Campaign",
-        "ExternalAudience"
+        "ExternalAudience",
+        "OwnerTierOverride"
       ]
     },
     {

@@ -61,6 +61,7 @@ _API_IMPORTS = {
     "NewsletterApi": "rapidata.api_client.api.newsletter_api",
     "OrderApi": "rapidata.api_client.api.order_api",
     "OrganizationApi": "rapidata.api_client.api.organization_api",
+    "OwnerTierOverrideApi": "rapidata.api_client.api.owner_tier_override_api",
     "ParticipantApi": "rapidata.api_client.api.participant_api",
     "PaymentApi": "rapidata.api_client.api.payment_api",
     "PipelineApi": "rapidata.api_client.api.pipeline_api",

@@ -315,6 +315,10 @@ Class | Method | HTTP request | Description
 *OrganizationApi* | [**organizations_organization_id_patch**](rapidata/api_client/docs/OrganizationApi.md#organizations_organization_id_patch) | **PATCH** /organizations/{organizationId} | Updates the given organization&#39;s provided fields.
 *OrganizationApi* | [**organizations_owner_support_slack_channel_put**](rapidata/api_client/docs/OrganizationApi.md#organizations_owner_support_slack_channel_put) | **PUT** /organizations/{owner}/support-slack-channel | Sets the support Slack channel URL for the organization owned by the given customer.
 *OrganizationApi* | [**organizations_post**](rapidata/api_client/docs/OrganizationApi.md#organizations_post) | **POST** /organizations | Creates an organization and makes the calling customer its owner.
+*OwnerTierOverrideApi* | [**campaign_owner_tier_overrides_get**](rapidata/api_client/docs/OwnerTierOverrideApi.md#campaign_owner_tier_overrides_get) | **GET** /campaign/owner-tier-overrides | Returns all owner-tier overrides.
+*OwnerTierOverrideApi* | [**campaign_owner_tier_overrides_owner_tier_override_id_delete**](rapidata/api_client/docs/OwnerTierOverrideApi.md#campaign_owner_tier_overrides_owner_tier_override_id_delete) | **DELETE** /campaign/owner-tier-overrides/{ownerTierOverrideId} | Deletes an owner-tier override.
+*OwnerTierOverrideApi* | [**campaign_owner_tier_overrides_owner_tier_override_id_put**](rapidata/api_client/docs/OwnerTierOverrideApi.md#campaign_owner_tier_overrides_owner_tier_override_id_put) | **PUT** /campaign/owner-tier-overrides/{ownerTierOverrideId} | Replaces an owner-tier override.
+*OwnerTierOverrideApi* | [**campaign_owner_tier_overrides_post**](rapidata/api_client/docs/OwnerTierOverrideApi.md#campaign_owner_tier_overrides_post) | **POST** /campaign/owner-tier-overrides | Creates an owner-tier override.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | Disables a participant in a benchmark.
 *ParticipantApi* | [**participant_participant_id_enable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_enable_post) | **POST** /participant/{participantId}/enable | Enables a previously disabled participant in a benchmark.
@@ -517,6 +521,8 @@ Class | Method | HTTP request | Description
  - [CreateOrderEndpointOutput](rapidata/api_client/docs/CreateOrderEndpointOutput.md)
  - [CreateOrganizationEndpointInput](rapidata/api_client/docs/CreateOrganizationEndpointInput.md)
  - [CreateOrganizationEndpointOutput](rapidata/api_client/docs/CreateOrganizationEndpointOutput.md)
+ - [CreateOwnerTierOverrideEndpointInput](rapidata/api_client/docs/CreateOwnerTierOverrideEndpointInput.md)
+ - [CreateOwnerTierOverrideEndpointOutput](rapidata/api_client/docs/CreateOwnerTierOverrideEndpointOutput.md)
  - [CreateProgramCampaignEndpointInput](rapidata/api_client/docs/CreateProgramCampaignEndpointInput.md)
  - [CreateProgramCampaignEndpointOutput](rapidata/api_client/docs/CreateProgramCampaignEndpointOutput.md)
  - [CreatePromptForBenchmarkEndpointInput](rapidata/api_client/docs/CreatePromptForBenchmarkEndpointInput.md)
@@ -1064,6 +1070,7 @@ Class | Method | HTTP request | Description
  - [QueryOrdersEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryOrdersEndpointPagedResultOfOutput.md)
  - [QueryOrganizationsEndpointOutput](rapidata/api_client/docs/QueryOrganizationsEndpointOutput.md)
  - [QueryOrganizationsEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryOrganizationsEndpointPagedResultOfOutput.md)
+ - [QueryOwnerTierOverridesEndpointOutput](rapidata/api_client/docs/QueryOwnerTierOverridesEndpointOutput.md)
  - [QueryParticipantsByBenchmarkEndpointOutput](rapidata/api_client/docs/QueryParticipantsByBenchmarkEndpointOutput.md)
  - [QueryParticipantsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/QueryParticipantsByBenchmarkEndpointPagedResultOfOutput.md)
  - [QueryParticipantsObsoleteEndpointOutput](rapidata/api_client/docs/QueryParticipantsObsoleteEndpointOutput.md)
@@ -1180,6 +1187,7 @@ Class | Method | HTTP request | Description
  - [UpdateLeaderboardResponseConfigEndpointInput](rapidata/api_client/docs/UpdateLeaderboardResponseConfigEndpointInput.md)
  - [UpdateOrderEndpointInput](rapidata/api_client/docs/UpdateOrderEndpointInput.md)
  - [UpdateOrganizationEndpointInput](rapidata/api_client/docs/UpdateOrganizationEndpointInput.md)
+ - [UpdateOwnerTierOverrideEndpointInput](rapidata/api_client/docs/UpdateOwnerTierOverrideEndpointInput.md)
  - [UpdateParticipantEndpointInput](rapidata/api_client/docs/UpdateParticipantEndpointInput.md)
  - [UpdateParticipantNameEndpointInput](rapidata/api_client/docs/UpdateParticipantNameEndpointInput.md)
  - [UpdatePromptTagsEndpointInput](rapidata/api_client/docs/UpdatePromptTagsEndpointInput.md)

@@ -15308,7 +15308,8 @@
           "id",
           "name",
           "benchmarkId",
-          "status"
+          "status",
+          "createdAt"
         ],
         "type": "object",
         "properties": {
@@ -15346,6 +15347,11 @@
               }
             ],
             "description": "The status of the participant."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the participant was added to the benchmark.",
+            "format": "date-time"
           }
         }
       },

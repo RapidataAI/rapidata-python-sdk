@@ -4494,8 +4494,9 @@
           },
           "priority": {
             "type": "integer",
-            "description": "The priority of the job. Higher values mean higher priority. Default is 50.",
-            "format": "int32"
+            "description": "The priority of the job. Higher values mean higher priority. When omitted, a\n per-owner default is applied server-side. A requested value is capped for\n non-admin customers.",
+            "format": "int32",
+            "nullable": true
           },
           "precedingJobId": {
             "type": "string",
