@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Mapping
+from typing import TYPE_CHECKING, Mapping
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.audience_status import AudienceStatus
 
 
 @dataclass(frozen=True)
@@ -55,3 +58,25 @@ class RecruitingMetrics:
             dropped=dropped,
             inactive=inactive,
         )
+
+
+def audience_will_never_produce_responses(
+    status: AudienceStatus, metrics: RecruitingMetrics | None
+) -> bool:
+    """Whether an audience can never answer a job assigned to it without the caller acting.
+
+    A job only draws responses from graduated annotators, so this is ``True`` only when
+    nobody has graduated *and* nobody ever will on the audience's own: recruiting was
+    never started, or the audience is marked ready yet its pool is empty. An audience
+    that is still recruiting (someone distilling, or status still Pending/Recruiting) is
+    filling up — waiting, not stuck — and a curated audience (no funnel of its own,
+    ``metrics is None``) draws on its own ready pool, so neither returns ``True``.
+    """
+    from rapidata.api_client.models.audience_status import AudienceStatus
+
+    if metrics is not None and (metrics.graduated > 0 or metrics.distilling > 0):
+        return False
+    if status == AudienceStatus.CREATED:
+        return True
+    # Marked ready but the funnel confirms nobody graduated or is distilling.
+    return status == AudienceStatus.READY and metrics is not None
