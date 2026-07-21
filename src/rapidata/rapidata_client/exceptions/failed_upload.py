@@ -23,6 +23,13 @@ class FailedUpload(Generic[T]):
         trace_id: Optional backend trace ID, when the failure originated from a
             RapidataError whose response included a traceId. Used to correlate
             an SDK-side failure with the backend trace that produced it.
+        stage: Optional ingestion stage that failed, for remote-URL assets
+            (e.g. "download", "content_type", "timeout", "size", "internal").
+            Only "internal" indicates a Rapidata-side fault; every other stage
+            is caller-actionable.
+        http_status: Optional origin-server HTTP status, when the failure was an
+            HTTP response from the asset host (e.g. a 403 on the URL). Distinct
+            from any status of the Rapidata API call itself.
     """
 
     item: T
@@ -31,15 +38,18 @@ class FailedUpload(Generic[T]):
     timestamp: Optional[datetime] = field(default_factory=datetime.now)
     exception: Optional[Exception] = None
     trace_id: Optional[str] = None
+    stage: Optional[str] = None
+    http_status: Optional[int] = None
 
     @classmethod
     def from_exception(cls, item: T, exception: Exception | None) -> FailedUpload[T]:
         """
         Create a FailedUpload from an item and exception.
 
-        For RapidataError exceptions, extracts the clean API error reason and
-        the backend trace ID (when present in the error response).
-        For other exceptions, uses the string representation.
+        For RapidataError exceptions, extracts the clean API error reason, the
+        backend trace ID, and the structured ingestion stage / origin HTTP
+        status (when present in the error response). For other exceptions, uses
+        the string representation.
 
         Args:
             item: The item that failed to upload.
@@ -60,6 +70,8 @@ class FailedUpload(Generic[T]):
 
         error_type = type(exception).__name__
         trace_id: Optional[str] = None
+        stage: Optional[str] = None
+        http_status: Optional[int] = None
 
         if isinstance(exception, RapidataError):
             error_message = exception.get_reason()
@@ -67,6 +79,17 @@ class FailedUpload(Generic[T]):
                 raw_trace_id = exception.details.get("traceId")
                 if isinstance(raw_trace_id, str) and raw_trace_id:
                     trace_id = raw_trace_id
+
+                # stage / upstreamHttpStatus are ProblemDetails extension
+                # members the asset service adds for remote-URL ingestion
+                # failures; they serialize flat alongside title / traceId.
+                raw_stage = exception.details.get("stage")
+                if isinstance(raw_stage, str) and raw_stage:
+                    stage = raw_stage
+
+                raw_http_status = exception.details.get("upstreamHttpStatus")
+                if isinstance(raw_http_status, int):
+                    http_status = raw_http_status
         else:
             error_message = str(exception)
 
@@ -76,6 +99,8 @@ class FailedUpload(Generic[T]):
             error_type=error_type,
             exception=exception,
             trace_id=trace_id,
+            stage=stage,
+            http_status=http_status,
         )
 
     def format_error_details(self) -> str:
@@ -90,6 +115,12 @@ class FailedUpload(Generic[T]):
             f"Error Type: {self.error_type}",
             f"Error Message: {self.error_message}",
         ]
+
+        if self.stage:
+            details.append(f"Stage: {self.stage}")
+
+        if self.http_status is not None:
+            details.append(f"HTTP Status: {self.http_status}")
 
         if self.trace_id:
             details.append(f"Trace Id: {self.trace_id}")

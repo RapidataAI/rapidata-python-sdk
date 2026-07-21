@@ -61,6 +61,25 @@ class FailedUploadException(Exception):
             grouped[failed_upload.error_message].append(failed_upload.item)
         return dict(grouped)
 
+    @property
+    def failures_by_stage(self) -> dict[str, list[Datapoint]]:
+        """
+        Get failures grouped by ingestion stage (remote-URL assets).
+
+        Only failures that carry a stage are included, so an empty dict means no
+        failure reached the asset service with a classified stage (e.g. local
+        file errors or datapoint-creation failures). The "internal" key is the
+        only Rapidata-side fault; every other stage is caller-actionable.
+
+        Returns:
+            Dictionary mapping ingestion stage to lists of failed datapoints.
+        """
+        grouped: dict[str, list[Datapoint]] = defaultdict(list)
+        for failed_upload in self._failed_uploads:
+            if failed_upload.stage:
+                grouped[failed_upload.stage].append(failed_upload.item)
+        return dict(grouped)
+
     def __str__(self) -> str:
         total = len(self._failed_uploads)
         if total == 0:
@@ -78,8 +97,15 @@ class FailedUploadException(Exception):
         for reason, failures in grouped.items():
             lines.append(f"  '{reason}': [")
             for fu in failures:
+                annotations = []
+                if fu.stage:
+                    annotations.append(f"stage={fu.stage}")
+                if fu.http_status is not None:
+                    annotations.append(f"http_status={fu.http_status}")
                 if fu.trace_id:
-                    lines.append(f"    {fu.item} [trace_id={fu.trace_id}],")
+                    annotations.append(f"trace_id={fu.trace_id}")
+                if annotations:
+                    lines.append(f"    {fu.item} [{', '.join(annotations)}],")
                 else:
                     lines.append(f"    {fu.item},")
             lines.append("  ]")
