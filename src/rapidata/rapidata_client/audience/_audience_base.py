@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from rapidata.rapidata_client.config import logger, managed_print, tracer
+from rapidata.rapidata_client.config import (
+    logger,
+    managed_print,
+    rapidata_config,
+    tracer,
+)
 
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
@@ -78,6 +83,7 @@ class RapidataAudienceBase:
                 create_job_endpoint_input=CreateJobEndpointInput(
                     audienceId=self.id,
                     jobDefinitionId=job_definition.id,
+                    checkForExplicitContent=rapidata_config.upload.checkForExplicitContent,
                 ),
             )
             job = RapidataJob(
@@ -93,6 +99,9 @@ class RapidataAudienceBase:
                 f"Job '{job.name}' is now viewable under: {job.job_details_page}"
             )
             self._warn_if_cost_exceeds_balance(job, response.cost_warning)
+            self._warn_if_content_check_skip_denied(
+                job, response.content_check_skip_denied
+            )
             self._warn_if_no_graduated_annotators(job)
             return job
 
@@ -126,6 +135,26 @@ class RapidataAudienceBase:
             cost_warning.estimated_cost,
             cost_warning.available_balance,
             cost_warning.shortfall,
+        )
+
+    @staticmethod
+    def _warn_if_content_check_skip_denied(
+        job: RapidataJob, skip_denied: bool | None
+    ) -> None:
+        """Warn when a requested explicit-content-check skip was not permitted.
+
+        Set on the response when the caller asked to skip the check
+        (``rapidata_config.upload.checkForExplicitContent = False``) but the account
+        may not skip it — the check ran regardless. Advisory, not an error.
+        """
+        if not skip_denied:
+            return
+        logger.warning(
+            "Job '%s' requested skipping the explicit-content check, but this account is "
+            "not permitted to skip it — the check ran anyway. Unset "
+            "rapidata_config.upload.checkForExplicitContent (or set it to None/True), or "
+            "contact Rapidata if you need the skip capability.",
+            job.name,
         )
 
     def find_jobs(
