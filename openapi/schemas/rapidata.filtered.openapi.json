@@ -8876,7 +8876,9 @@
                   "name",
                   "-name",
                   "slug",
-                  "-slug"
+                  "-slug",
+                  "member_count",
+                  "-member_count"
                 ],
                 "type": "string"
               }
@@ -41585,7 +41587,8 @@
         "required": [
           "id",
           "name",
-          "slug"
+          "slug",
+          "memberCount"
         ],
         "type": "object",
         "properties": {
@@ -41600,6 +41603,11 @@
           "slug": {
             "type": "string",
             "description": "The URL-safe unique identifier of the organization."
+          },
+          "memberCount": {
+            "type": "integer",
+            "description": "The number of members the organization has.",
+            "format": "int32"
           }
         }
       },
