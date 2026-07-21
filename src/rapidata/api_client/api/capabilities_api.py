@@ -365,7 +365,7 @@ class CapabilitiesApi:
     ) -> GetCustomerCapabilitiesEndpointOutput:
         """Lists the capabilities a customer holds.
 
-        explicitCapabilities are grants held directly or through organization membership;  effectiveCapabilities also folds in platform-admin access.
+        capabilities are the ones the customer effectively holds: granted directly, through organization membership, or folded in from platform-admin access.
 
         :param customer_id: The customer to inspect. (required)
         :type customer_id: UUID
@@ -435,7 +435,7 @@ class CapabilitiesApi:
     ) -> ApiResponse[GetCustomerCapabilitiesEndpointOutput]:
         """Lists the capabilities a customer holds.
 
-        explicitCapabilities are grants held directly or through organization membership;  effectiveCapabilities also folds in platform-admin access.
+        capabilities are the ones the customer effectively holds: granted directly, through organization membership, or folded in from platform-admin access.
 
         :param customer_id: The customer to inspect. (required)
         :type customer_id: UUID
@@ -505,7 +505,7 @@ class CapabilitiesApi:
     ) -> RESTResponseType:
         """Lists the capabilities a customer holds.
 
-        explicitCapabilities are grants held directly or through organization membership;  effectiveCapabilities also folds in platform-admin access.
+        capabilities are the ones the customer effectively holds: granted directly, through organization membership, or folded in from platform-admin access.
 
         :param customer_id: The customer to inspect. (required)
         :type customer_id: UUID
