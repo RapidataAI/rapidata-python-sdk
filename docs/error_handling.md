@@ -14,7 +14,7 @@ If you would rather tolerate a small fraction of failures instead, raise the [fa
 
 - `0.0` (default) — strict. Any failed upload aborts creation; no definition is left behind and the failed datapoints can be retried.
 - `0.01` — up to 1% of datapoints may fail; the definition is created with the rest, and the failures are logged.
-- `1.0` — the definition is always created, regardless of how many datapoints failed.
+- `1.0` — the definition is created regardless of how many datapoints failed, as long as at least one datapoint uploads successfully (a definition over an empty dataset is never created).
 
 Set it globally, via the config object or the `RAPIDATA_failureTolerance` environment variable:
 

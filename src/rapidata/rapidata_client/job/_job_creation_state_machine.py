@@ -45,7 +45,9 @@ class JobDefinitionCreationMachine:
     ``failure_tolerance`` is the fraction of the job's datapoints allowed to fail
     while still creating the definition (``0.0`` = strict, ``1.0`` = create
     regardless). The ratio is always measured against the original datapoint
-    count, so it stays meaningful across resume attempts.
+    count, so it stays meaningful across resume attempts. Regardless of the
+    tolerance, at least one datapoint must upload successfully - a definition
+    over an empty dataset is never created.
     """
 
     def __init__(
@@ -98,7 +100,7 @@ class JobDefinitionCreationMachine:
             raise FailedUploadException(
                 self.dataset,
                 self.failed_uploads,
-                job_definition=self.job_definition,
+                job_definition=None,
                 machine=self,
             )
 
@@ -147,6 +149,9 @@ class JobDefinitionCreationMachine:
             failed_count / self._total_datapoints if self._total_datapoints else 0.0
         )
 
+        # At least one datapoint must land regardless of the tolerance: a
+        # definition over an empty dataset has nothing to label and would be
+        # exactly the kind of useless remote artifact this machine prevents.
         within_tolerance = failure_ratio <= self._failure_tolerance
         if within_tolerance and self._succeeded_count > 0:
             if failed_count > 0:

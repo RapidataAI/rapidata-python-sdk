@@ -107,8 +107,10 @@ class UploadConfig(BaseModel):
             still creating the job definition (0.0-1.0). 0.0 (default) is strict: any failed
             upload aborts creation so no incomplete definition is left behind, and the failed
             datapoints can be retried into the same dataset. 1.0 creates the definition
-            regardless of how many datapoints failed. Overridable per call via the
-            ``failure_tolerance`` argument on ``create_*_job_definition``. Defaults to 0.0.
+            regardless of how many datapoints failed, as long as at least one datapoint
+            uploads successfully (a definition over an empty dataset is never created).
+            Overridable per call via the ``failure_tolerance`` argument on
+            ``create_*_job_definition``. Defaults to 0.0.
     """
 
     model_config = ConfigDict(validate_assignment=True)

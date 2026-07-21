@@ -161,3 +161,34 @@ def test_retry_reuses_dataset_and_persists_definition():
     # Retry re-uploaded ONLY the failed datapoints, into the same dataset.
     assert dataset.add_datapoints.call_count == 2
     assert dataset.add_datapoints.call_args_list[1].args[0] == ["c", "d"]
+
+
+def test_all_fail_never_creates_definition_even_at_full_tolerance():
+    # Even failure_tolerance=1.0 must not create a definition over an empty
+    # dataset: a job with zero datapoints has nothing to label.
+    svc = _make_openapi_service()
+    dps = ["a", "b", "c"]
+    result = ([], [_failed("a"), _failed("b"), _failed("c")])
+
+    dataset = MagicMock()
+    dataset.id = "ds-1"
+    dataset.add_datapoints.side_effect = [result]
+    machine = JobDefinitionCreationMachine(
+        openapi_service=svc,
+        name="My Job",
+        workflow=MagicMock(),
+        datapoints=dps,
+        referee=MagicMock(),
+        failure_tolerance=1.0,
+    )
+
+    with (
+        patch(f"{MODULE}.RapidataDataset", return_value=dataset),
+        patch(f"{MODULE}.print_campaign_preview_qr_for_pipeline"),
+        patch(f"{MODULE}.print_job_definition_preview_link"),
+        patch(JOB_INPUT),
+    ):
+        with pytest.raises(FailedUploadException):
+            machine.run()
+
+    svc.order.job_api.job_definition_post.assert_not_called()
