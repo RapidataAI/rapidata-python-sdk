@@ -1,4 +1,5 @@
 from __future__ import annotations
+import errno
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from .failed_upload import FailedUpload
 from typing import TYPE_CHECKING, Optional
@@ -95,6 +96,20 @@ class FailedUploadException(Exception):
             grouped[failed_upload.error_message].append(failed_upload.item)
         return dict(grouped)
 
+    def _has_fd_exhaustion_failure(self) -> bool:
+        """Whether any failure looks like the OS running out of file descriptors.
+
+        Checks the errno first (EMFILE), falling back to the message text for
+        cases where the OSError was wrapped or stringified before it reached us.
+        """
+        for fu in self._failed_uploads:
+            exc = fu.exception
+            if isinstance(exc, OSError) and exc.errno == errno.EMFILE:
+                return True
+            if "too many open files" in fu.error_message.lower():
+                return True
+        return False
+
     def __str__(self) -> str:
         total = len(self._failed_uploads)
         if total == 0:
@@ -119,6 +134,16 @@ class FailedUploadException(Exception):
             lines.append("  ]")
 
         failed_upload_message = "\n".join(lines)
+        if self._has_fd_exhaustion_failure():
+            failed_upload_message += (
+                "\n\nThese failures look like file-descriptor exhaustion ('Too many open "
+                "files'). The upload cache and worker pool each hold open file handles, so a "
+                "large or concurrent upload can exceed a low 'ulimit -n'. To fix, either raise "
+                "the OS limit (e.g. 'ulimit -n 8192') or lower the SDK's footprint via the "
+                "'RAPIDATA_cacheShards' (default 32) and 'RAPIDATA_maxWorkers' (default 25) "
+                "environment variables. See "
+                "https://docs.rapidata.ai/3.x/config/#upload-configuration-options"
+            )
         if self.machine is not None:
             failed_upload_message += (
                 "\n\nNo job definition was created because the upload stayed outside the "

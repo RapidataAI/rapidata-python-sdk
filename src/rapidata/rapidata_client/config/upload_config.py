@@ -91,9 +91,12 @@ class UploadConfig(BaseModel):
         cacheTimeout (float): Cache operation timeout in seconds. Defaults to 0.1.
         cacheLocation (Path): Directory for cache storage. Defaults to ~/.cache/rapidata/upload_cache.
             This is immutable. Only used for file uploads when cacheToDisk=True.
-        cacheShards (int): Number of cache shards for parallel access. Defaults to 128.
-            Higher values improve concurrency but increase file handles. Must be positive.
-            This is immutable. Only used for file uploads when cacheToDisk=True.
+        cacheShards (int): Number of disk-cache shards for concurrent file-cache access. Defaults to 32.
+            Each shard is a separate on-disk store that holds open file handles, so a higher value
+            raises the process's file-descriptor count — which can exceed a low ``ulimit -n`` and
+            surface as "Too many open files". 32 comfortably covers the default ``maxWorkers`` of 25.
+            Must be positive. Immutable at runtime — set it via the ``RAPIDATA_cacheShards`` environment
+            variable. Only used for file uploads when cacheToDisk=True.
         enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
         batchSize (int): Number of URLs per batch (100-5000). Defaults to 1000.
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
@@ -134,8 +137,9 @@ class UploadConfig(BaseModel):
         frozen=True,
     )
     cacheShards: int = Field(
-        default=128,
+        default=32,
         frozen=True,
+        description="Disk-cache shards. Each opens file handles; keep low enough for ulimit -n.",
     )
     batchSize: int = Field(
         default=1000,
