@@ -114,6 +114,11 @@ class UploadConfig(BaseModel):
             uploads successfully (a definition over an empty dataset is never created).
             Overridable per call via the ``failure_tolerance`` argument on
             ``create_*_job_definition``. Defaults to 0.0.
+        checkForExplicitContent (bool | None): Opt in or out of Rapidata's server-side
+            explicit-content check, applied when a job is assigned to an audience.
+            ``None`` (default) uses the account's default. ``True`` forces the check on.
+            ``False`` requests skipping it — honored only when the account is permitted to
+            skip; otherwise the check still runs and a warning is logged. Defaults to None.
     """
 
     model_config = ConfigDict(validate_assignment=True)
@@ -160,6 +165,10 @@ class UploadConfig(BaseModel):
     failureTolerance: float = Field(
         default=0.0,
         description="Fraction of a job's datapoints allowed to fail while still creating the definition (0.0-1.0).",
+    )
+    checkForExplicitContent: bool | None = Field(
+        default=None,
+        description="Opt in/out of the server-side explicit-content check on job assignment. None uses the account default; True forces it on; False requests skip (honored only if permitted).",
     )
 
     @field_validator("maxWorkers")

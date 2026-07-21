@@ -50,6 +50,7 @@ logger.info("This will be shown") # (2)!
 | `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
 | `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
 | `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression settings; see [Compression override](#compression-override) below. |
+| `checkForExplicitContent` | `bool \| None` | `None` | Opt in/out of the server-side explicit-content check on job assignment. `None` uses the account default; `True` forces it on; `False` requests skipping it (honored only if the account is permitted, otherwise the check still runs and a warning is logged). |
 
 #### Compression override
 
