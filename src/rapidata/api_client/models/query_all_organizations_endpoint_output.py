@@ -16,7 +16,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -30,7 +30,8 @@ class QueryAllOrganizationsEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The id of the organization.")
     name: StrictStr = Field(description="The human-readable name of the organization.")
     slug: StrictStr = Field(description="The URL-safe unique identifier of the organization.")
-    __properties: ClassVar[List[str]] = ["id", "name", "slug"]
+    member_count: StrictInt = Field(description="The number of members the organization has.", alias="memberCount")
+    __properties: ClassVar[List[str]] = ["id", "name", "slug", "memberCount"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,7 +82,8 @@ class QueryAllOrganizationsEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
-            "slug": obj.get("slug")
+            "slug": obj.get("slug"),
+            "memberCount": obj.get("memberCount")
         }
         try:
             _obj = cls.model_validate(_data)
