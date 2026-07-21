@@ -3546,7 +3546,7 @@
           "Campaign"
         ],
         "summary": "Sets the fast bid multiplier for a single external booster campaign to an arbitrary value.",
-        "description": "Bypasses the level→multiplier mapping. Intended for live testing and one-off\n operational tweaks. Value must be in [0, 50]; 0 effectively pauses delivery on the\n campaign without changing its status. The response reports the multiplier the\n downstream system confirms is applied.",
+        "description": "Bypasses the level\u2192multiplier mapping. Intended for live testing and one-off\n operational tweaks. Value must be in [0, 50]; 0 effectively pauses delivery on the\n campaign without changing its status. The response reports the multiplier the\n downstream system confirms is applied.",
         "parameters": [
           {
             "name": "externalCampaignId",
@@ -4232,7 +4232,7 @@
           "Campaign"
         ],
         "summary": "Replaces the campaign's stream program.",
-        "description": "The program is validated before it is persisted; a malformed graph is rejected.\n The program's version is bumped and republished — running sessions pick up the new\n program on their next response.",
+        "description": "The program is validated before it is persisted; a malformed graph is rejected.\n The program's version is bumped and republished \u2014 running sessions pick up the new\n program on their next response.",
         "parameters": [
           {
             "name": "campaignId",
@@ -24353,7 +24353,7 @@
           "Job"
         ],
         "summary": "Restarts the given rapids of a job.",
-        "description": "The old rapids are rejected (their billed responses refunded) and soft-deleted, then cloned\n into a new target group. Results regenerate automatically once the replacements finish\n collecting; the job dips below 100% progress during re-collection and climbs back. Idempotent\n per original rapid — a repeated call reuses the existing replacement.",
+        "description": "The old rapids are rejected (their billed responses refunded) and soft-deleted, then cloned\n into a new target group. Results regenerate automatically once the replacements finish\n collecting; the job dips below 100% progress during re-collection and climbs back. Idempotent\n per original rapid \u2014 a repeated call reuses the existing replacement.",
         "parameters": [
           {
             "name": "jobId",
@@ -28216,7 +28216,7 @@
           "BillingAccount"
         ],
         "summary": "Grants a voucher to a customer.",
-        "description": "Provide exactly one of validity (a duration from now) or expiresAt (an\n explicit instant) — not both, not neither. The grant immediately raises the customer's\n serve allowance.",
+        "description": "Provide exactly one of validity (a duration from now) or expiresAt (an\n explicit instant) \u2014 not both, not neither. The grant immediately raises the customer's\n serve allowance.",
         "requestBody": {
           "description": "The customer, voucher amount, and expiry.",
           "content": {
@@ -32329,7 +32329,7 @@
           "Signal"
         ],
         "summary": "Deletes a signal by its id.",
-        "description": "Soft-deleted signals (and every run they spawned) are hidden from all view / list\n endpoints — including admin endpoints — per the cascade policy.",
+        "description": "Soft-deleted signals (and every run they spawned) are hidden from all view / list\n endpoints \u2014 including admin endpoints \u2014 per the cascade policy.",
         "parameters": [
           {
             "name": "signalId",
@@ -32551,7 +32551,7 @@
           "Signal"
         ],
         "summary": "Pauses a signal.",
-        "description": "Manual triggers still fire on a paused signal — pause only affects the scheduler.",
+        "description": "Manual triggers still fire on a paused signal \u2014 pause only affects the scheduler.",
         "parameters": [
           {
             "name": "signalId",
@@ -33538,7 +33538,7 @@
           "ValidationSet"
         ],
         "summary": "Gets all validation sets available to the user that a rapid with the provided parameters can be added to.",
-        "description": "Matching is strict: a validation set is only returned when its asset type, modality, and prompt type\n equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.\n This differs from /validation-set/recommended, which uses loose overlap matching and may return\n sets that then reject the rapid. Returns an empty array when no compatible set exists.",
+        "description": "Matching is strict: a validation set is only returned when its asset type, modality, and prompt type\n equal the provided parameters exactly \u2014 the same constraint enforced when actually adding a rapid.\n This differs from /validation-set/recommended, which uses loose overlap matching and may return\n sets that then reject the rapid. Returns an empty array when no compatible set exists.",
         "parameters": [
           {
             "name": "assetType",
@@ -36423,7 +36423,7 @@
           },
           "minResponsesToGraduate": {
             "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Defaults to null (no minimum — users graduate as soon as the score is reached).",
+            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Defaults to null (no minimum \u2014 users graduate as soon as the score is reached).",
             "format": "uint32",
             "nullable": true
           },
@@ -40722,7 +40722,7 @@
                 "$ref": "#/components/schemas/BoostingControlMode"
               }
             ],
-            "description": "How the campaign's boost is controlled — Manual (user-editable) or Automatic\n (managed by an owning service; boost edits are rejected by the API)."
+            "description": "How the campaign's boost is controlled \u2014 Manual (user-editable) or Automatic\n (managed by an owning service; boost edits are rejected by the API)."
           },
           "requiresBooster": {
             "type": "boolean",
@@ -40976,7 +40976,7 @@
                 "$ref": "#/components/schemas/BoostingProfile"
               }
             ],
-            "description": "The boosting profile configuration. Takes precedence over BoostLevel and\n RequiresBooster when set. Prefer BoostLevel — it lets the server derive\n the right profile (including filtered-audience creation) from the campaign's filters."
+            "description": "The boosting profile configuration. Takes precedence over BoostLevel and\n RequiresBooster when set. Prefer BoostLevel \u2014 it lets the server derive\n the right profile (including filtered-audience creation) from the campaign's filters."
           },
           "stickyConfig": {
             "allOf": [
@@ -43868,7 +43868,7 @@
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to DefaultInitialBoostLevel. Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via IsAllowedToSetInitialBoostLevel.",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to DefaultInitialBoostLevel. Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel \u2014 anything outside that range returns\n 403 Forbidden via IsAllowedToSetInitialBoostLevel.",
             "format": "int32",
             "nullable": true
           },
@@ -45877,7 +45877,7 @@
           },
           "additionalInputs": {
             "type": "object",
-            "description": "Extra model inputs keyed by parameter name (e.g. \"aspect_ratio\"). The system-managed keys\n (prompt, num_outputs) must not appear here — they are supplied automatically. Values are\n validated against the model's live input schema when the faucet is set."
+            "description": "Extra model inputs keyed by parameter name (e.g. \"aspect_ratio\"). The system-managed keys\n (prompt, num_outputs) must not appear here \u2014 they are supplied automatically. Values are\n validated against the model's live input schema when the faucet is set."
           }
         },
         "description": "Configures a faucet that generates samples via the Replicate API."
@@ -48356,7 +48356,7 @@
                 "$ref": "#/components/schemas/CreateJobEndpoint_CostWarning"
               }
             ],
-            "description": "Present only when the job's estimated cost exceeds the owner's remaining balance.\n Advisory — the job is created and runs regardless; it may pause for funds mid-run."
+            "description": "Present only when the job's estimated cost exceeds the owner's remaining balance.\n Advisory \u2014 the job is created and runs regardless; it may pause for funds mid-run."
           }
         },
         "description": "The result when a job has been created."
@@ -51053,7 +51053,7 @@
           },
           "progress": {
             "type": "number",
-            "description": "Labeling completion as a ratio in the range 0–1, or null when no progress has\n been reported yet (completion sets it to 1). Sortable via ?sort=progress.",
+            "description": "Labeling completion as a ratio in the range 0\u20131, or null when no progress has\n been reported yet (completion sets it to 1). Sortable via ?sort=progress.",
             "format": "double",
             "nullable": true
           }
