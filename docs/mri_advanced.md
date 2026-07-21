@@ -201,6 +201,63 @@ participant = benchmark.participants[0]
 participant.delete()
 ```
 
+## Voter Demographics
+
+Every vote on a benchmark carries the voter's demographics, so you can see *who*
+evaluated your models and how different groups ranked them.
+
+!!! note
+    `ageBucket`, `gender` and `occupation` are **estimated** (inferred from
+    behaviour), not self-declared. `country` and `language` are observed. Each
+    dimension includes an `"unknown"` bucket for votes whose attribute could not
+    be determined.
+
+### Voter composition
+
+`get_demographics` returns how the votes split across each demographic
+dimension — both the raw vote count and the share of the total (shares within a
+dimension sum to 1):
+
+```python
+demographics = client.mri.get_demographics("benchmark_id_here")
+
+print(f"{demographics.total_votes} votes")
+for bucket in demographics.dimensions["country"]:
+    print(f"{bucket.value}: {bucket.votes} votes ({bucket.share:.1%})")
+```
+
+### Standings per demographic segment
+
+`get_standings_breakdown` returns the overall standings plus one segment per
+bucket of a dimension, each with that segment's standings — useful for spotting
+where a model is ranked differently by different groups:
+
+```python
+breakdown = client.mri.get_standings_breakdown(
+    "benchmark_id_here",
+    dimension="AgeBucket",  # AgeBucket | Gender | Occupation | Country | Language
+)
+
+for segment in breakdown.segments:
+    leader = segment.items[0] if segment.items else None
+    print(f"{segment.value} ({segment.votes} votes): {leader.name if leader else '—'}")
+```
+
+Segments are **raw vote counts** by default; pass `use_weighted_scoring=True` to
+weight votes by annotator reliability. Both methods accept a `run_id` to scope
+to a single evaluation run and a `filters` dict (the same fields as the
+standings query, e.g. `tags`, `country`, `leaderboard_id`) to narrow the votes
+considered:
+
+```python
+breakdown = client.mri.get_standings_breakdown(
+    "benchmark_id_here",
+    dimension="Country",
+    filters={"tags": ["landscape"], "language": ["en"]},
+    use_weighted_scoring=True,
+)
+```
+
 ## Accessing the Underlying Jobs
 
 The standings and win/loss matrix are aggregates. If you need the raw responses
@@ -234,4 +291,5 @@ being set up) are skipped, so the list only contains jobs you can act on.
 - [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)
 - [RapidataLeaderboard](/reference/rapidata/rapidata_client/benchmark/leaderboard/rapidata_leaderboard/)
 - [BenchmarkParticipant](/reference/rapidata/rapidata_client/benchmark/participant/participant/)
+- [Demographics result models](/reference/rapidata/rapidata_client/benchmark/demographics/models/)
 

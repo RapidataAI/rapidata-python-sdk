@@ -14,6 +14,13 @@ from .job import (
     CostEstimate,
     JobProgress,
 )
+from .benchmark.demographics import (
+    BenchmarkDemographics,
+    BenchmarkStandingItem,
+    BenchmarkStandingsBreakdown,
+    BenchmarkStandingsSegment,
+    DemographicBucket,
+)
 from .signal import RapidataSignal, RapidataSignalManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
