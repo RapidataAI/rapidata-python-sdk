@@ -8,7 +8,7 @@
         <link rel="canonical" href="https://docs.rapidata.ai/3.x/human_prompting/">
       
       
-        <link rel="prev" href="../cost_estimates/">
+        <link rel="prev" href="../job_progress/">
       
       
         <link rel="next" href="../error_handling/">
@@ -433,6 +433,8 @@
       
         
       
+        
+      
     
     
     
@@ -720,6 +722,34 @@
     
   
     Cost Estimates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../job_progress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Job Progress
   
 
     
@@ -1752,18 +1782,22 @@
 <h3 id="limit-decision-criteria">Limit Decision Criteria<a class="headerlink" href="#limit-decision-criteria" title="Permanent link">#</a></h3>
 <p>Don't overload labelers with multiple criteria in a single question.</p>
 <p><strong>Better:</strong>
-</p><div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>"What animal is in the image? - rabbit/dog/cat/other"
+</p><div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Instruction:    "What animal is in the image?"
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Answer options: rabbit / dog / cat / other
 </span></code></pre></div><p></p>
 <p><strong>Avoid:</strong>
-</p><div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>"Does this image contain a rabbit, a dog, or a cat? - yes/no"
+</p><div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Instruction:    "Does this image contain a rabbit, a dog, or a cat?"
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Answer options: yes / no
 </span></code></pre></div><p></p>
 <h3 id="use-clear-response-options">Use Clear Response Options<a class="headerlink" href="#use-clear-response-options" title="Permanent link">#</a></h3>
 <p>Provide distinct, non-overlapping response options.</p>
 <p><strong>Better:</strong>
-</p><div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>"Rate the image quality: poor/acceptable/excellent"
+</p><div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Instruction:    "Rate the image quality"
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Answer options: poor / acceptable / excellent
 </span></code></pre></div><p></p>
 <p><strong>Avoid:</strong>
-</p><div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>"Rate the image quality: bad/not good/fine/good/great"
+</p><div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Instruction:    "Rate the image quality"
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Answer options: bad / not good / fine / good / great
 </span></code></pre></div><p></p>
 <h2 id="example-implementation">Example Implementation<a class="headerlink" href="#example-implementation" title="Permanent link">#</a></h2>
 <p>When creating a Rapidata job, implement these principles as follows:</p>
@@ -1781,18 +1815,23 @@
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">truth</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/bad_ai_generated_image.png"</span>
 </span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">)</span>
 </span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Coherence Comparison"</span><span class="p">,</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image has more glitches and is more likely to be AI generated?"</span><span class="p">,</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux-1.1-pro/33_2.jpg"</span><span class="p">,</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>         <span class="s2">"https://assets.rapidata.ai/stable-diffusion-3/33_0.jpg"</span><span class="p">]</span>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="p">]</span>
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="p">)</span>
-</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span> <span class="c1"># (1)!</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Coherence Comparison"</span><span class="p">,</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image has more glitches and is more likely to be AI generated?"</span><span class="p">,</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux-1.1-pro/33_2.jpg"</span><span class="p">,</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>         <span class="s2">"https://assets.rapidata.ai/stable-diffusion-3/33_0.jpg"</span><span class="p">]</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    <span class="p">]</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="p">)</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
 </span></code></pre></div>
+<ol>
+<li>Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.</li>
+</ol>
 <h2 id="common-task-types-and-recommended-instructions">Common Task Types and Recommended Instructions<a class="headerlink" href="#common-task-types-and-recommended-instructions" title="Permanent link">#</a></h2>
 <h3 id="image-comparison-tasks">Image Comparison Tasks<a class="headerlink" href="#image-comparison-tasks" title="Permanent link">#</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Comparing image preference</span>

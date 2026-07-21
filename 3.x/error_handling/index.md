@@ -2,38 +2,53 @@
 
 ## Introduction
 
-When creating job definitions or orders with the Rapidata SDK, datapoints may fail to upload due to various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures is essential for building robust integrations.
+When creating job definitions with the Rapidata SDK, datapoints may fail to upload for various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures is essential for building robust integrations.
 
-When one or more datapoints fail to upload, the SDK raises a `FailedUploadException`. This exception provides detailed information about what went wrong and gives you several recovery options:
+Job creation is **atomic by default**: if any datapoint fails to upload, the SDK does **not** create the job definition — so you never end up with an incomplete definition — and raises a `FailedUploadException`. You then fix the problem and call `exception.retry()`, which re-uploads only the failed datapoints into the **same** dataset and finishes creating the definition. Retrying never creates a duplicate dataset or definition.
 
-- Inspect which datapoints failed and why
-- Retry the failed datapoints
-- Continue with the successfully uploaded datapoints
+If you would rather tolerate a small fraction of failures instead, raise the [failure tolerance](#failure-tolerance).
 
-This guide shows you how to handle upload failures effectively.
+## Failure tolerance
 
-## Understanding FailedUploadException
+`failure_tolerance` is the fraction of a job's datapoints (`0.0`–`1.0`) allowed to fail while still creating the definition:
 
-The `FailedUploadException` is raised during `JobDefinition` or `Order` creation when one or more datapoints cannot be uploaded. 
-**Important**: Despite the exception being raised, a `JobDefinition` or `Order` object is still created with the successfully uploaded datapoints, allowing you to continue if you catch the exception.
+- `0.0` (default) — strict. Any failed upload aborts creation; no definition is left behind and the failed datapoints can be retried.
+- `0.01` — up to 1% of datapoints may fail; the definition is created with the rest, and the failures are logged.
+- `1.0` — the definition is created regardless of how many datapoints failed, as long as at least one datapoint uploads successfully (a definition over an empty dataset is never created).
 
-### Exception Properties
-
-The exception provides these properties to help you understand and recover from failures:
+Set it globally, via the config object or the `RAPIDATA_failureTolerance` environment variable:
 
 ```python
-FailedUploadException(
-    dataset: RapidataDataset, # (1)!
-    failed_uploads: list[FailedUpload], # (2)!
-    order: Optional[RapidataOrder], # (3)!
-    job_definition: Optional[JobDefinition] # (4)!
+from rapidata import rapidata_config
+rapidata_config.upload.failureTolerance = 0.01
+```
+
+or per call, which overrides the global default for that job:
+
+```python
+job_def = client.job.create_classification_job_definition(
+    name="Image Classification",
+    instruction="What animal is in this image?",
+    answer_options=["Cat", "Dog", "Bird"],
+    datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"],
+    failure_tolerance=0.01,
 )
 ```
 
-1. The dataset that was being created.
-2. Basic list of failed datapoints.
-3. The order object (only present during order creation).
-4. The job definition object (only present during job definition creation).
+The ratio is measured against the whole job, so it stays meaningful across retries.
+
+## Understanding FailedUploadException
+
+The `FailedUploadException` is raised during job-definition creation when the upload stays outside the failure tolerance. When it comes from job creation, no job definition was created — recover with `exception.retry()` (see below).
+
+### Exception Properties
+
+The exception exposes these to help you understand and recover from failures:
+
+- `dataset` — the dataset that was being uploaded to. `retry()` reuses it.
+- `failed_uploads` / `detailed_failures` / `failures_by_reason` — which datapoints failed and why (see below).
+- `retry()` — re-upload the failed datapoints into `dataset` and finish creating the definition. Returns the `RapidataJobDefinition`.
+- `job_definition` — `None` for job creation (nothing was persisted). Populated only when tolerating failures on a legacy order.
 
 ### Understanding Failure Information
 
@@ -99,11 +114,11 @@ This groups all failed datapoints by their error message, making it easy to see 
 
 **Datapoint Creation Failures**: After assets are successfully uploaded, datapoints are created. These failures can have different reasons depending on what went wrong (e.g., validation errors, format issues, backend constraints). Each datapoint may fail for a unique reason.
 
-## Recovery Strategies
+## Recovery
 
-### Strategy 1: Continue with Successfully Uploaded Datapoints
+### Fix and retry
 
-When a `FailedUploadException` is raised, the `JobDefinition` is still created with the successfully uploaded datapoints. You can catch the exception and continue using the created object:
+The recommended recovery path is to catch the exception, fix whatever caused the failures (for example correct the file paths), and call `exception.retry()`. This re-uploads **only** the failed datapoints into the **same** dataset and finishes creating the definition — no new dataset, no duplicate definition, and nothing to re-specify:
 
 ```python
 from rapidata import RapidataClient
@@ -116,67 +131,46 @@ try:
         name="Image Classification",
         instruction="What animal is in this image?",
         answer_options=["Cat", "Dog", "Bird"],
-        datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"]
+        datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"],
     )
 except FailedUploadException as e:
-    print(f"Warning: {len(e.failed_uploads)} datapoints failed to upload")
+    for reason, datapoints in e.failures_by_reason.items():  # (1)!
+        print(f"  {reason}: {len(datapoints)} datapoints")
 
-    if len(e.failed_uploads) > len(datapoints) * 0.1: # (1)!
-        raise ValueError("Too many failures, aborting")
+    # ...fix the failing datapoints (e.g. correct the paths on disk)...
+    job_def = e.retry()  # (2)!
 
-    job_def = e.job_definition # (2)!
-
-# The job definition holds the successful datapoints — assign it to an audience to start collecting responses.
 audience = client.audience.get_audience_by_id("global")
 job = audience.assign_job(job_def)
 ```
 
-1. Check if the failure rate is acceptable — here we abort if more than 10% failed.
-2. The job definition was still created with the successfully uploaded datapoints. You can use it normally.
+1. Inspect what failed and why before retrying.
+2. Returns the created `RapidataJobDefinition`. If some datapoints still fail beyond the tolerance, `retry()` raises `FailedUploadException` again (with the same dataset attached), so you can keep fixing and retrying.
 
-### Strategy 2: Retry Failed Datapoints
+!!! warning
+    Don't re-call `create_*_job_definition(...)` to retry — that starts a fresh dataset and creates a **second** definition. Use `exception.retry()` so the existing dataset is reused.
 
-After catching the exception, you can fix the issues (e.g., correct file paths, fix formats) and retry the failed datapoints by adding them to the dataset:
+### Tolerate a fraction of failures
+
+If a few failures are acceptable, set a [failure tolerance](#failure-tolerance). When the failed fraction is within tolerance the definition is created with the datapoints that succeeded, the failures are logged, and no exception is raised:
 
 ```python
-from rapidata import RapidataClient
-from rapidata.rapidata_client.exceptions import FailedUploadException
+job_def = client.job.create_classification_job_definition(
+    name="Image Classification",
+    instruction="What animal is in this image?",
+    answer_options=["Cat", "Dog", "Bird"],
+    datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"],
+    failure_tolerance=0.5,  # tolerate up to 50% failures for this job
+)
+```
 
-client = RapidataClient()
+### Manual control (advanced)
 
-try:
-    job_def = client.job.create_classification_job_definition(
-        name="Image Classification",
-        instruction="What animal is in this image?",
-        answer_options=["Cat", "Dog", "Bird"],
-        datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"]
-    )
+`exception.retry()` covers the common case. If you need to drive the retry yourself — for example to substitute corrected datapoints — the failed dataset is available on the exception and you can add datapoints to it directly:
+
+```python
 except FailedUploadException as e:
-    print(f"{len(e.failed_uploads)} datapoints failed:")
-    for reason, datapoints in e.failures_by_reason.items():
-        print(f"  {reason}: {len(datapoints)} datapoints")
-
-    successful_retries, failed_retries = e.dataset.add_datapoints(e.failed_uploads) # (1)!
-    print(f"{len(successful_retries)} datapoints successfully added on retry")
-
-    if failed_retries:
-        print(f"{len(failed_retries)} datapoints still failed after retry")
+    successful_retries, failed_retries = e.dataset.add_datapoints(e.failed_uploads)
 ```
 
-1. Fix the underlying issues (e.g., correct file paths) before retrying. This adds the previously failed datapoints back to the dataset.
-
-### Strategy 3: Retrieve and Use After Exception (If Not Caught)
-
-If you didn't catch the exception during creation, you can still retrieve and use the job definition. It was created with the successfully uploaded datapoints and can be used through code or the app.rapidata.ai UI:
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-job_def = client.job.get_job_definition_by_id(job_definition_id) # (1)!
-audience = client.audience.get_audience_by_id("global")
-audience.assign_job(job_def)
-```
-
-1. Retrieve the job definition using its ID (from the exception message or the [Rapidata Dashboard](https://app.rapidata.ai)).
+Note that this only re-uploads the datapoints; it does not create the job definition. Prefer `exception.retry()` unless you specifically need the lower-level control.

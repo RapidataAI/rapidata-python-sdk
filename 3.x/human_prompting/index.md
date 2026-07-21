@@ -40,12 +40,14 @@ Don't overload labelers with multiple criteria in a single question.
 
 **Better:**
 ```
-"What animal is in the image? - rabbit/dog/cat/other"
+Instruction:    "What animal is in the image?"
+Answer options: rabbit / dog / cat / other
 ```
 
 **Avoid:**
 ```
-"Does this image contain a rabbit, a dog, or a cat? - yes/no"
+Instruction:    "Does this image contain a rabbit, a dog, or a cat?"
+Answer options: yes / no
 ```
 
 ### Use Clear Response Options
@@ -53,12 +55,14 @@ Provide distinct, non-overlapping response options.
 
 **Better:**
 ```
-"Rate the image quality: poor/acceptable/excellent"
+Instruction:    "Rate the image quality"
+Answer options: poor / acceptable / excellent
 ```
 
 **Avoid:**
 ```
-"Rate the image quality: bad/not good/fine/good/great"
+Instruction:    "Rate the image quality"
+Answer options: bad / not good / fine / good / great
 ```
 
 ## Example Implementation
@@ -80,6 +84,8 @@ audience.add_compare_example(
     truth="https://assets.rapidata.ai/bad_ai_generated_image.png"
 )
 
+audience.start_recruiting() # (1)!
+
 job_definition = client.job.create_compare_job_definition(
     name="Image Coherence Comparison",
     instruction="Which image has more glitches and is more likely to be AI generated?",
@@ -92,6 +98,8 @@ job_definition = client.job.create_compare_job_definition(
 job = audience.assign_job(job_definition)
 job.view()
 ```
+
+1. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
 ## Common Task Types and Recommended Instructions
 

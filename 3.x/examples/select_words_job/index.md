@@ -122,6 +122,8 @@ Like any other job, a select words job can be assigned to any audience — a rea
             truths=truths,
         )
 
+    audience.start_recruiting() # (2)!
+
     job_definition = client.job.create_select_words_job_definition(
         name="Image-Text Alignment Example",
         instruction="The image is based on the text below. Select mistakes, i.e., words that are not aligned with the image.",
@@ -138,6 +140,7 @@ Like any other job, a select words job can be assigned to any audience — a rea
     ```
 
     1. Creates a new, empty audience. The `add_select_words_example` calls train and filter the labelers who join it.
+    2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
         Review every qualification example and its truth words carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.

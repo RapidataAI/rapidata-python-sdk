@@ -433,6 +433,8 @@
       
         
       
+        
+      
     
     
     
@@ -740,6 +742,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../job_progress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Job Progress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../human_prompting/" class="md-nav__link">
         
   
@@ -839,6 +869,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#failure-tolerance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure tolerance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#understanding-faileduploadexception" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -917,22 +958,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-strategies" class="md-nav__link">
+  <a href="#recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recovery Strategies
+        Recovery
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Recovery Strategies">
+    <nav class="md-nav" aria-label="Recovery">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#strategy-1-continue-with-successfully-uploaded-datapoints" class="md-nav__link">
+  <a href="#fix-and-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategy 1: Continue with Successfully Uploaded Datapoints
+        Fix and retry
       
     </span>
   </a>
@@ -940,10 +981,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#strategy-2-retry-failed-datapoints" class="md-nav__link">
+  <a href="#tolerate-a-fraction-of-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategy 2: Retry Failed Datapoints
+        Tolerate a fraction of failures
       
     </span>
   </a>
@@ -951,10 +992,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#strategy-3-retrieve-and-use-after-exception-if-not-caught" class="md-nav__link">
+  <a href="#manual-control-advanced" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategy 3: Retrieve and Use After Exception (If Not Caught)
+        Manual control (advanced)
       
     </span>
   </a>
@@ -1588,6 +1629,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#failure-tolerance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure tolerance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#understanding-faileduploadexception" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1666,22 +1718,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-strategies" class="md-nav__link">
+  <a href="#recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recovery Strategies
+        Recovery
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Recovery Strategies">
+    <nav class="md-nav" aria-label="Recovery">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#strategy-1-continue-with-successfully-uploaded-datapoints" class="md-nav__link">
+  <a href="#fix-and-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategy 1: Continue with Successfully Uploaded Datapoints
+        Fix and retry
       
     </span>
   </a>
@@ -1689,10 +1741,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#strategy-2-retry-failed-datapoints" class="md-nav__link">
+  <a href="#tolerate-a-fraction-of-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategy 2: Retry Failed Datapoints
+        Tolerate a fraction of failures
       
     </span>
   </a>
@@ -1700,10 +1752,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#strategy-3-retrieve-and-use-after-exception-if-not-caught" class="md-nav__link">
+  <a href="#manual-control-advanced" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategy 3: Retrieve and Use After Exception (If Not Caught)
+        Manual control (advanced)
       
     </span>
   </a>
@@ -1737,38 +1789,46 @@
 
 <h1 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">#</a></h1>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>When creating job definitions or orders with the Rapidata SDK, datapoints may fail to upload due to various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures is essential for building robust integrations.</p>
-<p>When one or more datapoints fail to upload, the SDK raises a <code>FailedUploadException</code>. This exception provides detailed information about what went wrong and gives you several recovery options:</p>
+<p>When creating job definitions with the Rapidata SDK, datapoints may fail to upload for various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures is essential for building robust integrations.</p>
+<p>Job creation is <strong>atomic by default</strong>: if any datapoint fails to upload, the SDK does <strong>not</strong> create the job definition — so you never end up with an incomplete definition — and raises a <code>FailedUploadException</code>. You then fix the problem and call <code>exception.retry()</code>, which re-uploads only the failed datapoints into the <strong>same</strong> dataset and finishes creating the definition. Retrying never creates a duplicate dataset or definition.</p>
+<p>If you would rather tolerate a small fraction of failures instead, raise the <a href="#failure-tolerance">failure tolerance</a>.</p>
+<h2 id="failure-tolerance">Failure tolerance<a class="headerlink" href="#failure-tolerance" title="Permanent link">#</a></h2>
+<p><code>failure_tolerance</code> is the fraction of a job's datapoints (<code>0.0</code>–<code>1.0</code>) allowed to fail while still creating the definition:</p>
 <ul>
-<li>Inspect which datapoints failed and why</li>
-<li>Retry the failed datapoints</li>
-<li>Continue with the successfully uploaded datapoints</li>
+<li><code>0.0</code> (default) — strict. Any failed upload aborts creation; no definition is left behind and the failed datapoints can be retried.</li>
+<li><code>0.01</code> — up to 1% of datapoints may fail; the definition is created with the rest, and the failures are logged.</li>
+<li><code>1.0</code> — the definition is created regardless of how many datapoints failed, as long as at least one datapoint uploads successfully (a definition over an empty dataset is never created).</li>
 </ul>
-<p>This guide shows you how to handle upload failures effectively.</p>
-<h2 id="understanding-faileduploadexception">Understanding FailedUploadException<a class="headerlink" href="#understanding-faileduploadexception" title="Permanent link">#</a></h2>
-<p>The <code>FailedUploadException</code> is raised during <code>JobDefinition</code> or <code>Order</code> creation when one or more datapoints cannot be uploaded. 
-<strong>Important</strong>: Despite the exception being raised, a <code>JobDefinition</code> or <code>Order</code> object is still created with the successfully uploaded datapoints, allowing you to continue if you catch the exception.</p>
-<h3 id="exception-properties">Exception Properties<a class="headerlink" href="#exception-properties" title="Permanent link">#</a></h3>
-<p>The exception provides these properties to help you understand and recover from failures:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">FailedUploadException</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">dataset</span><span class="p">:</span> <span class="n">RapidataDataset</span><span class="p">,</span> <span class="c1"># (1)!</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">failed_uploads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">FailedUpload</span><span class="p">],</span> <span class="c1"># (2)!</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RapidataOrder</span><span class="p">],</span> <span class="c1"># (3)!</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">job_definition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">JobDefinition</span><span class="p">]</span> <span class="c1"># (4)!</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+<p>Set it globally, via the config object or the <code>RAPIDATA_failureTolerance</code> environment variable:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidata_config</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">rapidata_config</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">failureTolerance</span> <span class="o">=</span> <span class="mf">0.01</span>
 </span></code></pre></div>
-<ol>
-<li>The dataset that was being created.</li>
-<li>Basic list of failed datapoints.</li>
-<li>The order object (only present during order creation).</li>
-<li>The job definition object (only present during job definition creation).</li>
-</ol>
+<p>or per call, which overrides the global default for that job:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">job_def</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Classification"</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">,</span> <span class="s2">"Bird"</span><span class="p">],</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"cat1.jpg"</span><span class="p">,</span> <span class="s2">"dog1.jpg"</span><span class="p">,</span> <span class="s2">"missing.jpg"</span><span class="p">],</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">failure_tolerance</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>The ratio is measured against the whole job, so it stays meaningful across retries.</p>
+<h2 id="understanding-faileduploadexception">Understanding FailedUploadException<a class="headerlink" href="#understanding-faileduploadexception" title="Permanent link">#</a></h2>
+<p>The <code>FailedUploadException</code> is raised during job-definition creation when the upload stays outside the failure tolerance. When it comes from job creation, no job definition was created — recover with <code>exception.retry()</code> (see below).</p>
+<h3 id="exception-properties">Exception Properties<a class="headerlink" href="#exception-properties" title="Permanent link">#</a></h3>
+<p>The exception exposes these to help you understand and recover from failures:</p>
+<ul>
+<li><code>dataset</code> — the dataset that was being uploaded to. <code>retry()</code> reuses it.</li>
+<li><code>failed_uploads</code> / <code>detailed_failures</code> / <code>failures_by_reason</code> — which datapoints failed and why (see below).</li>
+<li><code>retry()</code> — re-upload the failed datapoints into <code>dataset</code> and finish creating the definition. Returns the <code>RapidataJobDefinition</code>.</li>
+<li><code>job_definition</code> — <code>None</code> for job creation (nothing was persisted). Populated only when tolerating failures on a legacy order.</li>
+</ul>
 <h3 id="understanding-failure-information">Understanding Failure Information<a class="headerlink" href="#understanding-failure-information" title="Permanent link">#</a></h3>
 <p>The exception provides two ways to inspect failures, depending on your needs:</p>
 <h4 id="detailed_failures-full-error-details"><code>detailed_failures</code> - Full Error Details<a class="headerlink" href="#detailed_failures-full-error-details" title="Permanent link">#</a></h4>
 <p>Use this when you need complete information about each failure, including error type, timestamp, and the original exception:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">exception</span><span class="o">.</span><span class="n">detailed_failures</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Returns: list[FailedUpload[Datapoint]]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">exception</span><span class="o">.</span><span class="n">detailed_failures</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Returns: list[FailedUpload[Datapoint]]</span>
 </span></code></pre></div>
 <p>Each <code>FailedUpload</code> object contains:</p>
 <ul>
@@ -1779,69 +1839,39 @@
 <li><code>exception</code>: The original exception (if available)</li>
 </ul>
 <p><strong>Example:</strong>
-</p><div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">[</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">FailedUpload</span><span class="p">(</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="n">item</span><span class="o">=</span><span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'missing.jpg'</span><span class="p">,</span> <span class="s1">'valid.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">),</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="n">error_message</span><span class="o">=</span><span class="s1">'One or more required assets failed to upload'</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">error_type</span><span class="o">=</span><span class="s1">'AssetUploadFailed'</span><span class="p">,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">exception</span><span class="o">=</span><span class="kc">None</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="p">)</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">]</span>
+</p><div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">[</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">FailedUpload</span><span class="p">(</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="n">item</span><span class="o">=</span><span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'missing.jpg'</span><span class="p">,</span> <span class="s1">'valid.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">),</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="n">error_message</span><span class="o">=</span><span class="s1">'One or more required assets failed to upload'</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="n">error_type</span><span class="o">=</span><span class="s1">'AssetUploadFailed'</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="n">exception</span><span class="o">=</span><span class="kc">None</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">)</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">]</span>
 </span></code></pre></div><p></p>
 <h4 id="failures_by_reason-grouped-by-error-type"><code>failures_by_reason</code> - Grouped by Error Type<a class="headerlink" href="#failures_by_reason-grouped-by-error-type" title="Permanent link">#</a></h4>
 <p>Use this when you want to identify patterns and handle different failure types differently:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">exception</span><span class="o">.</span><span class="n">failures_by_reason</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Returns: dict[str, list[Datapoint]]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">exception</span><span class="o">.</span><span class="n">failures_by_reason</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Returns: dict[str, list[Datapoint]]</span>
 </span></code></pre></div>
 <p>This groups all failed datapoints by their error message, making it easy to see common issues at a glance.</p>
 <p><strong>Example:</strong>
-</p><div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s1">'One or more required assets failed to upload'</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'missing1.jpg'</span><span class="p">,</span> <span class="s1">'valid.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">),</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'missing2.jpg'</span><span class="p">,</span> <span class="s1">'valid.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">)</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">],</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="s1">'Invalid datapoint format'</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'test.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">)</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="p">]</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">}</span>
+</p><div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s1">'One or more required assets failed to upload'</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'missing1.jpg'</span><span class="p">,</span> <span class="s1">'valid.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">),</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'missing2.jpg'</span><span class="p">,</span> <span class="s1">'valid.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="p">],</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s1">'Invalid datapoint format'</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">Datapoint</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="p">[</span><span class="s1">'test.jpg'</span><span class="p">],</span> <span class="o">...</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="p">]</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
 </span></code></pre></div><p></p>
 <h3 id="types-of-failures">Types of Failures<a class="headerlink" href="#types-of-failures" title="Permanent link">#</a></h3>
 <p><strong>Asset Upload Failures</strong>: When assets (images, videos, etc.) fail to upload, all affected datapoints will have the same error message: <code>"One or more required assets failed to upload"</code>. This happens before datapoint creation begins.</p>
 <p><strong>Datapoint Creation Failures</strong>: After assets are successfully uploaded, datapoints are created. These failures can have different reasons depending on what went wrong (e.g., validation errors, format issues, backend constraints). Each datapoint may fail for a unique reason.</p>
-<h2 id="recovery-strategies">Recovery Strategies<a class="headerlink" href="#recovery-strategies" title="Permanent link">#</a></h2>
-<h3 id="strategy-1-continue-with-successfully-uploaded-datapoints">Strategy 1: Continue with Successfully Uploaded Datapoints<a class="headerlink" href="#strategy-1-continue-with-successfully-uploaded-datapoints" title="Permanent link">#</a></h3>
-<p>When a <code>FailedUploadException</code> is raised, the <code>JobDefinition</code> is still created with the successfully uploaded datapoints. You can catch the exception and continue using the created object:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.rapidata_client.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">FailedUploadException</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">try</span><span class="p">:</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">job_def</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">name</span><span class="o">=</span><span class="s2">"Image Classification"</span><span class="p">,</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">,</span> <span class="s2">"Bird"</span><span class="p">],</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"cat1.jpg"</span><span class="p">,</span> <span class="s2">"dog1.jpg"</span><span class="p">,</span> <span class="s2">"missing.jpg"</span><span class="p">]</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="p">)</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="k">except</span> <span class="n">FailedUploadException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Warning: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">failed_uploads</span><span class="p">)</span><span class="si">}</span><span class="s2"> datapoints failed to upload"</span><span class="p">)</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">failed_uploads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">datapoints</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">:</span> <span class="c1"># (1)!</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Too many failures, aborting"</span><span class="p">)</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="n">job_def</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">job_definition</span> <span class="c1"># (2)!</span>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># The job definition holds the successful datapoints — assign it to an audience to start collecting responses.</span>
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"global"</span><span class="p">)</span>
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_def</span><span class="p">)</span>
-</span></code></pre></div>
-<ol>
-<li>Check if the failure rate is acceptable — here we abort if more than 10% failed.</li>
-<li>The job definition was still created with the successfully uploaded datapoints. You can use it normally.</li>
-</ol>
-<h3 id="strategy-2-retry-failed-datapoints">Strategy 2: Retry Failed Datapoints<a class="headerlink" href="#strategy-2-retry-failed-datapoints" title="Permanent link">#</a></h3>
-<p>After catching the exception, you can fix the issues (e.g., correct file paths, fix formats) and retry the failed datapoints by adding them to the dataset:</p>
+<h2 id="recovery">Recovery<a class="headerlink" href="#recovery" title="Permanent link">#</a></h2>
+<h3 id="fix-and-retry">Fix and retry<a class="headerlink" href="#fix-and-retry" title="Permanent link">#</a></h3>
+<p>The recommended recovery path is to catch the exception, fix whatever caused the failures (for example correct the file paths), and call <code>exception.retry()</code>. This re-uploads <strong>only</strong> the failed datapoints into the <strong>same</strong> dataset and finishes creating the definition — no new dataset, no duplicate definition, and nothing to re-specify:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.rapidata_client.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">FailedUploadException</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
@@ -1852,35 +1882,42 @@
 </span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">name</span><span class="o">=</span><span class="s2">"Image Classification"</span><span class="p">,</span>
 </span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
 </span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">,</span> <span class="s2">"Bird"</span><span class="p">],</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"cat1.jpg"</span><span class="p">,</span> <span class="s2">"dog1.jpg"</span><span class="p">,</span> <span class="s2">"missing.jpg"</span><span class="p">]</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"cat1.jpg"</span><span class="p">,</span> <span class="s2">"dog1.jpg"</span><span class="p">,</span> <span class="s2">"missing.jpg"</span><span class="p">],</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="p">)</span>
 </span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="k">except</span> <span class="n">FailedUploadException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">failed_uploads</span><span class="p">)</span><span class="si">}</span><span class="s2"> datapoints failed:"</span><span class="p">)</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="k">for</span> <span class="n">reason</span><span class="p">,</span> <span class="n">datapoints</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">failures_by_reason</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">datapoints</span><span class="p">)</span><span class="si">}</span><span class="s2"> datapoints"</span><span class="p">)</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="n">successful_retries</span><span class="p">,</span> <span class="n">failed_retries</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">add_datapoints</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">failed_uploads</span><span class="p">)</span> <span class="c1"># (1)!</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">successful_retries</span><span class="p">)</span><span class="si">}</span><span class="s2"> datapoints successfully added on retry"</span><span class="p">)</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="k">if</span> <span class="n">failed_retries</span><span class="p">:</span>
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failed_retries</span><span class="p">)</span><span class="si">}</span><span class="s2"> datapoints still failed after retry"</span><span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="k">for</span> <span class="n">reason</span><span class="p">,</span> <span class="n">datapoints</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">failures_by_reason</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c1"># (1)!</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">datapoints</span><span class="p">)</span><span class="si">}</span><span class="s2"> datapoints"</span><span class="p">)</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="c1"># ...fix the failing datapoints (e.g. correct the paths on disk)...</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="n">job_def</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">retry</span><span class="p">()</span>  <span class="c1"># (2)!</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"global"</span><span class="p">)</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_def</span><span class="p">)</span>
 </span></code></pre></div>
 <ol>
-<li>Fix the underlying issues (e.g., correct file paths) before retrying. This adds the previously failed datapoints back to the dataset.</li>
+<li>Inspect what failed and why before retrying.</li>
+<li>Returns the created <code>RapidataJobDefinition</code>. If some datapoints still fail beyond the tolerance, <code>retry()</code> raises <code>FailedUploadException</code> again (with the same dataset attached), so you can keep fixing and retrying.</li>
 </ol>
-<h3 id="strategy-3-retrieve-and-use-after-exception-if-not-caught">Strategy 3: Retrieve and Use After Exception (If Not Caught)<a class="headerlink" href="#strategy-3-retrieve-and-use-after-exception-if-not-caught" title="Permanent link">#</a></h3>
-<p>If you didn't catch the exception during creation, you can still retrieve and use the job definition. It was created with the successfully uploaded datapoints and can be used through code or the app.rapidata.ai UI:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">job_def</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_definition_by_id</span><span class="p">(</span><span class="n">job_definition_id</span><span class="p">)</span> <span class="c1"># (1)!</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"global"</span><span class="p">)</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_def</span><span class="p">)</span>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Don't re-call <code>create_*_job_definition(...)</code> to retry — that starts a fresh dataset and creates a <strong>second</strong> definition. Use <code>exception.retry()</code> so the existing dataset is reused.</p>
+</div>
+<h3 id="tolerate-a-fraction-of-failures">Tolerate a fraction of failures<a class="headerlink" href="#tolerate-a-fraction-of-failures" title="Permanent link">#</a></h3>
+<p>If a few failures are acceptable, set a <a href="#failure-tolerance">failure tolerance</a>. When the failed fraction is within tolerance the definition is created with the datapoints that succeeded, the failures are logged, and no exception is raised:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">job_def</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Classification"</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">,</span> <span class="s2">"Bird"</span><span class="p">],</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"cat1.jpg"</span><span class="p">,</span> <span class="s2">"dog1.jpg"</span><span class="p">,</span> <span class="s2">"missing.jpg"</span><span class="p">],</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">failure_tolerance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># tolerate up to 50% failures for this job</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<ol>
-<li>Retrieve the job definition using its ID (from the exception message or the <a href="https://app.rapidata.ai">Rapidata Dashboard</a>).</li>
-</ol>
+<h3 id="manual-control-advanced">Manual control (advanced)<a class="headerlink" href="#manual-control-advanced" title="Permanent link">#</a></h3>
+<p><code>exception.retry()</code> covers the common case. If you need to drive the retry yourself — for example to substitute corrected datapoints — the failed dataset is available on the exception and you can add datapoints to it directly:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">except</span> <span class="n">FailedUploadException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">successful_retries</span><span class="p">,</span> <span class="n">failed_retries</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">add_datapoints</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">failed_uploads</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Note that this only re-uploads the datapoints; it does not create the job definition. Prefer <code>exception.retry()</code> unless you specifically need the lower-level control.</p>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>

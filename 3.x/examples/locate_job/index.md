@@ -86,6 +86,8 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
             truths=truths,
         )
 
+    audience.start_recruiting() # (2)!
+
     job_definition = client.job.create_locate_job_definition(
         name="Artifact Detection Example",
         instruction="Tap on any visual glitches or errors in the image.",
@@ -101,6 +103,7 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
     ```
 
     1. Creates a new, empty audience. The `add_locate_example` calls train and filter the labelers who join it.
+    2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
         Review every qualification example and its truth regions carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
