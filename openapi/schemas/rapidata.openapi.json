@@ -6939,7 +6939,7 @@
           "Capabilities"
         ],
         "summary": "Lists the capabilities a customer holds.",
-        "description": "explicitCapabilities are grants held directly or through organization membership;\n effectiveCapabilities also folds in platform-admin access.",
+        "description": "capabilities are grants held through organization membership.",
         "parameters": [
           {
             "name": "customerId",
@@ -43045,12 +43045,11 @@
       },
       "GetCustomerCapabilitiesEndpoint_Output": {
         "required": [
-          "explicitCapabilities",
-          "effectiveCapabilities"
+          "capabilities"
         ],
         "type": "object",
         "properties": {
-          "explicitCapabilities": {
+          "capabilities": {
             "allOf": [
               {
                 "type": "array",
@@ -43059,18 +43058,7 @@
                 }
               }
             ],
-            "description": "Capability granted to the customer directly or through organization membership."
-          },
-          "effectiveCapabilities": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Capability"
-                }
-              }
-            ],
-            "description": "Capability the customer effectively holds, including platform-admin fold-in."
+            "description": "Capabilities granted to the customer through organization membership."
           }
         }
       },
