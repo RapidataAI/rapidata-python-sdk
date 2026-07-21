@@ -179,4 +179,4 @@ Note that this only re-uploads the datapoints; it does not create the job defini
 
 If uploads fail with `OSError: [Errno 24] Too many open files`, the process has hit its file-descriptor limit — the upload cache, worker pool, and HTTP connections all consume descriptors. When the SDK detects this it appends a hint to the `FailedUploadException` message pointing at the relevant knobs.
 
-Raise the OS limit (`ulimit -n 8192`) or lower the SDK's footprint with `RAPIDATA_cacheShards` / `RAPIDATA_maxWorkers`. See [Too many open files](config.md#too-many-open-files) in the configuration guide for details.
+Raise the OS limit (`ulimit -n 8192`), lower the SDK's footprint with `RAPIDATA_cacheShards` / `RAPIDATA_maxWorkers`, or turn the disk cache off entirely with `cacheToDisk=False` (no cache descriptors at all, at the cost of cross-run upload dedup). See [Too many open files](config.md#too-many-open-files) in the configuration guide for details.
