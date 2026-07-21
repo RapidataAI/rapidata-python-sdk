@@ -91,9 +91,12 @@ class UploadConfig(BaseModel):
         cacheTimeout (float): Cache operation timeout in seconds. Defaults to 0.1.
         cacheLocation (Path): Directory for cache storage. Defaults to ~/.cache/rapidata/upload_cache.
             This is immutable. Only used for file uploads when cacheToDisk=True.
-        cacheShards (int): Number of cache shards for parallel access. Defaults to 128.
-            Higher values improve concurrency but increase file handles. Must be positive.
-            This is immutable. Only used for file uploads when cacheToDisk=True.
+        cacheShards (int): Number of disk-cache shards for concurrent file-cache access. Defaults to 32.
+            Each shard is a separate on-disk store that holds open file handles, so a higher value
+            raises the process's file-descriptor count — which can exceed a low ``ulimit -n`` and
+            surface as "Too many open files". 32 comfortably covers the default ``maxWorkers`` of 25.
+            Must be positive. Immutable at runtime — set it via the ``RAPIDATA_cacheShards`` environment
+            variable. Only used for file uploads when cacheToDisk=True.
         enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
         batchSize (int): Number of URLs per batch (100-5000). Defaults to 1000.
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
@@ -103,6 +106,14 @@ class UploadConfig(BaseModel):
             maximum length is automatically shortened for the order/job instruction before
             upload. When False (default), an over-long context is left unchanged and a
             warning is logged that the backend would reject it. Defaults to False.
+        failureTolerance (float): The fraction of a job's datapoints allowed to fail while
+            still creating the job definition (0.0-1.0). 0.0 (default) is strict: any failed
+            upload aborts creation so no incomplete definition is left behind, and the failed
+            datapoints can be retried into the same dataset. 1.0 creates the definition
+            regardless of how many datapoints failed, as long as at least one datapoint
+            uploads successfully (a definition over an empty dataset is never created).
+            Overridable per call via the ``failure_tolerance`` argument on
+            ``create_*_job_definition``. Defaults to 0.0.
     """
 
     model_config = ConfigDict(validate_assignment=True)
@@ -126,8 +137,9 @@ class UploadConfig(BaseModel):
         frozen=True,
     )
     cacheShards: int = Field(
-        default=128,
+        default=32,
         frozen=True,
+        description="Disk-cache shards. Each opens file handles; keep low enough for ulimit -n.",
     )
     batchSize: int = Field(
         default=1000,
@@ -144,6 +156,10 @@ class UploadConfig(BaseModel):
     autoShortenContext: bool = Field(
         default=False,
         description="Automatically shorten over-long datapoint contexts for the instruction before upload.",
+    )
+    failureTolerance: float = Field(
+        default=0.0,
+        description="Fraction of a job's datapoints allowed to fail while still creating the definition (0.0-1.0).",
     )
 
     @field_validator("maxWorkers")
@@ -172,6 +188,13 @@ class UploadConfig(BaseModel):
     def validate_batch_size(cls, v: int) -> int:
         if v < 100:
             raise ValueError("batchSize must be at least 100")
+        return v
+
+    @field_validator("failureTolerance")
+    @classmethod
+    def validate_failure_tolerance(cls, v: float) -> float:
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("failureTolerance must be between 0.0 and 1.0")
         return v
 
     def __init__(self, **kwargs):

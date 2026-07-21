@@ -1,20 +1,15 @@
 from __future__ import annotations
 
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.config import logger, tracer
-from rapidata.rapidata_client.config._qr_preview import (
-    print_campaign_preview_qr_for_pipeline,
-    print_job_definition_preview_link,
-)
+from rapidata.rapidata_client.config import logger, tracer, rapidata_config
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.job.rapidata_job_definition import RapidataJobDefinition
-from typing import Sequence, Literal, TYPE_CHECKING
-from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.exceptions.failed_upload_exception import (
-    FailedUploadException,
+from rapidata.rapidata_client.job._job_creation_state_machine import (
+    JobDefinitionCreationMachine,
 )
+from typing import Sequence, Literal, TYPE_CHECKING
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
@@ -74,9 +69,13 @@ class RapidataJobManager:
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
     ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
+
+        if failure_tolerance is not None and not 0.0 <= failure_tolerance <= 1.0:
+            raise ValueError("failure_tolerance must be between 0.0 and 1.0")
 
         self._warn_unsupported_settings(workflow, settings)
 
@@ -122,23 +121,6 @@ class RapidataJobManager:
             quorum_threshold,
             settings,
         )
-        from rapidata.api_client.models.create_dataset_endpoint_input import (
-            CreateDatasetEndpointInput,
-        )
-        from rapidata.api_client.models.create_job_definition_endpoint_input import (
-            CreateJobDefinitionEndpointInput,
-        )
-
-        dataset = self._openapi_service.dataset.dataset_api.dataset_post(
-            create_dataset_endpoint_input=CreateDatasetEndpointInput(
-                name=name + "_dataset"
-            )
-        )
-        rapidata_dataset = RapidataDataset(dataset.dataset_id, self._openapi_service)
-
-        with tracer.start_as_current_span("add_datapoints"):
-            _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
-
         rapid_feature_flags = (
             [s._to_feature_flag() for s in settings if s.target == "rapids"]
             if settings
@@ -150,43 +132,23 @@ class RapidataJobManager:
             else None
         )
 
-        job_definition_response = (
-            self._openapi_service.order.job_api.job_definition_post(
-                create_job_definition_endpoint_input=CreateJobDefinitionEndpointInput(
-                    definitionName=name,
-                    workflow=workflow._to_model(),
-                    datasetId=rapidata_dataset.id,
-                    referee=referee._to_model(),
-                    rapidFeatureFlags=(
-                        rapid_feature_flags if rapid_feature_flags else None
-                    ),
-                    campaignFeatureFlags=(
-                        campaign_feature_flags if campaign_feature_flags else None
-                    ),
-                )
-            )
+        tolerance = (
+            failure_tolerance
+            if failure_tolerance is not None
+            else rapidata_config.upload.failureTolerance
         )
-        job_model = RapidataJobDefinition(
-            id=job_definition_response.definition_id,
+
+        machine = JobDefinitionCreationMachine(
+            openapi_service=self._openapi_service,
             name=name,
-            openapi_service=self._openapi_service,
+            workflow=workflow,
+            datapoints=datapoints,
+            referee=referee,
+            failure_tolerance=tolerance,
+            rapid_feature_flags=rapid_feature_flags,
+            campaign_feature_flags=campaign_feature_flags,
         )
-
-        if failed_uploads:
-            raise FailedUploadException(
-                rapidata_dataset, failed_uploads, job_definition=job_model
-            )
-
-        print_campaign_preview_qr_for_pipeline(
-            openapi_service=self._openapi_service,
-            pipeline_id=job_definition_response.pipeline_id,
-        )
-        print_job_definition_preview_link(
-            environment=self._openapi_service.environment,
-            job_definition_id=job_model.id,
-        )
-
-        return job_model
+        return machine.run()
 
     def create_classification_job_definition(
         self,
@@ -201,6 +163,7 @@ class RapidataJobManager:
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
         """Create a classification job definition.
@@ -228,6 +191,7 @@ class RapidataJobManager:
                 If provided, the classification datapoint will stop after the quorum is reached or at the number of responses, whatever happens first.
                 Cannot be used together with confidence_threshold.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -257,6 +221,7 @@ class RapidataJobManager:
                 confidence_threshold=confidence_threshold,
                 quorum_threshold=quorum_threshold,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def create_compare_job_definition(
@@ -272,6 +237,7 @@ class RapidataJobManager:
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
         """Create a compare job definition.
@@ -307,6 +273,7 @@ class RapidataJobManager:
                 If provided, the comparison datapoint will stop after the quorum is reached or at the number of responses, whatever happens first.
                 Cannot be used together with confidence_threshold.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -343,6 +310,7 @@ class RapidataJobManager:
                 confidence_threshold=confidence_threshold,
                 quorum_threshold=quorum_threshold,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def create_ranking_job_definition(
@@ -357,6 +325,7 @@ class RapidataJobManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
     ) -> RapidataJobDefinition:
         """
         Create a ranking job definition.
@@ -381,6 +350,7 @@ class RapidataJobManager:
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per ranking, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
         """
         with tracer.start_as_current_span("JobManager.create_ranking_job"):
             if contexts and len(contexts) != len(datapoints):
@@ -431,6 +401,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def create_free_text_job_definition(
@@ -443,6 +414,7 @@ class RapidataJobManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
         """Create a free text job definition.
@@ -465,6 +437,7 @@ class RapidataJobManager:
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -485,6 +458,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def create_select_words_job_definition(
@@ -495,6 +469,7 @@ class RapidataJobManager:
         sentences: list[str],
         responses_per_datapoint: int = 10,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
         """Create a select words job definition.
@@ -511,6 +486,7 @@ class RapidataJobManager:
                 Must be the same length as datapoints.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -531,6 +507,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def create_locate_job_definition(
@@ -542,6 +519,7 @@ class RapidataJobManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
         """Create a locate job definition.
@@ -561,6 +539,7 @@ class RapidataJobManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -580,6 +559,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def create_draw_job_definition(
@@ -591,6 +571,7 @@ class RapidataJobManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
         """Create a draw job definition.
@@ -610,6 +591,7 @@ class RapidataJobManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -629,6 +611,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def _create_timestamp_job_definition(
@@ -640,6 +623,7 @@ class RapidataJobManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataJobDefinition:
         """Create a timestamp job definition.
@@ -662,6 +646,7 @@ class RapidataJobManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
+            failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
@@ -681,6 +666,7 @@ class RapidataJobManager:
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 settings=settings,
+                failure_tolerance=failure_tolerance,
             )
 
     def get_job_definition_by_id(self, job_definition_id: str) -> RapidataJobDefinition:

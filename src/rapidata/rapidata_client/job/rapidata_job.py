@@ -117,6 +117,51 @@ class RapidataJob:
             f"once approved, call this again."
         )
 
+    def _raise_if_audience_cannot_produce_responses(self) -> None:
+        """Raises if the job's audience can never produce a response.
+
+        A job only draws responses from graduated annotators. When none have
+        graduated *and* none ever will without action — recruiting never started, or
+        the audience is marked ready yet its pool is empty — the job can never reach
+        Completed, so waiting on it would block the caller forever, exactly like the
+        ManualApproval / SpendLimited states. A pool that is merely early in recruiting
+        (0 graduated but still distilling, or status Pending/Recruiting) is not stuck
+        and does not raise, and neither does a curated audience (no funnel of its own).
+        A failed read is treated as "unknown" and does not raise.
+        """
+        from rapidata.rapidata_client.audience.recruiting import (
+            audience_will_never_produce_responses,
+        )
+
+        metrics = self._get_recruiting_metrics()
+        if metrics is not None and (metrics.graduated > 0 or metrics.distilling > 0):
+            return
+
+        try:
+            with suppress_rapidata_error_logging():
+                audience = self._openapi_service.audience.audience_api.audience_audience_id_get(
+                    self.audience_id
+                )
+        except Exception:
+            logger.debug(
+                "Could not read audience status for job '%s'", self, exc_info=True
+            )
+            return
+
+        if not audience_will_never_produce_responses(audience.status, metrics):
+            return
+
+        raise Exception(
+            f"Job '{self}' is assigned to audience '{audience.name}' "
+            f"({self.audience_id}), which can never produce responses: no annotators "
+            f"have graduated and none are being recruited. A job only receives "
+            f"responses from graduated annotators, and annotators only graduate once "
+            f"the audience has at least 3 qualification examples and recruiting has "
+            f"started, so the job will never complete. Add examples and call "
+            f'start_recruiting(), or assign the job to the ready-to-go "global" '
+            f"audience for tasks that need no special qualification."
+        )
+
     def _retry_operation(
         self,
         operation: Callable[[], T],
@@ -177,6 +222,7 @@ class RapidataJob:
                 (``ManualApproval`` or ``SpendLimited``) while a different status is
                 being awaited — with the review reason when the API provides one.
         """
+        self._raise_if_audience_cannot_produce_responses()
         while True:
             job = self._fetch_job()
             current_status = job.state.value
@@ -317,9 +363,11 @@ class RapidataJob:
             RapidataResults: The results of the job.
 
         Raises:
-            Exception: If failed to get job results, or if the job is in manual
-                review (``ManualApproval``) or spend-limited (``SpendLimited``) and
-                therefore cannot complete without intervention.
+            Exception: If failed to get job results, or if the job cannot complete
+                without intervention — it is in manual review (``ManualApproval``),
+                spend-limited (``SpendLimited``), or assigned to an audience that can
+                never graduate annotators (recruiting never started, or its pool is
+                empty).
         """
         with tracer.start_as_current_span("RapidataJob.get_results"):
             from rapidata.api_client.exceptions import ApiException
@@ -358,8 +406,10 @@ class RapidataJob:
 
         Raises:
             ValueError: If refresh_rate is less than 1.
-            Exception: If the job has failed, or is in a state it can't progress out
-                of on its own (``ManualApproval`` or ``SpendLimited``).
+            Exception: If the job has failed, or can't progress on its own — it is
+                in ``ManualApproval`` or ``SpendLimited``, or assigned to an audience
+                that can never graduate annotators (recruiting never started, or its
+                pool is empty).
         """
         if refresh_rate < 1:
             raise ValueError("refresh_rate must be at least 1")
@@ -374,6 +424,8 @@ class RapidataJob:
 
         if job.state in self._BLOCKING_STATUSES:
             self._raise_for_blocking_status(job)
+
+        self._raise_if_audience_cannot_produce_responses()
 
         # Get progress from pipeline if available
         with tqdm(

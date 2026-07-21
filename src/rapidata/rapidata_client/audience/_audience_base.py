@@ -93,7 +93,18 @@ class RapidataAudienceBase:
                 f"Job '{job.name}' is now viewable under: {job.job_details_page}"
             )
             self._warn_if_cost_exceeds_balance(job, response.cost_warning)
+            self._warn_if_no_graduated_annotators(job)
             return job
+
+    def _warn_if_no_graduated_annotators(self, job: RapidataJob) -> None:
+        """Hook: warn when no annotator has graduated to answer the job yet.
+
+        A filtered audience always reuses its base audience's already-qualified
+        pool, so it has annotators by construction — only :class:`RapidataAudience`
+        overrides this to warn about a dimension audience that has yet to graduate
+        anyone.
+        """
+        return None
 
     @staticmethod
     def _warn_if_cost_exceeds_balance(

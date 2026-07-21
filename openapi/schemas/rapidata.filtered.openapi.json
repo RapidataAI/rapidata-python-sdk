@@ -6889,7 +6889,7 @@
           "Capabilities"
         ],
         "summary": "Lists the capabilities a customer holds.",
-        "description": "explicitCapabilities are grants held directly or through organization membership;\n effectiveCapabilities also folds in platform-admin access.",
+        "description": "capabilities are grants held through organization membership.",
         "parameters": [
           {
             "name": "customerId",
@@ -41210,12 +41210,11 @@
       },
       "GetCustomerCapabilitiesEndpoint_Output": {
         "required": [
-          "explicitCapabilities",
-          "effectiveCapabilities"
+          "capabilities"
         ],
         "type": "object",
         "properties": {
-          "explicitCapabilities": {
+          "capabilities": {
             "allOf": [
               {
                 "type": "array",
@@ -41224,18 +41223,7 @@
                 }
               }
             ],
-            "description": "Capability granted to the customer directly or through organization membership."
-          },
-          "effectiveCapabilities": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Capability"
-                }
-              }
-            ],
-            "description": "Capability the customer effectively holds, including platform-admin fold-in."
+            "description": "Capabilities granted to the customer through organization membership."
           }
         }
       },
@@ -46447,6 +46435,11 @@
           "notifyOwnerOnCompletion": {
             "type": "boolean",
             "description": "Whether the job's owner should be emailed when the job completes. Defaults to false."
+          },
+          "checkForExplicitContent": {
+            "type": "boolean",
+            "description": "Whether Rapidata's explicit-content check should run for this job. Leave null to use\n the default for the caller's account. Set true to force the check on. Set false to\n skip it — honored only when the account is permitted to skip; otherwise the check\n still runs and ContentCheckSkipDenied is set on the response.",
+            "nullable": true
           }
         },
         "description": "The input for the create job endpoint."
@@ -46465,6 +46458,10 @@
           "recruitingStarted": {
             "type": "boolean",
             "description": "Whether recruiting was automatically started for the audience."
+          },
+          "contentCheckSkipDenied": {
+            "type": "boolean",
+            "description": "True when the caller asked to skip the explicit-content check but is not permitted\n to; the check runs regardless. Advisory — the job is created and runs either way."
           },
           "costWarning": {
             "allOf": [

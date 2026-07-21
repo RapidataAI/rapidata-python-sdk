@@ -16,7 +16,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.capability import Capability
 from pydantic import ValidationError
@@ -28,9 +28,8 @@ class GetCustomerCapabilitiesEndpointOutput(LazyValidatedModel):
     """
     GetCustomerCapabilitiesEndpointOutput
     """ # noqa: E501
-    explicit_capabilities: List[Capability] = Field(alias="explicitCapabilities")
-    effective_capabilities: List[Capability] = Field(alias="effectiveCapabilities")
-    __properties: ClassVar[List[str]] = ["explicitCapabilities", "effectiveCapabilities"]
+    capabilities: List[Capability]
+    __properties: ClassVar[List[str]] = ["capabilities"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -79,8 +78,7 @@ class GetCustomerCapabilitiesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "explicitCapabilities": obj.get("explicitCapabilities"),
-            "effectiveCapabilities": obj.get("effectiveCapabilities")
+            "capabilities": obj.get("capabilities")
         }
         try:
             _obj = cls.model_validate(_data)

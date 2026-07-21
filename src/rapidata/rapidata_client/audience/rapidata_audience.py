@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.rapidata_client.validation.rapids.box import Box
     from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+    from rapidata.rapidata_client.job.rapidata_job import RapidataJob
     import pandas as pd
 
 
@@ -494,3 +495,39 @@ class RapidataAudience(RapidataAudienceBase):
             logger.info(f"Started recruiting for audience: {self.id}")
             self._recruiting_started = True
             return self
+
+    def _warn_if_no_graduated_annotators(self, job: RapidataJob) -> None:
+        """Warn when no annotator has graduated into this audience yet.
+
+        A job only draws responses from graduated annotators, and annotators only
+        graduate once the audience has enough qualification examples and recruiting
+        has started. Until one does, the job receives nothing, so surface it.
+        Advisory only — the job is created regardless — so a failure to read the
+        recruiting funnel must not break assignment.
+        """
+        try:
+            metrics = self.get_recruiting_metrics()
+        except Exception:
+            logger.debug(
+                "Could not read recruiting metrics for audience '%s'",
+                self.id,
+                exc_info=True,
+            )
+            return
+
+        if metrics.graduated > 0:
+            return
+
+        logger.warning(
+            "Audience '%s' (%s) has no graduated annotators yet (%d still distilling), "
+            "so job '%s' will receive 0 responses until annotators graduate into it. "
+            "Annotators only graduate once the audience has at least 3 qualification "
+            "examples and recruiting has started: if recruiting is already underway "
+            "this may just need time, otherwise add examples and call "
+            "start_recruiting(). For a task that needs no special qualification, assign "
+            'the job to the ready-to-go "global" audience instead.',
+            self._name,
+            self.id,
+            metrics.distilling,
+            job.name,
+        )
