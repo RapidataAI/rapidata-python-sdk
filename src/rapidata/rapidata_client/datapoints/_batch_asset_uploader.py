@@ -219,10 +219,8 @@ class BatchAssetUploader:
                 f"Polling {total_batches_submitted} submitted batch(es) for completion"
             )
             try:
-                status = (
-                    self.openapi_service.asset.batch_upload_api.asset_batch_upload_status_get(
-                        correlation_id=correlation_id
-                    )
+                status = self.openapi_service.asset.batch_upload_api.asset_batch_upload_status_get(
+                    correlation_id=correlation_id
                 )
 
                 # Process newly completed batches
@@ -321,13 +319,17 @@ class BatchAssetUploader:
                             )
                         )
                 else:
-                    # Track failure
+                    # Track failure. stage / upstream_http_status are populated
+                    # by the asset service for remote-URL ingestion failures and
+                    # let callers see the failed stage without parsing the message.
                     failed_uploads.append(
                         FailedUpload(
                             item=item.url,
                             error_type="BatchUploadFailed",
                             error_message=item.error_message
                             or "Unknown batch upload error",
+                            stage=item.stage,
+                            http_status=item.upstream_http_status,
                         )
                     )
                     logger.warning(

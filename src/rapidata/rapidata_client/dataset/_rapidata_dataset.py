@@ -38,7 +38,7 @@ from __future__ import annotations
 
 import threading
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import Callable
+from typing import Callable, Iterable, TypeVar
 
 from opentelemetry import context as otel_context
 from tqdm.auto import tqdm
@@ -52,6 +52,8 @@ from rapidata.rapidata_client.datapoints._asset_upload_orchestrator import (
 )
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.rapidata_client.config import rapidata_config, logger
+
+T = TypeVar("T")
 
 
 class RapidataDataset:
@@ -198,9 +200,16 @@ class RapidataDataset:
                         del datapoint_pending_count[idx]
 
             if immediately_ready:
-                logger.debug(f"{len(immediately_ready)} datapoint(s) need no asset uploads, submitting immediately")
+                logger.debug(
+                    f"{len(immediately_ready)} datapoint(s) need no asset uploads, submitting immediately"
+                )
                 self._submit_datapoints_for_creation(
-                    immediately_ready, datapoints, creation_futures, lock, executor, datapoint_pbar,
+                    immediately_ready,
+                    datapoints,
+                    creation_futures,
+                    lock,
+                    executor,
+                    datapoint_pbar,
                 )
 
             # Create callback that submits datapoints for creation
@@ -420,9 +429,7 @@ class RapidataDataset:
         for asset_failure in asset_failures:
             affected = asset_to_datapoints.get(asset_failure.item, set())
             for dp_idx in affected:
-                datapoint_to_asset_failures.setdefault(dp_idx, []).append(
-                    asset_failure
-                )
+                datapoint_to_asset_failures.setdefault(dp_idx, []).append(asset_failure)
 
         # Handle datapoints whose assets failed to upload
         with lock:
@@ -483,12 +490,31 @@ class RapidataDataset:
 
         trace_id = ", ".join(unique_trace_ids) if unique_trace_ids else None
 
+        # Propagate stage / http_status only when the blocking asset failures
+        # agree on a single value — a datapoint with two assets that failed at
+        # different stages has no single stage to report, so leave it None
+        # rather than pick one arbitrarily.
+        stage = RapidataDataset._single_or_none(
+            fu.stage for fu in related_asset_failures
+        )
+        http_status = RapidataDataset._single_or_none(
+            fu.http_status for fu in related_asset_failures
+        )
+
         return FailedUpload(
             item=datapoint,
             error_type="AssetUploadFailed",
             error_message=error_message,
             trace_id=trace_id,
+            stage=stage,
+            http_status=http_status,
         )
+
+    @staticmethod
+    def _single_or_none(values: Iterable[T | None]) -> T | None:
+        """Return the sole distinct non-None value, or None if there isn't exactly one."""
+        distinct = {v for v in values if v is not None}
+        return next(iter(distinct)) if len(distinct) == 1 else None
 
     def _create_dataset_groups(self, datapoints: list[Datapoint]) -> None:
         """Create dataset groups from datapoints that have a group field."""

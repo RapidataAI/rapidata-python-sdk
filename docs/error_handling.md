@@ -70,6 +70,8 @@ Each `FailedUpload` object contains:
 - `error_type`: The type of error (e.g., "AssetUploadFailed", "RapidataError")
 - `timestamp`: When the failure occurred
 - `exception`: The original exception (if available)
+- `stage`: For remote-URL assets, the ingestion stage that failed — one of `download`, `redirect`, `content_type`, `decode`, `timeout`, `size`, `validation`, or `internal`. Only `internal` is a Rapidata-side fault; every other stage is caller-actionable (e.g. a bad URL, an unreachable host, an unsupported content type). `None` for local-file or datapoint-creation failures.
+- `http_status`: For a failed remote URL, the origin server's HTTP status (e.g. `403` when the asset host forbids access). `None` when the failure wasn't an HTTP response from the host.
 
 **Example:**
 ```python
@@ -108,9 +110,32 @@ This groups all failed datapoints by their error message, making it easy to see 
 }
 ```
 
+#### `failures_by_stage` - Grouped by Ingestion Stage
+
+Use this when your datapoints are **remote URLs** and you want to know *which stage* of ingestion failed rather than reading messages. It groups the failed datapoints by their `stage` (see the field list above); datapoints without a stage (local files, datapoint-creation failures) are omitted.
+
+```python
+exception.failures_by_stage
+# Returns: dict[str, list[Datapoint]]
+```
+
+**Example:**
+```python
+{
+    'download': [  # the host returned a non-2xx (check http_status on the FailedUpload)
+        Datapoint(asset=['https://host/a.jpg'], ...)
+    ],
+    'content_type': [  # the URL served a type that isn't a supported asset
+        Datapoint(asset=['https://host/page.html'], ...)
+    ]
+}
+```
+
+Because only `internal` is a Rapidata-side fault, this makes it easy to separate URLs you need to fix from the rare failure worth reporting to us.
+
 ### Types of Failures
 
-**Asset Upload Failures**: When assets (images, videos, etc.) fail to upload, all affected datapoints will have the same error message: `"One or more required assets failed to upload"`. This happens before datapoint creation begins.
+**Asset Upload Failures**: When assets (images, videos, etc.) fail to upload, all affected datapoints will have the same error message: `"One or more required assets failed to upload"`. This happens before datapoint creation begins. For **remote-URL** assets the failure additionally carries a `stage` and, where applicable, an origin `http_status` — inspect these (or `failures_by_stage`) to see whether the URL was unreachable, forbidden, the wrong content type, too large, or timed out.
 
 **Datapoint Creation Failures**: After assets are successfully uploaded, datapoints are created. These failures can have different reasons depending on what went wrong (e.g., validation errors, format issues, backend constraints). Each datapoint may fail for a unique reason.
 
