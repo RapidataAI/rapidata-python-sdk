@@ -121,6 +121,9 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the current user.
 *BenchmarkApi* | [**benchmarks_managed_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_managed_get) | **GET** /benchmarks/managed | Queries the curated benchmarks available to every customer.
 *BenchmarkApi* | [**benchmarks_published_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_published_get) | **GET** /benchmarks/published | Queries the benchmarks surfaced in the public benchmark repository.
+*BidderApi* | [**authorization_relations_bidder_delete**](rapidata/api_client/docs/BidderApi.md#authorization_relations_bidder_delete) | **DELETE** /authorization/relations/bidder | Revokes a bidder relation from a customer.
+*BidderApi* | [**authorization_relations_bidder_get**](rapidata/api_client/docs/BidderApi.md#authorization_relations_bidder_get) | **GET** /authorization/relations/bidder | Lists the customers holding bidder relations, one cursor page at a time.
+*BidderApi* | [**authorization_relations_bidder_put**](rapidata/api_client/docs/BidderApi.md#authorization_relations_bidder_put) | **PUT** /authorization/relations/bidder | Grants a bidder relation to a customer.
 *BillingApi* | [**billing_billing_item_billing_item_id_settings_post**](rapidata/api_client/docs/BillingApi.md#billing_billing_item_billing_item_id_settings_post) | **POST** /billing/billing-item/{billingItemId}/settings | Creates a billing setting for a billing item.
 *BillingApi* | [**billing_billing_item_billing_item_id_settings_setting_id_delete**](rapidata/api_client/docs/BillingApi.md#billing_billing_item_billing_item_id_settings_setting_id_delete) | **DELETE** /billing/billing-item/{billingItemId}/settings/{settingId} | Deletes a billing item billing setting.
 *BillingApi* | [**billing_cost_time_series_get**](rapidata/api_client/docs/BillingApi.md#billing_cost_time_series_get) | **GET** /billing/cost/time-series | Gets the billing cost time series.
@@ -169,7 +172,7 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | Exercises the rapid-bag pipeline with a synthetic user profile so the health of  the campaign monitoring path can be probed externally.
 *CampaignApi* | [**campaign_program_post**](rapidata/api_client/docs/CampaignApi.md#campaign_program_post) | **POST** /campaign/program | Creates a program campaign from the given stream program.
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries campaigns with optional filtering, sorting, and pagination.
-*CapabilitiesApi* | [**capabilities_capability_grantees_get**](rapidata/api_client/docs/CapabilitiesApi.md#capabilities_capability_grantees_get) | **GET** /capabilities/{capability}/grantees | Lists the grant tuples on a capability, one cursor page at a time.
+*CapabilitiesApi* | [**capabilities_capability_grantees_get**](rapidata/api_client/docs/CapabilitiesApi.md#capabilities_capability_grantees_get) | **GET** /capabilities/{capability}/grantees | Lists the organizations granted a capability, one cursor page at a time.
 *CapabilitiesApi* | [**customers_customer_id_capabilities_get**](rapidata/api_client/docs/CapabilitiesApi.md#customers_customer_id_capabilities_get) | **GET** /customers/{customerId}/capabilities | Lists the capabilities a customer holds.
 *CapabilitiesApi* | [**organizations_organization_id_capabilities_capability_delete**](rapidata/api_client/docs/CapabilitiesApi.md#organizations_organization_id_capabilities_capability_delete) | **DELETE** /organizations/{organizationId}/capabilities/{capability} | Revokes an organization&#39;s capability grant.
 *CapabilitiesApi* | [**organizations_organization_id_capabilities_capability_put**](rapidata/api_client/docs/CapabilitiesApi.md#organizations_organization_id_capabilities_capability_put) | **PUT** /organizations/{organizationId}/capabilities/{capability} | Grants a capability to an organization.
@@ -338,6 +341,9 @@ Class | Method | HTTP request | Description
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Streams the preliminary download file when ready.
+*PlatformApi* | [**authorization_relations_platform_delete**](rapidata/api_client/docs/PlatformApi.md#authorization_relations_platform_delete) | **DELETE** /authorization/relations/platform | Revokes a platform relation from a customer.
+*PlatformApi* | [**authorization_relations_platform_get**](rapidata/api_client/docs/PlatformApi.md#authorization_relations_platform_get) | **GET** /authorization/relations/platform | Lists the customers holding platform relations, one cursor page at a time.
+*PlatformApi* | [**authorization_relations_platform_put**](rapidata/api_client/docs/PlatformApi.md#authorization_relations_platform_put) | **PUT** /authorization/relations/platform | Grants a platform relation to a customer.
 *PromptApi* | [**benchmark_prompt_prompt_id_delete**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_delete) | **DELETE** /benchmark-prompt/{promptId} | Deletes a prompt.
 *PromptApi* | [**benchmark_prompt_prompt_id_tags_put**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_tags_put) | **PUT** /benchmark-prompt/{promptId}/tags | Updates the tags associated with a prompt.
 *RankingApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/RankingApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Gets the result overview for a ranking workflow.
@@ -443,6 +449,9 @@ Class | Method | HTTP request | Description
  - [AudienceStateRecalculationPhase](rapidata/api_client/docs/AudienceStateRecalculationPhase.md)
  - [AudienceStateRecalculationState](rapidata/api_client/docs/AudienceStateRecalculationState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
+ - [AuthorizationRelationsBidder](rapidata/api_client/docs/AuthorizationRelationsBidder.md)
+ - [AuthorizationRelationsPlatform](rapidata/api_client/docs/AuthorizationRelationsPlatform.md)
+ - [AuthorizationScope](rapidata/api_client/docs/AuthorizationScope.md)
  - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
  - [BatchUploadUrlStatus](rapidata/api_client/docs/BatchUploadUrlStatus.md)
  - [BillingPeriodStatus](rapidata/api_client/docs/BillingPeriodStatus.md)
@@ -578,6 +587,8 @@ Class | Method | HTTP request | Description
  - [GetBatchUploadResultEndpointUrlOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointUrlOutput.md)
  - [GetBatchUploadStatusEndpointOutput](rapidata/api_client/docs/GetBatchUploadStatusEndpointOutput.md)
  - [GetBenchmarkByIdEndpointOutput](rapidata/api_client/docs/GetBenchmarkByIdEndpointOutput.md)
+ - [GetBidderRelationMembersEndpointCursorPagedResultOfOutput](rapidata/api_client/docs/GetBidderRelationMembersEndpointCursorPagedResultOfOutput.md)
+ - [GetBidderRelationMembersEndpointOutput](rapidata/api_client/docs/GetBidderRelationMembersEndpointOutput.md)
  - [GetBillingPeriodOverviewEndpointOutput](rapidata/api_client/docs/GetBillingPeriodOverviewEndpointOutput.md)
  - [GetBillingSettingsTimelineEndpointOutput](rapidata/api_client/docs/GetBillingSettingsTimelineEndpointOutput.md)
  - [GetBillingSettingsTimelineEndpointOutputInterval](rapidata/api_client/docs/GetBillingSettingsTimelineEndpointOutputInterval.md)
@@ -638,6 +649,8 @@ Class | Method | HTTP request | Description
  - [GetOrganizationEndpointOutput](rapidata/api_client/docs/GetOrganizationEndpointOutput.md)
  - [GetParticipantByIdEndpointOutput](rapidata/api_client/docs/GetParticipantByIdEndpointOutput.md)
  - [GetPipelineByIdEndpointOutput](rapidata/api_client/docs/GetPipelineByIdEndpointOutput.md)
+ - [GetPlatformRelationMembersEndpointCursorPagedResultOfOutput](rapidata/api_client/docs/GetPlatformRelationMembersEndpointCursorPagedResultOfOutput.md)
+ - [GetPlatformRelationMembersEndpointOutput](rapidata/api_client/docs/GetPlatformRelationMembersEndpointOutput.md)
  - [GetPromptsByBenchmarkEndpointOutput](rapidata/api_client/docs/GetPromptsByBenchmarkEndpointOutput.md)
  - [GetPromptsByBenchmarkEndpointPagedResultOfOutput](rapidata/api_client/docs/GetPromptsByBenchmarkEndpointPagedResultOfOutput.md)
  - [GetPublicOrdersEndpointOrderOutput](rapidata/api_client/docs/GetPublicOrdersEndpointOrderOutput.md)
@@ -695,6 +708,8 @@ Class | Method | HTTP request | Description
  - [GetWorkflowResultsEndpointResponseOutput](rapidata/api_client/docs/GetWorkflowResultsEndpointResponseOutput.md)
  - [GoogleOneTapLoginEndpointInput](rapidata/api_client/docs/GoogleOneTapLoginEndpointInput.md)
  - [GoogleOneTapLoginEndpointOutput](rapidata/api_client/docs/GoogleOneTapLoginEndpointOutput.md)
+ - [GrantBidderRelationEndpointInput](rapidata/api_client/docs/GrantBidderRelationEndpointInput.md)
+ - [GrantPlatformRelationEndpointInput](rapidata/api_client/docs/GrantPlatformRelationEndpointInput.md)
  - [GrantVoucherEndpointInput](rapidata/api_client/docs/GrantVoucherEndpointInput.md)
  - [GrantVoucherEndpointOutput](rapidata/api_client/docs/GrantVoucherEndpointOutput.md)
  - [IArtifact](rapidata/api_client/docs/IArtifact.md)
@@ -779,6 +794,9 @@ Class | Method | HTTP request | Description
  - [IFaucetOutputReplicateFaucetOutput](rapidata/api_client/docs/IFaucetOutputReplicateFaucetOutput.md)
  - [IFlow](rapidata/api_client/docs/IFlow.md)
  - [IFlowRankingFlow](rapidata/api_client/docs/IFlowRankingFlow.md)
+ - [IGraduationRule](rapidata/api_client/docs/IGraduationRule.md)
+ - [IGraduationRuleScoreThresholdRule](rapidata/api_client/docs/IGraduationRuleScoreThresholdRule.md)
+ - [IGraduationRuleTaskAccuracyRule](rapidata/api_client/docs/IGraduationRuleTaskAccuracyRule.md)
  - [ILineItem](rapidata/api_client/docs/ILineItem.md)
  - [ILineItemMinimumSpendCommitment](rapidata/api_client/docs/ILineItemMinimumSpendCommitment.md)
  - [ILineItemOtherCharge](rapidata/api_client/docs/ILineItemOtherCharge.md)
@@ -1117,6 +1135,8 @@ Class | Method | HTTP request | Description
  - [RetrySampleGenerationEndpointInput](rapidata/api_client/docs/RetrySampleGenerationEndpointInput.md)
  - [RetrySampleGenerationEndpointOutput](rapidata/api_client/docs/RetrySampleGenerationEndpointOutput.md)
  - [ReviewReason](rapidata/api_client/docs/ReviewReason.md)
+ - [RevokeBidderRelationEndpointInput](rapidata/api_client/docs/RevokeBidderRelationEndpointInput.md)
+ - [RevokePlatformRelationEndpointInput](rapidata/api_client/docs/RevokePlatformRelationEndpointInput.md)
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
  - [SampleGenerationItemStatus](rapidata/api_client/docs/SampleGenerationItemStatus.md)
  - [SampleGenerationStatus](rapidata/api_client/docs/SampleGenerationStatus.md)

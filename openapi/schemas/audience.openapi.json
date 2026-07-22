@@ -2283,17 +2283,13 @@
             ],
             "description": "The filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double",
-            "nullable": true
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Defaults to null (uses GraduationScore).",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "How users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule (\"solve N tasks at X accuracy\"). When omitted, new audiences\n default to a task-accuracy rule (0.75 accuracy over 10 tasks)."
           },
           "minimumSizeForActivation": {
             "type": "integer",
@@ -2312,12 +2308,6 @@
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Defaults to 10. Set to null to disable this exit condition.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Defaults to null (no minimum — users graduate as soon as the score is reached).",
             "format": "uint32",
             "nullable": true
           },
@@ -2585,7 +2575,7 @@
           "isPublic",
           "isDistilling",
           "distillingCampaignId",
-          "graduationScore",
+          "graduationRule",
           "distillingRetrievalMode",
           "boostLevel"
         ],
@@ -2676,26 +2666,17 @@
             "format": "int32",
             "nullable": true
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Null when no minimum is configured.",
             "format": "uint32",
             "nullable": true
           },
@@ -3905,6 +3886,83 @@
         "type": "string",
         "format": "binary"
       },
+      "IGraduationRule": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IGraduationRuleScoreThresholdRule"
+          },
+          {
+            "$ref": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ScoreThreshold": "#/components/schemas/IGraduationRuleScoreThresholdRule",
+            "TaskAccuracy": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        }
+      },
+      "IGraduationRuleScoreThresholdRule": {
+        "required": [
+          "graduationScore",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScoreThreshold"
+            ],
+            "type": "string"
+          },
+          "graduationScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "demotionScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "minResponsesToGraduate": {
+            "type": "integer",
+            "format": "uint32",
+            "nullable": true
+          }
+        }
+      },
+      "IGraduationRuleTaskAccuracyRule": {
+        "required": [
+          "targetAccuracy",
+          "minTasks",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TaskAccuracy"
+            ],
+            "type": "string"
+          },
+          "targetAccuracy": {
+            "type": "number",
+            "format": "double"
+          },
+          "minTasks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxTasks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "IMetadata": {
         "required": [
           "_t"
@@ -4319,7 +4377,8 @@
           "createdAt",
           "ownerMail",
           "isPublic",
-          "isDistilling"
+          "isDistilling",
+          "graduationRule"
         ],
         "type": "object",
         "properties": {
@@ -4386,6 +4445,14 @@
           "isDistilling": {
             "type": "boolean",
             "description": "Whether the audience is currently distilling users."
+          },
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
           },
           "randomAdmissionProbability": {
             "type": "number",
@@ -4661,26 +4728,17 @@
             "format": "int32",
             "nullable": true
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Set to null to use GraduationScore.",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "Replaces how users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule."
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Set to null to disable this exit condition.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Set to null to allow graduation as soon as the score is reached.",
             "format": "uint32",
             "nullable": true
           },

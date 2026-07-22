@@ -61,9 +61,9 @@ class CapabilitiesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetCapabilityGranteesEndpointCursorPagedResultOfOutput:
-        """Lists the grant tuples on a capability, one cursor page at a time.
+        """Lists the organizations granted a capability, one cursor page at a time.
 
-        Covers both organization-level and direct customer grants. Follow nextCursor to page.
+        Follow nextCursor to page.
 
         :param capability: The capability to inspect. (required)
         :type capability: Capability
@@ -139,9 +139,9 @@ class CapabilitiesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetCapabilityGranteesEndpointCursorPagedResultOfOutput]:
-        """Lists the grant tuples on a capability, one cursor page at a time.
+        """Lists the organizations granted a capability, one cursor page at a time.
 
-        Covers both organization-level and direct customer grants. Follow nextCursor to page.
+        Follow nextCursor to page.
 
         :param capability: The capability to inspect. (required)
         :type capability: Capability
@@ -217,9 +217,9 @@ class CapabilitiesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Lists the grant tuples on a capability, one cursor page at a time.
+        """Lists the organizations granted a capability, one cursor page at a time.
 
-        Covers both organization-level and direct customer grants. Follow nextCursor to page.
+        Follow nextCursor to page.
 
         :param capability: The capability to inspect. (required)
         :type capability: Capability

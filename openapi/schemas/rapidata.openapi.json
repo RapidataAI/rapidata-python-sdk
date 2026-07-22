@@ -80,6 +80,10 @@
       "x-displayName": "Rapidata.Identity.API"
     },
     {
+      "name": "Bidder",
+      "x-displayName": "Bidder"
+    },
+    {
       "name": "Capabilities",
       "x-displayName": "Capabilities"
     },
@@ -102,6 +106,10 @@
     {
       "name": "Organization",
       "x-displayName": "Organization"
+    },
+    {
+      "name": "Platform",
+      "x-displayName": "Platform"
     },
     {
       "name": "Survey",
@@ -6859,13 +6867,184 @@
         ]
       }
     },
+    "/authorization/relations/bidder": {
+      "get": {
+        "tags": [
+          "Bidder"
+        ],
+        "summary": "Lists the customers holding bidder relations, one cursor page at a time.",
+        "description": "Returns every relation unless relation narrows it. Follow nextCursor to page.",
+        "parameters": [
+          {
+            "name": "relation",
+            "in": "query",
+            "description": "Optional relation to filter by.",
+            "schema": {
+              "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "The opaque cursor from the previous page; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBidderRelationMembersEndpoint_CursorPagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Bidder"
+        ],
+        "summary": "Grants a bidder relation to a customer.",
+        "description": "Idempotent: re-granting an existing relation is a no-op.",
+        "requestBody": {
+          "description": "The customer and the bidder relation to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantBidderRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Bidder"
+        ],
+        "summary": "Revokes a bidder relation from a customer.",
+        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
+        "requestBody": {
+          "description": "The customer and the bidder relation to revoke.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeBidderRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/capabilities/{capability}/grantees": {
       "get": {
         "tags": [
           "Capabilities"
         ],
-        "summary": "Lists the grant tuples on a capability, one cursor page at a time.",
-        "description": "Covers both organization-level and direct customer grants. Follow nextCursor to page.",
+        "summary": "Lists the organizations granted a capability, one cursor page at a time.",
+        "description": "Follow nextCursor to page.",
         "parameters": [
           {
             "name": "capability",
@@ -9283,6 +9462,177 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SwitchActiveOrganizationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/authorization/relations/platform": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Lists the customers holding platform relations, one cursor page at a time.",
+        "description": "Returns every relation unless relation narrows it. Follow nextCursor to page.",
+        "parameters": [
+          {
+            "name": "relation",
+            "in": "query",
+            "description": "Optional relation to filter by.",
+            "schema": {
+              "$ref": "#/components/schemas/AuthorizationRelations_Platform"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "The opaque cursor from the previous page; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPlatformRelationMembersEndpoint_CursorPagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Grants a platform relation to a customer.",
+        "description": "Idempotent: re-granting an existing relation is a no-op.",
+        "requestBody": {
+          "description": "The customer and the platform relation to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantPlatformRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Revokes a platform relation from a customer.",
+        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
+        "requestBody": {
+          "description": "The customer and the platform relation to revoke.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokePlatformRelationEndpoint_Input"
               }
             }
           },
@@ -36391,17 +36741,13 @@
             ],
             "description": "The filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double",
-            "nullable": true
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Defaults to null (uses GraduationScore).",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "How users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule (\"solve N tasks at X accuracy\"). When omitted, new audiences\n default to a task-accuracy rule (0.75 accuracy over 10 tasks)."
           },
           "minimumSizeForActivation": {
             "type": "integer",
@@ -36420,12 +36766,6 @@
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Defaults to 10. Set to null to disable this exit condition.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Defaults to null (no minimum — users graduate as soon as the score is reached).",
             "format": "uint32",
             "nullable": true
           },
@@ -36693,7 +37033,7 @@
           "isPublic",
           "isDistilling",
           "distillingCampaignId",
-          "graduationScore",
+          "graduationRule",
           "distillingRetrievalMode",
           "boostLevel"
         ],
@@ -36784,26 +37124,17 @@
             "format": "int32",
             "nullable": true
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Null when no minimum is configured.",
             "format": "uint32",
             "nullable": true
           },
@@ -38009,6 +38340,83 @@
           }
         }
       },
+      "IGraduationRule": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IGraduationRuleScoreThresholdRule"
+          },
+          {
+            "$ref": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ScoreThreshold": "#/components/schemas/IGraduationRuleScoreThresholdRule",
+            "TaskAccuracy": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        }
+      },
+      "IGraduationRuleScoreThresholdRule": {
+        "required": [
+          "graduationScore",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScoreThreshold"
+            ],
+            "type": "string"
+          },
+          "graduationScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "demotionScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "minResponsesToGraduate": {
+            "type": "integer",
+            "format": "uint32",
+            "nullable": true
+          }
+        }
+      },
+      "IGraduationRuleTaskAccuracyRule": {
+        "required": [
+          "targetAccuracy",
+          "minTasks",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TaskAccuracy"
+            ],
+            "type": "string"
+          },
+          "targetAccuracy": {
+            "type": "number",
+            "format": "double"
+          },
+          "minTasks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxTasks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "IMetadata": {
         "required": [
           "_t"
@@ -38423,7 +38831,8 @@
           "createdAt",
           "ownerMail",
           "isPublic",
-          "isDistilling"
+          "isDistilling",
+          "graduationRule"
         ],
         "type": "object",
         "properties": {
@@ -38490,6 +38899,14 @@
           "isDistilling": {
             "type": "boolean",
             "description": "Whether the audience is currently distilling users."
+          },
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
           },
           "randomAdmissionProbability": {
             "type": "number",
@@ -38765,26 +39182,17 @@
             "format": "int32",
             "nullable": true
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Set to null to use GraduationScore.",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "Replaces how users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule."
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Set to null to disable this exit condition.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Set to null to allow graduation as soon as the score is reached.",
             "format": "uint32",
             "nullable": true
           },
@@ -42697,6 +43105,27 @@
           }
         }
       },
+      "AuthorizationRelations_Bidder": {
+        "enum": [
+          "Admin",
+          "Editor",
+          "Viewer"
+        ],
+        "description": "Relations on the singleton `bidder` object that carries global RTB access. Grants are\ndirect here and, unlike Organization, are never folded in from platform staff."
+      },
+      "AuthorizationRelations_Platform": {
+        "enum": [
+          "Admin",
+          "Viewer"
+        ],
+        "description": "Relations on the singleton `platform` object. The model is hierarchical: `admin`\nfolds into `viewer`."
+      },
+      "AuthorizationScope": {
+        "enum": [
+          "Platform",
+          "Bidder"
+        ]
+      },
       "Capability": {
         "enum": [
           "SkipContentCheck"
@@ -42998,6 +43427,57 @@
         },
         "description": "The request body for dynamic client registration."
       },
+      "GetBidderRelationMembersEndpoint_CursorPagedResultOfOutput": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBidderRelationMembersEndpoint_Output"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
+      },
+      "GetBidderRelationMembersEndpoint_Output": {
+        "required": [
+          "customer",
+          "scope",
+          "relation",
+          "grantedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer holding the relation.",
+            "format": "uuid"
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthorizationScope"
+              }
+            ],
+            "description": "The object the relation is on."
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          },
+          "grantedAt": {
+            "type": "string",
+            "description": "When the grant was written.",
+            "format": "date-time"
+          }
+        }
+      },
       "GetCapabilityGranteesEndpoint_CursorPagedResultOfOutput": {
         "required": [
           "items"
@@ -43019,24 +43499,19 @@
       },
       "GetCapabilityGranteesEndpoint_Output": {
         "required": [
-          "object",
-          "relation",
-          "user",
+          "organizationId",
+          "organizationName",
           "timestamp"
         ],
         "type": "object",
         "properties": {
-          "object": {
+          "organizationId": {
             "type": "string",
-            "description": "The object, as type:id."
+            "description": "The organization that holds the capability."
           },
-          "relation": {
+          "organizationName": {
             "type": "string",
-            "description": "The relation."
-          },
-          "user": {
-            "type": "string",
-            "description": "The subject, as type:id[#relation]."
+            "description": "The human-readable name of the organization."
           },
           "timestamp": {
             "type": "string",
@@ -43117,6 +43592,57 @@
           }
         }
       },
+      "GetPlatformRelationMembersEndpoint_CursorPagedResultOfOutput": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetPlatformRelationMembersEndpoint_Output"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
+      },
+      "GetPlatformRelationMembersEndpoint_Output": {
+        "required": [
+          "customer",
+          "scope",
+          "relation",
+          "grantedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer holding the relation.",
+            "format": "uuid"
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthorizationScope"
+              }
+            ],
+            "description": "The object the relation is on."
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Platform"
+          },
+          "grantedAt": {
+            "type": "string",
+            "description": "When the grant was written.",
+            "format": "date-time"
+          }
+        }
+      },
       "GoogleOneTapLoginEndpoint_Input": {
         "required": [
           "idToken"
@@ -43143,6 +43669,40 @@
             "type": "string",
             "description": "The email of the signed-in user, if available.",
             "nullable": true
+          }
+        }
+      },
+      "GrantBidderRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to grant the relation to.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          }
+        }
+      },
+      "GrantPlatformRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to grant the relation to.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Platform"
           }
         }
       },
@@ -43720,6 +44280,40 @@
           "message": {
             "type": "string",
             "description": "A message indicating that the keys are not yet available."
+          }
+        }
+      },
+      "RevokeBidderRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to revoke the relation from.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          }
+        }
+      },
+      "RevokePlatformRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to revoke the relation from.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Platform"
           }
         }
       },
@@ -60514,12 +61108,14 @@
       "name": "Rapidata Identity API",
       "tags": [
         "Rapidata.Identity.API",
+        "Bidder",
         "Capabilities",
         "Client",
         "Customer",
         "Identity",
         "Newsletter",
         "Organization",
+        "Platform",
         "Survey"
       ]
     },

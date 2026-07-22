@@ -16,22 +16,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.get_platform_relation_members_endpoint_output import GetPlatformRelationMembersEndpointOutput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
+class GetPlatformRelationMembersEndpointCursorPagedResultOfOutput(LazyValidatedModel):
     """
-    GetCapabilityGranteesEndpointOutput
+    A page of results identified by an opaque cursor rather than an offset. Used where the underlying store pages by continuation token and a total count is unavailable or expensive. string? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page.
     """ # noqa: E501
-    organization_id: StrictStr = Field(description="The organization that holds the capability.", alias="organizationId")
-    organization_name: StrictStr = Field(description="The human-readable name of the organization.", alias="organizationName")
-    timestamp: datetime = Field(description="When the grant was written.")
-    __properties: ClassVar[List[str]] = ["organizationId", "organizationName", "timestamp"]
+    items: List[GetPlatformRelationMembersEndpointOutput]
+    next_cursor: Optional[StrictStr] = Field(default=None, alias="nextCursor")
+    __properties: ClassVar[List[str]] = ["items", "nextCursor"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +46,7 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCapabilityGranteesEndpointOutput from a JSON string"""
+        """Create an instance of GetPlatformRelationMembersEndpointCursorPagedResultOfOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,11 +67,23 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
+        # set to None if next_cursor (nullable) is None
+        # and model_fields_set contains the field
+        if self.next_cursor is None and "next_cursor" in self.model_fields_set:
+            _dict['nextCursor'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCapabilityGranteesEndpointOutput from a dict"""
+        """Create an instance of GetPlatformRelationMembersEndpointCursorPagedResultOfOutput from a dict"""
         if obj is None:
             return None
 
@@ -80,9 +91,8 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "organizationId": obj.get("organizationId"),
-            "organizationName": obj.get("organizationName"),
-            "timestamp": obj.get("timestamp")
+            "items": [GetPlatformRelationMembersEndpointOutput.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "nextCursor": obj.get("nextCursor")
         }
         try:
             _obj = cls.model_validate(_data)
