@@ -429,7 +429,7 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        level_of_detail: LevelOfDetail | None = None,
+        level_of_detail: LevelOfDetail | int | None = None,
         min_responses_per_matchup: int | None = None,
         audience_id: str | RapidataAudienceBase | None = None,
         settings: Sequence["RapidataSetting"] | None = None,
@@ -443,7 +443,7 @@ class RapidataBenchmark:
             show_prompt: Whether to show the prompt to the users. (default: False)
             show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
-            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. One of: 'debug', 'low', 'medium', 'high', 'very high'. (default: None, server decides)
+            level_of_detail: Sets the leaderboard's response budget — the total number of comparison responses collected per model evaluation. A larger budget buys more matchups and therefore more precise standings, at the cost of a slower, more expensive evaluation. Either one of the named levels — 'debug' (20 responses), 'low' (2,000), 'medium' (4,000), 'high' (8,000), 'very high' (16,000) — or a positive integer for a custom budget. (default: None, server decides)
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
             audience_id: The audience that should answer the leaderboard. Pass either the audience id, a :class:`RapidataAudience` (dimension audience), or a :class:`RapidataFilteredAudience` (derived via :py:meth:`RapidataAudience.filter`). Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
@@ -460,14 +460,11 @@ class RapidataBenchmark:
         )
 
         with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
-            if level_of_detail is not None and (
-                not isinstance(level_of_detail, str)
-                or level_of_detail not in LevelOfDetail.__args__
-            ):
-                raise ValueError(
-                    "Level of detail must be a string and one of: "
-                    + ", ".join(LevelOfDetail.__args__)
-                )
+            response_budget = (
+                DetailMapper.resolve_budget(level_of_detail)
+                if level_of_detail is not None
+                else None
+            )
 
             if min_responses_per_matchup is not None and (
                 not isinstance(min_responses_per_matchup, int)
@@ -506,11 +503,7 @@ class RapidataBenchmark:
                         showPromptAsset=show_prompt_asset,
                         isInversed=inverse_ranking,
                         minResponses=min_responses_per_matchup,
-                        responseBudget=(
-                            DetailMapper.get_budget(level_of_detail)
-                            if level_of_detail is not None
-                            else None
-                        ),
+                        responseBudget=response_budget,
                         audienceId=resolved_audience_id,
                         featureFlags=(
                             [setting._to_feature_flag() for setting in settings]
@@ -767,20 +760,33 @@ class RapidataBenchmark:
         use_weighted_scoring: Optional[bool] = None,
     ) -> pd.DataFrame:
         """
-        Returns the win/loss matrix for all participants across all leaderboards in the benchmark.
+        Returns the pairwise win/loss matrix aggregated across the benchmark's leaderboards.
 
-        The matrix shows pairwise comparison results where each cell [i, j] represents
-        the number of wins participant i has against participant j.
+        The returned DataFrame is square, with participant names on both the index
+        (rows) and columns. Cell ``[i, j]`` is how often participant ``i`` (row) beat
+        participant ``j`` (column) in their direct matchups, summed over every
+        leaderboard in scope. Read a row to see how a model did against every
+        opponent; the diagonal (a model against itself) is always 0. This is the
+        head-to-head breakdown behind :meth:`get_overall_standings`, which collapses
+        the same matchups into a single Elo score per model.
 
         Args:
-            tags: Filter matchups by these tags. If None, all matchups are considered.
-            participant_ids: Filter to only include these participants.
-            leaderboard_ids: Filter to only include matchups from these leaderboards.
-            use_weighted_scoring: Whether to use weighted scoring for the matrix calculation.
+            tags: Only count matchups carrying one of these prompt tags. If None,
+                every matchup is included; if an empty list, none are.
+            participant_ids: Restrict the matrix to these participants. If None, all
+                participants are included.
+            leaderboard_ids: Only aggregate matchups from these leaderboards. If None,
+                all leaderboards in the benchmark are included.
+            use_weighted_scoring: If True, each matchup is weighted by the responding
+                annotators' reliability (``userScore``) instead of being counted as a
+                plain win, so cells hold weighted sums (floats) rather than raw counts.
+                If False, cells are raw win counts. When None (default), the server
+                applies its configured default.
 
         Returns:
-            A pandas DataFrame with participants as both index and columns,
-            containing the pairwise win counts.
+            A pandas DataFrame indexed by participant name on both axes, where cell
+            ``[i, j]`` holds the (optionally weighted) number of wins of the row
+            participant over the column participant.
         """
         import pandas as pd
 

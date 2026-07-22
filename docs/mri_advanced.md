@@ -100,9 +100,33 @@ leaderboard = benchmark.create_leaderboard(
 )
 ```
 
-### Level of Detail
+### Level of Detail (response budget)
 
-Controls the number of comparisons performed, affecting accuracy vs. speed.
+`level_of_detail` sets the leaderboard's **response budget** — the total number of
+comparison responses collected per model evaluation. A larger budget buys more
+matchups, which makes the standings more precise but makes each evaluation slower
+and more expensive. The named levels map to concrete budgets:
+
+| `level_of_detail` | Responses per model evaluation |
+|---|---|
+| `"debug"` | 20 |
+| `"low"` | 2,000 |
+| `"medium"` | 4,000 |
+| `"high"` | 8,000 |
+| `"very high"` | 16,000 |
+
+Omitting `level_of_detail` lets the server pick a default.
+
+Need a budget between (or beyond) the named levels? Pass a positive integer
+instead of a name to set a **custom** response budget directly:
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Custom Budget",
+    instruction="Which image do you prefer?",
+    level_of_detail=5000,   # exactly 5,000 responses per model evaluation
+)
+```
 
 ```python
 # Different detail levels
@@ -117,6 +141,26 @@ leaderboard_precise = benchmark.create_leaderboard(
     instruction="Which image do you prefer?", 
     level_of_detail="very high"  # More comparisons, higher accuracy
 )
+```
+
+You can also read or change the budget on an existing leaderboard through the
+`level_of_detail` property, which likewise accepts a named level or a custom
+integer. Changes apply to future evaluations; standings that have already been
+computed are not recomputed.
+
+```python
+print(leaderboard.level_of_detail)   # e.g. "low"
+leaderboard.level_of_detail = "high" # named level
+leaderboard.level_of_detail = 5000   # custom budget
+```
+
+A custom budget reads back as `"custom"`; use the `response_budget` property to
+get the exact number.
+
+```python
+leaderboard.level_of_detail = 5000
+print(leaderboard.level_of_detail)   # "custom"
+print(leaderboard.response_budget)   # 5000
 ```
 
 ### Prompt and Asset Display
@@ -199,6 +243,43 @@ You can remove a participant — and its uploaded media — from the benchmark. 
 ```python
 participant = benchmark.participants[0]
 participant.delete()
+```
+
+## Win/Loss Matrix
+
+`get_standings` collapses every matchup into one Elo score per model. When you want
+the head-to-head breakdown instead, use `get_win_loss_matrix`. It returns a square
+pandas DataFrame with participant names on both axes, where cell `[i, j]` is how
+often the row model `i` beat the column model `j`. Reading a single row tells you
+how one model fared against each opponent; the diagonal is always 0.
+
+```python
+# Per-leaderboard: matchups within one leaderboard
+matrix = leaderboard.get_win_loss_matrix()
+
+# Benchmark-wide: aggregated across all leaderboards
+matrix = benchmark.get_win_loss_matrix()
+
+print(matrix)
+#            ModelA  ModelB  ModelC
+#   ModelA        0      12       9
+#   ModelB        4       0       7
+#   ModelC        6       8       0
+```
+
+Both methods accept `tags` to restrict the count to matchups with specific prompt
+tags. The benchmark-level method additionally accepts `participant_ids` and
+`leaderboard_ids` to narrow the participants and leaderboards included.
+
+By default the cells are raw win counts. Pass `use_weighted_scoring=True` to weight
+each matchup by the responding annotators' reliability (`userScore`) instead — the
+cells then hold weighted sums (floats) rather than integer counts.
+
+```python
+matrix = leaderboard.get_win_loss_matrix(
+    tags=["landscape"],
+    use_weighted_scoring=True,
+)
 ```
 
 ## Accessing the Underlying Jobs
