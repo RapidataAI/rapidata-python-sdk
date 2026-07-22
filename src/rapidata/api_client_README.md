@@ -100,6 +100,7 @@ Class | Method | HTTP request | Description
 *BatchUploadApi* | [**asset_batch_upload_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_post) | **POST** /asset/batch-upload | Creates a batch upload and queues processing for each URL.
 *BatchUploadApi* | [**asset_batch_upload_status_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_status_get) | **GET** /asset/batch-upload/status | Gets aggregated status for batch uploads identified by IDs or a correlation ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_demographics_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_demographics_get) | **GET** /benchmark/{benchmarkId}/demographics | Returns the share of a benchmark&#39;s votes falling in each demographic bucket.
 *BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities.
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its id.
 *BenchmarkApi* | [**benchmark_benchmark_id_leaderboards_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_leaderboards_get) | **GET** /benchmark/{benchmarkId}/leaderboards | Queries all leaderboards for the given benchmark.
@@ -113,6 +114,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_sample_generation_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_sample_generation_post) | **POST** /benchmark/{benchmarkId}/sample-generation | Starts an asynchronous sample generation run.
+*BenchmarkApi* | [**benchmark_benchmark_id_standings_breakdown_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_breakdown_get) | **GET** /benchmark/{benchmarkId}/standings/breakdown | Returns the standings over the whole filtered set alongside the standings recomputed for  each value of the chosen dimension.
 *BenchmarkApi* | [**benchmark_benchmark_id_standings_query_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_query_get) | **GET** /benchmark/{benchmarkId}/standings/query | Queries the standings of a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Queries all tags within a benchmark.
 *BenchmarkApi* | [**benchmark_combined_matrix_query_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_combined_matrix_query_get) | **GET** /benchmark/combined-matrix/query | Queries the combined win matrix of multiple benchmarks.
@@ -454,6 +456,7 @@ Class | Method | HTTP request | Description
  - [AuthorizationScope](rapidata/api_client/docs/AuthorizationScope.md)
  - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
  - [BatchUploadUrlStatus](rapidata/api_client/docs/BatchUploadUrlStatus.md)
+ - [BenchmarkDemographicDimension](rapidata/api_client/docs/BenchmarkDemographicDimension.md)
  - [BillingPeriodStatus](rapidata/api_client/docs/BillingPeriodStatus.md)
  - [BillingSummaryMode](rapidata/api_client/docs/BillingSummaryMode.md)
  - [BoostLeaderboardEndpointInput](rapidata/api_client/docs/BoostLeaderboardEndpointInput.md)
@@ -587,6 +590,12 @@ Class | Method | HTTP request | Description
  - [GetBatchUploadResultEndpointUrlOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointUrlOutput.md)
  - [GetBatchUploadStatusEndpointOutput](rapidata/api_client/docs/GetBatchUploadStatusEndpointOutput.md)
  - [GetBenchmarkByIdEndpointOutput](rapidata/api_client/docs/GetBenchmarkByIdEndpointOutput.md)
+ - [GetBenchmarkDemographicsEndpointOutput](rapidata/api_client/docs/GetBenchmarkDemographicsEndpointOutput.md)
+ - [GetBenchmarkDemographicsEndpointOutputBucket](rapidata/api_client/docs/GetBenchmarkDemographicsEndpointOutputBucket.md)
+ - [GetBenchmarkDemographicsEndpointOutputDimensionSet](rapidata/api_client/docs/GetBenchmarkDemographicsEndpointOutputDimensionSet.md)
+ - [GetBenchmarkStandingsBreakdownEndpointOutput](rapidata/api_client/docs/GetBenchmarkStandingsBreakdownEndpointOutput.md)
+ - [GetBenchmarkStandingsBreakdownEndpointOutputOutputItem](rapidata/api_client/docs/GetBenchmarkStandingsBreakdownEndpointOutputOutputItem.md)
+ - [GetBenchmarkStandingsBreakdownEndpointOutputSegment](rapidata/api_client/docs/GetBenchmarkStandingsBreakdownEndpointOutputSegment.md)
  - [GetBidderRelationMembersEndpointCursorPagedResultOfOutput](rapidata/api_client/docs/GetBidderRelationMembersEndpointCursorPagedResultOfOutput.md)
  - [GetBidderRelationMembersEndpointOutput](rapidata/api_client/docs/GetBidderRelationMembersEndpointOutput.md)
  - [GetBillingPeriodOverviewEndpointOutput](rapidata/api_client/docs/GetBillingPeriodOverviewEndpointOutput.md)
