@@ -32,6 +32,28 @@ audience = client.audience.create_audience(name="Custom Prompt Alignment Audienc
 
 1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next.
 
+#### Tuning the admission bar
+
+By default a labeler is admitted once they answer enough qualification tasks
+well enough — the server default is **75% accuracy over 10 tasks**. Set the bar
+explicitly as "solve N tasks at X accuracy" with two arguments:
+
+```py
+audience = client.audience.create_audience(
+    name="Custom Prompt Alignment Audience",
+    target_accuracy=0.9, # (1)!
+    min_tasks=20,        # (2)!
+)
+```
+
+1. `X` — the fraction of qualification tasks (0..1) a labeler must get right to
+   be admitted. Omit to use the server default of `0.75`.
+2. `N` — how many qualification tasks a labeler must complete before the
+   accuracy verdict is trusted. Omit to use the server default of `10`.
+
+Supplying just one of the two is fine — the other keeps its default. A higher
+bar yields fewer but more reliable labelers.
+
 ### Step 2: Add Qualification Examples
 
 Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.
