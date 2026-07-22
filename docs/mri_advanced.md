@@ -117,6 +117,17 @@ and more expensive. The named levels map to concrete budgets:
 
 Omitting `level_of_detail` lets the server pick a default.
 
+Need a budget between (or beyond) the named levels? Pass a positive integer
+instead of a name to set a **custom** response budget directly:
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Custom Budget",
+    instruction="Which image do you prefer?",
+    level_of_detail=5000,   # exactly 5,000 responses per model evaluation
+)
+```
+
 ```python
 # Different detail levels
 leaderboard_fast = benchmark.create_leaderboard(
@@ -133,12 +144,23 @@ leaderboard_precise = benchmark.create_leaderboard(
 ```
 
 You can also read or change the budget on an existing leaderboard through the
-`level_of_detail` property. Changes apply to future evaluations; standings that
-have already been computed are not recomputed.
+`level_of_detail` property, which likewise accepts a named level or a custom
+integer. Changes apply to future evaluations; standings that have already been
+computed are not recomputed.
 
 ```python
 print(leaderboard.level_of_detail)   # e.g. "low"
-leaderboard.level_of_detail = "high" # collect more responses from now on
+leaderboard.level_of_detail = "high" # named level
+leaderboard.level_of_detail = 5000   # custom budget
+```
+
+A custom budget reads back as `"custom"`; use the `response_budget` property to
+get the exact number.
+
+```python
+leaderboard.level_of_detail = 5000
+print(leaderboard.level_of_detail)   # "custom"
+print(leaderboard.response_budget)   # 5000
 ```
 
 ### Prompt and Asset Display

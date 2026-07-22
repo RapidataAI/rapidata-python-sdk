@@ -8,6 +8,7 @@ from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.benchmark._detail_mapper import (
     DetailMapper,
     LevelOfDetail,
+    ResolvedLevelOfDetail,
 )
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
@@ -62,31 +63,44 @@ class RapidataLeaderboard:
         self.__leaderboard_page = f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.__benchmark_id}/leaderboard/{self.id}"
 
     @property
-    def level_of_detail(self) -> LevelOfDetail:
+    def response_budget(self) -> int:
+        """
+        The leaderboard's response budget — the total number of comparison responses
+        collected per model evaluation.
+
+        This is the raw number behind :attr:`level_of_detail`; read it when you need
+        the exact budget rather than the named level (which is ``"custom"`` for
+        budgets that don't match a named level).
+        """
+        return self.__response_budget
+
+    @property
+    def level_of_detail(self) -> ResolvedLevelOfDetail:
         """
         The level of detail of the leaderboard.
 
-        This is a friendly name for the leaderboard's *response budget* — the total
-        number of comparison responses collected per model evaluation. A larger
+        This is a friendly name for the leaderboard's :attr:`response_budget` — the
+        total number of comparison responses collected per model evaluation. A larger
         budget buys more matchups and therefore more precise standings, at the cost
-        of a slower and more expensive evaluation. The names map to these budgets:
-        ``'debug'`` (20), ``'low'`` (2,000), ``'medium'`` (4,000), ``'high'`` (8,000),
-        ``'very high'`` (16,000). Reading this rounds the stored budget down to the
-        nearest level.
+        of a slower and more expensive evaluation. The named levels map to these
+        budgets: ``'debug'`` (20), ``'low'`` (2,000), ``'medium'`` (4,000),
+        ``'high'`` (8,000), ``'very high'`` (16,000). Any other budget reads back as
+        ``'custom'`` — use :attr:`response_budget` to get the exact number.
         """
         return DetailMapper.get_level_of_detail(self.__response_budget)
 
     @level_of_detail.setter
-    def level_of_detail(self, level_of_detail: LevelOfDetail):
+    def level_of_detail(self, level_of_detail: LevelOfDetail | int):
         """
         Sets the level of detail (response budget) of the leaderboard.
 
-        Takes effect for future evaluations; already-computed standings are not
-        recomputed.
+        Accepts one of the named levels or a positive integer for a custom response
+        budget. Takes effect for future evaluations; already-computed standings are
+        not recomputed.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.level_of_detail.setter"):
             logger.debug(f"Setting level of detail to {level_of_detail}")
-            self.__response_budget = DetailMapper.get_budget(level_of_detail)
+            self.__response_budget = DetailMapper.resolve_budget(level_of_detail)
             self._update_config()
 
     @property

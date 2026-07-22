@@ -429,7 +429,7 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        level_of_detail: LevelOfDetail | None = None,
+        level_of_detail: LevelOfDetail | int | None = None,
         min_responses_per_matchup: int | None = None,
         audience_id: str | RapidataAudienceBase | None = None,
         settings: Sequence["RapidataSetting"] | None = None,
@@ -443,7 +443,7 @@ class RapidataBenchmark:
             show_prompt: Whether to show the prompt to the users. (default: False)
             show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
-            level_of_detail: Sets the leaderboard's response budget — the total number of comparison responses collected per model evaluation. A larger budget buys more matchups and therefore more precise standings, at the cost of a slower, more expensive evaluation. One of 'debug' (20 responses), 'low' (2,000), 'medium' (4,000), 'high' (8,000), 'very high' (16,000). (default: None, server decides)
+            level_of_detail: Sets the leaderboard's response budget — the total number of comparison responses collected per model evaluation. A larger budget buys more matchups and therefore more precise standings, at the cost of a slower, more expensive evaluation. Either one of the named levels — 'debug' (20 responses), 'low' (2,000), 'medium' (4,000), 'high' (8,000), 'very high' (16,000) — or a positive integer for a custom budget. (default: None, server decides)
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
             audience_id: The audience that should answer the leaderboard. Pass either the audience id, a :class:`RapidataAudience` (dimension audience), or a :class:`RapidataFilteredAudience` (derived via :py:meth:`RapidataAudience.filter`). Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
@@ -460,14 +460,11 @@ class RapidataBenchmark:
         )
 
         with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
-            if level_of_detail is not None and (
-                not isinstance(level_of_detail, str)
-                or level_of_detail not in LevelOfDetail.__args__
-            ):
-                raise ValueError(
-                    "Level of detail must be a string and one of: "
-                    + ", ".join(LevelOfDetail.__args__)
-                )
+            response_budget = (
+                DetailMapper.resolve_budget(level_of_detail)
+                if level_of_detail is not None
+                else None
+            )
 
             if min_responses_per_matchup is not None and (
                 not isinstance(min_responses_per_matchup, int)
@@ -506,11 +503,7 @@ class RapidataBenchmark:
                         showPromptAsset=show_prompt_asset,
                         isInversed=inverse_ranking,
                         minResponses=min_responses_per_matchup,
-                        responseBudget=(
-                            DetailMapper.get_budget(level_of_detail)
-                            if level_of_detail is not None
-                            else None
-                        ),
+                        responseBudget=response_budget,
                         audienceId=resolved_audience_id,
                         featureFlags=(
                             [setting._to_feature_flag() for setting in settings]
