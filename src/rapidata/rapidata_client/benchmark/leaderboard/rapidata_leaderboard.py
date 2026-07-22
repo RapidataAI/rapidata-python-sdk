@@ -64,14 +64,25 @@ class RapidataLeaderboard:
     @property
     def level_of_detail(self) -> LevelOfDetail:
         """
-        Returns the level of detail of the leaderboard.
+        The level of detail of the leaderboard.
+
+        This is a friendly name for the leaderboard's *response budget* — the total
+        number of comparison responses collected per model evaluation. A larger
+        budget buys more matchups and therefore more precise standings, at the cost
+        of a slower and more expensive evaluation. The names map to these budgets:
+        ``'debug'`` (20), ``'low'`` (2,000), ``'medium'`` (4,000), ``'high'`` (8,000),
+        ``'very high'`` (16,000). Reading this rounds the stored budget down to the
+        nearest level.
         """
         return DetailMapper.get_level_of_detail(self.__response_budget)
 
     @level_of_detail.setter
     def level_of_detail(self, level_of_detail: LevelOfDetail):
         """
-        Sets the level of detail of the leaderboard.
+        Sets the level of detail (response budget) of the leaderboard.
+
+        Takes effect for future evaluations; already-computed standings are not
+        recomputed.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.level_of_detail.setter"):
             logger.debug(f"Setting level of detail to {level_of_detail}")
@@ -243,18 +254,28 @@ class RapidataLeaderboard:
         use_weighted_scoring: Optional[bool] = None,
     ) -> pd.DataFrame:
         """
-        Returns the win/loss matrix for all participants in this leaderboard.
+        Returns the pairwise win/loss matrix for the participants in this leaderboard.
 
-        The matrix shows pairwise comparison results where each cell [i, j] represents
-        the number of wins participant i has against participant j.
+        The returned DataFrame is square, with participant names on both the index
+        (rows) and columns. Cell ``[i, j]`` is how often participant ``i`` (row) beat
+        participant ``j`` (column) in their direct matchups. Read a row to see how a
+        model did against every opponent; the diagonal (a model against itself) is
+        always 0. This is the head-to-head breakdown behind :meth:`get_standings`,
+        which collapses the same matchups into a single Elo score per model.
 
         Args:
-            tags: Filter matchups by these tags. If None, all matchups are considered.
-            use_weighted_scoring: Whether to use weighted scoring for the matrix calculation.
+            tags: Only count matchups carrying one of these prompt tags. If None,
+                every matchup on the leaderboard is included; if an empty list, none are.
+            use_weighted_scoring: If True, each matchup is weighted by the responding
+                annotators' reliability (``userScore``) instead of being counted as a
+                plain win, so cells hold weighted sums (floats) rather than raw counts.
+                If False, cells are raw win counts. When None (default), the server
+                applies the leaderboard's configured default.
 
         Returns:
-            A pandas DataFrame with participants as both index and columns,
-            containing the pairwise win counts.
+            A pandas DataFrame indexed by participant name on both axes, where cell
+            ``[i, j]`` holds the (optionally weighted) number of wins of the row
+            participant over the column participant.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_win_loss_matrix"):
             tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
