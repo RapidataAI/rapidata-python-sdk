@@ -243,18 +243,15 @@ for segment in breakdown.segments:
     print(f"{segment.value} ({segment.votes} votes): {leader.name if leader else '—'}")
 ```
 
-Segments are **raw vote counts** by default; pass `use_weighted_scoring=True` to
-weight votes by annotator reliability. Both methods accept a `run_id` to scope
-to a single evaluation run and a `filters` dict (the same fields as the
-standings query, e.g. `tags`, `country`, `leaderboard_id`) to narrow the votes
-considered:
+Segments are **raw vote counts**. Both methods accept a `run_id` to scope to a
+single evaluation run and a `filters` dict (the same fields as the standings
+query, e.g. `tags`, `country`, `leaderboard_id`) to narrow the votes considered:
 
 ```python
 breakdown = client.mri.get_standings_breakdown(
     "benchmark_id_here",
     dimension="Country",
     filters={"tags": ["landscape"], "language": ["en"]},
-    use_weighted_scoring=True,
 )
 ```
 

@@ -68,16 +68,12 @@ class BenchmarkDemographicsApi:
         benchmark_id: str,
         dimension: str,
         filters: Optional[Dict[str, AudienceAudienceIdJobsGetJobIdParameter]] = None,
-        use_weighted_scoring: bool = False,
     ) -> BenchmarkStandingsBreakdown:
         raw = self._get(
             resource_path="/benchmark/{benchmarkId}/standings/breakdown",
             benchmark_id=benchmark_id,
             filters=filters or {},
-            extra_query=[
-                ("dimension", dimension),
-                ("useWeightedScoring", use_weighted_scoring),
-            ],
+            extra_query=[("dimension", dimension)],
         )
         return BenchmarkStandingsBreakdown.model_validate(raw)
 

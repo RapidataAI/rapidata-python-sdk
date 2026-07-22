@@ -174,7 +174,6 @@ class RapidataBenchmarkManager:
         dimension: BreakdownDimension,
         run_id: Optional[str] = None,
         filters: Optional[dict[str, Union[str, list[str]]]] = None,
-        use_weighted_scoring: bool = False,
     ) -> BenchmarkStandingsBreakdown:
         """
         Returns the benchmark standings broken down by a demographic dimension.
@@ -184,17 +183,15 @@ class RapidataBenchmarkManager:
         segment's raw vote count and its own standings. This shows how different
         voter groups rank the models relative to each other.
 
-        By default segments are **raw vote counts**; pass
-        ``use_weighted_scoring=True`` to weight votes by annotator reliability.
-        Note that the ``AgeBucket``, ``Gender`` and ``Occupation`` dimensions are
-        **estimated** (inferred), not self-declared.
+        Segments are **raw vote counts**. Note that the ``AgeBucket``, ``Gender``
+        and ``Occupation`` dimensions are **estimated** (inferred), not
+        self-declared.
 
         Args:
             benchmark_id: The id of the benchmark.
             dimension: The demographic dimension to break the standings down by. One of "AgeBucket", "Gender", "Occupation", "Country", "Language".
             run_id: Restrict the breakdown to a single evaluation run. If None, all runs are considered.
             filters: Additional filters on the underlying votes, keyed by field name (same fields as :py:meth:`get_demographics`). Each value is a string or list of strings matched with ``in`` semantics.
-            use_weighted_scoring: Whether to weight votes by annotator reliability instead of using raw counts. Defaults to False.
 
         Returns:
             A BenchmarkStandingsBreakdown with the global standings and per-segment standings.
@@ -212,7 +209,6 @@ class RapidataBenchmarkManager:
                 benchmark_id=benchmark_id,
                 dimension=dimension,
                 filters=self.__build_filters(filters, run_id),
-                use_weighted_scoring=use_weighted_scoring,
             )
 
     @staticmethod

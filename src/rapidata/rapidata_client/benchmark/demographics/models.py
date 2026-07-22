@@ -2,9 +2,18 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Union
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictBool,
+    StrictFloat,
+    StrictInt,
+    StrictStr,
+)
 
 from rapidata.api_client.models.confidence_interval import ConfidenceInterval
+from rapidata.api_client.models.standing_status import StandingStatus
 
 # The field names of the demographic dimensions. Age, gender and occupation are
 # *estimated* (inferred from behaviour), not self-declared by the annotator;
@@ -47,8 +56,8 @@ class BenchmarkDemographics(BaseModel):
 class BenchmarkStandingItem(BaseModel):
     """A single model's standing within a benchmark.
 
-    `score`/`wins`/`total_matches` are raw vote counts unless the breakdown was
-    requested with weighted scoring, in which case they are reliability-weighted.
+    `score`/`wins`/`total_matches` are raw vote counts. Mirrors the standings
+    item shape returned by the benchmark standings endpoints.
     """
 
     model_config = ConfigDict(populate_by_name=True)
@@ -56,9 +65,13 @@ class BenchmarkStandingItem(BaseModel):
     id: StrictStr
     name: StrictStr
     family: Optional[StrictStr] = None
+    proprietary_name: Optional[StrictStr] = Field(default=None, alias="proprietaryName")
+    logo: Optional[StrictStr] = None
+    status: StandingStatus
     score: Optional[Union[StrictFloat, StrictInt]] = None
     wins: Union[StrictFloat, StrictInt]
     total_matches: Union[StrictFloat, StrictInt] = Field(alias="totalMatches")
+    is_disabled: StrictBool = Field(alias="isDisabled")
     confidence_interval: Optional[ConfidenceInterval] = Field(
         default=None, alias="confidenceInterval"
     )
@@ -84,8 +97,8 @@ class BenchmarkStandingsBreakdown(BaseModel):
 
     `global_standings` is the overall standings across all voters; `segments`
     holds one entry per bucket of `dimension` (including `"unknown"`). Segments
-    are raw vote counts unless weighted scoring was requested. Age, gender and
-    occupation dimensions are estimated (inferred), not self-declared.
+    are raw vote counts. Age, gender and occupation dimensions are estimated
+    (inferred), not self-declared.
     """
 
     model_config = ConfigDict(populate_by_name=True)
