@@ -4877,6 +4877,11 @@
             "type": "string",
             "description": "The feedback text."
           },
+          "englishFeedback": {
+            "type": "string",
+            "description": "The English translation of the feedback, or null when unavailable.",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the feedback was created.",
