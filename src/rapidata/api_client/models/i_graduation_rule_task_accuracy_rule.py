@@ -16,22 +16,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
+class IGraduationRuleTaskAccuracyRule(LazyValidatedModel):
     """
-    GetCapabilityGranteesEndpointOutput
+    IGraduationRuleTaskAccuracyRule
     """ # noqa: E501
-    organization_id: StrictStr = Field(description="The organization that holds the capability.", alias="organizationId")
-    organization_name: StrictStr = Field(description="The human-readable name of the organization.", alias="organizationName")
-    timestamp: datetime = Field(description="When the grant was written.")
-    __properties: ClassVar[List[str]] = ["organizationId", "organizationName", "timestamp"]
+    t: StrictStr = Field(alias="_t")
+    target_accuracy: Union[StrictFloat, StrictInt] = Field(alias="targetAccuracy")
+    min_tasks: StrictInt = Field(alias="minTasks")
+    max_tasks: Optional[StrictInt] = Field(default=None, alias="maxTasks")
+    __properties: ClassVar[List[str]] = ["_t", "targetAccuracy", "minTasks", "maxTasks"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['TaskAccuracy']):
+            raise ValueError("must be one of enum values ('TaskAccuracy')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +54,7 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCapabilityGranteesEndpointOutput from a JSON string"""
+        """Create an instance of IGraduationRuleTaskAccuracyRule from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,11 +75,16 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if max_tasks (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_tasks is None and "max_tasks" in self.model_fields_set:
+            _dict['maxTasks'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCapabilityGranteesEndpointOutput from a dict"""
+        """Create an instance of IGraduationRuleTaskAccuracyRule from a dict"""
         if obj is None:
             return None
 
@@ -80,9 +92,10 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "organizationId": obj.get("organizationId"),
-            "organizationName": obj.get("organizationName"),
-            "timestamp": obj.get("timestamp")
+            "_t": obj.get("_t"),
+            "targetAccuracy": obj.get("targetAccuracy"),
+            "minTasks": obj.get("minTasks"),
+            "maxTasks": obj.get("maxTasks")
         }
         try:
             _obj = cls.model_validate(_data)

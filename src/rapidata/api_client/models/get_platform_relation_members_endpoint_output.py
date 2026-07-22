@@ -17,21 +17,25 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
+from uuid import UUID
+from rapidata.api_client.models.authorization_relations_platform import AuthorizationRelationsPlatform
+from rapidata.api_client.models.authorization_scope import AuthorizationScope
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
+class GetPlatformRelationMembersEndpointOutput(LazyValidatedModel):
     """
-    GetCapabilityGranteesEndpointOutput
+    GetPlatformRelationMembersEndpointOutput
     """ # noqa: E501
-    organization_id: StrictStr = Field(description="The organization that holds the capability.", alias="organizationId")
-    organization_name: StrictStr = Field(description="The human-readable name of the organization.", alias="organizationName")
-    timestamp: datetime = Field(description="When the grant was written.")
-    __properties: ClassVar[List[str]] = ["organizationId", "organizationName", "timestamp"]
+    customer: UUID = Field(description="The customer holding the relation.")
+    scope: AuthorizationScope = Field(description="The object the relation is on.")
+    relation: AuthorizationRelationsPlatform
+    granted_at: datetime = Field(description="When the grant was written.", alias="grantedAt")
+    __properties: ClassVar[List[str]] = ["customer", "scope", "relation", "grantedAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +51,7 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCapabilityGranteesEndpointOutput from a JSON string"""
+        """Create an instance of GetPlatformRelationMembersEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,7 +76,7 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCapabilityGranteesEndpointOutput from a dict"""
+        """Create an instance of GetPlatformRelationMembersEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -80,9 +84,10 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "organizationId": obj.get("organizationId"),
-            "organizationName": obj.get("organizationName"),
-            "timestamp": obj.get("timestamp")
+            "customer": obj.get("customer"),
+            "scope": obj.get("scope"),
+            "relation": obj.get("relation"),
+            "grantedAt": obj.get("grantedAt")
         }
         try:
             _obj = cls.model_validate(_data)
