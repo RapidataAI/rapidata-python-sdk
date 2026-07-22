@@ -1817,9 +1817,12 @@ This is immutable. Only used for file uploads when cacheToDisk=True.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Number of cache shards for parallel access. Defaults to 128.
-Higher values improve concurrency but increase file handles. Must be positive.
-This is immutable. Only used for file uploads when cacheToDisk=True.</p>
+                <p>Number of disk-cache shards for concurrent file-cache access. Defaults to 32.
+Each shard is a separate on-disk store that holds open file handles, so a higher value
+raises the process's file-descriptor count — which can exceed a low <code>ulimit -n</code> and
+surface as "Too many open files". 32 comfortably covers the default <code>maxWorkers</code> of 25.
+Must be positive. Immutable at runtime — set it via the <code>RAPIDATA_cacheShards</code> environment
+variable. Only used for file uploads when cacheToDisk=True.</p>
               </div>
             </td>
           </tr>
@@ -1900,6 +1903,21 @@ Overridable per call via the <code>failure_tolerance</code> argument on
               </div>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.checkForExplicitContent">checkForExplicitContent</span></code></td>
+            <td>
+                  <code><span title="bool">bool</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Opt in or out of Rapidata's server-side
+explicit-content check, applied when a job is assigned to an audience.
+<code>None</code> (default) uses the account's default. <code>True</code> forces the check on.
+<code>False</code> requests skipping it — honored only when the account is permitted to
+skip; otherwise the check still runs and a warning is logged. Defaults to None.</p>
+              </div>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -1912,11 +1930,11 @@ Overridable per call via the <code>failure_tolerance</code> argument on
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/rapidata/rapidata_client/config/upload_config.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-196">196</a></span>
-<span class="normal"><a href="#__codelineno-0-197">197</a></span>
-<span class="normal"><a href="#__codelineno-0-198">198</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_cache</span><span class="p">()</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_cache</span><span class="p">()</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 

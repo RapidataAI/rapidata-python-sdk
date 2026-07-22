@@ -46,10 +46,11 @@ logger.info("This will be shown") # (2)!
 | `cacheToDisk` | `bool` | `True` | Enable disk-based caching for file uploads |
 | `cacheTimeout` | `float` | `1` | Cache operation timeout in seconds |
 | `cacheLocation` | `Path` | `~/.cache/rapidata/upload_cache` | Directory for cache storage (immutable) |
-| `cacheShards` | `int` | `128` | Number of cache shards for parallel access (immutable) |
+| `cacheShards` | `int` | `32` | Number of disk-cache shards for concurrent access (immutable). Each shard holds open file handles — see [Too many open files](#too-many-open-files) |
 | `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
 | `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
 | `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression settings; see [Compression override](#compression-override) below. |
+| `checkForExplicitContent` | `bool \| None` | `None` | Opt in/out of the server-side explicit-content check on job assignment. `None` uses the account default; `True` forces it on; `False` requests skipping it (honored only if the account is permitted, otherwise the check still runs and a warning is logged). |
 
 #### Compression override
 
@@ -66,6 +67,33 @@ rapidata_config.upload.compression = CompressionConfig(
 ```
 
 Any field left as `None` falls back to the server-side default. Currently applies to single-asset uploads (`/asset/file` and `/asset/url`); batched URL uploads will pick the override up in a follow-up after the OpenAPI client regenerates.
+
+#### Too many open files
+
+Uploading local files opens file descriptors — for the on-disk upload cache (one set of handles per `cacheShards`), the worker pool (`maxWorkers`), and the HTTP connections. On systems with a low `ulimit -n` (1024 is common), a large or highly concurrent upload can exhaust the limit and fail with `OSError: [Errno 24] Too many open files`.
+
+Ways to resolve it:
+
+- **Raise the OS limit** (per shell): `ulimit -n 8192`.
+- **Lower the SDK's footprint** — reduce the cache shards and/or the worker pool:
+
+    ```bash
+    export RAPIDATA_cacheShards=16   # fewer cache shards = fewer open handles
+    export RAPIDATA_maxWorkers=10    # fewer concurrent uploads
+    ```
+
+    `cacheShards` is immutable at runtime, so set it via the environment variable (or a `.env` file); `maxWorkers` can also be set in code (`rapidata_config.upload.maxWorkers = 10`).
+
+- **Turn the disk cache off entirely** — the simplest fix if descriptors are still tight. `cacheToDisk=False` switches file uploads to an in-memory cache, which opens **no** cache file descriptors at all:
+
+    ```python
+    from rapidata import rapidata_config
+    rapidata_config.upload.cacheToDisk = False   # or RAPIDATA_cacheToDisk=false
+    ```
+
+    The tradeoff is only mild: the upload cache no longer persists across runs, so re-running the same upload re-uploads files it would otherwise have skipped (dedup within a single run still works). For a one-off large or highly concurrent submission this is usually the easiest way out.
+
+The default `cacheShards` of 32 keeps a single upload well under a 1024 limit; lower it further, or turn off `cacheToDisk`, only if you run many upload processes concurrently against the same limit.
 
 ## Environment Variables
 
@@ -107,7 +135,7 @@ RAPIDATA_maxRetries=3
 RAPIDATA_cacheToDisk=true
 RAPIDATA_cacheTimeout=1
 RAPIDATA_cacheLocation=~/.cache/rapidata/upload_cache
-RAPIDATA_cacheShards=128
+RAPIDATA_cacheShards=32
 RAPIDATA_batchSize=1000
 RAPIDATA_batchPollInterval=0.5
 

@@ -1483,10 +1483,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#level-of-detail" class="md-nav__link">
+  <a href="#level-of-detail-response-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Level of Detail
+        Level of Detail (response budget)
       
     </span>
   </a>
@@ -1589,6 +1589,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#winloss-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Win/Loss Matrix
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1768,10 +1779,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#level-of-detail" class="md-nav__link">
+  <a href="#level-of-detail-response-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Level of Detail
+        Level of Detail (response budget)
       
     </span>
   </a>
@@ -1874,6 +1885,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#winloss-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Win/Loss Matrix
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2001,92 +2023,177 @@
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">show_prompt_asset</span><span class="o">=</span><span class="kc">True</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="level-of-detail">Level of Detail<a class="headerlink" href="#level-of-detail" title="Permanent link">#</a></h3>
-<p>Controls the number of comparisons performed, affecting accuracy vs. speed.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Different detail levels</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">leaderboard_fast</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Quick Evaluation"</span><span class="p">,</span> 
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image do you prefer?"</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="s2">"low"</span>      <span class="c1"># Fewer comparisons, faster results</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">)</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">leaderboard_precise</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Precise Evaluation"</span><span class="p">,</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image do you prefer?"</span><span class="p">,</span> 
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="s2">"very high"</span>  <span class="c1"># More comparisons, higher accuracy</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">)</span>
+<h3 id="level-of-detail-response-budget">Level of Detail (response budget)<a class="headerlink" href="#level-of-detail-response-budget" title="Permanent link">#</a></h3>
+<p><code>level_of_detail</code> sets the leaderboard's <strong>response budget</strong> — the total number of
+comparison responses collected per model evaluation. A larger budget buys more
+matchups, which makes the standings more precise but makes each evaluation slower
+and more expensive. The named levels map to concrete budgets:</p>
+<table>
+<thead>
+<tr>
+<th><code>level_of_detail</code></th>
+<th>Responses per model evaluation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"debug"</code></td>
+<td>20</td>
+</tr>
+<tr>
+<td><code>"low"</code></td>
+<td>2,000</td>
+</tr>
+<tr>
+<td><code>"medium"</code></td>
+<td>4,000</td>
+</tr>
+<tr>
+<td><code>"high"</code></td>
+<td>8,000</td>
+</tr>
+<tr>
+<td><code>"very high"</code></td>
+<td>16,000</td>
+</tr>
+</tbody>
+</table>
+<p>Omitting <code>level_of_detail</code> lets the server pick a default.</p>
+<p>Need a budget between (or beyond) the named levels? Pass a positive integer
+instead of a name to set a <strong>custom</strong> response budget directly:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Custom Budget"</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image do you prefer?"</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>   <span class="c1"># exactly 5,000 responses per model evaluation</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Different detail levels</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">leaderboard_fast</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Quick Evaluation"</span><span class="p">,</span> 
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image do you prefer?"</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="s2">"low"</span>      <span class="c1"># Fewer comparisons, faster results</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">leaderboard_precise</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Precise Evaluation"</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image do you prefer?"</span><span class="p">,</span> 
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="s2">"very high"</span>  <span class="c1"># More comparisons, higher accuracy</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>You can also read or change the budget on an existing leaderboard through the
+<code>level_of_detail</code> property, which likewise accepts a named level or a custom
+integer. Changes apply to future evaluations; standings that have already been
+computed are not recomputed.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">level_of_detail</span><span class="p">)</span>   <span class="c1"># e.g. "low"</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">leaderboard</span><span class="o">.</span><span class="n">level_of_detail</span> <span class="o">=</span> <span class="s2">"high"</span> <span class="c1"># named level</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">leaderboard</span><span class="o">.</span><span class="n">level_of_detail</span> <span class="o">=</span> <span class="mi">5000</span>   <span class="c1"># custom budget</span>
+</span></code></pre></div>
+<p>A custom budget reads back as <code>"custom"</code>; use the <code>response_budget</code> property to
+get the exact number.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">leaderboard</span><span class="o">.</span><span class="n">level_of_detail</span> <span class="o">=</span> <span class="mi">5000</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">level_of_detail</span><span class="p">)</span>   <span class="c1"># "custom"</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">leaderboard</span><span class="o">.</span><span class="n">response_budget</span><span class="p">)</span>   <span class="c1"># 5000</span>
 </span></code></pre></div>
 <h3 id="prompt-and-asset-display">Prompt and Asset Display<a class="headerlink" href="#prompt-and-asset-display" title="Permanent link">#</a></h3>
 <p>Control what evaluators see during comparison.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Context-Aware Evaluation"</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which generated image better matches the prompt?"</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">show_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>           <span class="c1"># Show the original text prompt</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">show_prompt_asset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># Show reference images/videos</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="s2">"medium"</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Context-Aware Evaluation"</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which generated image better matches the prompt?"</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">show_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>           <span class="c1"># Show the original text prompt</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">show_prompt_asset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># Show reference images/videos</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">level_of_detail</span><span class="o">=</span><span class="s2">"medium"</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="participant-management">Participant Management<a class="headerlink" href="#participant-management" title="Permanent link">#</a></h2>
 <h3 id="listing-participants">Listing Participants<a class="headerlink" href="#listing-participants" title="Permanent link">#</a></h3>
 <p>You can list all participants in a benchmark using the <code>participants</code> property:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">for</span> <span class="n">participant</span> <span class="ow">in</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">:</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">for</span> <span class="n">participant</span> <span class="ow">in</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">:</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="submitting-participants">Submitting Participants<a class="headerlink" href="#submitting-participants" title="Permanent link">#</a></h3>
 <p>When using <code>add_model</code>, participants are created in the <code>CREATED</code> state and are not yet submitted for evaluation. You can submit them individually or in bulk:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Submit a single participant</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"ModelA"</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img1.png"</span><span class="p">],</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">]</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">)</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">participant</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Or add multiple models and submit them all at once</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelB"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img2.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelC"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img3.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Submits all participants in CREATED state</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Submit a single participant</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"ModelA"</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img1.png"</span><span class="p">],</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">]</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">participant</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Or add multiple models and submit them all at once</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelB"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img2.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ModelC"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img3.png"</span><span class="p">],</span> <span class="n">identifiers</span><span class="o">=</span><span class="p">[</span><span class="s2">"scene_1"</span><span class="p">])</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Submits all participants in CREATED state</span>
 </span></code></pre></div>
 <h3 id="inspecting-a-participants-elo">Inspecting a Participant's Elo<a class="headerlink" href="#inspecting-a-participants-elo" title="Permanent link">#</a></h3>
 <p>Each participant has an Elo score aggregated across all of the benchmark's leaderboards. Read it directly from the participant:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">elo</span> <span class="o">=</span> <span class="n">participant</span><span class="o">.</span><span class="n">get_elo</span><span class="p">()</span>  <span class="c1"># None if not computed yet</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">elo</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">elo</span> <span class="o">=</span> <span class="n">participant</span><span class="o">.</span><span class="n">get_elo</span><span class="p">()</span>  <span class="c1"># None if not computed yet</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">participant</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">elo</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="renaming-a-participant">Renaming a Participant<a class="headerlink" href="#renaming-a-participant" title="Permanent link">#</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"New model name"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"New model name"</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="disabling-participants">Disabling Participants<a class="headerlink" href="#disabling-participants" title="Permanent link">#</a></h3>
 <p>A disabled participant is excluded from evaluation and the computed standings. Unlike deleting, this is reversible:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Bring it back into the evaluation later</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">participant</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Bring it back into the evaluation later</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">participant</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
 </span></code></pre></div>
 <h3 id="deleting-participants">Deleting Participants<a class="headerlink" href="#deleting-participants" title="Permanent link">#</a></h3>
 <p>You can remove a participant — and its uploaded media — from the benchmark. This cannot be undone:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span></code></pre></div>
+<h2 id="winloss-matrix">Win/Loss Matrix<a class="headerlink" href="#winloss-matrix" title="Permanent link">#</a></h2>
+<p><code>get_standings</code> collapses every matchup into one Elo score per model. When you want
+the head-to-head breakdown instead, use <code>get_win_loss_matrix</code>. It returns a square
+pandas DataFrame with participant names on both axes, where cell <code>[i, j]</code> is how
+often the row model <code>i</code> beat the column model <code>j</code>. Reading a single row tells you
+how one model fared against each opponent; the diagonal is always 0.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Per-leaderboard: matchups within one leaderboard</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">()</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Benchmark-wide: aggregated across all leaderboards</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">()</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1">#            ModelA  ModelB  ModelC</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1">#   ModelA        0      12       9</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1">#   ModelB        4       0       7</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1">#   ModelC        6       8       0</span>
+</span></code></pre></div>
+<p>Both methods accept <code>tags</code> to restrict the count to matchups with specific prompt
+tags. The benchmark-level method additionally accepts <code>participant_ids</code> and
+<code>leaderboard_ids</code> to narrow the participants and leaderboards included.</p>
+<p>By default the cells are raw win counts. Pass <code>use_weighted_scoring=True</code> to weight
+each matchup by the responding annotators' reliability (<code>userScore</code>) instead — the
+cells then hold weighted sums (floats) rather than integer counts.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">(</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"landscape"</span><span class="p">],</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">use_weighted_scoring</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="accessing-the-underlying-jobs">Accessing the Underlying Jobs<a class="headerlink" href="#accessing-the-underlying-jobs" title="Permanent link">#</a></h2>
 <p>The standings and win/loss matrix are aggregates. If you need the raw responses
 behind them, use the leaderboard's <code>jobs</code> property: every model evaluation on a
 leaderboard runs as a job, and this returns all of them, most recent first.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">leaderboards</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span> <span class="c1"># list[RapidataJob], newest first</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span><span class="si">}</span><span class="s2"> evaluations have run for this leaderboard"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">leaderboards</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span> <span class="c1"># list[RapidataJob], newest first</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span><span class="si">}</span><span class="s2"> evaluations have run for this leaderboard"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Each item is a full <code>RapidataJob</code>, so you can pull the detailed comparison
 results, check status, or open a job in the dashboard:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"Completed"</span><span class="p">:</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="k">continue</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># RapidataResults — the individual matchups</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>    <span class="c1"># or work with the raw dict directly</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"Completed"</span><span class="p">:</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>        <span class="k">continue</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># RapidataResults — the individual matchups</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>    <span class="c1"># or work with the raw dict directly</span>
 </span></code></pre></div>
 <p>Runs that don't yet have an associated job (for example, an evaluation still
 being set up) are skipped, so the list only contains jobs you can act on.</p>

@@ -471,6 +471,28 @@ audience = client.audience.create_audience(name="Custom Prompt Alignment Audienc
 
 1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next.
 
+#### Tuning the admission bar
+
+By default a labeler is admitted once they answer enough qualification tasks
+well enough — the server default is **75% accuracy over 10 tasks**. Set the bar
+explicitly as "solve N tasks at X accuracy" with two arguments:
+
+```py
+audience = client.audience.create_audience(
+    name="Custom Prompt Alignment Audience",
+    target_accuracy=0.9, # (1)!
+    min_tasks=20,        # (2)!
+)
+```
+
+1. `X` — the fraction of qualification tasks (0..1) a labeler must get right to
+   be admitted. Omit to use the server default of `0.75`.
+2. `N` — how many qualification tasks a labeler must complete before the
+   accuracy verdict is trusted. Omit to use the server default of `10`.
+
+Supplying just one of the two is fine — the other keeps its default. A higher
+bar yields fewer but more reliable labelers.
+
 ### Step 2: Add Qualification Examples
 
 Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.
@@ -1637,6 +1659,8 @@ Each `FailedUpload` object contains:
 - `error_type`: The type of error (e.g., "AssetUploadFailed", "RapidataError")
 - `timestamp`: When the failure occurred
 - `exception`: The original exception (if available)
+- `stage`: For remote-URL assets, the ingestion stage that failed — one of `download`, `redirect`, `content_type`, `decode`, `timeout`, `size`, `validation`, or `internal`. Only `internal` is a Rapidata-side fault; every other stage is caller-actionable (e.g. a bad URL, an unreachable host, an unsupported content type). `None` for local-file or datapoint-creation failures.
+- `http_status`: For a failed remote URL, the origin server's HTTP status (e.g. `403` when the asset host forbids access). `None` when the failure wasn't an HTTP response from the host.
 
 **Example:**
 ```python
@@ -1675,9 +1699,32 @@ This groups all failed datapoints by their error message, making it easy to see 
 }
 ```
 
+#### `failures_by_stage` - Grouped by Ingestion Stage
+
+Use this when your datapoints are **remote URLs** and you want to know *which stage* of ingestion failed rather than reading messages. It groups the failed datapoints by their `stage` (see the field list above); datapoints without a stage (local files, datapoint-creation failures) are omitted.
+
+```python
+exception.failures_by_stage
+# Returns: dict[str, list[Datapoint]]
+```
+
+**Example:**
+```python
+{
+    'download': [  # the host returned a non-2xx (check http_status on the FailedUpload)
+        Datapoint(asset=['https://host/a.jpg'], ...)
+    ],
+    'content_type': [  # the URL served a type that isn't a supported asset
+        Datapoint(asset=['https://host/page.html'], ...)
+    ]
+}
+```
+
+Because only `internal` is a Rapidata-side fault, this makes it easy to separate URLs you need to fix from the rare failure worth reporting to us.
+
 ### Types of Failures
 
-**Asset Upload Failures**: When assets (images, videos, etc.) fail to upload, all affected datapoints will have the same error message: `"One or more required assets failed to upload"`. This happens before datapoint creation begins.
+**Asset Upload Failures**: When assets (images, videos, etc.) fail to upload, all affected datapoints will have the same error message: `"One or more required assets failed to upload"`. This happens before datapoint creation begins. For **remote-URL** assets the failure additionally carries a `stage` and, where applicable, an origin `http_status` — inspect these (or `failures_by_stage`) to see whether the URL was unreachable, forbidden, the wrong content type, too large, or timed out.
 
 **Datapoint Creation Failures**: After assets are successfully uploaded, datapoints are created. These failures can have different reasons depending on what went wrong (e.g., validation errors, format issues, backend constraints). Each datapoint may fail for a unique reason.
 
@@ -1741,6 +1788,12 @@ except FailedUploadException as e:
 ```
 
 Note that this only re-uploads the datapoints; it does not create the job definition. Prefer `exception.retry()` unless you specifically need the lower-level control.
+
+## Too many open files
+
+If uploads fail with `OSError: [Errno 24] Too many open files`, the process has hit its file-descriptor limit — the upload cache, worker pool, and HTTP connections all consume descriptors. When the SDK detects this it appends a hint to the `FailedUploadException` message pointing at the relevant knobs.
+
+Raise the OS limit (`ulimit -n 8192`), lower the SDK's footprint with `RAPIDATA_cacheShards` / `RAPIDATA_maxWorkers`, or turn the disk cache off entirely with `cacheToDisk=False` (no cache descriptors at all, at the cost of cross-run upload dedup). See [Too many open files](config.md#too-many-open-files) in the configuration guide for details.
 
 
 ## Early Stopping
@@ -2323,10 +2376,11 @@ logger.info("This will be shown") # (2)!
 | `cacheToDisk` | `bool` | `True` | Enable disk-based caching for file uploads |
 | `cacheTimeout` | `float` | `1` | Cache operation timeout in seconds |
 | `cacheLocation` | `Path` | `~/.cache/rapidata/upload_cache` | Directory for cache storage (immutable) |
-| `cacheShards` | `int` | `128` | Number of cache shards for parallel access (immutable) |
+| `cacheShards` | `int` | `32` | Number of disk-cache shards for concurrent access (immutable). Each shard holds open file handles — see [Too many open files](#too-many-open-files) |
 | `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
 | `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
 | `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression settings; see [Compression override](#compression-override) below. |
+| `checkForExplicitContent` | `bool \| None` | `None` | Opt in/out of the server-side explicit-content check on job assignment. `None` uses the account default; `True` forces it on; `False` requests skipping it (honored only if the account is permitted, otherwise the check still runs and a warning is logged). |
 
 #### Compression override
 
@@ -2343,6 +2397,33 @@ rapidata_config.upload.compression = CompressionConfig(
 ```
 
 Any field left as `None` falls back to the server-side default. Currently applies to single-asset uploads (`/asset/file` and `/asset/url`); batched URL uploads will pick the override up in a follow-up after the OpenAPI client regenerates.
+
+#### Too many open files
+
+Uploading local files opens file descriptors — for the on-disk upload cache (one set of handles per `cacheShards`), the worker pool (`maxWorkers`), and the HTTP connections. On systems with a low `ulimit -n` (1024 is common), a large or highly concurrent upload can exhaust the limit and fail with `OSError: [Errno 24] Too many open files`.
+
+Ways to resolve it:
+
+- **Raise the OS limit** (per shell): `ulimit -n 8192`.
+- **Lower the SDK's footprint** — reduce the cache shards and/or the worker pool:
+
+    ```bash
+    export RAPIDATA_cacheShards=16   # fewer cache shards = fewer open handles
+    export RAPIDATA_maxWorkers=10    # fewer concurrent uploads
+    ```
+
+    `cacheShards` is immutable at runtime, so set it via the environment variable (or a `.env` file); `maxWorkers` can also be set in code (`rapidata_config.upload.maxWorkers = 10`).
+
+- **Turn the disk cache off entirely** — the simplest fix if descriptors are still tight. `cacheToDisk=False` switches file uploads to an in-memory cache, which opens **no** cache file descriptors at all:
+
+    ```python
+    from rapidata import rapidata_config
+    rapidata_config.upload.cacheToDisk = False   # or RAPIDATA_cacheToDisk=false
+    ```
+
+    The tradeoff is only mild: the upload cache no longer persists across runs, so re-running the same upload re-uploads files it would otherwise have skipped (dedup within a single run still works). For a one-off large or highly concurrent submission this is usually the easiest way out.
+
+The default `cacheShards` of 32 keeps a single upload well under a 1024 limit; lower it further, or turn off `cacheToDisk`, only if you run many upload processes concurrently against the same limit.
 
 ## Environment Variables
 
@@ -2384,7 +2465,7 @@ RAPIDATA_maxRetries=3
 RAPIDATA_cacheToDisk=true
 RAPIDATA_cacheTimeout=1
 RAPIDATA_cacheLocation=~/.cache/rapidata/upload_cache
-RAPIDATA_cacheShards=128
+RAPIDATA_cacheShards=32
 RAPIDATA_batchSize=1000
 RAPIDATA_batchPollInterval=0.5
 
@@ -3464,9 +3545,33 @@ leaderboard = benchmark.create_leaderboard(
 )
 ```
 
-### Level of Detail
+### Level of Detail (response budget)
 
-Controls the number of comparisons performed, affecting accuracy vs. speed.
+`level_of_detail` sets the leaderboard's **response budget** — the total number of
+comparison responses collected per model evaluation. A larger budget buys more
+matchups, which makes the standings more precise but makes each evaluation slower
+and more expensive. The named levels map to concrete budgets:
+
+| `level_of_detail` | Responses per model evaluation |
+|---|---|
+| `"debug"` | 20 |
+| `"low"` | 2,000 |
+| `"medium"` | 4,000 |
+| `"high"` | 8,000 |
+| `"very high"` | 16,000 |
+
+Omitting `level_of_detail` lets the server pick a default.
+
+Need a budget between (or beyond) the named levels? Pass a positive integer
+instead of a name to set a **custom** response budget directly:
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Custom Budget",
+    instruction="Which image do you prefer?",
+    level_of_detail=5000,   # exactly 5,000 responses per model evaluation
+)
+```
 
 ```python
 # Different detail levels
@@ -3481,6 +3586,26 @@ leaderboard_precise = benchmark.create_leaderboard(
     instruction="Which image do you prefer?", 
     level_of_detail="very high"  # More comparisons, higher accuracy
 )
+```
+
+You can also read or change the budget on an existing leaderboard through the
+`level_of_detail` property, which likewise accepts a named level or a custom
+integer. Changes apply to future evaluations; standings that have already been
+computed are not recomputed.
+
+```python
+print(leaderboard.level_of_detail)   # e.g. "low"
+leaderboard.level_of_detail = "high" # named level
+leaderboard.level_of_detail = 5000   # custom budget
+```
+
+A custom budget reads back as `"custom"`; use the `response_budget` property to
+get the exact number.
+
+```python
+leaderboard.level_of_detail = 5000
+print(leaderboard.level_of_detail)   # "custom"
+print(leaderboard.response_budget)   # 5000
 ```
 
 ### Prompt and Asset Display
@@ -3563,6 +3688,43 @@ You can remove a participant — and its uploaded media — from the benchmark. 
 ```python
 participant = benchmark.participants[0]
 participant.delete()
+```
+
+## Win/Loss Matrix
+
+`get_standings` collapses every matchup into one Elo score per model. When you want
+the head-to-head breakdown instead, use `get_win_loss_matrix`. It returns a square
+pandas DataFrame with participant names on both axes, where cell `[i, j]` is how
+often the row model `i` beat the column model `j`. Reading a single row tells you
+how one model fared against each opponent; the diagonal is always 0.
+
+```python
+# Per-leaderboard: matchups within one leaderboard
+matrix = leaderboard.get_win_loss_matrix()
+
+# Benchmark-wide: aggregated across all leaderboards
+matrix = benchmark.get_win_loss_matrix()
+
+print(matrix)
+#            ModelA  ModelB  ModelC
+#   ModelA        0      12       9
+#   ModelB        4       0       7
+#   ModelC        6       8       0
+```
+
+Both methods accept `tags` to restrict the count to matchups with specific prompt
+tags. The benchmark-level method additionally accepts `participant_ids` and
+`leaderboard_ids` to narrow the participants and leaderboards included.
+
+By default the cells are raw win counts. Pass `use_weighted_scoring=True` to weight
+each matchup by the responding annotators' reliability (`userScore`) instead — the
+cells then hold weighted sums (floats) rather than integer counts.
+
+```python
+matrix = leaderboard.get_win_loss_matrix(
+    tags=["landscape"],
+    use_weighted_scoring=True,
+)
 ```
 
 ## Accessing the Underlying Jobs

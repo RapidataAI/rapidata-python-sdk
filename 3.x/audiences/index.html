@@ -665,6 +665,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Step 1: Create the Audience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tuning-the-admission-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuning the admission bar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1687,6 +1704,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Step 1: Create the Audience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tuning-the-admission-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuning the admission bar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1913,40 +1947,58 @@
 <ol>
 <li>Creates a new, empty audience. Labelers join by passing the qualification examples you add next.</li>
 </ol>
+<h4 id="tuning-the-admission-bar">Tuning the admission bar<a class="headerlink" href="#tuning-the-admission-bar" title="Permanent link">#</a></h4>
+<p>By default a labeler is admitted once they answer enough qualification tasks
+well enough — the server default is <strong>75% accuracy over 10 tasks</strong>. Set the bar
+explicitly as "solve N tasks at X accuracy" with two arguments:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Custom Prompt Alignment Audience"</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">target_accuracy</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="c1"># (1)!</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">min_tasks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>        <span class="c1"># (2)!</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<ol>
+<li><code>X</code> — the fraction of qualification tasks (0..1) a labeler must get right to
+   be admitted. Omit to use the server default of <code>0.75</code>.</li>
+<li><code>N</code> — how many qualification tasks a labeler must complete before the
+   accuracy verdict is trusted. Omit to use the server default of <code>10</code>.</li>
+</ol>
+<p>Supplying just one of the two is fine — the other keeps its default. A higher
+bar yields fewer but more reliable labelers.</p>
 <h3 id="step-2-add-qualification-examples">Step 2: Add Qualification Examples<a class="headerlink" href="#step-2-add-qualification-examples" title="Permanent link">#</a></h3>
 <p>Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.</p>
 <div class="admonition warning">
 <p class="admonition-title">Review your qualification examples carefully</p>
 <p>Every qualification example with its associated truth must be manually and thoroughly reviewed before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting your quality control. Always verify that each example has a clear, unambiguous correct answer.</p>
 </div>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">DATAPOINTS</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_sign_diffusion.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_duck.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_duck.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_flower.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_flower.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_store_front.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_store_front.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_hand.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_hand.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_traffic_lights.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_traffic_lights.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_plane.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_plane.jpg"</span><span class="p">],</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">]</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">PROMPTS</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="s2">"A sign that says 'Diffusion'."</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="s2">"A psychedelic duck with glasses"</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="s2">"A small blue book sitting on a large red book."</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="s2">"A yellow flower sticking out of a bright green pot."</span><span class="p">,</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="s2">"A store front with 'hello world' written on it."</span><span class="p">,</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="s2">"A yellow hand on a black stone."</span><span class="p">,</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="s2">"A green, yellow and red traffic light."</span><span class="p">,</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="s2">"A plane flying over a person."</span><span class="p">,</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="p">]</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="k">for</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">datapoint</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">PROMPTS</span><span class="p">,</span> <span class="n">DATAPOINTS</span><span class="p">):</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="n">audience</span><span class="o">.</span><span class="n">add_compare_example</span><span class="p">(</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        <span class="n">datapoint</span><span class="o">=</span><span class="n">datapoint</span><span class="p">,</span> <span class="c1"># (1)!</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        <span class="n">truth</span><span class="o">=</span><span class="n">datapoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="c1"># (2)!</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        <span class="n">context</span><span class="o">=</span><span class="n">prompt</span> <span class="c1"># (3)!</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    <span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">DATAPOINTS</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_sign_diffusion.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_duck.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_duck.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_flower.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_flower.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_store_front.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_store_front.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_hand.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_hand.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_traffic_lights.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_traffic_lights.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_plane.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_plane.jpg"</span><span class="p">],</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">]</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">PROMPTS</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="s2">"A sign that says 'Diffusion'."</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="s2">"A psychedelic duck with glasses"</span><span class="p">,</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="s2">"A small blue book sitting on a large red book."</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="s2">"A yellow flower sticking out of a bright green pot."</span><span class="p">,</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="s2">"A store front with 'hello world' written on it."</span><span class="p">,</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="s2">"A yellow hand on a black stone."</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="s2">"A green, yellow and red traffic light."</span><span class="p">,</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="s2">"A plane flying over a person."</span><span class="p">,</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="p">]</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="k">for</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">datapoint</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">PROMPTS</span><span class="p">,</span> <span class="n">DATAPOINTS</span><span class="p">):</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="n">audience</span><span class="o">.</span><span class="n">add_compare_example</span><span class="p">(</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="n">datapoint</span><span class="o">=</span><span class="n">datapoint</span><span class="p">,</span> <span class="c1"># (1)!</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>        <span class="n">truth</span><span class="o">=</span><span class="n">datapoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="c1"># (2)!</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>        <span class="n">context</span><span class="o">=</span><span class="n">prompt</span> <span class="c1"># (3)!</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    <span class="p">)</span>
 </span></code></pre></div>
 <ol>
 <li>The items to compare — a list of URLs, local paths, or text strings.</li>
@@ -1963,7 +2015,7 @@
 labelers against them. Recruiting starts only when you call this — until then,
 the audience stays in its <code>Created</code> state and recruits nobody, so a mid-upload
 failure never leaves you with a partially configured, live audience.</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span>
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Recruiting is explicit</p>
@@ -1973,21 +2025,21 @@ reviewed. Calling it more than once on the same audience is a no-op.</p>
 </div>
 <h3 id="step-4-create-and-assign-a-job">Step 4: Create and Assign a Job<a class="headerlink" href="#step-4-create-and-assign-a-job" title="Permanent link">#</a></h3>
 <p>Once recruiting has started, create a job definition and assign it to the audience:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment Job"</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>         <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">]</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="p">],</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">)</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment Job"</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>         <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">]</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="p">],</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="cost-warnings-and-jobs-under-review">Cost warnings and jobs under review<a class="headerlink" href="#cost-warnings-and-jobs-under-review" title="Permanent link">#</a></h3>
 <p><code>assign_job</code> never blocks on funds: the job is always created. If its estimated cost
@@ -2001,58 +2053,58 @@ informative error naming the state (and the review reason, when available) inste
 blocking indefinitely — top up or wait for a reviewer, then call it again.</p>
 <h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">#</a></h2>
 <p>Here's the full workflow — creating a custom audience, adding qualification examples, and running a labeling job:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Custom Prompt Alignment Audience"</span><span class="p">)</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">DATAPOINTS</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_sign_diffusion.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_duck.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_duck.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_flower.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_flower.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_store_front.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_store_front.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_hand.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_hand.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_traffic_lights.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_traffic_lights.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_plane.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_plane.jpg"</span><span class="p">],</span>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">]</span>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="n">PROMPTS</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="s2">"A sign that says 'Diffusion'."</span><span class="p">,</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="s2">"A psychedelic duck with glasses"</span><span class="p">,</span>
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="s2">"A small blue book sitting on a large red book."</span><span class="p">,</span>
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="s2">"A yellow flower sticking out of a bright green pot."</span><span class="p">,</span>
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="s2">"A store front with 'hello world' written on it."</span><span class="p">,</span>
-</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="s2">"A yellow hand on a black stone."</span><span class="p">,</span>
-</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>    <span class="s2">"A green, yellow and red traffic light."</span><span class="p">,</span>
-</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="s2">"A plane flying over a person."</span><span class="p">,</span>
-</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="p">]</span>
-</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
-</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="k">for</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">datapoint</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">PROMPTS</span><span class="p">,</span> <span class="n">DATAPOINTS</span><span class="p">):</span>
-</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    <span class="n">audience</span><span class="o">.</span><span class="n">add_compare_example</span><span class="p">(</span>
-</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
-</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>        <span class="n">datapoint</span><span class="o">=</span><span class="n">datapoint</span><span class="p">,</span>
-</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>        <span class="n">truth</span><span class="o">=</span><span class="n">datapoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>        <span class="n">context</span><span class="o">=</span><span class="n">prompt</span>
-</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>    <span class="p">)</span>
-</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>
-</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span> <span class="c1"># (1)!</span>
-</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>
-</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment Job"</span><span class="p">,</span>
-</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
-</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span>
-</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>         <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">]</span>
-</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>    <span class="p">],</span>
-</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
-</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="p">)</span>
-</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>
-</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Custom Prompt Alignment Audience"</span><span class="p">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">DATAPOINTS</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_sign_diffusion.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_duck.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_duck.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_flower.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_flower.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_store_front.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_store_front.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_hand.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_hand.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_traffic_lights.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_traffic_lights.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_plane.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/mj_plane.jpg"</span><span class="p">],</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">]</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="n">PROMPTS</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="s2">"A sign that says 'Diffusion'."</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="s2">"A psychedelic duck with glasses"</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="s2">"A small blue book sitting on a large red book."</span><span class="p">,</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    <span class="s2">"A yellow flower sticking out of a bright green pot."</span><span class="p">,</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    <span class="s2">"A store front with 'hello world' written on it."</span><span class="p">,</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    <span class="s2">"A yellow hand on a black stone."</span><span class="p">,</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    <span class="s2">"A green, yellow and red traffic light."</span><span class="p">,</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    <span class="s2">"A plane flying over a person."</span><span class="p">,</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="p">]</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="k">for</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">datapoint</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">PROMPTS</span><span class="p">,</span> <span class="n">DATAPOINTS</span><span class="p">):</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    <span class="n">audience</span><span class="o">.</span><span class="n">add_compare_example</span><span class="p">(</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>        <span class="n">datapoint</span><span class="o">=</span><span class="n">datapoint</span><span class="p">,</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>        <span class="n">truth</span><span class="o">=</span><span class="n">datapoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>        <span class="n">context</span><span class="o">=</span><span class="n">prompt</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>    <span class="p">)</span>
+</span><span id="__span-5-35"><a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+</span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span> <span class="c1"># (1)!</span>
+</span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>
+</span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment Job"</span><span class="p">,</span>
+</span><span id="__span-5-40"><a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
+</span><span id="__span-5-41"><a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-5-42"><a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_book.jpg"</span><span class="p">,</span>
+</span><span id="__span-5-43"><a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>         <span class="s2">"https://assets.rapidata.ai/mj_book.jpg"</span><span class="p">]</span>
+</span><span id="__span-5-44"><a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>    <span class="p">],</span>
+</span><span id="__span-5-45"><a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
+</span><span id="__span-5-46"><a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="p">)</span>
+</span><span id="__span-5-47"><a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>
+</span><span id="__span-5-48"><a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-5-49"><a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+</span><span id="__span-5-50"><a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-5-51"><a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-5-52"><a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </span></code></pre></div>
 <ol>
 <li>Recruiting is explicit: call <code>start_recruiting()</code> once all qualification examples are added and reviewed, before assigning a job.</li>
@@ -2063,22 +2115,22 @@ your job uses <code>settings</code> to change how the task is rendered (e.g.
 <code>NoShuffleSetting</code> to keep answer options in order, <code>AllowNeitherBothSetting</code>
 to add an "Unsure" button), pass the same settings to the example so the
 labeler qualifies on the exact UI they will later see.</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoShuffleSetting</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">audience</span><span class="o">.</span><span class="n">add_classification_example</span><span class="p">(</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"How well does the image match the description?"</span><span class="p">,</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="s2">"1: Not at all"</span><span class="p">,</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="s2">"2: A little"</span><span class="p">,</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="s2">"3: Moderately"</span><span class="p">,</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="s2">"4: Very well"</span><span class="p">,</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="s2">"5: Perfectly"</span><span class="p">,</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="p">],</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">datapoint</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/email-4o.png"</span><span class="p">,</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">truth</span><span class="o">=</span><span class="p">[</span><span class="s2">"5: Perfectly"</span><span class="p">,</span> <span class="s2">"4: Very well"</span><span class="p">],</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">context</span><span class="o">=</span><span class="s2">"A laptop screen with clearly readable text, addressed to the marketing team."</span><span class="p">,</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">NoShuffleSetting</span><span class="p">()],</span> <span class="c1"># (1)!</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoShuffleSetting</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">audience</span><span class="o">.</span><span class="n">add_classification_example</span><span class="p">(</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"How well does the image match the description?"</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="s2">"1: Not at all"</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="s2">"2: A little"</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="s2">"3: Moderately"</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="s2">"4: Very well"</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="s2">"5: Perfectly"</span><span class="p">,</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="p">],</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">datapoint</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/email-4o.png"</span><span class="p">,</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">truth</span><span class="o">=</span><span class="p">[</span><span class="s2">"5: Perfectly"</span><span class="p">,</span> <span class="s2">"4: Very well"</span><span class="p">],</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">context</span><span class="o">=</span><span class="s2">"A laptop screen with clearly readable text, addressed to the marketing team."</span><span class="p">,</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">settings</span><span class="o">=</span><span class="p">[</span><span class="n">NoShuffleSetting</span><span class="p">()],</span> <span class="c1"># (1)!</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="p">)</span>
 </span></code></pre></div>
 <ol>
 <li>Applies the setting as a feature flag on this single example. Use the same
@@ -2089,10 +2141,10 @@ labeler qualifies on the exact UI they will later see.</p>
 </ol>
 <h2 id="reusing-audiences">Reusing Audiences<a class="headerlink" href="#reusing-audiences" title="Permanent link">#</a></h2>
 <p>Once created, you can reuse your audience for multiple jobs:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">audiences</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">find_audiences</span><span class="p">(</span><span class="s2">"Custom Prompt Alignment Audience"</span><span class="p">)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">new_job_definition</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">audiences</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">find_audiences</span><span class="p">(</span><span class="s2">"Custom Prompt Alignment Audience"</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">new_job_definition</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="filtered-audiences">Filtered Audiences<a class="headerlink" href="#filtered-audiences" title="Permanent link">#</a></h2>
 <p>A filtered audience is a lightweight subset of an existing audience's
@@ -2106,16 +2158,16 @@ trained.</p>
 filters. The call returns a <code>RapidataFilteredAudience</code> — a slim handle
 that reuses the base audience's qualified pool. Multiple filters in the
 list are combined with logical AND.</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">LanguageFilter</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">base</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">us_english_speakers</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"en"</span><span class="p">]),</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">])</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">job</span> <span class="o">=</span> <span class="n">us_english_speakers</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">new_job_definition</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">LanguageFilter</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">base</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">us_english_speakers</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"en"</span><span class="p">]),</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">])</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">job</span> <span class="o">=</span> <span class="n">us_english_speakers</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">new_job_definition</span><span class="p">)</span>
 </span></code></pre></div>
 <p>The returned object is a <code>RapidataFilteredAudience</code> — a slim variant that
 exposes only the operations that make sense for a filtered view
@@ -2160,28 +2212,28 @@ a way that's better expressed as a single combined filter on the base.</p>
 <p>The list form combines filters with logical AND. For anything richer,
 build a single top-level filter explicitly with <code>AndFilter</code> / <code>OrFilter</code> /
 <code>NotFilter</code>, or use the equivalent <code>&amp;</code> / <code>|</code> / <code>~</code> operators:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">LanguageFilter</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># "US or Canadian labelers, but not French speakers"</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">audience_slice</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="p">(</span><span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">])</span> <span class="o">|</span> <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"CA"</span><span class="p">]))</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="o">&amp;</span> <span class="o">~</span><span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"fr"</span><span class="p">]),</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">])</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountryFilter</span><span class="p">,</span> <span class="n">LanguageFilter</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># "US or Canadian labelers, but not French speakers"</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">audience_slice</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="p">(</span><span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">])</span> <span class="o">|</span> <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"CA"</span><span class="p">]))</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="o">&amp;</span> <span class="o">~</span><span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"fr"</span><span class="p">]),</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">])</span>
 </span></code></pre></div>
 <h3 id="using-a-filtered-audience-with-a-leaderboard">Using a filtered audience with a leaderboard<a class="headerlink" href="#using-a-filtered-audience-with-a-leaderboard" title="Permanent link">#</a></h3>
 <p><code>RapidataFilteredAudience</code> is a valid <code>audience_id</code> anywhere a regular
 audience id is accepted, including <a href="../mri/"><code>benchmark.create_leaderboard</code></a>.
 Pass the object directly — no need to read <code>.id</code> yourself:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">us_english</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"en"</span><span class="p">]),</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">])</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Realism (US, English)"</span><span class="p">,</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is more realistic?"</span><span class="p">,</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">audience_id</span><span class="o">=</span><span class="n">us_english</span><span class="p">,</span> <span class="c1"># (1)!</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">us_english</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">CountryFilter</span><span class="p">([</span><span class="s2">"US"</span><span class="p">]),</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">LanguageFilter</span><span class="p">([</span><span class="s2">"en"</span><span class="p">]),</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">])</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">create_leaderboard</span><span class="p">(</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Realism (US, English)"</span><span class="p">,</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image is more realistic?"</span><span class="p">,</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">audience_id</span><span class="o">=</span><span class="n">us_english</span><span class="p">,</span> <span class="c1"># (1)!</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">)</span>
 </span></code></pre></div>
 <ol>
 <li>Accepts an id string, a <code>RapidataAudience</code>, or a <code>RapidataFilteredAudience</code>. Defaults to the global audience when omitted.</li>

@@ -1429,6 +1429,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#rapidata.rapidata_client.audience.recruiting.audience_will_never_produce_responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        audience_will_never_produce_responses
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1599,6 +1610,83 @@ graduated annotator who goes quiet moves out of <code>graduated</code> and into 
 
 </div>
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="rapidata.rapidata_client.audience.recruiting.audience_will_never_produce_responses" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">audience_will_never_produce_responses</span>
+
+
+<a href="#rapidata.rapidata_client.audience.recruiting.audience_will_never_produce_responses" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">audience_will_never_produce_responses</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">status</span><span class="p">:</span> <span class="n"><span title="rapidata.api_client.models.audience_status.AudienceStatus">AudienceStatus</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">metrics</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="RecruitingMetrics
+
+
+  
+      dataclass
+   (rapidata.rapidata_client.audience.recruiting.RecruitingMetrics)" href="#rapidata.rapidata_client.audience.recruiting.RecruitingMetrics">RecruitingMetrics</a></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="bool">bool</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Whether an audience can never answer a job assigned to it without the caller acting.</p>
+<p>A job only draws responses from graduated annotators, so this is <code>True</code> only when
+nobody has graduated <em>and</em> nobody ever will on the audience's own: recruiting was
+never started, or the audience is marked ready yet its pool is empty. An audience
+that is still recruiting (someone distilling, or status still Pending/Recruiting) is
+filling up — waiting, not stuck — and a curated audience (no funnel of its own,
+<code>metrics is None</code>) draws on its own ready pool, so neither returns <code>True</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/rapidata/rapidata_client/audience/recruiting.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span>
+<span class="normal"><a href="#__codelineno-0-78">78</a></span>
+<span class="normal"><a href="#__codelineno-0-79">79</a></span>
+<span class="normal"><a href="#__codelineno-0-80">80</a></span>
+<span class="normal"><a href="#__codelineno-0-81">81</a></span>
+<span class="normal"><a href="#__codelineno-0-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="k">def</span><span class="w"> </span><span class="nf">audience_will_never_produce_responses</span><span class="p">(</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">AudienceStatus</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">RecruitingMetrics</span> <span class="o">|</span> <span class="kc">None</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="w">    </span><span class="sd">"""Whether an audience can never answer a job assigned to it without the caller acting.</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    A job only draws responses from graduated annotators, so this is ``True`` only when</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">    nobody has graduated *and* nobody ever will on the audience's own: recruiting was</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    never started, or the audience is marked ready yet its pool is empty. An audience</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    that is still recruiting (someone distilling, or status still Pending/Recruiting) is</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">    filling up — waiting, not stuck — and a curated audience (no funnel of its own,</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">    ``metrics is None``) draws on its own ready pool, so neither returns ``True``.</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    """</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.audience_status</span><span class="w"> </span><span class="kn">import</span> <span class="n">AudienceStatus</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="k">if</span> <span class="n">metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">graduated</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">metrics</span><span class="o">.</span><span class="n">distilling</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="k">return</span> <span class="kc">False</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">AudienceStatus</span><span class="o">.</span><span class="n">CREATED</span><span class="p">:</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a>    <span class="c1"># Marked ready but the funnel confirms nobody graduated or is distilling.</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="k">return</span> <span class="n">status</span> <span class="o">==</span> <span class="n">AudienceStatus</span><span class="o">.</span><span class="n">READY</span> <span class="ow">and</span> <span class="n">metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

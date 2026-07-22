@@ -942,6 +942,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#too-many-open-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Too many open files
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1652,6 +1663,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#too-many-open-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Too many open files
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1857,8 +1879,8 @@
 <tr>
 <td><code>cacheShards</code></td>
 <td><code>int</code></td>
-<td><code>128</code></td>
-<td>Number of cache shards for parallel access (immutable)</td>
+<td><code>32</code></td>
+<td>Number of disk-cache shards for concurrent access (immutable). Each shard holds open file handles — see <a href="#too-many-open-files">Too many open files</a></td>
 </tr>
 <tr>
 <td><code>batchSize</code></td>
@@ -1878,6 +1900,12 @@
 <td><code>None</code></td>
 <td>Per-upload image-compression settings; see <a href="#compression-override">Compression override</a> below.</td>
 </tr>
+<tr>
+<td><code>checkForExplicitContent</code></td>
+<td><code>bool \| None</code></td>
+<td><code>None</code></td>
+<td>Opt in/out of the server-side explicit-content check on job assignment. <code>None</code> uses the account default; <code>True</code> forces it on; <code>False</code> requests skipping it (honored only if the account is permitted, otherwise the check still runs and a warning is logged).</td>
+</tr>
 </tbody>
 </table>
 <h4 id="compression-override">Compression override<a class="headerlink" href="#compression-override" title="Permanent link">#</a></h4>
@@ -1892,6 +1920,27 @@
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
 </span></code></pre></div>
 <p>Any field left as <code>None</code> falls back to the server-side default. Currently applies to single-asset uploads (<code>/asset/file</code> and <code>/asset/url</code>); batched URL uploads will pick the override up in a follow-up after the OpenAPI client regenerates.</p>
+<h4 id="too-many-open-files">Too many open files<a class="headerlink" href="#too-many-open-files" title="Permanent link">#</a></h4>
+<p>Uploading local files opens file descriptors — for the on-disk upload cache (one set of handles per <code>cacheShards</code>), the worker pool (<code>maxWorkers</code>), and the HTTP connections. On systems with a low <code>ulimit -n</code> (1024 is common), a large or highly concurrent upload can exhaust the limit and fail with <code>OSError: [Errno 24] Too many open files</code>.</p>
+<p>Ways to resolve it:</p>
+<ul>
+<li><strong>Raise the OS limit</strong> (per shell): <code>ulimit -n 8192</code>.</li>
+<li>
+<p><strong>Lower the SDK's footprint</strong> — reduce the cache shards and/or the worker pool:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RAPIDATA_cacheShards</span><span class="o">=</span><span class="m">16</span><span class="w">   </span><span class="c1"># fewer cache shards = fewer open handles</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RAPIDATA_maxWorkers</span><span class="o">=</span><span class="m">10</span><span class="w">    </span><span class="c1"># fewer concurrent uploads</span>
+</span></code></pre></div>
+<p><code>cacheShards</code> is immutable at runtime, so set it via the environment variable (or a <code>.env</code> file); <code>maxWorkers</code> can also be set in code (<code>rapidata_config.upload.maxWorkers = 10</code>).</p>
+</li>
+<li>
+<p><strong>Turn the disk cache off entirely</strong> — the simplest fix if descriptors are still tight. <code>cacheToDisk=False</code> switches file uploads to an in-memory cache, which opens <strong>no</strong> cache file descriptors at all:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidata_config</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">rapidata_config</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">cacheToDisk</span> <span class="o">=</span> <span class="kc">False</span>   <span class="c1"># or RAPIDATA_cacheToDisk=false</span>
+</span></code></pre></div>
+<p>The tradeoff is only mild: the upload cache no longer persists across runs, so re-running the same upload re-uploads files it would otherwise have skipped (dedup within a single run still works). For a one-off large or highly concurrent submission this is usually the easiest way out.</p>
+</li>
+</ul>
+<p>The default <code>cacheShards</code> of 32 keeps a single upload well under a 1024 limit; lower it further, or turn off <code>cacheToDisk</code>, only if you run many upload processes concurrently against the same limit.</p>
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">#</a></h2>
 <p>Every configuration field can also be set through an environment variable prefixed with <code>RAPIDATA_</code> followed by the field name (e.g. <code>RAPIDATA_maxWorkers</code>). This is useful for CI/CD pipelines, containers, or any context where you want to configure the SDK without changing code.</p>
 <p>Environment variables are applied at initialization and act as defaults — values passed explicitly in code always take precedence.</p>
@@ -1938,31 +1987,31 @@
 </ol>
 <p>Empty strings are treated as unset, so <code>RAPIDATA_CLIENT_ID=""</code> falls through to the next layer instead of attempting to authenticate with an empty value.</p>
 <h3 id="example-env-file">Example <code>.env</code> file<a class="headerlink" href="#example-env-file" title="Permanent link">#</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># --- Upload ---</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">RAPIDATA_maxWorkers</span><span class="o">=</span><span class="m">25</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">RAPIDATA_maxRetries</span><span class="o">=</span><span class="m">3</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">RAPIDATA_cacheToDisk</span><span class="o">=</span><span class="nb">true</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">RAPIDATA_cacheTimeout</span><span class="o">=</span><span class="m">1</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">RAPIDATA_cacheLocation</span><span class="o">=</span>~/.cache/rapidata/upload_cache
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">RAPIDATA_cacheShards</span><span class="o">=</span><span class="m">128</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">RAPIDATA_batchSize</span><span class="o">=</span><span class="m">1000</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">RAPIDATA_batchPollInterval</span><span class="o">=</span><span class="m">0</span>.5
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># --- Logging ---</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">RAPIDATA_level</span><span class="o">=</span>WARNING
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">RAPIDATA_log_file</span><span class="o">=</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">RAPIDATA_format</span><span class="o">=</span>%<span class="o">(</span>asctime<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>name<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>levelname<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>message<span class="o">)</span>s
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">RAPIDATA_silent_mode</span><span class="o">=</span><span class="nb">false</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nv">RAPIDATA_enable_otlp</span><span class="o">=</span><span class="nb">true</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># --- Upload ---</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">RAPIDATA_maxWorkers</span><span class="o">=</span><span class="m">25</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">RAPIDATA_maxRetries</span><span class="o">=</span><span class="m">3</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">RAPIDATA_cacheToDisk</span><span class="o">=</span><span class="nb">true</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">RAPIDATA_cacheTimeout</span><span class="o">=</span><span class="m">1</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">RAPIDATA_cacheLocation</span><span class="o">=</span>~/.cache/rapidata/upload_cache
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">RAPIDATA_cacheShards</span><span class="o">=</span><span class="m">32</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">RAPIDATA_batchSize</span><span class="o">=</span><span class="m">1000</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">RAPIDATA_batchPollInterval</span><span class="o">=</span><span class="m">0</span>.5
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># --- Logging ---</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nv">RAPIDATA_level</span><span class="o">=</span>WARNING
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nv">RAPIDATA_log_file</span><span class="o">=</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">RAPIDATA_format</span><span class="o">=</span>%<span class="o">(</span>asctime<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>name<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>levelname<span class="o">)</span>s<span class="w"> </span>-<span class="w"> </span>%<span class="o">(</span>message<span class="o">)</span>s
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nv">RAPIDATA_silent_mode</span><span class="o">=</span><span class="nb">false</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nv">RAPIDATA_enable_otlp</span><span class="o">=</span><span class="nb">true</span>
 </span></code></pre></div>
 <h3 id="boolean-values">Boolean values<a class="headerlink" href="#boolean-values" title="Permanent link">#</a></h3>
 <p>Boolean environment variables accept <code>1</code>, <code>true</code>, or <code>yes</code> (case-insensitive) as truthy. Everything else is treated as <code>false</code>.</p>
 <h3 id="loading-a-env-file">Loading a <code>.env</code> file<a class="headerlink" href="#loading-a-env-file" title="Permanent link">#</a></h3>
 <p>The SDK does not load <code>.env</code> files automatically. Use a library like <a href="https://pypi.org/project/python-dotenv/"><code>python-dotenv</code></a> to load them before importing the SDK:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># reads .env into os.environ</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># reads .env into os.environ</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
 </span></code></pre></div>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
