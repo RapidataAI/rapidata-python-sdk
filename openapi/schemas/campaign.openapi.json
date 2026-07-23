@@ -250,6 +250,7 @@
           "Campaign"
         ],
         "summary": "Retrieves the details of a specific campaign.",
+        "description": "The response is discriminated by campaign kind: a program campaign includes its stream\n program, a routed campaign includes its selections.",
         "parameters": [
           {
             "name": "campaignId",
@@ -267,7 +268,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCampaignByIdEndpoint_Output"
+                  "$ref": "#/components/schemas/ICampaignDetails"
                 }
               }
             }
@@ -2022,133 +2023,6 @@
           }
         }
       },
-      "GetCampaignByIdEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "status",
-          "priority",
-          "boostingProfile",
-          "boostingControlMode",
-          "hasBooster",
-          "boostLevel",
-          "stickyConfig",
-          "filters",
-          "selections",
-          "featureFlags",
-          "ownerMail",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the campaign."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the campaign."
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CampaignStatus"
-              }
-            ],
-            "description": "The current status of the campaign."
-          },
-          "priority": {
-            "type": "integer",
-            "description": "The priority level of the campaign.",
-            "format": "int32"
-          },
-          "boostingProfile": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BoostingProfile"
-              }
-            ],
-            "description": "The boosting profile configuration."
-          },
-          "boostingControlMode": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BoostingControlMode"
-              }
-            ],
-            "description": "The boosting control mode."
-          },
-          "hasBooster": {
-            "type": "boolean",
-            "description": "Whether the campaign has a booster."
-          },
-          "boostLevel": {
-            "type": "integer",
-            "description": "The campaign's effective boost level (0-10). 0 when no boost is active.\n Lets clients render and edit the level without unpacking the boosting profile.",
-            "format": "int32"
-          },
-          "requiresBooster": {
-            "type": "boolean",
-            "description": "Whether the campaign requires a booster.",
-            "deprecated": true
-          },
-          "stickyConfig": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StickyConfig"
-              }
-            ],
-            "description": "The sticky behavior configuration."
-          },
-          "filters": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ICampaignFilter"
-                }
-              }
-            ],
-            "description": "The targeting filters for this campaign."
-          },
-          "selections": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ICampaignSelection"
-                }
-              }
-            ],
-            "description": "The rapid selections for this campaign."
-          },
-          "featureFlags": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/FeatureFlag"
-                }
-              }
-            ],
-            "description": "The feature flags configured for this campaign."
-          },
-          "ownerMail": {
-            "type": "string",
-            "description": "The email of the campaign owner."
-          },
-          "organizationId": {
-            "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "The timestamp when the campaign was created.",
-            "format": "date-time"
-          }
-        }
-      },
       "GetCampaignCacheEndpoint_CampaignEntry": {
         "required": [
           "id",
@@ -2275,6 +2149,319 @@
             "description": "The cached dimension-to-score mappings."
           }
         }
+      },
+      "ICampaignDetails": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ICampaignDetailsProgramCampaignDetails"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignDetailsRoutedCampaignDetails"
+          }
+        ],
+        "description": "A campaign's details, identified by a discriminator. Implementations describe the\n type-specific configuration: a routed campaign's selections or a program campaign's\n stream program.",
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ProgramCampaign": "#/components/schemas/ICampaignDetailsProgramCampaignDetails",
+            "RoutedCampaign": "#/components/schemas/ICampaignDetailsRoutedCampaignDetails"
+          }
+        }
+      },
+      "ICampaignDetailsProgramCampaignDetails": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "priority",
+          "boostingProfile",
+          "boostingControlMode",
+          "hasBooster",
+          "boostLevel",
+          "stickyConfig",
+          "filters",
+          "featureFlags",
+          "ownerMail",
+          "createdAt",
+          "version",
+          "rootNodeId",
+          "nodes",
+          "maxRapids",
+          "maxDurationSeconds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProgramCampaign"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the campaign."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CampaignStatus"
+              }
+            ],
+            "description": "The current status of the campaign."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority level of the campaign.",
+            "format": "int32"
+          },
+          "boostingProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingProfile"
+              }
+            ],
+            "description": "The boosting profile configuration."
+          },
+          "boostingControlMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingControlMode"
+              }
+            ],
+            "description": "The boosting control mode."
+          },
+          "hasBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign has a booster."
+          },
+          "boostLevel": {
+            "type": "integer",
+            "description": "The campaign's effective boost level (0-10). 0 when no boost is active.\n Lets clients render and edit the level without unpacking the boosting profile.",
+            "format": "int32"
+          },
+          "requiresBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign requires a booster.",
+            "deprecated": true
+          },
+          "stickyConfig": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StickyConfig"
+              }
+            ],
+            "description": "The sticky behavior configuration."
+          },
+          "filters": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignFilter"
+                }
+              }
+            ],
+            "description": "The targeting filters for this campaign."
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The feature flags configured for this campaign."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the campaign owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the campaign.",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the campaign was created.",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "description": "The program's current version, for optimistic concurrency on save.",
+            "format": "int32"
+          },
+          "rootNodeId": {
+            "type": "string",
+            "description": "The node the program's evaluation enters at."
+          },
+          "nodes": {
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/IProgramNode"
+                }
+              }
+            ],
+            "description": "The program's decision graph, keyed by node id."
+          },
+          "maxRapids": {
+            "type": "integer",
+            "description": "The session ends after this many counted responses.",
+            "format": "int32"
+          },
+          "maxDurationSeconds": {
+            "type": "integer",
+            "description": "The session ends after this many seconds.",
+            "format": "int32"
+          }
+        },
+        "description": "A program campaign: its sessions stream their rapids, driven by a stream program."
+      },
+      "ICampaignDetailsRoutedCampaignDetails": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "priority",
+          "boostingProfile",
+          "boostingControlMode",
+          "hasBooster",
+          "boostLevel",
+          "stickyConfig",
+          "filters",
+          "selections",
+          "featureFlags",
+          "ownerMail",
+          "createdAt",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RoutedCampaign"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the campaign."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CampaignStatus"
+              }
+            ],
+            "description": "The current status of the campaign."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority level of the campaign.",
+            "format": "int32"
+          },
+          "boostingProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingProfile"
+              }
+            ],
+            "description": "The boosting profile configuration."
+          },
+          "boostingControlMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingControlMode"
+              }
+            ],
+            "description": "The boosting control mode."
+          },
+          "hasBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign has a booster."
+          },
+          "boostLevel": {
+            "type": "integer",
+            "description": "The campaign's effective boost level (0-10). 0 when no boost is active.\n Lets clients render and edit the level without unpacking the boosting profile.",
+            "format": "int32"
+          },
+          "requiresBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign requires a booster.",
+            "deprecated": true
+          },
+          "stickyConfig": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StickyConfig"
+              }
+            ],
+            "description": "The sticky behavior configuration."
+          },
+          "filters": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignFilter"
+                }
+              }
+            ],
+            "description": "The targeting filters for this campaign."
+          },
+          "selections": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignSelection"
+                }
+              }
+            ],
+            "description": "The rapid selections for this campaign."
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The feature flags configured for this campaign."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the campaign owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the campaign.",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the campaign was created.",
+            "format": "date-time"
+          }
+        },
+        "description": "A routed campaign: its rapids are served from a fixed selection list."
       },
       "ICampaignFilter": {
         "required": [
