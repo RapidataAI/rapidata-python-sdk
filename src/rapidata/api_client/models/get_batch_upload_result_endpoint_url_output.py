@@ -30,11 +30,12 @@ class GetBatchUploadResultEndpointUrlOutput(LazyValidatedModel):
     """ # noqa: E501
     url: StrictStr
     file_name: Optional[StrictStr] = Field(default=None, alias="fileName")
+    warnings: Optional[List[StrictStr]] = None
     status: BatchUploadUrlStatus
     error_message: Optional[StrictStr] = Field(default=None, alias="errorMessage")
     stage: Optional[StrictStr] = None
     upstream_http_status: Optional[StrictInt] = Field(default=None, alias="upstreamHttpStatus")
-    __properties: ClassVar[List[str]] = ["url", "fileName", "status", "errorMessage", "stage", "upstreamHttpStatus"]
+    __properties: ClassVar[List[str]] = ["url", "fileName", "warnings", "status", "errorMessage", "stage", "upstreamHttpStatus"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -105,6 +106,7 @@ class GetBatchUploadResultEndpointUrlOutput(LazyValidatedModel):
         _data = {
             "url": obj.get("url"),
             "fileName": obj.get("fileName"),
+            "warnings": obj.get("warnings"),
             "status": obj.get("status"),
             "errorMessage": obj.get("errorMessage"),
             "stage": obj.get("stage"),
