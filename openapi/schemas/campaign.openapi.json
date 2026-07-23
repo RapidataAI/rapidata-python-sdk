@@ -3111,13 +3111,17 @@
           },
           {
             "$ref": "#/components/schemas/IProgramNodeCasesNode"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramNodeWeightedSplitNode"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
             "ActionNode": "#/components/schemas/IProgramNodeActionNode",
-            "CasesNode": "#/components/schemas/IProgramNodeCasesNode"
+            "CasesNode": "#/components/schemas/IProgramNodeCasesNode",
+            "WeightedSplitNode": "#/components/schemas/IProgramNodeWeightedSplitNode"
           }
         }
       },
@@ -3162,6 +3166,26 @@
           }
         }
       },
+      "IProgramNodeWeightedSplitNode": {
+        "required": [
+          "branches",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "WeightedSplitNode"
+            ],
+            "type": "string"
+          },
+          "branches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WeightedBranch"
+            }
+          }
+        }
+      },
       "IProgramPredicate": {
         "required": [
           "_t"
@@ -3169,17 +3193,67 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IProgramPredicateAccuracyPredicate"
+          },
+          {
             "$ref": "#/components/schemas/IProgramPredicateAnsweredCountPredicate"
           },
           {
+            "$ref": "#/components/schemas/IProgramPredicateConsecutiveCorrectPredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateConsecutiveIncorrectPredicate"
+          },
+          {
             "$ref": "#/components/schemas/IProgramPredicateCorrectCountPredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateTimeElapsedPredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateUserAttributePredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateUserScorePredicate"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AccuracyPredicate": "#/components/schemas/IProgramPredicateAccuracyPredicate",
             "AnsweredCountPredicate": "#/components/schemas/IProgramPredicateAnsweredCountPredicate",
-            "CorrectCountPredicate": "#/components/schemas/IProgramPredicateCorrectCountPredicate"
+            "ConsecutiveCorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveCorrectPredicate",
+            "ConsecutiveIncorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveIncorrectPredicate",
+            "CorrectCountPredicate": "#/components/schemas/IProgramPredicateCorrectCountPredicate",
+            "TimeElapsedPredicate": "#/components/schemas/IProgramPredicateTimeElapsedPredicate",
+            "UserAttributePredicate": "#/components/schemas/IProgramPredicateUserAttributePredicate",
+            "UserScorePredicate": "#/components/schemas/IProgramPredicateUserScorePredicate"
+          }
+        }
+      },
+      "IProgramPredicateAccuracyPredicate": {
+        "required": [
+          "comparison",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AccuracyPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "minimumAnswered": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3193,6 +3267,50 @@
           "_t": {
             "enum": [
               "AnsweredCountPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateConsecutiveCorrectPredicate": {
+        "required": [
+          "comparison",
+          "value",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConsecutiveCorrectPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateConsecutiveIncorrectPredicate": {
+        "required": [
+          "comparison",
+          "value",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConsecutiveIncorrectPredicate"
             ],
             "type": "string"
           },
@@ -3224,6 +3342,73 @@
           "value": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateTimeElapsedPredicate": {
+        "required": [
+          "comparison",
+          "seconds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TimeElapsedPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "seconds": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateUserAttributePredicate": {
+        "required": [
+          "attribute",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserAttributePredicate"
+            ],
+            "type": "string"
+          },
+          "attribute": {
+            "$ref": "#/components/schemas/UserAttribute"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IProgramPredicateUserScorePredicate": {
+        "required": [
+          "comparison",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScorePredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -3667,6 +3852,12 @@
           }
         }
       },
+      "UserAttribute": {
+        "enum": [
+          "Country",
+          "Language"
+        ]
+      },
       "ValidationChance": {
         "required": [
           "userScoreThreshold",
@@ -3728,6 +3919,22 @@
                 "type": "string"
               }
             }
+          }
+        }
+      },
+      "WeightedBranch": {
+        "required": [
+          "weight",
+          "nodeId"
+        ],
+        "type": "object",
+        "properties": {
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nodeId": {
+            "type": "string"
           }
         }
       }

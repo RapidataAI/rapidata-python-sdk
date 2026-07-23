@@ -18,12 +18,13 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_program_node_action_node import IProgramNodeActionNode
 from rapidata.api_client.models.i_program_node_cases_node import IProgramNodeCasesNode
+from rapidata.api_client.models.i_program_node_weighted_split_node import IProgramNodeWeightedSplitNode
 from pydantic import StrictStr, Field
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IPROGRAMNODE_ONE_OF_SCHEMAS = ["IProgramNodeActionNode", "IProgramNodeCasesNode"]
+IPROGRAMNODE_ONE_OF_SCHEMAS = ["IProgramNodeActionNode", "IProgramNodeCasesNode", "IProgramNodeWeightedSplitNode"]
 
 class IProgramNode(LazyValidatedModel):
     """
@@ -33,8 +34,10 @@ class IProgramNode(LazyValidatedModel):
     oneof_schema_1_validator: Optional[IProgramNodeActionNode] = None
     # data type: IProgramNodeCasesNode
     oneof_schema_2_validator: Optional[IProgramNodeCasesNode] = None
-    actual_instance: Optional[Union[IProgramNodeActionNode, IProgramNodeCasesNode]] = None
-    one_of_schemas: Set[str] = { "IProgramNodeActionNode", "IProgramNodeCasesNode" }
+    # data type: IProgramNodeWeightedSplitNode
+    oneof_schema_3_validator: Optional[IProgramNodeWeightedSplitNode] = None
+    actual_instance: Optional[Union[IProgramNodeActionNode, IProgramNodeCasesNode, IProgramNodeWeightedSplitNode]] = None
+    one_of_schemas: Set[str] = { "IProgramNodeActionNode", "IProgramNodeCasesNode", "IProgramNodeWeightedSplitNode" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -67,12 +70,17 @@ class IProgramNode(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramNodeCasesNode`")
         else:
             match += 1
+        # validate data type: IProgramNodeWeightedSplitNode
+        if not isinstance(v, IProgramNodeWeightedSplitNode):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramNodeWeightedSplitNode`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode, IProgramNodeWeightedSplitNode. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode, IProgramNodeWeightedSplitNode. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -99,13 +107,19 @@ class IProgramNode(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IProgramNodeWeightedSplitNode
+        try:
+            instance.actual_instance = IProgramNodeWeightedSplitNode.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode, IProgramNodeWeightedSplitNode. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IProgramNode with oneOf schemas: IProgramNodeActionNode, IProgramNodeCasesNode, IProgramNodeWeightedSplitNode. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -119,7 +133,7 @@ class IProgramNode(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IProgramNodeActionNode, IProgramNodeCasesNode]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IProgramNodeActionNode, IProgramNodeCasesNode, IProgramNodeWeightedSplitNode]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
