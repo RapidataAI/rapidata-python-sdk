@@ -39,6 +39,10 @@ class BatchAssetUploader:
         self._interrupted = False
         self._processed_batches: set[str] = set()
 
+    def drain_warnings(self):
+        """Return backend warnings gathered from batch items and clear them."""
+        return self.asset_uploader.drain_warnings()
+
     def batch_upload_urls(
         self,
         urls: list[str],
@@ -66,6 +70,7 @@ class BatchAssetUploader:
         # Reset state from previous runs
         self._interrupted = False
         self._processed_batches = set()
+        self.asset_uploader.drain_warnings()
 
         # Generate a correlation ID for this upload session so we can poll
         # by correlation ID instead of passing all batch IDs as query params
@@ -298,6 +303,14 @@ class BatchAssetUploader:
 
             # Process each URL in the batch result
             for item in result.items:
+                # Per-item warnings (e.g. "video longer than 25 seconds") ride
+                # alongside an otherwise-successful upload. Read defensively:
+                # the field is only present once the asset service exposing it
+                # is deployed. See _record_warnings.
+                self.asset_uploader._record_warnings(
+                    item.url, getattr(item, "warnings", None)
+                )
+
                 if item.status == BatchUploadUrlStatus.COMPLETED:
                     # Cache successful upload using proper API
                     if item.file_name is not None:
