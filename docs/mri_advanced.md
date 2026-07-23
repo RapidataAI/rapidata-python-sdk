@@ -275,11 +275,14 @@ print(countries)
 `get_standings_breakdown` returns one row per `(segment, model)` — how each
 demographic segment of voters ranks the models, with that segment's vote count.
 Useful for spotting where a model is ranked differently by different groups. For
-the overall standings across all voters, use `get_overall_standings`.
+the overall standings across all voters, use `get_overall_standings`. The
+dimension is a `BenchmarkDemographicDimension`.
 
 ```python
+from rapidata import BenchmarkDemographicDimension
+
 breakdown = benchmark.get_standings_breakdown(
-    dimension="AgeBucket",  # AgeBucket | Gender | Occupation | Country | Language
+    dimension=BenchmarkDemographicDimension.AGEBUCKET,
 )
 # columns: segment, segment_votes, name, wins, total_matches, score
 ```
@@ -289,7 +292,7 @@ and `run_id` to narrow the votes considered:
 
 ```python
 breakdown = benchmark.get_standings_breakdown(
-    dimension="Country",
+    dimension=BenchmarkDemographicDimension.COUNTRY,
     tags=["landscape"],
 )
 ```

@@ -14,6 +14,9 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
 )
+from rapidata.api_client.models.benchmark_demographic_dimension import (
+    BenchmarkDemographicDimension,
+)
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -26,11 +29,6 @@ if TYPE_CHECKING:
     )
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
-
-# The demographic dimension to split standings by, as accepted by the
-# breakdown endpoint. Age, gender and occupation are estimated (inferred);
-# country and language are observed.
-BreakdownDimension = Literal["AgeBucket", "Gender", "Occupation", "Country", "Language"]
 
 
 class RapidataBenchmark:
@@ -881,7 +879,7 @@ class RapidataBenchmark:
 
     def get_standings_breakdown(
         self,
-        dimension: BreakdownDimension,
+        dimension: BenchmarkDemographicDimension,
         tags: Optional[list[str]] = None,
         leaderboard_ids: Optional[list[str]] = None,
         run_id: Optional[str] = None,
@@ -898,7 +896,7 @@ class RapidataBenchmark:
         self-declared; ``Country`` and ``Language`` are observed.
 
         Args:
-            dimension: The demographic dimension to split by. One of "AgeBucket", "Gender", "Occupation", "Country", "Language".
+            dimension: The :class:`BenchmarkDemographicDimension` to split by (``AgeBucket``, ``Gender``, ``Occupation``, ``Country`` or ``Language``).
             tags: Only count votes on matchups with these tags. If None, all matchups are considered.
             leaderboard_ids: Only count votes from these leaderboards. If None, all leaderboards are considered.
             run_id: Only count votes from this evaluation run. If None, all runs are considered.
@@ -906,19 +904,9 @@ class RapidataBenchmark:
         Returns:
             A pandas DataFrame with columns ``segment``, ``segment_votes``, ``name``, ``wins``, ``total_matches``, ``score``.
         """
-        from rapidata.api_client.models.benchmark_demographic_dimension import (
-            BenchmarkDemographicDimension,
-        )
-
         import pandas as pd
 
         with tracer.start_as_current_span("RapidataBenchmark.get_standings_breakdown"):
-            if dimension not in BreakdownDimension.__args__:
-                raise ValueError(
-                    "Dimension must be one of: "
-                    + ", ".join(BreakdownDimension.__args__)
-                )
-
             tags_filter, leaderboard_filter, run_filter = self.__demographic_filters(
                 tags, leaderboard_ids, run_id
             )
