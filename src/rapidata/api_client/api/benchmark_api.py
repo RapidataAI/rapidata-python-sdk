@@ -19,6 +19,7 @@ from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
+from rapidata.api_client.models.benchmark_demographic_dimension import BenchmarkDemographicDimension
 from rapidata.api_client.models.create_benchmark_endpoint_input import CreateBenchmarkEndpointInput
 from rapidata.api_client.models.create_benchmark_endpoint_output import CreateBenchmarkEndpointOutput
 from rapidata.api_client.models.create_benchmark_participant_endpoint_input import CreateBenchmarkParticipantEndpointInput
@@ -29,6 +30,8 @@ from rapidata.api_client.models.create_sample_generation_endpoint_input import C
 from rapidata.api_client.models.create_sample_generation_endpoint_output import CreateSampleGenerationEndpointOutput
 from rapidata.api_client.models.fork_benchmark_endpoint_output import ForkBenchmarkEndpointOutput
 from rapidata.api_client.models.get_benchmark_by_id_endpoint_output import GetBenchmarkByIdEndpointOutput
+from rapidata.api_client.models.get_benchmark_demographics_endpoint_output import GetBenchmarkDemographicsEndpointOutput
+from rapidata.api_client.models.get_benchmark_standings_breakdown_endpoint_output import GetBenchmarkStandingsBreakdownEndpointOutput
 from rapidata.api_client.models.get_prompts_by_benchmark_endpoint_paged_result_of_output import GetPromptsByBenchmarkEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_benchmarks_endpoint_paged_result_of_output import QueryBenchmarksEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_combined_matrix_by_benchmarks_endpoint_output import QueryCombinedMatrixByBenchmarksEndpointOutput
@@ -314,6 +317,601 @@ class BenchmarkApi:
         return self.api_client.param_serialize(
             method='DELETE',
             resource_path='/benchmark/{benchmarkId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_demographics_get(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetBenchmarkDemographicsEndpointOutput:
+        """Returns the share of a benchmark's votes falling in each demographic bucket.
+
+        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.
+
+        :param benchmark_id: The id of the benchmark. (required)
+        :type benchmark_id: str
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param leaderboard_id: Filter by leaderboard_id.
+        :type leaderboard_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_demographics_get_serialize(
+            benchmark_id=benchmark_id,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            leaderboard_id=leaderboard_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetBenchmarkDemographicsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_demographics_get_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetBenchmarkDemographicsEndpointOutput]:
+        """Returns the share of a benchmark's votes falling in each demographic bucket.
+
+        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.
+
+        :param benchmark_id: The id of the benchmark. (required)
+        :type benchmark_id: str
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param leaderboard_id: Filter by leaderboard_id.
+        :type leaderboard_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_demographics_get_serialize(
+            benchmark_id=benchmark_id,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            leaderboard_id=leaderboard_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetBenchmarkDemographicsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_demographics_get_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Returns the share of a benchmark's votes falling in each demographic bucket.
+
+        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.
+
+        :param benchmark_id: The id of the benchmark. (required)
+        :type benchmark_id: str
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param leaderboard_id: Filter by leaderboard_id.
+        :type leaderboard_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_demographics_get_serialize(
+            benchmark_id=benchmark_id,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            leaderboard_id=leaderboard_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetBenchmarkDemographicsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_demographics_get_serialize(
+        self,
+        benchmark_id,
+        country,
+        language,
+        gender,
+        age_bucket,
+        occupation,
+        tags,
+        participant_id,
+        leaderboard_id,
+        run_id,
+        prompt_identifier,
+        voted_at,
+        logic,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        if country is not None:
+            _param_val = country
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('country[' + _k + ']', _v))
+        if language is not None:
+            _param_val = language
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('language[' + _k + ']', _v))
+        if gender is not None:
+            _param_val = gender
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('gender[' + _k + ']', _v))
+        if age_bucket is not None:
+            _param_val = age_bucket
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('age_bucket[' + _k + ']', _v))
+        if occupation is not None:
+            _param_val = occupation
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('occupation[' + _k + ']', _v))
+        if tags is not None:
+            _param_val = tags
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('tags[' + _k + ']', _v))
+        if participant_id is not None:
+            _param_val = participant_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_id[' + _k + ']', _v))
+        if leaderboard_id is not None:
+            _param_val = leaderboard_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('leaderboard_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('leaderboard_id[' + _k + ']', _v))
+        if run_id is not None:
+            _param_val = run_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('run_id[' + _k + ']', _v))
+        if prompt_identifier is not None:
+            _param_val = prompt_identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('prompt_identifier[' + _k + ']', _v))
+        if voted_at is not None:
+            _param_val = voted_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('voted_at[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/benchmark/{benchmarkId}/demographics',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -4787,6 +5385,618 @@ class BenchmarkApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/benchmark/{benchmarkId}/sample-generation',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_standings_breakdown_get(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
+        dimension: Annotated[BenchmarkDemographicDimension, Field(description="The demographic dimension to split the standings by.")],
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetBenchmarkStandingsBreakdownEndpointOutput:
+        """Returns the standings over the whole filtered set alongside the standings recomputed for  each value of the chosen dimension.
+
+        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.
+
+        :param benchmark_id: The id of the benchmark. (required)
+        :type benchmark_id: str
+        :param dimension: The demographic dimension to split the standings by. (required)
+        :type dimension: BenchmarkDemographicDimension
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param leaderboard_id: Filter by leaderboard_id.
+        :type leaderboard_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_standings_breakdown_get_serialize(
+            benchmark_id=benchmark_id,
+            dimension=dimension,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            leaderboard_id=leaderboard_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetBenchmarkStandingsBreakdownEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_standings_breakdown_get_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
+        dimension: Annotated[BenchmarkDemographicDimension, Field(description="The demographic dimension to split the standings by.")],
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetBenchmarkStandingsBreakdownEndpointOutput]:
+        """Returns the standings over the whole filtered set alongside the standings recomputed for  each value of the chosen dimension.
+
+        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.
+
+        :param benchmark_id: The id of the benchmark. (required)
+        :type benchmark_id: str
+        :param dimension: The demographic dimension to split the standings by. (required)
+        :type dimension: BenchmarkDemographicDimension
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param leaderboard_id: Filter by leaderboard_id.
+        :type leaderboard_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_standings_breakdown_get_serialize(
+            benchmark_id=benchmark_id,
+            dimension=dimension,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            leaderboard_id=leaderboard_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetBenchmarkStandingsBreakdownEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_standings_breakdown_get_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
+        dimension: Annotated[BenchmarkDemographicDimension, Field(description="The demographic dimension to split the standings by.")],
+        country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
+        language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
+        gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
+        age_bucket: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by age_bucket.")] = None,
+        occupation: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by occupation.")] = None,
+        tags: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tags.")] = None,
+        participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
+        run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
+        prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
+        voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Returns the standings over the whole filtered set alongside the standings recomputed for  each value of the chosen dimension.
+
+        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.
+
+        :param benchmark_id: The id of the benchmark. (required)
+        :type benchmark_id: str
+        :param dimension: The demographic dimension to split the standings by. (required)
+        :type dimension: BenchmarkDemographicDimension
+        :param country: Filter by country.
+        :type country: AudienceAudienceIdJobsGetJobIdParameter
+        :param language: Filter by language.
+        :type language: AudienceAudienceIdJobsGetJobIdParameter
+        :param gender: Filter by gender.
+        :type gender: AudienceAudienceIdJobsGetJobIdParameter
+        :param age_bucket: Filter by age_bucket.
+        :type age_bucket: AudienceAudienceIdJobsGetJobIdParameter
+        :param occupation: Filter by occupation.
+        :type occupation: AudienceAudienceIdJobsGetJobIdParameter
+        :param tags: Filter by tags.
+        :type tags: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_id: Filter by participant_id.
+        :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param leaderboard_id: Filter by leaderboard_id.
+        :type leaderboard_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param run_id: Filter by run_id.
+        :type run_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param prompt_identifier: Filter by prompt_identifier.
+        :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
+        :param voted_at: Filter by voted_at.
+        :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
+        :type logic: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_standings_breakdown_get_serialize(
+            benchmark_id=benchmark_id,
+            dimension=dimension,
+            country=country,
+            language=language,
+            gender=gender,
+            age_bucket=age_bucket,
+            occupation=occupation,
+            tags=tags,
+            participant_id=participant_id,
+            leaderboard_id=leaderboard_id,
+            run_id=run_id,
+            prompt_identifier=prompt_identifier,
+            voted_at=voted_at,
+            logic=logic,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetBenchmarkStandingsBreakdownEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_standings_breakdown_get_serialize(
+        self,
+        benchmark_id,
+        dimension,
+        country,
+        language,
+        gender,
+        age_bucket,
+        occupation,
+        tags,
+        participant_id,
+        leaderboard_id,
+        run_id,
+        prompt_identifier,
+        voted_at,
+        logic,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        if dimension is not None:
+            
+            _query_params.append(('dimension', dimension.value))
+            
+        if country is not None:
+            _param_val = country
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('country[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('country[' + _k + ']', _v))
+        if language is not None:
+            _param_val = language
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('language[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('language[' + _k + ']', _v))
+        if gender is not None:
+            _param_val = gender
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('gender[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('gender[' + _k + ']', _v))
+        if age_bucket is not None:
+            _param_val = age_bucket
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('age_bucket[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('age_bucket[' + _k + ']', _v))
+        if occupation is not None:
+            _param_val = occupation
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('occupation[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('occupation[' + _k + ']', _v))
+        if tags is not None:
+            _param_val = tags
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('tags[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('tags[' + _k + ']', _v))
+        if participant_id is not None:
+            _param_val = participant_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_id[' + _k + ']', _v))
+        if leaderboard_id is not None:
+            _param_val = leaderboard_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('leaderboard_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('leaderboard_id[' + _k + ']', _v))
+        if run_id is not None:
+            _param_val = run_id
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('run_id[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('run_id[' + _k + ']', _v))
+        if prompt_identifier is not None:
+            _param_val = prompt_identifier
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('prompt_identifier[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('prompt_identifier[' + _k + ']', _v))
+        if voted_at is not None:
+            _param_val = voted_at
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('voted_at[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('voted_at[' + _k + ']', _v))
+        if logic is not None:
+            
+            _query_params.append(('logic', logic))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/benchmark/{benchmarkId}/standings/breakdown',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

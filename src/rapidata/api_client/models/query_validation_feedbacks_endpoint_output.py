@@ -18,7 +18,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,8 +32,9 @@ class QueryValidationFeedbacksEndpointOutput(LazyValidatedModel):
     user_id: StrictStr = Field(description="The ID of the user who submitted the feedback.", alias="userId")
     session_id: StrictStr = Field(description="The session ID of the user who submitted the feedback.", alias="sessionId")
     feedback: StrictStr = Field(description="The feedback text.")
+    english_feedback: Optional[StrictStr] = Field(default=None, description="The English translation of the feedback, or null when unavailable.", alias="englishFeedback")
     created_at: datetime = Field(description="The timestamp when the feedback was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "userId", "sessionId", "feedback", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "userId", "sessionId", "feedback", "englishFeedback", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -70,6 +71,11 @@ class QueryValidationFeedbacksEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if english_feedback (nullable) is None
+        # and model_fields_set contains the field
+        if self.english_feedback is None and "english_feedback" in self.model_fields_set:
+            _dict['englishFeedback'] = None
+
         return _dict
 
     @classmethod
@@ -86,6 +92,7 @@ class QueryValidationFeedbacksEndpointOutput(LazyValidatedModel):
             "userId": obj.get("userId"),
             "sessionId": obj.get("sessionId"),
             "feedback": obj.get("feedback"),
+            "englishFeedback": obj.get("englishFeedback"),
             "createdAt": obj.get("createdAt")
         }
         try:

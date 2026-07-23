@@ -8,6 +8,7 @@ from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.benchmark._detail_mapper import (
     DetailMapper,
     LevelOfDetail,
+    ResolvedLevelOfDetail,
 )
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
@@ -62,20 +63,44 @@ class RapidataLeaderboard:
         self.__leaderboard_page = f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.__benchmark_id}/leaderboard/{self.id}"
 
     @property
-    def level_of_detail(self) -> LevelOfDetail:
+    def response_budget(self) -> int:
         """
-        Returns the level of detail of the leaderboard.
+        The leaderboard's response budget — the total number of comparison responses
+        collected per model evaluation.
+
+        This is the raw number behind :attr:`level_of_detail`; read it when you need
+        the exact budget rather than the named level (which is ``"custom"`` for
+        budgets that don't match a named level).
+        """
+        return self.__response_budget
+
+    @property
+    def level_of_detail(self) -> ResolvedLevelOfDetail:
+        """
+        The level of detail of the leaderboard.
+
+        This is a friendly name for the leaderboard's :attr:`response_budget` — the
+        total number of comparison responses collected per model evaluation. A larger
+        budget buys more matchups and therefore more precise standings, at the cost
+        of a slower and more expensive evaluation. The named levels map to these
+        budgets: ``'debug'`` (20), ``'low'`` (2,000), ``'medium'`` (4,000),
+        ``'high'`` (8,000), ``'very high'`` (16,000). Any other budget reads back as
+        ``'custom'`` — use :attr:`response_budget` to get the exact number.
         """
         return DetailMapper.get_level_of_detail(self.__response_budget)
 
     @level_of_detail.setter
-    def level_of_detail(self, level_of_detail: LevelOfDetail):
+    def level_of_detail(self, level_of_detail: LevelOfDetail | int):
         """
-        Sets the level of detail of the leaderboard.
+        Sets the level of detail (response budget) of the leaderboard.
+
+        Accepts one of the named levels or a positive integer for a custom response
+        budget. Takes effect for future evaluations; already-computed standings are
+        not recomputed.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.level_of_detail.setter"):
             logger.debug(f"Setting level of detail to {level_of_detail}")
-            self.__response_budget = DetailMapper.get_budget(level_of_detail)
+            self.__response_budget = DetailMapper.resolve_budget(level_of_detail)
             self._update_config()
 
     @property
@@ -243,18 +268,28 @@ class RapidataLeaderboard:
         use_weighted_scoring: Optional[bool] = None,
     ) -> pd.DataFrame:
         """
-        Returns the win/loss matrix for all participants in this leaderboard.
+        Returns the pairwise win/loss matrix for the participants in this leaderboard.
 
-        The matrix shows pairwise comparison results where each cell [i, j] represents
-        the number of wins participant i has against participant j.
+        The returned DataFrame is square, with participant names on both the index
+        (rows) and columns. Cell ``[i, j]`` is how often participant ``i`` (row) beat
+        participant ``j`` (column) in their direct matchups. Read a row to see how a
+        model did against every opponent; the diagonal (a model against itself) is
+        always 0. This is the head-to-head breakdown behind :meth:`get_standings`,
+        which collapses the same matchups into a single Elo score per model.
 
         Args:
-            tags: Filter matchups by these tags. If None, all matchups are considered.
-            use_weighted_scoring: Whether to use weighted scoring for the matrix calculation.
+            tags: Only count matchups carrying one of these prompt tags. If None,
+                every matchup on the leaderboard is included; if an empty list, none are.
+            use_weighted_scoring: If True, each matchup is weighted by the responding
+                annotators' reliability (``userScore``) instead of being counted as a
+                plain win, so cells hold weighted sums (floats) rather than raw counts.
+                If False, cells are raw win counts. When None (default), the server
+                applies the leaderboard's configured default.
 
         Returns:
-            A pandas DataFrame with participants as both index and columns,
-            containing the pairwise win counts.
+            A pandas DataFrame indexed by participant name on both axes, where cell
+            ``[i, j]`` holds the (optionally weighted) number of wins of the row
+            participant over the column participant.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_win_loss_matrix"):
             tags_filter = AudienceAudienceIdJobsGetJobIdParameter()

@@ -16,25 +16,43 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.i_program_predicate_accuracy_predicate import IProgramPredicateAccuracyPredicate
 from rapidata.api_client.models.i_program_predicate_answered_count_predicate import IProgramPredicateAnsweredCountPredicate
+from rapidata.api_client.models.i_program_predicate_consecutive_correct_predicate import IProgramPredicateConsecutiveCorrectPredicate
+from rapidata.api_client.models.i_program_predicate_consecutive_incorrect_predicate import IProgramPredicateConsecutiveIncorrectPredicate
 from rapidata.api_client.models.i_program_predicate_correct_count_predicate import IProgramPredicateCorrectCountPredicate
+from rapidata.api_client.models.i_program_predicate_time_elapsed_predicate import IProgramPredicateTimeElapsedPredicate
+from rapidata.api_client.models.i_program_predicate_user_attribute_predicate import IProgramPredicateUserAttributePredicate
+from rapidata.api_client.models.i_program_predicate_user_score_predicate import IProgramPredicateUserScorePredicate
 from pydantic import StrictStr, Field
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IPROGRAMPREDICATE_ONE_OF_SCHEMAS = ["IProgramPredicateAnsweredCountPredicate", "IProgramPredicateCorrectCountPredicate"]
+IPROGRAMPREDICATE_ONE_OF_SCHEMAS = ["IProgramPredicateAccuracyPredicate", "IProgramPredicateAnsweredCountPredicate", "IProgramPredicateConsecutiveCorrectPredicate", "IProgramPredicateConsecutiveIncorrectPredicate", "IProgramPredicateCorrectCountPredicate", "IProgramPredicateTimeElapsedPredicate", "IProgramPredicateUserAttributePredicate", "IProgramPredicateUserScorePredicate"]
 
 class IProgramPredicate(LazyValidatedModel):
     """
     IProgramPredicate
     """
+    # data type: IProgramPredicateAccuracyPredicate
+    oneof_schema_1_validator: Optional[IProgramPredicateAccuracyPredicate] = None
     # data type: IProgramPredicateAnsweredCountPredicate
-    oneof_schema_1_validator: Optional[IProgramPredicateAnsweredCountPredicate] = None
+    oneof_schema_2_validator: Optional[IProgramPredicateAnsweredCountPredicate] = None
+    # data type: IProgramPredicateConsecutiveCorrectPredicate
+    oneof_schema_3_validator: Optional[IProgramPredicateConsecutiveCorrectPredicate] = None
+    # data type: IProgramPredicateConsecutiveIncorrectPredicate
+    oneof_schema_4_validator: Optional[IProgramPredicateConsecutiveIncorrectPredicate] = None
     # data type: IProgramPredicateCorrectCountPredicate
-    oneof_schema_2_validator: Optional[IProgramPredicateCorrectCountPredicate] = None
-    actual_instance: Optional[Union[IProgramPredicateAnsweredCountPredicate, IProgramPredicateCorrectCountPredicate]] = None
-    one_of_schemas: Set[str] = { "IProgramPredicateAnsweredCountPredicate", "IProgramPredicateCorrectCountPredicate" }
+    oneof_schema_5_validator: Optional[IProgramPredicateCorrectCountPredicate] = None
+    # data type: IProgramPredicateTimeElapsedPredicate
+    oneof_schema_6_validator: Optional[IProgramPredicateTimeElapsedPredicate] = None
+    # data type: IProgramPredicateUserAttributePredicate
+    oneof_schema_7_validator: Optional[IProgramPredicateUserAttributePredicate] = None
+    # data type: IProgramPredicateUserScorePredicate
+    oneof_schema_8_validator: Optional[IProgramPredicateUserScorePredicate] = None
+    actual_instance: Optional[Union[IProgramPredicateAccuracyPredicate, IProgramPredicateAnsweredCountPredicate, IProgramPredicateConsecutiveCorrectPredicate, IProgramPredicateConsecutiveIncorrectPredicate, IProgramPredicateCorrectCountPredicate, IProgramPredicateTimeElapsedPredicate, IProgramPredicateUserAttributePredicate, IProgramPredicateUserScorePredicate]] = None
+    one_of_schemas: Set[str] = { "IProgramPredicateAccuracyPredicate", "IProgramPredicateAnsweredCountPredicate", "IProgramPredicateConsecutiveCorrectPredicate", "IProgramPredicateConsecutiveIncorrectPredicate", "IProgramPredicateCorrectCountPredicate", "IProgramPredicateTimeElapsedPredicate", "IProgramPredicateUserAttributePredicate", "IProgramPredicateUserScorePredicate" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -57,9 +75,24 @@ class IProgramPredicate(LazyValidatedModel):
         instance = IProgramPredicate.model_construct()
         error_messages = []
         match = 0
+        # validate data type: IProgramPredicateAccuracyPredicate
+        if not isinstance(v, IProgramPredicateAccuracyPredicate):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateAccuracyPredicate`")
+        else:
+            match += 1
         # validate data type: IProgramPredicateAnsweredCountPredicate
         if not isinstance(v, IProgramPredicateAnsweredCountPredicate):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateAnsweredCountPredicate`")
+        else:
+            match += 1
+        # validate data type: IProgramPredicateConsecutiveCorrectPredicate
+        if not isinstance(v, IProgramPredicateConsecutiveCorrectPredicate):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateConsecutiveCorrectPredicate`")
+        else:
+            match += 1
+        # validate data type: IProgramPredicateConsecutiveIncorrectPredicate
+        if not isinstance(v, IProgramPredicateConsecutiveIncorrectPredicate):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateConsecutiveIncorrectPredicate`")
         else:
             match += 1
         # validate data type: IProgramPredicateCorrectCountPredicate
@@ -67,12 +100,27 @@ class IProgramPredicate(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateCorrectCountPredicate`")
         else:
             match += 1
+        # validate data type: IProgramPredicateTimeElapsedPredicate
+        if not isinstance(v, IProgramPredicateTimeElapsedPredicate):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateTimeElapsedPredicate`")
+        else:
+            match += 1
+        # validate data type: IProgramPredicateUserAttributePredicate
+        if not isinstance(v, IProgramPredicateUserAttributePredicate):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateUserAttributePredicate`")
+        else:
+            match += 1
+        # validate data type: IProgramPredicateUserScorePredicate
+        if not isinstance(v, IProgramPredicateUserScorePredicate):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IProgramPredicateUserScorePredicate`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IProgramPredicate with oneOf schemas: IProgramPredicateAnsweredCountPredicate, IProgramPredicateCorrectCountPredicate. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IProgramPredicate with oneOf schemas: IProgramPredicateAccuracyPredicate, IProgramPredicateAnsweredCountPredicate, IProgramPredicateConsecutiveCorrectPredicate, IProgramPredicateConsecutiveIncorrectPredicate, IProgramPredicateCorrectCountPredicate, IProgramPredicateTimeElapsedPredicate, IProgramPredicateUserAttributePredicate, IProgramPredicateUserScorePredicate. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IProgramPredicate with oneOf schemas: IProgramPredicateAnsweredCountPredicate, IProgramPredicateCorrectCountPredicate. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IProgramPredicate with oneOf schemas: IProgramPredicateAccuracyPredicate, IProgramPredicateAnsweredCountPredicate, IProgramPredicateConsecutiveCorrectPredicate, IProgramPredicateConsecutiveIncorrectPredicate, IProgramPredicateCorrectCountPredicate, IProgramPredicateTimeElapsedPredicate, IProgramPredicateUserAttributePredicate, IProgramPredicateUserScorePredicate. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -87,9 +135,27 @@ class IProgramPredicate(LazyValidatedModel):
         error_messages = []
         match = 0
 
+        # deserialize data into IProgramPredicateAccuracyPredicate
+        try:
+            instance.actual_instance = IProgramPredicateAccuracyPredicate.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IProgramPredicateAnsweredCountPredicate
         try:
             instance.actual_instance = IProgramPredicateAnsweredCountPredicate.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IProgramPredicateConsecutiveCorrectPredicate
+        try:
+            instance.actual_instance = IProgramPredicateConsecutiveCorrectPredicate.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IProgramPredicateConsecutiveIncorrectPredicate
+        try:
+            instance.actual_instance = IProgramPredicateConsecutiveIncorrectPredicate.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -99,13 +165,31 @@ class IProgramPredicate(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IProgramPredicateTimeElapsedPredicate
+        try:
+            instance.actual_instance = IProgramPredicateTimeElapsedPredicate.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IProgramPredicateUserAttributePredicate
+        try:
+            instance.actual_instance = IProgramPredicateUserAttributePredicate.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IProgramPredicateUserScorePredicate
+        try:
+            instance.actual_instance = IProgramPredicateUserScorePredicate.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IProgramPredicate with oneOf schemas: IProgramPredicateAnsweredCountPredicate, IProgramPredicateCorrectCountPredicate. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IProgramPredicate with oneOf schemas: IProgramPredicateAccuracyPredicate, IProgramPredicateAnsweredCountPredicate, IProgramPredicateConsecutiveCorrectPredicate, IProgramPredicateConsecutiveIncorrectPredicate, IProgramPredicateCorrectCountPredicate, IProgramPredicateTimeElapsedPredicate, IProgramPredicateUserAttributePredicate, IProgramPredicateUserScorePredicate. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IProgramPredicate with oneOf schemas: IProgramPredicateAnsweredCountPredicate, IProgramPredicateCorrectCountPredicate. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IProgramPredicate with oneOf schemas: IProgramPredicateAccuracyPredicate, IProgramPredicateAnsweredCountPredicate, IProgramPredicateConsecutiveCorrectPredicate, IProgramPredicateConsecutiveIncorrectPredicate, IProgramPredicateCorrectCountPredicate, IProgramPredicateTimeElapsedPredicate, IProgramPredicateUserAttributePredicate, IProgramPredicateUserScorePredicate. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -119,7 +203,7 @@ class IProgramPredicate(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IProgramPredicateAnsweredCountPredicate, IProgramPredicateCorrectCountPredicate]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IProgramPredicateAccuracyPredicate, IProgramPredicateAnsweredCountPredicate, IProgramPredicateConsecutiveCorrectPredicate, IProgramPredicateConsecutiveIncorrectPredicate, IProgramPredicateCorrectCountPredicate, IProgramPredicateTimeElapsedPredicate, IProgramPredicateUserAttributePredicate, IProgramPredicateUserScorePredicate]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

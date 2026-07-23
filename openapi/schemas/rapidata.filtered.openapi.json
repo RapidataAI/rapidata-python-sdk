@@ -80,6 +80,10 @@
       "x-displayName": "Rapidata.Identity.API"
     },
     {
+      "name": "Bidder",
+      "x-displayName": "Bidder"
+    },
+    {
       "name": "Capabilities",
       "x-displayName": "Capabilities"
     },
@@ -102,6 +106,10 @@
     {
       "name": "Organization",
       "x-displayName": "Organization"
+    },
+    {
+      "name": "Platform",
+      "x-displayName": "Platform"
     },
     {
       "name": "Survey",
@@ -6809,13 +6817,184 @@
         ]
       }
     },
+    "/authorization/relations/bidder": {
+      "get": {
+        "tags": [
+          "Bidder"
+        ],
+        "summary": "Lists the customers holding bidder relations, one cursor page at a time.",
+        "description": "Returns every relation unless relation narrows it. Follow nextCursor to page.",
+        "parameters": [
+          {
+            "name": "relation",
+            "in": "query",
+            "description": "Optional relation to filter by.",
+            "schema": {
+              "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "The opaque cursor from the previous page; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBidderRelationMembersEndpoint_CursorPagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Bidder"
+        ],
+        "summary": "Grants a bidder relation to a customer.",
+        "description": "Idempotent: re-granting an existing relation is a no-op.",
+        "requestBody": {
+          "description": "The customer and the bidder relation to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantBidderRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Bidder"
+        ],
+        "summary": "Revokes a bidder relation from a customer.",
+        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
+        "requestBody": {
+          "description": "The customer and the bidder relation to revoke.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeBidderRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/capabilities/{capability}/grantees": {
       "get": {
         "tags": [
           "Capabilities"
         ],
-        "summary": "Lists the grant tuples on a capability, one cursor page at a time.",
-        "description": "Covers both organization-level and direct customer grants. Follow nextCursor to page.",
+        "summary": "Lists the organizations granted a capability, one cursor page at a time.",
+        "description": "Follow nextCursor to page.",
         "parameters": [
           {
             "name": "capability",
@@ -8876,7 +9055,9 @@
                   "name",
                   "-name",
                   "slug",
-                  "-slug"
+                  "-slug",
+                  "member_count",
+                  "-member_count"
                 ],
                 "type": "string"
               }
@@ -9231,6 +9412,177 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SwitchActiveOrganizationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/authorization/relations/platform": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Lists the customers holding platform relations, one cursor page at a time.",
+        "description": "Returns every relation unless relation narrows it. Follow nextCursor to page.",
+        "parameters": [
+          {
+            "name": "relation",
+            "in": "query",
+            "description": "Optional relation to filter by.",
+            "schema": {
+              "$ref": "#/components/schemas/AuthorizationRelations_Platform"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "The opaque cursor from the previous page; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPlatformRelationMembersEndpoint_CursorPagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Grants a platform relation to a customer.",
+        "description": "Idempotent: re-granting an existing relation is a no-op.",
+        "requestBody": {
+          "description": "The customer and the platform relation to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantPlatformRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Revokes a platform relation from a customer.",
+        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
+        "requestBody": {
+          "description": "The customer and the platform relation to revoke.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokePlatformRelationEndpoint_Input"
               }
             }
           },
@@ -10044,7 +10396,1234 @@
         ]
       }
     },
+    "/benchmark/{benchmarkId}/demographics": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the share of a benchmark's votes falling in each demographic bucket.",
+        "description": "The same vote-level filters as the standings query apply. Every dimension closes with an\n unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks\n without granular votes return a zero-vote, empty-dimension response.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Filter by country.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter by language.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "description": "Filter by gender.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "age_bucket",
+            "in": "query",
+            "description": "Filter by age_bucket.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "occupation",
+            "in": "query",
+            "description": "Filter by occupation.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Filter by tags.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_id",
+            "in": "query",
+            "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "leaderboard_id",
+            "in": "query",
+            "description": "Filter by leaderboard_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "run_id",
+            "in": "query",
+            "description": "Filter by run_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "prompt_identifier",
+            "in": "query",
+            "description": "Filter by prompt_identifier.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "voted_at",
+            "in": "query",
+            "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark/{benchmarkId}/matrix": {},
+    "/benchmark/{benchmarkId}/standings/breakdown": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the standings over the whole filtered set alongside the standings recomputed for\n each value of the chosen dimension.",
+        "description": "The same vote-level filters as the standings query apply. Segments are sorted by votes\n descending, the unknown segment last. Benchmarks without granular votes return\n empty segments.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dimension",
+            "in": "query",
+            "description": "The demographic dimension to split the standings by.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/BenchmarkDemographicDimension"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Filter by country.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter by language.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "description": "Filter by gender.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "age_bucket",
+            "in": "query",
+            "description": "Filter by age_bucket.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "occupation",
+            "in": "query",
+            "description": "Filter by occupation.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Filter by tags.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_id",
+            "in": "query",
+            "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "leaderboard_id",
+            "in": "query",
+            "description": "Filter by leaderboard_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "run_id",
+            "in": "query",
+            "description": "Filter by run_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "prompt_identifier",
+            "in": "query",
+            "description": "Filter by prompt_identifier.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "voted_at",
+            "in": "query",
+            "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkStandingsBreakdownEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark/combined-matrix": {},
     "/benchmark/combined-standings": {},
     "/benchmark/{benchmarkId}/prompts": {
@@ -34291,6 +35870,12 @@
             "type": "string",
             "nullable": true
           },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "status": {
             "$ref": "#/components/schemas/BatchUploadUrlStatus"
           },
@@ -34681,17 +36266,13 @@
             ],
             "description": "The filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double",
-            "nullable": true
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Defaults to null (uses GraduationScore).",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "How users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule (\"solve N tasks at X accuracy\"). When omitted, new audiences\n default to a task-accuracy rule (0.75 accuracy over 10 tasks)."
           },
           "minimumSizeForActivation": {
             "type": "integer",
@@ -34710,12 +36291,6 @@
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Defaults to 10. Set to null to disable this exit condition.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Defaults to null (no minimum — users graduate as soon as the score is reached).",
             "format": "uint32",
             "nullable": true
           },
@@ -34983,7 +36558,7 @@
           "isPublic",
           "isDistilling",
           "distillingCampaignId",
-          "graduationScore",
+          "graduationRule",
           "distillingRetrievalMode",
           "boostLevel"
         ],
@@ -35074,26 +36649,17 @@
             "format": "int32",
             "nullable": true
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Null when no minimum is configured.",
             "format": "uint32",
             "nullable": true
           },
@@ -36299,6 +37865,83 @@
           }
         }
       },
+      "IGraduationRule": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IGraduationRuleScoreThresholdRule"
+          },
+          {
+            "$ref": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ScoreThreshold": "#/components/schemas/IGraduationRuleScoreThresholdRule",
+            "TaskAccuracy": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        }
+      },
+      "IGraduationRuleScoreThresholdRule": {
+        "required": [
+          "graduationScore",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScoreThreshold"
+            ],
+            "type": "string"
+          },
+          "graduationScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "demotionScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "minResponsesToGraduate": {
+            "type": "integer",
+            "format": "uint32",
+            "nullable": true
+          }
+        }
+      },
+      "IGraduationRuleTaskAccuracyRule": {
+        "required": [
+          "targetAccuracy",
+          "minTasks",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TaskAccuracy"
+            ],
+            "type": "string"
+          },
+          "targetAccuracy": {
+            "type": "number",
+            "format": "double"
+          },
+          "minTasks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxTasks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "IMetadata": {
         "required": [
           "_t"
@@ -36704,7 +38347,8 @@
           "createdAt",
           "ownerMail",
           "isPublic",
-          "isDistilling"
+          "isDistilling",
+          "graduationRule"
         ],
         "type": "object",
         "properties": {
@@ -36771,6 +38415,14 @@
           "isDistilling": {
             "type": "boolean",
             "description": "Whether the audience is currently distilling users."
+          },
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
           },
           "randomAdmissionProbability": {
             "type": "number",
@@ -37046,26 +38698,17 @@
             "format": "int32",
             "nullable": true
           },
-          "graduationScore": {
-            "type": "number",
-            "description": "The score used to determine whether a user graduates from the distilling campaign.",
-            "format": "double"
-          },
-          "demotionScore": {
-            "type": "number",
-            "description": "Score below which a graduated user is demoted back to distilling.\n Must be less than or equal to GraduationScore. Set to null to use GraduationScore.",
-            "format": "double",
-            "nullable": true
+          "graduationRule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IGraduationRule"
+              }
+            ],
+            "description": "Replaces how users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule."
           },
           "maxDistillingResponses": {
             "type": "integer",
             "description": "Maximum responses before user exits the distilling campaign.\n Set to null to disable this exit condition.",
-            "format": "uint32",
-            "nullable": true
-          },
-          "minResponsesToGraduate": {
-            "type": "integer",
-            "description": "Minimum responses required before a user can graduate into the audience.\n Even if the user's score is at or above the graduation threshold, they will\n remain in distilling until they have answered at least this many responses.\n Must be strictly less than MaxDistillingResponses when both are set.\n Set to null to allow graduation as soon as the score is reached.",
             "format": "uint32",
             "nullable": true
           },
@@ -38767,13 +40410,17 @@
           },
           {
             "$ref": "#/components/schemas/IProgramNodeCasesNode"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramNodeWeightedSplitNode"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
             "ActionNode": "#/components/schemas/IProgramNodeActionNode",
-            "CasesNode": "#/components/schemas/IProgramNodeCasesNode"
+            "CasesNode": "#/components/schemas/IProgramNodeCasesNode",
+            "WeightedSplitNode": "#/components/schemas/IProgramNodeWeightedSplitNode"
           }
         }
       },
@@ -38818,6 +40465,26 @@
           }
         }
       },
+      "IProgramNodeWeightedSplitNode": {
+        "required": [
+          "branches",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "WeightedSplitNode"
+            ],
+            "type": "string"
+          },
+          "branches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WeightedBranch"
+            }
+          }
+        }
+      },
       "IProgramPredicate": {
         "required": [
           "_t"
@@ -38825,17 +40492,67 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IProgramPredicateAccuracyPredicate"
+          },
+          {
             "$ref": "#/components/schemas/IProgramPredicateAnsweredCountPredicate"
           },
           {
+            "$ref": "#/components/schemas/IProgramPredicateConsecutiveCorrectPredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateConsecutiveIncorrectPredicate"
+          },
+          {
             "$ref": "#/components/schemas/IProgramPredicateCorrectCountPredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateTimeElapsedPredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateUserAttributePredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateUserScorePredicate"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AccuracyPredicate": "#/components/schemas/IProgramPredicateAccuracyPredicate",
             "AnsweredCountPredicate": "#/components/schemas/IProgramPredicateAnsweredCountPredicate",
-            "CorrectCountPredicate": "#/components/schemas/IProgramPredicateCorrectCountPredicate"
+            "ConsecutiveCorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveCorrectPredicate",
+            "ConsecutiveIncorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveIncorrectPredicate",
+            "CorrectCountPredicate": "#/components/schemas/IProgramPredicateCorrectCountPredicate",
+            "TimeElapsedPredicate": "#/components/schemas/IProgramPredicateTimeElapsedPredicate",
+            "UserAttributePredicate": "#/components/schemas/IProgramPredicateUserAttributePredicate",
+            "UserScorePredicate": "#/components/schemas/IProgramPredicateUserScorePredicate"
+          }
+        }
+      },
+      "IProgramPredicateAccuracyPredicate": {
+        "required": [
+          "comparison",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AccuracyPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "minimumAnswered": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -38849,6 +40566,50 @@
           "_t": {
             "enum": [
               "AnsweredCountPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateConsecutiveCorrectPredicate": {
+        "required": [
+          "comparison",
+          "value",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConsecutiveCorrectPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateConsecutiveIncorrectPredicate": {
+        "required": [
+          "comparison",
+          "value",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConsecutiveIncorrectPredicate"
             ],
             "type": "string"
           },
@@ -38880,6 +40641,73 @@
           "value": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateTimeElapsedPredicate": {
+        "required": [
+          "comparison",
+          "seconds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TimeElapsedPredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "seconds": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IProgramPredicateUserAttributePredicate": {
+        "required": [
+          "attribute",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserAttributePredicate"
+            ],
+            "type": "string"
+          },
+          "attribute": {
+            "$ref": "#/components/schemas/UserAttribute"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IProgramPredicateUserScorePredicate": {
+        "required": [
+          "comparison",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScorePredicate"
+            ],
+            "type": "string"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ProgramComparison"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -39306,6 +41134,12 @@
           }
         }
       },
+      "UserAttribute": {
+        "enum": [
+          "Country",
+          "Language"
+        ]
+      },
       "ValidationChance": {
         "required": [
           "userScoreThreshold",
@@ -39332,6 +41166,22 @@
               "$ref": "#/components/schemas/ICampaignSelection"
             },
             "nullable": true
+          }
+        }
+      },
+      "WeightedBranch": {
+        "required": [
+          "weight",
+          "nodeId"
+        ],
+        "type": "object",
+        "properties": {
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nodeId": {
+            "type": "string"
           }
         }
       },
@@ -40860,9 +42710,31 @@
           }
         }
       },
+      "AuthorizationRelations_Bidder": {
+        "enum": [
+          "Admin",
+          "Editor",
+          "Viewer"
+        ],
+        "description": "Relations on the singleton `bidder` object that carries global RTB access. Grants are\ndirect here and, unlike Organization, are never folded in from platform staff."
+      },
+      "AuthorizationRelations_Platform": {
+        "enum": [
+          "Admin",
+          "Viewer"
+        ],
+        "description": "Relations on the singleton `platform` object. The model is hierarchical: `admin`\nfolds into `viewer`."
+      },
+      "AuthorizationScope": {
+        "enum": [
+          "Platform",
+          "Bidder"
+        ]
+      },
       "Capability": {
         "enum": [
-          "SkipContentCheck"
+          "SkipContentCheck",
+          "PreheatBoost"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
@@ -41161,6 +43033,57 @@
         },
         "description": "The request body for dynamic client registration."
       },
+      "GetBidderRelationMembersEndpoint_CursorPagedResultOfOutput": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBidderRelationMembersEndpoint_Output"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
+      },
+      "GetBidderRelationMembersEndpoint_Output": {
+        "required": [
+          "customer",
+          "scope",
+          "relation",
+          "grantedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer holding the relation.",
+            "format": "uuid"
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthorizationScope"
+              }
+            ],
+            "description": "The object the relation is on."
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          },
+          "grantedAt": {
+            "type": "string",
+            "description": "When the grant was written.",
+            "format": "date-time"
+          }
+        }
+      },
       "GetCapabilityGranteesEndpoint_CursorPagedResultOfOutput": {
         "required": [
           "items"
@@ -41182,24 +43105,19 @@
       },
       "GetCapabilityGranteesEndpoint_Output": {
         "required": [
-          "object",
-          "relation",
-          "user",
+          "organizationId",
+          "organizationName",
           "timestamp"
         ],
         "type": "object",
         "properties": {
-          "object": {
+          "organizationId": {
             "type": "string",
-            "description": "The object, as type:id."
+            "description": "The organization that holds the capability."
           },
-          "relation": {
+          "organizationName": {
             "type": "string",
-            "description": "The relation."
-          },
-          "user": {
-            "type": "string",
-            "description": "The subject, as type:id[#relation]."
+            "description": "The human-readable name of the organization."
           },
           "timestamp": {
             "type": "string",
@@ -41280,6 +43198,57 @@
           }
         }
       },
+      "GetPlatformRelationMembersEndpoint_CursorPagedResultOfOutput": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetPlatformRelationMembersEndpoint_Output"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
+      },
+      "GetPlatformRelationMembersEndpoint_Output": {
+        "required": [
+          "customer",
+          "scope",
+          "relation",
+          "grantedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer holding the relation.",
+            "format": "uuid"
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthorizationScope"
+              }
+            ],
+            "description": "The object the relation is on."
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Platform"
+          },
+          "grantedAt": {
+            "type": "string",
+            "description": "When the grant was written.",
+            "format": "date-time"
+          }
+        }
+      },
       "GoogleOneTapLoginEndpoint_Input": {
         "required": [
           "idToken"
@@ -41306,6 +43275,40 @@
             "type": "string",
             "description": "The email of the signed-in user, if available.",
             "nullable": true
+          }
+        }
+      },
+      "GrantBidderRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to grant the relation to.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          }
+        }
+      },
+      "GrantPlatformRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to grant the relation to.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Platform"
           }
         }
       },
@@ -41585,7 +43588,8 @@
         "required": [
           "id",
           "name",
-          "slug"
+          "slug",
+          "memberCount"
         ],
         "type": "object",
         "properties": {
@@ -41600,6 +43604,11 @@
           "slug": {
             "type": "string",
             "description": "The URL-safe unique identifier of the organization."
+          },
+          "memberCount": {
+            "type": "integer",
+            "description": "The number of members the organization has.",
+            "format": "int32"
           }
         }
       },
@@ -41880,6 +43889,40 @@
           }
         }
       },
+      "RevokeBidderRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to revoke the relation from.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          }
+        }
+      },
+      "RevokePlatformRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to revoke the relation from.",
+            "format": "uuid"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_Platform"
+          }
+        }
+      },
       "SendSurveyEndpoint_Input": {
         "required": [
           "fields"
@@ -41967,6 +44010,15 @@
             "description": "The new URL-safe unique identifier, if changing it."
           }
         }
+      },
+      "BenchmarkDemographicDimension": {
+        "enum": [
+          "AgeBucket",
+          "Gender",
+          "Occupation",
+          "Country",
+          "Language"
+        ]
       },
       "BoostLeaderboardEndpoint_Input": {
         "required": [
@@ -42591,6 +44643,216 @@
             "type": "number",
             "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark.",
             "format": "double"
+          }
+        }
+      },
+      "GetBenchmarkDemographicsEndpoint_Output": {
+        "required": [
+          "totalVotes",
+          "dimensions"
+        ],
+        "type": "object",
+        "properties": {
+          "totalVotes": {
+            "type": "integer",
+            "description": "The total votes behind the composition.",
+            "format": "int64"
+          },
+          "dimensions": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output_DimensionSet"
+              }
+            ],
+            "description": "The per-dimension bucket breakdowns."
+          }
+        },
+        "description": "The demographic composition of a benchmark's votes."
+      },
+      "GetBenchmarkDemographicsEndpoint_Output_Bucket": {
+        "required": [
+          "value",
+          "votes",
+          "share"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "votes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "share": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "GetBenchmarkDemographicsEndpoint_Output_DimensionSet": {
+        "required": [
+          "ageBucket",
+          "gender",
+          "occupation",
+          "country",
+          "language"
+        ],
+        "type": "object",
+        "properties": {
+          "ageBucket": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output_Bucket"
+            }
+          },
+          "gender": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output_Bucket"
+            }
+          },
+          "occupation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output_Bucket"
+            }
+          },
+          "country": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output_Bucket"
+            }
+          },
+          "language": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output_Bucket"
+            }
+          }
+        }
+      },
+      "GetBenchmarkStandingsBreakdownEndpoint_Output": {
+        "required": [
+          "dimension",
+          "global",
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "dimension": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BenchmarkDemographicDimension"
+              }
+            ],
+            "description": "The dimension the standings are split by."
+          },
+          "global": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBenchmarkStandingsBreakdownEndpoint_Output_OutputItem"
+                }
+              }
+            ],
+            "description": "The standings over the whole filtered set, ordered by score descending."
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBenchmarkStandingsBreakdownEndpoint_Output_Segment"
+                }
+              }
+            ],
+            "description": "The standings per dimension value, ordered by votes descending with unknown last."
+          }
+        },
+        "description": "The standings broken down by a demographic dimension."
+      },
+      "GetBenchmarkStandingsBreakdownEndpoint_Output_OutputItem": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "GetBenchmarkStandingsBreakdownEndpoint_Output_Segment": {
+        "required": [
+          "value",
+          "votes",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "votes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkStandingsBreakdownEndpoint_Output_OutputItem"
+            }
           }
         }
       },
@@ -55518,6 +57780,11 @@
             "type": "string",
             "description": "The feedback text."
           },
+          "englishFeedback": {
+            "type": "string",
+            "description": "The English translation of the feedback, or null when unavailable.",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the feedback was created.",
@@ -58461,12 +60728,14 @@
       "name": "Rapidata Identity API",
       "tags": [
         "Rapidata.Identity.API",
+        "Bidder",
         "Capabilities",
         "Client",
         "Customer",
         "Identity",
         "Newsletter",
         "Organization",
+        "Platform",
         "Survey"
       ]
     },

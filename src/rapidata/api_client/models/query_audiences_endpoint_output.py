@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.audience_status import AudienceStatus
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+from rapidata.api_client.models.i_graduation_rule import IGraduationRule
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -42,11 +43,12 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
     organization_id: Optional[StrictStr] = Field(default=None, description="The id of the organization that owns the entity.", alias="organizationId")
     is_public: StrictBool = Field(description="Whether the audience is publicly visible.", alias="isPublic")
     is_distilling: StrictBool = Field(description="Whether the audience is currently distilling users.", alias="isDistilling")
+    graduation_rule: IGraduationRule = Field(description="The rule this audience uses to graduate users — a score-threshold rule or a  task-accuracy rule.", alias="graduationRule")
     random_admission_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of admitting a random user to the audience.", alias="randomAdmissionProbability")
     health: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The health score of the audience.")
     graduated: Optional[StrictInt] = Field(default=None, description="The number of graduated users.")
     dropped: Optional[StrictInt] = Field(default=None, description="The number of dropped users.")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "organizationId", "isPublic", "isDistilling", "randomAdmissionProbability", "health", "graduated", "dropped"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "organizationId", "isPublic", "isDistilling", "graduationRule", "randomAdmissionProbability", "health", "graduated", "dropped"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -90,6 +92,9 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of graduation_rule
+        if self.graduation_rule:
+            _dict['graduationRule'] = self.graduation_rule.to_dict()
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
@@ -139,6 +144,7 @@ class QueryAudiencesEndpointOutput(LazyValidatedModel):
             "organizationId": obj.get("organizationId"),
             "isPublic": obj.get("isPublic"),
             "isDistilling": obj.get("isDistilling"),
+            "graduationRule": IGraduationRule.from_dict(obj["graduationRule"]) if obj.get("graduationRule") is not None else None,
             "randomAdmissionProbability": obj.get("randomAdmissionProbability"),
             "health": obj.get("health"),
             "graduated": obj.get("graduated"),

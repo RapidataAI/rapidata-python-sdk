@@ -28,11 +28,10 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
     """
     GetCapabilityGranteesEndpointOutput
     """ # noqa: E501
-    object: StrictStr = Field(description="The object, as type:id.")
-    relation: StrictStr = Field(description="The relation.")
-    user: StrictStr = Field(description="The subject, as type:id[#relation].")
+    organization_id: StrictStr = Field(description="The organization that holds the capability.", alias="organizationId")
+    organization_name: StrictStr = Field(description="The human-readable name of the organization.", alias="organizationName")
     timestamp: datetime = Field(description="When the grant was written.")
-    __properties: ClassVar[List[str]] = ["object", "relation", "user", "timestamp"]
+    __properties: ClassVar[List[str]] = ["organizationId", "organizationName", "timestamp"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,9 +80,8 @@ class GetCapabilityGranteesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "object": obj.get("object"),
-            "relation": obj.get("relation"),
-            "user": obj.get("user"),
+            "organizationId": obj.get("organizationId"),
+            "organizationName": obj.get("organizationName"),
             "timestamp": obj.get("timestamp")
         }
         try:

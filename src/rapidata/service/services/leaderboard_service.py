@@ -7,9 +7,6 @@ if TYPE_CHECKING:
     from rapidata.api_client.api.benchmark_api import BenchmarkApi
     from rapidata.api_client.api.participant_api import ParticipantApi
     from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
-    from rapidata.rapidata_client.benchmark.demographics._demographics_api import (
-        BenchmarkDemographicsApi,
-    )
 
 
 class LeaderboardService:
@@ -18,7 +15,6 @@ class LeaderboardService:
         self._leaderboard_api: LeaderboardApi | None = None
         self._benchmark_api: BenchmarkApi | None = None
         self._participant_api: ParticipantApi | None = None
-        self._benchmark_demographics_api: BenchmarkDemographicsApi | None = None
 
     @property
     def leaderboard_api(self) -> LeaderboardApi:
@@ -40,14 +36,3 @@ class LeaderboardService:
             from rapidata.api_client.api.participant_api import ParticipantApi
             self._participant_api = ParticipantApi(self._api_client)
         return self._participant_api
-
-    @property
-    def benchmark_demographics_api(self) -> BenchmarkDemographicsApi:
-        # Hand-written wrapper for endpoints not yet in the generated client; see
-        # rapidata_client/benchmark/demographics/_demographics_api.py.
-        if self._benchmark_demographics_api is None:
-            from rapidata.rapidata_client.benchmark.demographics._demographics_api import (
-                BenchmarkDemographicsApi,
-            )
-            self._benchmark_demographics_api = BenchmarkDemographicsApi(self._api_client)
-        return self._benchmark_demographics_api

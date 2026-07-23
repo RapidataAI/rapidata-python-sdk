@@ -586,6 +586,12 @@
             "type": "string",
             "nullable": true
           },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "status": {
             "$ref": "#/components/schemas/BatchUploadUrlStatus"
           },
