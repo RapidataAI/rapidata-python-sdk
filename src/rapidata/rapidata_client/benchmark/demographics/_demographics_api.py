@@ -6,31 +6,11 @@ from typing import Dict, List, Optional, Tuple, TYPE_CHECKING
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
 )
-from rapidata.rapidata_client.benchmark.demographics.models import (
-    BenchmarkDemographics,
-    BenchmarkStandingsBreakdown,
-)
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
 
-# Field filters accepted by both endpoints — the same surface as
-# `benchmark/{id}/standings/query`, so the backend parses them identically.
-BENCHMARK_FILTER_FIELDS: Tuple[str, ...] = (
-    "country",
-    "language",
-    "gender",
-    "age_bucket",
-    "occupation",
-    "tags",
-    "participant_id",
-    "leaderboard_id",
-    "run_id",
-    "prompt_identifier",
-    "voted_at",
-)
-
-# 2xx bodies are deserialized by hand below; only the error statuses need a
+# 2xx bodies are returned as parsed dicts; only the error statuses need a
 # mapping so `RapidataApiClient` wraps them into `RapidataError`.
 _ERROR_RESPONSE_TYPES: Dict[str, Optional[str]] = {
     "400": "ValidationProblemDetails",
@@ -44,8 +24,9 @@ class BenchmarkDemographicsApi:
 
     These endpoints are not part of the checked-in generated OpenAPI client yet.
     This wrapper talks to the same low-level ``RapidataApiClient`` the generated
-    APIs use and mirrors their request/response handling; once the backend ships
-    and the client is regenerated, the generated methods supersede it.
+    APIs use and mirrors their request/response handling, returning the parsed
+    JSON body; once the backend ships and the client is regenerated, the
+    generated methods supersede it.
     """
 
     def __init__(self, api_client: RapidataApiClient) -> None:
@@ -55,27 +36,25 @@ class BenchmarkDemographicsApi:
         self,
         benchmark_id: str,
         filters: Optional[Dict[str, AudienceAudienceIdJobsGetJobIdParameter]] = None,
-    ) -> BenchmarkDemographics:
-        raw = self._get(
+    ) -> dict:
+        return self._get(
             resource_path="/benchmark/{benchmarkId}/demographics",
             benchmark_id=benchmark_id,
             filters=filters or {},
         )
-        return BenchmarkDemographics.model_validate(raw)
 
     def get_standings_breakdown(
         self,
         benchmark_id: str,
         dimension: str,
         filters: Optional[Dict[str, AudienceAudienceIdJobsGetJobIdParameter]] = None,
-    ) -> BenchmarkStandingsBreakdown:
-        raw = self._get(
+    ) -> dict:
+        return self._get(
             resource_path="/benchmark/{benchmarkId}/standings/breakdown",
             benchmark_id=benchmark_id,
             filters=filters or {},
             extra_query=[("dimension", dimension)],
         )
-        return BenchmarkStandingsBreakdown.model_validate(raw)
 
     def _get(
         self,

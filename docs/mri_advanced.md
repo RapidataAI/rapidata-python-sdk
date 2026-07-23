@@ -204,7 +204,8 @@ participant.delete()
 ## Voter Demographics
 
 Every vote on a benchmark carries the voter's demographics, so you can see *who*
-evaluated your models and how different groups ranked them.
+evaluated your models and how different groups ranked them. Both methods live on
+the benchmark and return a pandas DataFrame, like `get_overall_standings`.
 
 !!! note
     `ageBucket`, `gender` and `occupation` are **estimated** (inferred from
@@ -214,44 +215,38 @@ evaluated your models and how different groups ranked them.
 
 ### Voter composition
 
-`get_demographics` returns how the votes split across each demographic
-dimension — both the raw vote count and the share of the total (shares within a
-dimension sum to 1):
+`get_demographics` returns one row per `(dimension, value)` with the raw vote
+count and its share of the dimension (shares within a dimension sum to 1):
 
 ```python
-demographics = client.mri.get_demographics("benchmark_id_here")
+demographics = benchmark.get_demographics()
+# columns: dimension, value, votes, share
 
-print(f"{demographics.total_votes} votes")
-for bucket in demographics.dimensions["country"]:
-    print(f"{bucket.value}: {bucket.votes} votes ({bucket.share:.1%})")
+countries = demographics[demographics["dimension"] == "country"]
+print(countries)
 ```
 
 ### Standings per demographic segment
 
-`get_standings_breakdown` returns the overall standings plus one segment per
-bucket of a dimension, each with that segment's standings — useful for spotting
-where a model is ranked differently by different groups:
+`get_standings_breakdown` returns one row per `(segment, model)` — how each
+demographic segment of voters ranks the models, with that segment's vote count.
+Useful for spotting where a model is ranked differently by different groups. For
+the overall standings across all voters, use `get_overall_standings`.
 
 ```python
-breakdown = client.mri.get_standings_breakdown(
-    "benchmark_id_here",
+breakdown = benchmark.get_standings_breakdown(
     dimension="AgeBucket",  # AgeBucket | Gender | Occupation | Country | Language
 )
-
-for segment in breakdown.segments:
-    leader = segment.items[0] if segment.items else None
-    print(f"{segment.value} ({segment.votes} votes): {leader.name if leader else '—'}")
+# columns: segment, segment_votes, name, wins, total_matches, score
 ```
 
-Segments are **raw vote counts**. Both methods accept a `run_id` to scope to a
-single evaluation run and a `filters` dict (the same fields as the standings
-query, e.g. `tags`, `country`, `leaderboard_id`) to narrow the votes considered:
+Segments are **raw vote counts**. Both methods accept `tags`, `leaderboard_ids`
+and `run_id` to narrow the votes considered:
 
 ```python
-breakdown = client.mri.get_standings_breakdown(
-    "benchmark_id_here",
+breakdown = benchmark.get_standings_breakdown(
     dimension="Country",
-    filters={"tags": ["landscape"], "language": ["en"]},
+    tags=["landscape"],
 )
 ```
 
@@ -288,5 +283,4 @@ being set up) are skipped, so the list only contains jobs you can act on.
 - [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)
 - [RapidataLeaderboard](/reference/rapidata/rapidata_client/benchmark/leaderboard/rapidata_leaderboard/)
 - [BenchmarkParticipant](/reference/rapidata/rapidata_client/benchmark/participant/participant/)
-- [Demographics result models](/reference/rapidata/rapidata_client/benchmark/demographics/models/)
 

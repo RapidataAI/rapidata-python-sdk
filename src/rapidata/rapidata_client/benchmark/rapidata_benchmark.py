@@ -27,6 +27,11 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
 
+# The demographic dimension to split standings by, as accepted by the
+# breakdown endpoint. Age, gender and occupation are estimated (inferred);
+# country and language are observed.
+BreakdownDimension = Literal["AgeBucket", "Gender", "Occupation", "Country", "Language"]
+
 
 class RapidataBenchmark:
     """
@@ -805,6 +810,144 @@ class RapidataBenchmark:
                 index=pd.Index(result.index),
                 columns=pd.Index(result.columns),
             )
+
+    def get_demographics(
+        self,
+        tags: Optional[list[str]] = None,
+        leaderboard_ids: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """
+        Returns the demographic composition of the voters for this benchmark.
+
+        One row per (dimension, bucket): the ``votes`` cast by that bucket and
+        its ``share`` of the dimension's votes (a dimension's shares sum to 1).
+        Every dimension (``ageBucket``, ``gender``, ``occupation``, ``country``,
+        ``language``) includes an ``"unknown"`` bucket for votes whose attribute
+        could not be determined.
+
+        ``ageBucket``, ``gender`` and ``occupation`` are estimated (inferred from
+        behaviour), not self-declared; ``country`` and ``language`` are observed.
+
+        Args:
+            tags: Only count votes on matchups with these tags. If None, all matchups are considered.
+            leaderboard_ids: Only count votes from these leaderboards. If None, all leaderboards are considered.
+            run_id: Only count votes from this evaluation run. If None, all runs are considered.
+
+        Returns:
+            A pandas DataFrame with columns ``dimension``, ``value``, ``votes``, ``share``.
+        """
+        import pandas as pd
+
+        with tracer.start_as_current_span("RapidataBenchmark.get_demographics"):
+            data = self._openapi_service.leaderboard.benchmark_demographics_api.get_demographics(
+                benchmark_id=self.id,
+                filters=self.__demographic_filters(tags, leaderboard_ids, run_id),
+            )
+
+            rows = [
+                {
+                    "dimension": dimension,
+                    "value": bucket["value"],
+                    "votes": bucket["votes"],
+                    "share": bucket["share"],
+                }
+                for dimension, buckets in data["dimensions"].items()
+                for bucket in buckets
+            ]
+
+            return pd.DataFrame(
+                rows, columns=pd.Index(["dimension", "value", "votes", "share"])
+            )
+
+    def get_standings_breakdown(
+        self,
+        dimension: BreakdownDimension,
+        tags: Optional[list[str]] = None,
+        leaderboard_ids: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """
+        Returns the standings split by a demographic dimension of the voters.
+
+        One row per (segment, model): how each demographic segment of voters
+        ranks the models, alongside that segment's vote count. The segments
+        include an ``"unknown"`` bucket. Scores are raw vote counts. For the
+        overall standings across all voters, use :py:meth:`get_overall_standings`.
+
+        ``AgeBucket``, ``Gender`` and ``Occupation`` are estimated (inferred), not
+        self-declared; ``Country`` and ``Language`` are observed.
+
+        Args:
+            dimension: The demographic dimension to split by. One of "AgeBucket", "Gender", "Occupation", "Country", "Language".
+            tags: Only count votes on matchups with these tags. If None, all matchups are considered.
+            leaderboard_ids: Only count votes from these leaderboards. If None, all leaderboards are considered.
+            run_id: Only count votes from this evaluation run. If None, all runs are considered.
+
+        Returns:
+            A pandas DataFrame with columns ``segment``, ``segment_votes``, ``name``, ``wins``, ``total_matches``, ``score``.
+        """
+        import pandas as pd
+
+        with tracer.start_as_current_span("RapidataBenchmark.get_standings_breakdown"):
+            if dimension not in BreakdownDimension.__args__:
+                raise ValueError(
+                    "Dimension must be one of: "
+                    + ", ".join(BreakdownDimension.__args__)
+                )
+
+            data = self._openapi_service.leaderboard.benchmark_demographics_api.get_standings_breakdown(
+                benchmark_id=self.id,
+                dimension=dimension,
+                filters=self.__demographic_filters(tags, leaderboard_ids, run_id),
+            )
+
+            rows = []
+            for segment in data["segments"]:
+                for item in segment["items"]:
+                    score = item.get("score")
+                    rows.append(
+                        {
+                            "segment": segment["value"],
+                            "segment_votes": segment["votes"],
+                            "name": item["name"],
+                            "wins": item["wins"],
+                            "total_matches": item["totalMatches"],
+                            "score": round(score, 2) if score is not None else None,
+                        }
+                    )
+
+            return pd.DataFrame(
+                rows,
+                columns=pd.Index(
+                    [
+                        "segment",
+                        "segment_votes",
+                        "name",
+                        "wins",
+                        "total_matches",
+                        "score",
+                    ]
+                ),
+            )
+
+    def __demographic_filters(
+        self,
+        tags: Optional[list[str]],
+        leaderboard_ids: Optional[list[str]],
+        run_id: Optional[str],
+    ) -> dict[str, AudienceAudienceIdJobsGetJobIdParameter]:
+        filters: dict[str, AudienceAudienceIdJobsGetJobIdParameter] = {}
+        for field, values in (
+            ("tags", tags),
+            ("leaderboard_id", leaderboard_ids),
+            ("run_id", [run_id] if run_id is not None else None),
+        ):
+            if values:
+                param = AudienceAudienceIdJobsGetJobIdParameter()
+                param.var_in = values
+                filters[field] = param
+        return filters
 
     def __str__(self) -> str:
         return f"RapidataBenchmark(name={self.name}, id={self.id})"
