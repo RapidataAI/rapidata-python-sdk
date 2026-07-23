@@ -10,8 +10,9 @@ from rapidata.rapidata_client.benchmark._detail_mapper import (
     LevelOfDetail,
     ResolvedLevelOfDetail,
 )
-from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
-    AudienceAudienceIdJobsGetJobIdParameter,
+from rapidata.rapidata_client.benchmark._vote_filters import (
+    demographic_filters,
+    in_filter,
 )
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_endpoint_input import (
@@ -21,6 +22,8 @@ from rapidata.api_client.models.update_leaderboard_endpoint_input import (
 if TYPE_CHECKING:
     import pandas as pd
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+    from rapidata.rapidata_client.filter.models.gender import Gender
+    from rapidata.rapidata_client.filter.models.age_group import AgeGroup
 
 
 class RapidataLeaderboard:
@@ -224,23 +227,51 @@ class RapidataLeaderboard:
 
             return [job_manager.get_job_by_id(job_id) for job_id in job_ids]
 
-    def get_standings(self, tags: Optional[list[str]] = None) -> "pd.DataFrame":
+    def get_standings(
+        self,
+        tags: Optional[list[str]] = None,
+        country: Optional[list[str]] = None,
+        language: Optional[list[str]] = None,
+        gender: Optional[list[Gender]] = None,
+        age_bucket: Optional[list[AgeGroup]] = None,
+        occupation: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
+    ) -> "pd.DataFrame":
         """
         Returns the standings of the leaderboard.
+
+        The demographic filters compute the standings from only the votes cast by
+        matching voters — e.g. the standings among women, or among US voters.
+        ``gender`` and ``age_bucket`` are estimated (inferred); ``country`` and
+        ``language`` are observed.
 
         Args:
             tags: The matchups with these tags should be used to create the standings.
                 If tags are None, all matchups will be considered.
                 If tags are empty, no matchups will be considered.
+            country: Only count votes from these countries (ISO-2 codes).
+            language: Only count votes from these languages.
+            gender: Only count votes from voters of these (estimated) genders.
+            age_bucket: Only count votes from voters in these (estimated) age buckets.
+            occupation: Only count votes from voters of these (estimated) occupations.
+            run_id: Only count votes from this evaluation run.
 
         Returns:
             A pandas DataFrame containing the standings of the leaderboard.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_standings"):
-            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
-            tags_filter.var_in = tags
+            votes = demographic_filters(
+                country, language, gender, age_bucket, occupation, run_id
+            )
             participants = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_standings_query_get(
-                leaderboard_id=self.id, tags=tags_filter
+                leaderboard_id=self.id,
+                tags=in_filter(tags),
+                country=votes.country,
+                language=votes.language,
+                gender=votes.gender,
+                age_bucket=votes.age_bucket,
+                occupation=votes.occupation,
+                run_id=votes.run_id,
             )
 
             import pandas as pd
@@ -266,6 +297,12 @@ class RapidataLeaderboard:
         self,
         tags: Optional[list[str]] = None,
         use_weighted_scoring: Optional[bool] = None,
+        country: Optional[list[str]] = None,
+        language: Optional[list[str]] = None,
+        gender: Optional[list[Gender]] = None,
+        age_bucket: Optional[list[AgeGroup]] = None,
+        occupation: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
     ) -> pd.DataFrame:
         """
         Returns the pairwise win/loss matrix for the participants in this leaderboard.
@@ -277,6 +314,10 @@ class RapidataLeaderboard:
         always 0. This is the head-to-head breakdown behind :meth:`get_standings`,
         which collapses the same matchups into a single Elo score per model.
 
+        The demographic filters restrict the matrix to matchups decided by matching
+        voters. ``gender`` and ``age_bucket`` are estimated (inferred); ``country``
+        and ``language`` are observed.
+
         Args:
             tags: Only count matchups carrying one of these prompt tags. If None,
                 every matchup on the leaderboard is included; if an empty list, none are.
@@ -285,6 +326,12 @@ class RapidataLeaderboard:
                 plain win, so cells hold weighted sums (floats) rather than raw counts.
                 If False, cells are raw win counts. When None (default), the server
                 applies the leaderboard's configured default.
+            country: Only count votes from these countries (ISO-2 codes).
+            language: Only count votes from these languages.
+            gender: Only count votes from voters of these (estimated) genders.
+            age_bucket: Only count votes from voters in these (estimated) age buckets.
+            occupation: Only count votes from voters of these (estimated) occupations.
+            run_id: Only count votes from this evaluation run.
 
         Returns:
             A pandas DataFrame indexed by participant name on both axes, where cell
@@ -292,12 +339,19 @@ class RapidataLeaderboard:
             participant over the column participant.
         """
         with tracer.start_as_current_span("RapidataLeaderboard.get_win_loss_matrix"):
-            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
-            tags_filter.var_in = tags
+            votes = demographic_filters(
+                country, language, gender, age_bucket, occupation, run_id
+            )
             result = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_matrix_query_get(
                 leaderboard_id=self.id,
-                tags=tags_filter,
+                tags=in_filter(tags),
                 use_weighted_scoring=use_weighted_scoring,
+                country=votes.country,
+                language=votes.language,
+                gender=votes.gender,
+                age_bucket=votes.age_bucket,
+                occupation=votes.occupation,
+                run_id=votes.run_id,
             )
 
             import pandas as pd
