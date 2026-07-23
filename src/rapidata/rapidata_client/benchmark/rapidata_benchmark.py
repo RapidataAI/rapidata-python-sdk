@@ -856,20 +856,20 @@ class RapidataBenchmark:
 
             dimensions = result.dimensions
             dimension_buckets = {
-                "ageBucket": dimensions.age_bucket,
-                "gender": dimensions.gender,
-                "occupation": dimensions.occupation,
-                "country": dimensions.country,
-                "language": dimensions.language,
+                BenchmarkDemographicDimension.AGEBUCKET: dimensions.age_bucket,
+                BenchmarkDemographicDimension.GENDER: dimensions.gender,
+                BenchmarkDemographicDimension.OCCUPATION: dimensions.occupation,
+                BenchmarkDemographicDimension.COUNTRY: dimensions.country,
+                BenchmarkDemographicDimension.LANGUAGE: dimensions.language,
             }
             rows = [
                 {
-                    "dimension": name,
+                    "dimension": dimension.value,
                     "value": bucket.value,
                     "votes": bucket.votes,
                     "share": bucket.share,
                 }
-                for name, buckets in dimension_buckets.items()
+                for dimension, buckets in dimension_buckets.items()
                 for bucket in buckets
             ]
 

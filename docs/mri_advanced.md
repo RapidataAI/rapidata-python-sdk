@@ -260,13 +260,19 @@ the benchmark and return a pandas DataFrame, like `get_overall_standings`.
 ### Voter composition
 
 `get_demographics` returns one row per `(dimension, value)` with the raw vote
-count and its share of the dimension (shares within a dimension sum to 1):
+count and its share of the dimension (shares within a dimension sum to 1). The
+`dimension` column holds `BenchmarkDemographicDimension` values (`AgeBucket`,
+`Gender`, `Occupation`, `Country`, `Language`):
 
 ```python
+from rapidata import BenchmarkDemographicDimension
+
 demographics = benchmark.get_demographics()
 # columns: dimension, value, votes, share
 
-countries = demographics[demographics["dimension"] == "country"]
+countries = demographics[
+    demographics["dimension"] == BenchmarkDemographicDimension.COUNTRY
+]
 print(countries)
 ```
 
