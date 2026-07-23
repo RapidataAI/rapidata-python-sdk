@@ -27,6 +27,7 @@ class Capability(str, Enum):
     """
     SKIPCONTENTCHECK = 'SkipContentCheck'
     PREHEATBOOST = 'PreheatBoost'
+    MANAGEDIMAGEFAUCET = 'ManagedImageFaucet'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
