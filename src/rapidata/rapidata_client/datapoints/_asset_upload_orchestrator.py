@@ -12,6 +12,7 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints._batch_asset_uploader import (
     BatchAssetUploader,
 )
+from rapidata.rapidata_client.exceptions.asset_warning import AssetWarning
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
 
@@ -113,6 +114,7 @@ class AssetUploadOrchestrator:
 
         # 4. Report results
         self._log_upload_results(failed_uploads)
+        self._log_upload_warnings(self._collect_warnings())
         return failed_uploads
 
     # Keep the URL scheme check case-insensitive to match AssetUploader.
@@ -255,6 +257,36 @@ class AssetUploadOrchestrator:
             logger.warning(f"Step 1/2: {len(failed_uploads)} asset(s) failed to upload")
         else:
             logger.info("Step 1/2: All assets uploaded successfully")
+
+    def _collect_warnings(self) -> list[AssetWarning[str]]:
+        """Drain and de-duplicate backend warnings from both upload paths.
+
+        Caching means a warning is captured only on the first upload of a given
+        asset, so this is already roughly per-unique-asset — but de-duplicate on
+        (item, message) so an asset referenced by several datapoints is reported
+        once, not once per reference.
+        """
+        drained = (
+            self.asset_uploader.drain_warnings() + self.batch_uploader.drain_warnings()
+        )
+
+        seen: set[AssetWarning[str]] = set()
+        unique: list[AssetWarning[str]] = []
+        for warning in drained:
+            if warning not in seen:
+                seen.add(warning)
+                unique.append(warning)
+        return unique
+
+    def _log_upload_warnings(self, warnings: list[AssetWarning[str]]) -> None:
+        """Surface non-fatal upload warnings via the SDK logger.
+
+        The assets uploaded successfully — these are backend advisories about
+        them (e.g. a video longer than annotators can solve), reported once at
+        the end so they are not lost among the per-asset upload logs.
+        """
+        for warning in warnings:
+            logger.warning("Upload warning for '%s': %s", warning.item, warning.message)
 
     def _filter_uncached(self, assets: set[str], cache: SingleFlightCache) -> set[str]:
         """Filter out assets that are already cached."""

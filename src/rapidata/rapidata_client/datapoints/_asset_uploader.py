@@ -11,6 +11,7 @@ from rapidata.rapidata_client.config import logger, rapidata_config, tracer
 from rapidata.rapidata_client.config.upload_config import CompressionConfig
 from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
+from rapidata.rapidata_client.exceptions.asset_warning import AssetWarning
 from diskcache import FanoutCache
 
 
@@ -65,6 +66,32 @@ class AssetUploader:
 
     def __init__(self, openapi_service: OpenAPIService) -> None:
         self.openapi_service = openapi_service
+        # Non-fatal warnings the backend attaches to successful uploads. Only
+        # captured on a cache miss (i.e. the first upload of a given asset),
+        # so this holds one entry per uniquely-uploaded asset per run; the
+        # orchestrator drains and de-duplicates it when reporting.
+        self._warnings: list[AssetWarning[str]] = []
+        self._warnings_lock = threading.Lock()
+
+    def _record_warnings(self, item: str, warnings: Any) -> None:
+        """Buffer any backend warnings for ``item``.
+
+        Read defensively: ``warnings`` is only a list once the backend that
+        produced the upload response exposes the field — until then (or for a
+        mocked response) it is None/absent and there is nothing to record.
+        """
+        if not isinstance(warnings, list):
+            return
+        with self._warnings_lock:
+            for message in warnings:
+                self._warnings.append(AssetWarning(item=item, message=message))
+
+    def drain_warnings(self) -> list[AssetWarning[str]]:
+        """Return the buffered warnings and clear the buffer."""
+        with self._warnings_lock:
+            collected = self._warnings
+            self._warnings = []
+            return collected
 
     # NOTE: the public ``get_*_cache_key`` helpers read
     # ``rapidata_config.upload.compression`` at call time rather than taking a
@@ -150,6 +177,7 @@ class AssetUploader:
             response = self.openapi_service.asset.asset_api.asset_url_post(
                 url=url, **kwargs
             )
+            self._record_warnings(url, getattr(response, "warnings", None))
             logger.info(
                 "Asset uploaded from URL: %s, file name: %s", url, response.file_name
             )
@@ -173,6 +201,7 @@ class AssetUploader:
             response = self.openapi_service.asset.asset_api.asset_file_post(
                 file=file_path, **kwargs
             )
+            self._record_warnings(file_path, getattr(response, "warnings", None))
             logger.info(
                 "Asset uploaded from file: %s, file name: %s",
                 file_path,
@@ -189,9 +218,7 @@ class AssetUploader:
     def upload_asset(self, asset: str) -> str:
         logger.debug("Uploading asset: %s", asset)
         if not isinstance(asset, str):
-            raise TypeError(
-                f"Asset must be a string, got {type(asset).__name__}"
-            )
+            raise TypeError(f"Asset must be a string, got {type(asset).__name__}")
 
         if self._URL_SCHEME_RE.match(asset):
             return self._upload_url_asset(asset)
