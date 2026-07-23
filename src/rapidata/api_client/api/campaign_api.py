@@ -23,8 +23,8 @@ from rapidata.api_client.models.create_program_campaign_endpoint_input import Cr
 from rapidata.api_client.models.create_program_campaign_endpoint_output import CreateProgramCampaignEndpointOutput
 from rapidata.api_client.models.get_boost_insights_endpoint_output import GetBoostInsightsEndpointOutput
 from rapidata.api_client.models.get_boost_status_endpoint_output import GetBoostStatusEndpointOutput
+from rapidata.api_client.models.get_campaign_by_id_endpoint_i_campaign_details import GetCampaignByIdEndpointICampaignDetails
 from rapidata.api_client.models.get_fast_bid_multiplier_endpoint_output import GetFastBidMultiplierEndpointOutput
-from rapidata.api_client.models.i_campaign_details import ICampaignDetails
 from rapidata.api_client.models.query_campaigns_endpoint_paged_result_of_output import QueryCampaignsEndpointPagedResultOfOutput
 from rapidata.api_client.models.set_fast_bid_multiplier_endpoint_input import SetFastBidMultiplierEndpointInput
 from rapidata.api_client.models.set_fast_bid_multiplier_endpoint_output import SetFastBidMultiplierEndpointOutput
@@ -1670,7 +1670,7 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ICampaignDetails:
+    ) -> GetCampaignByIdEndpointICampaignDetails:
         """Retrieves the details of a specific campaign.
 
         The response is discriminated by campaign kind: a program campaign includes its stream  program, a routed campaign includes its selections.
@@ -1708,7 +1708,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ICampaignDetails",
+            '200': "GetCampaignByIdEndpointICampaignDetails",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1740,7 +1740,7 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ICampaignDetails]:
+    ) -> ApiResponse[GetCampaignByIdEndpointICampaignDetails]:
         """Retrieves the details of a specific campaign.
 
         The response is discriminated by campaign kind: a program campaign includes its stream  program, a routed campaign includes its selections.
@@ -1778,7 +1778,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ICampaignDetails",
+            '200': "GetCampaignByIdEndpointICampaignDetails",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
@@ -1848,7 +1848,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ICampaignDetails",
+            '200': "GetCampaignByIdEndpointICampaignDetails",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,

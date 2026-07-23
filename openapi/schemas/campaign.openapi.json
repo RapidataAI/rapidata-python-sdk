@@ -268,7 +268,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ICampaignDetails"
+                  "$ref": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetails"
                 }
               }
             }
@@ -2023,156 +2023,29 @@
           }
         }
       },
-      "GetCampaignCacheEndpoint_CampaignEntry": {
-        "required": [
-          "id",
-          "name",
-          "status",
-          "priority",
-          "filterCount",
-          "selectionCount",
-          "userScoreDimensionCount",
-          "featureFlagCount",
-          "rateLimitCount",
-          "isPreviewEnabled",
-          "boostingControlMode"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/CampaignStatus"
-          },
-          "priority": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "filterCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "selectionCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userScoreDimensionCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "featureFlagCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "rateLimitCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isPreviewEnabled": {
-            "type": "boolean"
-          },
-          "boostingControlMode": {
-            "$ref": "#/components/schemas/BoostingControlMode"
-          }
-        }
-      },
-      "GetCampaignCacheEndpoint_Output": {
-        "required": [
-          "count",
-          "campaigns"
-        ],
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "integer",
-            "description": "The total number of cached campaigns.",
-            "format": "int32"
-          },
-          "campaigns": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetCampaignCacheEndpoint_CampaignEntry"
-                }
-              }
-            ],
-            "description": "The list of cached campaign summaries."
-          }
-        }
-      },
-      "GetFastBidMultiplierEndpoint_Output": {
-        "required": [
-          "externalCampaignId",
-          "bidMultiplierValue"
-        ],
-        "type": "object",
-        "properties": {
-          "externalCampaignId": {
-            "type": "integer",
-            "description": "The external campaign id reported by the downstream system.",
-            "format": "int32"
-          },
-          "bidMultiplierValue": {
-            "type": "number",
-            "description": "The current bid multiplier reported for the campaign.",
-            "format": "double"
-          }
-        }
-      },
-      "GetUserScoreCacheEndpoint_Output": {
-        "required": [
-          "count",
-          "scores"
-        ],
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "integer",
-            "description": "The total number of cached user scores.",
-            "format": "int32"
-          },
-          "scores": {
-            "allOf": [
-              {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "number",
-                  "format": "double"
-                }
-              }
-            ],
-            "description": "The cached dimension-to-score mappings."
-          }
-        }
-      },
-      "ICampaignDetails": {
+      "GetCampaignByIdEndpoint_ICampaignDetails": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/ICampaignDetailsProgramCampaignDetails"
+            "$ref": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_RoutedCampaignDetails"
           },
           {
-            "$ref": "#/components/schemas/ICampaignDetailsRoutedCampaignDetails"
+            "$ref": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_ProgramCampaignDetails"
           }
         ],
         "description": "A campaign's details, identified by a discriminator. Implementations describe the\n type-specific configuration: a routed campaign's selections or a program campaign's\n stream program.",
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "ProgramCampaign": "#/components/schemas/ICampaignDetailsProgramCampaignDetails",
-            "RoutedCampaign": "#/components/schemas/ICampaignDetailsRoutedCampaignDetails"
+            "RoutedCampaign": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_RoutedCampaignDetails",
+            "ProgramCampaign": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_ProgramCampaignDetails"
           }
         }
       },
-      "ICampaignDetailsProgramCampaignDetails": {
+      "GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_ProgramCampaignDetails": {
         "required": [
           "id",
           "name",
@@ -2329,7 +2202,7 @@
         },
         "description": "A program campaign: its sessions stream their rapids, driven by a stream program."
       },
-      "ICampaignDetailsRoutedCampaignDetails": {
+      "GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_RoutedCampaignDetails": {
         "required": [
           "id",
           "name",
@@ -2462,6 +2335,133 @@
           }
         },
         "description": "A routed campaign: its rapids are served from a fixed selection list."
+      },
+      "GetCampaignCacheEndpoint_CampaignEntry": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "priority",
+          "filterCount",
+          "selectionCount",
+          "userScoreDimensionCount",
+          "featureFlagCount",
+          "rateLimitCount",
+          "isPreviewEnabled",
+          "boostingControlMode"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filterCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selectionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userScoreDimensionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "featureFlagCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rateLimitCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPreviewEnabled": {
+            "type": "boolean"
+          },
+          "boostingControlMode": {
+            "$ref": "#/components/schemas/BoostingControlMode"
+          }
+        }
+      },
+      "GetCampaignCacheEndpoint_Output": {
+        "required": [
+          "count",
+          "campaigns"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "The total number of cached campaigns.",
+            "format": "int32"
+          },
+          "campaigns": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetCampaignCacheEndpoint_CampaignEntry"
+                }
+              }
+            ],
+            "description": "The list of cached campaign summaries."
+          }
+        }
+      },
+      "GetFastBidMultiplierEndpoint_Output": {
+        "required": [
+          "externalCampaignId",
+          "bidMultiplierValue"
+        ],
+        "type": "object",
+        "properties": {
+          "externalCampaignId": {
+            "type": "integer",
+            "description": "The external campaign id reported by the downstream system.",
+            "format": "int32"
+          },
+          "bidMultiplierValue": {
+            "type": "number",
+            "description": "The current bid multiplier reported for the campaign.",
+            "format": "double"
+          }
+        }
+      },
+      "GetUserScoreCacheEndpoint_Output": {
+        "required": [
+          "count",
+          "scores"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "The total number of cached user scores.",
+            "format": "int32"
+          },
+          "scores": {
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            ],
+            "description": "The cached dimension-to-score mappings."
+          }
+        }
       },
       "ICampaignFilter": {
         "required": [
