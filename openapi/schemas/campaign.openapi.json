@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "v1"
+    "version": "2026.07.24.1303-b3d1ec7"
   },
   "servers": [
     {
@@ -63,6 +63,47 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}/activate": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Activates the specified campaign.",
+        "description": "Only campaigns in the Created, Preview, or Analysis state can be activated; any other\n state returns 400. A program campaign has no top-level routing id and is therefore not\n picked up by the target-group-driven auto-activation, so this endpoint is how it is moved\n into the serving set.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "The identifier of the campaign to activate.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",

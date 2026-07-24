@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "v1"
+    "version": "2026.07.24.1303-b3d1ec7"
   },
   "servers": [
     {
@@ -3551,7 +3551,6 @@
           "organizationId": {
             "type": "string",
             "description": "The identifier of the organization this customer belongs to, if any.",
-            "format": "uuid",
             "nullable": true
           }
         }

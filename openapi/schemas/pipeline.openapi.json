@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Pipeline API",
     "description": "The API for the Rapidata Pipeline service",
-    "version": "v1"
+    "version": "2026.07.24.1303-b3d1ec7"
   },
   "servers": [
     {
