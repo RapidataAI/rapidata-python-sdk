@@ -8,6 +8,7 @@ from opentelemetry import context as otel_context
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
+from rapidata.rapidata_client.benchmark.prompt_metadata import Origin, Tag
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 if TYPE_CHECKING:
@@ -21,7 +22,8 @@ class BenchmarkPrompt:
     identifier: str
     prompt: str | None = None
     prompt_asset: str | None = None
-    tags: list[str] = field(default_factory=list)
+    taggings: list[Tag] = field(default_factory=list)
+    origin: Origin | None = None
 
 
 class BenchmarkPromptUploader:
@@ -45,6 +47,8 @@ class BenchmarkPromptUploader:
             IAssetInputExistingAssetInput,
         )
         from rapidata.api_client.models.i_asset_input import IAssetInput
+        from rapidata.api_client.models.prompt_origin import PromptOrigin
+        from rapidata.api_client.models.prompt_tagging import PromptTagging
 
         self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self._benchmark_id,
@@ -61,7 +65,18 @@ class BenchmarkPromptUploader:
                     if prompt.prompt_asset is not None
                     else None
                 ),
-                tags=prompt.tags,
+                # `tags` is deprecated (values only) but still populated so an
+                # older backend that doesn't yet read `taggings` keeps working.
+                tags=[tag.value for tag in prompt.taggings],
+                taggings=[
+                    PromptTagging(value=tag.value, category=tag.category)
+                    for tag in prompt.taggings
+                ],
+                origin=(
+                    PromptOrigin(value=prompt.origin.value)
+                    if prompt.origin is not None
+                    else None
+                ),
             ),
         )
 

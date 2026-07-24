@@ -19,6 +19,8 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_asset_input import IAssetInput
+from rapidata.api_client.models.prompt_origin import PromptOrigin
+from rapidata.api_client.models.prompt_tagging import PromptTagging
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +34,9 @@ class CreatePromptForBenchmarkEndpointInput(LazyValidatedModel):
     prompt: Optional[StrictStr] = Field(default=None, description="The prompt text.")
     prompt_asset: Optional[IAssetInput] = Field(default=None, description="The asset associated with the prompt.", alias="promptAsset")
     tags: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["identifier", "prompt", "promptAsset", "tags"]
+    taggings: Optional[List[PromptTagging]] = None
+    origin: Optional[PromptOrigin] = None
+    __properties: ClassVar[List[str]] = ["identifier", "prompt", "promptAsset", "tags", "taggings", "origin"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -72,6 +76,16 @@ class CreatePromptForBenchmarkEndpointInput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of prompt_asset
         if self.prompt_asset:
             _dict['promptAsset'] = self.prompt_asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in taggings (list)
+        _items = []
+        if self.taggings:
+            for _item_taggings in self.taggings:
+                if _item_taggings:
+                    _items.append(_item_taggings.to_dict())
+            _dict['taggings'] = _items
+        # override the default output from pydantic by calling `to_dict()` of origin
+        if self.origin:
+            _dict['origin'] = self.origin.to_dict()
         # set to None if prompt (nullable) is None
         # and model_fields_set contains the field
         if self.prompt is None and "prompt" in self.model_fields_set:
@@ -81,6 +95,16 @@ class CreatePromptForBenchmarkEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.tags is None and "tags" in self.model_fields_set:
             _dict['tags'] = None
+
+        # set to None if taggings (nullable) is None
+        # and model_fields_set contains the field
+        if self.taggings is None and "taggings" in self.model_fields_set:
+            _dict['taggings'] = None
+
+        # set to None if origin (nullable) is None
+        # and model_fields_set contains the field
+        if self.origin is None and "origin" in self.model_fields_set:
+            _dict['origin'] = None
 
         return _dict
 
@@ -97,7 +121,9 @@ class CreatePromptForBenchmarkEndpointInput(LazyValidatedModel):
             "identifier": obj.get("identifier"),
             "prompt": obj.get("prompt"),
             "promptAsset": IAssetInput.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
-            "tags": obj.get("tags")
+            "tags": obj.get("tags"),
+            "taggings": [PromptTagging.from_dict(_item) for _item in obj["taggings"]] if obj.get("taggings") is not None else None,
+            "origin": PromptOrigin.from_dict(obj["origin"]) if obj.get("origin") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

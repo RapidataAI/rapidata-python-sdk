@@ -11,6 +11,7 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
     BenchmarkPrompt,
     BenchmarkPromptUploader,
 )
+from rapidata.rapidata_client.benchmark.prompt_metadata import Origin, Tag
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
 )
@@ -50,6 +51,8 @@ class RapidataBenchmark:
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
+        self.__taggings: list[list[Tag]] = []
+        self.__origins: list[Origin | None] = []
         self.__participants: list[BenchmarkParticipant] = []
         self.__benchmark_page: str = (
             f"https://app.{self._openapi_service.environment}/mri/benchmarks/{self.id}"
@@ -74,6 +77,8 @@ class RapidataBenchmark:
             self.__identifiers = []
             self.__prompt_assets = []
             self.__tags = []
+            self.__taggings = []
+            self.__origins = []
 
             current_page = 1
             total_pages = None
@@ -118,7 +123,24 @@ class RapidataBenchmark:
                         else:
                             self.__prompt_assets.append(None)
 
-                    self.__tags.append(prompt.tags)
+                    # Prefer the structured `taggings`; fall back to the
+                    # deprecated flat `tags` when talking to a backend that
+                    # doesn't emit them yet.
+                    if prompt.taggings is not None:
+                        prompt_taggings = [
+                            Tag(value=tagging.value, category=tagging.category)
+                            for tagging in prompt.taggings
+                        ]
+                    else:
+                        prompt_taggings = [Tag(value=tag) for tag in prompt.tags]
+
+                    self.__taggings.append(prompt_taggings)
+                    self.__tags.append([tag.value for tag in prompt_taggings])
+                    self.__origins.append(
+                        Origin(value=prompt.origin.value)
+                        if prompt.origin is not None
+                        else None
+                    )
                 if current_page >= total_pages:
                     break
 
@@ -186,12 +208,42 @@ class RapidataBenchmark:
     @property
     def tags(self) -> list[list[str]]:
         """
-        Returns the tags that are registered for the benchmark.
+        Returns the tag values registered for the benchmark, aligned by index with `prompts`.
+
+        This is the flat, values-only view of the tags. It is kept for
+        backwards compatibility — prefer `taggings` for the structured
+        (value + category) representation.
         """
         if not self.__tags:
             self.__instantiate_prompts()
 
         return self.__tags
+
+    @property
+    def taggings(self) -> list[list[Tag]]:
+        """
+        Returns the structured tags registered for the benchmark, aligned by index with `prompts`.
+
+        Each :class:`Tag` carries a ``value`` and an optional ``category``. Tags
+        are used to filter and organize leaderboard results and are NOT shown to
+        the annotators.
+        """
+        if not self.__taggings:
+            self.__instantiate_prompts()
+
+        return self.__taggings
+
+    @property
+    def origins(self) -> list[Origin | None]:
+        """
+        Returns the origin of each prompt, aligned by index with `prompts`.
+
+        A prompt without an origin is represented as ``None``.
+        """
+        if not self.__origins:
+            self.__instantiate_prompts()
+
+        return self.__origins
 
     @property
     def leaderboards(self) -> list[RapidataLeaderboard]:
@@ -278,6 +330,8 @@ class RapidataBenchmark:
         prompts: Optional[list[str | None] | list[str]] = None,
         prompt_assets: Optional[list[str | None] | list[str]] = None,
         tags: Optional[list[list[str] | None] | list[list[str]]] = None,
+        taggings: Optional[list[list[Tag | str] | None]] = None,
+        origins: Optional[list[Origin | str | None]] = None,
     ) -> None:
         """
         Adds one or more prompts to the benchmark. Everything is matched up by the
@@ -293,15 +347,20 @@ class RapidataBenchmark:
             identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts as the identifiers.
             prompts: The prompts that will be registered for the benchmark.
             prompt_assets: The prompt assets that will be registered for the benchmark.
-            tags: The tags that will be associated with the prompts to use for filtering the leaderboard results. They will NOT be shown to the users.
+            tags: Deprecated flat tags, associated with the prompts to filter the leaderboard results. They are NOT shown to the users. Plain strings are still accepted and mapped to `Tag(value, category=None)`; prefer `taggings` for structured (value + category) tags. Any `tags` and `taggings` given for the same prompt are merged.
+            taggings: Structured tags per prompt. Each entry is a list of :class:`Tag` (or plain strings, which are mapped to `Tag(value, category=None)`), or None. Used to filter and organize leaderboard results; NOT shown to the users.
+            origins: The origin of each prompt (e.g. a source dataset). Each entry is an :class:`Origin`, a plain string (mapped to `Origin(value)`), or None.
 
         Example:
             ```python
+            from rapidata import Tag, Origin
+
             benchmark.add_prompts(
                 identifiers=["id1", "id2"],
                 prompts=["prompt 1", "prompt 2"],
                 prompt_assets=["https://assets.rapidata.ai/prompt_1.jpg", "https://assets.rapidata.ai/prompt_2.jpg"],
-                tags=[["tag1", "tag2"], ["tag2"]],
+                taggings=[[Tag("landscape", category="scene")], [Tag("portrait")]],
+                origins=[Origin("coco"), Origin("coco")],
             )
             ```
         """
@@ -344,6 +403,28 @@ class RapidataBenchmark:
                             "Tags must be a list of lists of strings or None."
                         )
 
+            if taggings is not None:
+                if not isinstance(taggings, list):
+                    raise ValueError(
+                        "Taggings must be a list of lists of Tag/str or None."
+                    )
+
+                for tagging in taggings:
+                    if tagging is not None and (
+                        not isinstance(tagging, list)
+                        or not all(isinstance(item, (Tag, str)) for item in tagging)
+                    ):
+                        raise ValueError(
+                            "Taggings must be a list of lists of Tag/str or None."
+                        )
+
+            if origins is not None:
+                if not isinstance(origins, list) or not all(
+                    origin is None or isinstance(origin, (Origin, str))
+                    for origin in origins
+                ):
+                    raise ValueError("Origins must be a list of Origin/str or None.")
+
             if not identifiers and not prompts:
                 raise ValueError(
                     "At least one of identifiers or prompts must be provided."
@@ -380,9 +461,22 @@ class RapidataBenchmark:
             if not tags:
                 tags = cast(list[list[str] | None], [None] * expected_length)
 
-            if not (expected_length == len(prompts) == len(prompt_assets) == len(tags)):
+            if not taggings:
+                taggings = cast(list[list[Tag | str] | None], [None] * expected_length)
+
+            if not origins:
+                origins = cast(list[Origin | str | None], [None] * expected_length)
+
+            if not (
+                expected_length
+                == len(prompts)
+                == len(prompt_assets)
+                == len(tags)
+                == len(taggings)
+                == len(origins)
+            ):
                 raise ValueError(
-                    "Identifiers, prompts, media assets, and tags must have the same length or set to None."
+                    "Identifiers, prompts, media assets, tags, taggings, and origins must have the same length or set to None."
                 )
 
             # Snapshot once: `self.identifiers` is a property whose getter re-fetches
@@ -400,12 +494,29 @@ class RapidataBenchmark:
                     f"Identifiers already exist in the benchmark: {already_registered}"
                 )
 
+            def build_taggings(
+                tag: list[str] | None, tagging: list[Tag | str] | None
+            ) -> list[Tag]:
+                # Flat `tags` and structured `taggings` for the same prompt are
+                # merged; plain strings from either become `Tag(value)`.
+                merged = [Tag(value=item) for item in (tag or [])]
+                for item in tagging or []:
+                    merged.append(Tag(value=item) if isinstance(item, str) else item)
+                return merged
+
+            def build_origin(origin: Origin | str | None) -> Origin | None:
+                return Origin(value=origin) if isinstance(origin, str) else origin
+
             to_upload = [
                 BenchmarkPrompt(
-                    identifier, prompt, asset, tag if tag is not None else []
+                    identifier,
+                    prompt,
+                    asset,
+                    build_taggings(tag, tagging),
+                    build_origin(origin),
                 )
-                for identifier, prompt, asset, tag in zip(
-                    identifiers, prompts, prompt_assets, tags
+                for identifier, prompt, asset, tag, tagging, origin in zip(
+                    identifiers, prompts, prompt_assets, tags, taggings, origins
                 )
             ]
 
@@ -415,7 +526,9 @@ class RapidataBenchmark:
                 self.__prompt_assets.append(
                     self.__normalize_cached_asset(uploaded.prompt_asset)
                 )
-                self.__tags.append(uploaded.tags)
+                self.__taggings.append(uploaded.taggings)
+                self.__tags.append([tag.value for tag in uploaded.taggings])
+                self.__origins.append(uploaded.origin)
 
             # The English translation is produced server-side and is unknown for
             # the just-added prompts. Clear it so the next access lazily re-fetches
