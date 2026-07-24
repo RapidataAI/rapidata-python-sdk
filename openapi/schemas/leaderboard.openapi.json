@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "v1"
+    "version": "2026.07.24.1303-b3d1ec7"
   },
   "servers": [
     {
@@ -1222,6 +1222,649 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/matchup-breakdown": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns a page of the requested confidence zone of an A-vs-B matchup — the prompts A clearly\n wins, the coin flips, or the prompts B clearly wins.",
+        "description": "Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score\n interval on A's win share and, within the requested zone, ordered most-confident first (coin\n flips by effective sample size). The same vote-level filters as the matrix query apply.\n Benchmarks without granular votes return an empty page.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantA",
+            "in": "query",
+            "description": "The id of participant A (the reference side of the split).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantB",
+            "in": "query",
+            "description": "The id of participant B.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "zone",
+            "in": "query",
+            "description": "Which confidence zone of the matchup to page through.",
+            "schema": {
+              "$ref": "#/components/schemas/MatchupZone"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Filter by country.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter by language.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "description": "Filter by gender.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "age_bucket",
+            "in": "query",
+            "description": "Filter by age_bucket.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "occupation",
+            "in": "query",
+            "description": "Filter by occupation.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Filter by tags.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_id",
+            "in": "query",
+            "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "leaderboard_id",
+            "in": "query",
+            "description": "Filter by leaderboard_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "run_id",
+            "in": "query",
+            "description": "Filter by run_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "prompt_identifier",
+            "in": "query",
+            "description": "Filter by prompt_identifier.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "voted_at",
+            "in": "query",
+            "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkMatchupBreakdownEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -12886,6 +13529,11 @@
             "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), if any.",
             "nullable": true
           },
+          "lab": {
+            "type": "string",
+            "description": "The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"), if any.",
+            "nullable": true
+          },
           "proprietaryName": {
             "type": "string",
             "description": "The vendor-facing display name of the model, if any.",
@@ -13535,6 +14183,111 @@
           }
         }
       },
+      "GetBenchmarkMatchupBreakdownEndpoint_Output": {
+        "required": [
+          "promptIdentifier",
+          "rawWinsA",
+          "rawWinsB",
+          "weightedWinsA",
+          "weightedWinsB",
+          "effectiveN",
+          "wilsonCenter"
+        ],
+        "type": "object",
+        "properties": {
+          "promptId": {
+            "type": "string",
+            "description": "The prompt entity id, or null when the identifier has no live prompt.",
+            "nullable": true
+          },
+          "promptIdentifier": {
+            "type": "string",
+            "description": "The stable identifier of the prompt within the benchmark."
+          },
+          "englishPrompt": {
+            "type": "string",
+            "description": "The prompt text translated to English, if any.",
+            "nullable": true
+          },
+          "originalPrompt": {
+            "type": "string",
+            "description": "The prompt text as originally provided, if any.",
+            "nullable": true
+          },
+          "promptAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "description": "The optional media asset shown with the prompt."
+          },
+          "rawWinsA": {
+            "type": "integer",
+            "description": "The number of votes A won on this prompt.",
+            "format": "int64"
+          },
+          "rawWinsB": {
+            "type": "integer",
+            "description": "The number of votes B won on this prompt.",
+            "format": "int64"
+          },
+          "weightedWinsA": {
+            "type": "number",
+            "description": "The reliability-weighted wins for A (summed annotator userScore).",
+            "format": "double"
+          },
+          "weightedWinsB": {
+            "type": "number",
+            "description": "The reliability-weighted wins for B (summed annotator userScore).",
+            "format": "double"
+          },
+          "effectiveN": {
+            "type": "number",
+            "description": "The reliability-weighted sample size, WeightedWinsA + WeightedWinsB.",
+            "format": "double"
+          },
+          "wilsonCenter": {
+            "type": "number",
+            "description": "The Wilson score interval center for A's win share.",
+            "format": "double"
+          }
+        },
+        "description": "One prompt's A-vs-B split with its render fields and vote stats."
+      },
+      "GetBenchmarkMatchupBreakdownEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkMatchupBreakdownEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "GetBenchmarkStandingsBreakdownEndpoint_Output": {
         "required": [
           "dimension",
@@ -13595,6 +14348,10 @@
             "type": "string"
           },
           "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "lab": {
             "type": "string",
             "nullable": true
           },
@@ -13746,6 +14503,10 @@
             "type": "string"
           },
           "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "lab": {
             "type": "string",
             "nullable": true
           },
@@ -14049,6 +14810,11 @@
           "family": {
             "type": "string",
             "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.",
+            "nullable": true
+          },
+          "lab": {
+            "type": "string",
+            "description": "The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"), or null if unset.",
             "nullable": true
           },
           "proprietaryName": {
@@ -15709,6 +16475,14 @@
           }
         }
       },
+      "MatchupZone": {
+        "enum": [
+          "AClearlyWins",
+          "CoinFlip",
+          "BClearlyWins",
+          null
+        ]
+      },
       "MetadataInputCollection": {
         "type": "object",
         "additionalProperties": {
@@ -15848,6 +16622,11 @@
           "family": {
             "type": "string",
             "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.",
+            "nullable": true
+          },
+          "lab": {
+            "type": "string",
+            "description": "The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"), or null if unset.",
             "nullable": true
           },
           "proprietaryName": {
@@ -16031,7 +16810,8 @@
       },
       "QueryCombinedStandingsByBenchmarksEndpoint_Output": {
         "required": [
-          "items"
+          "items",
+          "totalResponses"
         ],
         "type": "object",
         "properties": {
@@ -16045,6 +16825,11 @@
               }
             ],
             "description": "The standings items, ordered by score descending."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "format": "int64"
           }
         },
         "description": "The queried standings output."
@@ -16068,6 +16853,10 @@
             "type": "string"
           },
           "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "lab": {
             "type": "string",
             "nullable": true
           },
@@ -16111,7 +16900,8 @@
       },
       "QueryCombinedStandingsByLeaderboardsEndpoint_Output": {
         "required": [
-          "items"
+          "items",
+          "totalResponses"
         ],
         "type": "object",
         "properties": {
@@ -16125,6 +16915,11 @@
               }
             ],
             "description": "The standings items, ordered by score descending."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "format": "int64"
           }
         },
         "description": "The queried standings output."
@@ -16148,6 +16943,10 @@
             "type": "string"
           },
           "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "lab": {
             "type": "string",
             "nullable": true
           },
@@ -16756,6 +17555,11 @@
             "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.",
             "nullable": true
           },
+          "lab": {
+            "type": "string",
+            "description": "The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"), or null if unset.",
+            "nullable": true
+          },
           "proprietaryName": {
             "type": "string",
             "description": "The vendor-facing display name of the model, or null if unset.",
@@ -17109,7 +17913,8 @@
       },
       "QueryStandingsByBenchmarkEndpoint_Output": {
         "required": [
-          "items"
+          "items",
+          "totalResponses"
         ],
         "type": "object",
         "properties": {
@@ -17123,6 +17928,11 @@
               }
             ],
             "description": "The standings items, ordered by score descending."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "format": "int64"
           }
         },
         "description": "The queried standings output."
@@ -17146,6 +17956,10 @@
             "type": "string"
           },
           "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "lab": {
             "type": "string",
             "nullable": true
           },
@@ -17189,7 +18003,8 @@
       },
       "QueryStandingsByLeaderboardEndpoint_Output": {
         "required": [
-          "items"
+          "items",
+          "totalResponses"
         ],
         "type": "object",
         "properties": {
@@ -17203,6 +18018,11 @@
               }
             ],
             "description": "The standings items, ordered by score descending."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "format": "int64"
           }
         },
         "description": "The queried standings output."
@@ -17226,6 +18046,10 @@
             "type": "string"
           },
           "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "lab": {
             "type": "string",
             "nullable": true
           },
@@ -17702,6 +18526,11 @@
           "family": {
             "type": "string",
             "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"). Pass null to clear.",
+            "nullable": true
+          },
+          "lab": {
+            "type": "string",
+            "description": "The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"). Pass null to clear.",
             "nullable": true
           },
           "proprietaryName": {
