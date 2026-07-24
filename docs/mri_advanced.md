@@ -50,25 +50,36 @@ benchmark = client.mri.create_new_benchmark(
 
 Tags provide metadata for filtering and organizing benchmark results without showing them to evaluators. These tags can also be set and used in the frontend. To view the frontend, you can use the `view` method of the benchmark or leaderboard.
 
+Tags are structured: each `Tag` has a `value` and an optional `category`. You can also record where each prompt came from with an `Origin`.
+
 ```python
-# Tags for filtering leaderboard results
-tags = [
-    ["landscape", "outdoor", "beach"],
-    ["landscape", "outdoor", "mountain"],
-    ["outdoor", "city"],
-    ["indoor", "vehicle"]
+from rapidata import Tag, Origin
+
+# Structured tags (value + optional category) for filtering leaderboard results
+taggings = [
+    [Tag("beach", category="scene"), Tag("outdoor")],
+    [Tag("mountain", category="scene"), Tag("outdoor")],
+    [Tag("city", category="scene")],
+    [Tag("vehicle", category="object"), Tag("indoor")],
 ]
 
 benchmark = client.mri.create_new_benchmark(
     name="Tagged Benchmark",
     identifiers=["scene_1", "scene_2", "scene_3", "scene_4"],
     prompts=["A sunny beach", "A mountain landscape", "A city skyline", "A car in a garage"],
-    tags=tags
+    taggings=taggings,
+    origins=[Origin("coco"), Origin("coco"), Origin("coco"), Origin("coco")],
 )
 
-# Filter leaderboard results by tags
-standings = leaderboard.get_standings(tags=["landscape", "outdoor"])
+# Filter leaderboard results by tag value
+standings = leaderboard.get_standings(tags=["outdoor"])
 ```
+
+!!! note
+    Plain-string tags remain supported for backwards compatibility via the `tags` argument
+    (e.g. `tags=[["landscape", "outdoor"]]`); they are treated as tags with no category.
+    Read them back with the structured `benchmark.taggings` / `benchmark.origins`
+    accessors, or the flat, values-only `benchmark.tags`.
 
 ### Adding prompts and assets after benchmark creation
 
@@ -80,7 +91,7 @@ benchmark.add_prompts(
     identifiers=["new_style"],
     prompts=["Generate artwork in this new style"],
     prompt_assets=["https://assets.rapidata.ai/new_style_ref.jpg"],
-    tags=[["abstract", "modern"]]
+    taggings=[[Tag("abstract", category="style"), Tag("modern")]],
 )
 ```
 
