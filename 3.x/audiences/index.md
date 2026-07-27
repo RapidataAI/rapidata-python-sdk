@@ -41,13 +41,13 @@ explicitly as "solve N tasks at X accuracy" with two arguments:
 ```py
 audience = client.audience.create_audience(
     name="Custom Prompt Alignment Audience",
-    target_accuracy=0.9, # (1)!
+    target_accuracy=0.8, # (1)!
     min_tasks=20,        # (2)!
 )
 ```
 
 1. `X` — the fraction of qualification tasks (0..1) a labeler must get right to
-   be admitted. Omit to use the server default of `0.75`.
+   be admitted. Omit to use the server default of `0.75`. - keep the random chance in mind when setting this
 2. `N` — how many qualification tasks a labeler must complete before the
    accuracy verdict is trusted. Omit to use the server default of `10`.
 

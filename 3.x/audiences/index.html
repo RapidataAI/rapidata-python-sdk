@@ -1953,13 +1953,13 @@ well enough — the server default is <strong>75% accuracy over 10 tasks</strong
 explicitly as "solve N tasks at X accuracy" with two arguments:</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Custom Prompt Alignment Audience"</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">target_accuracy</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="c1"># (1)!</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">target_accuracy</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="c1"># (1)!</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">min_tasks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>        <span class="c1"># (2)!</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
 </span></code></pre></div>
 <ol>
 <li><code>X</code> — the fraction of qualification tasks (0..1) a labeler must get right to
-   be admitted. Omit to use the server default of <code>0.75</code>.</li>
+   be admitted. Omit to use the server default of <code>0.75</code>. - keep the random chance in mind when setting this</li>
 <li><code>N</code> — how many qualification tasks a labeler must complete before the
    accuracy verdict is trusted. Omit to use the server default of <code>10</code>.</li>
 </ol>
