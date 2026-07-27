@@ -59,8 +59,8 @@ class RapidataFlow:
                 RapidataFlowItem,
             )
 
-            if time_to_live is not None and time_to_live < 60:
-                raise ValueError("Time to live must be at least 60 seconds.")
+            if time_to_live is not None and time_to_live < 45:
+                raise ValueError("Time to live must be at least 45 seconds.")
             if context_assets is not None and not 1 <= len(context_assets) <= 10:
                 raise ValueError("Context assets must contain between 1 and 10 assets.")
 
