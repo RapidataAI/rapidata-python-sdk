@@ -1950,11 +1950,11 @@
 <h4 id="tuning-the-admission-bar">Tuning the admission bar<a class="headerlink" href="#tuning-the-admission-bar" title="Permanent link">#</a></h4>
 <p>By default a labeler is admitted once they answer enough qualification tasks
 well enough — the server default is <strong>75% accuracy over 10 tasks</strong>. Set the bar
-explicitly as "solve N tasks at X accuracy" with two arguments:</p>
+explicitly as "solve N tasks at X accuracy" with two arguments: </p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Custom Prompt Alignment Audience"</span><span class="p">,</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">target_accuracy</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="c1"># (1)!</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">min_tasks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>        <span class="c1"># (2)!</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">min_tasks</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>        <span class="c1"># (2)!</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
 </span></code></pre></div>
 <ol>
