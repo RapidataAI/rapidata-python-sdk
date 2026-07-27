@@ -1,0 +1,47 @@
+name: Auto-merge OpenAPI Client PR
+
+# The OpenAPI client PR is bot-generated (openapi-generation-main -> main) and
+# only touches generated code, so once pyright is green there is nothing left
+# for a human to review. This watches the pyright run and squash-merges the PR
+# when it succeeds.
+on:
+  workflow_run:
+    workflows: ["Python Type Checking with Pyright"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    # Gate on: pyright succeeded, for a PR (not a branch push), on the generated
+    # branch, from this repo (not a fork). Only a write-access actor can push
+    # openapi-generation-main, so the branch name is a sufficient trust anchor.
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'openapi-generation-main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ vars.RAPIDATA_OPENAPI_GENERATOR_APP_ID }}
+          private-key: ${{ secrets.RAPIDATA_OPENAPI_GENERATOR_PRIVATE_KEY }}
+
+      - name: Merge the OpenAPI client PR
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          pr=$(gh pr list --repo "$GITHUB_REPOSITORY" \
+            --head openapi-generation-main --base main \
+            --state open --json number --jq '.[0].number')
+          if [ -z "$pr" ]; then
+            echo "No open OpenAPI client PR (openapi-generation-main -> main); nothing to merge."
+            exit 0
+          fi
+          echo "pyright passed for openapi-generation-main; merging PR #$pr"
+          gh pr merge "$pr" --repo "$GITHUB_REPOSITORY" --squash --delete-branch
