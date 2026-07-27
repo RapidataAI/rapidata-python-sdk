@@ -475,13 +475,13 @@ audience = client.audience.create_audience(name="Custom Prompt Alignment Audienc
 
 By default a labeler is admitted once they answer enough qualification tasks
 well enough — the server default is **75% accuracy over 10 tasks**. Set the bar
-explicitly as "solve N tasks at X accuracy" with two arguments:
+explicitly as "solve N tasks at X accuracy" with two arguments: 
 
 ```py
 audience = client.audience.create_audience(
     name="Custom Prompt Alignment Audience",
     target_accuracy=0.8, # (1)!
-    min_tasks=20,        # (2)!
+    min_tasks=12,        # (2)!
 )
 ```
 
