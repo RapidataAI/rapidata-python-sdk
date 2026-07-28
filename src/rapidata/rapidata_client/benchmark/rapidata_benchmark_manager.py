@@ -1,5 +1,6 @@
 from typing import Optional
 from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchmark
+from rapidata.rapidata_client.benchmark.prompt_metadata import Origin, Tag
 from rapidata.api_client.models.create_benchmark_endpoint_input import (
     CreateBenchmarkEndpointInput,
 )
@@ -28,7 +29,8 @@ class RapidataBenchmarkManager:
         identifiers: Optional[list[str]] = None,
         prompts: Optional[list[str | None] | list[str]] = None,
         prompt_assets: Optional[list[str | None] | list[str]] = None,
-        tags: Optional[list[list[str] | None] | list[list[str]]] = None,
+        tags: Optional[list[list[str | Tag] | None]] = None,
+        origins: Optional[list[Origin | str | None]] = None,
     ) -> RapidataBenchmark:
         """
         Creates a new benchmark with the given name, identifiers, prompts, and media assets.
@@ -41,17 +43,21 @@ class RapidataBenchmarkManager:
             identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts as the identifiers.
             prompts: The prompts that will be registered for the benchmark.
             prompt_assets: The prompt assets that will be registered for the benchmark.
-            tags: The tags that will be associated with the prompts to use for filtering the leaderboard results. They will NOT be shown to the users.
+            tags: The tags per prompt, used to filter and organize the leaderboard results. They are NOT shown to the users. Each entry is a list whose items are either a plain string (mapped to `Tag(value, category=None)`) or a :class:`Tag` with a `value` and optional `category`, or None for no tags.
+            origins: The origin of each prompt (e.g. a source dataset). Each entry is an :class:`Origin`, a plain string (mapped to `Origin(value)`), or None.
 
         Example:
             ```python
+            from rapidata import Tag, Origin
+
             name = "Example Benchmark"
             identifiers = ["id1", "id2", "id3"]
             prompts = ["prompt 1", "prompt 2", "prompt 3"]
             prompt_assets = ["https://assets.rapidata.ai/prompt_1.jpg", "https://assets.rapidata.ai/prompt_2.jpg", "https://assets.rapidata.ai/prompt_3.jpg"]
-            tags = [["tag1", "tag2"], ["tag2"], ["tag2", "tag3"]]
+            tags = [[Tag("tag1", category="group"), "tag2"], [Tag("tag2")], ["tag2", "tag3"]]
+            origins = [Origin("coco"), Origin("coco"), Origin("coco")]
 
-            benchmark = create_new_benchmark(name=name, identifiers=identifiers, prompts=prompts, prompt_assets=prompt_assets, tags=tags)
+            benchmark = create_new_benchmark(name=name, identifiers=identifiers, prompts=prompts, prompt_assets=prompt_assets, tags=tags, origins=origins)
             ```
         """
         with tracer.start_as_current_span(
@@ -76,7 +82,7 @@ class RapidataBenchmarkManager:
                 name, benchmark_result.id, self.__openapi_service
             )
 
-            benchmark.add_prompts(identifiers, prompts, prompt_assets, tags)
+            benchmark.add_prompts(identifiers, prompts, prompt_assets, tags, origins)
 
             return benchmark
 

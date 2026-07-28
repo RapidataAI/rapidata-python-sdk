@@ -11,6 +11,11 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
     BenchmarkPrompt,
     BenchmarkPromptUploader,
 )
+from rapidata.rapidata_client.benchmark.prompt_metadata import (
+    BenchmarkPromptInfo,
+    Origin,
+    Tag,
+)
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
 )
@@ -23,6 +28,9 @@ if TYPE_CHECKING:
     )
     from rapidata.rapidata_client.benchmark.participant.participant import (
         BenchmarkParticipant,
+    )
+    from rapidata.api_client.models.get_prompts_by_benchmark_endpoint_output import (
+        GetPromptsByBenchmarkEndpointOutput,
     )
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
@@ -50,14 +58,22 @@ class RapidataBenchmark:
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
+        self.__structured_tags: list[list[Tag]] = []
+        self.__origins: list[Origin | None] = []
+        self.__prompt_ids: dict[str, str] = {}
         self.__participants: list[BenchmarkParticipant] = []
         self.__benchmark_page: str = (
             f"https://app.{self._openapi_service.environment}/mri/benchmarks/{self.id}"
         )
         self._prompt_uploader = BenchmarkPromptUploader(id, openapi_service)
 
-    def __instantiate_prompts(self) -> None:
-        from rapidata.rapidata_client.config import tracer
+    @staticmethod
+    def __extract_asset_url(prompt: GetPromptsByBenchmarkEndpointOutput) -> str | None:
+        """Reconstruct a prompt's asset reference from the server metadata.
+
+        Remote assets come back as their `sourceUrl`; locally-uploaded ones as
+        the bare `originalFilename`.
+        """
         from rapidata.api_client.models.i_asset_model_file_asset_model import (
             IAssetModelFileAssetModel,
         )
@@ -68,12 +84,52 @@ class RapidataBenchmark:
             IMetadataModelOriginalFilenameMetadataModel,
         )
 
+        if prompt.prompt_asset is None:
+            return None
+        file_asset = prompt.prompt_asset.actual_instance
+        assert isinstance(file_asset, IAssetModelFileAssetModel)
+        source_url = file_asset.metadata.get("sourceUrl")
+        original_filename = file_asset.metadata.get("originalFilename")
+        if source_url is not None:
+            instance = source_url.actual_instance
+            assert isinstance(instance, IMetadataModelSourceUrlMetadataModel)
+            return instance.url
+        if original_filename is not None:
+            instance = original_filename.actual_instance
+            assert isinstance(instance, IMetadataModelOriginalFilenameMetadataModel)
+            return instance.original_filename
+        return None
+
+    @classmethod
+    def __to_prompt_info(
+        cls, prompt: GetPromptsByBenchmarkEndpointOutput
+    ) -> BenchmarkPromptInfo:
+        """Map a generated prompt output model to the user-facing info object."""
+        return BenchmarkPromptInfo(
+            identifier=prompt.identifier,
+            prompt=prompt.original_prompt,
+            english_prompt=prompt.english_prompt,
+            prompt_asset=cls.__extract_asset_url(prompt),
+            tags=[Tag(value=tag.value, category=tag.category) for tag in prompt.tags],
+            origin=(
+                Origin(source=prompt.origin.source)
+                if prompt.origin is not None
+                else None
+            ),
+        )
+
+    def __instantiate_prompts(self) -> None:
+        from rapidata.rapidata_client.config import tracer
+
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
             self.__prompts = []
             self.__english_prompts = []
             self.__identifiers = []
             self.__prompt_assets = []
             self.__tags = []
+            self.__structured_tags = []
+            self.__origins = []
+            self.__prompt_ids = {}
 
             current_page = 1
             total_pages = None
@@ -93,32 +149,15 @@ class RapidataBenchmark:
                 total_pages = prompts_result.total_pages
 
                 for prompt in prompts_result.items:
-                    self.__prompts.append(prompt.original_prompt)
-                    self.__english_prompts.append(prompt.english_prompt)
-                    self.__identifiers.append(prompt.identifier)
-                    if prompt.prompt_asset is None:
-                        self.__prompt_assets.append(None)
-                    else:
-                        file_asset = prompt.prompt_asset.actual_instance
-                        assert isinstance(file_asset, IAssetModelFileAssetModel)
-                        source_url = file_asset.metadata.get("sourceUrl")
-                        original_filename = file_asset.metadata.get("originalFilename")
-                        if source_url is not None:
-                            instance = source_url.actual_instance
-                            assert isinstance(
-                                instance, IMetadataModelSourceUrlMetadataModel
-                            )
-                            self.__prompt_assets.append(instance.url)
-                        elif original_filename is not None:
-                            instance = original_filename.actual_instance
-                            assert isinstance(
-                                instance, IMetadataModelOriginalFilenameMetadataModel
-                            )
-                            self.__prompt_assets.append(instance.original_filename)
-                        else:
-                            self.__prompt_assets.append(None)
-
-                    self.__tags.append([tag.value for tag in prompt.tags])
+                    info = self.__to_prompt_info(prompt)
+                    self.__prompts.append(info.prompt)
+                    self.__english_prompts.append(info.english_prompt)
+                    self.__identifiers.append(info.identifier)
+                    self.__prompt_assets.append(info.prompt_asset)
+                    self.__structured_tags.append(info.tags)
+                    self.__tags.append([tag.value for tag in info.tags])
+                    self.__origins.append(info.origin)
+                    self.__prompt_ids[prompt.identifier] = prompt.id
                 if current_page >= total_pages:
                     break
 
@@ -186,12 +225,42 @@ class RapidataBenchmark:
     @property
     def tags(self) -> list[list[str]]:
         """
-        Returns the tags that are registered for the benchmark.
+        Returns the tag values registered for the benchmark, aligned by index with `prompts`.
+
+        This is the flat, values-only view of the tags. It is kept for
+        backwards compatibility — prefer `structured_tags` for the
+        (value + category) representation.
         """
         if not self.__tags:
             self.__instantiate_prompts()
 
         return self.__tags
+
+    @property
+    def structured_tags(self) -> list[list[Tag]]:
+        """
+        Returns the structured tags registered for the benchmark, aligned by index with `prompts`.
+
+        Each :class:`Tag` carries a ``value`` and an optional ``category``. Tags
+        are used to filter and organize leaderboard results and are NOT shown to
+        the annotators.
+        """
+        if not self.__structured_tags:
+            self.__instantiate_prompts()
+
+        return self.__structured_tags
+
+    @property
+    def origins(self) -> list[Origin | None]:
+        """
+        Returns the origin of each prompt, aligned by index with `prompts`.
+
+        A prompt without an origin is represented as ``None``.
+        """
+        if not self.__origins:
+            self.__instantiate_prompts()
+
+        return self.__origins
 
     @property
     def leaderboards(self) -> list[RapidataLeaderboard]:
@@ -277,7 +346,8 @@ class RapidataBenchmark:
         identifiers: Optional[list[str]] = None,
         prompts: Optional[list[str | None] | list[str]] = None,
         prompt_assets: Optional[list[str | None] | list[str]] = None,
-        tags: Optional[list[list[str] | None] | list[list[str]]] = None,
+        tags: Optional[list[list[str | Tag] | None]] = None,
+        origins: Optional[list[Origin | str | None]] = None,
     ) -> None:
         """
         Adds one or more prompts to the benchmark. Everything is matched up by the
@@ -293,15 +363,19 @@ class RapidataBenchmark:
             identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts as the identifiers.
             prompts: The prompts that will be registered for the benchmark.
             prompt_assets: The prompt assets that will be registered for the benchmark.
-            tags: The tags that will be associated with the prompts to use for filtering the leaderboard results. They will NOT be shown to the users.
+            tags: The tags per prompt, used to filter and organize the leaderboard results. They are NOT shown to the users. Each entry is a list whose items are either a plain string (mapped to `Tag(value, category=None)`) or a :class:`Tag` with a `value` and optional `category`, or None for no tags.
+            origins: The origin of each prompt (e.g. a source dataset). Each entry is an :class:`Origin`, a plain string (mapped to `Origin(value)`), or None.
 
         Example:
             ```python
+            from rapidata import Tag, Origin
+
             benchmark.add_prompts(
                 identifiers=["id1", "id2"],
                 prompts=["prompt 1", "prompt 2"],
                 prompt_assets=["https://assets.rapidata.ai/prompt_1.jpg", "https://assets.rapidata.ai/prompt_2.jpg"],
-                tags=[["tag1", "tag2"], ["tag2"]],
+                tags=[[Tag("landscape", category="scene"), "outdoor"], [Tag("portrait")]],
+                origins=[Origin("coco"), Origin("coco")],
             )
             ```
         """
@@ -333,16 +407,23 @@ class RapidataBenchmark:
 
             if tags is not None:
                 if not isinstance(tags, list):
-                    raise ValueError("Tags must be a list of lists of strings or None.")
+                    raise ValueError("Tags must be a list of lists of str/Tag or None.")
 
                 for tag in tags:
                     if tag is not None and (
                         not isinstance(tag, list)
-                        or not all(isinstance(item, str) for item in tag)
+                        or not all(isinstance(item, (str, Tag)) for item in tag)
                     ):
                         raise ValueError(
-                            "Tags must be a list of lists of strings or None."
+                            "Tags must be a list of lists of str/Tag or None."
                         )
+
+            if origins is not None:
+                if not isinstance(origins, list) or not all(
+                    origin is None or isinstance(origin, (Origin, str))
+                    for origin in origins
+                ):
+                    raise ValueError("Origins must be a list of Origin/str or None.")
 
             if not identifiers and not prompts:
                 raise ValueError(
@@ -378,11 +459,20 @@ class RapidataBenchmark:
                 prompt_assets = cast(list[str | None], [None] * expected_length)
 
             if not tags:
-                tags = cast(list[list[str] | None], [None] * expected_length)
+                tags = cast(list[list[str | Tag] | None], [None] * expected_length)
 
-            if not (expected_length == len(prompts) == len(prompt_assets) == len(tags)):
+            if not origins:
+                origins = cast(list[Origin | str | None], [None] * expected_length)
+
+            if not (
+                expected_length
+                == len(prompts)
+                == len(prompt_assets)
+                == len(tags)
+                == len(origins)
+            ):
                 raise ValueError(
-                    "Identifiers, prompts, media assets, and tags must have the same length or set to None."
+                    "Identifiers, prompts, media assets, tags, and origins must have the same length or set to None."
                 )
 
             # Snapshot once: `self.identifiers` is a property whose getter re-fetches
@@ -400,12 +490,27 @@ class RapidataBenchmark:
                     f"Identifiers already exist in the benchmark: {already_registered}"
                 )
 
+            def build_tags(tag: list[str | Tag] | None) -> list[Tag]:
+                # Bare strings are wrapped into an uncategorized Tag; Tag objects
+                # pass through untouched.
+                return [
+                    Tag(value=item) if isinstance(item, str) else item
+                    for item in (tag or [])
+                ]
+
+            def build_origin(origin: Origin | str | None) -> Origin | None:
+                return Origin(source=origin) if isinstance(origin, str) else origin
+
             to_upload = [
                 BenchmarkPrompt(
-                    identifier, prompt, asset, tag if tag is not None else []
+                    identifier,
+                    prompt,
+                    asset,
+                    build_tags(tag),
+                    build_origin(origin),
                 )
-                for identifier, prompt, asset, tag in zip(
-                    identifiers, prompts, prompt_assets, tags
+                for identifier, prompt, asset, tag, origin in zip(
+                    identifiers, prompts, prompt_assets, tags, origins
                 )
             ]
 
@@ -415,12 +520,170 @@ class RapidataBenchmark:
                 self.__prompt_assets.append(
                     self.__normalize_cached_asset(uploaded.prompt_asset)
                 )
-                self.__tags.append(uploaded.tags)
+                self.__structured_tags.append(uploaded.tags)
+                self.__tags.append([tag.value for tag in uploaded.tags])
+                self.__origins.append(uploaded.origin)
 
             # The English translation is produced server-side and is unknown for
             # the just-added prompts. Clear it so the next access lazily re-fetches
             # the prompt set, while the rest of the cache stays intact.
             self.__english_prompts = []
+
+    def update_prompt(
+        self,
+        identifier: str,
+        tags: Optional[list[str | Tag]] = None,
+        origin: Origin | str | None = None,
+    ) -> None:
+        """Updates the tags and/or origin of an existing prompt.
+
+        Only the provided fields are changed: pass ``tags`` to replace the
+        prompt's tags, ``origin`` to set its origin, or both. A field left as
+        ``None`` is not sent and the server leaves it unchanged.
+
+        Args:
+            identifier: The identifier of the prompt to update. Must already be registered on the benchmark.
+            tags: The new tags for the prompt. Each item is a plain string (mapped to `Tag(value, category=None)`) or a :class:`Tag`. Replaces the existing tags.
+            origin: The new origin (an :class:`Origin` or a plain string mapped to `Origin(source)`).
+        """
+        from rapidata.api_client.models.update_prompt_tags_endpoint_input import (
+            UpdatePromptTagsEndpointInput,
+        )
+        from rapidata.api_client.models.tag import Tag as ApiTag
+        from rapidata.api_client.models.origin import Origin as ApiOrigin
+
+        with tracer.start_as_current_span("RapidataBenchmark.update_prompt"):
+            if tags is None and origin is None:
+                raise ValueError("Provide tags and/or origin to update.")
+
+            if tags is not None and (
+                not isinstance(tags, list)
+                or not all(isinstance(item, (str, Tag)) for item in tags)
+            ):
+                raise ValueError("Tags must be a list of str/Tag.")
+
+            if origin is not None and not isinstance(origin, (Origin, str)):
+                raise ValueError("Origin must be an Origin or str.")
+
+            if identifier not in self.__prompt_ids:
+                self.__instantiate_prompts()
+            if identifier not in self.__prompt_ids:
+                raise ValueError(
+                    f"Identifier does not exist in the benchmark: {identifier}"
+                )
+            prompt_id = self.__prompt_ids[identifier]
+
+            structured_tags = (
+                [Tag(value=item) if isinstance(item, str) else item for item in tags]
+                if tags is not None
+                else None
+            )
+            resolved_origin = (
+                Origin(source=origin) if isinstance(origin, str) else origin
+            )
+
+            self._openapi_service.leaderboard.prompt_api.benchmark_prompt_prompt_id_tags_put(
+                prompt_id=prompt_id,
+                update_prompt_tags_endpoint_input=UpdatePromptTagsEndpointInput(
+                    tags=(
+                        [
+                            ApiTag(value=tag.value, category=tag.category)
+                            for tag in structured_tags
+                        ]
+                        if structured_tags is not None
+                        else None
+                    ),
+                    origin=(
+                        ApiOrigin(source=resolved_origin.source)
+                        if resolved_origin is not None
+                        else None
+                    ),
+                ),
+            )
+
+            # Reflect the change in the caches so a subsequent read is consistent
+            # without a re-fetch.
+            if identifier in self.__identifiers:
+                index = self.__identifiers.index(identifier)
+                if structured_tags is not None:
+                    self.__structured_tags[index] = structured_tags
+                    self.__tags[index] = [tag.value for tag in structured_tags]
+                if resolved_origin is not None:
+                    self.__origins[index] = resolved_origin
+
+    def query_prompts(
+        self,
+        tag_values: Optional[list[str]] = None,
+        tag_categories: Optional[list[str]] = None,
+        origin_source: Optional[list[str]] = None,
+        sort: Optional[list[str]] = None,
+    ) -> list[BenchmarkPromptInfo]:
+        """Queries the benchmark's prompts with server-side filtering and sorting.
+
+        Args:
+            tag_values: Keep only prompts carrying a tag whose value is in this list.
+            tag_categories: Keep only prompts carrying a tag whose category is in this list.
+            origin_source: Keep only prompts whose origin source is in this list.
+            sort: Sort fields, applied in order. Allowed: ``id``, ``created_at``,
+                ``origin_source`` — prefix with ``-`` for descending (e.g.
+                ``-created_at``). Tag value/category are filter-only and cannot be
+                sorted on.
+
+        Returns:
+            The matching prompts as :class:`BenchmarkPromptInfo` objects.
+        """
+        with tracer.start_as_current_span("RapidataBenchmark.query_prompts"):
+            allowed_sort = {"id", "created_at", "origin_source"}
+            if sort is not None:
+                if not isinstance(sort, list) or not all(
+                    isinstance(field, str) for field in sort
+                ):
+                    raise ValueError("Sort must be a list of strings.")
+                for field in sort:
+                    if field.lstrip("-") not in allowed_sort:
+                        raise ValueError(
+                            f"Cannot sort by '{field}'. Allowed sort fields are "
+                            f"{sorted(allowed_sort)} (optionally prefixed with '-')."
+                        )
+
+            def in_filter(
+                values: Optional[list[str]],
+            ) -> Optional[AudienceAudienceIdJobsGetJobIdParameter]:
+                if values is None:
+                    return None
+                param = AudienceAudienceIdJobsGetJobIdParameter()
+                param.var_in = values
+                return param
+
+            results: list[BenchmarkPromptInfo] = []
+            current_page = 1
+
+            while True:
+                prompts_result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompts_get(
+                    benchmark_id=self.id,
+                    page=current_page,
+                    page_size=100,
+                    sort=sort,
+                    tag_values=in_filter(tag_values),
+                    tag_categories=in_filter(tag_categories),
+                    origin_source=in_filter(origin_source),
+                )
+
+                if prompts_result.total_pages is None:
+                    raise ValueError(
+                        "An error occurred while fetching prompts: total_pages is None"
+                    )
+
+                results.extend(
+                    self.__to_prompt_info(prompt) for prompt in prompts_result.items
+                )
+
+                if current_page >= prompts_result.total_pages:
+                    break
+
+                current_page += 1
+
+            return results
 
     def create_leaderboard(
         self,

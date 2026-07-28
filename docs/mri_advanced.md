@@ -50,25 +50,37 @@ benchmark = client.mri.create_new_benchmark(
 
 Tags provide metadata for filtering and organizing benchmark results without showing them to evaluators. These tags can also be set and used in the frontend. To view the frontend, you can use the `view` method of the benchmark or leaderboard.
 
+Each tag is either a plain string or a `Tag` with a `value` and an optional `category` — you can mix both in the same list. Bare strings are wrapped into `Tag(value, category=None)` for you. You can also record where each prompt came from with an `Origin`.
+
 ```python
-# Tags for filtering leaderboard results
+from rapidata import Tag, Origin
+
+# Tags per prompt — plain strings and Tag objects can be mixed
 tags = [
-    ["landscape", "outdoor", "beach"],
-    ["landscape", "outdoor", "mountain"],
-    ["outdoor", "city"],
-    ["indoor", "vehicle"]
+    [Tag("beach", category="scene"), "outdoor"],
+    [Tag("mountain", category="scene"), "outdoor"],
+    [Tag("city", category="scene")],
+    [Tag("vehicle", category="object"), "indoor"],
 ]
 
 benchmark = client.mri.create_new_benchmark(
     name="Tagged Benchmark",
     identifiers=["scene_1", "scene_2", "scene_3", "scene_4"],
     prompts=["A sunny beach", "A mountain landscape", "A city skyline", "A car in a garage"],
-    tags=tags
+    tags=tags,
+    origins=[Origin("coco"), Origin("coco"), Origin("coco"), Origin("coco")],
 )
 
-# Filter leaderboard results by tags
-standings = leaderboard.get_standings(tags=["landscape", "outdoor"])
+# Filter leaderboard results by tag value
+standings = leaderboard.get_standings(tags=["outdoor"])
 ```
+
+!!! note
+    Plain-string tags keep working (e.g. `tags=[["landscape", "outdoor"]]`); they are
+    treated as tags with no category. Read tags back with the values-only
+    `benchmark.tags` (`list[list[str]]`) for backwards compatibility, or the
+    structured `benchmark.structured_tags` (`list[list[Tag]]`) for categories, and
+    prompt origins with `benchmark.origins`.
 
 ### Adding prompts and assets after benchmark creation
 
@@ -80,8 +92,35 @@ benchmark.add_prompts(
     identifiers=["new_style"],
     prompts=["Generate artwork in this new style"],
     prompt_assets=["https://assets.rapidata.ai/new_style_ref.jpg"],
-    tags=[["abstract", "modern"]]
+    tags=[[Tag("abstract", category="style"), "modern"]],
 )
+```
+
+### Editing a prompt's tags and origin
+
+Update the tags and/or origin of an already-registered prompt. Only the fields you pass are changed; omit one to leave it as-is.
+
+```python
+benchmark.update_prompt(
+    "new_style",
+    tags=[Tag("abstract", category="style"), "surreal"],
+    origin=Origin("wikiart"),
+)
+```
+
+### Filtering and sorting prompts
+
+Query the benchmark's prompts with server-side filtering and sorting. Filter by tag value, tag category, or origin source; sort by `id`, `created_at`, or `origin_source` (prefix with `-` for descending). Tag value/category are filter-only.
+
+```python
+prompts = benchmark.query_prompts(
+    tag_values=["outdoor"],
+    tag_categories=["scene"],
+    origin_source=["coco"],
+    sort=["-created_at"],
+)
+for p in prompts:
+    print(p.identifier, [t.value for t in p.tags], p.origin.source if p.origin else None)
 ```
 
 ## Leaderboard Configuration
