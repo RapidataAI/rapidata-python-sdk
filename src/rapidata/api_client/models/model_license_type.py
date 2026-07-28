@@ -17,18 +17,19 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class FlowType(str, Enum):
+class ModelLicenseType(str, Enum):
     """
-    FlowType
+    ModelLicenseType
     """
 
     """
     allowed enum values
     """
-    RANKING = 'Ranking'
+    OPENSOURCE = 'OpenSource'
+    PROPRIETARY = 'Proprietary'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of FlowType from a JSON string"""
+        """Create an instance of ModelLicenseType from a JSON string"""
         return cls(json.loads(json_str))
 
