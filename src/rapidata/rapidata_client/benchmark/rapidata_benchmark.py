@@ -69,11 +69,11 @@ class RapidataBenchmark:
         )
 
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
-            self.__prompts = []
-            self.__english_prompts = []
-            self.__identifiers = []
-            self.__prompt_assets = []
-            self.__tags = []
+            prompts: list[str | None] = []
+            english_prompts: list[str | None] = []
+            identifiers: list[str] = []
+            prompt_assets: list[str | None] = []
+            tags: list[list[str]] = []
 
             current_page = 1
             total_pages = None
@@ -93,11 +93,11 @@ class RapidataBenchmark:
                 total_pages = prompts_result.total_pages
 
                 for prompt in prompts_result.items:
-                    self.__prompts.append(prompt.original_prompt)
-                    self.__english_prompts.append(prompt.english_prompt)
-                    self.__identifiers.append(prompt.identifier)
+                    prompts.append(prompt.original_prompt)
+                    english_prompts.append(prompt.english_prompt)
+                    identifiers.append(prompt.identifier)
                     if prompt.prompt_asset is None:
-                        self.__prompt_assets.append(None)
+                        prompt_assets.append(None)
                     else:
                         file_asset = prompt.prompt_asset.actual_instance
                         assert isinstance(file_asset, IAssetModelFileAssetModel)
@@ -108,21 +108,30 @@ class RapidataBenchmark:
                             assert isinstance(
                                 instance, IMetadataModelSourceUrlMetadataModel
                             )
-                            self.__prompt_assets.append(instance.url)
+                            prompt_assets.append(instance.url)
                         elif original_filename is not None:
                             instance = original_filename.actual_instance
                             assert isinstance(
                                 instance, IMetadataModelOriginalFilenameMetadataModel
                             )
-                            self.__prompt_assets.append(instance.original_filename)
+                            prompt_assets.append(instance.original_filename)
                         else:
-                            self.__prompt_assets.append(None)
+                            prompt_assets.append(None)
 
-                    self.__tags.append([tag.value for tag in prompt.tags])
+                    tags.append([tag.value for tag in prompt.tags])
                 if current_page >= total_pages:
                     break
 
                 current_page += 1
+
+            # Commit the caches only once every page fetched and parsed cleanly.
+            # A mid-pagination failure would otherwise leave them partially filled,
+            # and the property getters treat any non-empty cache as complete.
+            self.__prompts = prompts
+            self.__english_prompts = english_prompts
+            self.__identifiers = identifiers
+            self.__prompt_assets = prompt_assets
+            self.__tags = tags
 
     # http / https in any case — same detection the asset uploader uses to tell
     # a remote URL from a local path.
