@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.07.27.1848-029529c"
+    "version": "2026.07.28.0731-56fd9ec"
   },
   "servers": [
     {
@@ -1320,7 +1320,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 60 seconds and 1 hour; defaults to 1 hour when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour; defaults to 4 minutes when omitted.",
             "format": "int32",
             "nullable": true
           },
