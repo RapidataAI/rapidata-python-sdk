@@ -11,8 +11,12 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
     BenchmarkPrompt,
     BenchmarkPromptUploader,
 )
-from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
-    AudienceAudienceIdJobsGetJobIdParameter,
+from rapidata.api_client.models.benchmark_demographic_dimension import (
+    BenchmarkDemographicDimension,
+)
+from rapidata.rapidata_client.benchmark._vote_filters import (
+    demographic_filters,
+    in_filter,
 )
 
 if TYPE_CHECKING:
@@ -24,6 +28,8 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.benchmark.participant.participant import (
         BenchmarkParticipant,
     )
+    from rapidata.rapidata_client.filter.models.gender import Gender
+    from rapidata.rapidata_client.filter.models.age_group import AgeGroup
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
 
@@ -713,26 +719,47 @@ class RapidataBenchmark:
         self,
         tags: Optional[list[str]] = None,
         leaderboard_ids: Optional[list[str]] = None,
+        country: Optional[list[str]] = None,
+        language: Optional[list[str]] = None,
+        gender: Optional[list[Gender]] = None,
+        age_bucket: Optional[list[AgeGroup]] = None,
+        occupation: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
     ) -> pd.DataFrame:
         """
         Returns an aggregated elo table of all leaderboards in the benchmark.
 
+        The demographic filters compute the standings from only the votes cast by
+        matching voters — e.g. the standings among women, or among US voters.
+        ``gender`` and ``age_bucket`` are estimated (inferred); ``country`` and
+        ``language`` are observed.
+
         Args:
             tags: Filter standings by these tags. If None, all tags are considered.
             leaderboard_ids: Filter to only include matchups from these leaderboards. If None, all leaderboards are considered.
+            country: Only count votes from these countries (ISO-2 codes).
+            language: Only count votes from these languages.
+            gender: Only count votes from voters of these (estimated) genders.
+            age_bucket: Only count votes from voters in these (estimated) age buckets.
+            occupation: Only count votes from voters of these (estimated) occupations.
+            run_id: Only count votes from this evaluation run.
         """
         import pandas as pd
 
         with tracer.start_as_current_span("get_overall_standings"):
-            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
-            tags_filter.var_in = tags
-            leaderboard_filter = AudienceAudienceIdJobsGetJobIdParameter()
-            leaderboard_filter.var_in = leaderboard_ids
-
+            votes = demographic_filters(
+                country, language, gender, age_bucket, occupation, run_id
+            )
             participants = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_query_get(
                 benchmark_id=self.id,
-                tags=tags_filter,
-                leaderboard_id=leaderboard_filter,
+                tags=in_filter(tags),
+                leaderboard_id=in_filter(leaderboard_ids),
+                country=votes.country,
+                language=votes.language,
+                gender=votes.gender,
+                age_bucket=votes.age_bucket,
+                occupation=votes.occupation,
+                run_id=votes.run_id,
             )
 
             standings = []
@@ -758,6 +785,12 @@ class RapidataBenchmark:
         participant_ids: Optional[list[str]] = None,
         leaderboard_ids: Optional[list[str]] = None,
         use_weighted_scoring: Optional[bool] = None,
+        country: Optional[list[str]] = None,
+        language: Optional[list[str]] = None,
+        gender: Optional[list[Gender]] = None,
+        age_bucket: Optional[list[AgeGroup]] = None,
+        occupation: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
     ) -> pd.DataFrame:
         """
         Returns the pairwise win/loss matrix aggregated across the benchmark's leaderboards.
@@ -769,6 +802,10 @@ class RapidataBenchmark:
         opponent; the diagonal (a model against itself) is always 0. This is the
         head-to-head breakdown behind :meth:`get_overall_standings`, which collapses
         the same matchups into a single Elo score per model.
+
+        The demographic filters restrict the matrix to matchups decided by matching
+        voters. ``gender`` and ``age_bucket`` are estimated (inferred); ``country``
+        and ``language`` are observed.
 
         Args:
             tags: Only count matchups carrying one of these prompt tags. If None,
@@ -782,6 +819,12 @@ class RapidataBenchmark:
                 plain win, so cells hold weighted sums (floats) rather than raw counts.
                 If False, cells are raw win counts. When None (default), the server
                 applies its configured default.
+            country: Only count votes from these countries (ISO-2 codes).
+            language: Only count votes from these languages.
+            gender: Only count votes from voters of these (estimated) genders.
+            age_bucket: Only count votes from voters in these (estimated) age buckets.
+            occupation: Only count votes from voters of these (estimated) occupations.
+            run_id: Only count votes from this evaluation run.
 
         Returns:
             A pandas DataFrame indexed by participant name on both axes, where cell
@@ -791,25 +834,193 @@ class RapidataBenchmark:
         import pandas as pd
 
         with tracer.start_as_current_span("get_win_loss_matrix"):
-            tags_filter = AudienceAudienceIdJobsGetJobIdParameter()
-            tags_filter.var_in = tags
-            participant_filter = AudienceAudienceIdJobsGetJobIdParameter()
-            participant_filter.var_in = participant_ids
-            leaderboard_filter = AudienceAudienceIdJobsGetJobIdParameter()
-            leaderboard_filter.var_in = leaderboard_ids
-
+            votes = demographic_filters(
+                country, language, gender, age_bucket, occupation, run_id
+            )
             result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_matrix_query_get(
                 benchmark_id=self.id,
-                tags=tags_filter,
-                participant_id=participant_filter,
-                leaderboard_id=leaderboard_filter,
+                tags=in_filter(tags),
+                participant_id=in_filter(participant_ids),
+                leaderboard_id=in_filter(leaderboard_ids),
                 use_weighted_scoring=use_weighted_scoring,
+                country=votes.country,
+                language=votes.language,
+                gender=votes.gender,
+                age_bucket=votes.age_bucket,
+                occupation=votes.occupation,
+                run_id=votes.run_id,
             )
 
             return pd.DataFrame(
                 data=result.data,
                 index=pd.Index(result.index),
                 columns=pd.Index(result.columns),
+            )
+
+    def get_demographics(
+        self,
+        tags: Optional[list[str]] = None,
+        leaderboard_ids: Optional[list[str]] = None,
+        country: Optional[list[str]] = None,
+        language: Optional[list[str]] = None,
+        gender: Optional[list[Gender]] = None,
+        age_bucket: Optional[list[AgeGroup]] = None,
+        occupation: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """
+        Returns the demographic composition of the voters for this benchmark.
+
+        One row per (dimension, bucket): the ``votes`` cast by that bucket and
+        its ``share`` of the dimension's votes (a dimension's shares sum to 1).
+        Every dimension (``AgeBucket``, ``Gender``, ``Occupation``, ``Country``,
+        ``Language``) includes an ``"unknown"`` bucket for votes whose attribute
+        could not be determined.
+
+        ``AgeBucket``, ``Gender`` and ``Occupation`` are estimated (inferred from
+        behaviour), not self-declared; ``Country`` and ``Language`` are observed.
+        The demographic filters restrict the composition to matching voters.
+
+        Args:
+            tags: Only count votes on matchups with these tags. If None, all matchups are considered.
+            leaderboard_ids: Only count votes from these leaderboards. If None, all leaderboards are considered.
+            country: Only count votes from these countries (ISO-2 codes).
+            language: Only count votes from these languages.
+            gender: Only count votes from voters of these (estimated) genders.
+            age_bucket: Only count votes from voters in these (estimated) age buckets.
+            occupation: Only count votes from voters of these (estimated) occupations.
+            run_id: Only count votes from this evaluation run. If None, all runs are considered.
+
+        Returns:
+            A pandas DataFrame with columns ``dimension``, ``value``, ``votes``, ``share``.
+        """
+        import pandas as pd
+
+        with tracer.start_as_current_span("RapidataBenchmark.get_demographics"):
+            votes = demographic_filters(
+                country, language, gender, age_bucket, occupation, run_id
+            )
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_demographics_get(
+                benchmark_id=self.id,
+                tags=in_filter(tags),
+                leaderboard_id=in_filter(leaderboard_ids),
+                country=votes.country,
+                language=votes.language,
+                gender=votes.gender,
+                age_bucket=votes.age_bucket,
+                occupation=votes.occupation,
+                run_id=votes.run_id,
+            )
+
+            dimensions = result.dimensions
+            dimension_buckets = {
+                BenchmarkDemographicDimension.AGEBUCKET: dimensions.age_bucket,
+                BenchmarkDemographicDimension.GENDER: dimensions.gender,
+                BenchmarkDemographicDimension.OCCUPATION: dimensions.occupation,
+                BenchmarkDemographicDimension.COUNTRY: dimensions.country,
+                BenchmarkDemographicDimension.LANGUAGE: dimensions.language,
+            }
+            rows = [
+                {
+                    "dimension": dimension.value,
+                    "value": bucket.value,
+                    "votes": bucket.votes,
+                    "share": bucket.share,
+                }
+                for dimension, buckets in dimension_buckets.items()
+                for bucket in buckets
+            ]
+
+            return pd.DataFrame(
+                rows, columns=pd.Index(["dimension", "value", "votes", "share"])
+            )
+
+    def get_standings_breakdown(
+        self,
+        dimension: BenchmarkDemographicDimension,
+        tags: Optional[list[str]] = None,
+        leaderboard_ids: Optional[list[str]] = None,
+        country: Optional[list[str]] = None,
+        language: Optional[list[str]] = None,
+        gender: Optional[list[Gender]] = None,
+        age_bucket: Optional[list[AgeGroup]] = None,
+        occupation: Optional[list[str]] = None,
+        run_id: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """
+        Returns the standings split by a demographic dimension of the voters.
+
+        One row per (segment, model): how each demographic segment of voters
+        ranks the models, alongside that segment's vote count. The segments
+        include an ``"unknown"`` bucket. Scores are raw vote counts. For the
+        overall standings across all voters, use :py:meth:`get_overall_standings`.
+
+        ``AgeBucket``, ``Gender`` and ``Occupation`` are estimated (inferred), not
+        self-declared; ``Country`` and ``Language`` are observed. The demographic
+        filters narrow the voters before the split (e.g. break down by age within
+        US voters only).
+
+        Args:
+            dimension: The :class:`BenchmarkDemographicDimension` to split by (``AgeBucket``, ``Gender``, ``Occupation``, ``Country`` or ``Language``).
+            tags: Only count votes on matchups with these tags. If None, all matchups are considered.
+            leaderboard_ids: Only count votes from these leaderboards. If None, all leaderboards are considered.
+            country: Only count votes from these countries (ISO-2 codes).
+            language: Only count votes from these languages.
+            gender: Only count votes from voters of these (estimated) genders.
+            age_bucket: Only count votes from voters in these (estimated) age buckets.
+            occupation: Only count votes from voters of these (estimated) occupations.
+            run_id: Only count votes from this evaluation run. If None, all runs are considered.
+
+        Returns:
+            A pandas DataFrame with columns ``segment``, ``segment_votes``, ``name``, ``wins``, ``total_matches``, ``score``.
+        """
+        import pandas as pd
+
+        with tracer.start_as_current_span("RapidataBenchmark.get_standings_breakdown"):
+            votes = demographic_filters(
+                country, language, gender, age_bucket, occupation, run_id
+            )
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_breakdown_get(
+                benchmark_id=self.id,
+                dimension=BenchmarkDemographicDimension(dimension),
+                tags=in_filter(tags),
+                leaderboard_id=in_filter(leaderboard_ids),
+                country=votes.country,
+                language=votes.language,
+                gender=votes.gender,
+                age_bucket=votes.age_bucket,
+                occupation=votes.occupation,
+                run_id=votes.run_id,
+            )
+
+            rows = []
+            for segment in result.segments:
+                for item in segment.items:
+                    rows.append(
+                        {
+                            "segment": segment.value,
+                            "segment_votes": segment.votes,
+                            "name": item.name,
+                            "wins": item.wins,
+                            "total_matches": item.total_matches,
+                            "score": (
+                                round(item.score, 2) if item.score is not None else None
+                            ),
+                        }
+                    )
+
+            return pd.DataFrame(
+                rows,
+                columns=pd.Index(
+                    [
+                        "segment",
+                        "segment_votes",
+                        "name",
+                        "wins",
+                        "total_matches",
+                        "score",
+                    ]
+                ),
             )
 
     def __str__(self) -> str:

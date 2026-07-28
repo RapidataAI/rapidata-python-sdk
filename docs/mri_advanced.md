@@ -245,6 +245,85 @@ participant = benchmark.participants[0]
 participant.delete()
 ```
 
+## Voter Demographics
+
+Every vote on a benchmark carries the voter's demographics, so you can see *who*
+evaluated your models and how different groups ranked them. Both methods live on
+the benchmark and return a pandas DataFrame, like `get_overall_standings`.
+
+!!! note
+    `ageBucket`, `gender` and `occupation` are **estimated** (inferred from
+    behaviour), not self-declared. `country` and `language` are observed. Each
+    dimension includes an `"unknown"` bucket for votes whose attribute could not
+    be determined.
+
+### Voter composition
+
+`get_demographics` returns one row per `(dimension, value)` with the raw vote
+count and its share of the dimension (shares within a dimension sum to 1). The
+`dimension` column holds `BenchmarkDemographicDimension` values (`AgeBucket`,
+`Gender`, `Occupation`, `Country`, `Language`):
+
+```python
+from rapidata import BenchmarkDemographicDimension
+
+demographics = benchmark.get_demographics()
+# columns: dimension, value, votes, share
+
+countries = demographics[
+    demographics["dimension"] == BenchmarkDemographicDimension.COUNTRY
+]
+print(countries)
+```
+
+### Standings per demographic segment
+
+`get_standings_breakdown` returns one row per `(segment, model)` — how each
+demographic segment of voters ranks the models, with that segment's vote count.
+Useful for spotting where a model is ranked differently by different groups. For
+the overall standings across all voters, use `get_overall_standings`. The
+dimension is a `BenchmarkDemographicDimension`.
+
+```python
+from rapidata import BenchmarkDemographicDimension
+
+breakdown = benchmark.get_standings_breakdown(
+    dimension=BenchmarkDemographicDimension.AGEBUCKET,
+)
+# columns: segment, segment_votes, name, wins, total_matches, score
+```
+
+Segments are **raw vote counts**.
+
+### Filtering standings and matrices by demographics
+
+The demographic dimensions are also filters. `get_overall_standings`,
+`get_win_loss_matrix`, `get_demographics` and `get_standings_breakdown` on the
+benchmark — and `get_standings` / `get_win_loss_matrix` on a leaderboard — all
+accept `country`, `language`, `gender`, `age_bucket`, `occupation` and `run_id`
+(on top of `tags` / `leaderboard_ids`). This computes the result from only the
+votes cast by matching voters, e.g. the standings among young women:
+
+```python
+from rapidata import BenchmarkDemographicDimension, Gender, AgeGroup
+
+standings = benchmark.get_overall_standings(
+    gender=[Gender.FEMALE],
+    age_bucket=[AgeGroup.BETWEEN_18_29],
+    country=["US", "GB"],
+)
+
+# and any of the other read methods, e.g.
+breakdown = benchmark.get_standings_breakdown(
+    dimension=BenchmarkDemographicDimension.COUNTRY,
+    tags=["landscape"],
+    gender=[Gender.FEMALE],
+)
+```
+
+`gender` and `age_bucket` take the SDK's `Gender` / `AgeGroup` enums; `country`,
+`language` and `occupation` take plain values.
+
 ## Win/Loss Matrix
 
 `get_standings` collapses every matchup into one Elo score per model. When you want

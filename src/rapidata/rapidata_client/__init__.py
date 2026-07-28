@@ -17,6 +17,9 @@ from .job import (
 from .signal import RapidataSignal, RapidataSignalManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
+from rapidata.api_client.models.benchmark_demographic_dimension import (
+    BenchmarkDemographicDimension,
+)
 from .selection import (
     DemographicSelection,
     LabelingSelection,
