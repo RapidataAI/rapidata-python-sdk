@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.07.28.1335-044c69c"
+    "version": "2026.07.28.1353-4b5496d"
   },
   "servers": [
     {
@@ -13689,6 +13689,14 @@
             "description": "The vendor-facing display name of the model, if any.",
             "nullable": true
           },
+          "licenseType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "description": "The license classification of the underlying model, if any."
+          },
           "logo": {
             "allOf": [
               {
@@ -14517,6 +14525,15 @@
             "type": "string",
             "nullable": true
           },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -14670,6 +14687,15 @@
           },
           "proprietaryName": {
             "type": "string",
+            "nullable": true
+          },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
             "nullable": true
           },
           "logo": {
@@ -14979,6 +15005,14 @@
             "type": "string",
             "description": "The vendor-facing display name of the model, or null if unset.",
             "nullable": true
+          },
+          "licenseType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "description": "The license classification of the underlying model, or null if not classified yet."
           },
           "logo": {
             "type": "string",
@@ -16675,6 +16709,13 @@
           "type": "string"
         }
       },
+      "ModelLicenseType": {
+        "enum": [
+          "OpenSource",
+          "Proprietary",
+          null
+        ]
+      },
       "Origin": {
         "required": [
           "source"
@@ -16810,6 +16851,14 @@
             "type": "string",
             "description": "The vendor-facing display name of the model, or null if unset.",
             "nullable": true
+          },
+          "licenseType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "description": "The license classification of the underlying model, or null if not classified yet."
           },
           "logo": {
             "type": "string",
@@ -17041,6 +17090,15 @@
             "type": "string",
             "nullable": true
           },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -17129,6 +17187,15 @@
           },
           "proprietaryName": {
             "type": "string",
+            "nullable": true
+          },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
             "nullable": true
           },
           "logo": {
@@ -17758,6 +17825,14 @@
             "description": "The vendor-facing display name of the model, or null if unset.",
             "nullable": true
           },
+          "licenseType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "description": "The license classification of the underlying model, or null if not classified yet."
+          },
           "logo": {
             "type": "string",
             "description": "The logo of the model, or null if unset.",
@@ -18160,6 +18235,15 @@
             "type": "string",
             "nullable": true
           },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -18248,6 +18332,15 @@
           },
           "proprietaryName": {
             "type": "string",
+            "nullable": true
+          },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
             "nullable": true
           },
           "logo": {
@@ -18744,6 +18837,16 @@
           "proprietaryName": {
             "type": "string",
             "description": "The vendor-facing display name of the model. Pass null to clear.",
+            "nullable": true
+          },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "description": "The license classification of the underlying model. Pass null to clear.",
             "nullable": true
           },
           "logo": {
