@@ -118,7 +118,7 @@ class RapidataBenchmark:
                         else:
                             self.__prompt_assets.append(None)
 
-                    self.__tags.append(prompt.tags)
+                    self.__tags.append([tag.value for tag in prompt.tags])
                 if current_page >= total_pages:
                     break
 

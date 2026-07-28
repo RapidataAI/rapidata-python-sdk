@@ -45,6 +45,7 @@ class BenchmarkPromptUploader:
             IAssetInputExistingAssetInput,
         )
         from rapidata.api_client.models.i_asset_input import IAssetInput
+        from rapidata.api_client.models.tag import Tag
 
         self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self._benchmark_id,
@@ -61,7 +62,7 @@ class BenchmarkPromptUploader:
                     if prompt.prompt_asset is not None
                     else None
                 ),
-                tags=prompt.tags,
+                tags=[Tag(value=tag) for tag in prompt.tags],
             ),
         )
 
