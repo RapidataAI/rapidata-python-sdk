@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.07.28.1017-b4bdc25"
+    "version": "2026.07.28.1243-a508abb"
   },
   "servers": [
     {
