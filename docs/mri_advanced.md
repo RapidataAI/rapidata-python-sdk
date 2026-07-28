@@ -118,21 +118,6 @@ Update the tags and/or origin of an already-registered prompt. Only the fields y
 benchmark.update_prompt("new_style", tags=["abstract", "surreal"], origin="wikiart")
 ```
 
-### Filtering and sorting prompts
-
-Query the benchmark's prompts with server-side filtering and sorting. Filter by tag value, tag category, or origin source; sort by `id`, `created_at`, or `origin_source` (prefix with `-` for descending). Tag value/category are filter-only.
-
-```python
-prompts = benchmark.query_prompts(
-    tag_values=["outdoor"],
-    tag_categories=["scene"],
-    origin_source=["coco"],
-    sort=["-created_at"],
-)
-for p in prompts:
-    print(p.identifier, [t.value for t in p.tags], p.origin.source if p.origin else None)
-```
-
 ## Leaderboard Configuration
 
 ### Inverse Ranking

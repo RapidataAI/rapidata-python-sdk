@@ -18,11 +18,7 @@ from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import 
 from rapidata.rapidata_client.benchmark.participant.participant import (
     BenchmarkParticipant,
 )
-from rapidata.rapidata_client.benchmark.prompt_metadata import (
-    BenchmarkPromptInfo,
-    Origin,
-    Tag,
-)
+from rapidata.rapidata_client.benchmark.prompt_metadata import Origin, Tag
 
 # Selection Types
 from rapidata.rapidata_client.selection.ab_test_selection import AbTestSelection
@@ -115,7 +111,6 @@ __all__ = [
     "BenchmarkParticipant",
     "Tag",
     "Origin",
-    "BenchmarkPromptInfo",
     # Selection Types
     "AbTestSelection",
     "CappedSelection",

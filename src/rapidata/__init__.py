@@ -66,7 +66,6 @@ from .rapidata_client import (
     DeviceType,
     Tag,
     Origin,
-    BenchmarkPromptInfo,
     Datapoint,
     ContextManager,
     FailedUploadException,
