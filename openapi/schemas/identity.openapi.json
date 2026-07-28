@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.07.27.1848-029529c"
+    "version": "2026.07.28.0731-56fd9ec"
   },
   "servers": [
     {
@@ -2875,6 +2875,9 @@
       "GetBidderRelationMembersEndpoint_Output": {
         "required": [
           "customer",
+          "email",
+          "organizationName",
+          "organizationId",
           "scope",
           "relation",
           "grantedAt"
@@ -2885,6 +2888,18 @@
             "type": "string",
             "description": "The customer holding the relation.",
             "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the customer."
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The name of the customer's active organization."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The identifier of the customer's active organization."
           },
           "scope": {
             "allOf": [
@@ -3040,6 +3055,9 @@
       "GetPlatformRelationMembersEndpoint_Output": {
         "required": [
           "customer",
+          "email",
+          "organizationName",
+          "organizationId",
           "scope",
           "relation",
           "grantedAt"
@@ -3050,6 +3068,18 @@
             "type": "string",
             "description": "The customer holding the relation.",
             "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the customer."
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The name of the customer's active organization."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The identifier of the customer's active organization."
           },
           "scope": {
             "allOf": [

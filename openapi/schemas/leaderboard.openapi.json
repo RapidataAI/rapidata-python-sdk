@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.07.27.1848-029529c"
+    "version": "2026.07.28.0731-56fd9ec"
   },
   "servers": [
     {
@@ -3009,7 +3009,9 @@
                   "id",
                   "-id",
                   "created_at",
-                  "-created_at"
+                  "-created_at",
+                  "origin_source",
+                  "-origin_source"
                 ],
                 "type": "string"
               }
@@ -3216,6 +3218,153 @@
             "name": "original_prompt",
             "in": "query",
             "description": "Filter by original_prompt.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "tag_values",
+            "in": "query",
+            "description": "Filter by tag_values.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "tag_categories",
+            "in": "query",
+            "description": "Filter by tag_categories.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "origin_source",
+            "in": "query",
+            "description": "Filter by origin_source.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -12258,7 +12407,8 @@
         "tags": [
           "Prompt"
         ],
-        "summary": "Updates the tags associated with a prompt.",
+        "summary": "Updates the tags and origin associated with a prompt.",
+        "description": "Fields left unset are not changed: send tags to replace the tag set, and/or\n origin to set the origin.",
         "parameters": [
           {
             "name": "promptId",
@@ -12271,7 +12421,7 @@
           }
         ],
         "requestBody": {
-          "description": "The new list of tags.",
+          "description": "The tags and origin to set.",
           "content": {
             "application/json": {
               "schema": {
@@ -13786,12 +13936,20 @@
               {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/Tag"
                 },
                 "nullable": true
               }
             ],
             "description": "The tags associated with the prompt."
+          },
+          "origin": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Origin"
+              }
+            ],
+            "description": "Where the prompt came from."
           }
         }
       },
@@ -14888,11 +15046,19 @@
               {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/Tag"
                 }
               }
             ],
-            "description": "The tags associated with the prompt."
+            "description": "The tags associated with the prompt, each with an optional category."
+          },
+          "origin": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Origin"
+              }
+            ],
+            "description": "Where the prompt came from, if known."
           }
         }
       },
@@ -16507,6 +16673,17 @@
             "All"
           ],
           "type": "string"
+        }
+      },
+      "Origin": {
+        "required": [
+          "source"
+        ],
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          }
         }
       },
       "ParticipantStatus": {
@@ -18214,11 +18391,11 @@
               {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/Tag"
                 }
               }
             ],
-            "description": "The tags associated with the benchmark."
+            "description": "The distinct value+category tag pairs associated with the benchmark."
           }
         }
       },
@@ -18393,6 +18570,21 @@
             "type": "integer",
             "description": "The number of invalid datapoints collected by the participant.",
             "format": "int32"
+          }
+        }
+      },
+      "Tag": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -18587,9 +18779,6 @@
         }
       },
       "UpdatePromptTagsEndpoint_Input": {
-        "required": [
-          "tags"
-        ],
         "type": "object",
         "properties": {
           "tags": {
@@ -18597,11 +18786,19 @@
               {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/Tag"
                 }
               }
             ],
-            "description": "The list of tags to be associated with the prompt."
+            "description": "The tags to associate with the prompt, each with an optional category. Omit to leave\n the existing tags unchanged."
+          },
+          "origin": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Origin"
+              }
+            ],
+            "description": "Where the prompt came from. Omit to leave the existing origin unchanged."
           }
         }
       },
