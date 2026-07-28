@@ -27,6 +27,7 @@ from .selection import (
     RapidataRetrievalMode,
     EffortSelection,
 )
+from .benchmark.prompt_metadata import Origin, Tag
 from .datapoints import Datapoint
 from .context import ContextManager
 from .datapoints.metadata import (

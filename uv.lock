@@ -2610,7 +2610,7 @@ wheels = [
 
 [[package]]
 name = "rapidata"
-version = "3.17.2"
+version = "3.19.0"
 source = { editable = "." }
 dependencies = [
     { name = "authlib" },
