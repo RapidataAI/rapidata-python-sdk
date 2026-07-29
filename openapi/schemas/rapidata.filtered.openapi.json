@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.07.29.1044-e5ce389"
+    "version": "2026.07.29.1204-b63a822"
   },
   "servers": [
     {
@@ -37410,6 +37410,7 @@
           "createdAt",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "isPublic",
           "isDistilling",
           "distillingCampaignId",
@@ -37477,8 +37478,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "isPublic": {
             "type": "boolean",
@@ -39201,6 +39201,7 @@
           "filters",
           "createdAt",
           "ownerMail",
+          "organizationId",
           "isPublic",
           "isDistilling",
           "graduationRule"
@@ -39260,8 +39261,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "isPublic": {
             "type": "boolean",
@@ -40217,6 +40217,7 @@
           "filters",
           "featureFlags",
           "ownerMail",
+          "organizationId",
           "createdAt",
           "version",
           "rootNodeId",
@@ -40314,8 +40315,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the campaign.",
-            "nullable": true
+            "description": "The id of the organization that owns the campaign."
           },
           "createdAt": {
             "type": "string",
@@ -40370,6 +40370,7 @@
           "selections",
           "featureFlags",
           "ownerMail",
+          "organizationId",
           "createdAt",
           "_t"
         ],
@@ -40473,8 +40474,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the campaign.",
-            "nullable": true
+            "description": "The id of the organization that owns the campaign."
           },
           "createdAt": {
             "type": "string",
@@ -41781,6 +41781,7 @@
           "boostLevel",
           "boostingControlMode",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -41829,8 +41830,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -43248,6 +43248,7 @@
           "featureFlags",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt",
           "_t"
         ],
@@ -43385,8 +43386,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -43541,6 +43541,7 @@
           "type",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -43572,8 +43573,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -45669,6 +45669,7 @@
           "createdAt",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "initialBoostLevel",
           "scoreShift",
           "scoreScale"
@@ -45712,8 +45713,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "initialBoostLevel": {
             "type": "integer",
@@ -46706,7 +46706,8 @@
           "participantName",
           "asset",
           "tags",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -46779,8 +46780,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -46795,6 +46795,7 @@
           "failedCount",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -46882,8 +46883,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -47086,7 +47086,8 @@
           "participantName",
           "asset",
           "tags",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -47140,8 +47141,7 @@
             "type": "string"
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -47153,7 +47153,8 @@
           "participantName",
           "asset",
           "tags",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -47226,8 +47227,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -47341,6 +47341,7 @@
           "asset",
           "tags",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -47411,8 +47412,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -47610,7 +47610,8 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -47645,8 +47646,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -48106,6 +48106,7 @@
           "status",
           "createdAt",
           "ownerMail",
+          "organizationId",
           "orderId",
           "jobId",
           "audienceId"
@@ -48139,8 +48140,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "orderId": {
             "type": "string",
@@ -48472,7 +48472,8 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -48507,8 +48508,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -48832,7 +48832,8 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -48867,8 +48868,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -48916,6 +48916,7 @@
           "failedCount",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -49003,8 +49004,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -50505,7 +50505,8 @@
           "audienceDeleted",
           "createdAt",
           "ownerId",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -50596,8 +50597,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         },
         "description": "The result when a job has been retrieved."
@@ -50642,7 +50642,8 @@
           "isPublic",
           "createdAt",
           "ownerId",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -50682,8 +50683,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         },
         "description": "The result when a job definition has been retrieved."
@@ -52431,7 +52431,8 @@
           "lastJobDate",
           "lastJobName",
           "lastJobId",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -52464,8 +52465,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -52583,7 +52583,8 @@
           "createdAt",
           "revisionCount",
           "ownerId",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -52624,8 +52625,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -52738,6 +52738,7 @@
           "pipelineId",
           "state",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -52781,8 +52782,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -52924,7 +52924,8 @@
           "createdAt",
           "revisionCount",
           "ownerId",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -52965,8 +52966,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -59695,6 +59695,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -59761,8 +59762,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -59950,6 +59950,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -60016,8 +60017,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -60369,6 +60369,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -60406,8 +60407,7 @@
             "type": "string"
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -60445,6 +60445,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -60482,8 +60483,7 @@
             "type": "string"
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -60618,6 +60618,7 @@
           "name",
           "isPublic",
           "ownerMail",
+          "organizationId",
           "ownerId",
           "dimensions",
           "createdAt"
@@ -60642,8 +60643,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "ownerId": {
             "type": "string",
@@ -60690,6 +60690,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -60753,8 +60754,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -61588,6 +61588,7 @@
           "referee",
           "name",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -61617,8 +61618,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -61630,6 +61630,7 @@
           "criteria",
           "name",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -61659,8 +61660,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "rankingConfig": {
             "type": "object",
@@ -61684,6 +61684,7 @@
           "context",
           "contextAsset",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -61738,8 +61739,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -62003,6 +62003,7 @@
           "referee",
           "name",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -62032,8 +62033,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.07.29.1044-e5ce389"
+    "version": "2026.07.29.1204-b63a822"
   },
   "servers": [
     {
@@ -2572,6 +2572,7 @@
           "createdAt",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "isPublic",
           "isDistilling",
           "distillingCampaignId",
@@ -2639,8 +2640,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "isPublic": {
             "type": "boolean",
@@ -4376,6 +4376,7 @@
           "filters",
           "createdAt",
           "ownerMail",
+          "organizationId",
           "isPublic",
           "isDistilling",
           "graduationRule"
@@ -4435,8 +4436,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "isPublic": {
             "type": "boolean",

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Workflow API",
     "description": "The API for the Rapidata Workflow service",
-    "version": "2026.07.29.1044-e5ce389"
+    "version": "2026.07.29.1204-b63a822"
   },
   "servers": [
     {
@@ -3020,6 +3020,7 @@
           "referee",
           "name",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -3049,8 +3050,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -3062,6 +3062,7 @@
           "criteria",
           "name",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -3091,8 +3092,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "rankingConfig": {
             "type": "object",
@@ -3116,6 +3116,7 @@
           "context",
           "contextAsset",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -3170,8 +3171,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -3435,6 +3435,7 @@
           "referee",
           "name",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -3464,8 +3465,7 @@
             "nullable": true
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
