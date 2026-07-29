@@ -197,6 +197,46 @@ print(leaderboard.level_of_detail)   # "custom"
 print(leaderboard.response_budget)   # 5000
 ```
 
+### Restricting which prompts a leaderboard uses
+
+A leaderboard normally builds matchups from every prompt in its benchmark. Pass
+`included_tags` and/or `excluded_tags` at creation to narrow that down to a slice
+of the [tagged](#tagging-system) prompts — useful for running a focused
+leaderboard (say, outdoor scenes only) against a broad benchmark.
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (outdoor)",
+    instruction="Which image is more realistic?",
+    included_tags=["outdoor"],   # only prompts tagged "outdoor"
+    excluded_tags=["nsfw"],      # never these, even if also tagged "outdoor"
+)
+```
+
+A prompt is used when it carries at least one `included_tags` value **and** no
+`excluded_tags` value. `excluded_tags` always wins. An empty or omitted
+`included_tags` means no restriction; a non-empty one drops prompts that have no
+tags at all. Matching is on the tag value — a tag's category is irrelevant.
+
+The rules are applied when a run starts rather than snapshotted at creation, so
+re-tagging a prompt changes which future runs pick it up. They only affect what
+gets **collected**; votes already recorded stay in the standings.
+
+!!! note
+    This is a different thing from `get_standings(tags=...)`. These arguments decide
+    which prompts get matchups collected for them, while `get_standings(tags=...)`
+    filters the standings you read back out of what was already collected.
+
+Both are set at creation and read back as read-only properties:
+
+```python
+print(leaderboard.included_tags)  # ["outdoor"]
+print(leaderboard.excluded_tags)  # ["nsfw"]
+```
+
+They cannot be changed afterwards — a leaderboard whose history was collected
+under changing rules is hard to interpret. To re-scope, create a new leaderboard.
+
 ### Prompt and Asset Display
 
 Control what evaluators see during comparison.
