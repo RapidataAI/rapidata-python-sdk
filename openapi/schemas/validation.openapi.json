@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Validation API",
     "description": "The API for the Rapidata Validation service",
-    "version": "2026.07.29.1044-e5ce389"
+    "version": "2026.07.29.1204-b63a822"
   },
   "servers": [
     {
@@ -1608,6 +1608,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -1645,8 +1646,7 @@
             "type": "string"
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -1684,6 +1684,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -1721,8 +1722,7 @@
             "type": "string"
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -1857,6 +1857,7 @@
           "name",
           "isPublic",
           "ownerMail",
+          "organizationId",
           "ownerId",
           "dimensions",
           "createdAt"
@@ -1881,8 +1882,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "ownerId": {
             "type": "string",
@@ -3113,6 +3113,7 @@
           "isPublic",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -3176,8 +3177,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",

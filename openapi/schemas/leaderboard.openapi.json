@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.07.29.1044-e5ce389"
+    "version": "2026.07.29.1204-b63a822"
   },
   "servers": [
     {
@@ -14199,6 +14199,7 @@
           "createdAt",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "initialBoostLevel",
           "scoreShift",
           "scoreScale"
@@ -14242,8 +14243,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "initialBoostLevel": {
             "type": "integer",
@@ -15242,7 +15242,8 @@
           "participantName",
           "asset",
           "tags",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -15321,8 +15322,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -15337,6 +15337,7 @@
           "failedCount",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -15437,8 +15438,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -15641,7 +15641,8 @@
           "participantName",
           "asset",
           "tags",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -15700,8 +15701,7 @@
             "type": "string"
           },
           "organizationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -15713,7 +15713,8 @@
           "participantName",
           "asset",
           "tags",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -15792,8 +15793,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -15913,6 +15913,7 @@
           "asset",
           "tags",
           "ownerMail",
+          "organizationId",
           "_t"
         ],
         "properties": {
@@ -15989,8 +15990,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -16743,7 +16743,8 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -16778,8 +16779,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -17239,6 +17239,7 @@
           "status",
           "createdAt",
           "ownerMail",
+          "organizationId",
           "orderId",
           "jobId",
           "audienceId"
@@ -17272,8 +17273,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "orderId": {
             "type": "string",
@@ -17605,7 +17605,8 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -17640,8 +17641,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -17965,7 +17965,8 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "organizationId"
         ],
         "type": "object",
         "properties": {
@@ -18000,8 +18001,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           }
         }
       },
@@ -18049,6 +18049,7 @@
           "failedCount",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -18136,8 +18137,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
