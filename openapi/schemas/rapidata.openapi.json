@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.07.29.1207-c645d0f"
+    "version": "2026.07.30.0736-b437ba6"
   },
   "servers": [
     {
@@ -45611,7 +45611,8 @@
         "enum": [
           "SkipContentCheck",
           "PreheatBoost",
-          "ManagedImageFaucet"
+          "ManagedImageFaucet",
+          "RequestFeatures"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
@@ -47177,6 +47178,28 @@
             ],
             "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Defaults to AllVotes when unset."
           },
+          "includedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values to restrict the leaderboard's matchups to. Only prompts carrying at\n least one of these tags are used; an empty list means no restriction."
+          },
+          "excludedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags: a prompt carrying an excluded tag is skipped even when one of its\n other tags is included."
+          },
           "featureFlags": {
             "allOf": [
               {
@@ -48175,7 +48198,9 @@
           "scoreScale",
           "isHidden",
           "isExcludedFromOverall",
-          "voteAggregation"
+          "voteAggregation",
+          "includedTags",
+          "excludedTags"
         ],
         "type": "object",
         "properties": {
@@ -48269,6 +48294,28 @@
               }
             ],
             "description": "How individual votes on a matchup are aggregated into the stored result."
+          },
+          "includedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard restricts its matchups to. Empty means no restriction."
+          },
+          "excludedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags."
           }
         }
       },
@@ -50095,7 +50142,9 @@
           "scoreShift",
           "scoreScale",
           "isHidden",
-          "isExcludedFromOverall"
+          "isExcludedFromOverall",
+          "includedTags",
+          "excludedTags"
         ],
         "type": "object",
         "properties": {
@@ -50175,6 +50224,28 @@
           "isExcludedFromOverall": {
             "type": "boolean",
             "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
+          },
+          "includedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard restricts its matchups to. Empty means no restriction."
+          },
+          "excludedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags."
           }
         }
       },
@@ -50228,7 +50299,9 @@
           "scoreScale",
           "isHidden",
           "isExcludedFromOverall",
-          "voteAggregation"
+          "voteAggregation",
+          "includedTags",
+          "excludedTags"
         ],
         "type": "object",
         "properties": {
@@ -50316,6 +50389,28 @@
               }
             ],
             "description": "How individual votes on a matchup are aggregated into the stored result."
+          },
+          "includedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard restricts its matchups to. Empty means no restriction."
+          },
+          "excludedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags."
           }
         }
       },
@@ -51538,6 +51633,28 @@
               }
             ],
             "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Only affects future runs."
+          },
+          "includedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values to restrict the leaderboard's matchups to. Only prompts carrying at\n least one of these tags are used; an empty list means no restriction."
+          },
+          "excludedTags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags: a prompt carrying an excluded tag is skipped even when one of its\n other tags is included."
           }
         }
       },
