@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.07.30.0736-b437ba6"
+    "version": "2026.07.30.0813-e344d2e"
   },
   "servers": [
     {
@@ -17114,6 +17114,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -17164,6 +17165,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
@@ -17213,6 +17218,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -17263,6 +17269,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
@@ -18307,6 +18317,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -18357,6 +18368,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
@@ -18406,6 +18421,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -18456,6 +18472,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
