@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Validation API",
     "description": "The API for the Rapidata Validation service",
-    "version": "2026.07.30.1033-ee0541b"
+    "version": "2026.07.30.1440-9ef7430"
   },
   "servers": [
     {
