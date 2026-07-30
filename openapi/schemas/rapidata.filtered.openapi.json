@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.07.30.0736-b437ba6"
+    "version": "2026.07.30.0813-e344d2e"
   },
   "servers": [
     {
@@ -22421,6 +22421,80 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/definition/{definitionId}/clone": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Clones a job definition into a new, private definition owned by the caller.",
+        "description": "The clone's first revision copies the configuration of the source definition's latest\n revision and references the same dataset. Jobs, runs and earlier revisions are not\n copied. A preview pipeline is automatically created and returned in the response.\n Omit the name to derive it from the source definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "description": "The id of the job definition to clone.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The clone job definition parameters.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CloneJobDefinitionEndpoint_Input"
+                  }
+                ],
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneJobDefinitionEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -47982,6 +48056,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -48032,6 +48107,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
@@ -48081,6 +48160,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -48131,6 +48211,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
@@ -49175,6 +49259,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -49225,6 +49310,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
@@ -49274,6 +49363,7 @@
           "score",
           "wins",
           "totalMatches",
+          "responseCount",
           "isDisabled"
         ],
         "type": "object",
@@ -49324,6 +49414,10 @@
           "totalMatches": {
             "type": "number",
             "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "isDisabled": {
             "type": "boolean"
@@ -49981,6 +50075,35 @@
             "type": "string"
           }
         }
+      },
+      "CloneJobDefinitionEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "definitionName": {
+            "type": "string",
+            "description": "The name of the new job definition. Defaults to the source definition's name\n suffixed with \"Copy\".",
+            "nullable": true
+          }
+        },
+        "description": "The input for the clone job definition endpoint."
+      },
+      "CloneJobDefinitionEndpoint_Output": {
+        "required": [
+          "definitionId",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string",
+            "description": "The id of the cloned job definition."
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The id of the created preview pipeline."
+          }
+        },
+        "description": "The result when a job definition has been cloned."
       },
       "CloneOrderEndpoint_Input": {
         "required": [
