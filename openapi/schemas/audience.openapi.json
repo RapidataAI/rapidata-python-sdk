@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.07.31.0907-45d8047"
+    "version": "2026.07.31.1828-821bffc"
   },
   "servers": [
     {
@@ -211,6 +211,7 @@
           "Audience"
         ],
         "summary": "Returns the audience with the specified id.",
+        "description": "Accepts the id of a filtered audience too. In that case the response describes the\n underlying base audience, with filter set to the filter applied on top of it.",
         "parameters": [
           {
             "name": "audienceId",
@@ -2565,6 +2566,7 @@
       "GetAudienceByIdEndpoint_Output": {
         "required": [
           "id",
+          "baseAudienceId",
           "name",
           "status",
           "qualifiedUserCount",
@@ -2585,6 +2587,18 @@
           "id": {
             "type": "string",
             "description": "The unique identifier of the audience."
+          },
+          "baseAudienceId": {
+            "type": "string",
+            "description": "The audience that backs this entry. Equals id for a regular audience; for a\n filtered audience it points to the audience the filter is applied on top of."
+          },
+          "filter": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAudienceFilter"
+              }
+            ],
+            "description": "The filter applied on top of the base audience. Null for a regular audience — a\n non-null value is the sole signal that this is a filtered view. Every other field\n describes the base audience, since a filtered view inherits its configuration and has\n no user counts of its own."
           },
           "name": {
             "type": "string",
