@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Sequence, TYPE_CHECKING
+
+from opentelemetry import context as otel_context
+from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, tracer, rapidata_config
 
@@ -12,6 +16,12 @@ if TYPE_CHECKING:
 # (datasets-service CreateDatapointCommandValidator: `RuleFor(x => x.Context).MaximumLength(400)`).
 # Keep in sync if the backend limit changes.
 MAX_CONTEXT_LENGTH = 400
+
+# The endpoint shortens the pairs of one request concurrently, but the request
+# only returns once its slowest pair is done. Splitting a large call into several
+# requests lets them overlap, reports progress as they land, and keeps a batch
+# short enough that one model call cannot stall the whole set.
+SHORTEN_BATCH_SIZE = 10
 
 
 class ContextManager:
@@ -41,7 +51,10 @@ class ContextManager:
         return self.shorten_contexts([(context, question)])[0]
 
     def shorten_contexts(self, pairs: Sequence[tuple[str, str]]) -> list[str]:
-        """Shorten a batch of ``(context, question)`` pairs in one request.
+        """Shorten a batch of ``(context, question)`` pairs.
+
+        The pairs are sent in concurrent batched requests, with a progress bar
+        while they run (suppressed by ``rapidata_config.logging.silent_mode``).
 
         Args:
             pairs: The ``(context, question)`` pairs to shorten.
@@ -49,6 +62,47 @@ class ContextManager:
         Returns:
             The shortened contexts, in the same order as ``pairs``.
         """
+        if not pairs:
+            return []
+
+        with tracer.start_as_current_span("ContextManager.shorten_contexts"):
+            if len(pairs) <= SHORTEN_BATCH_SIZE:
+                return self._shorten_batch(pairs)
+
+            batches = [
+                pairs[start : start + SHORTEN_BATCH_SIZE]
+                for start in range(0, len(pairs), SHORTEN_BATCH_SIZE)
+            ]
+            results: list[list[str]] = [[] for _ in batches]
+            current_context = otel_context.get_current()
+
+            def shorten_batch(index: int) -> None:
+                token = otel_context.attach(current_context)
+                try:
+                    results[index] = self._shorten_batch(batches[index])
+                finally:
+                    otel_context.detach(token)
+
+            with ThreadPoolExecutor(
+                max_workers=rapidata_config.upload.maxWorkers
+            ) as executor:
+                futures = {
+                    executor.submit(shorten_batch, index): index
+                    for index in range(len(batches))
+                }
+                with tqdm(
+                    total=len(pairs),
+                    desc="Shortening contexts",
+                    disable=rapidata_config.logging.silent_mode,
+                ) as progress:
+                    for future in as_completed(futures):
+                        future.result()
+                        progress.update(len(batches[futures[future]]))
+
+            return [context for batch in results for context in batch]
+
+    def _shorten_batch(self, pairs: Sequence[tuple[str, str]]) -> list[str]:
+        """Shorten one batch of ``(context, question)`` pairs in a single request."""
         from rapidata.api_client.models.shorten_context_endpoint_input import (
             ShortenContextEndpointInput,
         )
@@ -56,24 +110,18 @@ class ContextManager:
             ShortenContextEndpointInputItem,
         )
 
-        if not pairs:
-            return []
-
-        with tracer.start_as_current_span("ContextManager.shorten_contexts"):
-            output = self._openapi_service.dataset.context_shortening_api.datasets_shorten_context_post(
-                shorten_context_endpoint_input=ShortenContextEndpointInput(
-                    items=[
-                        ShortenContextEndpointInputItem(
-                            context=context, question=question
-                        )
-                        for context, question in pairs
-                    ]
-                )
+        output = self._openapi_service.dataset.context_shortening_api.datasets_shorten_context_post(
+            shorten_context_endpoint_input=ShortenContextEndpointInput(
+                items=[
+                    ShortenContextEndpointInputItem(context=context, question=question)
+                    for context, question in pairs
+                ]
             )
-            return [item.shortened_context for item in output.items]
+        )
+        return [item.shortened_context for item in output.items]
 
     def _apply_context_shortening(
-        self, datapoints: list[Datapoint], question: str | None
+        self, datapoints: list[Datapoint], question: str
     ) -> None:
         """Shorten datapoint contexts for ``question``, in place.
 
@@ -84,9 +132,6 @@ class ContextManager:
         With ``rapidata_config.upload.contextShortening`` enabled, every context
         is shortened, not only the over-long ones: a context tuned to the question
         focuses the annotator even when it already fits.
-
-        Shortening needs the question to tune against, so without one nothing can
-        be shortened and a warning is logged instead.
         """
         shorten_all = rapidata_config.upload.contextShortening
 
@@ -99,37 +144,14 @@ class ContextManager:
         if not candidates:
             return
 
-        over_limit = [
-            (index, context)
-            for index, _, context in candidates
-            if len(context) > MAX_CONTEXT_LENGTH
-        ]
-
-        if not question:
-            for index, context in over_limit:
-                logger.warning(
-                    "Datapoint %d has a context of %d characters, which exceeds the "
-                    "maximum of %d and would be rejected by the backend, but no "
-                    "question/instruction was available to shorten it against. "
-                    "Shorten it manually or via client.context.shorten_context(...).",
-                    index,
-                    len(context),
-                    MAX_CONTEXT_LENGTH,
-                )
-            if shorten_all and len(over_limit) < len(candidates):
-                logger.warning(
-                    "rapidata_config.upload.contextShortening is enabled but no "
-                    "question/instruction was available to shorten against; leaving "
-                    "%d context(s) unchanged.",
-                    len(candidates) - len(over_limit),
-                )
-            return
-
-        if over_limit:
+        over_limit_count = sum(
+            1 for _, _, context in candidates if len(context) > MAX_CONTEXT_LENGTH
+        )
+        if over_limit_count:
             logger.warning(
                 "%d context(s) exceed the maximum of %d characters and are being "
                 "shortened for the instruction so the backend accepts them.",
-                len(over_limit),
+                over_limit_count,
                 MAX_CONTEXT_LENGTH,
             )
 
@@ -144,10 +166,7 @@ class ContextManager:
                     index,
                 )
                 continue
-            # An over-long context is rewritten whether or not the caller opted
-            # in, so report that at warning level; an opted-in one is expected.
-            log = logger.warning if len(context) > MAX_CONTEXT_LENGTH else logger.info
-            log(
+            logger.info(
                 "Datapoint %d: shortened context from %d to %d characters.",
                 index,
                 len(context),
