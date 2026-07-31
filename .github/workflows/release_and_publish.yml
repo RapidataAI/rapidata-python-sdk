@@ -180,3 +180,16 @@ jobs:
         repository: rapidataAI/skills
         event-type: sdk-release
         client-payload: '{"version": "${{ steps.update_version.outputs.new_version }}"}'
+
+    # The hosted MCP server wraps this SDK but resolves it at image build time, so
+    # without a rebuild it keeps serving whatever version was current when that repo
+    # last changed — it had drifted to 3.15.3 while 3.19.2 was released. Hand it the
+    # version just published so it pins exactly this release.
+    - name: Trigger rapidata-mcp image rebuild
+      if: steps.release_type.outputs.type == 'stable'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.SKILLS_REPO_PAT }}
+        repository: RapidataAI/rapidata-mcp
+        event-type: sdk-released
+        client-payload: '{"sdk_version": "${{ steps.update_version.outputs.new_version }}"}'
