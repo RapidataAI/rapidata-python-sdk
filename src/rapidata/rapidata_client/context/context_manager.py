@@ -72,76 +72,85 @@ class ContextManager:
             )
             return [item.shortened_context for item in output.items]
 
-    def _enforce_context_length(
+    def _apply_context_shortening(
         self, datapoints: list[Datapoint], question: str | None
     ) -> None:
-        """Check datapoint contexts against the backend's maximum length, in place.
+        """Shorten datapoint contexts for ``question``, in place.
 
-        For every datapoint whose context exceeds :data:`MAX_CONTEXT_LENGTH`:
+        A context longer than :data:`MAX_CONTEXT_LENGTH` is **always** shortened
+        — the backend would reject it otherwise — and a warning reports it, since
+        the annotators then see text the caller did not write.
 
-        - if ``rapidata_config.upload.autoShortenContext`` is set (the default)
-          and a ``question`` is available, the context is shortened for that
-          question (one batched request) and substituted, and a warning reports
-          that it happened;
-        - otherwise a warning is logged explaining the backend would reject it.
+        With ``rapidata_config.upload.contextShortening`` enabled, every context
+        is shortened, not only the over-long ones: a context tuned to the question
+        focuses the annotator even when it already fits.
+
+        Shortening needs the question to tune against, so without one nothing can
+        be shortened and a warning is logged instead.
         """
-        over_limit = [
+        shorten_all = rapidata_config.upload.contextShortening
+
+        candidates = [
             (index, datapoint, datapoint.context)
             for index, datapoint in enumerate(datapoints)
             if datapoint.context is not None
-            and len(datapoint.context) > MAX_CONTEXT_LENGTH
+            and (shorten_all or len(datapoint.context) > MAX_CONTEXT_LENGTH)
         ]
-        if not over_limit:
+        if not candidates:
             return
 
-        auto_shorten = rapidata_config.upload.autoShortenContext
+        over_limit = [
+            (index, context)
+            for index, _, context in candidates
+            if len(context) > MAX_CONTEXT_LENGTH
+        ]
 
-        if auto_shorten and question:
+        if not question:
+            for index, context in over_limit:
+                logger.warning(
+                    "Datapoint %d has a context of %d characters, which exceeds the "
+                    "maximum of %d and would be rejected by the backend, but no "
+                    "question/instruction was available to shorten it against. "
+                    "Shorten it manually or via client.context.shorten_context(...).",
+                    index,
+                    len(context),
+                    MAX_CONTEXT_LENGTH,
+                )
+            if shorten_all and len(over_limit) < len(candidates):
+                logger.warning(
+                    "rapidata_config.upload.contextShortening is enabled but no "
+                    "question/instruction was available to shorten against; leaving "
+                    "%d context(s) unchanged.",
+                    len(candidates) - len(over_limit),
+                )
+            return
+
+        if over_limit:
             logger.warning(
                 "%d context(s) exceed the maximum of %d characters and are being "
-                "shortened automatically for the instruction. Set "
-                "rapidata_config.upload.autoShortenContext = False to keep them "
-                "unchanged instead.",
+                "shortened for the instruction so the backend accepts them.",
                 len(over_limit),
                 MAX_CONTEXT_LENGTH,
             )
-            shortened = self.shorten_contexts(
-                [(context, question) for _, _, context in over_limit]
-            )
-            for (index, datapoint, context), new_context in zip(over_limit, shortened):
-                if not new_context:
-                    logger.warning(
-                        "Datapoint %d: shorten-context returned an empty result; "
-                        "keeping the original context.",
-                        index,
-                    )
-                    continue
+
+        shortened = self.shorten_contexts(
+            [(context, question) for _, _, context in candidates]
+        )
+        for (index, datapoint, context), new_context in zip(candidates, shortened):
+            if not new_context:
                 logger.warning(
-                    "Datapoint %d: shortened context from %d to %d characters.",
+                    "Datapoint %d: shorten-context returned an empty result; "
+                    "keeping the original context.",
                     index,
-                    len(context),
-                    len(new_context),
                 )
-                datapoint.context = new_context
-            return
-
-        if auto_shorten:
-            # Shortening needs the question to tune the context against; without
-            # it we can't shorten, so fall back to warning instead of proceeding.
-            reason = "no question/instruction was available to shorten it against"
-        else:
-            reason = (
-                "automatic shortening is turned off "
-                "(rapidata_config.upload.autoShortenContext = False)"
-            )
-
-        for index, _, context in over_limit:
-            logger.warning(
-                "Datapoint %d has a context of %d characters, which exceeds the "
-                "maximum of %d and would be rejected by the backend: %s. Shorten it "
-                "manually or via client.context.shorten_context(...).",
+                continue
+            # An over-long context is rewritten whether or not the caller opted
+            # in, so report that at warning level; an opted-in one is expected.
+            log = logger.warning if len(context) > MAX_CONTEXT_LENGTH else logger.info
+            log(
+                "Datapoint %d: shortened context from %d to %d characters.",
                 index,
                 len(context),
-                MAX_CONTEXT_LENGTH,
-                reason,
+                len(new_context),
             )
+            datapoint.context = new_context

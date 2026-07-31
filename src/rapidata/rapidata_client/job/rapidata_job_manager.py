@@ -79,7 +79,7 @@ class RapidataJobManager:
 
         self._warn_unsupported_settings(workflow, settings)
 
-        self.__context_manager._enforce_context_length(
+        self.__context_manager._apply_context_shortening(
             datapoints=datapoints,
             question=workflow._get_instruction(),
         )

@@ -1,8 +1,8 @@
-"""Tests for the automatic shortening of over-long datapoint contexts.
+"""Tests for the shortening of datapoint contexts before upload.
 
-Shortening is on by default, so a context can be rewritten without the caller
-asking for it — every one of these paths must be visible in the logs at warning
-level.
+An over-long context is always shortened — that path cannot be opted out of, so
+it must be visible in the logs at warning level. Shortening contexts that
+already fit is opt-in via ``rapidata_config.upload.contextShortening``.
 """
 
 from __future__ import annotations
@@ -19,12 +19,16 @@ from rapidata.rapidata_client.context.context_manager import (
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
+QUESTION = "Is this a cat?"
+LONG_CONTEXT = "a" * (MAX_CONTEXT_LENGTH + 1)
+SHORT_CONTEXT = "a short context"
+
 
 @pytest.fixture(autouse=True)
-def restore_auto_shorten():
-    original = rapidata_config.upload.autoShortenContext
+def restore_context_shortening():
+    original = rapidata_config.upload.contextShortening
     yield
-    rapidata_config.upload.autoShortenContext = original
+    rapidata_config.upload.contextShortening = original
 
 
 def _datapoint(context: str | None) -> Datapoint:
@@ -38,70 +42,97 @@ def _manager(shortened: list[str] | None = None) -> ContextManager:
     return manager
 
 
-def test_auto_shorten_is_on_by_default():
-    assert rapidata_config.upload.autoShortenContext is True
+def _warnings(caplog) -> list[str]:
+    return [r.getMessage() for r in caplog.records if r.levelno >= logging.WARNING]
 
 
-def test_over_long_context_is_shortened_by_default(caplog):
-    long_context = "a" * (MAX_CONTEXT_LENGTH + 1)
-    datapoints = [_datapoint(long_context)]
-    manager = _manager(shortened=["short context"])
-
-    with caplog.at_level(logging.WARNING):
-        manager._enforce_context_length(datapoints, question="Is this a cat?")
-
-    manager.shorten_contexts.assert_called_once_with(  # type: ignore[attr-defined]
-        [(long_context, "Is this a cat?")]
-    )
-    assert datapoints[0].context == "short context"
-    assert "shortened automatically" in caplog.text
+def test_context_shortening_is_off_by_default():
+    assert rapidata_config.upload.contextShortening is False
 
 
-def test_context_within_limit_is_untouched(caplog):
-    datapoints = [_datapoint("a" * MAX_CONTEXT_LENGTH), _datapoint(None)]
+def test_over_long_context_is_always_shortened(caplog):
+    datapoints = [_datapoint(LONG_CONTEXT)]
+    manager = _manager(shortened=["shortened context"])
+
+    with caplog.at_level(logging.INFO):
+        manager._apply_context_shortening(datapoints, question=QUESTION)
+
+    manager.shorten_contexts.assert_called_once_with([(LONG_CONTEXT, QUESTION)])  # type: ignore[attr-defined]
+    assert datapoints[0].context == "shortened context"
+    assert any("exceed the maximum" in message for message in _warnings(caplog))
+    assert any("shortened context from" in message for message in _warnings(caplog))
+
+
+def test_context_within_limit_is_untouched_when_disabled(caplog):
+    datapoints = [_datapoint(SHORT_CONTEXT), _datapoint(None)]
     manager = _manager(shortened=[])
 
-    with caplog.at_level(logging.WARNING):
-        manager._enforce_context_length(datapoints, question="Is this a cat?")
+    with caplog.at_level(logging.INFO):
+        manager._apply_context_shortening(datapoints, question=QUESTION)
 
     manager.shorten_contexts.assert_not_called()  # type: ignore[attr-defined]
-    assert [r for r in caplog.records if r.levelno >= logging.WARNING] == []
+    assert datapoints[0].context == SHORT_CONTEXT
+    assert _warnings(caplog) == []
+
+
+def test_enabled_shortens_every_context(caplog):
+    datapoints = [_datapoint(SHORT_CONTEXT), _datapoint(LONG_CONTEXT), _datapoint(None)]
+    rapidata_config.upload.contextShortening = True
+    manager = _manager(shortened=["short one", "short two"])
+
+    with caplog.at_level(logging.INFO):
+        manager._apply_context_shortening(datapoints, question=QUESTION)
+
+    manager.shorten_contexts.assert_called_once_with(  # type: ignore[attr-defined]
+        [(SHORT_CONTEXT, QUESTION), (LONG_CONTEXT, QUESTION)]
+    )
+    assert [datapoint.context for datapoint in datapoints] == [
+        "short one",
+        "short two",
+        None,
+    ]
+    # The within-limit datapoint was shortened on request, so it stays at info;
+    # only the over-long one warrants a warning.
+    assert not any("Datapoint 0" in message for message in _warnings(caplog))
+    assert any("Datapoint 1" in message for message in _warnings(caplog))
 
 
 def test_empty_shortening_result_keeps_original_context(caplog):
-    long_context = "a" * (MAX_CONTEXT_LENGTH + 1)
-    datapoints = [_datapoint(long_context)]
+    datapoints = [_datapoint(LONG_CONTEXT)]
     manager = _manager(shortened=[""])
 
-    with caplog.at_level(logging.WARNING):
-        manager._enforce_context_length(datapoints, question="Is this a cat?")
+    with caplog.at_level(logging.INFO):
+        manager._apply_context_shortening(datapoints, question=QUESTION)
 
-    assert datapoints[0].context == long_context
-    assert "empty result" in caplog.text
-
-
-def test_without_question_context_is_left_unchanged(caplog):
-    long_context = "a" * (MAX_CONTEXT_LENGTH + 1)
-    datapoints = [_datapoint(long_context)]
-    manager = _manager(shortened=["short context"])
-
-    with caplog.at_level(logging.WARNING):
-        manager._enforce_context_length(datapoints, question=None)
-
-    manager.shorten_contexts.assert_not_called()  # type: ignore[attr-defined]
-    assert datapoints[0].context == long_context
-    assert "no question/instruction was available" in caplog.text
+    assert datapoints[0].context == LONG_CONTEXT
+    assert any("empty result" in message for message in _warnings(caplog))
 
 
-def test_disabled_auto_shorten_only_warns(caplog):
-    rapidata_config.upload.autoShortenContext = False
-    long_context = "a" * (MAX_CONTEXT_LENGTH + 1)
-    datapoints = [_datapoint(long_context)]
-    manager = _manager(shortened=["short context"])
+def test_without_question_over_long_context_is_left_unchanged(caplog):
+    datapoints = [_datapoint(LONG_CONTEXT)]
+    manager = _manager(shortened=["shortened context"])
 
-    with caplog.at_level(logging.WARNING):
-        manager._enforce_context_length(datapoints, question="Is this a cat?")
+    with caplog.at_level(logging.INFO):
+        manager._apply_context_shortening(datapoints, question=None)
 
     manager.shorten_contexts.assert_not_called()  # type: ignore[attr-defined]
-    assert datapoints[0].context == long_context
-    assert "automatic shortening is turned off" in caplog.text
+    assert datapoints[0].context == LONG_CONTEXT
+    assert any(
+        "no question/instruction was available" in message
+        for message in _warnings(caplog)
+    )
+
+
+def test_without_question_enabled_shortening_warns(caplog):
+    datapoints = [_datapoint(SHORT_CONTEXT)]
+    rapidata_config.upload.contextShortening = True
+    manager = _manager(shortened=["shortened context"])
+
+    with caplog.at_level(logging.INFO):
+        manager._apply_context_shortening(datapoints, question=None)
+
+    manager.shorten_contexts.assert_not_called()  # type: ignore[attr-defined]
+    assert datapoints[0].context == SHORT_CONTEXT
+    assert any(
+        "contextShortening is enabled" in message for message in _warnings(caplog)
+    )

@@ -102,11 +102,11 @@ class UploadConfig(BaseModel):
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
         compression (CompressionConfig | None): Per-upload override for the asset service's
             image-compression behaviour. Defaults to None (use server-side defaults).
-        autoShortenContext (bool): When True (default), a datapoint context longer than the
-            backend's maximum length is automatically shortened for the order/job instruction
-            before upload, and a warning is logged reporting that it happened. When False, an
-            over-long context is left unchanged and a warning is logged that the backend would
-            reject it. Defaults to True.
+        contextShortening (bool): When True, every datapoint context is shortened for the
+            order/job instruction before upload, keeping only the part relevant to the
+            question. Defaults to False. Independent of this setting, a context longer than
+            the backend's maximum length is always shortened so the backend accepts it, with
+            a warning; that cannot be turned off.
         failureTolerance (float): The fraction of a job's datapoints allowed to fail while
             still creating the job definition (0.0-1.0). 0.0 (default) is strict: any failed
             upload aborts creation so no incomplete definition is left behind, and the failed
@@ -159,9 +159,9 @@ class UploadConfig(BaseModel):
         default=None,
         description="Per-upload override for image compression. None uses server defaults.",
     )
-    autoShortenContext: bool = Field(
-        default=True,
-        description="Automatically shorten over-long datapoint contexts for the instruction before upload.",
+    contextShortening: bool = Field(
+        default=False,
+        description="Shorten every datapoint context for the instruction before upload. Over-long contexts are always shortened regardless.",
     )
     failureTolerance: float = Field(
         default=0.0,

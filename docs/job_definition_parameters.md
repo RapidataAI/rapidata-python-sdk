@@ -164,11 +164,7 @@ datapoints=["image1.jpg", "image2.jpg"],
 contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 ```
 
-**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. Over-long contexts are shortened for you by default (see below).
-
-#### Automatic shortening
-
-Any context longer than the 400-character limit is automatically shortened before upload — tuned to the `instruction` so only the part relevant to the question is kept. A warning is logged whenever this happens, reporting how many contexts were shortened and by how much, so a silently rewritten context never goes unnoticed.
+**Length limit:** A context may be at most 400 characters. A longer one is always shortened before upload — tuned to the `instruction` so only the part relevant to the question is kept — because the backend would otherwise reject it. This cannot be turned off, and a warning is logged reporting how many contexts were shortened and by how much, so a rewritten context never goes unnoticed.
 
 ```python
 job_definition = client.job.create_classification_job_definition(
@@ -180,12 +176,14 @@ job_definition = client.job.create_classification_job_definition(
 )
 ```
 
-To keep contexts exactly as you wrote them, turn it off — an over-long context is then left unchanged and a warning explains the backend would reject it:
+#### Shortening every context
+
+A context tuned to the question focuses the labeler even when it already fits the limit. Enable `contextShortening` to have *every* context shortened, not just the over-long ones:
 
 ```python
 from rapidata import rapidata_config
 
-rapidata_config.upload.autoShortenContext = False
+rapidata_config.upload.contextShortening = True
 ```
 
 You can also shorten contexts directly via the client, without creating a job definition:
