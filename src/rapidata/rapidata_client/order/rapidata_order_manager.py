@@ -82,7 +82,7 @@ class RapidataOrderManager:
         selections: Sequence[RapidataSelection] | None = None,
     ) -> RapidataOrder:
         self._warn_deprecated()
-        self.__context_manager._enforce_context_length(
+        self.__context_manager._apply_context_shortening(
             datapoints=datapoints,
             question=workflow._get_instruction(),
         )
