@@ -164,17 +164,13 @@ datapoints=["image1.jpg", "image2.jpg"],
 contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 ```
 
-**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. If a context exceeds the limit, a warning is logged at creation time. Enable automatic shortening (see below) to have over-long contexts trimmed for you.
+**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. Over-long contexts are shortened for you by default (see below).
 
 #### Automatic shortening
 
-Set `rapidata_config.upload.autoShortenContext = True` to have any context longer than the 400-character limit automatically shortened — tuned to the `instruction` so only the part relevant to the question is kept — before upload. When left at its default (`False`), an over-long context is left unchanged and a warning is logged explaining the backend would reject it.
+Any context longer than the 400-character limit is automatically shortened before upload — tuned to the `instruction` so only the part relevant to the question is kept. A warning is logged whenever this happens, reporting how many contexts were shortened and by how much, so a silently rewritten context never goes unnoticed.
 
 ```python
-from rapidata import rapidata_config
-
-rapidata_config.upload.autoShortenContext = True
-
 job_definition = client.job.create_classification_job_definition(
     name="Outfit check",
     instruction="Does the main character wear the right clothing?",
@@ -182,6 +178,14 @@ job_definition = client.job.create_classification_job_definition(
     datapoints=["scene.jpg"],
     contexts=["<a very long, detailed beach-scene description ...>"],
 )
+```
+
+To keep contexts exactly as you wrote them, turn it off — an over-long context is then left unchanged and a warning explains the backend would reject it:
+
+```python
+from rapidata import rapidata_config
+
+rapidata_config.upload.autoShortenContext = False
 ```
 
 You can also shorten contexts directly via the client, without creating a job definition:

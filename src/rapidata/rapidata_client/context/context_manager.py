@@ -79,9 +79,10 @@ class ContextManager:
 
         For every datapoint whose context exceeds :data:`MAX_CONTEXT_LENGTH`:
 
-        - if ``rapidata_config.upload.autoShortenContext`` is set and a
-          ``question`` is available, the context is shortened for that question
-          (one batched request) and substituted;
+        - if ``rapidata_config.upload.autoShortenContext`` is set (the default)
+          and a ``question`` is available, the context is shortened for that
+          question (one batched request) and substituted, and a warning reports
+          that it happened;
         - otherwise a warning is logged explaining the backend would reject it.
         """
         over_limit = [
@@ -95,17 +96,15 @@ class ContextManager:
 
         auto_shorten = rapidata_config.upload.autoShortenContext
 
-        if auto_shorten and not question:
-            # Shortening needs the question to tune the context against; without
-            # it we can't shorten, so fall back to warning instead of proceeding.
-            logger.warning(
-                "rapidata_config.upload.autoShortenContext is set but no "
-                "question/instruction was available to shorten against; leaving "
-                "%d over-long context(s) unchanged.",
-                len(over_limit),
-            )
-
         if auto_shorten and question:
+            logger.warning(
+                "%d context(s) exceed the maximum of %d characters and are being "
+                "shortened automatically for the instruction. Set "
+                "rapidata_config.upload.autoShortenContext = False to keep them "
+                "unchanged instead.",
+                len(over_limit),
+                MAX_CONTEXT_LENGTH,
+            )
             shortened = self.shorten_contexts(
                 [(context, question) for _, _, context in over_limit]
             )
@@ -117,7 +116,7 @@ class ContextManager:
                         index,
                     )
                     continue
-                logger.info(
+                logger.warning(
                     "Datapoint %d: shortened context from %d to %d characters.",
                     index,
                     len(context),
@@ -126,13 +125,23 @@ class ContextManager:
                 datapoint.context = new_context
             return
 
+        if auto_shorten:
+            # Shortening needs the question to tune the context against; without
+            # it we can't shorten, so fall back to warning instead of proceeding.
+            reason = "no question/instruction was available to shorten it against"
+        else:
+            reason = (
+                "automatic shortening is turned off "
+                "(rapidata_config.upload.autoShortenContext = False)"
+            )
+
         for index, _, context in over_limit:
             logger.warning(
                 "Datapoint %d has a context of %d characters, which exceeds the "
-                "maximum of %d and would be rejected by the backend. Shorten it, "
-                "or set rapidata_config.upload.autoShortenContext = True to shorten "
-                "it automatically.",
+                "maximum of %d and would be rejected by the backend: %s. Shorten it "
+                "manually or via client.context.shorten_context(...).",
                 index,
                 len(context),
                 MAX_CONTEXT_LENGTH,
+                reason,
             )
