@@ -306,6 +306,8 @@ class RapidataBenchmark:
                                 self.id,
                                 leaderboard.id,
                                 self._openapi_service,
+                                leaderboard.included_tags,
+                                leaderboard.excluded_tags,
                             )
                             for leaderboard in leaderboards_result.items
                         ]
@@ -618,6 +620,8 @@ class RapidataBenchmark:
         min_responses_per_matchup: int | None = None,
         audience_id: str | RapidataAudienceBase | None = None,
         settings: Sequence["RapidataSetting"] | None = None,
+        included_tags: list[str] | None = None,
+        excluded_tags: list[str] | None = None,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -632,6 +636,20 @@ class RapidataBenchmark:
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
             audience_id: The audience that should answer the leaderboard. Pass either the audience id, a :class:`RapidataAudience` (dimension audience), or a :class:`RapidataFilteredAudience` (derived via :py:meth:`RapidataAudience.filter`). Defaults to the global audience when not specified.
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
+            included_tags: Restricts **which of the benchmark's prompts this leaderboard collects matchups for**: only prompts carrying at least one of these tag values are used. When empty or not specified (the default) every prompt is eligible. Note that a non-empty list drops untagged prompts. (default: None)
+            excluded_tags: Prompt tag values to skip when collecting matchups. Always wins over ``included_tags`` — a prompt carrying both an included and an excluded tag is skipped. (default: None)
+
+        Do not confuse either tag argument with the ``tags`` argument of
+        :meth:`RapidataLeaderboard.get_standings`: that filters the standings you read
+        back out, whereas these decide which prompts get matchups collected in the first
+        place.
+
+        Both match on the tag **value**; a tag's category is irrelevant. They are
+        resolved when a run starts rather than snapshotted at creation, so re-tagging a
+        prompt changes which future runs pick it up. They are read back via the
+        read-only :attr:`RapidataLeaderboard.included_tags` /
+        :attr:`RapidataLeaderboard.excluded_tags` and cannot be changed afterwards — to
+        re-scope, create a new leaderboard.
         """
         from rapidata.api_client.models.create_leaderboard_endpoint_input import (
             CreateLeaderboardEndpointInput,
@@ -666,7 +684,7 @@ class RapidataBenchmark:
             )
 
             logger.info(
-                "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s",
+                "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s, included_tags %s, excluded_tags %s",
                 name,
                 instruction,
                 show_prompt,
@@ -676,6 +694,8 @@ class RapidataBenchmark:
                 min_responses_per_matchup,
                 resolved_audience_id,
                 settings,
+                included_tags,
+                excluded_tags,
             )
 
             leaderboard_result = (
@@ -690,6 +710,8 @@ class RapidataBenchmark:
                         minResponses=min_responses_per_matchup,
                         responseBudget=response_budget,
                         audienceId=resolved_audience_id,
+                        includedTags=included_tags,
+                        excludedTags=excluded_tags,
                         featureFlags=(
                             [setting._to_feature_flag() for setting in settings]
                             if settings
@@ -716,6 +738,8 @@ class RapidataBenchmark:
                 self.id,
                 leaderboard_result.id,
                 self._openapi_service,
+                included_tags,
+                excluded_tags,
             )
 
     def evaluate_model(

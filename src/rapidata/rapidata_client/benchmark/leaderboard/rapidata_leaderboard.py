@@ -35,6 +35,8 @@ class RapidataLeaderboard:
         show_prompt: Whether to show the prompt to the users.
         id: The ID of the leaderboard.
         openapi_service: The OpenAPIService instance for API interaction.
+        included_tags: The prompt tag values the leaderboard restricts its matchups to.
+        excluded_tags: The prompt tag values the leaderboard skips when building matchups.
     """
 
     def __init__(
@@ -49,6 +51,8 @@ class RapidataLeaderboard:
         benchmark_id: str,
         id: str,
         openapi_service: OpenAPIService,
+        included_tags: list[str] | None = None,
+        excluded_tags: list[str] | None = None,
     ):
         self.__openapi_service = openapi_service
         self.__name = name
@@ -59,6 +63,8 @@ class RapidataLeaderboard:
         self.__response_budget = response_budget
         self.__min_responses_per_matchup = min_responses_per_matchup
         self.__benchmark_id = benchmark_id
+        self.__included_tags = list(included_tags) if included_tags else []
+        self.__excluded_tags = list(excluded_tags) if excluded_tags else []
         self.id = id
         self.__leaderboard_page = f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.__benchmark_id}/leaderboard/{self.id}"
 
@@ -157,6 +163,31 @@ class RapidataLeaderboard:
         Returns the instruction of the leaderboard.
         """
         return self.__instruction
+
+    @property
+    def included_tags(self) -> list[str]:
+        """
+        The prompt tag values this leaderboard restricts its matchups to.
+
+        Only benchmark prompts carrying at least one of these tags are used to build
+        matchups; an empty list (the default) means no restriction. Fixed at creation —
+        to re-scope a leaderboard, create a new one.
+
+        Not to be confused with the ``tags`` argument of :meth:`get_standings`, which
+        filters the standings you read back rather than what gets collected.
+        """
+        return list(self.__included_tags)
+
+    @property
+    def excluded_tags(self) -> list[str]:
+        """
+        The prompt tag values this leaderboard skips when building matchups.
+
+        A prompt carrying any of these tags is never used, even if it also carries one
+        of :attr:`included_tags`. Fixed at creation — to re-scope a leaderboard, create
+        a new one.
+        """
+        return list(self.__excluded_tags)
 
     @property
     def name(self) -> str:
