@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.07.30.1440-9ef7430"
+    "version": "2026.07.31.0907-45d8047"
   },
   "servers": [
     {
@@ -21231,6 +21231,7 @@
           "Sample"
         ],
         "summary": "Gets navigation context (previous, next, related samples) for a sample.",
+        "description": "Returns 400 when relatedLimit is outside 1..500. Use\n GET /benchmark/{benchmarkId}/samples/{identifier} to page through identifiers\n that carry more related samples than a single navigation response can hold.",
         "parameters": [
           {
             "name": "sampleId",
@@ -21239,6 +21240,16 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "relatedLimit",
+            "in": "query",
+            "description": "The maximum number of related samples to return.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
             }
           }
         ],
@@ -47195,7 +47206,7 @@
                 }
               }
             ],
-            "description": "Samples of other participants in the same benchmark that share the current\n sample's identifier."
+            "description": "Samples of other participants in the same benchmark that share the current\n sample's identifier, ordered by participant name and capped at the requested\n related limit."
           }
         }
       },
