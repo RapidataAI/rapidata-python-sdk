@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.03.1121-5ec927d"
+    "version": "2026.08.03.1143-0fc8c3e"
   },
   "servers": [
     {
@@ -29510,9 +29510,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "owner_id",
+            "name": "organization_id",
             "in": "query",
-            "description": "Filter by owner_id.",
+            "description": "Filter by organization_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -31730,9 +31730,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "owner_id",
+            "name": "organization_id",
             "in": "query",
-            "description": "Filter by owner_id.",
+            "description": "Filter by organization_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -57344,7 +57344,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The customer ID of the billing period owner."
+            "description": "The organization the billing period belongs to."
           },
           "startDate": {
             "type": "string",
@@ -57624,7 +57624,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The owner customer ID."
+            "description": "The organization the invoice belongs to."
           },
           "createdAt": {
             "type": "string",
