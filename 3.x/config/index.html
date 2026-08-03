@@ -1901,6 +1901,12 @@
 <td>Per-upload image-compression settings; see <a href="#compression-override">Compression override</a> below.</td>
 </tr>
 <tr>
+<td><code>contextShortening</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Shorten every datapoint context for the job instruction before upload. Contexts longer than the 400-character backend limit are always shortened regardless of this setting, with a warning. See <a href="../job_definition_parameters/#contexts">contexts</a>.</td>
+</tr>
+<tr>
 <td><code>checkForExplicitContent</code></td>
 <td><code>bool \| None</code></td>
 <td><code>None</code></td>

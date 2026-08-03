@@ -1872,16 +1872,17 @@ image-compression behaviour. Defaults to None (use server-side defaults).</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.autoShortenContext">autoShortenContext</span></code></td>
+            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.contextShortening">contextShortening</span></code></td>
             <td>
                   <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>When True, a datapoint context longer than the backend's
-maximum length is automatically shortened for the order/job instruction before
-upload. When False (default), an over-long context is left unchanged and a
-warning is logged that the backend would reject it. Defaults to False.</p>
+                <p>When True, every datapoint context is shortened for the
+order/job instruction before upload, keeping only the part relevant to the
+question. Defaults to False. Independent of this setting, a context longer than
+the backend's maximum length is always shortened so the backend accepts it, with
+a warning; that cannot be turned off.</p>
               </div>
             </td>
           </tr>
@@ -1930,11 +1931,11 @@ skip; otherwise the check still runs and a warning is logged. Defaults to None.<
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/rapidata/rapidata_client/config/upload_config.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-209">209</a></span>
-<span class="normal"><a href="#__codelineno-0-210">210</a></span>
-<span class="normal"><a href="#__codelineno-0-211">211</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_cache</span><span class="p">()</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_cache</span><span class="p">()</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 
