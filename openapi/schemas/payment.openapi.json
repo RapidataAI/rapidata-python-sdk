@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.08.03.1211-f6137f7"
+    "version": "2026.08.03.1240-2b88bc0"
   },
   "servers": [
     {
@@ -2274,46 +2274,6 @@
         }
       }
     },
-    "/customer/unsubscribe": {
-      "post": {
-        "tags": [
-          "BillingAccount"
-        ],
-        "summary": "Unsubscribes the current customer.",
-        "requestBody": {
-          "description": "Optional reason for unsubscribing.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UnsubscribeEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
     "/billing/invoice": {
       "post": {
         "tags": [
@@ -2784,14 +2744,6 @@
             "in": "query",
             "description": "The Stripe price id to check out.",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "mode",
-            "in": "query",
-            "description": "The mode in which the payment should be done.",
             "schema": {
               "type": "string"
             }
@@ -5405,16 +5357,6 @@
           "Minute"
         ],
         "description": "The time interval used to aggregate a time series."
-      },
-      "UnsubscribeEndpoint_Input": {
-        "type": "object",
-        "properties": {
-          "reason": {
-            "type": "string",
-            "description": "The reason for unsubscribing.",
-            "nullable": true
-          }
-        }
       },
       "ValidationProblemDetails": {
         "type": "object",
