@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.03.0926-bd09a34"
+    "version": "2026.08.03.0940-8053d08"
   },
   "servers": [
     {
@@ -21884,6 +21884,68 @@
           }
         },
         "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/leaderboard/{leaderboardId}/rebalance": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Rebalances a leaderboard by adding responses for the given participants.",
+        "description": "Unlike the plain boost, which only generates matchups among the boosted participants,\n this matches each given participant evenly against every other participant of the\n benchmark — the same distribution a participant receives when it is first submitted.\n Use it to bring under-sampled participants up to the rest of the leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "The id of the leaderboard to rebalance.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The payload describing the rebalance to apply.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RebalanceLeaderboardEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
         "security": [
           {
             "OpenIdConnect": [
@@ -51449,6 +51511,37 @@
               }
             ],
             "description": "The distinct value+category tag pairs associated with the benchmark."
+          }
+        }
+      },
+      "RebalanceLeaderboardEndpoint_Input": {
+        "required": [
+          "participants",
+          "totalResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "participants": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The participants of the given leaderboard that should receive responses."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "The total responses to add, shared evenly across all given participants.",
+            "format": "int32"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection. Use the same value across leaderboards\n of a benchmark to have them boosted on the same image pairs. Omit for random selection.",
+            "format": "int64",
+            "nullable": true
           }
         }
       },
