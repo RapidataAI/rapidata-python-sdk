@@ -16,36 +16,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IPipelineMetadataPipelineClassificationMetadata(LazyValidatedModel):
+class RebalanceLeaderboardEndpointInput(LazyValidatedModel):
     """
-    IPipelineMetadataPipelineClassificationMetadata
+    RebalanceLeaderboardEndpointInput
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    classification: StrictStr
-    visibilities: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["_t", "classification", "visibilities"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['ClassificationMetadata']):
-            raise ValueError("must be one of enum values ('ClassificationMetadata')")
-        return value
-
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        for i in value:
-            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
-                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
-        return value
+    participants: List[StrictStr]
+    total_responses: StrictInt = Field(description="The total responses to add, shared evenly across all given participants.", alias="totalResponses")
+    seed: Optional[StrictInt] = Field(default=None, description="Optional seed for deterministic matchup selection. Use the same value across leaderboards  of a benchmark to have them boosted on the same image pairs. Omit for random selection.")
+    __properties: ClassVar[List[str]] = ["participants", "totalResponses", "seed"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -61,7 +46,7 @@ class IPipelineMetadataPipelineClassificationMetadata(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of IPipelineMetadataPipelineClassificationMetadata from a JSON string"""
+        """Create an instance of RebalanceLeaderboardEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,11 +67,16 @@ class IPipelineMetadataPipelineClassificationMetadata(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if seed (nullable) is None
+        # and model_fields_set contains the field
+        if self.seed is None and "seed" in self.model_fields_set:
+            _dict['seed'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of IPipelineMetadataPipelineClassificationMetadata from a dict"""
+        """Create an instance of RebalanceLeaderboardEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -94,9 +84,9 @@ class IPipelineMetadataPipelineClassificationMetadata(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "_t": obj.get("_t"),
-            "classification": obj.get("classification"),
-            "visibilities": obj.get("visibilities")
+            "participants": obj.get("participants"),
+            "totalResponses": obj.get("totalResponses"),
+            "seed": obj.get("seed")
         }
         try:
             _obj = cls.model_validate(_data)
