@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.03.1121-5ec927d"
+    "version": "2026.08.03.1143-0fc8c3e"
   },
   "servers": [
     {
