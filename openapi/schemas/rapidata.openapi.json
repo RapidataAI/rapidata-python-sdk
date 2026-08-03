@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.07.31.1828-821bffc"
+    "version": "2026.08.03.0823-a936dee"
   },
   "servers": [
     {
@@ -28902,12 +28902,11 @@
         "summary": "Gets the paged billing groups for the active billing period.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "query",
-            "description": "Optional customer ID. Admins can specify any customer; non-admins see their own.",
+            "description": "Optional organization id. Staff can specify any organization; others see their own.",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           },
           {
@@ -28999,12 +28998,11 @@
         "summary": "Gets the overview for the active billing period.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "query",
-            "description": "Optional customer ID. Admins can specify any customer; non-admins see their own.",
+            "description": "Optional organization id. Staff can specify any organization; others see their own.",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -29211,12 +29209,11 @@
         "description": "Defaults to the authenticated customer when no customerId is provided.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "query",
-            "description": "The id of the customer to get the billing summary for.",
+            "description": "The organization to get the billing summary for. Defaults to the caller's own organization.",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -30253,7 +30250,7 @@
         ]
       }
     },
-    "/billing/customer/{customerId}/settings": {
+    "/billing/organization/{organizationId}/settings": {
       "post": {
         "tags": [
           "Billing",
@@ -30262,13 +30259,12 @@
         "summary": "Creates a billing setting for a customer.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "path",
-            "description": "The customer identifier.",
+            "description": "The organization identifier.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -30427,7 +30423,7 @@
         ]
       }
     },
-    "/billing/customer/{customerId}/settings/{settingId}": {
+    "/billing/organization/{organizationId}/settings/{settingId}": {
       "delete": {
         "tags": [
           "Billing",
@@ -30436,13 +30432,12 @@
         "summary": "Deletes a customer billing setting.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "path",
-            "description": "The customer identifier.",
+            "description": "The organization identifier.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           },
           {
@@ -30548,12 +30543,11 @@
         "summary": "Gets the billing settings timeline.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "query",
-            "description": "Optional customer identifier to scope the timeline.",
+            "description": "Optional organization identifier to scope the timeline.",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           },
           {
@@ -30832,9 +30826,9 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "customer_id",
+            "name": "organization_id",
             "in": "query",
-            "description": "Filter by customer_id.",
+            "description": "Filter by organization_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -31180,69 +31174,7 @@
         ]
       }
     },
-    "/customer/{customerId}/credit-line": {
-      "put": {
-        "tags": [
-          "BillingAccount"
-        ],
-        "summary": "Sets the spend limit for a customer.",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The id of the customer whose credit line to set.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The new credit line.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetCreditLineEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access"
-            ]
-          }
-        ]
-      }
-    },
-    "/customer/{customerId}/minimum-spend-commitment": {
+    "/billing/organization/{organizationId}/minimum-spend-commitment": {
       "put": {
         "tags": [
           "BillingAccount"
@@ -31251,13 +31183,12 @@
         "description": "At invoice time, if the period's measured spend is below the commitment, a top-up charge for\n the shortfall is added so the usage-side bill reaches the commitment. Setting it to 0\n removes the commitment.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "path",
-            "description": "The id of the customer whose minimum spend commitment to set.",
+            "description": "The id of the organization whose minimum spend commitment to set.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -31305,7 +31236,68 @@
         ]
       }
     },
-    "/customer/{customerId}/platform-fee": {
+    "/billing/organization/{organizationId}/credit-line": {
+      "put": {
+        "tags": [
+          "BillingAccount"
+        ],
+        "summary": "Sets the spend limit for an organization.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization whose credit line to set.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new credit line.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetOrganizationCreditLineEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/billing/organization/{organizationId}/platform-fee": {
       "put": {
         "tags": [
           "BillingAccount"
@@ -31314,13 +31306,12 @@
         "description": "The fee is automatically applied as a charge to the customer's current open billing period\n and to every future period. Setting it to null removes the platform-fee charge from\n the current open period; 0 keeps an explicit $0 charge that is still shown.",
         "parameters": [
           {
-            "name": "customerId",
+            "name": "organizationId",
             "in": "path",
-            "description": "The id of the customer whose platform fee to set.",
+            "description": "The id of the organization whose platform fee to set.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -55742,6 +55733,7 @@
         "required": [
           "name",
           "billingPeriodId",
+          "organizationId",
           "customerId",
           "customerMail",
           "amount",
@@ -55757,9 +55749,13 @@
             "type": "string",
             "description": "The billing period to add the charge to."
           },
+          "organizationId": {
+            "type": "string",
+            "description": "The customer to charge."
+          },
           "customerId": {
             "type": "string",
-            "description": "The customer to charge.",
+            "description": "The member the charge is recorded against, for auditability.",
             "format": "uuid"
           },
           "customerMail": {
@@ -56587,15 +56583,14 @@
       },
       "GrantVoucherEndpoint_Input": {
         "required": [
-          "customerId",
+          "organizationId",
           "amount"
         ],
         "type": "object",
         "properties": {
-          "customerId": {
+          "organizationId": {
             "type": "string",
-            "description": "The id of the customer to grant the voucher to.",
-            "format": "uuid"
+            "description": "The id of the organization to grant the voucher to."
           },
           "amount": {
             "type": "number",
@@ -57242,7 +57237,7 @@
       "QueryBillingPeriodsEndpoint_Output": {
         "required": [
           "id",
-          "ownerId",
+          "organizationId",
           "startDate",
           "endDate",
           "status",
@@ -57254,10 +57249,9 @@
             "type": "string",
             "description": "The billing period ID."
           },
-          "ownerId": {
+          "organizationId": {
             "type": "string",
-            "description": "The customer ID of the billing period owner.",
-            "format": "uuid"
+            "description": "The customer ID of the billing period owner."
           },
           "startDate": {
             "type": "string",
@@ -57489,7 +57483,7 @@
           "billingPeriodEnd",
           "status",
           "amountDue",
-          "ownerId",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -57535,10 +57529,9 @@
             "description": "The invoice currency.",
             "nullable": true
           },
-          "ownerId": {
+          "organizationId": {
             "type": "string",
-            "description": "The owner customer ID.",
-            "format": "uuid"
+            "description": "The owner customer ID."
           },
           "createdAt": {
             "type": "string",
@@ -57705,20 +57698,6 @@
           "UseReconciliationTime"
         ]
       },
-      "SetCreditLineEndpoint_Input": {
-        "required": [
-          "creditLine"
-        ],
-        "type": "object",
-        "properties": {
-          "creditLine": {
-            "type": "number",
-            "description": "The new credit line. null means no limit (unlimited), 0 disables all traffic,\n and a positive value caps spend at that amount.",
-            "format": "double",
-            "nullable": true
-          }
-        }
-      },
       "SetMinimumSpendCommitmentEndpoint_Input": {
         "required": [
           "minimumSpendCommitment"
@@ -57729,6 +57708,20 @@
             "type": "number",
             "description": "The new minimum spend commitment. 0 means no commitment; a positive value tops up\n the usage-side bill at invoice time when measured spend falls short.",
             "format": "double"
+          }
+        }
+      },
+      "SetOrganizationCreditLineEndpoint_Input": {
+        "required": [
+          "creditLine"
+        ],
+        "type": "object",
+        "properties": {
+          "creditLine": {
+            "type": "number",
+            "description": "The new credit line. null means no limit (unlimited), 0 disables all traffic,\n and a positive value caps spend at that amount.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -57747,12 +57740,19 @@
         }
       },
       "StartBulkReconciliationEndpoint_Input": {
+        "required": [
+          "organizationId"
+        ],
         "type": "object",
         "properties": {
           "billingItemId": {
             "type": "string",
             "description": "The identifier of a single billing item to reconcile.",
             "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The organization the reconciliation is scoped to."
           },
           "customerId": {
             "type": "string",
