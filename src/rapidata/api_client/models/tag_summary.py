@@ -16,28 +16,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ISelectionAbTestSelection(LazyValidatedModel):
+class TagSummary(LazyValidatedModel):
     """
-    ISelectionAbTestSelection
+    TagSummary
     """ # noqa: E501
-    t: StrictStr = Field(alias="_t")
-    a: List[ISelection]
-    b: List[ISelection]
-    __properties: ClassVar[List[str]] = ["_t", "a", "b"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['AbTestSelection']):
-            raise ValueError("must be one of enum values ('AbTestSelection')")
-        return value
+    value: StrictStr
+    category: Optional[StrictStr] = None
+    prompt_count: StrictInt = Field(alias="promptCount")
+    __properties: ClassVar[List[str]] = ["value", "category", "promptCount"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -53,7 +46,7 @@ class ISelectionAbTestSelection(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ISelectionAbTestSelection from a JSON string"""
+        """Create an instance of TagSummary from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,25 +67,16 @@ class ISelectionAbTestSelection(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in a (list)
-        _items = []
-        if self.a:
-            for _item_a in self.a:
-                if _item_a:
-                    _items.append(_item_a.to_dict())
-            _dict['a'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in b (list)
-        _items = []
-        if self.b:
-            for _item_b in self.b:
-                if _item_b:
-                    _items.append(_item_b.to_dict())
-            _dict['b'] = _items
+        # set to None if category (nullable) is None
+        # and model_fields_set contains the field
+        if self.category is None and "category" in self.model_fields_set:
+            _dict['category'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ISelectionAbTestSelection from a dict"""
+        """Create an instance of TagSummary from a dict"""
         if obj is None:
             return None
 
@@ -100,9 +84,9 @@ class ISelectionAbTestSelection(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "_t": obj.get("_t"),
-            "a": [ISelection.from_dict(_item) for _item in obj["a"]] if obj.get("a") is not None else None,
-            "b": [ISelection.from_dict(_item) for _item in obj["b"]] if obj.get("b") is not None else None
+            "value": obj.get("value"),
+            "category": obj.get("category"),
+            "promptCount": obj.get("promptCount")
         }
         try:
             _obj = cls.model_validate(_data)
@@ -110,7 +94,4 @@ class ISelectionAbTestSelection(LazyValidatedModel):
             _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
-from rapidata.api_client.models.i_selection import ISelection
-# TODO: Rewrite to not use raise_errors
-ISelectionAbTestSelection.model_rebuild(raise_errors=False)
 

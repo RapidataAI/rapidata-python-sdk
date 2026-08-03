@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.03.1350-14980d6"
+    "version": "2026.08.03.1559-50ce3ff"
   },
   "servers": [
     {
@@ -16401,6 +16401,7 @@
           "Benchmark"
         ],
         "summary": "Queries all tags within a benchmark.",
+        "description": "Each tag carries the number of prompts in the benchmark that use it. That count always covers\n the whole benchmark and is unaffected by any filtering applied when listing prompts, so it can\n be used to render a tag taxonomy alongside an independent prompt filter.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -49560,11 +49561,11 @@
               {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/Tag"
+                  "$ref": "#/components/schemas/TagSummary"
                 }
               }
             ],
-            "description": "The distinct value+category tag pairs associated with the benchmark."
+            "description": "The distinct value+category tag pairs associated with the benchmark, each with the number\n of prompts using it."
           }
         }
       },
@@ -49785,6 +49786,26 @@
           "category": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "TagSummary": {
+        "required": [
+          "value",
+          "promptCount"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptCount": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
