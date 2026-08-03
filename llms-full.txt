@@ -1075,17 +1075,9 @@ datapoints=["image1.jpg", "image2.jpg"],
 contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 ```
 
-**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. If a context exceeds the limit, a warning is logged at creation time. Enable automatic shortening (see below) to have over-long contexts trimmed for you.
-
-#### Automatic shortening
-
-Set `rapidata_config.upload.autoShortenContext = True` to have any context longer than the 400-character limit automatically shortened — tuned to the `instruction` so only the part relevant to the question is kept — before upload. When left at its default (`False`), an over-long context is left unchanged and a warning is logged explaining the backend would reject it.
+**Length limit:** A context may be at most 400 characters. A longer one is always shortened before upload — tuned to the `instruction` so only the part relevant to the question is kept — because the backend would otherwise reject it. This cannot be turned off, and a warning is logged reporting how many contexts were shortened, so a rewritten context never goes unnoticed. Shortening runs in concurrent batches with a progress bar; the per-context before/after lengths are logged at info level.
 
 ```python
-from rapidata import rapidata_config
-
-rapidata_config.upload.autoShortenContext = True
-
 job_definition = client.job.create_classification_job_definition(
     name="Outfit check",
     instruction="Does the main character wear the right clothing?",
@@ -1093,6 +1085,16 @@ job_definition = client.job.create_classification_job_definition(
     datapoints=["scene.jpg"],
     contexts=["<a very long, detailed beach-scene description ...>"],
 )
+```
+
+#### Shortening every context
+
+A context tuned to the question focuses the labeler even when it already fits the limit. Enable `contextShortening` to have *every* context shortened, not just the over-long ones:
+
+```python
+from rapidata import rapidata_config
+
+rapidata_config.upload.contextShortening = True
 ```
 
 You can also shorten contexts directly via the client, without creating a job definition:
@@ -2380,6 +2382,7 @@ logger.info("This will be shown") # (2)!
 | `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
 | `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
 | `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression settings; see [Compression override](#compression-override) below. |
+| `contextShortening` | `bool` | `False` | Shorten every datapoint context for the job instruction before upload. Contexts longer than the 400-character backend limit are always shortened regardless of this setting, with a warning. See [contexts](job_definition_parameters.md#contexts). |
 | `checkForExplicitContent` | `bool \| None` | `None` | Opt in/out of the server-side explicit-content check on job assignment. `None` uses the account default; `True` forces it on; `False` requests skipping it (honored only if the account is permitted, otherwise the check still runs and a warning is logged). |
 
 #### Compression override
@@ -3641,6 +3644,46 @@ leaderboard.level_of_detail = 5000
 print(leaderboard.level_of_detail)   # "custom"
 print(leaderboard.response_budget)   # 5000
 ```
+
+### Restricting which prompts a leaderboard uses
+
+A leaderboard normally builds matchups from every prompt in its benchmark. Pass
+`included_tags` and/or `excluded_tags` at creation to narrow that down to a slice
+of the [tagged](#tagging-system) prompts — useful for running a focused
+leaderboard (say, outdoor scenes only) against a broad benchmark.
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (outdoor)",
+    instruction="Which image is more realistic?",
+    included_tags=["outdoor"],   # only prompts tagged "outdoor"
+    excluded_tags=["nsfw"],      # never these, even if also tagged "outdoor"
+)
+```
+
+A prompt is used when it carries at least one `included_tags` value **and** no
+`excluded_tags` value. `excluded_tags` always wins. An empty or omitted
+`included_tags` means no restriction; a non-empty one drops prompts that have no
+tags at all. Matching is on the tag value — a tag's category is irrelevant.
+
+The rules are applied when a run starts rather than snapshotted at creation, so
+re-tagging a prompt changes which future runs pick it up. They only affect what
+gets **collected**; votes already recorded stay in the standings.
+
+!!! note
+    This is a different thing from `get_standings(tags=...)`. These arguments decide
+    which prompts get matchups collected for them, while `get_standings(tags=...)`
+    filters the standings you read back out of what was already collected.
+
+Both are set at creation and read back as read-only properties:
+
+```python
+print(leaderboard.included_tags)  # ["outdoor"]
+print(leaderboard.excluded_tags)  # ["nsfw"]
+```
+
+They cannot be changed afterwards — a leaderboard whose history was collected
+under changing rules is hard to interpret. To re-scope, create a new leaderboard.
 
 ### Prompt and Asset Display
 
