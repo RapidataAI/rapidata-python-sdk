@@ -16,19 +16,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EnsureEnglishEndpointOutput(LazyValidatedModel):
+class SetOrganizationCreditLineEndpointInput(LazyValidatedModel):
     """
-    EnsureEnglishEndpointOutput
+    SetOrganizationCreditLineEndpointInput
     """ # noqa: E501
-    english_text: StrictStr = Field(description="The English version of the provided text.", alias="englishText")
-    __properties: ClassVar[List[str]] = ["englishText"]
+    credit_line: Optional[Union[StrictFloat, StrictInt]] = Field(description="The new credit line. null means no limit (unlimited), 0 disables all traffic,  and a positive value caps spend at that amount.", alias="creditLine")
+    __properties: ClassVar[List[str]] = ["creditLine"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -44,7 +44,7 @@ class EnsureEnglishEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EnsureEnglishEndpointOutput from a JSON string"""
+        """Create an instance of SetOrganizationCreditLineEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -65,11 +65,16 @@ class EnsureEnglishEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if credit_line (nullable) is None
+        # and model_fields_set contains the field
+        if self.credit_line is None and "credit_line" in self.model_fields_set:
+            _dict['creditLine'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EnsureEnglishEndpointOutput from a dict"""
+        """Create an instance of SetOrganizationCreditLineEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -77,7 +82,7 @@ class EnsureEnglishEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "englishText": obj.get("englishText")
+            "creditLine": obj.get("creditLine")
         }
         try:
             _obj = cls.model_validate(_data)
