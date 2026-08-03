@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.03.1240-2b88bc0"
+    "version": "2026.08.03.1324-0e5c7d7"
   },
   "servers": [
     {
@@ -22832,7 +22832,7 @@
           "Prompt"
         ],
         "summary": "Deletes a prompt.",
-        "description": "Also removes every sample generated for the prompt across the benchmark.",
+        "description": "Also removes every sample generated for the prompt across the benchmark, and stops the votes\n it collected from counting toward the benchmark's scoreboard, matchups and demographics.",
         "parameters": [
           {
             "name": "promptId",
