@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.08.04.0902-7379762"
+    "version": "2026.08.04.0910-f0c9ce0"
   },
   "servers": [
     {
