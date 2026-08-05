@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.05.1505-3f10412"
+    "version": "2026.08.05.1506-8314dc3"
   },
   "servers": [
     {
@@ -47681,7 +47681,8 @@
           "organizationId",
           "initialBoostLevel",
           "scoreShift",
-          "scoreScale"
+          "scoreScale",
+          "lastUpdatedAt"
         ],
         "type": "object",
         "properties": {
@@ -47739,6 +47740,12 @@
             "type": "number",
             "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark.",
             "format": "double"
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -48346,7 +48353,8 @@
           "isExcludedFromOverall",
           "voteAggregation",
           "includedTags",
-          "excludedTags"
+          "excludedTags",
+          "lastUpdatedAt"
         ],
         "type": "object",
         "properties": {
@@ -48462,6 +48470,12 @@
               }
             ],
             "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags."
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "description": "When votes were last recorded for the leaderboard. Null when no run has ever delivered\n votes to it.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -49692,7 +49706,8 @@
           "isPublished",
           "createdAt",
           "ownerMail",
-          "organizationId"
+          "organizationId",
+          "lastUpdatedAt"
         ],
         "type": "object",
         "properties": {
@@ -49728,6 +49743,12 @@
           "organizationId": {
             "type": "string",
             "description": "The id of the organization that owns the entity."
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -50300,7 +50321,8 @@
           "isHidden",
           "isExcludedFromOverall",
           "includedTags",
-          "excludedTags"
+          "excludedTags",
+          "lastUpdatedAt"
         ],
         "type": "object",
         "properties": {
@@ -50402,6 +50424,12 @@
               }
             ],
             "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags."
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "description": "When votes were last recorded for the leaderboard. Null when no run has ever delivered\n votes to it.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -50457,7 +50485,8 @@
           "isExcludedFromOverall",
           "voteAggregation",
           "includedTags",
-          "excludedTags"
+          "excludedTags",
+          "lastUpdatedAt"
         ],
         "type": "object",
         "properties": {
@@ -50567,6 +50596,12 @@
               }
             ],
             "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags."
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "description": "When votes were last recorded for the leaderboard. Null when no run has ever delivered\n votes to it.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -50612,7 +50647,8 @@
           "isPublished",
           "createdAt",
           "ownerMail",
-          "organizationId"
+          "organizationId",
+          "lastUpdatedAt"
         ],
         "type": "object",
         "properties": {
@@ -50648,6 +50684,12 @@
           "organizationId": {
             "type": "string",
             "description": "The id of the organization that owns the entity."
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -50972,7 +51014,8 @@
           "isPublished",
           "createdAt",
           "ownerMail",
-          "organizationId"
+          "organizationId",
+          "lastUpdatedAt"
         ],
         "type": "object",
         "properties": {
@@ -51008,6 +51051,12 @@
           "organizationId": {
             "type": "string",
             "description": "The id of the organization that owns the entity."
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },

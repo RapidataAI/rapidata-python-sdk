@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Workflow API",
     "description": "The API for the Rapidata Workflow service",
-    "version": "2026.08.05.1505-3f10412"
+    "version": "2026.08.05.1506-8314dc3"
   },
   "servers": [
     {
