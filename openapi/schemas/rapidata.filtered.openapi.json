@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.05.1520-66c362b"
+    "version": "2026.08.05.1547-584bf66"
   },
   "servers": [
     {
@@ -27458,6 +27458,7 @@
           "Billing"
         ],
         "summary": "Gets the paged billing groups for a billing period.",
+        "description": "Set includeNonBillable to also surface groups whose activity is entirely\n non-billable. The billable fields keep their meaning; the non-billable amounts are reported\n separately on each row.",
         "parameters": [
           {
             "name": "billingPeriodId",
@@ -27466,6 +27467,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "includeNonBillable",
+            "in": "query",
+            "description": "Whether to also report non-billable cost.",
+            "schema": {
+              "type": "boolean"
             }
           },
           {
@@ -27555,6 +27564,7 @@
           "Billing"
         ],
         "summary": "Gets the overview for a billing period by its ID.",
+        "description": "Set includeNonBillable to also report the period's non-billable cost. The existing\n totals stay billable-only; the non-billable amounts are reported in their own fields.",
         "parameters": [
           {
             "name": "billingPeriodId",
@@ -27563,6 +27573,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "includeNonBillable",
+            "in": "query",
+            "description": "Whether to also report non-billable cost.",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -27765,6 +27783,7 @@
           "Billing"
         ],
         "summary": "Queries billing periods accessible to the current customer.",
+        "description": "The has_billables filter selects periods by whether they have anything to invoice —\n billable response cost, a manual charge, or an external-service charge. It is not applied\n unless requested.",
         "parameters": [
           {
             "name": "page",
@@ -27955,6 +27974,55 @@
             "name": "end_date",
             "in": "query",
             "description": "Filter by end_date.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "has_billables",
+            "in": "query",
+            "description": "Filter by has_billables.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -54180,6 +54248,18 @@
             "description": "The total number of billable responses.",
             "format": "int64"
           },
+          "totalNonBillableCost": {
+            "type": "number",
+            "description": "The gross cost of the period's non-billable activity, if it was requested.",
+            "format": "double",
+            "nullable": true
+          },
+          "totalNonBillableResponseCount": {
+            "type": "integer",
+            "description": "The total number of non-billable responses, if it was requested.",
+            "format": "int64",
+            "nullable": true
+          },
           "lineItems": {
             "allOf": [
               {
@@ -54892,6 +54972,18 @@
           "audienceId": {
             "type": "string",
             "description": "The identifier of the audience the distillation run was executed for."
+          },
+          "nonBillableCost": {
+            "type": "number",
+            "description": "The gross cost of this group's non-billable activity, if it was requested.",
+            "format": "double",
+            "nullable": true
+          },
+          "nonBillableResponseCount": {
+            "type": "integer",
+            "description": "The number of non-billable responses in this group, if it was requested.",
+            "format": "int64",
+            "nullable": true
           }
         },
         "description": "A billing group for responses produced by an audience distillation run."
@@ -54950,6 +55042,18 @@
           "audienceId": {
             "type": "string",
             "description": "The identifier of the audience the job belongs to."
+          },
+          "nonBillableCost": {
+            "type": "number",
+            "description": "The gross cost of this group's non-billable activity, if it was requested.",
+            "format": "double",
+            "nullable": true
+          },
+          "nonBillableResponseCount": {
+            "type": "integer",
+            "description": "The number of non-billable responses in this group, if it was requested.",
+            "format": "int64",
+            "nullable": true
           }
         },
         "description": "A billing group for responses produced by an audience job."
@@ -55003,6 +55107,18 @@
           "benchmarkId": {
             "type": "string",
             "description": "The identifier of the benchmark that produced the responses."
+          },
+          "nonBillableCost": {
+            "type": "number",
+            "description": "The gross cost of this group's non-billable activity, if it was requested.",
+            "format": "double",
+            "nullable": true
+          },
+          "nonBillableResponseCount": {
+            "type": "integer",
+            "description": "The number of non-billable responses in this group, if it was requested.",
+            "format": "int64",
+            "nullable": true
           }
         },
         "description": "A billing group for responses produced by a benchmark."
@@ -55056,6 +55172,18 @@
           "orderId": {
             "type": "string",
             "description": "The identifier of the order that produced the responses."
+          },
+          "nonBillableCost": {
+            "type": "number",
+            "description": "The gross cost of this group's non-billable activity, if it was requested.",
+            "format": "double",
+            "nullable": true
+          },
+          "nonBillableResponseCount": {
+            "type": "integer",
+            "description": "The number of non-billable responses in this group, if it was requested.",
+            "format": "int64",
+            "nullable": true
           }
         },
         "description": "A billing group for responses produced by an order."
@@ -55109,6 +55237,18 @@
           "flowId": {
             "type": "string",
             "description": "The identifier of the ranking flow that produced the responses."
+          },
+          "nonBillableCost": {
+            "type": "number",
+            "description": "The gross cost of this group's non-billable activity, if it was requested.",
+            "format": "double",
+            "nullable": true
+          },
+          "nonBillableResponseCount": {
+            "type": "integer",
+            "description": "The number of non-billable responses in this group, if it was requested.",
+            "format": "int64",
+            "nullable": true
           }
         },
         "description": "A billing group for responses produced by a ranking flow."
@@ -55162,6 +55302,18 @@
           "validationSetId": {
             "type": "string",
             "description": "The identifier of the validation set that produced the responses."
+          },
+          "nonBillableCost": {
+            "type": "number",
+            "description": "The gross cost of this group's non-billable activity, if it was requested.",
+            "format": "double",
+            "nullable": true
+          },
+          "nonBillableResponseCount": {
+            "type": "integer",
+            "description": "The number of non-billable responses in this group, if it was requested.",
+            "format": "int64",
+            "nullable": true
           }
         },
         "description": "A billing group for responses produced by a validation set."
