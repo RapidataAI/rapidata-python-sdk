@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.08.05.0940-e8b78a0"
+    "version": "2026.08.05.0945-34db239"
   },
   "servers": [
     {
@@ -1467,7 +1467,7 @@
           "Audience"
         ],
         "summary": "Rebuilds the distilling campaign for the specified audience.",
-        "description": "Recalculates campaign filters and selections based on the audience's current settings\n (demographic filters, exit conditions, etc.).",
+        "description": "Recalculates campaign filters, selections and the boosting profile based on the\n audience's current settings (demographic filters, exit conditions, boost thresholds).",
         "parameters": [
           {
             "name": "audienceId",
