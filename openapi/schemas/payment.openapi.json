@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.08.05.0945-34db239"
+    "version": "2026.08.05.0952-bd57bac"
   },
   "servers": [
     {
@@ -38,6 +38,47 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/manual-charge/{manualChargeId}": {
+      "delete": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Deletes a manual charge from its billing period.",
+        "description": "Only charges and refunds entered by hand can be deleted, and only while their billing period\n is still Open or Reconciling. Charges derived from the billing account — the\n recurring platform fee and the minimum-spend top-up — are managed through the billing account\n instead and are rejected here. Responds 409 Conflict when the period is invoiced while\n the request is in flight, leaving the charge in place.",
+        "parameters": [
+          {
+            "name": "manualChargeId",
+            "in": "path",
+            "description": "The id of the manual charge to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -3277,8 +3318,6 @@
           "name",
           "billingPeriodId",
           "organizationId",
-          "customerId",
-          "customerMail",
           "amount",
           "reason"
         ],
@@ -3294,16 +3333,18 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The customer to charge."
+            "description": "The organization the charge is billed to."
           },
           "customerId": {
             "type": "string",
-            "description": "The member the charge is recorded against, for auditability.",
-            "format": "uuid"
+            "description": "The member the charge is recorded against, for auditability. Optional — omit it for a\n charge that belongs to the organization as a whole rather than to one of its members.",
+            "format": "uuid",
+            "nullable": true
           },
           "customerMail": {
             "type": "string",
-            "description": "The customer's email address."
+            "description": "The email address of the member named by CustomerId.",
+            "nullable": true
           },
           "amount": {
             "type": "number",
@@ -3402,6 +3443,7 @@
       "GetActiveBillingPeriodOverviewEndpoint_Output": {
         "required": [
           "id",
+          "organizationId",
           "startDate",
           "endDate",
           "status",
@@ -3416,6 +3458,10 @@
           "id": {
             "type": "string",
             "description": "The billing period ID."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The organization the billing period belongs to."
           },
           "startDate": {
             "type": "string",
@@ -3471,6 +3517,7 @@
       "GetBillingPeriodOverviewEndpoint_Output": {
         "required": [
           "id",
+          "organizationId",
           "startDate",
           "endDate",
           "status",
@@ -3485,6 +3532,10 @@
           "id": {
             "type": "string",
             "description": "The billing period ID."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The organization the billing period belongs to."
           },
           "startDate": {
             "type": "string",
@@ -3665,6 +3716,12 @@
             "type": "number",
             "description": "Dollars the customer has committed to spend per billing period; 0 means no commitment.",
             "format": "double"
+          },
+          "platformFee": {
+            "type": "number",
+            "description": "The recurring fee charged once per billing period. null means no platform fee and\n no line item; 0 is an explicit $0 fee that is still itemized.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
