@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.06.1054-ed7bffb"
+    "version": "2026.08.06.1214-59dd0a0"
   },
   "servers": [
     {
@@ -29891,17 +29891,18 @@
         ]
       }
     },
-    "/invoice/{invoiceId}/finalize": {
-      "post": {
+    "/invoice/{invoiceId}": {
+      "delete": {
         "tags": [
           "Invoice"
         ],
-        "summary": "Finalizes a draft invoice.",
+        "summary": "Deletes a draft invoice, discarding it completely.",
+        "description": "Only an invoice that was never finalized can be deleted — a draft, or a generation attempt\n that failed. The invoice disappears from the payment provider as well, and its billing period\n returns to Open so it can be invoiced again. A finalized invoice must be voided through\n POST /invoice/{invoiceId}/void instead; deleting one responds 409 Conflict, as\n does deleting while generation is still in progress.",
         "parameters": [
           {
             "name": "invoiceId",
             "in": "path",
-            "description": "The invoice to finalize.",
+            "description": "The invoice to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -29939,9 +29940,7 @@
             ]
           }
         ]
-      }
-    },
-    "/invoice/{invoiceId}": {
+      },
       "get": {
         "tags": [
           "Invoice"
@@ -29968,6 +29967,56 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/invoice/{invoiceId}/finalize": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Finalizes a draft invoice.",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "The invoice to finalize.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
