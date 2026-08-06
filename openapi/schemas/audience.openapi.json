@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.08.06.0824-f72f968"
+    "version": "2026.08.06.0838-4e88bae"
   },
   "servers": [
     {
@@ -4835,6 +4835,10 @@
             ],
             "description": "The truth for the example.",
             "nullable": true
+          },
+          "instructionText": {
+            "type": "string",
+            "description": "The instruction shown to the user — the criteria for a compare example, the target\n for a locate, line or scrub example, or the title for a classify or transcription\n example. The example's answer options are left unchanged."
           },
           "explanation": {
             "type": "string",
