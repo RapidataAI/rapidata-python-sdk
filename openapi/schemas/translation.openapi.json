@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Translation API",
     "description": "The API for the Rapidata Translation service",
-    "version": "2026.08.06.0709-3f23297"
+    "version": "2026.08.06.0824-f72f968"
   },
   "servers": [
     {
