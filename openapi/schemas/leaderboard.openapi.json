@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.08.06.1002-cfd99d2"
+    "version": "2026.08.06.1054-ed7bffb"
   },
   "servers": [
     {
@@ -18806,7 +18806,8 @@
           "Queued",
           "Running",
           "Completed",
-          "Failed"
+          "Failed",
+          "Paused"
         ]
       },
       "SampleGenerationItemStatus": {
