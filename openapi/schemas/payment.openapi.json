@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.08.06.0842-3babd12"
+    "version": "2026.08.06.0853-187f48f"
   },
   "servers": [
     {
@@ -3386,7 +3386,6 @@
           "name",
           "billingPeriodId",
           "organizationId",
-          "amount",
           "reason"
         ],
         "type": "object",
@@ -3416,8 +3415,22 @@
           },
           "amount": {
             "type": "number",
-            "description": "The charge amount. Positive for fees, negative for refunds.",
-            "format": "double"
+            "description": "The total charge amount, equivalent to a single unit priced at this value. Only\n honored when both Quantity and UnitPrice are omitted;\n never combine it with them.",
+            "format": "double",
+            "nullable": true,
+            "deprecated": true
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "The number of units billed. The charge total is Quantity × UnitPrice, and the\n invoice line shows the unit breakdown.",
+            "format": "int32",
+            "nullable": true
+          },
+          "unitPrice": {
+            "type": "number",
+            "description": "The price per unit. Positive for fees, negative for refunds.",
+            "format": "double",
+            "nullable": true
           },
           "reason": {
             "allOf": [
@@ -4808,6 +4821,8 @@
           "id",
           "name",
           "amount",
+          "quantity",
+          "unitPrice",
           "_t"
         ],
         "properties": {
@@ -4830,6 +4845,14 @@
           "comment": {
             "type": "string",
             "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -4868,6 +4891,8 @@
           "id",
           "name",
           "amount",
+          "quantity",
+          "unitPrice",
           "_t"
         ],
         "properties": {
@@ -4890,6 +4915,14 @@
           "comment": {
             "type": "string",
             "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "double"
           }
         }
       },

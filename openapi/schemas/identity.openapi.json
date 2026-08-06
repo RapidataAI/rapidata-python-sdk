@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.08.06.0842-3babd12"
+    "version": "2026.08.06.0853-187f48f"
   },
   "servers": [
     {
@@ -283,6 +283,7 @@
           "Capabilities"
         ],
         "summary": "Lists the capabilities granted to an organization.",
+        "description": "Readable by the organization's own members, so a client can light up the product surfaces its\n grants entitle it to; platform staff read any organization.",
         "parameters": [
           {
             "name": "organizationId",
