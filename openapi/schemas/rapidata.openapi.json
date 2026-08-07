@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.07.0928-6c9069e"
+    "version": "2026.08.07.0934-c07839c"
   },
   "servers": [
     {
@@ -118,6 +118,10 @@
     {
       "name": "Benchmark",
       "x-displayName": "Benchmark"
+    },
+    {
+      "name": "HuggingFaceSync",
+      "x-displayName": "HuggingFaceSync"
     },
     {
       "name": "SampleGeneration",
@@ -13344,6 +13348,588 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetPromptsByBenchmarkEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/huggingface-sync": {
+      "get": {
+        "tags": [
+          "Benchmark",
+          "HuggingFaceSync"
+        ],
+        "summary": "Returns the HuggingFace sync status of the benchmark.",
+        "description": "All fields are null when the benchmark has never been synced.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark whose sync status to return.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkHuggingFaceSyncEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Benchmark",
+          "HuggingFaceSync"
+        ],
+        "summary": "Starts a HuggingFace sync of the benchmark and returns its current sync status.",
+        "description": "Responds 409 Conflict when a sync is already in progress for the benchmark, or when a repo\n name is supplied that differs from the one an earlier successful sync established. The repo\n name is only honored while the benchmark has never completed a sync.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to sync.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The requested repo name and full-rebuild flag.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartBenchmarkHuggingFaceSyncEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartBenchmarkHuggingFaceSyncEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/huggingface-sync/attempts": {
+      "get": {
+        "tags": [
+          "Benchmark",
+          "HuggingFaceSync"
+        ],
+        "summary": "Queries the benchmark's HuggingFace sync attempts (empty when it has never been synced).",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark whose sync attempts to return.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "status",
+                  "-status",
+                  "outcome",
+                  "-outcome",
+                  "triggered_by",
+                  "-triggered_by",
+                  "created_at",
+                  "-created_at",
+                  "completed_at",
+                  "-completed_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "outcome",
+            "in": "query",
+            "description": "Filter by outcome.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "repo_id",
+            "in": "query",
+            "description": "Filter by repo_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "triggered_by",
+            "in": "query",
+            "description": "Filter by triggered_by.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "completed_at",
+            "in": "query",
+            "description": "Filter by completed_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkHuggingFaceSyncHistoryEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -44838,12 +45424,14 @@
             "nullable": true
           },
           "pidBatchMode": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/PidBatchMode"
               }
             ],
-            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total."
+            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total.",
+            "nullable": true
           },
           "drainDurationSeconds": {
             "type": "integer",
@@ -47316,12 +47904,14 @@
             "nullable": true
           },
           "licenseType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
               }
             ],
-            "description": "The license classification of the underlying model, if any."
+            "description": "The license classification of the underlying model, if any.",
+            "nullable": true
           },
           "logo": {
             "allOf": [
@@ -47954,6 +48544,165 @@
             "items": {
               "$ref": "#/components/schemas/GetBenchmarkDemographicsEndpoint_Output_Bucket"
             }
+          }
+        }
+      },
+      "GetBenchmarkHuggingFaceSyncEndpoint_Output": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSyncStatus"
+              }
+            ],
+            "description": "Current lifecycle status (NeverSynced when the benchmark has never been synced)."
+          },
+          "outcome": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSyncOutcome"
+              }
+            ],
+            "description": "Outcome of the last completed attempt, or null when none has completed.",
+            "nullable": true
+          },
+          "repoId": {
+            "type": "string",
+            "description": "The target HuggingFace repo id (e.g. Rapidata/svg-benchmark), or null.",
+            "nullable": true
+          },
+          "repoUrl": {
+            "type": "string",
+            "description": "URL of the HuggingFace repo, or null when not yet known.",
+            "nullable": true
+          },
+          "prUrl": {
+            "type": "string",
+            "description": "URL of the review pull request opened by the last attempt, or null.",
+            "nullable": true
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "description": "When the benchmark was last successfully synced, or null.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastError": {
+            "type": "string",
+            "description": "The error from the last failed attempt, or null.",
+            "nullable": true
+          }
+        }
+      },
+      "GetBenchmarkHuggingFaceSyncHistoryEndpoint_Output": {
+        "required": [
+          "id",
+          "status",
+          "repoId",
+          "triggeredBy",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The attempt id (also the correlation token for its export/sync jobs)."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSyncStatus"
+              }
+            ],
+            "description": "Lifecycle status of the attempt."
+          },
+          "outcome": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSyncOutcome"
+              }
+            ],
+            "description": "Outcome once completed, or null while still running or on failure.",
+            "nullable": true
+          },
+          "repoId": {
+            "type": "string",
+            "description": "The HuggingFace repo this attempt targeted."
+          },
+          "repoUrl": {
+            "type": "string",
+            "description": "URL of the HuggingFace repo, or null when not yet known.",
+            "nullable": true
+          },
+          "prUrl": {
+            "type": "string",
+            "description": "URL of the review pull request opened by the attempt, or null.",
+            "nullable": true
+          },
+          "error": {
+            "type": "string",
+            "description": "The error from a failed attempt, or null.",
+            "nullable": true
+          },
+          "triggeredBy": {
+            "type": "string",
+            "description": "Provenance of the trigger (an admin's mail, or auto-sync)."
+          },
+          "syncedRowCount": {
+            "type": "integer",
+            "description": "Rows the worker synced, or null until it reports success.",
+            "format": "int64",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the attempt was started.",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "When the attempt reached a terminal state, or null while still running.",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "GetBenchmarkHuggingFaceSyncHistoryEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkHuggingFaceSyncHistoryEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -48646,12 +49395,14 @@
             "nullable": true
           },
           "licenseType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
               }
             ],
-            "description": "The license classification of the underlying model, or null if not classified yet."
+            "description": "The license classification of the underlying model, or null if not classified yet.",
+            "nullable": true
           },
           "logo": {
             "type": "string",
@@ -49666,6 +50417,24 @@
           }
         }
       },
+      "HuggingFaceSyncOutcome": {
+        "enum": [
+          "CreatedPrivate",
+          "UpdatedPrivate",
+          "OpenedPullRequest",
+          "Failed",
+          null
+        ]
+      },
+      "HuggingFaceSyncStatus": {
+        "enum": [
+          "NeverSynced",
+          "Exporting",
+          "Uploading",
+          "Completed",
+          "Failed"
+        ]
+      },
       "IFaucetInput": {
         "required": [
           "_t"
@@ -49944,12 +50713,14 @@
             "nullable": true
           },
           "licenseType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
               }
             ],
-            "description": "The license classification of the underlying model, or null if not classified yet."
+            "description": "The license classification of the underlying model, or null if not classified yet.",
+            "nullable": true
           },
           "logo": {
             "type": "string",
@@ -50996,12 +51767,14 @@
             "nullable": true
           },
           "licenseType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
               }
             ],
-            "description": "The license classification of the underlying model, or null if not classified yet."
+            "description": "The license classification of the underlying model, or null if not classified yet.",
+            "nullable": true
           },
           "logo": {
             "type": "string",
@@ -51847,6 +52620,73 @@
           "Idle"
         ]
       },
+      "StartBenchmarkHuggingFaceSyncEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "repoName": {
+            "type": "string",
+            "description": "Optional target repo name. Only honored while the benchmark has never completed a sync;\n defaults to a name derived from the benchmark name.",
+            "nullable": true
+          },
+          "fullRebuild": {
+            "type": "boolean",
+            "description": "When true, re-export the entire benchmark as a non-incremental sync. Defaults to false.",
+            "nullable": true
+          }
+        }
+      },
+      "StartBenchmarkHuggingFaceSyncEndpoint_Output": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSyncStatus"
+              }
+            ],
+            "description": "Current lifecycle status (NeverSynced when the benchmark has never been synced)."
+          },
+          "outcome": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSyncOutcome"
+              }
+            ],
+            "description": "Outcome of the last completed attempt, or null when none has completed.",
+            "nullable": true
+          },
+          "repoId": {
+            "type": "string",
+            "description": "The target HuggingFace repo id (e.g. Rapidata/svg-benchmark), or null.",
+            "nullable": true
+          },
+          "repoUrl": {
+            "type": "string",
+            "description": "URL of the HuggingFace repo, or null when not yet known.",
+            "nullable": true
+          },
+          "prUrl": {
+            "type": "string",
+            "description": "URL of the review pull request opened by the last attempt, or null.",
+            "nullable": true
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "description": "When the benchmark was last successfully synced, or null.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastError": {
+            "type": "string",
+            "description": "The error from the last failed attempt, or null.",
+            "nullable": true
+          }
+        }
+      },
       "SubmitParticipantByBenchmarkEndpoint_Output": {
         "required": [
           "validDatapoints",
@@ -52472,12 +53312,14 @@
             "description": "The feature flags that apply to the campaign (session-wide) for this definition."
           },
           "aggregatorType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/AggregatorType"
               }
             ],
-            "description": "The aggregator type."
+            "description": "The aggregator type.",
+            "nullable": true
           }
         },
         "description": "The input for the create job definition endpoint."
@@ -52724,12 +53566,14 @@
             "description": "The referee is used to determine how many votes will be collected."
           },
           "aggregator": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/AggregatorType"
               }
             ],
-            "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases"
+            "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases",
+            "nullable": true
           },
           "featureFlags": {
             "allOf": [
@@ -52775,12 +53619,14 @@
             "nullable": true
           },
           "stickyState": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/StickyState"
               }
             ],
             "description": "Indicates if the underlying campaign should be sticky.",
+            "nullable": true,
             "deprecated": true
           },
           "stickyConfig": {
@@ -52845,12 +53691,14 @@
             "description": "The selections are used to determine which tasks are shown to a user."
           },
           "retrievalMode": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/RetrievalMode"
               }
             ],
-            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool."
+            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool.",
+            "nullable": true
           },
           "maxIterations": {
             "type": "integer",
@@ -53053,12 +53901,14 @@
             "nullable": true
           },
           "reviewReason": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/ReviewReason"
               }
             ],
-            "description": "Why the job was routed to manual review, when it is (or was) in\n ManualApproval. Null when no customer-facing reason\n applies."
+            "description": "Why the job was routed to manual review, when it is (or was) in\n ManualApproval. Null when no customer-facing reason\n applies.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -53241,12 +54091,14 @@
             "description": "The dataset id."
           },
           "aggregatorType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/AggregatorType"
               }
             ],
-            "description": "The aggregator type."
+            "description": "The aggregator type.",
+            "nullable": true
           },
           "workflow": {
             "allOf": [
@@ -64889,6 +65741,7 @@
       "name": "Rapidata Leaderboard API",
       "tags": [
         "Benchmark",
+        "HuggingFaceSync",
         "SampleGeneration",
         "Faucet",
         "Replicate",

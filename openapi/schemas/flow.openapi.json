@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.08.07.0928-6c9069e"
+    "version": "2026.08.07.0934-c07839c"
   },
   "servers": [
     {
@@ -1268,12 +1268,14 @@
             "nullable": true
           },
           "pidBatchMode": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/PidBatchMode"
               }
             ],
-            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total."
+            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total.",
+            "nullable": true
           },
           "drainDurationSeconds": {
             "type": "integer",
