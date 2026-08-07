@@ -16,23 +16,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryCustomersEndpointOutput(LazyValidatedModel):
+class IGraduationRuleAcceptedFreeTextRule(LazyValidatedModel):
     """
-    QueryCustomersEndpointOutput
+    IGraduationRuleAcceptedFreeTextRule
     """ # noqa: E501
-    id: UUID = Field(description="The unique identifier of the customer.")
-    email: Optional[StrictStr] = Field(description="The email address of the customer.")
-    organization_name: Optional[StrictStr] = Field(description="The name of the organization this customer belongs to, if any.", alias="organizationName")
-    organization_id: Optional[StrictStr] = Field(description="The identifier of the organization this customer belongs to, if any.", alias="organizationId")
-    __properties: ClassVar[List[str]] = ["id", "email", "organizationName", "organizationId"]
+    t: StrictStr = Field(alias="_t")
+    min_accepted_responses: StrictInt = Field(alias="minAcceptedResponses")
+    min_accepted_ratio: Union[StrictFloat, StrictInt] = Field(alias="minAcceptedRatio")
+    demotion_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="demotionRatio")
+    __properties: ClassVar[List[str]] = ["_t", "minAcceptedResponses", "minAcceptedRatio", "demotionRatio"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['AcceptedFreeText']):
+            raise ValueError("must be one of enum values ('AcceptedFreeText')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -48,7 +54,7 @@ class QueryCustomersEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryCustomersEndpointOutput from a JSON string"""
+        """Create an instance of IGraduationRuleAcceptedFreeTextRule from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,26 +75,16 @@ class QueryCustomersEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if email (nullable) is None
+        # set to None if demotion_ratio (nullable) is None
         # and model_fields_set contains the field
-        if self.email is None and "email" in self.model_fields_set:
-            _dict['email'] = None
-
-        # set to None if organization_name (nullable) is None
-        # and model_fields_set contains the field
-        if self.organization_name is None and "organization_name" in self.model_fields_set:
-            _dict['organizationName'] = None
-
-        # set to None if organization_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.organization_id is None and "organization_id" in self.model_fields_set:
-            _dict['organizationId'] = None
+        if self.demotion_ratio is None and "demotion_ratio" in self.model_fields_set:
+            _dict['demotionRatio'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryCustomersEndpointOutput from a dict"""
+        """Create an instance of IGraduationRuleAcceptedFreeTextRule from a dict"""
         if obj is None:
             return None
 
@@ -96,10 +92,10 @@ class QueryCustomersEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "email": obj.get("email"),
-            "organizationName": obj.get("organizationName"),
-            "organizationId": obj.get("organizationId")
+            "_t": obj.get("_t"),
+            "minAcceptedResponses": obj.get("minAcceptedResponses"),
+            "minAcceptedRatio": obj.get("minAcceptedRatio"),
+            "demotionRatio": obj.get("demotionRatio")
         }
         try:
             _obj = cls.model_validate(_data)
