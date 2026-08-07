@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.08.07.0928-6c9069e"
+    "version": "2026.08.07.0934-c07839c"
   },
   "servers": [
     {
@@ -4509,12 +4509,14 @@
             "description": "The feature flags that apply to the campaign (session-wide) for this definition."
           },
           "aggregatorType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/AggregatorType"
               }
             ],
-            "description": "The aggregator type."
+            "description": "The aggregator type.",
+            "nullable": true
           }
         },
         "description": "The input for the create job definition endpoint."
@@ -4761,12 +4763,14 @@
             "description": "The referee is used to determine how many votes will be collected."
           },
           "aggregator": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/AggregatorType"
               }
             ],
-            "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases"
+            "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases",
+            "nullable": true
           },
           "featureFlags": {
             "allOf": [
@@ -4812,12 +4816,14 @@
             "nullable": true
           },
           "stickyState": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/StickyState"
               }
             ],
             "description": "Indicates if the underlying campaign should be sticky.",
+            "nullable": true,
             "deprecated": true
           },
           "stickyConfig": {
@@ -4882,12 +4888,14 @@
             "description": "The selections are used to determine which tasks are shown to a user."
           },
           "retrievalMode": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/RetrievalMode"
               }
             ],
-            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool."
+            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool.",
+            "nullable": true
           },
           "maxIterations": {
             "type": "integer",
@@ -5112,12 +5120,14 @@
             "nullable": true
           },
           "reviewReason": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/ReviewReason"
               }
             ],
-            "description": "Why the job was routed to manual review, when it is (or was) in\n ManualApproval. Null when no customer-facing reason\n applies."
+            "description": "Why the job was routed to manual review, when it is (or was) in\n ManualApproval. Null when no customer-facing reason\n applies.",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -5300,12 +5310,14 @@
             "description": "The dataset id."
           },
           "aggregatorType": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/AggregatorType"
               }
             ],
-            "description": "The aggregator type."
+            "description": "The aggregator type.",
+            "nullable": true
           },
           "workflow": {
             "allOf": [
