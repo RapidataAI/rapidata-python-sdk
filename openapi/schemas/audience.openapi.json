@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.08.07.1327-6cc43e9"
+    "version": "2026.08.07.1407-83b3f25"
   },
   "servers": [
     {
@@ -3907,6 +3907,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IGraduationRuleAcceptedFreeTextRule"
+          },
+          {
             "$ref": "#/components/schemas/IGraduationRuleScoreThresholdRule"
           },
           {
@@ -3916,8 +3919,37 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AcceptedFreeText": "#/components/schemas/IGraduationRuleAcceptedFreeTextRule",
             "ScoreThreshold": "#/components/schemas/IGraduationRuleScoreThresholdRule",
             "TaskAccuracy": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        }
+      },
+      "IGraduationRuleAcceptedFreeTextRule": {
+        "required": [
+          "minAcceptedResponses",
+          "minAcceptedRatio",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AcceptedFreeText"
+            ],
+            "type": "string"
+          },
+          "minAcceptedResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minAcceptedRatio": {
+            "type": "number",
+            "format": "double"
+          },
+          "demotionRatio": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         }
       },
