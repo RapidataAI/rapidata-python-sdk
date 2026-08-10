@@ -85,10 +85,6 @@ class UploadConfig(BaseModel):
     Attributes:
         maxWorkers (int): The maximum number of worker threads for concurrent uploads. Defaults to 25.
         maxRetries (int): The maximum number of retries for failed uploads. Defaults to 3.
-        sweepMaxWorkers (int): Worker threads used for the end-of-run recovery sweep and for
-            `participant.retry_missing`. Defaults to 8, deliberately below `maxWorkers`: a sweep
-            runs after a batch has already produced timeouts, which usually means the uplink is
-            saturated. Capped at `maxWorkers` in use, so lowering `maxWorkers` lowers this too.
         cacheToDisk (bool): Enable disk-based caching for file uploads. If False, uses in-memory cache only. Defaults to True.
             Note: URL assets are always cached in-memory regardless of this setting.
             Caching cannot be disabled entirely as it's required for the two-step upload flow.
@@ -137,10 +133,6 @@ class UploadConfig(BaseModel):
 
     maxWorkers: int = Field(default=25)
     maxRetries: int = Field(default=3)
-    sweepMaxWorkers: int = Field(
-        default=8,
-        description="Worker threads for the end-of-run recovery sweep and retry_missing.",
-    )
     cacheToDisk: bool = Field(
         default=True,
         description="Enable disk-based caching for file uploads. URLs are always cached in-memory.",
@@ -188,13 +180,6 @@ class UploadConfig(BaseModel):
                 f"maxWorkers is set to {v}, which is above the recommended limit of 200. "
                 "This may lead to suboptimal performance due to connection pool constraints."
             )
-        return v
-
-    @field_validator("sweepMaxWorkers")
-    @classmethod
-    def validate_sweep_max_workers(cls, v: int) -> int:
-        if v < 1:
-            raise ValueError("sweepMaxWorkers must be at least 1")
         return v
 
     @field_validator("cacheShards")

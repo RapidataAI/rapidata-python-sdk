@@ -69,17 +69,16 @@ def test_retry_missing_skips_upload_when_nothing_is_missing():
     assert failed == []
 
 
-def test_retry_missing_reuploads_only_the_difference_at_lower_concurrency():
+def test_retry_missing_reuploads_only_the_difference():
     participant = _participant()
     participant.uploaded_identifier_counts = MagicMock(return_value=Counter(["a"]))
     participant.upload_media = MagicMock(return_value=(["b"], []))
 
     participant.retry_missing(["a.jpg", "b.jpg"], ["a", "b"])
 
-    args, kwargs = participant.upload_media.call_args
+    args, _ = participant.upload_media.call_args
     assert args[0] == ["b.jpg"]
     assert args[1] == ["b"]
-    assert kwargs["max_workers"] == 8
 
 
 def test_retry_missing_rejects_mismatched_lengths():

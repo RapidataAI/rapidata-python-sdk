@@ -231,7 +231,6 @@ class BenchmarkParticipant:
         assets: list[str],
         identifiers: list[str],
         data_type: Literal["media", "text"] = "media",
-        max_workers: int | None = None,
     ) -> tuple[list[str], list[FailedUpload[SampleUpload]]]:
         """
         Upload samples concurrently with proper error handling and progress tracking.
@@ -240,10 +239,6 @@ class BenchmarkParticipant:
             assets: List of strings to upload
             identifiers: List of identifiers matching the assets
             data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
-            max_workers: Concurrent upload threads. Defaults to
-                `rapidata_config.upload.maxWorkers`. Lower it when the uplink is
-                the bottleneck — a saturated connection produces timeouts, not
-                throughput.
 
         Returns:
             tuple[list[str], list[FailedUpload[SampleUpload]]]: The identifiers
@@ -273,13 +268,9 @@ class BenchmarkParticipant:
         # Capture the current OpenTelemetry context before creating threads
         current_context = otel_context.get_current()
 
-        workers = (
-            max_workers
-            if max_workers is not None
-            else rapidata_config.upload.maxWorkers
-        )
-
-        with ThreadPoolExecutor(max_workers=workers) as executor:
+        with ThreadPoolExecutor(
+            max_workers=rapidata_config.upload.maxWorkers
+        ) as executor:
             futures = {
                 executor.submit(
                     upload_with_context,
@@ -376,7 +367,6 @@ class BenchmarkParticipant:
         assets: list[str],
         identifiers: list[str],
         data_type: Literal["media", "text"] = "media",
-        max_workers: int | None = None,
     ) -> tuple[list[str], list[FailedUpload[SampleUpload]]]:
         """Upload only the samples the server does not already have.
 
@@ -394,9 +384,6 @@ class BenchmarkParticipant:
             assets: The full list of media originally intended for the participant.
             identifiers: The identifiers matching the assets.
             data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
-            max_workers: Concurrent upload threads. Defaults to
-                `rapidata_config.upload.sweepMaxWorkers`, which is deliberately
-                lower than the main pool — failures cluster on saturated links.
 
         Returns:
             tuple[list[str], list[FailedUpload[SampleUpload]]]: The identifiers
@@ -410,23 +397,10 @@ class BenchmarkParticipant:
                 self._failed_samples = []
                 return [], []
 
-            workers = (
-                max_workers
-                if max_workers is not None
-                else min(
-                    rapidata_config.upload.sweepMaxWorkers,
-                    rapidata_config.upload.maxWorkers,
-                )
-            )
-            logger.info(
-                "Re-uploading %s missing sample(s) with %s worker(s)",
-                len(missing),
-                workers,
-            )
+            logger.info("Re-uploading %s missing sample(s)", len(missing))
 
             return self.upload_media(
                 [sample.media for sample in missing],
                 [sample.identifier for sample in missing],
                 data_type=data_type,
-                max_workers=workers,
             )

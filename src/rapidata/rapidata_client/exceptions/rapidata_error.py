@@ -19,10 +19,12 @@ class RapidataError(Exception):
         self.message = message
         self.original_exception = original_exception
         self.details = details
-        # The problem+json body is the canonical source, but a gateway timeout
-        # (408) or an LB-generated error has no body to carry it — then the
-        # response header is the only place the id survives.
-        self.trace_id = self._trace_id_from_details(details) or trace_id
+        # Header first: it carries the bare trace id, while the problem+json
+        # body carries the full traceparent (00-<trace>-<span>-<flags>). Taking
+        # the header first keeps the id in one searchable shape no matter which
+        # layer produced the error — a timeout that never reached a handler has
+        # no body at all, only the header.
+        self.trace_id = trace_id or self._trace_id_from_details(details)
 
         # Create a nice error message
         error_msg = "Rapidata API Error"

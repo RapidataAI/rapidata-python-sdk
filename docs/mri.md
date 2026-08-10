@@ -157,7 +157,7 @@ benchmark.run()
 Large uploads over a slow or flaky connection can leave individual samples
 behind. `add_model` already handles the common case: if any sample fails, it
 diffs the intended samples against what the server actually holds and
-re-uploads only the difference at lower concurrency.
+re-uploads only the difference.
 
 Anything still missing afterwards is left on the participant, with the reason
 and the backend trace id attached:

@@ -788,8 +788,8 @@ class RapidataBenchmark:
 
         If any sample fails to upload, a recovery sweep runs automatically: the
         intended samples are diffed against what the server actually holds and
-        only the difference is re-uploaded, at lower concurrency. Anything still
-        missing afterwards is logged and left on `participant.failed_samples`.
+        only the difference is re-uploaded. Anything still missing afterwards is
+        logged and left on `participant.failed_samples`.
 
         Args:
             name: The name of the model.
@@ -864,10 +864,11 @@ class RapidataBenchmark:
 
                 if failed_uploads:
                     # On a flaky link failures cluster in time, so the three
-                    # immediate attempts all land in the same bad window. One
-                    # slower sweep at the end of the batch recovers most of
-                    # them, and diffing against the server first keeps it from
-                    # duplicating a sample whose write outlived its timeout.
+                    # immediate attempts all land in the same bad window. A
+                    # sweep at the end of the batch is far enough removed to
+                    # recover most of them, and diffing against the server first
+                    # keeps it from duplicating a sample whose write outlived
+                    # its timeout.
                     logger.warning(
                         "%s sample(s) failed; sweeping against server state before giving up",
                         len(failed_uploads),

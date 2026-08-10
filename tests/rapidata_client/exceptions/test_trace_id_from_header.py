@@ -22,12 +22,28 @@ def test_header_trace_id_used_when_body_has_none():
     assert "Trace Id: 00-hdr-01" in str(error)
 
 
-def test_body_trace_id_wins_over_header():
+def test_header_trace_id_wins_over_body():
+    # The header carries the bare trace id; the body carries the full
+    # traceparent wrapping that same id. Preferring the header keeps the value
+    # in one shape across every kind of error.
+    error = RapidataError(
+        status_code=400,
+        message="Bad request",
+        details={
+            "title": "Bad request",
+            "traceId": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01",
+        },
+        trace_id="4bf92f3577b34da6a3ce929d0e0e4736",
+    )
+
+    assert error.trace_id == "4bf92f3577b34da6a3ce929d0e0e4736"
+
+
+def test_body_trace_id_used_when_no_header_present():
     error = RapidataError(
         status_code=400,
         message="Bad request",
         details={"title": "Bad request", "traceId": "00-body-01"},
-        trace_id="00-hdr-01",
     )
 
     assert error.trace_id == "00-body-01"
