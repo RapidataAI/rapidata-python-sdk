@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Optional, Any
 import json
 
@@ -11,11 +13,16 @@ class RapidataError(Exception):
         message: str | None = None,
         original_exception: Exception | None = None,
         details: Any = None,
+        trace_id: str | None = None,
     ):
         self.status_code = status_code
         self.message = message
         self.original_exception = original_exception
         self.details = details
+        # The problem+json body is the canonical source, but a gateway timeout
+        # (408) or an LB-generated error has no body to carry it — then the
+        # response header is the only place the id survives.
+        self.trace_id = self._trace_id_from_details(details) or trace_id
 
         # Create a nice error message
         error_msg = "Rapidata API Error"
@@ -25,6 +32,15 @@ class RapidataError(Exception):
             error_msg += f": {message}"
 
         super().__init__(error_msg)
+
+    @staticmethod
+    def _trace_id_from_details(details: Any) -> str | None:
+        """Read the `traceId` ProblemDetails member, when the body carried one."""
+        if isinstance(details, dict):
+            raw = details.get("traceId")
+            if isinstance(raw, str) and raw:
+                return raw
+        return None
 
     def get_reason(self) -> str:
         """Get a concise reason string suitable for grouping and display.
@@ -45,12 +61,10 @@ class RapidataError(Exception):
         """Return a string representation of the error."""
         title = None
         errors = None
-        trace_id = None
 
         if self.details and isinstance(self.details, dict):
             title = self.details.get("title")
             errors = self.details.get("errors")
-            trace_id = self.details.get("traceId")
 
         error_parts = []
 
@@ -65,8 +79,8 @@ class RapidataError(Exception):
             else:
                 error_parts.append(f"Reasons: {errors}")
 
-        if trace_id:
-            error_parts.append(f"Trace Id: {trace_id}")
+        if self.trace_id:
+            error_parts.append(f"Trace Id: {self.trace_id}")
         else:
             error_parts.append("Trace Id: N/A")
 
@@ -75,6 +89,7 @@ class RapidataError(Exception):
         from rapidata.rapidata_client.api.rapidata_api_client import (
             format_outdated_sdk_note,
         )
+
         note = format_outdated_sdk_note()
         if note:
             error_parts.append(note)

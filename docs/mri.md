@@ -152,6 +152,43 @@ participant.run()
 benchmark.run()
 ```
 
+### 3c. Recovering a Partial Upload
+
+Large uploads over a slow or flaky connection can leave individual samples
+behind. `add_model` already handles the common case: if any sample fails, it
+diffs the intended samples against what the server actually holds and
+re-uploads only the difference at lower concurrency.
+
+Anything still missing afterwards is left on the participant, with the reason
+and the backend trace id attached:
+
+```python
+participant = benchmark.add_model(name="MyAIModel_v2.1", media=media, prompts=prompts)
+
+for failure in participant.failed_samples:
+    print(failure.item.identifier, failure.item.media, failure.error_message)
+```
+
+You can run the same recovery yourself at any time — pass the *full* intended
+lists, not just the failures. It re-uploads only what the server is missing:
+
+```python
+successful, still_failed = participant.retry_missing(media, prompts)
+```
+
+Checking the server before re-uploading is what makes this safe to repeat: a
+request can time out *after* the sample was stored, so a blind retry would give
+that prompt a second sample and over-weight it in matchup sampling.
+
+If the connection itself is the bottleneck, lower the concurrency — a saturated
+uplink produces timeouts, not throughput:
+
+```python
+from rapidata import rapidata_config
+
+rapidata_config.upload.maxWorkers = 8
+```
+
 You can also inspect existing participants:
 
 ```python

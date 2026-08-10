@@ -43,6 +43,7 @@ logger.info("This will be shown") # (2)!
 |-----------|------|---------|-------------|
 | `maxWorkers` | `int` | `25` | Maximum concurrent upload threads |
 | `maxRetries` | `int` | `3` | Retry attempts for failed uploads |
+| `sweepMaxWorkers` | `int` | `8` | Concurrent threads for the end-of-run recovery sweep and `participant.retry_missing`. Deliberately below `maxWorkers`, and capped by it. |
 | `cacheToDisk` | `bool` | `True` | Enable disk-based caching for file uploads |
 | `cacheTimeout` | `float` | `1` | Cache operation timeout in seconds |
 | `cacheLocation` | `Path` | `~/.cache/rapidata/upload_cache` | Directory for cache storage (immutable) |
@@ -133,6 +134,7 @@ Empty strings are treated as unset, so `RAPIDATA_CLIENT_ID=""` falls through to 
 # --- Upload ---
 RAPIDATA_maxWorkers=25
 RAPIDATA_maxRetries=3
+RAPIDATA_sweepMaxWorkers=8
 RAPIDATA_cacheToDisk=true
 RAPIDATA_cacheTimeout=1
 RAPIDATA_cacheLocation=~/.cache/rapidata/upload_cache
