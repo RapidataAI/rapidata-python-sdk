@@ -73,11 +73,12 @@ jobs:
             exit 0
           }
 
-          pr_json=$(gh pr view "$pr" --repo "$GITHUB_REPOSITORY" \
-            --json headRefOid,headRepository,headRepositoryOwner,isDraft)
-          head_sha=$(jq -r '.headRefOid' <<<"$pr_json")
-          head_repo=$(jq -r '.headRepositoryOwner.login + "/" + .headRepository.name' <<<"$pr_json")
-          is_draft=$(jq -r '.isDraft' <<<"$pr_json")
+          # REST rather than `gh pr view --json`: reading the head repo over
+          # GraphQL needs read:org, which the app token does not carry.
+          pr_json=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$pr")
+          head_sha=$(jq -r '.head.sha' <<<"$pr_json")
+          head_repo=$(jq -r '.head.repo.full_name' <<<"$pr_json")
+          is_draft=$(jq -r '.draft' <<<"$pr_json")
 
           if [ "$head_repo" != "$GITHUB_REPOSITORY" ]; then
             block "its head branch lives in a fork ($head_repo)"
