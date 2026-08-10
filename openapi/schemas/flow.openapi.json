@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.08.10.0732-1b889e3"
+    "version": "2026.08.10.0912-8a94bdd"
   },
   "servers": [
     {
