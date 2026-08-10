@@ -42,6 +42,7 @@ from rapidata.api_client.api.payment_api import PaymentApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.platform_api import PlatformApi
 from rapidata.api_client.api.prompt_api import PromptApi
+from rapidata.api_client.api.prompt_embedding_map_api import PromptEmbeddingMapApi
 from rapidata.api_client.api.ranking_api import RankingApi
 from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
 from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi

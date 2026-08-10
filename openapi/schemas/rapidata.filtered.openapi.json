@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.10.0933-06618b9"
+    "version": "2026.08.10.1600-35a2676"
   },
   "servers": [
     {
@@ -122,6 +122,10 @@
     {
       "name": "HuggingFaceSync",
       "x-displayName": "HuggingFaceSync"
+    },
+    {
+      "name": "PromptEmbeddingMap",
+      "x-displayName": "PromptEmbeddingMap"
     },
     {
       "name": "SampleGeneration",
@@ -12335,6 +12339,526 @@
         ]
       }
     },
+    "/benchmark/{benchmarkId}/standings/by-tag": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the standings over the whole filtered set alongside the standings recomputed for each\n tag on the benchmark.",
+        "description": "The same vote-level filters as the standings query apply, except a tag filter — tags are what\n the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole\n grid comes from one request; which axes to render is the caller's choice. Segment items carry\n the id and the numbers only: the participants' names and model metadata are identical in every\n segment and are reported once in global, to be joined on by id.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to apply weighted scoring based on user scores.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Filter by country.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter by language.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "description": "Filter by gender.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "age_bucket",
+            "in": "query",
+            "description": "Filter by age_bucket.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "occupation",
+            "in": "query",
+            "description": "Filter by occupation.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_id",
+            "in": "query",
+            "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "leaderboard_id",
+            "in": "query",
+            "description": "Filter by leaderboard_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "run_id",
+            "in": "query",
+            "description": "Filter by run_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "voted_at",
+            "in": "query",
+            "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkStandingsByTagEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark/combined-matrix": {},
     "/benchmark/combined-standings": {},
     "/benchmark/{benchmarkId}/prompts": {
@@ -13388,6 +13912,187 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/prompt-embedding-map": {
+      "post": {
+        "tags": [
+          "Benchmark",
+          "PromptEmbeddingMap"
+        ],
+        "summary": "Starts an asynchronous computation of the benchmark's prompt embedding map.",
+        "description": "Restricted to platform staff. Computing a map is what decides whether a benchmark exposes one\n on the anonymous read route, so it is a curation call rather than a benchmark-owner capability\n — a benchmark's owner cannot trigger or re-trigger it.\n \n Returns a tracking id immediately; poll\n GET /benchmark/{benchmarkId}/prompt-embedding-map/status for progress. Responds with\n 409 Conflict when no embedding provider is configured, or when a computation for this\n benchmark is already in flight. Any map already being served stays in place until the new one\n succeeds, so triggering a recomputation is safe.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose prompts should be embedded.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptEmbeddingMapEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Benchmark",
+          "PromptEmbeddingMap"
+        ],
+        "summary": "Returns the benchmark's prompt embedding map.",
+        "description": "Unpaged: the whole corpus arrives in one response because the plot needs every point at once.\n Tag strings are de-duplicated into a map-level tags vocabulary that each point indexes\n via tagIndices. Prompts without English text are not embedded, so promptCount can\n be lower than the benchmark's prompt total and the map is not a complete corpus listing.\n Responds with 204 No Content when no map has been computed yet.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose prompt embedding map should be returned.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptEmbeddingMapEndpoint_Output"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/prompt-embedding-map/status": {
+      "get": {
+        "tags": [
+          "Benchmark",
+          "PromptEmbeddingMap"
+        ],
+        "summary": "Returns the state of the benchmark's most recent prompt embedding map computation.",
+        "description": "Restricted to platform staff, matching the action it reports on. Deliberately narrower than the\n map itself, which is readable by anyone who can read the benchmark: a failure reason carries the\n embedding provider's raw error text, so it must not reach benchmark owners or the public.\n \n A benchmark has exactly one map, and this reports its most recent computation whatever the\n state, so a failure is visible here rather than silently absent. Responds with 204 No Content\n when no computation has ever been triggered for this benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose computation state should be returned.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptEmbeddingMapStatusEndpoint_Output"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -46346,6 +47051,18 @@
           }
         }
       },
+      "CreatePromptEmbeddingMapEndpoint_Output": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the queued prompt embedding map."
+          }
+        }
+      },
       "CreatePromptForBenchmarkEndpoint_Input": {
         "required": [
           "identifier"
@@ -47140,6 +47857,199 @@
           }
         }
       },
+      "GetBenchmarkStandingsByTagEndpoint_Output": {
+        "required": [
+          "global",
+          "totalResponses",
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "global": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBenchmarkStandingsByTagEndpoint_Output_OutputItem"
+                }
+              }
+            ],
+            "description": "The standings over the whole filtered set, ordered by score descending."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "Total raw human responses (votes) behind Global under the current filter —\n the actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "format": "int64"
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBenchmarkStandingsByTagEndpoint_Output_Segment"
+                }
+              }
+            ],
+            "description": "The standings per tag, ordered by votes descending."
+          }
+        },
+        "description": "The standings sliced by prompt tag."
+      },
+      "GetBenchmarkStandingsByTagEndpoint_Output_OutputItem": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "responseCount",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "family": {
+            "type": "string",
+            "nullable": true
+          },
+          "lab": {
+            "type": "string",
+            "nullable": true
+          },
+          "proprietaryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "licenseType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "GetBenchmarkStandingsByTagEndpoint_Output_Segment": {
+        "required": [
+          "value",
+          "promptCount",
+          "votes",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "axis": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetBenchmarkStandingsByTagEndpoint_Output_SegmentItem"
+            }
+          }
+        }
+      },
+      "GetBenchmarkStandingsByTagEndpoint_Output_SegmentItem": {
+        "required": [
+          "id",
+          "score",
+          "wins",
+          "totalMatches",
+          "responseCount",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "GetCombinedBenchmarkMatrixEndpoint_Output": {
         "required": [
           "index",
@@ -47608,6 +48518,124 @@
               }
             ],
             "description": "The faucet configured to auto-generate samples, or null if none is set."
+          }
+        }
+      },
+      "GetPromptEmbeddingMapEndpoint_Output": {
+        "required": [
+          "computedAt",
+          "promptCount",
+          "tags",
+          "points"
+        ],
+        "type": "object",
+        "properties": {
+          "computedAt": {
+            "type": "string",
+            "description": "When the map finished computing.",
+            "format": "date-time"
+          },
+          "promptCount": {
+            "type": "integer",
+            "description": "How many prompts the map contains. Prompts without English text are not embedded, so this\n can be lower than the benchmark's prompt total.",
+            "format": "int32"
+          },
+          "tags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              }
+            ],
+            "description": "The de-duplicated tag vocabulary for the map. Each point's tagIndices are positions\n in this list."
+          },
+          "points": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetPromptEmbeddingMapEndpoint_Output_Point"
+                }
+              }
+            ],
+            "description": "One point per embedded prompt."
+          }
+        }
+      },
+      "GetPromptEmbeddingMapEndpoint_Output_Point": {
+        "required": [
+          "promptId",
+          "x",
+          "y",
+          "tagIndices"
+        ],
+        "type": "object",
+        "properties": {
+          "promptId": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "format": "double"
+          },
+          "y": {
+            "type": "number",
+            "format": "double"
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "tagIndices": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "GetPromptEmbeddingMapStatusEndpoint_Output": {
+        "required": [
+          "id",
+          "status",
+          "promptCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the benchmark's map."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromptEmbeddingMapStatus"
+              }
+            ],
+            "description": "The state of the most recent computation — not of the map being served. A Pending or\n Failed status still leaves the previously computed map on the public route."
+          },
+          "promptCount": {
+            "type": "integer",
+            "description": "How many prompts the map contains. Prompts without English text are not embedded, so this\n can be lower than the benchmark's prompt total. Zero until the first run succeeds.",
+            "format": "int32"
+          },
+          "computedAt": {
+            "type": "string",
+            "description": "When the points currently being served were computed. Absent until the first run succeeds.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "failureReason": {
+            "type": "string",
+            "description": "Why the computation failed, when it did.",
+            "nullable": true
           }
         }
       },
@@ -48730,6 +49758,13 @@
           "Submittable",
           "Submitted",
           "Disabled"
+        ]
+      },
+      "PromptEmbeddingMapStatus": {
+        "enum": [
+          "Pending",
+          "Ready",
+          "Failed"
         ]
       },
       "QueryBenchmarksEndpoint_Output": {
@@ -63715,6 +64750,7 @@
       "tags": [
         "Benchmark",
         "HuggingFaceSync",
+        "PromptEmbeddingMap",
         "SampleGeneration",
         "Faucet",
         "Replicate",
