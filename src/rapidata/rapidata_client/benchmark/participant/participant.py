@@ -22,6 +22,10 @@ from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.participant_status import ParticipantStatus
 
+# The backend rejects anything above its MaxPageSize (100) outright rather than
+# clamping, so this is a hard ceiling and not a tuning knob.
+_SAMPLES_PAGE_SIZE = 100
+
 
 class BenchmarkParticipant:
     """A participant (model) in a benchmark evaluation.
@@ -51,24 +55,11 @@ class BenchmarkParticipant:
         self._benchmark_id = benchmark_id
         self._asset_uploader = AssetUploader(openapi_service)
         self._status = status
-        self._failed_samples: list[FailedUpload[SampleUpload]] = []
 
     @property
     def status(self) -> ParticipantStatus:
         """The current status of the participant."""
         return self._status
-
-    @property
-    def failed_samples(self) -> list[FailedUpload[SampleUpload]]:
-        """The samples that failed in the most recent upload on this participant.
-
-        Each entry carries the media/identifier pair plus the failure reason and
-        backend trace id, so a failed batch can be re-submitted without
-        reconstructing the pairs from the logs. Populated by
-        :meth:`upload_media` and :meth:`retry_missing` — and therefore by
-        ``benchmark.add_model``, which calls them.
-        """
-        return list(self._failed_samples)
 
     def get_elo(self) -> float | None:
         """Returns the participant's current Elo score in the benchmark.
@@ -244,7 +235,7 @@ class BenchmarkParticipant:
             tuple[list[str], list[FailedUpload[SampleUpload]]]: The identifiers
             that uploaded, and a `FailedUpload` per sample that did not. Each
             failure carries the media/identifier pair, the reason, and the
-            backend trace id. Also available afterwards as `failed_samples`.
+            backend trace id.
         """
         if len(assets) != len(identifiers):
             raise ValueError("Assets and identifiers must have the same length")
@@ -301,7 +292,6 @@ class BenchmarkParticipant:
 
                     pbar.update(1)
 
-        self._failed_samples = failed_uploads
         return successful_uploads, failed_uploads
 
     def uploaded_identifier_counts(self) -> Counter[str]:
@@ -321,7 +311,7 @@ class BenchmarkParticipant:
                 result = self._openapi_service.leaderboard.sample_api.participant_participant_id_samples_get(
                     participant_id=self.id,
                     page=current_page,
-                    page_size=500,
+                    page_size=_SAMPLES_PAGE_SIZE,
                 )
 
                 if result.total_pages is None:
@@ -341,10 +331,19 @@ class BenchmarkParticipant:
 
             return counts
 
-    def _select_missing(
+    def missing_samples(
         self, assets: list[str], identifiers: list[str]
     ) -> list[SampleUpload]:
-        """Diff the intended samples against what the server actually holds."""
+        """Returns the intended samples the server does not hold yet.
+
+        Answers "what still needs uploading" by asking the server, so it stays
+        correct on any participant — including one fetched from
+        ``benchmark.participants`` rather than freshly uploaded to.
+
+        Args:
+            assets: The full list of media intended for the participant.
+            identifiers: The identifiers matching the assets.
+        """
         if len(assets) != len(identifiers):
             raise ValueError("Assets and identifiers must have the same length")
 
@@ -390,11 +389,10 @@ class BenchmarkParticipant:
             uploaded by this call, and any that still failed.
         """
         with tracer.start_as_current_span("BenchmarkParticipant.retry_missing"):
-            missing = self._select_missing(assets, identifiers)
+            missing = self.missing_samples(assets, identifiers)
 
             if not missing:
                 logger.info("All samples are present on the server, nothing to retry")
-                self._failed_samples = []
                 return [], []
 
             logger.info("Re-uploading %s missing sample(s)", len(missing))

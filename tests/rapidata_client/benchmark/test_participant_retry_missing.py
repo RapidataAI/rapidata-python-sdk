@@ -26,34 +26,76 @@ def _participant() -> BenchmarkParticipant:
     )
 
 
-def test_select_missing_returns_only_absent_pairs():
+def _page(identifiers: list[str], total_pages: int) -> MagicMock:
+    page = MagicMock()
+    page.total_pages = total_pages
+    page.items = [
+        MagicMock(actual_instance=MagicMock(identifier=i)) for i in identifiers
+    ]
+    return page
+
+
+def test_uploaded_identifier_counts_pages_within_the_server_page_limit():
+    # The backend rejects a page_size above its MaxPageSize (100) instead of
+    # clamping it, so every page request must stay at or below that.
+    participant = _participant()
+    samples_get = (
+        participant._openapi_service.leaderboard.sample_api.participant_participant_id_samples_get
+    )
+    samples_get.side_effect = [_page(["a", "b"], 2), _page(["b"], 2)]
+
+    counts = participant.uploaded_identifier_counts()
+
+    assert counts == Counter(["a", "b", "b"])
+    assert samples_get.call_count == 2
+    assert [c.kwargs["page"] for c in samples_get.call_args_list] == [1, 2]
+    for call in samples_get.call_args_list:
+        assert call.kwargs["page_size"] <= 100
+
+
+def test_uploaded_identifier_counts_raises_when_total_pages_missing():
+    participant = _participant()
+    samples_get = (
+        participant._openapi_service.leaderboard.sample_api.participant_participant_id_samples_get
+    )
+    samples_get.return_value = _page(["a"], None)
+
+    try:
+        participant.uploaded_identifier_counts()
+    except ValueError as e:
+        assert "total_pages" in str(e)
+    else:
+        raise AssertionError("expected a ValueError when total_pages is None")
+
+
+def test_missing_samples_returns_only_absent_pairs():
     participant = _participant()
     participant.uploaded_identifier_counts = MagicMock(return_value=Counter(["a", "c"]))
 
-    missing = participant._select_missing(["a.jpg", "b.jpg", "c.jpg"], ["a", "b", "c"])
+    missing = participant.missing_samples(["a.jpg", "b.jpg", "c.jpg"], ["a", "b", "c"])
 
     assert missing == [SampleUpload(media="b.jpg", identifier="b")]
 
 
-def test_select_missing_counts_repeated_identifiers_individually():
+def test_missing_samples_counts_repeated_identifiers_individually():
     # The same prompt may legitimately be supplied several times, so a set-based
     # diff would wrongly treat one uploaded sample as satisfying both.
     participant = _participant()
     participant.uploaded_identifier_counts = MagicMock(return_value=Counter(["a"]))
 
-    missing = participant._select_missing(["a1.jpg", "a2.jpg"], ["a", "a"])
+    missing = participant.missing_samples(["a1.jpg", "a2.jpg"], ["a", "a"])
 
     assert missing == [SampleUpload(media="a2.jpg", identifier="a")]
 
 
-def test_select_missing_empty_when_server_has_everything():
+def test_missing_samples_empty_when_server_has_everything():
     participant = _participant()
     participant.uploaded_identifier_counts = MagicMock(
         return_value=Counter(["a", "a", "b"])
     )
 
     assert (
-        participant._select_missing(["1.jpg", "2.jpg", "3.jpg"], ["a", "a", "b"]) == []
+        participant.missing_samples(["1.jpg", "2.jpg", "3.jpg"], ["a", "a", "b"]) == []
     )
 
 

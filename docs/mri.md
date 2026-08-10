@@ -159,14 +159,15 @@ behind. `add_model` already handles the common case: if any sample fails, it
 diffs the intended samples against what the server actually holds and
 re-uploads only the difference.
 
-Anything still missing afterwards is left on the participant, with the reason
-and the backend trace id attached:
+Anything still missing afterwards is logged with its reason and backend trace
+id. To ask which pairs those are, compare your intended lists against the
+server:
 
 ```python
 participant = benchmark.add_model(name="MyAIModel_v2.1", media=media, prompts=prompts)
 
-for failure in participant.failed_samples:
-    print(failure.item.identifier, failure.item.media, failure.error_message)
+for sample in participant.missing_samples(media, prompts):
+    print(sample.identifier, sample.media)
 ```
 
 You can run the same recovery yourself at any time — pass the *full* intended
