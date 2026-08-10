@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import os
+import re
 import time
-from typing import Literal
+from typing import Any, Literal
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, tracer
@@ -25,6 +27,10 @@ from rapidata.api_client.models.participant_status import ParticipantStatus
 # The backend rejects anything above its MaxPageSize (100) outright rather than
 # clamping, so this is a hard ceiling and not a tuning knob.
 _SAMPLES_PAGE_SIZE = 100
+
+# http / https in any case — same detection the asset uploader uses to tell a
+# remote URL from a local path.
+_URL_SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
 
 
 class BenchmarkParticipant:
@@ -294,17 +300,63 @@ class BenchmarkParticipant:
 
         return successful_uploads, failed_uploads
 
-    def uploaded_identifier_counts(self) -> Counter[str]:
-        """Returns how many samples the server holds for each identifier.
+    @staticmethod
+    def _local_asset_key(asset: str, data_type: Literal["media", "text"]) -> str:
+        """The form a local asset takes once the server reports it back.
+
+        Remote URLs round-trip verbatim as `sourceUrl`; local files come back as
+        the bare `originalFilename`, so the directory part is dropped here to
+        match. Mirrors the normalization `RapidataBenchmark` already applies to
+        prompt assets.
+        """
+        if data_type == "text" or _URL_SCHEME_RE.match(asset):
+            return asset
+
+        return os.path.basename(asset)
+
+    @staticmethod
+    def _server_asset_key(asset: Any) -> str | None:
+        """The comparable form of a sample's asset as the server reports it.
+
+        Returns None when the asset is a shape this cannot read (a multi-asset,
+        or metadata the backend has stopped sending); callers must treat that as
+        "unidentifiable", never as "absent".
+        """
+        instance = getattr(asset, "actual_instance", None)
+
+        text = getattr(instance, "text", None)
+        if isinstance(text, str):
+            return text
+
+        metadata = getattr(instance, "metadata", None)
+        if not isinstance(metadata, dict):
+            return None
+
+        source_url = getattr(
+            getattr(metadata.get("sourceUrl"), "actual_instance", None), "url", None
+        )
+        if isinstance(source_url, str):
+            return source_url
+
+        original_filename = getattr(
+            getattr(metadata.get("originalFilename"), "actual_instance", None),
+            "original_filename",
+            None,
+        )
+        if isinstance(original_filename, str):
+            return original_filename
+
+        return None
+
+    def _uploaded_sample_keys(self) -> Counter[tuple[str, str | None]]:
+        """Counts the samples the server holds, per (identifier, asset).
 
         This is server truth, not a client-side tally: it reflects samples that
         actually persisted, including ones whose upload appeared to fail (a
         timeout can arrive after the sample was written).
         """
-        with tracer.start_as_current_span(
-            "BenchmarkParticipant.uploaded_identifier_counts"
-        ):
-            counts: Counter[str] = Counter()
+        with tracer.start_as_current_span("BenchmarkParticipant._uploaded_sample_keys"):
+            counts: Counter[tuple[str, str | None]] = Counter()
             current_page = 1
 
             while True:
@@ -320,9 +372,11 @@ class BenchmarkParticipant:
                     )
 
                 for item in result.items:
-                    identifier = getattr(item.actual_instance, "identifier", None)
+                    sample = item.actual_instance
+                    identifier = getattr(sample, "identifier", None)
                     if isinstance(identifier, str):
-                        counts[identifier] += 1
+                        key = self._server_asset_key(getattr(sample, "asset", None))
+                        counts[(identifier, key)] += 1
 
                 if current_page >= result.total_pages:
                     break
@@ -332,7 +386,10 @@ class BenchmarkParticipant:
             return counts
 
     def missing_samples(
-        self, assets: list[str], identifiers: list[str]
+        self,
+        assets: list[str],
+        identifiers: list[str],
+        data_type: Literal["media", "text"] = "media",
     ) -> list[SampleUpload]:
         """Returns the intended samples the server does not hold yet.
 
@@ -340,22 +397,38 @@ class BenchmarkParticipant:
         correct on any participant — including one fetched from
         ``benchmark.participants`` rather than freshly uploaded to.
 
+        Matching is per media *and* identifier, not per identifier alone: an
+        identifier may carry several distinct assets, and knowing only that one
+        of three landed says nothing about which one. The one case this cannot
+        separate is two different paths sharing a filename under the same
+        identifier (`a/1.png` and `b/1.png`) — they are indistinguishable once
+        the server has reduced them to `originalFilename`.
+
         Args:
             assets: The full list of media intended for the participant.
             identifiers: The identifiers matching the assets.
+            data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
         """
         if len(assets) != len(identifiers):
             raise ValueError("Assets and identifiers must have the same length")
 
-        # A participant may legitimately have several samples for one identifier,
-        # so account for the server's samples one at a time rather than by set
-        # membership — otherwise a prompt supplied twice looks satisfied by one.
-        remaining = self.uploaded_identifier_counts()
+        # Decrement rather than test membership: the same media may legitimately
+        # be supplied more than once for an identifier, and each occurrence needs
+        # its own sample.
+        remaining = self._uploaded_sample_keys()
 
         missing: list[SampleUpload] = []
         for asset, identifier in zip(assets, identifiers):
-            if remaining[identifier] > 0:
-                remaining[identifier] -= 1
+            key = (identifier, self._local_asset_key(asset, data_type))
+            unreadable = (identifier, None)
+
+            if remaining[key] > 0:
+                remaining[key] -= 1
+            elif remaining[unreadable] > 0:
+                # A sample exists whose asset could not be read back. Spend it
+                # here rather than re-upload: a duplicate sample silently
+                # over-weights the prompt, while a missing one is reported.
+                remaining[unreadable] -= 1
             else:
                 missing.append(SampleUpload(media=asset, identifier=identifier))
 
@@ -389,7 +462,7 @@ class BenchmarkParticipant:
             uploaded by this call, and any that still failed.
         """
         with tracer.start_as_current_span("BenchmarkParticipant.retry_missing"):
-            missing = self.missing_samples(assets, identifiers)
+            missing = self.missing_samples(assets, identifiers, data_type=data_type)
 
             if not missing:
                 logger.info("All samples are present on the server, nothing to retry")
