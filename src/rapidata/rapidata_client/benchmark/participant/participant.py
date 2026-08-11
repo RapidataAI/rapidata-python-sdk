@@ -2,10 +2,8 @@ from __future__ import annotations
 
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import os
-import re
 import time
-from typing import Any, Literal
+from typing import Literal
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, tracer
@@ -19,6 +17,7 @@ from opentelemetry import context as otel_context
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.benchmark.participant.sample_upload import SampleUpload
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
+from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
 
 
 from rapidata.service.openapi_service import OpenAPIService
@@ -28,9 +27,9 @@ from rapidata.api_client.models.participant_status import ParticipantStatus
 # clamping, so this is a hard ceiling and not a tuning knob.
 _SAMPLES_PAGE_SIZE = 100
 
-# http / https in any case — same detection the asset uploader uses to tell a
-# remote URL from a local path.
-_URL_SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
+# Returned when the participant already holds this sample. The only conflict the
+# sample endpoint raises, so the status alone identifies it.
+_ALREADY_EXISTS_STATUS = 409
 
 
 class BenchmarkParticipant:
@@ -201,6 +200,28 @@ class BenchmarkParticipant:
 
                 return None
 
+            except RapidataError as e:
+                if e.status_code == _ALREADY_EXISTS_STATUS:
+                    # The backend rejects a sample the participant already holds for
+                    # this identifier and asset. That is the success case for a retry:
+                    # the sample we wanted is there, and re-sending would double the
+                    # prompt's weight in matchup sampling.
+                    logger.debug("Sample already present for %s", identifier)
+                    return None
+
+                last_exception = e
+                if attempt < rapidata_config.upload.maxRetries - 1:
+                    retry_delay = backoff_delay(attempt)
+                    logger.info(
+                        "Upload attempt %s/%s failed for %s: %s. Retrying in %.1fs...",
+                        attempt + 1,
+                        rapidata_config.upload.maxRetries,
+                        identifier,
+                        last_exception,
+                        retry_delay,
+                    )
+                    time.sleep(retry_delay)
+
             except Exception as e:
                 last_exception = e
                 if attempt < rapidata_config.upload.maxRetries - 1:
@@ -300,63 +321,17 @@ class BenchmarkParticipant:
 
         return successful_uploads, failed_uploads
 
-    @staticmethod
-    def _local_asset_key(asset: str, data_type: Literal["media", "text"]) -> str:
-        """The form a local asset takes once the server reports it back.
+    def _uploaded_identifier_counts(self) -> Counter[str]:
+        """Counts the samples the server holds for each identifier.
 
-        Remote URLs round-trip verbatim as `sourceUrl`; local files come back as
-        the bare `originalFilename`, so the directory part is dropped here to
-        match. Mirrors the normalization `RapidataBenchmark` already applies to
-        prompt assets.
+        Server truth, not a client-side tally: it reflects samples that actually
+        persisted, including ones whose upload appeared to fail because the
+        response never arrived.
         """
-        if data_type == "text" or _URL_SCHEME_RE.match(asset):
-            return asset
-
-        return os.path.basename(asset)
-
-    @staticmethod
-    def _server_asset_key(asset: Any) -> str | None:
-        """The comparable form of a sample's asset as the server reports it.
-
-        Returns None when the asset is a shape this cannot read (a multi-asset,
-        or metadata the backend has stopped sending); callers must treat that as
-        "unidentifiable", never as "absent".
-        """
-        instance = getattr(asset, "actual_instance", None)
-
-        text = getattr(instance, "text", None)
-        if isinstance(text, str):
-            return text
-
-        metadata = getattr(instance, "metadata", None)
-        if not isinstance(metadata, dict):
-            return None
-
-        source_url = getattr(
-            getattr(metadata.get("sourceUrl"), "actual_instance", None), "url", None
-        )
-        if isinstance(source_url, str):
-            return source_url
-
-        original_filename = getattr(
-            getattr(metadata.get("originalFilename"), "actual_instance", None),
-            "original_filename",
-            None,
-        )
-        if isinstance(original_filename, str):
-            return original_filename
-
-        return None
-
-    def _uploaded_sample_keys(self) -> Counter[tuple[str, str | None]]:
-        """Counts the samples the server holds, per (identifier, asset).
-
-        This is server truth, not a client-side tally: it reflects samples that
-        actually persisted, including ones whose upload appeared to fail (a
-        timeout can arrive after the sample was written).
-        """
-        with tracer.start_as_current_span("BenchmarkParticipant._uploaded_sample_keys"):
-            counts: Counter[tuple[str, str | None]] = Counter()
+        with tracer.start_as_current_span(
+            "BenchmarkParticipant._uploaded_identifier_counts"
+        ):
+            counts: Counter[str] = Counter()
             current_page = 1
 
             while True:
@@ -372,11 +347,9 @@ class BenchmarkParticipant:
                     )
 
                 for item in result.items:
-                    sample = item.actual_instance
-                    identifier = getattr(sample, "identifier", None)
+                    identifier = getattr(item.actual_instance, "identifier", None)
                     if isinstance(identifier, str):
-                        key = self._server_asset_key(getattr(sample, "asset", None))
-                        counts[(identifier, key)] += 1
+                        counts[identifier] += 1
 
                 if current_page >= result.total_pages:
                     break
@@ -385,54 +358,21 @@ class BenchmarkParticipant:
 
             return counts
 
-    def missing_samples(
-        self,
-        assets: list[str],
-        identifiers: list[str],
-        data_type: Literal["media", "text"] = "media",
-    ) -> list[SampleUpload]:
-        """Returns the intended samples the server does not hold yet.
+    def missing_counts(self, identifiers: list[str]) -> Counter[str]:
+        """Returns how many samples each identifier is still short on the server.
 
-        Answers "what still needs uploading" by asking the server, so it stays
-        correct on any participant — including one fetched from
+        Identifiers that are fully uploaded are absent from the result, so an
+        empty counter means nothing is outstanding. Being a server-side question,
+        it is answered correctly for any participant — including one fetched from
         ``benchmark.participants`` rather than freshly uploaded to.
 
-        Matching is per media *and* identifier, not per identifier alone: an
-        identifier may carry several distinct assets, and knowing only that one
-        of three landed says nothing about which one. The one case this cannot
-        separate is two different paths sharing a filename under the same
-        identifier (`a/1.png` and `b/1.png`) — they are indistinguishable once
-        the server has reduced them to `originalFilename`.
-
         Args:
-            assets: The full list of media intended for the participant.
-            identifiers: The identifiers matching the assets.
-            data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
+            identifiers: The full list of identifiers intended for the participant.
         """
-        if len(assets) != len(identifiers):
-            raise ValueError("Assets and identifiers must have the same length")
+        intended = Counter(identifiers)
+        intended.subtract(self._uploaded_identifier_counts())
 
-        # Decrement rather than test membership: the same media may legitimately
-        # be supplied more than once for an identifier, and each occurrence needs
-        # its own sample.
-        remaining = self._uploaded_sample_keys()
-
-        missing: list[SampleUpload] = []
-        for asset, identifier in zip(assets, identifiers):
-            key = (identifier, self._local_asset_key(asset, data_type))
-            unreadable = (identifier, None)
-
-            if remaining[key] > 0:
-                remaining[key] -= 1
-            elif remaining[unreadable] > 0:
-                # A sample exists whose asset could not be read back. Spend it
-                # here rather than re-upload: a duplicate sample silently
-                # over-weights the prompt, while a missing one is reported.
-                remaining[unreadable] -= 1
-            else:
-                missing.append(SampleUpload(media=asset, identifier=identifier))
-
-        return missing
+        return Counter({k: v for k, v in intended.items() if v > 0})
 
     def retry_missing(
         self,
@@ -440,14 +380,14 @@ class BenchmarkParticipant:
         identifiers: list[str],
         data_type: Literal["media", "text"] = "media",
     ) -> tuple[list[str], list[FailedUpload[SampleUpload]]]:
-        """Upload only the samples the server does not already have.
+        """Upload the samples the server is still missing.
 
-        Diffs the intended media/identifier pairs against the participant's
-        samples on the server and re-uploads just the difference. Verifying
-        before re-uploading is what makes this safe to call after a failed run:
-        a request can time out *after* the sample was persisted, so retrying
-        blindly would give the identifier a second sample and over-weight that
-        prompt in matchup sampling.
+        Asks the server which identifiers are short, then re-sends every asset
+        belonging to those identifiers. The backend rejects any sample the
+        participant already holds, so the ones that did land are skipped without
+        being duplicated — which is what makes this safe to call repeatedly. It
+        also means the client never has to work out *which* asset of an identifier
+        is the missing one; the server decides.
 
         Assets that already uploaded are served from the local upload cache, so
         recovering a run is typically far quicker than the original upload.
@@ -459,19 +399,43 @@ class BenchmarkParticipant:
 
         Returns:
             tuple[list[str], list[FailedUpload[SampleUpload]]]: The identifiers
-            uploaded by this call, and any that still failed.
+            uploaded across all rounds, and any that still failed on the last one.
         """
+        if len(assets) != len(identifiers):
+            raise ValueError("Assets and identifiers must have the same length")
+
         with tracer.start_as_current_span("BenchmarkParticipant.retry_missing"):
-            missing = self.missing_samples(assets, identifiers, data_type=data_type)
+            successful: list[str] = []
+            failed: list[FailedUpload[SampleUpload]] = []
 
-            if not missing:
-                logger.info("All samples are present on the server, nothing to retry")
-                return [], []
+            for _ in range(rapidata_config.upload.maxRetries):
+                short = self.missing_counts(identifiers)
+                if not short:
+                    break
 
-            logger.info("Re-uploading %s missing sample(s)", len(missing))
+                outstanding = sum(short.values())
+                logger.info(
+                    "%s sample(s) missing across %s identifier(s); re-uploading",
+                    outstanding,
+                    len(short),
+                )
 
-            return self.upload_media(
-                [sample.media for sample in missing],
-                [sample.identifier for sample in missing],
-                data_type=data_type,
-            )
+                pairs = [
+                    (asset, identifier)
+                    for asset, identifier in zip(assets, identifiers)
+                    if identifier in short
+                ]
+
+                round_successful, failed = self.upload_media(
+                    [asset for asset, _ in pairs],
+                    [identifier for _, identifier in pairs],
+                    data_type=data_type,
+                )
+                successful.extend(round_successful)
+
+                # Stop once a round stops closing the gap, so a sample the server
+                # keeps refusing cannot spin here.
+                if sum(self.missing_counts(identifiers).values()) >= outstanding:
+                    break
+
+            return successful, failed

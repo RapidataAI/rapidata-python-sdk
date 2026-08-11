@@ -1,9 +1,10 @@
-"""Tests for the server-diff recovery path on a benchmark participant.
+"""Tests for the recovery path on a benchmark participant.
 
-`retry_missing` exists so a partially-failed upload can be finished without
-re-sending samples the server already has: a request can time out *after* the
-sample was persisted, and a blind retry would give that identifier a second
-sample and over-weight the prompt in matchup sampling.
+Deduplication lives in the backend: it rejects a sample the participant already
+holds for an identifier and asset. That lets the client stay simple — ask which
+identifiers are short, re-send everything belonging to them, and let the server
+turn away the ones that already landed. The client never has to work out *which*
+asset of an identifier is the missing one.
 """
 
 from __future__ import annotations
@@ -15,6 +16,8 @@ from rapidata.rapidata_client.benchmark.participant.participant import (
     BenchmarkParticipant,
 )
 from rapidata.rapidata_client.benchmark.participant.sample_upload import SampleUpload
+from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
+from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
 
 
 def _participant() -> BenchmarkParticipant:
@@ -26,34 +29,12 @@ def _participant() -> BenchmarkParticipant:
     )
 
 
-def _file_sample(identifier: str, original_filename: str) -> MagicMock:
-    """A server sample for an uploaded local file."""
-    metadata = {
-        "originalFilename": MagicMock(
-            actual_instance=MagicMock(original_filename=original_filename)
-        )
-    }
-    asset = MagicMock(actual_instance=MagicMock(text=None, metadata=metadata))
-    return MagicMock(actual_instance=MagicMock(identifier=identifier, asset=asset))
-
-
-def _url_sample(identifier: str, url: str) -> MagicMock:
-    """A server sample for an asset ingested from a remote URL."""
-    metadata = {"sourceUrl": MagicMock(actual_instance=MagicMock(url=url))}
-    asset = MagicMock(actual_instance=MagicMock(text=None, metadata=metadata))
-    return MagicMock(actual_instance=MagicMock(identifier=identifier, asset=asset))
-
-
-def _unreadable_sample(identifier: str) -> MagicMock:
-    """A server sample whose asset shape yields no comparable key."""
-    asset = MagicMock(actual_instance=MagicMock(text=None, metadata=None))
-    return MagicMock(actual_instance=MagicMock(identifier=identifier, asset=asset))
-
-
-def _page(samples: list[MagicMock], total_pages: int) -> MagicMock:
+def _page(identifiers: list[str], total_pages: int | None) -> MagicMock:
     page = MagicMock()
     page.total_pages = total_pages
-    page.items = samples
+    page.items = [
+        MagicMock(actual_instance=MagicMock(identifier=i)) for i in identifiers
+    ]
     return page
 
 
@@ -69,17 +50,11 @@ def test_pages_within_the_server_page_limit():
     # The backend rejects a page_size above its MaxPageSize (100) instead of
     # clamping it, so every page request must stay at or below that.
     participant = _participant()
-    samples_get = _serve(
-        participant,
-        [
-            _page([_file_sample("a", "a.jpg"), _file_sample("b", "b.jpg")], 2),
-            _page([_file_sample("b", "b2.jpg")], 2),
-        ],
-    )
+    samples_get = _serve(participant, [_page(["a", "b"], 2), _page(["b"], 2)])
 
-    counts = participant._uploaded_sample_keys()
+    counts = participant._uploaded_identifier_counts()
 
-    assert counts == Counter({("a", "a.jpg"): 1, ("b", "b.jpg"): 1, ("b", "b2.jpg"): 1})
+    assert counts == Counter({"a": 1, "b": 2})
     assert [c.kwargs["page"] for c in samples_get.call_args_list] == [1, 2]
     for call in samples_get.call_args_list:
         assert call.kwargs["page_size"] <= 100
@@ -87,124 +62,104 @@ def test_pages_within_the_server_page_limit():
 
 def test_raises_when_total_pages_missing():
     participant = _participant()
-    _serve(participant, [_page([_file_sample("a", "a.jpg")], None)])
+    _serve(participant, [_page(["a"], None)])
 
     try:
-        participant._uploaded_sample_keys()
+        participant._uploaded_identifier_counts()
     except ValueError as e:
         assert "total_pages" in str(e)
     else:
         raise AssertionError("expected a ValueError when total_pages is None")
 
 
-def test_missing_samples_returns_only_absent_pairs():
+def test_missing_counts_reports_the_shortfall_per_identifier():
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "a.jpg"): 1, ("c", "c.jpg"): 1})
+    participant._uploaded_identifier_counts = MagicMock(
+        return_value=Counter({"a": 1, "b": 2})
     )
 
-    missing = participant.missing_samples(["a.jpg", "b.jpg", "c.jpg"], ["a", "b", "c"])
+    # Three samples intended for "a", two for "b", one for "c".
+    missing = participant.missing_counts(["a", "a", "a", "b", "b", "c"])
 
-    assert missing == [SampleUpload(media="b.jpg", identifier="b")]
+    assert missing == Counter({"a": 2, "c": 1})
 
 
-def test_missing_samples_identifies_which_asset_is_absent():
-    # The regression this guards: with several distinct assets under one
-    # identifier, counting samples per identifier says only "one of three
-    # landed" — not which. Matching on the asset re-uploads the right one.
+def test_missing_counts_is_empty_when_everything_is_present():
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "a2.jpg"): 1})
+    participant._uploaded_identifier_counts = MagicMock(
+        return_value=Counter({"a": 2, "b": 1})
     )
 
-    missing = participant.missing_samples(
-        ["a1.jpg", "a2.jpg", "a3.jpg"], ["a", "a", "a"]
-    )
-
-    assert missing == [
-        SampleUpload(media="a1.jpg", identifier="a"),
-        SampleUpload(media="a3.jpg", identifier="a"),
-    ]
+    assert participant.missing_counts(["a", "a", "b"]) == Counter()
 
 
-def test_missing_samples_matches_local_files_by_basename():
-    # The server reports a local upload as its bare originalFilename, so the
-    # caller's directory prefix must not defeat the match.
+def test_missing_counts_ignores_extra_server_samples():
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "1.png"): 1})
-    )
+    participant._uploaded_identifier_counts = MagicMock(return_value=Counter({"a": 5}))
 
-    assert participant.missing_samples(["run/a/1.png"], ["a"]) == []
+    assert participant.missing_counts(["a"]) == Counter()
 
 
-def test_missing_samples_matches_urls_verbatim():
+def test_already_present_sample_counts_as_uploaded():
+    # The backend's 409 is the success case for a retry, not a failure — and it
+    # must not be retried, since re-sending would only be rejected again.
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "https://host/1.png"): 1})
+    participant._asset_uploader = MagicMock()
+    participant._asset_uploader.build_asset_input.return_value = (
+        AssetMapper.create_text_input("content")
     )
+    sample_post = (
+        participant._openapi_service.leaderboard.participant_api.participant_participant_id_sample_post
+    )
+    sample_post.side_effect = RapidataError(status_code=409, message="already exists")
 
-    assert participant.missing_samples(["https://host/1.png"], ["a"]) == []
+    failure = participant._process_single_sample_upload("a.jpg", "a")
+
+    assert failure is None
+    assert sample_post.call_count == 1
 
 
-def test_missing_samples_matches_text_by_content():
+def test_other_errors_still_fail_after_retries():
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "some text"): 1})
+    participant._asset_uploader = MagicMock()
+    participant._asset_uploader.build_asset_input.return_value = (
+        AssetMapper.create_text_input("content")
     )
+    sample_post = (
+        participant._openapi_service.leaderboard.participant_api.participant_participant_id_sample_post
+    )
+    sample_post.side_effect = RapidataError(status_code=500, message="boom")
 
-    assert participant.missing_samples(["some text"], ["a"], data_type="text") == []
+    failure = participant._process_single_sample_upload("a.jpg", "a")
+
+    assert failure is not None
+    assert failure.item == SampleUpload(media="a.jpg", identifier="a")
+    assert sample_post.call_count > 1
 
 
-def test_missing_samples_counts_a_repeated_asset_individually():
-    # The same media supplied twice for one identifier needs two samples.
+def test_retry_missing_resends_every_asset_of_a_short_identifier():
+    # The client cannot tell which of an identifier's assets is missing, so it
+    # sends them all and lets the backend reject the ones already there.
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "a1.jpg"): 1})
+    participant.missing_counts = MagicMock(
+        side_effect=[Counter({"a": 1}), Counter(), Counter()]
+    )
+    participant.upload_media = MagicMock(return_value=(["a", "a"], []))
+
+    successful, failed = participant.retry_missing(
+        ["a1.jpg", "a2.jpg", "b1.jpg"], ["a", "a", "b"]
     )
 
-    missing = participant.missing_samples(["a1.jpg", "a1.jpg"], ["a", "a"])
+    args, _ = participant.upload_media.call_args
+    assert args[0] == ["a1.jpg", "a2.jpg"]
+    assert args[1] == ["a", "a"]
+    assert successful == ["a", "a"]
+    assert failed == []
 
-    assert missing == [SampleUpload(media="a1.jpg", identifier="a")]
 
-
-def test_missing_samples_treats_unreadable_server_assets_as_present():
-    # Better to leave a sample unsent and report it than to duplicate one: a
-    # duplicate silently over-weights the prompt in matchup sampling.
+def test_retry_missing_skips_upload_when_nothing_is_short():
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", None): 1})
-    )
-
-    assert participant.missing_samples(["a1.jpg"], ["a"]) == []
-
-
-def test_missing_samples_empty_when_server_has_everything():
-    participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "1.jpg"): 1, ("a", "2.jpg"): 1, ("b", "3.jpg"): 1})
-    )
-
-    assert (
-        participant.missing_samples(["1.jpg", "2.jpg", "3.jpg"], ["a", "a", "b"]) == []
-    )
-
-
-def test_server_asset_key_reads_each_asset_shape():
-    key = BenchmarkParticipant._server_asset_key
-    assert key(_file_sample("a", "a.jpg").actual_instance.asset) == "a.jpg"
-    assert key(_url_sample("a", "https://h/a.jpg").actual_instance.asset) == (
-        "https://h/a.jpg"
-    )
-    assert key(_unreadable_sample("a").actual_instance.asset) is None
-    assert key(None) is None
-
-
-def test_retry_missing_skips_upload_when_nothing_is_missing():
-    participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "a.jpg"): 1})
-    )
+    participant.missing_counts = MagicMock(return_value=Counter())
     participant.upload_media = MagicMock()
 
     successful, failed = participant.retry_missing(["a.jpg"], ["a"])
@@ -214,23 +169,19 @@ def test_retry_missing_skips_upload_when_nothing_is_missing():
     assert failed == []
 
 
-def test_retry_missing_reuploads_only_the_difference():
+def test_retry_missing_stops_when_a_round_makes_no_progress():
+    # A sample the server keeps refusing must not spin here.
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(
-        return_value=Counter({("a", "a.jpg"): 1})
-    )
-    participant.upload_media = MagicMock(return_value=(["b"], []))
+    participant.missing_counts = MagicMock(return_value=Counter({"a": 1}))
+    participant.upload_media = MagicMock(return_value=([], []))
 
-    participant.retry_missing(["a.jpg", "b.jpg"], ["a", "b"])
+    participant.retry_missing(["a.jpg"], ["a"])
 
-    args, _ = participant.upload_media.call_args
-    assert args[0] == ["b.jpg"]
-    assert args[1] == ["b"]
+    assert participant.upload_media.call_count == 1
 
 
 def test_retry_missing_rejects_mismatched_lengths():
     participant = _participant()
-    participant._uploaded_sample_keys = MagicMock(return_value=Counter())
 
     try:
         participant.retry_missing(["a.jpg", "b.jpg"], ["a"])

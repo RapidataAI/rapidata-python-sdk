@@ -160,26 +160,27 @@ diffs the intended samples against what the server actually holds and
 re-uploads only the difference.
 
 Anything still missing afterwards is logged with its reason and backend trace
-id. To ask which pairs those are, compare your intended lists against the
+id. To ask what is outstanding, compare your intended prompts against the
 server:
 
 ```python
 participant = benchmark.add_model(name="MyAIModel_v2.1", media=media, prompts=prompts)
 
-for sample in participant.missing_samples(media, prompts):
-    print(sample.identifier, sample.media)
+for identifier, count in participant.missing_counts(prompts).items():
+    print(identifier, "is short", count, "sample(s)")
 ```
 
 You can run the same recovery yourself at any time — pass the *full* intended
-lists, not just the failures. It re-uploads only what the server is missing:
+lists, not just the failures:
 
 ```python
 successful, still_failed = participant.retry_missing(media, prompts)
 ```
 
-Checking the server before re-uploading is what makes this safe to repeat: a
-request can time out *after* the sample was stored, so a blind retry would give
-that prompt a second sample and over-weight it in matchup sampling.
+This is safe to repeat. The server rejects a sample the participant already
+holds, so re-sending a prompt's media cannot give it a second copy and
+over-weight it in matchup sampling — which is also why the SDK never has to work
+out which of a prompt's media is the missing one.
 
 If the connection itself is the bottleneck, lower the concurrency — a saturated
 uplink produces timeouts, not throughput:

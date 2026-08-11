@@ -789,8 +789,8 @@ class RapidataBenchmark:
         If any sample fails to upload, a recovery sweep runs automatically: the
         intended samples are diffed against what the server actually holds and
         only the difference is re-uploaded. Anything still missing afterwards is
-        logged with its reason; `participant.missing_samples(media, identifiers)`
-        reports which pairs they are.
+        logged with its reason; `participant.missing_counts(identifiers)` reports
+        how many samples each identifier is still short.
 
         Args:
             name: The name of the model.
@@ -897,8 +897,8 @@ class RapidataBenchmark:
                     logger.warning(
                         "Some uploads failed. The model evaluation may be incomplete. "
                         "Call `participant.retry_missing(media, identifiers)` to try "
-                        "again, or `participant.missing_samples(media, identifiers)` "
-                        "to see which pairs are still absent."
+                        "again, or `participant.missing_counts(identifiers)` to see "
+                        "which identifiers are still short."
                     )
 
                 if len(successful_uploads) == 0:
