@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from rapidata.api_client.api.benchmark_api import BenchmarkApi
     from rapidata.api_client.api.participant_api import ParticipantApi
     from rapidata.api_client.api.prompt_api import PromptApi
+    from rapidata.api_client.api.sample_api import SampleApi
     from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
 
 
@@ -17,6 +18,7 @@ class LeaderboardService:
         self._benchmark_api: BenchmarkApi | None = None
         self._participant_api: ParticipantApi | None = None
         self._prompt_api: PromptApi | None = None
+        self._sample_api: SampleApi | None = None
 
     @property
     def leaderboard_api(self) -> LeaderboardApi:
@@ -49,3 +51,11 @@ class LeaderboardService:
 
             self._prompt_api = PromptApi(self._api_client)
         return self._prompt_api
+
+    @property
+    def sample_api(self) -> SampleApi:
+        if self._sample_api is None:
+            from rapidata.api_client.api.sample_api import SampleApi
+
+            self._sample_api = SampleApi(self._api_client)
+        return self._sample_api

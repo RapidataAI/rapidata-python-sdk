@@ -49,7 +49,7 @@ from .rapidata_client import (
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
-# --- GENERATED SETTINGS IMPORTS END ---
+    # --- GENERATED SETTINGS IMPORTS END ---
     CountryFilter,
     LanguageFilter,
     NotFilter,
@@ -70,6 +70,7 @@ from .rapidata_client import (
     ContextManager,
     FailedUploadException,
     FailedUpload,
+    SampleUpload,
     rapidata_config,
     logger,
     managed_print,

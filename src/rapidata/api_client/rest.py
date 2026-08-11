@@ -13,6 +13,7 @@
 import io
 import json
 import logging
+import random
 import re
 import time
 from typing import Dict, Optional
@@ -26,10 +27,23 @@ from rapidata.api_client.exceptions import ApiException, ApiValueError
 _logger = logging.getLogger("rapidata.api_client")
 _TRANSIENT_RETRY_MAX_ATTEMPTS = 3
 _TRANSIENT_RETRY_BASE_DELAY = 0.5
+_TRANSIENT_RETRY_MAX_DELAY = 30.0
 # 429 = rate limit, 502/503/504 = transient upstream / gateway errors.
 # All five are safe to retry with exponential backoff.
 _RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 _RETRY_AFTER_MAX_SECONDS = 60.0
+
+
+def _backoff_delay(attempt: int) -> float:
+    """Exponential backoff with equal jitter, in seconds.
+
+    A saturated uplink fails many concurrent requests at once; without the
+    jitter they all retry in lockstep and recreate the congestion that caused
+    the failure.
+    """
+    ceiling = min(_TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt), _TRANSIENT_RETRY_MAX_DELAY)
+    half = ceiling / 2
+    return half + random.uniform(0, half)
 
 
 class RESTResponse(io.IOBase):
@@ -228,7 +242,7 @@ class RESTClientObject:
                 # (common for 429). Fall back to exponential backoff.
                 delay = self._retry_after_from_response(r)
                 if delay is None:
-                    delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
+                    delay = _backoff_delay(attempt)
                 _logger.warning(
                     "Server error on %s %s (attempt %d/%d): %d. Retrying in %.1fs...",
                     method, url, attempt + 1, _TRANSIENT_RETRY_MAX_ATTEMPTS + 1,
@@ -347,7 +361,7 @@ class RESTClientObject:
             )
 
         if self._is_retryable_error(error) and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS:
-            delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
+            delay = _backoff_delay(attempt)
             _logger.warning(
                 "Transient network error on %s %s (attempt %d/%d): %s. Retrying in %.1fs...",
                 method, url, attempt + 1, _TRANSIENT_RETRY_MAX_ATTEMPTS + 1,

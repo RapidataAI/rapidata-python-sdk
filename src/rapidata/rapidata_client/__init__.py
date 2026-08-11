@@ -28,6 +28,7 @@ from .selection import (
     EffortSelection,
 )
 from .benchmark.prompt_metadata import Origin, Tag
+from .benchmark.participant.sample_upload import SampleUpload
 from .datapoints import Datapoint
 from .context import ContextManager
 from .datapoints.metadata import (
