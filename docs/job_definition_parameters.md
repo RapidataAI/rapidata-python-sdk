@@ -438,7 +438,9 @@ job_definition = client.job.create_free_text_job_definition(
 |-----------|------|-------------|
 | `comparison_budget_per_ranking` | `int` | Number of pairwise matchups collected per ranking (per inner list of `datapoints`) |
 | `responses_per_comparison` | `int` | Number of responses collected per matchup (default `1`) — replaces `responses_per_datapoint` |
-| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints |
+| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints. Only applies to rankings with more than 10 datapoints |
+
+Rankings with more than 10 datapoints pick matchups adaptively (Elo-style) within the comparison budget. Rankings with 10 or fewer datapoints compare every unique pair instead, spreading the budget evenly across the pairs — the total is rounded down to a multiple of the number of pairs, and every pair is compared at least once even if the budget is smaller than the number of pairs.
 
 ```python
 job_definition = client.job.create_ranking_job_definition(
