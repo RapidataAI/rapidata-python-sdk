@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.10.1600-35a2676"
+    "version": "2026.08.11.1359-4548577"
   },
   "servers": [
     {
@@ -42233,6 +42233,9 @@
             "$ref": "#/components/schemas/ICampaignFilterDeviceFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterDspFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
           },
           {
@@ -42265,6 +42268,7 @@
             "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
             "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
             "DeviceFilter": "#/components/schemas/ICampaignFilterDeviceFilter",
+            "DspFilter": "#/components/schemas/ICampaignFilterDspFilter",
             "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
             "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
             "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
@@ -42442,6 +42446,26 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/DeviceType"
+            }
+          }
+        }
+      },
+      "ICampaignFilterDspFilter": {
+        "required": [
+          "dspNames",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DspFilter"
+            ],
+            "type": "string"
+          },
+          "dspNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }

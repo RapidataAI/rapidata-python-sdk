@@ -23,19 +23,19 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IUserFilterOrUserFilter(LazyValidatedModel):
+class ICampaignFilterDspFilter(LazyValidatedModel):
     """
-    IUserFilterOrUserFilter
+    ICampaignFilterDspFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    filters: List[IUserFilter]
-    __properties: ClassVar[List[str]] = ["_t", "filters"]
+    dsp_names: List[StrictStr] = Field(alias="dspNames")
+    __properties: ClassVar[List[str]] = ["_t", "dspNames"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OrFilter']):
-            raise ValueError("must be one of enum values ('OrFilter')")
+        if value not in set(['DspFilter']):
+            raise ValueError("must be one of enum values ('DspFilter')")
         return value
 
     # model_config is inherited from LazyValidatedModel
@@ -52,7 +52,7 @@ class IUserFilterOrUserFilter(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of IUserFilterOrUserFilter from a JSON string"""
+        """Create an instance of ICampaignFilterDspFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,18 +73,11 @@ class IUserFilterOrUserFilter(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of IUserFilterOrUserFilter from a dict"""
+        """Create an instance of ICampaignFilterDspFilter from a dict"""
         if obj is None:
             return None
 
@@ -93,7 +86,7 @@ class IUserFilterOrUserFilter(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "filters": [IUserFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+            "dspNames": obj.get("dspNames")
         }
         try:
             _obj = cls.model_validate(_data)
@@ -101,7 +94,4 @@ class IUserFilterOrUserFilter(LazyValidatedModel):
             _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
-from rapidata.api_client.models.i_user_filter import IUserFilter
-# TODO: Rewrite to not use raise_errors
-IUserFilterOrUserFilter.model_rebuild(raise_errors=False)
 
