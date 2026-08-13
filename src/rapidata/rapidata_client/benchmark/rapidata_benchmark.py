@@ -39,6 +39,10 @@ if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
 
 
+# A batch-wide failure would otherwise print one full error block per sample.
+_MAX_REPORTED_FAILURES = 5
+
+
 class RapidataBenchmark:
     """
     An instance of a Rapidata benchmark.
@@ -892,8 +896,13 @@ class RapidataBenchmark:
                 )
 
                 if failed_uploads:
-                    for failure in failed_uploads:
+                    for failure in failed_uploads[:_MAX_REPORTED_FAILURES]:
                         logger.error(failure.format_error_details())
+                    if len(failed_uploads) > _MAX_REPORTED_FAILURES:
+                        logger.error(
+                            "... and %s more failed upload(s). Enable INFO logging to see each one.",
+                            len(failed_uploads) - _MAX_REPORTED_FAILURES,
+                        )
                     logger.warning(
                         "Some uploads failed. The model evaluation may be incomplete. "
                         "Call `participant.retry_missing(media, identifiers)` to try "
