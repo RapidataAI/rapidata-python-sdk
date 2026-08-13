@@ -239,7 +239,9 @@ class BenchmarkParticipant:
                     )
                     time.sleep(retry_delay)
 
-        logger.error(f"Upload failed for {identifier}. Error: {str(last_exception)}")
+        # Not the last word on this sample: callers sweep with `retry_missing` and then
+        # report whatever is still short, so an error here double-counts recoveries.
+        logger.info("Upload failed for %s. Error: %s", identifier, last_exception)
         return FailedUpload.from_exception(
             SampleUpload(media=asset, identifier=identifier), last_exception
         )

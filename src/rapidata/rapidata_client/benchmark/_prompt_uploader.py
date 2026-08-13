@@ -101,9 +101,9 @@ class BenchmarkPromptUploader:
                 self.upload(prompt)
             except Exception as e:
                 failures[prompt.identifier] = e
-                logger.error(
-                    "Failed to upload prompt %s: %s", prompt.identifier, str(e)
-                )
+                # The post-batch summary below reports every failed identifier, so an
+                # error per prompt only duplicates it once a whole batch goes bad.
+                logger.info("Failed to upload prompt %s: %s", prompt.identifier, str(e))
             finally:
                 otel_context.detach(token)
 
