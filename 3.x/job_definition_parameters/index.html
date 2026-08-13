@@ -2807,10 +2807,11 @@
 <tr>
 <td><code>random_comparisons_ratio</code></td>
 <td><code>float</code></td>
-<td>Ratio of random matchups to total matchups (default <code>0.5</code>); the rest are close matchups between similarly-rated datapoints</td>
+<td>Ratio of random matchups to total matchups (default <code>0.5</code>); the rest are close matchups between similarly-rated datapoints. Only applies to rankings with more than 10 datapoints</td>
 </tr>
 </tbody>
 </table>
+<p>Rankings with more than 10 datapoints pick matchups adaptively (Elo-style) within the comparison budget. Rankings with 10 or fewer datapoints compare every unique pair instead, spreading the budget evenly across the pairs — the total is rounded down to a multiple of the number of pairs, and every pair is compared at least once even if the budget is smaller than the number of pairs.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_ranking_job_definition</span><span class="p">(</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Ranking"</span><span class="p">,</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image looks better?"</span><span class="p">,</span>

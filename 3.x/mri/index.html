@@ -1455,6 +1455,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#3c-recovering-a-partial-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3c. Recovering a Partial Upload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#4-matchmaking-and-ranking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1685,6 +1696,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#3c-recovering-a-partial-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3c. Recovering a Partial Upload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#4-matchmaking-and-ranking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1892,10 +1914,37 @@ one — pass <code>audience_id</code>:</p>
 </span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Or submit all unsubmitted participants at once</span>
 </span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="n">benchmark</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></code></pre></div>
+<h3 id="3c-recovering-a-partial-upload">3c. Recovering a Partial Upload<a class="headerlink" href="#3c-recovering-a-partial-upload" title="Permanent link">#</a></h3>
+<p>Large uploads over a slow or flaky connection can leave individual samples
+behind. <code>add_model</code> already handles the common case: if any sample fails, it
+diffs the intended samples against what the server actually holds and
+re-uploads only the difference.</p>
+<p>Anything still missing afterwards is logged with its reason and backend trace
+id. To ask what is outstanding, compare your intended prompts against the
+server:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"MyAIModel_v2.1"</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="n">media</span><span class="p">,</span> <span class="n">prompts</span><span class="o">=</span><span class="n">prompts</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">for</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">participant</span><span class="o">.</span><span class="n">missing_counts</span><span class="p">(</span><span class="n">prompts</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="s2">"is short"</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="s2">"sample(s)"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>You can run the same recovery yourself at any time — pass the <em>full</em> intended
+lists, not just the failures:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">successful</span><span class="p">,</span> <span class="n">still_failed</span> <span class="o">=</span> <span class="n">participant</span><span class="o">.</span><span class="n">retry_missing</span><span class="p">(</span><span class="n">media</span><span class="p">,</span> <span class="n">prompts</span><span class="p">)</span>
+</span></code></pre></div>
+<p>This is safe to repeat. The server rejects a sample the participant already
+holds, so re-sending a prompt's media cannot give it a second copy and
+over-weight it in matchup sampling — which is also why the SDK never has to work
+out which of a prompt's media is the missing one.</p>
+<p>If the connection itself is the bottleneck, lower the concurrency — a saturated
+uplink produces timeouts, not throughput:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidata_config</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">rapidata_config</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">maxWorkers</span> <span class="o">=</span> <span class="mi">8</span>
+</span></code></pre></div>
 <p>You can also inspect existing participants:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all participants</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">:</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all participants</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">:</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="4-matchmaking-and-ranking">4. Matchmaking and Ranking<a class="headerlink" href="#4-matchmaking-and-ranking" title="Permanent link">#</a></h3>
 <p>MRI creates fair comparisons by:</p>
@@ -1913,29 +1962,29 @@ one — pass <code>audience_id</code>:</p>
 </ul>
 <h3 id="retrieving-existing-benchmarks">Retrieving Existing Benchmarks<a class="headerlink" href="#retrieving-existing-benchmarks" title="Permanent link">#</a></h3>
 <p>You can retrieve benchmarks by ID or search for them:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get a specific benchmark by ID</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">get_benchmark_by_id</span><span class="p">(</span><span class="s2">"benchmark_id_here"</span><span class="p">)</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Find benchmarks by name</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">recent_benchmarks</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">find_benchmarks</span><span class="p">(</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"AI Art"</span><span class="p">,</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">amount</span><span class="o">=</span><span class="mi">10</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Get a specific benchmark by ID</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">benchmark</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">get_benchmark_by_id</span><span class="p">(</span><span class="s2">"benchmark_id_here"</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Find benchmarks by name</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">recent_benchmarks</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">mri</span><span class="o">.</span><span class="n">find_benchmarks</span><span class="p">(</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"AI Art"</span><span class="p">,</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">amount</span><span class="o">=</span><span class="mi">10</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="retrieving-results">Retrieving Results<a class="headerlink" href="#retrieving-results" title="Permanent link">#</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Get the leaderboard</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">leaderboards</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Get the standings</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">standings</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_standings</span><span class="p">()</span> <span class="c1"># Returns a pandas dataframe</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get the leaderboard</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">leaderboards</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Get the standings</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">standings</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_standings</span><span class="p">()</span> <span class="c1"># Returns a pandas dataframe</span>
 </span></code></pre></div>
 <p>Every model evaluation on a leaderboard is carried out by a <strong>job</strong>. The <code>jobs</code>
 property exposes those jobs so you can drill into the raw comparison results
 behind the standings:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># All jobs that have run for this leaderboard (most recent first)</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">())</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># RapidataResults for that evaluation</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># All jobs that have run for this leaderboard (most recent first)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">())</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># RapidataResults for that evaluation</span>
 </span></code></pre></div>
 <p>Each entry is a full <code>RapidataJob</code>, so the usual methods (<code>get_results()</code>,
 <code>get_status()</code>, <code>view()</code>, ...) are available. See

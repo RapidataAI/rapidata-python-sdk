@@ -1484,7 +1484,7 @@
 <ol>
 <li>The global audience (id <code>global</code>) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a ranking job to any audience — browse them in the <a href="https://app.rapidata.ai/audiences">Rapidata Dashboard</a>.</li>
 <li>The outer list defines independent rankings; each inner list is the set of datapoints ranked against each other. Here, this is a single ranking over all rabbits.</li>
-<li>The number of matchups collected per ranking. More comparisons make the resulting order more reliable.</li>
+<li>The number of matchups collected per ranking. More comparisons make the resulting order more reliable. For rankings of 10 or fewer datapoints, the budget is spread evenly over every unique pair (rounded down to a multiple of the number of pairs).</li>
 <li>Half the comparisons are random; the rest are close matchups between similarly-rated datapoints.</li>
 </ol>
 <div class="admonition note">

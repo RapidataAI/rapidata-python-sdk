@@ -66,7 +66,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
 === "Audio"
     ```python
-    from rapidata import RapidataClient, LanguageFilter
+    from rapidata import RapidataClient
 
     client = RapidataClient()
 
@@ -88,7 +88,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
 === "Text"
     ```python
-    from rapidata import RapidataClient, LanguageFilter
+    from rapidata import RapidataClient
 
     client = RapidataClient()
 
@@ -1349,7 +1349,9 @@ job_definition = client.job.create_free_text_job_definition(
 |-----------|------|-------------|
 | `comparison_budget_per_ranking` | `int` | Number of pairwise matchups collected per ranking (per inner list of `datapoints`) |
 | `responses_per_comparison` | `int` | Number of responses collected per matchup (default `1`) — replaces `responses_per_datapoint` |
-| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints |
+| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints. Only applies to rankings with more than 10 datapoints |
+
+Rankings with more than 10 datapoints pick matchups adaptively (Elo-style) within the comparison budget. Rankings with 10 or fewer datapoints compare every unique pair instead, spreading the budget evenly across the pairs — the total is rounded down to a multiple of the number of pairs, and every pair is compared at least once even if the budget is smaller than the number of pairs.
 
 ```python
 job_definition = client.job.create_ranking_job_definition(
@@ -3215,7 +3217,7 @@ print(results)
 
 1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a ranking job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 2. The outer list defines independent rankings; each inner list is the set of datapoints ranked against each other. Here, this is a single ranking over all rabbits.
-3. The number of matchups collected per ranking. More comparisons make the resulting order more reliable.
+3. The number of matchups collected per ranking. More comparisons make the resulting order more reliable. For rankings of 10 or fewer datapoints, the budget is spread evenly over every unique pair (rounded down to a multiple of the number of pairs).
 4. Half the comparisons are random; the rest are close matchups between similarly-rated datapoints.
 
 !!! note
@@ -3378,6 +3380,45 @@ participant.run()
 
 # Or submit all unsubmitted participants at once
 benchmark.run()
+```
+
+### 3c. Recovering a Partial Upload
+
+Large uploads over a slow or flaky connection can leave individual samples
+behind. `add_model` already handles the common case: if any sample fails, it
+diffs the intended samples against what the server actually holds and
+re-uploads only the difference.
+
+Anything still missing afterwards is logged with its reason and backend trace
+id. To ask what is outstanding, compare your intended prompts against the
+server:
+
+```python
+participant = benchmark.add_model(name="MyAIModel_v2.1", media=media, prompts=prompts)
+
+for identifier, count in participant.missing_counts(prompts).items():
+    print(identifier, "is short", count, "sample(s)")
+```
+
+You can run the same recovery yourself at any time — pass the *full* intended
+lists, not just the failures:
+
+```python
+successful, still_failed = participant.retry_missing(media, prompts)
+```
+
+This is safe to repeat. The server rejects a sample the participant already
+holds, so re-sending a prompt's media cannot give it a second copy and
+over-weight it in matchup sampling — which is also why the SDK never has to work
+out which of a prompt's media is the missing one.
+
+If the connection itself is the bottleneck, lower the concurrency — a saturated
+uplink produces timeouts, not throughput:
+
+```python
+from rapidata import rapidata_config
+
+rapidata_config.upload.maxWorkers = 8
 ```
 
 You can also inspect existing participants:
@@ -4221,15 +4262,41 @@ Other agents follow their own conventions — Cursor rules, Copilot instructions
 
 ## Keeping the skill up to date
 
-The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. Pull the latest version so your agent stays in sync.
+The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. A skill that lags behind the SDK will describe methods that have changed, so either let Claude Code update it for you or pull it yourself.
 
-**Claude Code**:
+### Automatic — Claude Code
+
+Claude Code refreshes marketplaces and updates their installed plugins in the background shortly after a session starts. This is off by default for marketplaces outside Anthropic's own, so switch it on once:
+
+`/plugin` → **Marketplaces** → `rapidata-sdk-marketplace` → **Enable auto-update**
+
+To set it for everyone on a project, commit it to `.claude/settings.json` — the same block works in your personal `~/.claude/settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "rapidata-sdk-marketplace": {
+      "source": { "source": "github", "repo": "RapidataAI/skills" },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "rapidata-sdk-plugin@rapidata-sdk-marketplace": true
+  }
+}
+```
+
+When an update lands mid-session, Claude Code asks you to run `/reload-plugins`. Otherwise it takes effect on your next launch.
+
+### Manual
+
+Claude Code:
 
 ```bash
 claude plugin marketplace update
 ```
 
-**Everything else**:
+Everything else — the `skills` CLI updates only when you ask it to:
 
 ```bash
 npx skills update rapidata

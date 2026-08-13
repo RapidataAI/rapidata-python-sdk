@@ -60,7 +60,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
 === "Audio"
     ```python
-    from rapidata import RapidataClient, LanguageFilter
+    from rapidata import RapidataClient
 
     client = RapidataClient()
 
@@ -82,7 +82,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
 === "Text"
     ```python
-    from rapidata import RapidataClient, LanguageFilter
+    from rapidata import RapidataClient
 
     client = RapidataClient()
 
