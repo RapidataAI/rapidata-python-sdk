@@ -91,10 +91,10 @@ def test_create_leaderboard_threads_all_votes_to_the_wire() -> None:
     assert leaderboard.vote_aggregation is VoteAggregation.ALL_VOTES
 
 
-def test_setter_patches_the_new_aggregation() -> None:
+def test_update_patches_the_new_aggregation() -> None:
     leaderboard = _make_leaderboard()
 
-    leaderboard.vote_aggregation = VoteAggregation.ALL_VOTES
+    leaderboard.update(vote_aggregation=VoteAggregation.ALL_VOTES)
 
     assert leaderboard.vote_aggregation is VoteAggregation.ALL_VOTES
     assert _patched_payload(leaderboard).vote_aggregation == (
@@ -102,16 +102,15 @@ def test_setter_patches_the_new_aggregation() -> None:
     )
 
 
-def test_unrelated_setters_preserve_the_aggregation() -> None:
-    """A patch that omits the field would be a no-op, but sending a stale value
-    would silently un-binarize the board."""
+def test_update_of_another_field_leaves_the_aggregation_alone() -> None:
+    """Patch semantics: omitting the field must leave the stored value alone, so an
+    unrelated update can never silently un-binarize the board."""
     leaderboard = _make_leaderboard(vote_aggregation=VoteAggregation.ALL_VOTES)
 
-    leaderboard.min_responses_per_matchup = 5
+    leaderboard.update(min_responses_per_matchup=5)
 
-    assert _patched_payload(leaderboard).vote_aggregation == (
-        VoteAggregationModel.ALLVOTES
-    )
+    assert _patched_payload(leaderboard).vote_aggregation is None
+    assert leaderboard.vote_aggregation is VoteAggregation.ALL_VOTES
 
 
 def test_unresolved_aggregation_is_fetched_once_on_read() -> None:
@@ -128,21 +127,20 @@ def test_unresolved_aggregation_is_fetched_once_on_read() -> None:
     api.leaderboard_leaderboard_id_get.assert_called_once_with(leaderboard_id="lb-1")
 
 
-def test_unrelated_setters_leave_an_unresolved_aggregation_alone() -> None:
-    """Sending a guessed value here would silently rewrite the board's setting."""
-    leaderboard = _make_leaderboard()
-
-    leaderboard.min_responses_per_matchup = 5
-
-    assert _patched_payload(leaderboard).vote_aggregation is None
-
-
-@pytest.mark.parametrize("value", ["MajorityVote", 1, None])
-def test_setter_rejects_non_enum_values(value: object) -> None:
+@pytest.mark.parametrize("value", ["MajorityVote", 1])
+def test_update_rejects_non_enum_values(value: object) -> None:
     leaderboard = _make_leaderboard()
 
     with pytest.raises(ValueError):
-        leaderboard.vote_aggregation = value  # type: ignore[assignment]
+        leaderboard.update(vote_aggregation=value)  # type: ignore[arg-type]
+
+
+def test_aggregation_is_no_longer_settable_as_an_attribute() -> None:
+    """Every mutation goes through update(); the properties are read-only."""
+    leaderboard = _make_leaderboard()
+
+    with pytest.raises(AttributeError):
+        leaderboard.vote_aggregation = VoteAggregation.ALL_VOTES  # type: ignore[misc]
 
 
 def test_round_trips_through_the_backend_model() -> None:

@@ -101,46 +101,12 @@ class RapidataLeaderboard:
         """
         return DetailMapper.get_level_of_detail(self.__response_budget)
 
-    @level_of_detail.setter
-    def level_of_detail(self, level_of_detail: LevelOfDetail | int):
-        """
-        Sets the level of detail (response budget) of the leaderboard.
-
-        Accepts one of the named levels or a positive integer for a custom response
-        budget. Takes effect for future evaluations; already-computed standings are
-        not recomputed.
-        """
-        with tracer.start_as_current_span("RapidataLeaderboard.level_of_detail.setter"):
-            logger.debug(f"Setting level of detail to {level_of_detail}")
-            self.__response_budget = DetailMapper.resolve_budget(level_of_detail)
-            self._update_config()
-
     @property
     def min_responses_per_matchup(self) -> int:
         """
         Returns the minimum number of responses required to be considered for the leaderboard.
         """
         return self.__min_responses_per_matchup
-
-    @min_responses_per_matchup.setter
-    def min_responses_per_matchup(self, min_responses: int):
-        """
-        Sets the minimum number of responses required to be considered for the leaderboard.
-        """
-        with tracer.start_as_current_span(
-            "RapidataLeaderboard.min_responses_per_matchup.setter"
-        ):
-            if not isinstance(min_responses, int):
-                raise ValueError("Min responses per matchup must be an integer")
-
-            if min_responses < 3:
-                raise ValueError("Min responses per matchup must be at least 3")
-
-            logger.debug(
-                f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
-            )
-            self.__min_responses_per_matchup = min_responses
-            self._update_config()
 
     @property
     def vote_aggregation(self) -> VoteAggregation:
@@ -166,19 +132,48 @@ class RapidataLeaderboard:
 
         return self.__vote_aggregation
 
-    @vote_aggregation.setter
-    def vote_aggregation(self, vote_aggregation: VoteAggregation):
+    def update(
+        self,
+        name: str | None = None,
+        level_of_detail: LevelOfDetail | int | None = None,
+        min_responses_per_matchup: int | None = None,
+        vote_aggregation: VoteAggregation | None = None,
+    ) -> None:
         """
-        Sets how the responses on a single matchup are aggregated.
+        Updates the leaderboard's configuration.
 
-        Standings are derived from the raw responses on every read, so switching this
-        also changes how already-collected responses are counted — no re-evaluation
-        needed.
+        Only the arguments you pass are changed; anything omitted keeps its stored
+        value.
+
+        Args:
+            name: The new name of the leaderboard. (not shown to the users)
+            level_of_detail: The new response budget — either one of the named levels ('debug', 'low', 'medium', 'high', 'very high') or a positive integer for a custom budget. Takes effect for future evaluations; already-computed standings are not recomputed.
+            min_responses_per_matchup: The new minimum number of responses collected per matchup. Must be at least 3.
+            vote_aggregation: How the responses on a single matchup are aggregated into that matchup's result. Standings are derived from the raw responses on every read, so this also changes how already-collected responses are counted — no re-evaluation needed.
         """
-        with tracer.start_as_current_span(
-            "RapidataLeaderboard.vote_aggregation.setter"
-        ):
-            if not isinstance(vote_aggregation, VoteAggregation):
+        with tracer.start_as_current_span("RapidataLeaderboard.update"):
+            if name is not None and (not isinstance(name, str) or len(name) < 1):
+                raise ValueError("Name must be a string of at least 1 character")
+
+            response_budget = (
+                DetailMapper.resolve_budget(level_of_detail)
+                if level_of_detail is not None
+                else None
+            )
+
+            if min_responses_per_matchup is not None:
+                # bool is an int subclass — reject it so `True` isn't read as 1.
+                if isinstance(min_responses_per_matchup, bool) or not isinstance(
+                    min_responses_per_matchup, int
+                ):
+                    raise ValueError("Min responses per matchup must be an integer")
+
+                if min_responses_per_matchup < 3:
+                    raise ValueError("Min responses per matchup must be at least 3")
+
+            if vote_aggregation is not None and not isinstance(
+                vote_aggregation, VoteAggregation
+            ):
                 raise ValueError(
                     "Vote aggregation must be one of: "
                     + ", ".join(
@@ -186,11 +181,37 @@ class RapidataLeaderboard:
                     )
                 )
 
-            logger.debug(
-                f"Setting vote aggregation to {vote_aggregation.name} for leaderboard {self.name}"
+            logger.info(
+                "Updating leaderboard %s with name %s, response_budget %s, min_responses_per_matchup %s, vote_aggregation %s",
+                self.id,
+                name,
+                response_budget,
+                min_responses_per_matchup,
+                vote_aggregation.name if vote_aggregation is not None else None,
             )
-            self.__vote_aggregation = vote_aggregation
-            self._update_config()
+
+            self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_patch(
+                leaderboard_id=self.id,
+                update_leaderboard_endpoint_input=UpdateLeaderboardEndpointInput(
+                    name=name,
+                    responseBudget=response_budget,
+                    minResponses=min_responses_per_matchup,
+                    voteAggregation=(
+                        vote_aggregation._to_backend_model()
+                        if vote_aggregation is not None
+                        else None
+                    ),
+                ),
+            )
+
+            if name is not None:
+                self.__name = name
+            if response_budget is not None:
+                self.__response_budget = response_budget
+            if min_responses_per_matchup is not None:
+                self.__min_responses_per_matchup = min_responses_per_matchup
+            if vote_aggregation is not None:
+                self.__vote_aggregation = vote_aggregation
 
     @property
     def show_prompt_asset(self) -> bool:
@@ -251,20 +272,6 @@ class RapidataLeaderboard:
         Returns the name of the leaderboard.
         """
         return self.__name
-
-    @name.setter
-    def name(self, name: str):
-        """
-        Sets the name of the leaderboard.
-        """
-        with tracer.start_as_current_span("RapidataLeaderboard.name.setter"):
-            if not isinstance(name, str):
-                raise ValueError("Name must be a string")
-            if len(name) < 1:
-                raise ValueError("Name must be at least 1 character long")
-
-            self.__name = name
-            self._update_config()
 
     @property
     def jobs(self) -> list[RapidataJob]:
@@ -409,29 +416,6 @@ class RapidataLeaderboard:
                 Fore.RED
                 + f"Please open this URL in your browser: '{encoded_url}'"
                 + Fore.RESET
-            )
-
-    def _custom_config(self, response_budget: int, min_responses_per_matchup: int):
-        self.__response_budget = response_budget
-        self.__min_responses_per_matchup = min_responses_per_matchup
-        self._update_config()
-
-    def _update_config(self):
-        with tracer.start_as_current_span("RapidataLeaderboard._update_config"):
-            self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_patch(
-                leaderboard_id=self.id,
-                update_leaderboard_endpoint_input=UpdateLeaderboardEndpointInput(
-                    name=self.__name,
-                    responseBudget=self.__response_budget,
-                    minResponses=self.__min_responses_per_matchup,
-                    # Patch semantics: omitted leaves the stored value alone, which is
-                    # what an unresolved aggregation must do.
-                    voteAggregation=(
-                        self.__vote_aggregation._to_backend_model()
-                        if self.__vote_aggregation is not None
-                        else None
-                    ),
-                ),
             )
 
     def __str__(self) -> str:
