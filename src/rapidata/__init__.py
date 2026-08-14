@@ -66,6 +66,7 @@ from .rapidata_client import (
     DeviceType,
     Tag,
     Origin,
+    VoteAggregation,
     Datapoint,
     ContextManager,
     FailedUploadException,

@@ -11,6 +11,9 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
     BenchmarkPrompt,
     BenchmarkPromptUploader,
 )
+from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
+    VoteAggregation,
+)
 from rapidata.rapidata_client.benchmark.prompt_metadata import (
     BenchmarkPromptInfo,
     Origin,
@@ -626,6 +629,7 @@ class RapidataBenchmark:
         settings: Sequence["RapidataSetting"] | None = None,
         included_tags: list[str] | None = None,
         excluded_tags: list[str] | None = None,
+        vote_aggregation: VoteAggregation = VoteAggregation.MAJORITY_VOTE,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -642,6 +646,7 @@ class RapidataBenchmark:
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
             included_tags: Restricts **which of the benchmark's prompts this leaderboard collects matchups for**: only prompts carrying at least one of these tag values are used. When empty or not specified (the default) every prompt is eligible. Note that a non-empty list drops untagged prompts. (default: None)
             excluded_tags: Prompt tag values to skip when collecting matchups. Always wins over ``included_tags`` — a prompt carrying both an included and an excluded tag is skipped. (default: None)
+            vote_aggregation: How the responses on a single matchup are aggregated into that matchup's result. :attr:`VoteAggregation.MAJORITY_VOTE` (the default) collapses each matchup to one win for the majority side, ties split 0.5/0.5, so every matchup weighs the same no matter how many responses it collected. :attr:`VoteAggregation.ALL_VOTES` counts every individual response as its own matchup, which lets heavily-answered matchups dominate the standings. Changeable afterwards via :attr:`RapidataLeaderboard.vote_aggregation`.
 
         Do not confuse either tag argument with the ``tags`` argument of
         :meth:`RapidataLeaderboard.get_standings`: that filters the standings you read
@@ -688,7 +693,7 @@ class RapidataBenchmark:
             )
 
             logger.info(
-                "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s, included_tags %s, excluded_tags %s",
+                "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s, included_tags %s, excluded_tags %s, vote_aggregation %s",
                 name,
                 instruction,
                 show_prompt,
@@ -700,6 +705,7 @@ class RapidataBenchmark:
                 settings,
                 included_tags,
                 excluded_tags,
+                vote_aggregation.name,
             )
 
             leaderboard_result = (
@@ -716,6 +722,7 @@ class RapidataBenchmark:
                         audienceId=resolved_audience_id,
                         includedTags=included_tags,
                         excludedTags=excluded_tags,
+                        voteAggregation=vote_aggregation._to_backend_model(),
                         featureFlags=(
                             [setting._to_feature_flag() for setting in settings]
                             if settings
@@ -744,6 +751,9 @@ class RapidataBenchmark:
                 self._openapi_service,
                 included_tags,
                 excluded_tags,
+                VoteAggregation._from_backend_model(
+                    leaderboard_result.vote_aggregation
+                ),
             )
 
     def evaluate_model(

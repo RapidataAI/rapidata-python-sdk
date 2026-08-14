@@ -11,6 +11,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from rapidata.api_client.models.vote_aggregation import (
+    VoteAggregation as VoteAggregationModel,
+)
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
     RapidataLeaderboard,
 )
@@ -25,6 +28,7 @@ def _make_benchmark() -> RapidataBenchmark:
     create.return_value.id = "lb-1"
     create.return_value.response_budget = 2000
     create.return_value.min_responses = 3
+    create.return_value.vote_aggregation = VoteAggregationModel.MAJORITYVOTE
     return RapidataBenchmark("bm", "bm-1", svc)
 
 
