@@ -70,6 +70,7 @@ plugins:
           - human_prompting.md
           - config.md
         Examples:
+          - examples/index.md
           - examples/classify_job.md
           - examples/compare_job.md
           - examples/locate_job.md
@@ -136,6 +137,7 @@ nav:
       - Error Handling: error_handling.md
       - Logging & Config: config.md
     - Examples:
+      - Overview: examples/index.md
       - Classification: examples/classify_job.md
       - Comparison: examples/compare_job.md
       - Locate: examples/locate_job.md
