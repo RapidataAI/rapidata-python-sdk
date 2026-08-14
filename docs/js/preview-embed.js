@@ -134,11 +134,93 @@ function initPreviewEmbed(wrapper) {
         });
     }
 
-    // Sync once in case the page loaded with a non-default tab (e.g. deep link).
-    renderIframe();
+    // A gallery of embeds would otherwise boot every rapids app at once - each
+    // one is ~40 requests and close to a megabyte - so opt-in lazy wrappers hold
+    // off until they are nearly in view. Everything else renders immediately.
+    if (wrapper.hasAttribute('data-preview-lazy')) {
+        renderWhenVisible(wrapper, renderIframe);
+    } else {
+        // Sync once in case the page loaded with a non-default tab (e.g. deep link).
+        renderIframe();
+    }
+}
+
+function renderWhenVisible(wrapper, renderIframe) {
+    if (typeof IntersectionObserver === 'undefined') {
+        renderIframe();
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+            enqueueLazyRender(wrapper, renderIframe);
+        });
+    }, { rootMargin: '150px 0px' });
+
+    observer.observe(wrapper);
+}
+
+// Several phones can enter the viewport in the same frame. Booting them at once
+// means each requests the same rapids bundle before any of them has populated
+// the HTTP cache, so the page pays for the bundle once per phone. Serialising
+// the boots lets everyone after the first read those chunks from cache.
+const lazyRenderQueue = [];
+let lazyRenderInFlight = false;
+const LAZY_SETTLE_MS = 500;
+const LAZY_MAX_WAIT_MS = 3000;
+
+function enqueueLazyRender(wrapper, renderIframe) {
+    lazyRenderQueue.push({ wrapper, renderIframe });
+    drainLazyRenderQueue();
+}
+
+function drainLazyRenderQueue() {
+    if (lazyRenderInFlight) return;
+
+    const next = lazyRenderQueue.shift();
+    if (!next) return;
+
+    lazyRenderInFlight = true;
+    next.renderIframe();
+
+    const release = () => {
+        lazyRenderInFlight = false;
+        drainLazyRenderQueue();
+    };
+
+    // renderIframe swaps in a fresh element, so the iframe to wait on is
+    // whatever is in the wrapper now.
+    const iframe = next.wrapper.querySelector('iframe.phone-preview__iframe');
+    if (!iframe) {
+        release();
+        return;
+    }
+
+    let released = false;
+    const releaseOnce = () => {
+        if (released) return;
+        released = true;
+        clearTimeout(timeout);
+        release();
+    };
+
+    iframe.addEventListener(
+        'load',
+        () => setTimeout(releaseOnce, LAZY_SETTLE_MS),
+        { once: true },
+    );
+    // A phone that never fires load must not stall the rest of the gallery.
+    const timeout = setTimeout(releaseOnce, LAZY_MAX_WAIT_MS);
 }
 
 function initAllPreviewEmbeds() {
+    // Instant navigation swaps the whole document; anything still queued belongs
+    // to the page the reader just left.
+    lazyRenderQueue.length = 0;
+    lazyRenderInFlight = false;
+
     document.querySelectorAll('[data-preview-embed]').forEach((wrapper) => {
         if (wrapper.dataset.previewEmbedInit === '1') return;
         wrapper.dataset.previewEmbedInit = '1';
