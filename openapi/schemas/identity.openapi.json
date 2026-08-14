@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.08.12.1010-860c8c8"
+    "version": "2026.08.14.1550-25bcd2c"
   },
   "servers": [
     {
@@ -1098,6 +1098,156 @@
         }
       }
     },
+    "/authorization/relations/external-app": {
+      "get": {
+        "tags": [
+          "ExternalApps"
+        ],
+        "summary": "Lists the customers holding relations on one app, one cursor page at a time.",
+        "description": "app is required: each app is a separate object in the graph, so there is no combined\n listing. Returns every relation unless relation narrows it. Follow nextCursor to page.",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "query",
+            "description": "The app whose members to list.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ExternalAppId"
+            }
+          },
+          {
+            "name": "relation",
+            "in": "query",
+            "description": "Optional relation to filter by.",
+            "schema": {
+              "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "The opaque cursor from the previous page; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetExternalAppRelationMembersEndpoint_CursorPagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ExternalApps"
+        ],
+        "summary": "Grants an external app relation to a customer.",
+        "description": "Idempotent: re-granting an existing relation is a no-op. The app must be one of the known\n values — an unrecognised app is rejected rather than written, since a grant against an object\n nothing reads would look like access was granted while conferring nothing.",
+        "requestBody": {
+          "description": "The customer, the app, and the relation to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantExternalAppRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ExternalApps"
+        ],
+        "summary": "Revokes an external app relation from a customer.",
+        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
+        "requestBody": {
+          "description": "The customer, the app, and the relation to revoke.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeExternalAppRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/identity/bridge-token": {
       "post": {
         "tags": [
@@ -1464,7 +1614,7 @@
           "Organization"
         ],
         "summary": "Creates an organization and makes the calling customer its owner.",
-        "description": "The calling customer becomes both the owner and the billing customer. Responds with 400 when\n the slug is already taken.",
+        "description": "The calling customer becomes the organization's owner. Responds with 400 when the slug is\n already taken.",
         "requestBody": {
           "description": "The organization to create.",
           "content": {
@@ -2223,22 +2373,21 @@
         }
       }
     },
-    "/organizations/{owner}/support-slack-channel": {
+    "/organizations/{organizationId}/support-slack-channel": {
       "put": {
         "tags": [
           "Organization"
         ],
-        "summary": "Sets the support Slack channel URL for the organization owned by the given customer.",
-        "description": "A null or empty URL clears the channel. Responds with 404 when no organization is owned by the given customer.",
+        "summary": "Sets the support Slack channel URL for the given organization.",
+        "description": "A null or empty URL clears the channel. Responds with 404 when no organization with the given id exists.",
         "parameters": [
           {
-            "name": "owner",
+            "name": "organizationId",
             "in": "path",
-            "description": "The customer ID that owns the organization.",
+            "description": "The id of the organization.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -2538,6 +2687,13 @@
         ],
         "description": "Relations on the singleton `bidder` object that carries global RTB access. Grants are\ndirect here and, unlike Organization, are never folded in from platform staff."
       },
+      "AuthorizationRelations_ExternalApp": {
+        "enum": [
+          "Admin",
+          "Viewer"
+        ],
+        "description": "Relations on an `external_app` object — one object per third-party app that federates\non the OIDC `groups` claim. The apps themselves are `ExternalAppId`. The ladder is hierarchical: `admin` folds into `viewer`.\nGrants are direct and, like `Bidder`, are never folded in from platform staff —\nholding platform admin must not confer administration of a separate system."
+      },
       "AuthorizationRelations_Platform": {
         "enum": [
           "Admin",
@@ -2548,7 +2704,8 @@
       "AuthorizationScope": {
         "enum": [
           "Platform",
-          "Bidder"
+          "Bidder",
+          "ExternalApp"
         ]
       },
       "Capability": {
@@ -2855,6 +3012,13 @@
         },
         "description": "The request body for dynamic client registration."
       },
+      "ExternalAppId": {
+        "enum": [
+          "ArgoCd",
+          "Grafana"
+        ],
+        "description": "                The third-party applications that federate on our OIDC `groups` claim and can therefore\n                be administered through a grant here. Each maps to an `external_app` object in the\n                authorization graph.\n                A closed enum rather than a free-form id on purpose: an arbitrary string would let a typo\nwrite a grant against an object nothing consumes, which looks like access was granted but\nsilently is not. Adding an app is a value here plus a tuple — no model change.This is the app itself; the relation vocabulary defined on these objects is\nAuthorizationRelations.ExternalApp. The Id suffix here keeps the two\ndistinguishable: a file with using static AuthorizationRelations imports that\nnested enum, and identical short names would make every bare mention ambiguous."
+      },
       "GetBidderRelationMembersEndpoint_CursorPagedResultOfOutput": {
         "required": [
           "items"
@@ -2982,6 +3146,76 @@
           }
         }
       },
+      "GetExternalAppRelationMembersEndpoint_CursorPagedResultOfOutput": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetExternalAppRelationMembersEndpoint_Output"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
+      },
+      "GetExternalAppRelationMembersEndpoint_Output": {
+        "required": [
+          "customer",
+          "email",
+          "organizationName",
+          "organizationId",
+          "scope",
+          "app",
+          "relation",
+          "grantedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer holding the relation.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the customer."
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The name of the customer's active organization."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The identifier of the customer's active organization."
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthorizationScope"
+              }
+            ],
+            "description": "The object the relation is on."
+          },
+          "app": {
+            "$ref": "#/components/schemas/ExternalAppId"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
+          },
+          "grantedAt": {
+            "type": "string",
+            "description": "When the grant was written.",
+            "format": "date-time"
+          }
+        }
+      },
       "GetOrganizationCapabilitiesEndpoint_Output": {
         "required": [
           "capabilities"
@@ -3006,7 +3240,6 @@
           "id",
           "name",
           "slug",
-          "billingCustomerId",
           "primaryDomain"
         ],
         "type": "object",
@@ -3022,11 +3255,6 @@
           "slug": {
             "type": "string",
             "description": "The URL-safe unique identifier of the organization."
-          },
-          "billingCustomerId": {
-            "type": "string",
-            "description": "The customer that owns billing for the organization.",
-            "format": "uuid"
           },
           "primaryDomain": {
             "type": "string",
@@ -3144,6 +3372,27 @@
           },
           "relation": {
             "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          }
+        }
+      },
+      "GrantExternalAppRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "app",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to grant the relation to.",
+            "format": "uuid"
+          },
+          "app": {
+            "$ref": "#/components/schemas/ExternalAppId"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
           }
         }
       },
@@ -3754,6 +4003,27 @@
           },
           "relation": {
             "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          }
+        }
+      },
+      "RevokeExternalAppRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "app",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to revoke the relation from.",
+            "format": "uuid"
+          },
+          "app": {
+            "$ref": "#/components/schemas/ExternalAppId"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
           }
         }
       },

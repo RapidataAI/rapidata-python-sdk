@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.08.12.1010-860c8c8"
+    "version": "2026.08.14.1550-25bcd2c"
   },
   "servers": [
     {
@@ -596,7 +596,11 @@
                   "end_date",
                   "-end_date",
                   "created_at",
-                  "-created_at"
+                  "-created_at",
+                  "net_invoiceable_amount",
+                  "-net_invoiceable_amount",
+                  "settled_at",
+                  "-settled_at"
                 ],
                 "type": "string"
               }
@@ -803,6 +807,104 @@
             "name": "has_billables",
             "in": "query",
             "description": "Filter by has_billables.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "net_invoiceable_amount",
+            "in": "query",
+            "description": "Filter by net_invoiceable_amount.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "settled_at",
+            "in": "query",
+            "description": "Filter by settled_at.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -1414,30 +1516,19 @@
         }
       }
     },
-    "/billing/organization/{organizationId}/settings": {
+    "/billing/settings": {
       "post": {
         "tags": [
           "Billing",
           "Settings"
         ],
-        "summary": "Creates a billing setting for a customer.",
-        "parameters": [
-          {
-            "name": "organizationId",
-            "in": "path",
-            "description": "The organization identifier.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "Creates a global billing setting.",
         "requestBody": {
           "description": "The billing setting data.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateCustomerBillingSettingEndpoint_Input"
+                "$ref": "#/components/schemas/CreateGlobalBillingSettingEndpoint_Input"
               }
             }
           },
@@ -1466,19 +1557,30 @@
         }
       }
     },
-    "/billing/settings": {
+    "/billing/organization/{organizationId}/settings": {
       "post": {
         "tags": [
           "Billing",
           "Settings"
         ],
-        "summary": "Creates a global billing setting.",
+        "summary": "Creates a billing setting for an organization.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "The billing setting data.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateGlobalBillingSettingEndpoint_Input"
+                "$ref": "#/components/schemas/CreateOrganizationBillingSettingEndpoint_Input"
               }
             }
           },
@@ -1557,23 +1659,14 @@
         }
       }
     },
-    "/billing/organization/{organizationId}/settings/{settingId}": {
+    "/billing/settings/{settingId}": {
       "delete": {
         "tags": [
           "Billing",
           "Settings"
         ],
-        "summary": "Deletes a customer billing setting.",
+        "summary": "Deletes a global billing setting.",
         "parameters": [
-          {
-            "name": "organizationId",
-            "in": "path",
-            "description": "The organization identifier.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "settingId",
             "in": "path",
@@ -1607,14 +1700,23 @@
         }
       }
     },
-    "/billing/settings/{settingId}": {
+    "/billing/organization/{organizationId}/settings/{settingId}": {
       "delete": {
         "tags": [
           "Billing",
           "Settings"
         ],
-        "summary": "Deletes a global billing setting.",
+        "summary": "Deletes an organization billing setting.",
         "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "settingId",
             "in": "path",
@@ -3045,7 +3147,9 @@
           "Open",
           "Invoiced",
           "Void",
-          "Reconciling"
+          "Reconciling",
+          "PendingReview",
+          "Closed"
         ]
       },
       "BillingSummaryMode": {
@@ -3163,96 +3267,6 @@
             "description": "The id of the created checkout session."
           }
         }
-      },
-      "CreateCustomerBillingSettingEndpoint_Input": {
-        "type": "object",
-        "properties": {
-          "priority": {
-            "type": "integer",
-            "description": "The priority of the setting. Defaults to the configured customer default if not specified.",
-            "format": "int32",
-            "nullable": true
-          },
-          "validFrom": {
-            "type": "string",
-            "description": "The start of the validity window.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "validTo": {
-            "type": "string",
-            "description": "The end of the validity window.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "costPerResponseFreeText": {
-            "type": "number",
-            "description": "The cost per free text response.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseImage": {
-            "type": "number",
-            "description": "The cost per image response.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseMediaPerSecond": {
-            "type": "number",
-            "description": "The cost per second of media response.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseMediaMinimum": {
-            "type": "number",
-            "description": "The minimum cost per media response.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseTextPer50Chars": {
-            "type": "number",
-            "description": "The cost per 50 characters of text response.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseContextTextPer50Chars": {
-            "type": "number",
-            "description": "The cost per 50 characters of context text.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseContextTextMinimum": {
-            "type": "number",
-            "description": "The minimum cost per context text.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseContextImage": {
-            "type": "number",
-            "description": "The cost per context image.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseContextVideoPerSecond": {
-            "type": "number",
-            "description": "The cost per second of context video.",
-            "format": "double",
-            "nullable": true
-          },
-          "costPerResponseContextVideoMinimum": {
-            "type": "number",
-            "description": "The minimum cost per context video.",
-            "format": "double",
-            "nullable": true
-          },
-          "discountRatio": {
-            "type": "number",
-            "description": "The discount ratio (0-1, e.g. 0.10 = 10% off).",
-            "format": "double",
-            "nullable": true
-          }
-        },
-        "description": "The billing setting input data."
       },
       "CreateExternalServicePriceEndpoint_Input": {
         "required": [
@@ -3498,6 +3512,96 @@
           }
         }
       },
+      "CreateOrganizationBillingSettingEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "description": "The priority of the setting. Defaults to the configured organization default if not specified.",
+            "format": "int32",
+            "nullable": true
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "The start of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validTo": {
+            "type": "string",
+            "description": "The end of the validity window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "costPerResponseFreeText": {
+            "type": "number",
+            "description": "The cost per free text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseImage": {
+            "type": "number",
+            "description": "The cost per image response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaPerSecond": {
+            "type": "number",
+            "description": "The cost per second of media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseMediaMinimum": {
+            "type": "number",
+            "description": "The minimum cost per media response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of text response.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextPer50Chars": {
+            "type": "number",
+            "description": "The cost per 50 characters of context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextTextMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context text.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextImage": {
+            "type": "number",
+            "description": "The cost per context image.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoPerSecond": {
+            "type": "number",
+            "description": "The cost per second of context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "costPerResponseContextVideoMinimum": {
+            "type": "number",
+            "description": "The minimum cost per context video.",
+            "format": "double",
+            "nullable": true
+          },
+          "discountRatio": {
+            "type": "number",
+            "description": "The discount ratio (0-1, e.g. 0.10 = 10% off).",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "description": "The billing setting input data."
+      },
       "CreateTopUpEndpoint_Input": {
         "required": [
           "amount"
@@ -3645,6 +3749,7 @@
           "totalDiscount",
           "totalNetCost",
           "totalResponseCount",
+          "settlementStale",
           "lineItems"
         ],
         "type": "object",
@@ -3706,6 +3811,33 @@
             "description": "The total number of non-billable responses, if it was requested.",
             "format": "int64",
             "nullable": true
+          },
+          "netInvoiceableAmount": {
+            "type": "number",
+            "description": "What an invoice for this period would charge, as of the last settlement: usage net of\n discounts plus charges, minus the voucher coverage already booked. Null until the period has\n been settled.",
+            "format": "double",
+            "nullable": true
+          },
+          "voucherCoverage": {
+            "type": "number",
+            "description": "How much of the period's billable usage vouchers absorbed at the last settlement.",
+            "format": "double",
+            "nullable": true
+          },
+          "settlementCurrency": {
+            "type": "string",
+            "description": "The currency the settlement amounts are denominated in.",
+            "nullable": true
+          },
+          "settledAt": {
+            "type": "string",
+            "description": "When the period was last settled.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "settlementStale": {
+            "type": "boolean",
+            "description": "Whether a billing input changed after the settlement amounts were computed, so they are\n awaiting a recompute."
           },
           "lineItems": {
             "allOf": [
@@ -5065,6 +5197,7 @@
           "startDate",
           "endDate",
           "status",
+          "settlementStale",
           "createdAt"
         ],
         "type": "object",
@@ -5094,6 +5227,33 @@
               }
             ],
             "description": "The status of the billing period."
+          },
+          "netInvoiceableAmount": {
+            "type": "number",
+            "description": "What an invoice for this period would charge, as of the last settlement. Null until the\n period has been settled.",
+            "format": "double",
+            "nullable": true
+          },
+          "voucherCoverage": {
+            "type": "number",
+            "description": "How much of the period's billable usage vouchers absorbed at the last settlement.",
+            "format": "double",
+            "nullable": true
+          },
+          "settlementCurrency": {
+            "type": "string",
+            "description": "The currency the settlement amounts are denominated in.",
+            "nullable": true
+          },
+          "settledAt": {
+            "type": "string",
+            "description": "When the period was last settled.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "settlementStale": {
+            "type": "boolean",
+            "description": "Whether a billing input changed after the settlement amounts were computed."
           },
           "createdAt": {
             "type": "string",
