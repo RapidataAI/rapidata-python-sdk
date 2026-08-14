@@ -134,6 +134,34 @@ leaderboard = benchmark.create_leaderboard(
 )
 ```
 
+### Vote Aggregation
+
+Each matchup — one comparison of two models on one prompt — collects several
+responses. By default the matchup's winner is the side the majority of those
+responses picked, with ties split 0.5/0.5.
+
+Pass `vote_aggregation=VoteAggregation.ALL_VOTES` to count every individual
+response as its own matchup instead:
+
+```python
+from rapidata import VoteAggregation
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism",
+    instruction="Which image is more realistic?",
+    vote_aggregation=VoteAggregation.ALL_VOTES,
+)
+```
+
+Standings are derived from the raw responses on every read, so switching the
+aggregation on an existing leaderboard also changes how its already-collected
+responses are counted — no re-evaluation needed.
+
+```python
+print(leaderboard.vote_aggregation)  # VoteAggregation.ALL_VOTES
+leaderboard.update(vote_aggregation=VoteAggregation.MAJORITY_VOTE)
+```
+
 ### Level of Detail (response budget)
 
 `level_of_detail` sets the leaderboard's **response budget** — the total number of
@@ -177,24 +205,39 @@ leaderboard_precise = benchmark.create_leaderboard(
 )
 ```
 
-You can also read or change the budget on an existing leaderboard through the
-`level_of_detail` property, which likewise accepts a named level or a custom
-integer. Changes apply to future evaluations; standings that have already been
-computed are not recomputed.
+You can read the budget on an existing leaderboard through the `level_of_detail`
+property and change it with `update()`, which likewise accepts a named level or a
+custom integer. Changes apply to future evaluations; standings that have already
+been computed are not recomputed.
 
 ```python
-print(leaderboard.level_of_detail)   # e.g. "low"
-leaderboard.level_of_detail = "high" # named level
-leaderboard.level_of_detail = 5000   # custom budget
+print(leaderboard.level_of_detail)              # e.g. "low"
+leaderboard.update(level_of_detail="high")      # named level
+leaderboard.update(level_of_detail=5000)        # custom budget
 ```
 
 A custom budget reads back as `"custom"`; use the `response_budget` property to
 get the exact number.
 
 ```python
-leaderboard.level_of_detail = 5000
+leaderboard.update(level_of_detail=5000)
 print(leaderboard.level_of_detail)   # "custom"
 print(leaderboard.response_budget)   # 5000
+```
+
+### Changing a leaderboard's configuration
+
+`update()` is the single entry point for every mutable leaderboard setting. Only
+the arguments you pass are changed; anything you omit keeps its stored value, and
+all of them go out in one request.
+
+```python
+leaderboard.update(
+    name="Realism v2",
+    level_of_detail="high",
+    min_responses_per_matchup=5,
+    vote_aggregation=VoteAggregation.MAJORITY_VOTE,
+)
 ```
 
 ### Restricting which prompts a leaderboard uses
