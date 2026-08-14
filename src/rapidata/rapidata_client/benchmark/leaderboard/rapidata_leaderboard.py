@@ -10,6 +10,9 @@ from rapidata.rapidata_client.benchmark._detail_mapper import (
     LevelOfDetail,
     ResolvedLevelOfDetail,
 )
+from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
+    VoteAggregation,
+)
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
 )
@@ -37,6 +40,7 @@ class RapidataLeaderboard:
         openapi_service: The OpenAPIService instance for API interaction.
         included_tags: The prompt tag values the leaderboard restricts its matchups to.
         excluded_tags: The prompt tag values the leaderboard skips when building matchups.
+        vote_aggregation: How the responses on a single matchup are aggregated into that matchup's result. None resolves it on first read.
     """
 
     def __init__(
@@ -53,6 +57,7 @@ class RapidataLeaderboard:
         openapi_service: OpenAPIService,
         included_tags: list[str] | None = None,
         excluded_tags: list[str] | None = None,
+        vote_aggregation: VoteAggregation | None = None,
     ):
         self.__openapi_service = openapi_service
         self.__name = name
@@ -65,6 +70,7 @@ class RapidataLeaderboard:
         self.__benchmark_id = benchmark_id
         self.__included_tags = list(included_tags) if included_tags else []
         self.__excluded_tags = list(excluded_tags) if excluded_tags else []
+        self.__vote_aggregation = vote_aggregation
         self.id = id
         self.__leaderboard_page = f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.__benchmark_id}/leaderboard/{self.id}"
 
@@ -134,6 +140,56 @@ class RapidataLeaderboard:
                 f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
             )
             self.__min_responses_per_matchup = min_responses
+            self._update_config()
+
+    @property
+    def vote_aggregation(self) -> VoteAggregation:
+        """
+        How the responses on a single matchup are aggregated into that matchup's result.
+
+        :attr:`VoteAggregation.MAJORITY_VOTE` collapses each matchup to one win for the
+        side the majority of responses picked (ties split 0.5/0.5), so every matchup
+        carries the same weight regardless of how many responses it collected.
+        :attr:`VoteAggregation.ALL_VOTES` instead counts every individual response as
+        its own matchup.
+        """
+        # The benchmark's leaderboard listing does not carry the aggregation, so
+        # leaderboards read from it fetch it once, on demand.
+        if self.__vote_aggregation is None:
+            with tracer.start_as_current_span("RapidataLeaderboard.vote_aggregation"):
+                result = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_get(
+                    leaderboard_id=self.id
+                )
+                self.__vote_aggregation = VoteAggregation._from_backend_model(
+                    result.vote_aggregation
+                )
+
+        return self.__vote_aggregation
+
+    @vote_aggregation.setter
+    def vote_aggregation(self, vote_aggregation: VoteAggregation):
+        """
+        Sets how the responses on a single matchup are aggregated.
+
+        Standings are derived from the raw responses on every read, so switching this
+        also changes how already-collected responses are counted — no re-evaluation
+        needed.
+        """
+        with tracer.start_as_current_span(
+            "RapidataLeaderboard.vote_aggregation.setter"
+        ):
+            if not isinstance(vote_aggregation, VoteAggregation):
+                raise ValueError(
+                    "Vote aggregation must be one of: "
+                    + ", ".join(
+                        f"VoteAggregation.{member.name}" for member in VoteAggregation
+                    )
+                )
+
+            logger.debug(
+                f"Setting vote aggregation to {vote_aggregation.name} for leaderboard {self.name}"
+            )
+            self.__vote_aggregation = vote_aggregation
             self._update_config()
 
     @property
@@ -368,6 +424,13 @@ class RapidataLeaderboard:
                     name=self.__name,
                     responseBudget=self.__response_budget,
                     minResponses=self.__min_responses_per_matchup,
+                    # Patch semantics: omitted leaves the stored value alone, which is
+                    # what an unresolved aggregation must do.
+                    voteAggregation=(
+                        self.__vote_aggregation._to_backend_model()
+                        if self.__vote_aggregation is not None
+                        else None
+                    ),
                 ),
             )
 

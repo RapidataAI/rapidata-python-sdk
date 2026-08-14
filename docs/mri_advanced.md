@@ -134,6 +134,40 @@ leaderboard = benchmark.create_leaderboard(
 )
 ```
 
+### Vote Aggregation
+
+Each matchup — one comparison of two models on one prompt — collects several
+responses (see `min_responses_per_matchup`). `vote_aggregation` decides how those
+responses become that matchup's result:
+
+| `VoteAggregation` | Effect |
+|---|---|
+| `MAJORITY_VOTE` (default) | The matchup collapses to a single win for the side the majority picked, ties split 0.5/0.5. Every matchup weighs the same. |
+| `ALL_VOTES` | Every individual response counts as its own matchup, so a heavily-answered matchup outweighs a lightly-answered one. |
+
+`MAJORITY_VOTE` is what you want in almost every case: it removes annotator noise
+within a matchup and keeps the standings from being skewed by uneven response
+counts across matchups.
+
+```python
+from rapidata import VoteAggregation
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism",
+    instruction="Which image is more realistic?",
+    vote_aggregation=VoteAggregation.ALL_VOTES,  # opt out of majority collapsing
+)
+```
+
+Standings are derived from the raw responses on every read, so switching the
+aggregation on an existing leaderboard also changes how its already-collected
+responses are counted — no re-evaluation needed.
+
+```python
+print(leaderboard.vote_aggregation)  # VoteAggregation.ALL_VOTES
+leaderboard.vote_aggregation = VoteAggregation.MAJORITY_VOTE
+```
+
 ### Level of Detail (response budget)
 
 `level_of_detail` sets the leaderboard's **response budget** — the total number of
