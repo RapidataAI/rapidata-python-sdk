@@ -405,7 +405,10 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2.25rem 1.5rem;
-    margin: 2rem 0;
+    /* Two phones plus the gap. The page hides its table of contents, so without
+       a cap the columns stretch into the freed space and the phones drift apart. */
+    max-width: 700px;
+    margin: 2rem auto;
 }
 
 .preview-gallery__card > h2 {

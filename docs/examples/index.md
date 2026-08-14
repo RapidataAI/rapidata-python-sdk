@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # Examples
 
 Every job type the SDK can create, live. Each phone is a real campaign — try the task yourself, it's the interface the labelers get — then open the example behind it for the code.
