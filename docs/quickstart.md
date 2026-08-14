@@ -58,16 +58,22 @@ client = RapidataClient(client_id="Your client ID", client_secret="Your client s
 
 ### Step 1: Get an Audience
 
-The simplest way to get started is with a curated audience:
+For general tasks, use the global audience — the broadest pool of labelers, ready to work on anything immediately:
+
+```py
+audience = client.audience.get_audience_by_id("global")
+```
+
+This example is about prompt alignment, so we use the curated **Alignment** audience instead — its labelers are already trained on that type of task:
 
 ```py
 audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
 ```
 
-1. Curated audiences are pre-existing pools of labelers trained on a specific type of task — this is the **Alignment** audience. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+1. Curated audiences are pre-existing pools of labelers trained on a specific type of task. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 !!! note
-    The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
+    The global and curated audiences get you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
 ### Step 2: Create a Job Definition
 
