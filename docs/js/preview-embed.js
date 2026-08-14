@@ -8,6 +8,12 @@
 
 const RAPIDS_ORIGIN = 'https://rapids.rapidata.ai';
 
+const LAZY_VISIBLE_RATIO = 0.5;
+const FOCUS_GUARD_MS = 4000;
+const FOCUS_GUARD_SETTLE_MS = 400;
+const FOCUS_JUMP_THRESHOLD_PX = 40;
+const FOCUS_GUARD_MAX_CORRECTIONS = 3;
+
 function buildPreviewUrl(campaignId, refreshCount) {
     const params = new URLSearchParams({
         id: campaignId,
@@ -114,6 +120,7 @@ function initPreviewEmbed(wrapper) {
         const fresh = old.cloneNode(false);
         fresh.src = url;
         attachIframeLoadHandler(fresh);
+        keepFocusFromScrollingPage(wrapper, fresh);
         old.replaceWith(fresh);
     }
 
@@ -154,12 +161,70 @@ function renderWhenVisible(wrapper, renderIframe) {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
+            // Hold off until the phone is properly on screen, which keeps the
+            // autofocus lurch small - see keepFocusFromScrollingPage. Demanding
+            // near-full visibility instead would be a scroll window only tens of
+            // pixels wide, which a paging reader skips over entirely, leaving
+            // the phone never booted at all.
+            const fitsOnScreen = entry.rootBounds
+                && entry.boundingClientRect.height <= entry.rootBounds.height;
+            if (fitsOnScreen && entry.intersectionRatio < LAZY_VISIBLE_RATIO) return;
             observer.unobserve(entry.target);
             enqueueLazyRender(wrapper, renderIframe);
         });
-    }, { rootMargin: '150px 0px' });
+    }, { threshold: [0, LAZY_VISIBLE_RATIO, 1] });
 
     observer.observe(wrapper);
+}
+
+// Rapid types with a text answer autofocus their input once the app boots, and
+// focusing anything inside an iframe makes the browser scroll the parent
+// document to reveal it. Booting is ~a second behind the reader's scroll, so the
+// phone is often off-screen by then and the page lurches hundreds of pixels,
+// skipping the cards in between. LAZY_VISIBLE_RATIO keeps that lurch small; this
+// puts the scroll position back.
+//
+// A cross-origin iframe taking focus fires no focusin on the parent - the only
+// notification is a window blur, which usefully arrives before the scroll.
+function keepFocusFromScrollingPage(wrapper, iframe) {
+    let corrections = 0;
+    let readerTouchedIt = false;
+    let expired = false;
+
+    // A reader clicking into the phone also blurs the window, and the browser
+    // scrolling their chosen input into view is wanted, not a lurch to undo.
+    const noteInteraction = () => { readerTouchedIt = true; };
+
+    const stop = () => {
+        expired = true;
+        window.removeEventListener('blur', onWindowBlur);
+        wrapper.removeEventListener('pointerdown', noteInteraction);
+    };
+
+    function onWindowBlur() {
+        if (readerTouchedIt) return;
+        const restoreTo = window.scrollY;
+        const deadline = performance.now() + FOCUS_GUARD_SETTLE_MS;
+
+        // Focus lands on the frame a beat after the blur, so poll briefly
+        // rather than deciding synchronously.
+        const settle = () => {
+            if (expired || readerTouchedIt) return;
+            const jumped = Math.abs(window.scrollY - restoreTo) >= FOCUS_JUMP_THRESHOLD_PX;
+            if (document.activeElement === iframe && jumped) {
+                iframe.blur();
+                window.scrollTo(window.scrollX, restoreTo);
+                if (++corrections >= FOCUS_GUARD_MAX_CORRECTIONS) stop();
+                return;
+            }
+            if (performance.now() < deadline) requestAnimationFrame(settle);
+        };
+        requestAnimationFrame(settle);
+    }
+
+    wrapper.addEventListener('pointerdown', noteInteraction);
+    window.addEventListener('blur', onWindowBlur);
+    setTimeout(stop, FOCUS_GUARD_MS);
 }
 
 // Several phones can enter the viewport in the same frame. Booting them at once
