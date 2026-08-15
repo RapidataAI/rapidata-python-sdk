@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.08.12.1010-860c8c8"
+    "version": "2026.08.14.1550-25bcd2c"
   },
   "servers": [
     {
@@ -2145,10 +2145,13 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
+          "demographicInformation",
           "result",
           "userScore",
-          "userScores",
-          "demographicInformation"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -2164,6 +2167,24 @@
           "language": {
             "type": "string"
           },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
           },
@@ -2176,12 +2197,6 @@
             "additionalProperties": {
               "type": "number",
               "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
             }
           }
         }
@@ -2304,10 +2319,13 @@
           "id",
           "userId",
           "country",
+          "age",
+          "gender",
+          "occupation",
+          "demographicInformation",
           "result",
           "userScore",
-          "userScores",
-          "demographicInformation"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -2319,6 +2337,24 @@
           },
           "country": {
             "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
           },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
@@ -2332,12 +2368,6 @@
             "additionalProperties": {
               "type": "number",
               "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
             }
           }
         }

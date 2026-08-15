@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Workflow API",
     "description": "The API for the Rapidata Workflow service",
-    "version": "2026.08.12.1010-860c8c8"
+    "version": "2026.08.14.1550-25bcd2c"
   },
   "servers": [
     {
@@ -617,6 +617,7 @@
           "Workflow"
         ],
         "summary": "Returns the number of times each asset index won across the workflow's rapids.",
+        "description": "The entries of winCounter are ordered by compared side: the first is the first\n compared side, the second is the second, and so on. That order is the order of the\n workflow's compare blueprint, which is also the order the sides' assets appear in on every\n rapid returned by /workflow/simple/{workflowId}/results — so rendering the entries\n as they arrive lines up with the individual rapids. Sides that have not won a rapid yet\n are present with a count of 0.",
         "parameters": [
           {
             "name": "workflowId",
@@ -1146,7 +1147,7 @@
                 }
               }
             ],
-            "description": "The number of times each asset index was the winner."
+            "description": "The number of times each side was the winner, keyed by the side's name and ordered by\n compared side rather than by wins."
           },
           "allTargetGroupsCompleted": {
             "type": "boolean",
@@ -1404,10 +1405,13 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
+          "demographicInformation",
           "result",
           "userScore",
-          "userScores",
-          "demographicInformation"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -1423,6 +1427,24 @@
           "language": {
             "type": "string"
           },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
           },
@@ -1435,12 +1457,6 @@
             "additionalProperties": {
               "type": "number",
               "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
             }
           }
         }
@@ -1520,10 +1536,13 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
+          "demographicInformation",
           "result",
           "userScore",
-          "userScores",
-          "demographicInformation"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -1539,6 +1558,24 @@
           "language": {
             "type": "string"
           },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
           },
@@ -1551,12 +1588,6 @@
             "additionalProperties": {
               "type": "number",
               "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
             }
           }
         }
@@ -1684,10 +1715,13 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
+          "demographicInformation",
           "result",
           "userScore",
-          "userScores",
-          "demographicInformation"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -1703,6 +1737,24 @@
           "language": {
             "type": "string"
           },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
           },
@@ -1715,12 +1767,6 @@
             "additionalProperties": {
               "type": "number",
               "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
             }
           }
         }

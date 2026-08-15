@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.08.12.1010-860c8c8"
+    "version": "2026.08.14.1550-25bcd2c"
   },
   "servers": [
     {
@@ -6519,13 +6519,490 @@
         }
       }
     },
-    "/benchmark/{benchmarkId}/images/query": {
+    "/benchmark/{benchmarkId}/leaderboards": {
       "get": {
         "tags": [
           "Benchmark"
         ],
-        "summary": "Queries the per-image ratings of a benchmark — a page of prompts, each with its ranked images\n and the pairwise win matrix over them, in the same pandas-split shape as the standings matrix.",
-        "description": "Filters apply to the underlying votes and use the same field set as the standings query.\n Ordering (extremeness by default) selects which prompts a page fits; a rating is an image's\n standing against all images on its prompt, so a participant filter narrows the rows but does not\n refit. Matrix axes are the image labels — a participant's name, suffixed -{n} when it has\n several images on the prompt. A prompt with no matching votes yields no rows.",
+        "summary": "Queries all leaderboards for the given benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark whose leaderboards will be returned.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "name",
+                  "-name"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryLeaderboardsByBenchmarkEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmarks/managed": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries the curated benchmarks available to every customer.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryManagedBenchmarksEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/matchups/query": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
+        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (extremeness by default) ranks the matchups themselves — extremeness being how far the\n split sits from a coin flip, in standard deviations — where the prompt-ratings query ranks\n prompts by their most decisive matchup. Filters use that query's field set, applied to the votes\n a matchup is tallied from, plus WinnerParticipantId and LooserParticipantId, which\n select matchups by which side won the whole matchup; those two are only accepted as top-level\n and leaves, and a tied matchup matches neither. Matchups of leaderboards excluded from\n the benchmark overall are never returned.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. extremeness and the winning side are always read\n off the raw counts; useWeightedScoring changes only each side's wins.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -6539,10 +7016,18 @@
           {
             "name": "useWeightedScoring",
             "in": "query",
-            "description": "Whether to weight ratings by annotator reliability.",
+            "description": "Whether to report each side's wins weighted by annotator reliability.",
             "schema": {
               "type": "boolean",
               "default": false
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "What a compared image stands for. Per image, every matchup is returned. Per participant, a\n matchup between two images of one participant is a self-matchup and leaves the page.",
+            "schema": {
+              "$ref": "#/components/schemas/RatingGrouping"
             }
           },
           {
@@ -7123,104 +7608,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "logic",
+            "name": "winner_participant_id",
             "in": "query",
-            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryImagesByBenchmarkEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/benchmark/{benchmarkId}/leaderboards": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Queries all leaderboards for the given benchmark.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "The id of the benchmark whose leaderboards will be returned.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "The 1-based page index.",
-            "schema": {
-              "type": "integer"
-            },
-            "x-parameter-group": "page"
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "description": "The number of items per page.",
-            "schema": {
-              "type": "integer"
-            },
-            "x-parameter-group": "page"
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
-            "schema": {
-              "type": "array",
-              "items": {
-                "enum": [
-                  "id",
-                  "-id",
-                  "name",
-                  "-name"
-                ],
-                "type": "string"
-              }
-            },
-            "x-parameter-group": "sort"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Filter by id.",
+            "description": "Filter by winner_participant_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -7267,9 +7657,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "name",
+            "name": "looser_participant_id",
             "in": "query",
-            "description": "Filter by name.",
+            "description": "Filter by looser_participant_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -7334,291 +7724,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryLeaderboardsByBenchmarkEndpoint_PagedResultOfOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/benchmarks/managed": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Queries the curated benchmarks available to every customer.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "The 1-based page index.",
-            "schema": {
-              "type": "integer"
-            },
-            "x-parameter-group": "page"
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "description": "The number of items per page.",
-            "schema": {
-              "type": "integer"
-            },
-            "x-parameter-group": "page"
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
-            "schema": {
-              "type": "array",
-              "items": {
-                "enum": [
-                  "id",
-                  "-id",
-                  "name",
-                  "-name",
-                  "created_at",
-                  "-created_at"
-                ],
-                "type": "string"
-              }
-            },
-            "x-parameter-group": "sort"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Filter by id.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "Filter by name.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "owner_mail",
-            "in": "query",
-            "description": "Filter by owner_mail.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "created_at",
-            "in": "query",
-            "description": "Filter by created_at.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "logic",
-            "in": "query",
-            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryManagedBenchmarksEndpoint_PagedResultOfOutput"
+                  "$ref": "#/components/schemas/QueryMatchupsByBenchmarkEndpoint_Output"
                 }
               }
             }
@@ -8227,6 +8333,660 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryMatrixByBenchmarkEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/prompt-ratings/query": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries a benchmark's prompt ratings — a page of prompts, each with its ranked entries and the\n pairwise win matrix over them.",
+        "description": "Filters apply to the underlying votes and use the same field set as the standings query. Ordering\n (extremeness by default) selects which prompts a page fits; a rating is an entry's standing against\n the other entries on its prompt, so a participant filter narrows the entries but does not refit. A\n prompt with no matching votes yields no entries.\n groupBy decides what competes. Per image, every image is its own entry and a participant\n with several images on a prompt appears several times. Per participant, its images become one\n entry rated from their pooled wins over other participants; comparisons between two of its own\n images are excluded from the rating, from both matrices, and from responseCount. Grouping\n changes only how prompts are scored, never which prompts the page holds.\n matrix.wins and matrix.votes are square and aligned to entries by position:\n row i, column j holds entry i's count against entry j. Read the axes\n off entries — the matrix carries no labels of its own.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to weight ratings by annotator reliability.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "What each rated entry represents.",
+            "schema": {
+              "$ref": "#/components/schemas/RatingGrouping"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "extremeness",
+                  "-extremeness",
+                  "responses",
+                  "-responses",
+                  "voted_at",
+                  "-voted_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "Filter by country.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter by language.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "description": "Filter by gender.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "age_bucket",
+            "in": "query",
+            "description": "Filter by age_bucket.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "occupation",
+            "in": "query",
+            "description": "Filter by occupation.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Filter by tags.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_id",
+            "in": "query",
+            "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "leaderboard_id",
+            "in": "query",
+            "description": "Filter by leaderboard_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "run_id",
+            "in": "query",
+            "description": "Filter by run_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "prompt_identifier",
+            "in": "query",
+            "description": "Filter by prompt_identifier.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "voted_at",
+            "in": "query",
+            "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryPromptRatingsByBenchmarkEndpoint_Output"
                 }
               }
             }
@@ -16157,9 +16917,6 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerId",
-          "ownerMail",
-          "organizationId",
           "initialBoostLevel",
           "scoreShift",
           "scoreScale",
@@ -16195,16 +16952,19 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer owning the benchmark.",
-            "format": "uuid"
+            "description": "The id of the customer owning the benchmark. Null unless the caller is platform staff or a member of the owning organization.",
+            "format": "uuid",
+            "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer owning the benchmark."
+            "description": "The mail of the customer owning the benchmark. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity."
+            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           },
           "initialBoostLevel": {
             "type": "integer",
@@ -16764,6 +17524,7 @@
           "wins",
           "totalMatches",
           "responseCount",
+          "isEvaluating",
           "isDisabled"
         ],
         "type": "object",
@@ -16818,6 +17579,9 @@
           "responseCount": {
             "type": "integer",
             "format": "int64"
+          },
+          "isEvaluating": {
+            "type": "boolean"
           },
           "isDisabled": {
             "type": "boolean"
@@ -17711,9 +18475,7 @@
           "participantId",
           "participantName",
           "asset",
-          "tags",
-          "ownerMail",
-          "organizationId"
+          "tags"
         ],
         "type": "object",
         "properties": {
@@ -17783,16 +18545,19 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer that owns the sample.",
-            "format": "uuid"
+            "description": "The id of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "format": "uuid",
+            "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer that owns the sample."
+            "description": "The mail of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity."
+            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           }
         }
       },
@@ -18110,9 +18875,7 @@
           "participantId",
           "participantName",
           "asset",
-          "tags",
-          "ownerMail",
-          "organizationId"
+          "tags"
         ],
         "type": "object",
         "properties": {
@@ -18165,13 +18928,16 @@
           },
           "ownerId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "ownerMail": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "organizationId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -18182,9 +18948,7 @@
           "participantId",
           "participantName",
           "asset",
-          "tags",
-          "ownerMail",
-          "organizationId"
+          "tags"
         ],
         "type": "object",
         "properties": {
@@ -18254,16 +19018,19 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer that owns the sample.",
-            "format": "uuid"
+            "description": "The id of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "format": "uuid",
+            "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer that owns the sample."
+            "description": "The mail of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity."
+            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           }
         }
       },
@@ -18382,8 +19149,6 @@
           "identifier",
           "asset",
           "tags",
-          "ownerMail",
-          "organizationId",
           "_t"
         ],
         "properties": {
@@ -18451,16 +19216,19 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer that owns the sample.",
-            "format": "uuid"
+            "description": "The id of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "format": "uuid",
+            "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer that owns the sample."
+            "description": "The mail of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity."
+            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           }
         }
       },
@@ -19746,179 +20514,6 @@
           }
         }
       },
-      "QueryImagesByBenchmarkEndpoint_Output": {
-        "required": [
-          "items",
-          "totalResponses",
-          "distinctMatchups",
-          "totalPrompts",
-          "page",
-          "pageSize"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/QueryImagesByBenchmarkEndpoint_OutputPrompt"
-                }
-              }
-            ],
-            "description": "The prompts of this page, each with its ranked images."
-          },
-          "totalResponses": {
-            "type": "integer",
-            "description": "Total raw human responses behind the corpus under the current filter.",
-            "format": "int64"
-          },
-          "distinctMatchups": {
-            "type": "integer",
-            "description": "Distinct compared image pairs in the corpus under the current filter.",
-            "format": "int64"
-          },
-          "totalPrompts": {
-            "type": "integer",
-            "description": "The number of prompts the filter leaves rankable — the paging total.",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "description": "The 1-based page index.",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "description": "The page size in prompts.",
-            "format": "int32"
-          }
-        },
-        "description": "The queried per-image ratings output."
-      },
-      "QueryImagesByBenchmarkEndpoint_OutputImage": {
-        "required": [
-          "sampleId",
-          "participantId",
-          "label",
-          "responseCount",
-          "rating",
-          "rank"
-        ],
-        "type": "object",
-        "properties": {
-          "sampleId": {
-            "type": "string"
-          },
-          "participantId": {
-            "type": "string"
-          },
-          "participantName": {
-            "type": "string",
-            "nullable": true
-          },
-          "label": {
-            "type": "string"
-          },
-          "asset": {
-            "type": "object",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ],
-            "nullable": true
-          },
-          "responseCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "rating": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "rank": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "QueryImagesByBenchmarkEndpoint_OutputPrompt": {
-        "required": [
-          "promptIdentifier",
-          "images",
-          "index",
-          "columns",
-          "data",
-          "votes"
-        ],
-        "type": "object",
-        "properties": {
-          "promptIdentifier": {
-            "type": "string"
-          },
-          "promptId": {
-            "type": "string",
-            "nullable": true
-          },
-          "englishPrompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "originalPrompt": {
-            "type": "string",
-            "nullable": true
-          },
-          "promptAsset": {
-            "type": "object",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ],
-            "nullable": true
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QueryImagesByBenchmarkEndpoint_OutputImage"
-            }
-          },
-          "index": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "columns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "number",
-                "format": "double"
-              }
-            }
-          },
-          "votes": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "number",
-                "format": "double"
-              }
-            }
-          }
-        }
-      },
       "QueryLeaderboardRunsEndpoint_Output": {
         "required": [
           "id",
@@ -20434,6 +21029,192 @@
           }
         }
       },
+      "QueryMatchupsByBenchmarkEndpoint_Output": {
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize",
+          "corpus"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/QueryMatchupsByBenchmarkEndpoint_OutputMatchup"
+                }
+              }
+            ],
+            "description": "The matchups of this page, in the requested order."
+          },
+          "total": {
+            "type": "integer",
+            "description": "The number of matchups the filter leaves — the paging total.",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The 1-based page index.",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "The page size in matchups.",
+            "format": "int32"
+          },
+          "corpus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QueryMatchupsByBenchmarkEndpoint_OutputCorpus"
+              }
+            ],
+            "description": "Totals over every matched matchup, not just this page."
+          }
+        },
+        "description": "The queried image matchups output."
+      },
+      "QueryMatchupsByBenchmarkEndpoint_OutputCorpus": {
+        "required": [
+          "totalResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "totalResponses": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "QueryMatchupsByBenchmarkEndpoint_OutputLeaderboard": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "QueryMatchupsByBenchmarkEndpoint_OutputMatchup": {
+        "required": [
+          "leaderboard",
+          "promptIdentifier",
+          "sides",
+          "responses",
+          "extremeness",
+          "latestVotedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboard": {
+            "$ref": "#/components/schemas/QueryMatchupsByBenchmarkEndpoint_OutputLeaderboard"
+          },
+          "promptIdentifier": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/QueryMatchupsByBenchmarkEndpoint_OutputPromptDetails"
+              }
+            ],
+            "nullable": true
+          },
+          "sides": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryMatchupsByBenchmarkEndpoint_OutputSide"
+            }
+          },
+          "responses": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "extremeness": {
+            "type": "number",
+            "format": "double"
+          },
+          "latestVotedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryMatchupsByBenchmarkEndpoint_OutputPromptDetails": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "english": {
+            "type": "string",
+            "nullable": true
+          },
+          "original": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "QueryMatchupsByBenchmarkEndpoint_OutputSide": {
+        "required": [
+          "sampleId",
+          "participantId",
+          "responses",
+          "wins"
+        ],
+        "type": "object",
+        "properties": {
+          "sampleId": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "participantName": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "responses": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "QueryMatrixByBenchmarkEndpoint_Output": {
         "required": [
           "index",
@@ -20715,6 +21496,220 @@
           }
         }
       },
+      "QueryPromptRatingsByBenchmarkEndpoint_Output": {
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize",
+          "corpus"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/QueryPromptRatingsByBenchmarkEndpoint_OutputPrompt"
+                }
+              }
+            ],
+            "description": "The prompts of this page, each with its ranked entries."
+          },
+          "total": {
+            "type": "integer",
+            "description": "The number of prompts the filter leaves rankable — the paging total.",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The 1-based page index.",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "The page size in prompts.",
+            "format": "int32"
+          },
+          "corpus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QueryPromptRatingsByBenchmarkEndpoint_OutputCorpus"
+              }
+            ],
+            "description": "Totals over the whole filtered corpus, not just this page."
+          }
+        },
+        "description": "The queried prompt ratings output."
+      },
+      "QueryPromptRatingsByBenchmarkEndpoint_OutputCorpus": {
+        "required": [
+          "totalResponses",
+          "distinctMatchups"
+        ],
+        "type": "object",
+        "properties": {
+          "totalResponses": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "distinctMatchups": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "QueryPromptRatingsByBenchmarkEndpoint_OutputEntry": {
+        "required": [
+          "id",
+          "participantId",
+          "images",
+          "responseCount",
+          "rating",
+          "rank"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "participantName": {
+            "type": "string",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryPromptRatingsByBenchmarkEndpoint_OutputEntryImage"
+            }
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "rank": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryPromptRatingsByBenchmarkEndpoint_OutputEntryImage": {
+        "required": [
+          "sampleId"
+        ],
+        "type": "object",
+        "properties": {
+          "sampleId": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "QueryPromptRatingsByBenchmarkEndpoint_OutputMatrix": {
+        "required": [
+          "wins",
+          "votes"
+        ],
+        "type": "object",
+        "properties": {
+          "wins": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          }
+        }
+      },
+      "QueryPromptRatingsByBenchmarkEndpoint_OutputPrompt": {
+        "required": [
+          "promptIdentifier",
+          "entries",
+          "matrix"
+        ],
+        "type": "object",
+        "properties": {
+          "promptIdentifier": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/QueryPromptRatingsByBenchmarkEndpoint_OutputPromptDetails"
+              }
+            ],
+            "nullable": true
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryPromptRatingsByBenchmarkEndpoint_OutputEntry"
+            }
+          },
+          "matrix": {
+            "$ref": "#/components/schemas/QueryPromptRatingsByBenchmarkEndpoint_OutputMatrix"
+          }
+        }
+      },
+      "QueryPromptRatingsByBenchmarkEndpoint_OutputPromptDetails": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "english": {
+            "type": "string",
+            "nullable": true
+          },
+          "original": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "QueryPublishedBenchmarksEndpoint_Output": {
         "required": [
           "id",
@@ -20723,8 +21718,6 @@
           "isPublic",
           "isPublished",
           "createdAt",
-          "ownerMail",
-          "organizationId",
           "lastUpdatedAt"
         ],
         "type": "object",
@@ -20756,11 +21749,13 @@
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer owning the benchmark."
+            "description": "The mail of the customer owning the benchmark. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity."
+            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "nullable": true
           },
           "lastUpdatedAt": {
             "type": "string",
@@ -20979,6 +21974,7 @@
           "wins",
           "totalMatches",
           "responseCount",
+          "isEvaluating",
           "isDisabled"
         ],
         "type": "object",
@@ -21033,6 +22029,9 @@
           "responseCount": {
             "type": "integer",
             "format": "int64"
+          },
+          "isEvaluating": {
+            "type": "boolean"
           },
           "isDisabled": {
             "type": "boolean"
@@ -21266,6 +22265,13 @@
             "description": "The distinct value+category tag pairs associated with the benchmark, each with the number\n of prompts using it."
           }
         }
+      },
+      "RatingGrouping": {
+        "enum": [
+          "Image",
+          "Participant"
+        ],
+        "description": "What each rated entry of a prompt represents."
       },
       "RebalanceLeaderboardEndpoint_Input": {
         "required": [

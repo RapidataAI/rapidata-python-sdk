@@ -20,6 +20,7 @@ from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.dataset_group_api import DatasetGroupApi
 from rapidata.api_client.api.evaluation_api import EvaluationApi
 from rapidata.api_client.api.examples_api import ExamplesApi
+from rapidata.api_client.api.external_apps_api import ExternalAppsApi
 from rapidata.api_client.api.external_audience_api import ExternalAudienceApi
 from rapidata.api_client.api.external_service_prices_api import ExternalServicePricesApi
 from rapidata.api_client.api.faucet_api import FaucetApi
