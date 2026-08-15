@@ -13,6 +13,9 @@ from rapidata import __version__
 from .logging_config import LoggingConfig, register_config_handler
 from rapidata.rapidata_client.config import logger
 
+# Span event emitted when lazy validation absorbs a backend/SDK schema mismatch.
+SCHEMA_DRIFT_EVENT_NAME = "api.schema_drift"
+
 
 def get_system_attributes() -> dict[str, str | int | None]:
     """Gather system telemetry for traces."""
@@ -40,6 +43,7 @@ class TracerProtocol(Protocol):
     def set_session_id(self, session_id: str) -> None: ...
     def set_user_info(self, client_id: str, email: str) -> None: ...
     def fail_current_span(self, message: str | None = None) -> None: ...
+    def record_schema_drift(self, model_name: str, fields: list[str]) -> None: ...
 
 
 class NoOpSpan:
@@ -84,6 +88,9 @@ class NoOpTracer:
         pass
 
     def fail_current_span(self, message: str | None = None) -> None:
+        pass
+
+    def record_schema_drift(self, model_name: str, fields: list[str]) -> None:
         pass
 
     def __getattr__(self, name: str) -> Any:
@@ -233,6 +240,24 @@ class RapidataTracer:
         span = trace.get_current_span()
         if span.is_recording():
             span.set_status(Status(StatusCode.ERROR, message))
+
+    def record_schema_drift(self, model_name: str, fields: list[str]) -> None:
+        """Record that a backend response drifted from the model the SDK expects.
+
+        Deliberately an event and not an error status: lazy validation absorbs
+        the drift, so the call the customer made still succeeds. Failing the span
+        reports an outage that isn't one, and a single client on a stale SDK can
+        then outnumber every genuine error in the platform's telemetry.
+        """
+        span = trace.get_current_span()
+        if span.is_recording():
+            span.add_event(
+                SCHEMA_DRIFT_EVENT_NAME,
+                {
+                    "api.schema_drift.model": model_name,
+                    "api.schema_drift.fields": fields,
+                },
+            )
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""

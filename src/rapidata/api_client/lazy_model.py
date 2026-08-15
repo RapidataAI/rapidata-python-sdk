@@ -101,7 +101,9 @@ class LazyValidatedModel(BaseModel):
             python_name = alias_to_field.get(key, key)
             construct_kwargs[python_name] = value
 
-        # --- observability: log error + fail the trace ---
+        # --- observability: log the drift, but leave the span status alone.
+        # The call still returns a usable model, so the failure (if any) happens
+        # at access time in __getattribute__ — that is where the span is failed.
         error_fields = list(field_errors.keys())
         logger.warning(
             "Validation failed for %s – mismatched fields: %s",
@@ -110,9 +112,7 @@ class LazyValidatedModel(BaseModel):
             exc_info=error,
         )
 
-        tracer.fail_current_span(
-            f"Validation failed for {cls.__name__}: {error_fields}"
-        )
+        tracer.record_schema_drift(cls.__name__, error_fields)
 
         # --- construct without validation ---
         instance = cls.model_construct(**construct_kwargs)
