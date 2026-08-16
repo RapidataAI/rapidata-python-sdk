@@ -2,9 +2,14 @@
 
 Replaces ``BaseModel`` as the parent of every generated model so that
 construction never raises on a type mismatch.  Instead, per-field
-validation errors are logged, recorded on the current OpenTelemetry
-span, and stored on the instance.  A ``TypeError`` is raised only when
-the caller actually *accesses* a field whose value failed validation.
+validation errors are logged, recorded as an event on the current
+OpenTelemetry span, and stored on the instance.  A ``TypeError`` is
+raised only when the caller actually *accesses* a field whose value
+failed validation.
+
+Drift that nobody reads is not a failure, so it is recorded as a span
+*event* and never as an error status — otherwise every caller on an
+older SDK reports a stream of failures for calls that succeeded.
 
 This means backend schema changes that affect unused fields no longer
 break SDK callers, while type-safety is preserved for fields that are
@@ -101,18 +106,24 @@ class LazyValidatedModel(BaseModel):
             python_name = alias_to_field.get(key, key)
             construct_kwargs[python_name] = value
 
-        # --- observability: log error + fail the trace ---
+        # --- observability: log the drift and record it on the trace ---
         error_fields = list(field_errors.keys())
+        # Imported lazily for the same reason as in __getattribute__ below: this
+        # base class is imported by every generated model.
+        from rapidata.rapidata_client.api.rapidata_api_client import (
+            format_outdated_sdk_note,
+        )
+
+        note = format_outdated_sdk_note()
         logger.warning(
-            "Validation failed for %s – mismatched fields: %s",
+            "Validation failed for %s – mismatched fields: %s%s",
             cls.__name__,
             error_fields,
+            f"\n{note}" if note else "",
             exc_info=error,
         )
 
-        tracer.fail_current_span(
-            f"Validation failed for {cls.__name__}: {error_fields}"
-        )
+        tracer.record_schema_drift(cls.__name__, error_fields)
 
         # --- construct without validation ---
         instance = cls.model_construct(**construct_kwargs)

@@ -4,7 +4,6 @@ import platform
 import sys
 import os
 from opentelemetry import trace
-from opentelemetry.trace import Status, StatusCode
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -12,6 +11,8 @@ from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
 from .logging_config import LoggingConfig, register_config_handler
 from rapidata.rapidata_client.config import logger
+
+SCHEMA_DRIFT_EVENT = "sdk.schema_drift"
 
 
 def get_system_attributes() -> dict[str, str | int | None]:
@@ -39,7 +40,7 @@ class TracerProtocol(Protocol):
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any: ...
     def set_session_id(self, session_id: str) -> None: ...
     def set_user_info(self, client_id: str, email: str) -> None: ...
-    def fail_current_span(self, message: str | None = None) -> None: ...
+    def record_schema_drift(self, model_name: str, fields: list[str]) -> None: ...
 
 
 class NoOpSpan:
@@ -83,7 +84,7 @@ class NoOpTracer:
     def set_user_info(self, client_id: str, email: str) -> None:
         pass
 
-    def fail_current_span(self, message: str | None = None) -> None:
+    def record_schema_drift(self, model_name: str, fields: list[str]) -> None:
         pass
 
     def __getattr__(self, name: str) -> Any:
@@ -228,11 +229,23 @@ class RapidataTracer:
             f"User info set - client_id: {self.client_id}, email: {self.email}"
         )
 
-    def fail_current_span(self, message: str | None = None) -> None:
-        """Mark the current span as errored."""
+    def record_schema_drift(self, model_name: str, fields: list[str]) -> None:
+        """Record tolerated backend schema drift as an event on the current span.
+
+        Deliberately an event rather than an error status: the SDK absorbs the drift
+        and the call succeeds, so failing the span would report a user-visible failure
+        that never happened. Reading a drifted field raises TypeError, and that marks
+        the span errored through the normal exception path.
+        """
         span = trace.get_current_span()
         if span.is_recording():
-            span.set_status(Status(StatusCode.ERROR, message))
+            span.add_event(
+                SCHEMA_DRIFT_EVENT,
+                attributes={
+                    f"{SCHEMA_DRIFT_EVENT}.model": model_name,
+                    f"{SCHEMA_DRIFT_EVENT}.fields": fields,
+                },
+            )
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
