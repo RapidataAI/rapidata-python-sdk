@@ -16,6 +16,8 @@ from .rapidata_client import (
     JobProgress,
     RapidataSignal,
     RapidataSignalManager,
+    BillingPeriod,
+    RapidataBillingManager,
     ValidationSetManager,
     RapidataValidationSet,
     Box,
