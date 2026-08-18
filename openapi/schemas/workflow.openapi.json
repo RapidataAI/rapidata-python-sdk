@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Workflow API",
     "description": "The API for the Rapidata Workflow service",
-    "version": "2026.08.17.1617-a3617f4"
+    "version": "2026.08.18.1529-c55ad91"
   },
   "servers": [
     {
@@ -488,7 +488,11 @@
                   "state",
                   "-state",
                   "decisiveness",
-                  "-decisiveness"
+                  "-decisiveness",
+                  "accepted_response_count",
+                  "-accepted_response_count",
+                  "has_responses",
+                  "-has_responses"
                 ],
                 "type": "string"
               }

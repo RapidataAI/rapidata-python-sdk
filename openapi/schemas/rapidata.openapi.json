@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.17.1617-a3617f4"
+    "version": "2026.08.18.1529-c55ad91"
   },
   "servers": [
     {
@@ -4651,7 +4651,7 @@
           "OwnerTierOverride"
         ],
         "summary": "Creates an owner-tier override.",
-        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "description": "Exactly one target must be given: either pattern — an exact email\n (user@domain.com) or a wildcard domain (*@domain.com) — or\n organizationId. At least one of the override values must be set.",
         "requestBody": {
           "description": "The override to create.",
           "content": {
@@ -4804,7 +4804,7 @@
           "OwnerTierOverride"
         ],
         "summary": "Replaces an owner-tier override.",
-        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "description": "Exactly one target must be given: either pattern — an exact email\n (user@domain.com) or a wildcard domain (*@domain.com) — or\n organizationId. At least one of the override values must be set. The target kind that\n is left out is cleared, so an override can be switched from one to the other.",
         "parameters": [
           {
             "name": "ownerTierOverrideId",
@@ -4817,7 +4817,7 @@
           }
         ],
         "requestBody": {
-          "description": "The new pattern and override values.",
+          "description": "The new target and override values.",
           "content": {
             "application/json": {
               "schema": {
@@ -4830,6 +4830,64 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/owner-tier/organizations/{organizationId}": {
+      "get": {
+        "tags": [
+          "OwnerTierOverride"
+        ],
+        "summary": "Returns the priority and global boost level an organization's campaigns are created with.",
+        "description": "priority and globalBoostLevel are the effective values, whether they come from an\n override or from the configured defaults; the two *Override fields are null when the\n default applies. Only overrides that target the organization are reflected — an override\n targeting an individual member's email address is not.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to read the tier of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrganizationOwnerTierEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -9140,7 +9198,7 @@
           "Organization"
         ],
         "summary": "Creates an invitation to join the organization.",
-        "description": "Returns a single-use token the invitee presents to the accept-invitation endpoint.",
+        "description": "An invitation mail with the accept link is sent to the invitee. The response still carries\n the single-use token the invitee presents to the accept-invitation endpoint, so the link can\n also be shared manually.",
         "parameters": [
           {
             "name": "organizationId",
@@ -15213,7 +15271,7 @@
         "tags": [
           "Benchmark"
         ],
-        "summary": "Queries all benchmarks of the current user.",
+        "summary": "Queries all benchmarks of the current user's organization.",
         "parameters": [
           {
             "name": "page",
@@ -23036,7 +23094,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "Queries all leaderboards accessible to the current user.",
+        "summary": "Queries all leaderboards accessible to the current user's organization.",
         "parameters": [
           {
             "name": "page",
@@ -28360,7 +28418,7 @@
           "Job"
         ],
         "summary": "Queries job definitions visible to the caller.",
-        "description": "Results are scoped to the caller's customer unless the caller is allowed to view all job definitions.",
+        "description": "Results are scoped to the caller's organization unless the caller is allowed to view all job definitions.",
         "parameters": [
           {
             "name": "page",
@@ -31751,6 +31809,133 @@
         ]
       }
     },
+    "/billing-periods/close-bulk": {
+      "post": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Starts closing every billing period awaiting review that ended before a date, optionally limited\n to those worth no more than a given amount.",
+        "description": "Answers 202 with a run identifier and closes the periods in the background — each one costs a\n full invoice recomputation, so a selection of a few hundred takes minutes. Poll\n GET /billing-periods/close-bulk/{bulkCloseId} for progress, per-period verdicts and the\n total written off. Each period is closed exactly as the per-period close does, and one period\n failing is recorded against that period rather than abandoning the rest. A period whose live\n residual exceeds maxNetInvoiceableAmount is refused rather than written off, so a\n selection built for small residuals cannot write off a real bill that arrived after the last\n settlement. Set dryRun to compute what the sweep would write off without minting\n write-off vouchers or closing anything. Answers 409 Conflict while another sweep is still\n running; only one runs at a time.",
+        "requestBody": {
+          "description": "The selection and the reason to record on every period it matches.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCloseBillingPeriodsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCloseBillingPeriodsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/billing-period/{billingPeriodId}/close": {
+      "post": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Closes a billing period, writing off whatever it would still have invoiced.",
+        "description": "The remaining amount is covered by a write-off voucher carrying the caller and the reason, so\n the period ends up closed and fully covered; nothing is sent to the payment provider. Answers\n 409 Conflict for a period that has already been invoiced, is being reconciled, or was already\n closed this way. The close is sticky: later changes to the period's billing inputs no longer\n bring it back for review, and undoing it means calling\n POST /billing-period/{billingPeriodId}/resettle with reopen set.",
+        "parameters": [
+          {
+            "name": "billingPeriodId",
+            "in": "path",
+            "description": "The billing period to close.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The reason the remaining amount will never be invoiced.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseBillingPeriodEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloseBillingPeriodEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/billing/manual-charge": {
       "post": {
         "tags": [
@@ -32258,6 +32443,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetBillingSummaryEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/billing-periods/close-bulk/{bulkCloseId}": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Returns how far a bulk close has got, what it has written off so far, and one verdict per period\n it has reached.",
+        "description": "A run reports Completed once it reaches the end of its selection, which says nothing about\n whether individual periods succeeded — read failed and the per-period error values\n for that. sweepError is set only when the run itself died. For a run started with\n dryRun, the counts and amounts describe what the sweep would do and nothing was\n written.",
+        "parameters": [
+          {
+            "name": "bulkCloseId",
+            "in": "path",
+            "description": "The run identifier returned when the bulk close was started.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBulkCloseBillingPeriodsStatusEndpoint_Output"
                 }
               }
             }
@@ -33362,6 +33605,75 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StartBulkReconciliationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/billing-period/{billingPeriodId}/resettle": {
+      "post": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Recomputes a billing period's invoiceable amount and voucher coverage, and returns the result.",
+        "description": "Idempotent. A period that was closed by an operator is left untouched unless reopen is\n set, in which case its write-off is revoked and its real remaining amount comes back for\n review. The response reports skipped with a reason when the period's status puts it\n beyond settlement — invoiced, void or being reconciled.",
+        "parameters": [
+          {
+            "name": "billingPeriodId",
+            "in": "path",
+            "description": "The billing period to re-settle.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Whether to undo an operator's close first.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResettleBillingPeriodEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResettleBillingPeriodEndpoint_Output"
                 }
               }
             }
@@ -39200,7 +39512,7 @@
         "tags": [
           "ValidationSet"
         ],
-        "summary": "Gets the available validation sets for the current user.",
+        "summary": "Gets the available validation sets for the current user's organization.",
         "responses": {
           "200": {
             "description": "OK",
@@ -40917,7 +41229,11 @@
                   "state",
                   "-state",
                   "decisiveness",
-                  "-decisiveness"
+                  "-decisiveness",
+                  "accepted_response_count",
+                  "-accepted_response_count",
+                  "has_responses",
+                  "-has_responses"
                 ],
                 "type": "string"
               }
@@ -44901,14 +45217,17 @@
         ]
       },
       "CreateOwnerTierOverrideEndpoint_Input": {
-        "required": [
-          "pattern"
-        ],
         "type": "object",
         "properties": {
           "pattern": {
             "type": "string",
-            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Exact matches win over wildcard matches."
+            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Null when targeting an organization instead.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization this override applies to. Null when targeting an email pattern\n instead. An exact email wins over an organization, which wins over a wildcard domain.",
+            "nullable": true
           },
           "priorityOverride": {
             "type": "integer",
@@ -45677,6 +45996,42 @@
             "type": "number",
             "description": "The current bid multiplier reported for the campaign.",
             "format": "double"
+          }
+        }
+      },
+      "GetOrganizationOwnerTierEndpoint_Output": {
+        "required": [
+          "organizationId",
+          "priority",
+          "globalBoostLevel"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the tier applies to."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority the organization's campaigns are created with.",
+            "format": "int32"
+          },
+          "globalBoostLevel": {
+            "type": "integer",
+            "description": "The global boost level the organization's campaigns are created with.",
+            "format": "int32"
+          },
+          "priorityOverride": {
+            "type": "integer",
+            "description": "The priority from the matching override, or null when the default applies.",
+            "format": "int32",
+            "nullable": true
+          },
+          "boostOverride": {
+            "type": "integer",
+            "description": "The boost level from the matching override, or null when the default applies.",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -47056,7 +47411,6 @@
       "QueryOwnerTierOverridesEndpoint_Output": {
         "required": [
           "id",
-          "pattern",
           "ownerMail",
           "createdAt"
         ],
@@ -47068,7 +47422,13 @@
           },
           "pattern": {
             "type": "string",
-            "description": "The owner-email pattern the override applies to."
+            "description": "The owner-email pattern the override applies to, or null when it targets an organization.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the override applies to, or null when it targets an email pattern.",
+            "nullable": true
           },
           "priorityOverride": {
             "type": "integer",
@@ -47240,14 +47600,17 @@
         }
       },
       "UpdateOwnerTierOverrideEndpoint_Input": {
-        "required": [
-          "pattern"
-        ],
         "type": "object",
         "properties": {
           "pattern": {
             "type": "string",
-            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com)."
+            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Null when targeting an organization instead.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization this override applies to. Null when targeting an email pattern\n instead.",
+            "nullable": true
           },
           "priorityOverride": {
             "type": "integer",
@@ -54248,7 +54611,7 @@
           },
           "isExcludedFromOverall": {
             "type": "boolean",
-            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it a private experiment of the owning organization."
           },
           "includedTags": {
             "allOf": [
@@ -54412,7 +54775,7 @@
           },
           "isExcludedFromOverall": {
             "type": "boolean",
-            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it a private experiment of the owning organization."
           },
           "voteAggregation": {
             "allOf": [
@@ -59862,12 +60225,99 @@
           "Prepaid"
         ]
       },
+      "BulkBillingPeriodCloseState": {
+        "enum": [
+          "Sweeping",
+          "Completed",
+          "Failed"
+        ]
+      },
+      "BulkCloseBillingPeriodsEndpoint_Input": {
+        "required": [
+          "endedBefore",
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "endedBefore": {
+            "type": "string",
+            "description": "Only periods that ended before this date are closed.",
+            "format": "date-time"
+          },
+          "maxNetInvoiceableAmount": {
+            "type": "number",
+            "description": "When set, only periods with at most this much left to invoice are closed, and a period whose\n amount has grown past it since it was last settled is refused.",
+            "format": "double",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why the remaining amounts will never be invoiced."
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Report what the sweep would write off without closing anything or minting any vouchers."
+          }
+        }
+      },
+      "BulkCloseBillingPeriodsEndpoint_Output": {
+        "required": [
+          "bulkCloseId",
+          "dryRun"
+        ],
+        "type": "object",
+        "properties": {
+          "bulkCloseId": {
+            "type": "string",
+            "description": "The run to poll for the sweep's progress."
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Whether this run only reports what it would have written off."
+          }
+        }
+      },
       "BulkReconciliationDispatchState": {
         "enum": [
           "Dispatching",
           "Completed",
           "Failed"
         ]
+      },
+      "CloseBillingPeriodEndpoint_Input": {
+        "required": [
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Why the remaining amount will never be invoiced."
+          }
+        }
+      },
+      "CloseBillingPeriodEndpoint_Output": {
+        "required": [
+          "billingPeriodId",
+          "writtenOffAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "billingPeriodId": {
+            "type": "string",
+            "description": "The closed billing period."
+          },
+          "writtenOffAmount": {
+            "type": "number",
+            "description": "The amount that was written off.",
+            "format": "double"
+          },
+          "writeOffVoucherId": {
+            "type": "string",
+            "description": "The voucher that absorbed the written-off amount, or null when there was nothing left.",
+            "nullable": true
+          }
+        }
       },
       "CreateBillingItemBillingSettingEndpoint_Input": {
         "type": "object",
@@ -60542,6 +60992,22 @@
             "type": "boolean",
             "description": "Whether a billing input changed after the settlement amounts were computed, so they are\n awaiting a recompute."
           },
+          "closedBy": {
+            "type": "string",
+            "description": "The operator who closed the period without invoicing it. Null when the period closed on\n its own because nothing was left to invoice.",
+            "nullable": true
+          },
+          "closeReason": {
+            "type": "string",
+            "description": "Why the period was closed without being invoiced.",
+            "nullable": true
+          },
+          "closedAt": {
+            "type": "string",
+            "description": "When the period was closed without being invoiced.",
+            "format": "date-time",
+            "nullable": true
+          },
           "lineItems": {
             "allOf": [
               {
@@ -60688,6 +61154,143 @@
             "type": "number",
             "description": "The recurring fee charged once per billing period. null means no platform fee and\n no line item; 0 is an explicit $0 fee that is still itemized.",
             "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "GetBulkCloseBillingPeriodsStatusEndpoint_Output": {
+        "required": [
+          "bulkCloseId",
+          "state",
+          "dryRun",
+          "endedBefore",
+          "reason",
+          "expectedTotal",
+          "processed",
+          "succeeded",
+          "failed",
+          "writeOffAmount",
+          "createdAt",
+          "createdById",
+          "createdByMail",
+          "periods"
+        ],
+        "type": "object",
+        "properties": {
+          "bulkCloseId": {
+            "type": "string",
+            "description": "The run this progress is about."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BulkBillingPeriodCloseState"
+              }
+            ],
+            "description": "The state of the run, not a verdict on the periods it touched: Sweeping is queued or\n in progress, Completed means it reached the end of its selection and NOT that every\n period succeeded (read failed and each period's error for that), and\n Failed means the run itself died early with sweepError saying why."
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Whether this run only reports what it would have written off."
+          },
+          "endedBefore": {
+            "type": "string",
+            "description": "The selection's cut-off date.",
+            "format": "date-time"
+          },
+          "maxNetInvoiceableAmount": {
+            "type": "number",
+            "description": "The selection's cap, or null when the run was uncapped.",
+            "format": "double",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why the remaining amounts will never be invoiced."
+          },
+          "expectedTotal": {
+            "type": "integer",
+            "description": "How many periods matched the selection when the sweep started. Zero until it starts.",
+            "format": "int32"
+          },
+          "processed": {
+            "type": "integer",
+            "description": "How many periods the run has reached so far.",
+            "format": "int32"
+          },
+          "succeeded": {
+            "type": "integer",
+            "description": "How many periods were closed, or would be closed in a dry run.",
+            "format": "int32"
+          },
+          "failed": {
+            "type": "integer",
+            "description": "How many periods were refused or failed. A non-zero count here does not stop the run, and\n does not make its state Failed.",
+            "format": "int32"
+          },
+          "writeOffAmount": {
+            "type": "number",
+            "description": "The total written off so far, or the total that would be written off in a dry run.",
+            "format": "double"
+          },
+          "sweepError": {
+            "type": "string",
+            "description": "Why the run itself stopped early, when it did. Set only for a run-level failure; a period\n the sweep refused leaves this null and reports itself in its own error.",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the run was requested.",
+            "format": "date-time"
+          },
+          "createdById": {
+            "type": "string",
+            "description": "The operator accountable for the run, as recorded on every period it closes.",
+            "format": "uuid"
+          },
+          "createdByMail": {
+            "type": "string",
+            "description": "The operator's mail address."
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "When the run finished, whether it completed or failed. Null while it is still sweeping.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "periods": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetBulkCloseBillingPeriodsStatusEndpoint_Output_Period"
+                }
+              }
+            ],
+            "description": "One verdict per period the run has reached, oldest period first."
+          }
+        }
+      },
+      "GetBulkCloseBillingPeriodsStatusEndpoint_Output_Period": {
+        "required": [
+          "billingPeriodId",
+          "writeOffAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "billingPeriodId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "writeOffAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "error": {
+            "type": "string",
             "nullable": true
           }
         }
@@ -62385,6 +62988,64 @@
           "UseReconciliationTime"
         ]
       },
+      "ResettleBillingPeriodEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "reopen": {
+            "type": "boolean",
+            "description": "Whether to undo an operator's close before re-settling, bringing the period's remaining\n amount back for review. Defaults to false, which leaves a closed period alone."
+          }
+        }
+      },
+      "ResettleBillingPeriodEndpoint_Output": {
+        "required": [
+          "billingPeriodId",
+          "status",
+          "skipped"
+        ],
+        "type": "object",
+        "properties": {
+          "billingPeriodId": {
+            "type": "string",
+            "description": "The re-settled billing period."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingPeriodStatus"
+              }
+            ],
+            "description": "The status the period is in after the call."
+          },
+          "netInvoiceableAmount": {
+            "type": "number",
+            "description": "What an invoice for this period would now charge.",
+            "format": "double",
+            "nullable": true
+          },
+          "voucherCoverage": {
+            "type": "number",
+            "description": "How much of the period's billable usage vouchers absorbed.",
+            "format": "double",
+            "nullable": true
+          },
+          "settledAt": {
+            "type": "string",
+            "description": "When the period was settled by this call.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "skipped": {
+            "type": "boolean",
+            "description": "Whether the period was left untouched."
+          },
+          "skippedReason": {
+            "type": "string",
+            "description": "Why the period was left untouched, when it was.",
+            "nullable": true
+          }
+        }
+      },
       "SetMinimumSpendCommitmentEndpoint_Input": {
         "required": [
           "minimumSpendCommitment"
@@ -62506,7 +63167,8 @@
         "enum": [
           "Signup",
           "ManualGrant",
-          "TopUp"
+          "TopUp",
+          "WriteOff"
         ]
       },
       "VoucherStatus": {
@@ -67337,7 +67999,7 @@
                 }
               }
             ],
-            "description": "The validation sets available to the current user."
+            "description": "The validation sets available to the current user's organization."
           }
         }
       },

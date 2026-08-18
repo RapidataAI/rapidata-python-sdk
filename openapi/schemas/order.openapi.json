@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.08.17.1617-a3617f4"
+    "version": "2026.08.18.1529-c55ad91"
   },
   "servers": [
     {
@@ -1135,7 +1135,7 @@
           "Job"
         ],
         "summary": "Queries job definitions visible to the caller.",
-        "description": "Results are scoped to the caller's customer unless the caller is allowed to view all job definitions.",
+        "description": "Results are scoped to the caller's organization unless the caller is allowed to view all job definitions.",
         "parameters": [
           {
             "name": "page",

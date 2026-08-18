@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.08.17.1617-a3617f4"
+    "version": "2026.08.18.1529-c55ad91"
   },
   "servers": [
     {
@@ -1367,7 +1367,7 @@
           "OwnerTierOverride"
         ],
         "summary": "Creates an owner-tier override.",
-        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "description": "Exactly one target must be given: either pattern — an exact email\n (user@domain.com) or a wildcard domain (*@domain.com) — or\n organizationId. At least one of the override values must be set.",
         "requestBody": {
           "description": "The override to create.",
           "content": {
@@ -1490,7 +1490,7 @@
           "OwnerTierOverride"
         ],
         "summary": "Replaces an owner-tier override.",
-        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "description": "Exactly one target must be given: either pattern — an exact email\n (user@domain.com) or a wildcard domain (*@domain.com) — or\n organizationId. At least one of the override values must be set. The target kind that\n is left out is cleared, so an override can be switched from one to the other.",
         "parameters": [
           {
             "name": "ownerTierOverrideId",
@@ -1503,7 +1503,7 @@
           }
         ],
         "requestBody": {
-          "description": "The new pattern and override values.",
+          "description": "The new target and override values.",
           "content": {
             "application/json": {
               "schema": {
@@ -1516,6 +1516,54 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/campaign/owner-tier/organizations/{organizationId}": {
+      "get": {
+        "tags": [
+          "OwnerTierOverride"
+        ],
+        "summary": "Returns the priority and global boost level an organization's campaigns are created with.",
+        "description": "priority and globalBoostLevel are the effective values, whether they come from an\n override or from the configured defaults; the two *Override fields are null when the\n default applies. Only overrides that target the organization are reflected — an override\n targeting an individual member's email address is not.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to read the tier of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrganizationOwnerTierEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -1677,14 +1725,17 @@
         ]
       },
       "CreateOwnerTierOverrideEndpoint_Input": {
-        "required": [
-          "pattern"
-        ],
         "type": "object",
         "properties": {
           "pattern": {
             "type": "string",
-            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Exact matches win over wildcard matches."
+            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Null when targeting an organization instead.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization this override applies to. Null when targeting an email pattern\n instead. An exact email wins over an organization, which wins over a wildcard domain.",
+            "nullable": true
           },
           "priorityOverride": {
             "type": "integer",
@@ -2475,6 +2526,42 @@
             "type": "number",
             "description": "The current bid multiplier reported for the campaign.",
             "format": "double"
+          }
+        }
+      },
+      "GetOrganizationOwnerTierEndpoint_Output": {
+        "required": [
+          "organizationId",
+          "priority",
+          "globalBoostLevel"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the tier applies to."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority the organization's campaigns are created with.",
+            "format": "int32"
+          },
+          "globalBoostLevel": {
+            "type": "integer",
+            "description": "The global boost level the organization's campaigns are created with.",
+            "format": "int32"
+          },
+          "priorityOverride": {
+            "type": "integer",
+            "description": "The priority from the matching override, or null when the default applies.",
+            "format": "int32",
+            "nullable": true
+          },
+          "boostOverride": {
+            "type": "integer",
+            "description": "The boost level from the matching override, or null when the default applies.",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -3854,7 +3941,6 @@
       "QueryOwnerTierOverridesEndpoint_Output": {
         "required": [
           "id",
-          "pattern",
           "ownerMail",
           "createdAt"
         ],
@@ -3866,7 +3952,13 @@
           },
           "pattern": {
             "type": "string",
-            "description": "The owner-email pattern the override applies to."
+            "description": "The owner-email pattern the override applies to, or null when it targets an organization.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the override applies to, or null when it targets an email pattern.",
+            "nullable": true
           },
           "priorityOverride": {
             "type": "integer",
@@ -4045,14 +4137,17 @@
         }
       },
       "UpdateOwnerTierOverrideEndpoint_Input": {
-        "required": [
-          "pattern"
-        ],
         "type": "object",
         "properties": {
           "pattern": {
             "type": "string",
-            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com)."
+            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Null when targeting an organization instead.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization this override applies to. Null when targeting an email pattern\n instead.",
+            "nullable": true
           },
           "priorityOverride": {
             "type": "integer",
