@@ -12,11 +12,11 @@ client = RapidataClient()
 period = client.billing.get_current_billing_period()
 
 print(f"{period.start_date:%Y-%m-%d} to {period.end_date:%Y-%m-%d}")
-print(f"Outstanding: ${period.outstanding_cost:.2f}")
+print(f"Outstanding: ${period.outstanding_cost}")
 print(f"Credits left: {period.credits}") # (1)!
 ```
 
-1. `credits` is `None` when your organization is billed for its usage rather than from a prepaid balance.
+1. `credits` is `None` when your organization is billed for its usage rather than from a prepaid balance. On a prepaid plan, `credits` is what remains of `effective_limit`.
 
 ## What the Period Contains
 
@@ -30,8 +30,9 @@ print(f"Credits left: {period.credits}") # (1)!
 | `discount` | The discounts applied to the period so far. |
 | `response_count` | The number of billable responses collected in the period. |
 | `credits` | The prepaid credit still available, or `None` on a usage-billed plan. |
+| `effective_limit` | The most you may spend this period, or `None` when you spend without a cap. |
 
-All amounts are in US dollars.
+All amounts are in US dollars, rounded to the cent.
 
 !!! note
     Billing is settled per **organization**, so these figures cover everything your organization spent in the period — not only the jobs this client created. Costs accrue while jobs run, so the values are a snapshot: fetch the period again for an up-to-date figure.
