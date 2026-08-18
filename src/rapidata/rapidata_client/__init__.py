@@ -15,6 +15,7 @@ from .job import (
     JobProgress,
 )
 from .signal import RapidataSignal, RapidataSignalManager
+from .billing import BillingPeriod, RapidataBillingManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
 from .selection import (
