@@ -72,7 +72,7 @@ class RapidataClient:
         client_id: str | None = None,
         client_secret: str | None = None,
         environment: str | None = None,
-        oauth_scope: str = "openid roles email api",
+        oauth_scope: str = "openid email api",
         cert_path: str | None = None,
         token: dict | None = None,
         token_file: str | None = None,
