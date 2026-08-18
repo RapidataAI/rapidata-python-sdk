@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.16.1304-6471484"
+    "version": "2026.08.17.1617-a3617f4"
   },
   "servers": [
     {
@@ -30632,6 +30632,13 @@
             }
           },
           {
+            "name": "organizationId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "includeNonBillable",
             "in": "query",
             "schema": {
@@ -31180,6 +31187,13 @@
             }
           },
           {
+            "name": "organizationId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "includeNonBillable",
             "in": "query",
             "schema": {
@@ -31260,6 +31274,13 @@
           },
           {
             "name": "customerMail",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organizationId",
             "in": "query",
             "schema": {
               "type": "string"
