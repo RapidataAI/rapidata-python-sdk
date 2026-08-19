@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.18.1529-c55ad91"
+    "version": "2026.08.19.0938-f150f5e"
   },
   "servers": [
     {
@@ -27884,6 +27884,73 @@
         ]
       }
     },
+    "/job/{jobId}/ab-summary": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the A/B winner summary for a job's comparison labelling.",
+        "description": "Scoped to the job's labelling server-side; returns 404 when the job has no labelling task.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job to summarise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useUserScore",
+            "in": "query",
+            "description": "Whether to weight wins by the annotator's user score.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobAbSummaryEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/job/{jobId}/cost-estimate": {
       "get": {
         "tags": [
@@ -27909,6 +27976,100 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobCostEstimateEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/{jobId}/datapoints": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the datapoints of the dataset backing a job.",
+        "description": "Scoped server-side to the job's own dataset; returns 404 when the job has no dataset.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job whose datapoints to list.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -28000,18 +28161,18 @@
         ]
       }
     },
-    "/job/{jobId}/results": {
+    "/job/{jobId}/progress": {
       "get": {
         "tags": [
           "Job"
         ],
-        "summary": "Gets the results of a job as a JSON string.",
-        "description": "For file download, use the download-results endpoint instead.",
+        "summary": "Gets the labelling progress for a job.",
+        "description": "Scoped to the job's labelling server-side; returns 404 when the job has no labelling task.",
         "parameters": [
           {
             "name": "jobId",
             "in": "path",
-            "description": "The id of the job to get results for.",
+            "description": "The id of the job to get progress for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -28024,7 +28185,286 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/GetJobProgressEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/{jobId}/responses": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the most recent responses for a job.",
+        "description": "Scoped to the job's labelling server-side; returns 404 when the job has no labelling task.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job whose responses to list.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of responses to return.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "The order to return responses in.",
+            "schema": {
+              "$ref": "#/components/schemas/SortDirection"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobResponsesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/{jobId}/results/{rapidId}/navigation": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the anchor rapid plus its neighbours within the job's filtered results.",
+        "description": "The job scopes the results server-side; returns 404 when the job has no labelling task.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The anchor rapid id.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "description": "Optional rapid states to filter the slice by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            }
+          },
+          {
+            "name": "window",
+            "in": "query",
+            "description": "The number of neighbours to return on each side.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 3
+            }
+          },
+          {
+            "name": "includeNotAccepted",
+            "in": "query",
+            "description": "Whether to include not-yet-accepted rapids.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeOverflow",
+            "in": "query",
+            "description": "Whether to include overflow rapids.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobResultNavigationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/{jobId}/results": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the results grid for a job.",
+        "description": "Resolves the job's rapid type server-side and returns the matching result shape (rapid\n cards, ranking datapoints, or grouped rankings). Returns 404 when the job has no\n labelling task.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job whose results to list.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "description": "Optional rapid states to filter by (rapid-card results only).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IJobResults"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
@@ -35677,6 +36117,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -37045,6 +37486,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -40812,6 +41254,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -41066,6 +41509,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -41159,6 +41603,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -41269,6 +41714,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -41374,6 +41820,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -41441,6 +41888,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -41498,6 +41946,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -41573,6 +42022,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -56827,6 +57277,46 @@
           }
         }
       },
+      "BoundingBoxResult_Box": {
+        "type": "object",
+        "properties": {
+          "xMin": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "ClassifyPayload_Category": {
+        "required": [
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "CloneJobDefinitionEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -57538,6 +58028,31 @@
           "Other"
         ]
       },
+      "GetJobAbSummaryEndpoint_Output": {
+        "required": [
+          "winCounter",
+          "allTargetGroupsCompleted"
+        ],
+        "type": "object",
+        "properties": {
+          "winCounter": {
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            ],
+            "description": "The win count per compared option."
+          },
+          "allTargetGroupsCompleted": {
+            "type": "boolean",
+            "description": "Whether all target groups have completed (result is then final)."
+          }
+        }
+      },
       "GetJobByIdEndpoint_Output": {
         "required": [
           "jobId",
@@ -57580,6 +58095,11 @@
           "pipelineId": {
             "type": "string",
             "description": "The pipeline id."
+          },
+          "audienceName": {
+            "type": "string",
+            "description": "The audience name, or null when the job's audience has since been deleted (jobs\n outlive their audience).",
+            "nullable": true
           },
           "status": {
             "allOf": [
@@ -57691,6 +58211,78 @@
         },
         "description": "The estimated cost of a job."
       },
+      "GetJobDatapointsEndpoint_Output": {
+        "required": [
+          "id",
+          "datasetId",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The datapoint id."
+          },
+          "datasetId": {
+            "type": "string",
+            "description": "The id of the dataset the datapoint belongs to."
+          },
+          "asset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "description": "The datapoint asset."
+          },
+          "context": {
+            "type": "string",
+            "description": "The optional textual context.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "description": "The optional context asset."
+          }
+        }
+      },
+      "GetJobDatapointsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "GetJobDefinitionByIdEndpoint_Output": {
         "required": [
           "definitionId",
@@ -57776,6 +58368,158 @@
           }
         },
         "description": "The estimated cost of a job definition."
+      },
+      "GetJobProgressEndpoint_Output": {
+        "required": [
+          "completionPercentage",
+          "total",
+          "completed",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "completionPercentage": {
+            "type": "number",
+            "description": "The completion percentage (0–100).",
+            "format": "double"
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of rapids.",
+            "format": "int64"
+          },
+          "completed": {
+            "type": "integer",
+            "description": "The number of completed rapids.",
+            "format": "int64"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LabelingState"
+              }
+            ],
+            "description": "The state of the job's labelling."
+          }
+        }
+      },
+      "GetJobResponsesEndpoint_Output": {
+        "required": [
+          "responses"
+        ],
+        "type": "object",
+        "properties": {
+          "responses": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetJobResponsesEndpoint_Output_Response"
+                }
+              }
+            ],
+            "description": "The responses, newest first by default."
+          }
+        }
+      },
+      "GetJobResponsesEndpoint_Output_Response": {
+        "required": [
+          "id",
+          "userId",
+          "country",
+          "language",
+          "result",
+          "userScore",
+          "userScores",
+          "demographicInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/IRapidResult"
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GetJobResultNavigationEndpoint_Output": {
+        "required": [
+          "current",
+          "previous",
+          "next",
+          "index",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "current": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobRapidResult"
+              }
+            ],
+            "description": "The anchor rapid, as a full result."
+          },
+          "previous": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/JobNavigationItem"
+                }
+              }
+            ],
+            "description": "The rapids preceding the anchor, in ascending order."
+          },
+          "next": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/JobNavigationItem"
+                }
+              }
+            ],
+            "description": "The rapids following the anchor, in ascending order."
+          },
+          "index": {
+            "type": "integer",
+            "description": "The 1-based position of the anchor within the filtered slice.",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of rapids in the filtered slice.",
+            "format": "int64"
+          }
+        }
       },
       "GetJobRevisionEndpoint_Output": {
         "required": [
@@ -57968,6 +58712,29 @@
           }
         }
       },
+      "GroupedRankingGroup": {
+        "required": [
+          "id",
+          "name",
+          "state",
+          "pairMakerInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "pairMakerInformation": {
+            "$ref": "#/components/schemas/IPairMakerInformation"
+          }
+        }
+      },
       "IDataset": {
         "required": [
           "_t"
@@ -58005,6 +58772,170 @@
             "type": "string"
           }
         }
+      },
+      "IJobResults": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IJobResultsGroupedRankingResults"
+          },
+          {
+            "$ref": "#/components/schemas/IJobResultsRankingResults"
+          },
+          {
+            "$ref": "#/components/schemas/IJobResultsRapidResults"
+          }
+        ],
+        "description": "The unified job results payload, discriminated by the job's rapid type.",
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "GroupedRankingResults": "#/components/schemas/IJobResultsGroupedRankingResults",
+            "RankingResults": "#/components/schemas/IJobResultsRankingResults",
+            "RapidResults": "#/components/schemas/IJobResultsRapidResults"
+          }
+        }
+      },
+      "IJobResultsGroupedRankingResults": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "GroupedRankingResults"
+            ],
+            "type": "string"
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of sub-rankings.",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The 1-based page number.",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "The page size.",
+            "format": "int32"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GroupedRankingGroup"
+                }
+              }
+            ],
+            "description": "The sub-rankings on this page."
+          }
+        },
+        "description": "Results for a grouped-ranking job: a paged list of sub-rankings."
+      },
+      "IJobResultsRankingResults": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "totalVotes",
+          "items",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RankingResults"
+            ],
+            "type": "string"
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of datapoints.",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The 1-based page number.",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "The page size.",
+            "format": "int32"
+          },
+          "totalVotes": {
+            "type": "integer",
+            "description": "The total number of votes cast.",
+            "format": "int64"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RankingDatapoint"
+                }
+              }
+            ],
+            "description": "The ranked datapoints on this page."
+          }
+        },
+        "description": "Results for a compare (ranking) job: a paged list of Elo-ranked datapoints."
+      },
+      "IJobResultsRapidResults": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "RapidResults"
+            ],
+            "type": "string"
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of rapids.",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The 1-based page number.",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "The page size.",
+            "format": "int32"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/JobRapidResult"
+                }
+              }
+            ],
+            "description": "The rapid cards on this page."
+          }
+        },
+        "description": "Results for a simple or evaluation job: a paged grid of per-rapid cards."
       },
       "IOrderWorkflowInput": {
         "required": [
@@ -58197,6 +59128,68 @@
             "format": "float"
           },
           "totalComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IPairMakerInformation": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation"
+          },
+          {
+            "$ref": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FullPermutationPairMakerInformation": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation",
+            "OnlinePairMakerInformation": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
+          }
+        }
+      },
+      "IPairMakerInformationFullPermutationPairMakerInformation": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FullPermutationPairMakerInformation"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IPairMakerInformationOnlinePairMakerInformation": {
+        "required": [
+          "randomMatchesRatio",
+          "totalComparisonBudget",
+          "currentComparisonBudget",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlinePairMakerInformation"
+            ],
+            "type": "string"
+          },
+          "randomMatchesRatio": {
+            "type": "number",
+            "format": "float"
+          },
+          "totalComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentComparisonBudget": {
             "type": "integer",
             "format": "int32"
           }
@@ -58745,6 +59738,565 @@
           }
         }
       },
+      "IRapidPayload": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload",
+            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
+            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
+            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
+            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+          }
+        }
+      },
+      "IRapidPayloadBoundingBoxPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadClassifyPayload": {
+        "required": [
+          "categories",
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyPayload"
+            ],
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyPayload_Category"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadComparePayload": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ComparePayload"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadFreeTextPayload": {
+        "required": [
+          "question",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextPayload"
+            ],
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IRapidPayloadLinePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LinePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadLocatePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocatePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadNamedEntityPayload": {
+        "required": [
+          "target",
+          "classes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidPayloadPolygonPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadScrubPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadTranscriptionPayload": {
+        "required": [
+          "title",
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionPayload"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "transcription": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionPayload_TranscriptionWord"
+            }
+          }
+        }
+      },
+      "IRapidResult": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidResultAttachCategoryResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultBoundingBoxResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultCompareResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultFreeTextResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultLineResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultLocateResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultPolygonResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultScrubResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultSkipResult"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidResultTranscriptionResult"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AttachCategoryResult": "#/components/schemas/IRapidResultAttachCategoryResult",
+            "BoundingBoxResult": "#/components/schemas/IRapidResultBoundingBoxResult",
+            "CompareResult": "#/components/schemas/IRapidResultCompareResult",
+            "FreeTextResult": "#/components/schemas/IRapidResultFreeTextResult",
+            "LineResult": "#/components/schemas/IRapidResultLineResult",
+            "LocateResult": "#/components/schemas/IRapidResultLocateResult",
+            "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
+            "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
+            "SkipResult": "#/components/schemas/IRapidResultSkipResult",
+            "TranscriptionResult": "#/components/schemas/IRapidResultTranscriptionResult"
+          }
+        }
+      },
+      "IRapidResultAttachCategoryResult": {
+        "required": [
+          "rapidId",
+          "category",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidResultBoundingBoxResult": {
+        "required": [
+          "rapidId",
+          "boundingBoxes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoundingBoxResult_Box"
+            }
+          }
+        }
+      },
+      "IRapidResultCompareResult": {
+        "required": [
+          "rapidId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "winners": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidResultFreeTextResult": {
+        "required": [
+          "rapidId",
+          "answer",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidResultLineResult": {
+        "required": [
+          "rapidId",
+          "lines",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_Line"
+            }
+          }
+        }
+      },
+      "IRapidResultLocateResult": {
+        "required": [
+          "rapidId",
+          "coordinates",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocateCoordinate"
+            }
+          }
+        }
+      },
+      "IRapidResultNamedEntityResult": {
+        "required": [
+          "rapidId",
+          "classifications",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
+            }
+          }
+        }
+      },
+      "IRapidResultPolygonResult": {
+        "required": [
+          "rapidId",
+          "shapes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "shapes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Shape"
+            }
+          }
+        }
+      },
+      "IRapidResultScrubResult": {
+        "required": [
+          "rapidId",
+          "timestamps",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "timestamps": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "IRapidResultSkipResult": {
+        "required": [
+          "rapidId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidResultTranscriptionResult": {
+        "required": [
+          "rapidId",
+          "selectedWords",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "selectedWords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionResult_TranscriptionWord"
+            }
+          }
+        }
+      },
       "IReferee": {
         "required": [
           "_t"
@@ -58853,6 +60405,67 @@
           "threshold": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "IResponseAggregation": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IResponseAggregationClassifyAggregation"
+          },
+          {
+            "$ref": "#/components/schemas/IResponseAggregationCompareAggregation"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassifyAggregation": "#/components/schemas/IResponseAggregationClassifyAggregation",
+            "CompareAggregation": "#/components/schemas/IResponseAggregationCompareAggregation"
+          }
+        }
+      },
+      "IResponseAggregationClassifyAggregation": {
+        "required": [
+          "categoryTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyAggregation"
+            ],
+            "type": "string"
+          },
+          "categoryTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTally"
+            }
+          }
+        }
+      },
+      "IResponseAggregationCompareAggregation": {
+        "required": [
+          "winnerTallies",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareAggregation"
+            ],
+            "type": "string"
+          },
+          "winnerTallies": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResponseTally"
+            }
           }
         }
       },
@@ -59466,6 +61079,218 @@
           "Failed"
         ]
       },
+      "JobNavigationItem": {
+        "required": [
+          "rapidId",
+          "asset",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RapidState"
+          }
+        }
+      },
+      "JobRapidResult": {
+        "required": [
+          "rapidId",
+          "asset",
+          "responses",
+          "totalResponseCount",
+          "state",
+          "payload"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          },
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobResponse"
+            }
+          },
+          "totalResponseCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RapidState"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/IRapidPayload"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "decisiveness": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "aggregation": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IResponseAggregation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "JobResponse": {
+        "required": [
+          "id",
+          "userId",
+          "country",
+          "language",
+          "result",
+          "userScore",
+          "userScores",
+          "demographicInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/IRapidResult"
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LabelingState": {
+        "enum": [
+          "Created",
+          "Started",
+          "Labeling",
+          "Paused",
+          "Done",
+          "Failed"
+        ]
+      },
+      "LineResult_Line": {
+        "required": [
+          "size",
+          "points"
+        ],
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "number",
+            "format": "double"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineResult_LinePoint"
+            }
+          }
+        }
+      },
+      "LineResult_LinePoint": {
+        "required": [
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "double"
+          },
+          "y": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "LocateCoordinate": {
+        "required": [
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "double"
+          },
+          "y": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "NamedEntityResult_NamedClassification": {
+        "required": [
+          "start",
+          "end",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
       "OrderState": {
         "enum": [
           "Created",
@@ -59480,6 +61305,39 @@
           "Failed",
           "StaleResults"
         ]
+      },
+      "PolygonResult_Coordinate": {
+        "required": [
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "y": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "PolygonResult_Shape": {
+        "required": [
+          "edges"
+        ],
+        "type": "object",
+        "properties": {
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolygonResult_Coordinate"
+            }
+          }
+        }
       },
       "PreviewOrderEndpoint_Input": {
         "type": "object",
@@ -60085,6 +61943,54 @@
           }
         }
       },
+      "RankingDatapoint": {
+        "required": [
+          "datapointId",
+          "asset",
+          "elo"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          },
+          "elo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RapidState": {
+        "enum": [
+          "Labeling",
+          "Paused",
+          "Incomplete",
+          "Flagged",
+          "Done",
+          "None",
+          "Rejected"
+        ]
+      },
+      "ResponseTally": {
+        "required": [
+          "count",
+          "userScoreSum"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userScoreSum": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "RestartRapidsEndpoint_Input": {
         "required": [
           "rapidIds"
@@ -60112,6 +62018,12 @@
           "CheckErrored",
           "ClassificationTimedOut",
           null
+        ]
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
         ]
       },
       "StickyState": {
@@ -60152,6 +62064,38 @@
             "type": "boolean",
             "description": "Whether the order should proceed even if certain datapoints failed.",
             "nullable": true
+          }
+        }
+      },
+      "TranscriptionPayload_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TranscriptionResult_TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -64365,31 +66309,6 @@
           }
         }
       },
-      "BoundingBoxResult_Box": {
-        "type": "object",
-        "properties": {
-          "xMin": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "yMin": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "xMax": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "yMax": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        }
-      },
       "ClassifyPayload": {
         "required": [
           "categories",
@@ -64405,21 +66324,6 @@
           },
           "title": {
             "type": "string"
-          }
-        }
-      },
-      "ClassifyPayload_Category": {
-        "required": [
-          "label"
-        ],
-        "type": "object",
-        "properties": {
-          "label": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -65340,257 +67244,6 @@
           }
         }
       },
-      "IRapidPayload": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload",
-            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
-            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
-            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
-            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
-          }
-        }
-      },
-      "IRapidPayloadBoundingBoxPayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadClassifyPayload": {
-        "required": [
-          "categories",
-          "title",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassifyPayload"
-            ],
-            "type": "string"
-          },
-          "categories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClassifyPayload_Category"
-            }
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadComparePayload": {
-        "required": [
-          "criteria",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ComparePayload"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadFreeTextPayload": {
-        "required": [
-          "question",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FreeTextPayload"
-            ],
-            "type": "string"
-          },
-          "question": {
-            "type": "string"
-          },
-          "shouldValidateResponse": {
-            "type": "boolean"
-          },
-          "validationSystemPrompt": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "IRapidPayloadLinePayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LinePayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadLocatePayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocatePayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadNamedEntityPayload": {
-        "required": [
-          "target",
-          "classes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          },
-          "classes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IRapidPayloadPolygonPayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadScrubPayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadTranscriptionPayload": {
-        "required": [
-          "title",
-          "transcription",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionPayload"
-            ],
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "transcription": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionPayload_TranscriptionWord"
-            }
-          }
-        }
-      },
       "IRapidPolygonRapid": {
         "required": [
           "target",
@@ -65638,314 +67291,6 @@
           },
           "id": {
             "type": "string"
-          }
-        }
-      },
-      "IRapidResult": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IRapidResultAttachCategoryResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultBoundingBoxResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultCompareResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultFreeTextResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultLineResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultLocateResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultPolygonResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultScrubResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultSkipResult"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidResultTranscriptionResult"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "AttachCategoryResult": "#/components/schemas/IRapidResultAttachCategoryResult",
-            "BoundingBoxResult": "#/components/schemas/IRapidResultBoundingBoxResult",
-            "CompareResult": "#/components/schemas/IRapidResultCompareResult",
-            "FreeTextResult": "#/components/schemas/IRapidResultFreeTextResult",
-            "LineResult": "#/components/schemas/IRapidResultLineResult",
-            "LocateResult": "#/components/schemas/IRapidResultLocateResult",
-            "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
-            "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
-            "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
-            "SkipResult": "#/components/schemas/IRapidResultSkipResult",
-            "TranscriptionResult": "#/components/schemas/IRapidResultTranscriptionResult"
-          }
-        }
-      },
-      "IRapidResultAttachCategoryResult": {
-        "required": [
-          "rapidId",
-          "category",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AttachCategoryResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "category": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidResultBoundingBoxResult": {
-        "required": [
-          "rapidId",
-          "boundingBoxes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "boundingBoxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BoundingBoxResult_Box"
-            }
-          }
-        }
-      },
-      "IRapidResultCompareResult": {
-        "required": [
-          "rapidId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "winners": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "IRapidResultFreeTextResult": {
-        "required": [
-          "rapidId",
-          "answer",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FreeTextResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "answer": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidResultLineResult": {
-        "required": [
-          "rapidId",
-          "lines",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LineResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "lines": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LineResult_Line"
-            }
-          }
-        }
-      },
-      "IRapidResultLocateResult": {
-        "required": [
-          "rapidId",
-          "coordinates",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocateResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "coordinates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LocateCoordinate"
-            }
-          }
-        }
-      },
-      "IRapidResultNamedEntityResult": {
-        "required": [
-          "rapidId",
-          "classifications",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NamedEntityResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "classifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
-            }
-          }
-        }
-      },
-      "IRapidResultPolygonResult": {
-        "required": [
-          "rapidId",
-          "shapes",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PolygonResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "shapes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PolygonResult_Shape"
-            }
-          }
-        }
-      },
-      "IRapidResultScrubResult": {
-        "required": [
-          "rapidId",
-          "timestamps",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ScrubResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "timestamps": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      },
-      "IRapidResultSkipResult": {
-        "required": [
-          "rapidId",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "SkipResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidResultTranscriptionResult": {
-        "required": [
-          "rapidId",
-          "selectedWords",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionResult"
-            ],
-            "type": "string"
-          },
-          "rapidId": {
-            "type": "string"
-          },
-          "selectedWords": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TranscriptionResult_TranscriptionWord"
-            }
           }
         }
       },
@@ -66168,67 +67513,6 @@
           "threshold": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "IResponseAggregation": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IResponseAggregationClassifyAggregation"
-          },
-          {
-            "$ref": "#/components/schemas/IResponseAggregationCompareAggregation"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "ClassifyAggregation": "#/components/schemas/IResponseAggregationClassifyAggregation",
-            "CompareAggregation": "#/components/schemas/IResponseAggregationCompareAggregation"
-          }
-        }
-      },
-      "IResponseAggregationClassifyAggregation": {
-        "required": [
-          "categoryTallies",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassifyAggregation"
-            ],
-            "type": "string"
-          },
-          "categoryTallies": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/ResponseTally"
-            }
-          }
-        }
-      },
-      "IResponseAggregationCompareAggregation": {
-        "required": [
-          "winnerTallies",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareAggregation"
-            ],
-            "type": "string"
-          },
-          "winnerTallies": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/ResponseTally"
-            }
           }
         }
       },
@@ -66576,42 +67860,6 @@
           }
         }
       },
-      "LineResult_Line": {
-        "required": [
-          "size",
-          "points"
-        ],
-        "type": "object",
-        "properties": {
-          "size": {
-            "type": "number",
-            "format": "double"
-          },
-          "points": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LineResult_LinePoint"
-            }
-          }
-        }
-      },
-      "LineResult_LinePoint": {
-        "required": [
-          "x",
-          "y"
-        ],
-        "type": "object",
-        "properties": {
-          "x": {
-            "type": "number",
-            "format": "double"
-          },
-          "y": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
       "LocateBoxTruth_Box": {
         "type": "object",
         "properties": {
@@ -66637,44 +67885,6 @@
           }
         }
       },
-      "LocateCoordinate": {
-        "required": [
-          "x",
-          "y"
-        ],
-        "type": "object",
-        "properties": {
-          "x": {
-            "type": "number",
-            "format": "double"
-          },
-          "y": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "NamedEntityResult_NamedClassification": {
-        "required": [
-          "start",
-          "end",
-          "classification"
-        ],
-        "type": "object",
-        "properties": {
-          "start": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "end": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "classification": {
-            "type": "string"
-          }
-        }
-      },
       "NamedEntityTruth_NamedClassification": {
         "required": [
           "start",
@@ -66693,39 +67903,6 @@
           },
           "classification": {
             "type": "string"
-          }
-        }
-      },
-      "PolygonResult_Coordinate": {
-        "required": [
-          "x",
-          "y"
-        ],
-        "type": "object",
-        "properties": {
-          "x": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "y": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        }
-      },
-      "PolygonResult_Shape": {
-        "required": [
-          "edges"
-        ],
-        "type": "object",
-        "properties": {
-          "edges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PolygonResult_Coordinate"
-            }
           }
         }
       },
@@ -67027,17 +68204,6 @@
           "MyAnswerIsCorrect"
         ]
       },
-      "RapidState": {
-        "enum": [
-          "Labeling",
-          "Paused",
-          "Incomplete",
-          "Flagged",
-          "Done",
-          "None",
-          "Rejected"
-        ]
-      },
       "ReportRapidEndpoint_Input": {
         "required": [
           "issue"
@@ -67066,23 +68232,6 @@
             "type": "string",
             "description": "An optional identifier where the report originated from.",
             "nullable": true
-          }
-        }
-      },
-      "ResponseTally": {
-        "required": [
-          "count",
-          "userScoreSum"
-        ],
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "userScoreSum": {
-            "type": "number",
-            "format": "double"
           }
         }
       },
@@ -67163,39 +68312,7 @@
           }
         }
       },
-      "TranscriptionPayload_TranscriptionWord": {
-        "required": [
-          "word",
-          "wordIndex"
-        ],
-        "type": "object",
-        "properties": {
-          "word": {
-            "type": "string"
-          },
-          "wordIndex": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "TranscriptionRapid_TranscriptionWord": {
-        "required": [
-          "word",
-          "wordIndex"
-        ],
-        "type": "object",
-        "properties": {
-          "word": {
-            "type": "string"
-          },
-          "wordIndex": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "TranscriptionResult_TranscriptionWord": {
         "required": [
           "word",
           "wordIndex"
@@ -69218,68 +70335,6 @@
           }
         }
       },
-      "IPairMakerInformation": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation"
-          },
-          {
-            "$ref": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "FullPermutationPairMakerInformation": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation",
-            "OnlinePairMakerInformation": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
-          }
-        }
-      },
-      "IPairMakerInformationFullPermutationPairMakerInformation": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FullPermutationPairMakerInformation"
-            ],
-            "type": "string"
-          }
-        }
-      },
-      "IPairMakerInformationOnlinePairMakerInformation": {
-        "required": [
-          "randomMatchesRatio",
-          "totalComparisonBudget",
-          "currentComparisonBudget",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "OnlinePairMakerInformation"
-            ],
-            "type": "string"
-          },
-          "randomMatchesRatio": {
-            "type": "number",
-            "format": "float"
-          },
-          "totalComparisonBudget": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "currentComparisonBudget": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "IWorkflow": {
         "required": [
           "_t"
@@ -69814,12 +70869,6 @@
             "format": "int32"
           }
         }
-      },
-      "SortDirection": {
-        "enum": [
-          "Asc",
-          "Desc"
-        ]
       },
       "WorkflowState": {
         "enum": [
