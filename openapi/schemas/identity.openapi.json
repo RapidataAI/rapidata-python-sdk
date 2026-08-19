@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.08.17.1617-a3617f4"
+    "version": "2026.08.18.1529-c55ad91"
   },
   "servers": [
     {
@@ -1941,7 +1941,7 @@
           "Organization"
         ],
         "summary": "Creates an invitation to join the organization.",
-        "description": "Returns a single-use token the invitee presents to the accept-invitation endpoint.",
+        "description": "An invitation mail with the accept link is sent to the invitee. The response still carries\n the single-use token the invitee presents to the accept-invitation endpoint, so the link can\n also be shared manually.",
         "parameters": [
           {
             "name": "organizationId",

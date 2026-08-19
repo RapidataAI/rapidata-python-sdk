@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.08.17.1617-a3617f4"
+    "version": "2026.08.18.1529-c55ad91"
   },
   "servers": [
     {
@@ -5018,7 +5018,7 @@
         "tags": [
           "Benchmark"
         ],
-        "summary": "Queries all benchmarks of the current user.",
+        "summary": "Queries all benchmarks of the current user's organization.",
         "parameters": [
           {
             "name": "page",
@@ -12541,7 +12541,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "Queries all leaderboards accessible to the current user.",
+        "summary": "Queries all leaderboards accessible to the current user's organization.",
         "parameters": [
           {
             "name": "page",
@@ -20704,7 +20704,7 @@
           },
           "isExcludedFromOverall": {
             "type": "boolean",
-            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it a private experiment of the owning organization."
           },
           "includedTags": {
             "allOf": [
@@ -20868,7 +20868,7 @@
           },
           "isExcludedFromOverall": {
             "type": "boolean",
-            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it an owner-only private experiment."
+            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard,\n making it a private experiment of the owning organization."
           },
           "voteAggregation": {
             "allOf": [

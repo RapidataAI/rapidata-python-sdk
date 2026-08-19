@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Validation API",
     "description": "The API for the Rapidata Validation service",
-    "version": "2026.08.17.1617-a3617f4"
+    "version": "2026.08.18.1529-c55ad91"
   },
   "servers": [
     {
@@ -272,7 +272,7 @@
         "tags": [
           "ValidationSet"
         ],
-        "summary": "Gets the available validation sets for the current user.",
+        "summary": "Gets the available validation sets for the current user's organization.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1554,7 +1554,7 @@
                 }
               }
             ],
-            "description": "The validation sets available to the current user."
+            "description": "The validation sets available to the current user's organization."
           }
         }
       },
