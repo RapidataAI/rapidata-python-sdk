@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.08.18.1529-c55ad91"
+    "version": "2026.08.19.0938-f150f5e"
   },
   "servers": [
     {
@@ -1117,7 +1117,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/rapid/compare-ab-summary/{correlationId}/recalculate": {

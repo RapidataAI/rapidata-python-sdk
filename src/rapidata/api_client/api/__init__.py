@@ -18,7 +18,6 @@ from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
 from rapidata.api_client.api.datapoints_api import DatapointsApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.dataset_group_api import DatasetGroupApi
-from rapidata.api_client.api.evaluation_api import EvaluationApi
 from rapidata.api_client.api.examples_api import ExamplesApi
 from rapidata.api_client.api.external_apps_api import ExternalAppsApi
 from rapidata.api_client.api.external_audience_api import ExternalAudienceApi
@@ -28,7 +27,6 @@ from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.flow_api import FlowApi
 from rapidata.api_client.api.flow_item_api import FlowItemApi
 from rapidata.api_client.api.global_text_api import GlobalTextApi
-from rapidata.api_client.api.grouped_ranking_api import GroupedRankingApi
 from rapidata.api_client.api.hugging_face_sync_api import HuggingFaceSyncApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.invoice_api import InvoiceApi
@@ -44,7 +42,6 @@ from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.platform_api import PlatformApi
 from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.prompt_embedding_map_api import PromptEmbeddingMapApi
-from rapidata.api_client.api.ranking_api import RankingApi
 from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
 from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
 from rapidata.api_client.api.rapid_api import RapidApi
@@ -55,7 +52,6 @@ from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.sample_generation_api import SampleGenerationApi
 from rapidata.api_client.api.settings_api import SettingsApi
 from rapidata.api_client.api.signal_api import SignalApi
-from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.survey_api import SurveyApi
 from rapidata.api_client.api.translation_api import TranslationApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi

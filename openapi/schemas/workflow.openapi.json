@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Workflow API",
     "description": "The API for the Rapidata Workflow service",
-    "version": "2026.08.18.1529-c55ad91"
+    "version": "2026.08.19.0938-f150f5e"
   },
   "servers": [
     {
@@ -100,7 +100,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflow/grouped-ranking/{workflowId}/results": {
@@ -344,7 +345,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflow/compare/{workflowId}/results": {
@@ -427,7 +429,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflow/simple/{workflowId}/results": {
@@ -527,7 +530,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflow/{workflowId}": {
@@ -612,7 +616,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflow/{workflowId}/compare-ab-summary": {
@@ -669,7 +674,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflow/{workflowId}/progress": {
@@ -716,7 +722,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflow/{workflowId}/responses": {
@@ -781,7 +788,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/workflows": {
