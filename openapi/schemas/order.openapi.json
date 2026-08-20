@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.08.19.1722-5de1718"
+    "version": "2026.08.20.1843-f4aff59"
   },
   "servers": [
     {
@@ -5884,6 +5884,9 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
           "result",
           "userScore",
           "userScores",
@@ -5902,6 +5905,18 @@
           },
           "language": {
             "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
           },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
@@ -9163,6 +9178,9 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
           "result",
           "userScore",
           "userScores",
@@ -9181,6 +9199,18 @@
           },
           "language": {
             "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
           },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"

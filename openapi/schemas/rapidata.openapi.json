@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.19.1722-5de1718"
+    "version": "2026.08.20.1843-f4aff59"
   },
   "servers": [
     {
@@ -51487,6 +51487,10 @@
               }
             ],
             "description": "Feature flags applied to every order created by this leaderboard."
+          },
+          "skipInitialRun": {
+            "type": "boolean",
+            "description": "Set to true to skip the initial standings run. A newly added model is still\n compared against the whole existing field and boost runs still work — there is just no\n run collecting the first responses. On the benchmark's first leaderboard, participants\n that already have result images are submitted into the field so those paths have a field\n to work with; on a benchmark that already has a leaderboard they are in it already and\n are left untouched. Defaults to false, which queues the run as before."
           }
         }
       },
@@ -58434,6 +58438,9 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
           "result",
           "userScore",
           "userScores",
@@ -58452,6 +58459,18 @@
           },
           "language": {
             "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
           },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
@@ -61184,6 +61203,9 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
           "result",
           "userScore",
           "userScores",
@@ -61202,6 +61224,18 @@
           },
           "language": {
             "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
           },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
