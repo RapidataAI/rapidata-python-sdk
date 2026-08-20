@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.08.19.0938-f150f5e"
+    "version": "2026.08.19.1722-5de1718"
   },
   "servers": [
     {
@@ -5489,6 +5489,18 @@
           "allTargetGroupsCompleted": {
             "type": "boolean",
             "description": "Whether all target groups have completed (result is then final)."
+          },
+          "sideOrder": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The canonical order of the compared side keys (matching WinCounter's\n keys), so the client can render the sides in a stable order rather than relying on the\n win-counter's dictionary order. Null when the compare blueprint has no defined order."
           }
         }
       },
@@ -5534,6 +5546,11 @@
           "pipelineId": {
             "type": "string",
             "description": "The pipeline id."
+          },
+          "campaignId": {
+            "type": "string",
+            "description": "The job's campaign id. Null when the pipeline did not yield exactly one campaign.",
+            "nullable": true
           },
           "audienceName": {
             "type": "string",
@@ -6156,7 +6173,9 @@
           "id",
           "name",
           "state",
-          "pairMakerInformation"
+          "pairMakerInformation",
+          "datapoints",
+          "totalVotes"
         ],
         "type": "object",
         "properties": {
@@ -6171,6 +6190,16 @@
           },
           "pairMakerInformation": {
             "$ref": "#/components/schemas/IPairMakerInformation"
+          },
+          "datapoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RankingDatapoint"
+            }
+          },
+          "totalVotes": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },

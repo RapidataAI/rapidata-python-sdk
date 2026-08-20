@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.08.19.0938-f150f5e"
+    "version": "2026.08.19.1722-5de1718"
   },
   "servers": [
     {
@@ -234,7 +234,7 @@
           "Capabilities"
         ],
         "summary": "Lists the capabilities a customer holds.",
-        "description": "capabilities are grants held through organization membership.",
+        "description": "capabilities are granted to an organization, so these are the grants of the\n organization the customer is currently acting under — the same set enforced for them. A\n customer without an organization holds none.",
         "parameters": [
           {
             "name": "customerId",
@@ -3142,7 +3142,7 @@
                 }
               }
             ],
-            "description": "Capabilities granted to the customer through organization membership."
+            "description": "Capabilities granted to the organization the customer is acting under."
           }
         }
       },
