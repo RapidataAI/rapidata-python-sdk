@@ -2,26 +2,36 @@
 ```mermaid
 classDiagram
     class RapidataClient {
-        +RapidataOrderManager order
-        +RapidataValidationManager validation
+        +RapidataJobManager job
+        +RapidataAudienceManager audience
+        +ValidationSetManager validation
+        +RapidataFlowManager flow
+        +RapidataBillingManager billing
     }
-    
-    class RapidataOrderManager {
+
+    class RapidataJobManager {
         +RapidataFilters filter
         +RapidataSettings settings
         +RapidataSelections selections
-        +create_****_order()
-        +get_order_by_id()
-        +find_orders()
+        +create_****_job_definition()
+        +get_job_definition_by_id()
+        +get_job_by_id()
+        +find_jobs()
     }
-    
-    class RapidataValidationManager {
+
+    class RapidataAudienceManager {
+        +create_audience()
+        +get_audience_by_id()
+        +assign_job()
+    }
+
+    class ValidationSetManager {
         +RapidsManager rapid
         +create_****_set()
         +get_validation_set_by_id()
         +find_validation_sets()
     }
-    
+
     class RapidataFilters {
         +Country
         +Language
@@ -50,21 +60,22 @@ classDiagram
         +Capped
         +Shuffling
     }
-    
+
     class RapidsManager {
         +****_rapid()
     }
 
-    RapidataClient --* RapidataOrderManager
-    RapidataClient --* RapidataValidationManager
-    RapidataOrderManager --* RapidataFilters
-    RapidataOrderManager --* RapidataSettings
-    RapidataOrderManager --* RapidataSelections
-    RapidataValidationManager --* RapidsManager
+    RapidataClient --* RapidataJobManager
+    RapidataClient --* RapidataAudienceManager
+    RapidataClient --* ValidationSetManager
+    RapidataJobManager --* RapidataFilters
+    RapidataJobManager --* RapidataSettings
+    RapidataJobManager --* RapidataSelections
+    ValidationSetManager --* RapidsManager
 
     link RapidataClient "../reference/rapidata/rapidata_client/rapidata_client/" ""
-    link RapidataOrderManager "../reference/rapidata/rapidata_client/order/rapidata_order_manager/" ""
-    link RapidataValidationManager "../reference/rapidata/rapidata_client/validation/validation_set_manager/" ""
+    link RapidataJobManager "../reference/rapidata/rapidata_client/job/rapidata_job_manager/" ""
+    link ValidationSetManager "../reference/rapidata/rapidata_client/validation/validation_set_manager/" ""
     link RapidataFilters "../reference/rapidata/rapidata_client/filter/rapidata_filters/" ""
     link RapidataSettings "../reference/rapidata/rapidata_client/settings/rapidata_settings/" ""
     link RapidataSelections "../reference/rapidata/rapidata_client/selection/rapidata_selections/" ""
@@ -74,17 +85,19 @@ classDiagram
 
 # Rapidata API
 
-The Rapidata API builds on the [RapidataClient](reference/rapidata/rapidata_client/rapidata_client.md) class. This class is the entry point for all operations. The RapidataClient class has two main properties, order and validation, which are used to manage orders and validation sets respectively.
+The Rapidata API builds on the [RapidataClient](reference/rapidata/rapidata_client/rapidata_client.md) class. This class is the entry point for all operations. You collect labels by creating a **job definition** with `job`, then assigning it to an **audience** — the job runs against that audience's annotators and produces results.
 
-### Order related classes
+### Job related classes
 
-[RapidataOrderManger](reference/rapidata/rapidata_client/order/rapidata_order_manager.md) - accessible through the RapidataClient(rapi) under rapi.order
+[RapidataJobManager](reference/rapidata/rapidata_client/job/rapidata_job_manager.md) - accessible through the RapidataClient(rapi) under rapi.job. Creates job definitions and looks up jobs.
 
-[RapidataFilters](reference/rapidata/rapidata_client/filter/rapidata_filters.md) - accessible through the RapidataClient(rapi) under rapi.order
+[RapidataAudienceManager](reference/rapidata/rapidata_client/audience/rapidata_audience_manager.md) - accessible through the RapidataClient(rapi) under rapi.audience. Manages annotator audiences and assigns job definitions to them.
 
-[RapidataSettings](reference/rapidata/rapidata_client/settings/rapidata_settings.md) - accessible through the RapidataClient(rapi) under rapi.order
+[RapidataFilters](reference/rapidata/rapidata_client/filter/rapidata_filters.md) - accessible through the RapidataClient(rapi) under rapi.job
 
-[RapidataSelections](reference/rapidata/rapidata_client/selection/rapidata_selections.md) - accessible through the RapidataClient(rapi) under rapi.order
+[RapidataSettings](reference/rapidata/rapidata_client/settings/rapidata_settings.md) - accessible through the RapidataClient(rapi) under rapi.job
+
+[RapidataSelections](reference/rapidata/rapidata_client/selection/rapidata_selections.md) - accessible through the RapidataClient(rapi) under rapi.job
 
 
 ### Validation related classes

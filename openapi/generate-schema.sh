@@ -54,12 +54,10 @@ asset
 audience
 order
 dataset
-pipeline
 identity
 rapid
 campaign
 validation
-workflow
 leaderboard
 flow
 translation
@@ -104,19 +102,8 @@ npx -y @redocly/cli join ./${SCHEMA_DIR}/*.openapi.json -o ./${SCHEMA_DIR}/rapid
 # latter from any `required` list). This mirrors the endpoint filtering for
 # partly-deprecated surfaces like a single deprecated field on a model.
 # Note: the `walk` builtin requires jq >= 1.6.
-#
-# The $keep list below is the one exception to the rule: these endpoints are
-# deprecated backend-side but the still-live order / QR-preview flow calls them
-# directly, so dropping them would leave that flow uncompilable. Keep generating
-# them until that flow migrates off them too.
 jq '
-  ["/pipeline/{pipelineId}", "/workflow/{workflowId}/progress"] as $keep
-  | .paths |= with_entries(
-      .key as $path
-      | .value |= with_entries(
-          select((.value.deprecated != true) or ($keep | index($path)))
-        )
-    )
+  del(.paths[][] | select(.deprecated == true))
   | walk(
       if type == "object" then
         ( if (.parameters | type) == "array"

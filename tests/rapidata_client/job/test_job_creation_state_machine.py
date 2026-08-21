@@ -59,7 +59,6 @@ def _run(svc, datapoints, tolerance, add_datapoints_side_effect):
 
     with (
         patch(f"{MODULE}.RapidataDataset", return_value=dataset),
-        patch(f"{MODULE}.print_campaign_preview_qr_for_pipeline"),
         patch(f"{MODULE}.print_job_definition_preview_link"),
         patch(JOB_INPUT),
     ):
@@ -111,7 +110,6 @@ def test_failure_exceeds_tolerance_raises_without_definition():
 
     with (
         patch(f"{MODULE}.RapidataDataset", return_value=dataset),
-        patch(f"{MODULE}.print_campaign_preview_qr_for_pipeline"),
         patch(f"{MODULE}.print_job_definition_preview_link"),
         patch(JOB_INPUT),
     ):
@@ -144,7 +142,6 @@ def test_retry_reuses_dataset_and_persists_definition():
 
     with (
         patch(f"{MODULE}.RapidataDataset", return_value=dataset) as dataset_cls,
-        patch(f"{MODULE}.print_campaign_preview_qr_for_pipeline"),
         patch(f"{MODULE}.print_job_definition_preview_link"),
         patch(JOB_INPUT),
     ):
@@ -184,7 +181,6 @@ def test_all_fail_never_creates_definition_even_at_full_tolerance():
 
     with (
         patch(f"{MODULE}.RapidataDataset", return_value=dataset),
-        patch(f"{MODULE}.print_campaign_preview_qr_for_pipeline"),
         patch(f"{MODULE}.print_job_definition_preview_link"),
         patch(JOB_INPUT),
     ):

@@ -19,7 +19,6 @@ from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
 from rapidata.rapidata_client.audience.rapidata_audience_manager import (
     RapidataAudienceManager,
 )
-from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
 )
@@ -68,7 +67,7 @@ _OTLP_COLLECTOR_ENVIRONMENTS = frozenset({"rapidata.ai", "rabbitdata.ch"})
 
 
 class RapidataClient:
-    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
+    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create jobs, audiences, and validation sets."""
 
     def __init__(
         self,
@@ -117,8 +116,6 @@ class RapidataClient:
             leeway (int, optional): How many seconds before its actual expiry a token is treated as expired — i.e. how early it is refreshed (or re-read from ``token_file``). Defaults to 60 seconds.
 
         Attributes:
-            order (RapidataOrderManager): The RapidataOrderManager instance.
-                Deprecated: use ``job`` together with ``audience`` instead.
             validation (ValidationSetManager): The ValidationSetManager instance.
             flow (RapidataFlowManager): The RapidataFlowManager instance.
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
@@ -173,9 +170,6 @@ class RapidataClient:
             )
 
             self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)
-
-            logger.debug("Initializing RapidataOrderManager")
-            self.order = RapidataOrderManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing ValidationSetManager")
             self.validation = ValidationSetManager(

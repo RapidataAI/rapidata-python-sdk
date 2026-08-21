@@ -6,7 +6,6 @@ from .audience import (
     RapidataFilteredAudience,
     RecruitingMetrics,
 )
-from .order import RapidataOrderManager, RapidataOrder
 from .job import (
     RapidataJob,
     RapidataJobDefinition,

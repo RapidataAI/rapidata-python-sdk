@@ -7,8 +7,6 @@ from .rapidata_client import (
     RapidataAudienceManager,
     RapidataFilteredAudience,
     RecruitingMetrics,
-    RapidataOrderManager,
-    RapidataOrder,
     RapidataJob,
     RapidataJobDefinition,
     RapidataJobManager,

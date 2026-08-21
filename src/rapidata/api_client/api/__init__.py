@@ -38,7 +38,6 @@ from rapidata.api_client.api.organization_api import OrganizationApi
 from rapidata.api_client.api.owner_tier_override_api import OwnerTierOverrideApi
 from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.api.payment_api import PaymentApi
-from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.platform_api import PlatformApi
 from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.prompt_embedding_map_api import PromptEmbeddingMapApi
@@ -58,5 +57,4 @@ from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_feedback_api import ValidationFeedbackApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
 from rapidata.api_client.api.volume_discount_api import VolumeDiscountApi
-from rapidata.api_client.api.workflow_api import WorkflowApi
 
