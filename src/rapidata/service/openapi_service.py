@@ -19,8 +19,6 @@ if TYPE_CHECKING:
     from rapidata.service.services.validation_service import ValidationService
     from rapidata.service.services.dataset_service import DatasetService
     from rapidata.service.services.campaign_service import CampaignService
-    from rapidata.service.services.pipeline_service import PipelineService
-    from rapidata.service.services.workflow_service import WorkflowService
     from rapidata.service.services.leaderboard_service import LeaderboardService
     from rapidata.service.services.rapid_service import RapidService
     from rapidata.service.services.signal_service import SignalService
@@ -76,8 +74,6 @@ class OpenAPIService:
         self._validation: ValidationService | None = None
         self._dataset: DatasetService | None = None
         self._campaign: CampaignService | None = None
-        self._pipeline: PipelineService | None = None
-        self._workflow: WorkflowService | None = None
         self._leaderboard: LeaderboardService | None = None
         self._rapid: RapidService | None = None
         self._signal: SignalService | None = None
@@ -196,20 +192,6 @@ class OpenAPIService:
             from rapidata.service.services.campaign_service import CampaignService
             self._campaign = CampaignService(self.api_client)
         return self._campaign
-
-    @property
-    def pipeline(self) -> PipelineService:
-        if self._pipeline is None:
-            from rapidata.service.services.pipeline_service import PipelineService
-            self._pipeline = PipelineService(self.api_client)
-        return self._pipeline
-
-    @property
-    def workflow(self) -> WorkflowService:
-        if self._workflow is None:
-            from rapidata.service.services.workflow_service import WorkflowService
-            self._workflow = WorkflowService(self.api_client)
-        return self._workflow
 
     @property
     def leaderboard(self) -> LeaderboardService:
