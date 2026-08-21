@@ -53,7 +53,7 @@ curl -X POST https://auth.rapidata.ai/connect/token \
   -d grant_type=client_credentials \
   -d client_id=YOUR_CLIENT_ID \
   -d client_secret=YOUR_CLIENT_SECRET \
-  -d scope="openid email roles"
+  -d scope="openid email api"
 
 # → {"access_token": "...", "token_type": "Bearer", "expires_in": 3600}
 
@@ -63,7 +63,7 @@ curl https://api.rapidata.ai/order/openapi/v1.json \
 
 ## Scopes
 
-Tokens are scoped. The SDK requests `openid roles email` by default, which is
+Tokens are scoped. The SDK requests `openid email api` by default, which is
 sufficient for all SDK operations. Request only the scopes you need. Every
 endpoint in the [OpenAPI specification](https://docs.rapidata.ai/openapi.json)
 declares the scopes it requires under its `OpenIdConnect` security scheme.
@@ -72,5 +72,5 @@ declares the scopes it requires under its `OpenIdConnect` security scheme.
 |-------|--------|
 | `openid` | Required for OIDC; identifies the token subject. |
 | `email` | Access to the account email claim. |
-| `roles` | The account's role claims, which gate API operations. |
+| `api` | Access to the Rapidata API resource. |
 | `offline_access` | A refresh token for long-lived sessions. |

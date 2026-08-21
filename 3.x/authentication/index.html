@@ -1680,7 +1680,7 @@ send it as a bearer token:</p>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">grant_type</span><span class="o">=</span>client_credentials<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_id</span><span class="o">=</span>YOUR_CLIENT_ID<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_secret</span><span class="o">=</span>YOUR_CLIENT_SECRET<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">scope</span><span class="o">=</span><span class="s2">"openid email roles"</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">scope</span><span class="o">=</span><span class="s2">"openid email api"</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># → {"access_token": "...", "token_type": "Bearer", "expires_in": 3600}</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
@@ -1688,7 +1688,7 @@ send it as a bearer token:</p>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer ACCESS_TOKEN"</span>
 </span></code></pre></div>
 <h2 id="scopes">Scopes<a class="headerlink" href="#scopes" title="Permanent link">#</a></h2>
-<p>Tokens are scoped. The SDK requests <code>openid roles email</code> by default, which is
+<p>Tokens are scoped. The SDK requests <code>openid email api</code> by default, which is
 sufficient for all SDK operations. Request only the scopes you need. Every
 endpoint in the <a href="https://docs.rapidata.ai/openapi.json">OpenAPI specification</a>
 declares the scopes it requires under its <code>OpenIdConnect</code> security scheme.</p>
@@ -1709,8 +1709,8 @@ declares the scopes it requires under its <code>OpenIdConnect</code> security sc
 <td>Access to the account email claim.</td>
 </tr>
 <tr>
-<td><code>roles</code></td>
-<td>The account's role claims, which gate API operations.</td>
+<td><code>api</code></td>
+<td>Access to the Rapidata API resource.</td>
 </tr>
 <tr>
 <td><code>offline_access</code></td>
