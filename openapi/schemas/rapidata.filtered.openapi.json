@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.21.0757-4bc4250"
+    "version": "2026.08.21.1305-2bf435d"
   },
   "servers": [
     {
@@ -25776,6 +25776,127 @@
         ]
       }
     },
+    "/job/{jobId}/shares": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Grants a customer viewer or editor access to a job by their email.",
+        "description": "The email must belong to an existing account; an unknown email returns 400 Bad Request.\n Granting editor access implies viewing. Re-sharing at the same level is idempotent.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job to share.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The email to share with and the access level to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobShareEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Returns each customer a job is shared with, together with their access level.",
+        "description": "The email is resolved for display and may be null if the account can no longer be resolved.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetJobSharesEndpoint_Output"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/job/definition/{definitionId}": {
       "delete": {
         "tags": [
@@ -28598,6 +28719,451 @@
         ]
       }
     },
+    "/jobs/shared": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Queries the jobs another organization has shared with the caller.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at",
+                  "state",
+                  "-state",
+                  "owner_mail",
+                  "-owner_mail",
+                  "progress",
+                  "-progress"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Filter by id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "job_definition_id",
+            "in": "query",
+            "description": "Filter by job_definition_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "audience_id",
+            "in": "query",
+            "description": "Filter by audience_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_mail",
+            "in": "query",
+            "description": "Filter by owner_mail.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuerySharedJobsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/job/{jobId}/rapids/restart": {
       "post": {
         "tags": [
@@ -28760,6 +29326,67 @@
         ]
       }
     },
+    "/job/{jobId}/shares/{customerId}": {
+      "delete": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Removes a customer's viewer and editor access to a job.",
+        "description": "Idempotent: revoking a share that does not exist succeeds with no effect.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer whose access is revoked.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/job/definition/{definitionId}/share": {
       "patch": {
         "tags": [
@@ -28819,17 +29446,19 @@
         ]
       }
     },
-    "/job/{jobId}/share": {
+    "/job/{jobId}/share": {},
+    "/job/{jobId}/visibility": {
       "patch": {
         "tags": [
           "Job"
         ],
-        "summary": "Marks or unmarks a job as public so its results can be shared with other users.",
+        "summary": "Marks or unmarks a job as public so its results are viewable via a link.",
+        "description": "Public visibility is distinct from per-customer sharing (/job/{jobId}/shares): this\n makes results readable by anyone, whereas sharing grants a specific customer access.",
         "parameters": [
           {
             "name": "jobId",
             "in": "path",
-            "description": "The ID of the job.",
+            "description": "The id of the job.",
             "required": true,
             "schema": {
               "type": "string"
@@ -54353,6 +54982,27 @@
         },
         "description": "The result when a job revision has been created."
       },
+      "CreateJobShareEndpoint_Input": {
+        "required": [
+          "email",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email of the account to share the job with."
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobShareLevel"
+              }
+            ],
+            "description": "The access level to grant."
+          }
+        }
+      },
       "CreateOrder": {
         "required": [
           "orderName",
@@ -55222,6 +55872,34 @@
           }
         },
         "description": "The result when a job revision has been retrieved."
+      },
+      "GetJobSharesEndpoint_Output": {
+        "required": [
+          "customerId",
+          "email",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The id of the customer the job is shared with.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The customer's email, or null when it could not be resolved.",
+            "nullable": true
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobShareLevel"
+              }
+            ],
+            "description": "The access level the customer holds."
+          }
+        }
       },
       "GetOrderByIdEndpoint_Output": {
         "required": [
@@ -57823,6 +58501,12 @@
           }
         }
       },
+      "JobShareLevel": {
+        "enum": [
+          "Viewer",
+          "Editor"
+        ]
+      },
       "LabelingState": {
         "enum": [
           "Created",
@@ -58536,6 +59220,108 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QueryPublicJobDefinitionsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QuerySharedJobsEndpoint_Output": {
+        "required": [
+          "jobId",
+          "name",
+          "jobDefinitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "state",
+          "ownerMail",
+          "organizationId",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The id of the job."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the job."
+          },
+          "jobDefinitionId": {
+            "type": "string",
+            "description": "The id of the job definition."
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the audience associated with the job."
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "description": "The revision number of the job.",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The id of the pipeline executing the job."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceJobState"
+              }
+            ],
+            "description": "The current state of the job."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the job's owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the job."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the job was created.",
+            "format": "date-time"
+          },
+          "progress": {
+            "type": "number",
+            "description": "Labeling completion as a ratio in the range 0–1, or null when no progress has\n been reported yet (completion sets it to 1). Sortable via ?sort=progress.",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "QuerySharedJobsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuerySharedJobsEndpoint_Output"
             }
           },
           "totalPages": {
