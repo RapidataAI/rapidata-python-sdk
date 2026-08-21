@@ -134,25 +134,6 @@ leaderboard = benchmark.create_leaderboard(
 )
 ```
 
-### Skipping the Initial Run
-
-Creating a leaderboard normally starts an initial run that evaluates the models
-already in the benchmark against each other. Pass `skip_initial_run=True` to
-create the leaderboard without it:
-
-```python
-leaderboard = benchmark.create_leaderboard(
-    name="Staged Evaluation",
-    instruction="Which image do you prefer?",
-    skip_initial_run=True,
-)
-```
-
-The leaderboard starts with no responses and therefore no standings. Everything
-else still works: a model added afterwards is compared against the whole existing
-field, and the leaderboard can be boosted from the app. Use this when you want to
-decide what gets evaluated first rather than paying for a full round up front.
-
 ### Vote Aggregation
 
 Each matchup — one comparison of two models on one prompt — collects several
