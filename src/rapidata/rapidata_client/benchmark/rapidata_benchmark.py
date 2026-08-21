@@ -630,6 +630,7 @@ class RapidataBenchmark:
         included_tags: list[str] | None = None,
         excluded_tags: list[str] | None = None,
         vote_aggregation: VoteAggregation = VoteAggregation.MAJORITY_VOTE,
+        skip_initial_run: bool = False,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -647,6 +648,7 @@ class RapidataBenchmark:
             included_tags: Restricts **which of the benchmark's prompts this leaderboard collects matchups for**: only prompts carrying at least one of these tag values are used. When empty or not specified (the default) every prompt is eligible. Note that a non-empty list drops untagged prompts. (default: None)
             excluded_tags: Prompt tag values to skip when collecting matchups. Always wins over ``included_tags`` — a prompt carrying both an included and an excluded tag is skipped. (default: None)
             vote_aggregation: How the responses on a single matchup are aggregated into that matchup's result. :attr:`VoteAggregation.MAJORITY_VOTE` (the default) collapses each matchup to one win for the majority side, ties split 0.5/0.5, so every matchup weighs the same no matter how many responses it collected. :attr:`VoteAggregation.ALL_VOTES` counts every individual response as its own matchup, which lets heavily-answered matchups dominate the standings. Changeable afterwards via :attr:`RapidataLeaderboard.vote_aggregation`.
+            skip_initial_run: Whether to skip the initial run that evaluates the models already in the benchmark against each other. Adding a model afterwards still compares it against the whole existing field, and boosting the leaderboard still works — you just start with no responses collected and therefore no standings. Set this when you want to choose what gets evaluated first instead of paying for a full round. (default: False)
 
         Do not confuse either tag argument with the ``tags`` argument of
         :meth:`RapidataLeaderboard.get_standings`: that filters the standings you read
@@ -693,7 +695,7 @@ class RapidataBenchmark:
             )
 
             logger.info(
-                "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s, included_tags %s, excluded_tags %s, vote_aggregation %s",
+                "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s, included_tags %s, excluded_tags %s, vote_aggregation %s, skip_initial_run %s",
                 name,
                 instruction,
                 show_prompt,
@@ -706,6 +708,7 @@ class RapidataBenchmark:
                 included_tags,
                 excluded_tags,
                 vote_aggregation.name,
+                skip_initial_run,
             )
 
             leaderboard_result = (
@@ -723,6 +726,7 @@ class RapidataBenchmark:
                         includedTags=included_tags,
                         excludedTags=excluded_tags,
                         voteAggregation=vote_aggregation._to_backend_model(),
+                        skipInitialRun=skip_initial_run,
                         featureFlags=(
                             [setting._to_feature_flag() for setting in settings]
                             if settings
