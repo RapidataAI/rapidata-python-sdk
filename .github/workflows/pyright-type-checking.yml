@@ -20,7 +20,9 @@ jobs:
       - run: uv sync
       - run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
       
+      # No working-directory: pyright reads pyrightconfig.json from the repo root so the
+      # checked paths live in one place. src/rapidata/service was outside the old scope,
+      # which is how a dead import there shipped in 3.21.0 and broke every API call.
       - uses: jakebailey/pyright-action@v2
         with:
           version: v1.1.396
-          working-directory: src/rapidata/rapidata_client
