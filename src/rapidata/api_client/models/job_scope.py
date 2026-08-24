@@ -17,19 +17,20 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class UserAttribute(str, Enum):
+class JobScope(str, Enum):
     """
-    UserAttribute
+    Which jobs a query over jobs should return, relative to the caller.
     """
 
     """
     allowed enum values
     """
-    COUNTRY = 'Country'
-    LANGUAGE = 'Language'
+    OWNED = 'Owned'
+    SHARED = 'Shared'
+    ALL = 'All'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of UserAttribute from a JSON string"""
+        """Create an instance of JobScope from a JSON string"""
         return cls(json.loads(json_str))
 
