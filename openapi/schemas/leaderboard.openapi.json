@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.08.23.1843-b868832"
+    "version": "2026.08.24.1254-af968e5"
   },
   "servers": [
     {
@@ -7002,7 +7002,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (extremeness by default) ranks the matchups themselves — extremeness being how far the\n split sits from a coin flip, in standard deviations — where the prompt-ratings query ranks\n prompts by their most decisive matchup. Filters use that query's field set, applied to the votes\n a matchup is tallied from, plus WinnerParticipantId and LooserParticipantId, which\n select matchups by which side won the whole matchup; those two are only accepted as top-level\n and leaves, and a tied matchup matches neither. Matchups of leaderboards excluded from\n the benchmark overall are never returned.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. extremeness and the winning side are always read\n off the raw counts; useWeightedScoring changes only each side's wins.",
+        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (sigma by default) ranks the matchups themselves — sigma being how far apart the two\n images' records over all of their comparisons on the prompt sit, in standard errors of their\n logit gap — where the prompt-ratings query ranks prompts by their most decisive matchup. Filters\n use that query's field set, applied to the votes a matchup is tallied from, plus\n WinnerParticipantId and LooserParticipantId, which select matchups by which side\n won the whole matchup; those two are only accepted as top-level and leaves, and a tied\n matchup matches neither. Matchups of leaderboards excluded from the benchmark overall are never\n returned.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. Each side carries its theta — the pooled per-image\n record sigma is derived from. extremeness and the winning side are always read off the\n raw counts, and sigma/theta are always weighted by annotator reliability;\n useWeightedScoring changes only each side's wins.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -7056,6 +7056,8 @@
               "type": "array",
               "items": {
                 "enum": [
+                  "sigma",
+                  "-sigma",
                   "extremeness",
                   "-extremeness",
                   "responses",
@@ -21113,6 +21115,7 @@
           "promptIdentifier",
           "sides",
           "responses",
+          "sigma",
           "extremeness",
           "latestVotedAt"
         ],
@@ -21142,6 +21145,10 @@
           "responses": {
             "type": "integer",
             "format": "int64"
+          },
+          "sigma": {
+            "type": "number",
+            "format": "double"
           },
           "extremeness": {
             "type": "number",
@@ -21186,7 +21193,8 @@
           "sampleId",
           "participantId",
           "responses",
-          "wins"
+          "wins",
+          "theta"
         ],
         "type": "object",
         "properties": {
@@ -21214,6 +21222,10 @@
             "format": "int64"
           },
           "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "theta": {
             "type": "number",
             "format": "double"
           }

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.23.1843-b868832"
+    "version": "2026.08.24.1254-af968e5"
   },
   "servers": [
     {
@@ -16380,7 +16380,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (extremeness by default) ranks the matchups themselves — extremeness being how far the\n split sits from a coin flip, in standard deviations — where the prompt-ratings query ranks\n prompts by their most decisive matchup. Filters use that query's field set, applied to the votes\n a matchup is tallied from, plus WinnerParticipantId and LooserParticipantId, which\n select matchups by which side won the whole matchup; those two are only accepted as top-level\n and leaves, and a tied matchup matches neither. Matchups of leaderboards excluded from\n the benchmark overall are never returned.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. extremeness and the winning side are always read\n off the raw counts; useWeightedScoring changes only each side's wins.",
+        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (sigma by default) ranks the matchups themselves — sigma being how far apart the two\n images' records over all of their comparisons on the prompt sit, in standard errors of their\n logit gap — where the prompt-ratings query ranks prompts by their most decisive matchup. Filters\n use that query's field set, applied to the votes a matchup is tallied from, plus\n WinnerParticipantId and LooserParticipantId, which select matchups by which side\n won the whole matchup; those two are only accepted as top-level and leaves, and a tied\n matchup matches neither. Matchups of leaderboards excluded from the benchmark overall are never\n returned.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. Each side carries its theta — the pooled per-image\n record sigma is derived from. extremeness and the winning side are always read off the\n raw counts, and sigma/theta are always weighted by annotator reliability;\n useWeightedScoring changes only each side's wins.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -16434,6 +16434,8 @@
               "type": "array",
               "items": {
                 "enum": [
+                  "sigma",
+                  "-sigma",
                   "extremeness",
                   "-extremeness",
                   "responses",
@@ -31941,6 +31943,63 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetCostTimeSeriesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/billing/outstanding": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the total amount the organization currently owes, broken down by unpaid invoices and\n periods awaiting an invoice.",
+        "description": "The total covers finalized-but-unpaid invoices plus the settled amount of ended periods not\n yet invoiced; the current, still-accruing period is reported separately and is not part of\n the total. The awaiting-invoice figure comes from settlement snapshots and may move while\n settlementStale is set.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "query",
+            "description": "The organization to get the outstanding cost for. Defaults to the caller's own organization.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOutstandingCostEndpoint_Output"
                 }
               }
             }
@@ -52718,6 +52777,7 @@
           "promptIdentifier",
           "sides",
           "responses",
+          "sigma",
           "extremeness",
           "latestVotedAt"
         ],
@@ -52747,6 +52807,10 @@
           "responses": {
             "type": "integer",
             "format": "int64"
+          },
+          "sigma": {
+            "type": "number",
+            "format": "double"
           },
           "extremeness": {
             "type": "number",
@@ -52791,7 +52855,8 @@
           "sampleId",
           "participantId",
           "responses",
-          "wins"
+          "wins",
+          "theta"
         ],
         "type": "object",
         "properties": {
@@ -52819,6 +52884,10 @@
             "format": "int64"
           },
           "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "theta": {
             "type": "number",
             "format": "double"
           }
@@ -60893,6 +60962,59 @@
             "description": "When the invoice was paid.",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      },
+      "GetOutstandingCostEndpoint_Output": {
+        "required": [
+          "totalOutstanding",
+          "unpaidInvoicesAmount",
+          "unpaidInvoiceCount",
+          "awaitingInvoiceAmount",
+          "awaitingInvoicePeriodCount",
+          "currentPeriodAccrued",
+          "settlementStale"
+        ],
+        "type": "object",
+        "properties": {
+          "totalOutstanding": {
+            "type": "number",
+            "description": "The total the organization currently owes: unpaid invoices plus periods awaiting an\n invoice. Excludes the current, still-accruing period.",
+            "format": "double"
+          },
+          "unpaidInvoicesAmount": {
+            "type": "number",
+            "description": "The amount owed on finalized invoices that have not been paid.",
+            "format": "double"
+          },
+          "unpaidInvoiceCount": {
+            "type": "integer",
+            "description": "How many unpaid invoices make up UnpaidInvoicesAmount.",
+            "format": "int32"
+          },
+          "awaitingInvoiceAmount": {
+            "type": "number",
+            "description": "The settled amount of ended periods that have not been invoiced yet.",
+            "format": "double"
+          },
+          "awaitingInvoicePeriodCount": {
+            "type": "integer",
+            "description": "How many periods make up AwaitingInvoiceAmount.",
+            "format": "int32"
+          },
+          "currentPeriodAccrued": {
+            "type": "number",
+            "description": "Billable spend accrued in the current, still-open period. Not part of\n TotalOutstanding: nothing is due until the period ends and settles.",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency the amounts are denominated in, or null when nothing is outstanding.",
+            "nullable": true
+          },
+          "settlementStale": {
+            "type": "boolean",
+            "description": "Whether any period behind AwaitingInvoiceAmount is awaiting a settlement\n recompute, so that figure may still change."
           }
         }
       },
