@@ -38,3 +38,32 @@ All amounts are in US dollars, rounded to the cent.
     Billing is settled per **organization**, so these figures cover everything your organization spent in the period — not only the jobs this client created. Costs accrue while jobs run, so the values are a snapshot: fetch the period again for an up-to-date figure.
 
 A period only opens once there is something to bill. If your organization has never run a billable job, `get_current_billing_period()` raises a `RapidataError` with status `404` — see [Error Handling](error_handling.md).
+
+## Reading the Outstanding Balance
+
+While the current period tells you what is accruing *now*, `get_outstanding_balance()` tells you what is already **due** — unpaid invoices plus ended periods that have settled but are not yet invoiced.
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+balance = client.billing.get_outstanding_balance()
+
+print(f"Total owed: ${balance.total_outstanding} {balance.currency}")
+print(f"Unpaid invoices: {balance.unpaid_invoice_count}")
+print(f"Accruing now (not yet due): ${balance.current_period_accrued}")
+```
+
+| Field | Description |
+|---|---|
+| `total_outstanding` | The total currently owed — `unpaid_invoices_amount` plus `awaiting_invoice_amount`. Excludes the current period. |
+| `unpaid_invoices_amount` | The amount owed on finalized invoices that have not been paid. |
+| `unpaid_invoice_count` | How many unpaid invoices make up `unpaid_invoices_amount`. |
+| `awaiting_invoice_amount` | The settled cost of ended periods not yet invoiced. |
+| `awaiting_invoice_period_count` | How many periods make up `awaiting_invoice_amount`. |
+| `current_period_accrued` | Spend accrued in the current, still-open period. Not part of `total_outstanding`. |
+| `currency` | The currency the amounts are in, or `None` when nothing is outstanding. |
+| `settlement_stale` | `True` when a period behind `awaiting_invoice_amount` is awaiting a settlement recompute, so that figure may still change. |
+
+Amounts are in US dollars, rounded to the cent. Like the current period, this is settled per **organization**.

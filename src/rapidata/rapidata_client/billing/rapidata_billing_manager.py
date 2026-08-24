@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from rapidata.rapidata_client.billing.billing_period import BillingPeriod
+from rapidata.rapidata_client.billing.outstanding_balance import OutstandingBalance
 from rapidata.rapidata_client.config import logger, tracer
 
 if TYPE_CHECKING:
@@ -43,3 +44,22 @@ class RapidataBillingManager:
             summary = billing_api.billing_summary_get()
             overview = billing_api.billing_period_active_get()
             return BillingPeriod._from_models(overview, summary)
+
+    def get_outstanding_balance(self) -> OutstandingBalance:
+        """Get everything the organization currently owes.
+
+        Covers finalized-but-unpaid invoices plus the settled cost of ended
+        periods not yet invoiced. The current, still-accruing period is reported
+        separately in :py:attr:`OutstandingBalance.current_period_accrued` and is
+        not part of the total.
+
+        Returns:
+            OutstandingBalance: The total owed, broken down by unpaid invoices
+                and periods awaiting an invoice.
+        """
+        with tracer.start_as_current_span(
+            "RapidataBillingManager.get_outstanding_balance"
+        ):
+            billing_api = self._openapi_service.payment.billing_api
+            outstanding = billing_api.billing_outstanding_get()
+            return OutstandingBalance._from_model(outstanding)
