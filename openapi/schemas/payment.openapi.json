@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.08.23.1843-b868832"
+    "version": "2026.08.24.1254-af968e5"
   },
   "servers": [
     {
@@ -696,6 +696,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetCostTimeSeriesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/outstanding": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Gets the total amount the organization currently owes, broken down by unpaid invoices and\n periods awaiting an invoice.",
+        "description": "The total covers finalized-but-unpaid invoices plus the settled amount of ended periods not\n yet invoiced; the current, still-accruing period is reported separately and is not part of\n the total. The awaiting-invoice figure comes from settlement snapshots and may move while\n settlementStale is set.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "query",
+            "description": "The organization to get the outstanding cost for. Defaults to the caller's own organization.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOutstandingCostEndpoint_Output"
                 }
               }
             }
@@ -4755,6 +4802,59 @@
             "description": "When the invoice was paid.",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      },
+      "GetOutstandingCostEndpoint_Output": {
+        "required": [
+          "totalOutstanding",
+          "unpaidInvoicesAmount",
+          "unpaidInvoiceCount",
+          "awaitingInvoiceAmount",
+          "awaitingInvoicePeriodCount",
+          "currentPeriodAccrued",
+          "settlementStale"
+        ],
+        "type": "object",
+        "properties": {
+          "totalOutstanding": {
+            "type": "number",
+            "description": "The total the organization currently owes: unpaid invoices plus periods awaiting an\n invoice. Excludes the current, still-accruing period.",
+            "format": "double"
+          },
+          "unpaidInvoicesAmount": {
+            "type": "number",
+            "description": "The amount owed on finalized invoices that have not been paid.",
+            "format": "double"
+          },
+          "unpaidInvoiceCount": {
+            "type": "integer",
+            "description": "How many unpaid invoices make up UnpaidInvoicesAmount.",
+            "format": "int32"
+          },
+          "awaitingInvoiceAmount": {
+            "type": "number",
+            "description": "The settled amount of ended periods that have not been invoiced yet.",
+            "format": "double"
+          },
+          "awaitingInvoicePeriodCount": {
+            "type": "integer",
+            "description": "How many periods make up AwaitingInvoiceAmount.",
+            "format": "int32"
+          },
+          "currentPeriodAccrued": {
+            "type": "number",
+            "description": "Billable spend accrued in the current, still-open period. Not part of\n TotalOutstanding: nothing is due until the period ends and settles.",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency the amounts are denominated in, or null when nothing is outstanding.",
+            "nullable": true
+          },
+          "settlementStale": {
+            "type": "boolean",
+            "description": "Whether any period behind AwaitingInvoiceAmount is awaiting a settlement\n recompute, so that figure may still change."
           }
         }
       },
