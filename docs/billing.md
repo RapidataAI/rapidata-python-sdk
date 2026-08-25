@@ -48,22 +48,8 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-balance = client.billing.get_outstanding_balance()
-
-print(f"Total owed: ${balance.total_outstanding} {balance.currency}")
-print(f"Unpaid invoices: {balance.unpaid_invoice_count}")
-print(f"Accruing now (not yet due): ${balance.current_period_accrued}")
+owed = client.billing.get_outstanding_balance()
+print(f"Total owed: ${owed}")
 ```
 
-| Field | Description |
-|---|---|
-| `total_outstanding` | The total currently owed — `unpaid_invoices_amount` plus `awaiting_invoice_amount`. Excludes the current period. |
-| `unpaid_invoices_amount` | The amount owed on finalized invoices that have not been paid. |
-| `unpaid_invoice_count` | How many unpaid invoices make up `unpaid_invoices_amount`. |
-| `awaiting_invoice_amount` | The settled cost of ended periods not yet invoiced. |
-| `awaiting_invoice_period_count` | How many periods make up `awaiting_invoice_amount`. |
-| `current_period_accrued` | Spend accrued in the current, still-open period. Not part of `total_outstanding`. |
-| `currency` | The currency the amounts are in, or `None` when nothing is outstanding. |
-| `settlement_stale` | `True` when a period behind `awaiting_invoice_amount` is awaiting a settlement recompute, so that figure may still change. |
-
-Amounts are in US dollars, rounded to the cent. Like the current period, this is settled per **organization**.
+The figure is in US dollars, rounded to the cent, and is already net of any vouchers and discounts. It does **not** include the current, still-accruing period — nothing is due until a period ends and settles. Like the current period, this is settled per **organization**.

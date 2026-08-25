@@ -15,7 +15,6 @@ from .rapidata_client import (
     RapidataSignal,
     RapidataSignalManager,
     BillingPeriod,
-    OutstandingBalance,
     RapidataBillingManager,
     ValidationSetManager,
     RapidataValidationSet,
