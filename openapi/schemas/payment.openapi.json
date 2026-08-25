@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.08.24.1254-af968e5"
+    "version": "2026.08.24.1550-dec4604"
   },
   "servers": [
     {
@@ -5954,7 +5954,7 @@
       },
       "QueryCostsByOrganizationEndpoint_Output": {
         "required": [
-          "organizationOwnerId",
+          "organizationId",
           "organizationName",
           "grossCost",
           "discount",
@@ -5963,14 +5963,13 @@
         ],
         "type": "object",
         "properties": {
-          "organizationOwnerId": {
+          "organizationId": {
             "type": "string",
-            "description": "The organization owner identifier.",
-            "format": "uuid"
+            "description": "The organization identifier."
           },
           "organizationName": {
             "type": "string",
-            "description": "The organization name."
+            "description": "The organization name, falling back to the organization identifier when it cannot be\n resolved."
           },
           "grossCost": {
             "type": "number",

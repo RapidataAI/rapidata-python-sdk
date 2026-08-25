@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.08.24.1254-af968e5"
+    "version": "2026.08.24.1550-dec4604"
   },
   "servers": [
     {
@@ -2248,8 +2248,16 @@
         "tags": [
           "Job"
         ],
-        "summary": "Queries jobs visible to the caller.",
+        "summary": "Queries jobs visible to the caller: owned, shared with them, or both.",
         "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "description": "Which jobs to return: owned by the caller's organization, shared with the caller, or both.",
+            "schema": {
+              "$ref": "#/components/schemas/JobScope"
+            }
+          },
           {
             "name": "page",
             "in": "query",
@@ -2443,6 +2451,55 @@
             "name": "audience_id",
             "in": "query",
             "description": "Filter by audience_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "description": "Filter by campaign_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -3035,441 +3092,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryPublicJobDefinitionsEndpoint_PagedResultOfOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/jobs/shared": {
-      "get": {
-        "tags": [
-          "Job"
-        ],
-        "summary": "Queries the jobs another organization has shared with the caller.",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "The 1-based page index.",
-            "schema": {
-              "type": "integer"
-            },
-            "x-parameter-group": "page"
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "description": "The number of items per page.",
-            "schema": {
-              "type": "integer"
-            },
-            "x-parameter-group": "page"
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
-            "schema": {
-              "type": "array",
-              "items": {
-                "enum": [
-                  "name",
-                  "-name",
-                  "created_at",
-                  "-created_at",
-                  "state",
-                  "-state",
-                  "owner_mail",
-                  "-owner_mail",
-                  "progress",
-                  "-progress"
-                ],
-                "type": "string"
-              }
-            },
-            "x-parameter-group": "sort"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "description": "Filter by id.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "Filter by name.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "job_definition_id",
-            "in": "query",
-            "description": "Filter by job_definition_id.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "audience_id",
-            "in": "query",
-            "description": "Filter by audience_id.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "description": "Filter by state.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "owner_mail",
-            "in": "query",
-            "description": "Filter by owner_mail.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "created_at",
-            "in": "query",
-            "description": "Filter by created_at.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "logic",
-            "in": "query",
-            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QuerySharedJobsEndpoint_PagedResultOfOutput"
                 }
               }
             }
@@ -9921,6 +9543,14 @@
           }
         }
       },
+      "JobScope": {
+        "enum": [
+          "Owned",
+          "Shared",
+          "All"
+        ],
+        "description": "Which jobs a query over jobs should return, relative to the caller."
+      },
       "JobShareLevel": {
         "enum": [
           "Viewer",
@@ -10410,7 +10040,8 @@
           "state",
           "ownerMail",
           "organizationId",
-          "createdAt"
+          "createdAt",
+          "isShared"
         ],
         "type": "object",
         "properties": {
@@ -10444,6 +10075,11 @@
           "pipelineId": {
             "type": "string",
             "description": "The id of the pipeline executing the job."
+          },
+          "campaignId": {
+            "type": "string",
+            "description": "The job's campaign id. Null when the pipeline did not yield exactly one campaign.\n Filterable via ?campaign_id[eq]= to resolve a campaign back to its job.",
+            "nullable": true
           },
           "status": {
             "allOf": [
@@ -10480,6 +10116,10 @@
             "description": "Labeling completion as a ratio in the range 0–1, or null when no progress has\n been reported yet (completion sets it to 1). Sortable via ?sort=progress.",
             "format": "double",
             "nullable": true
+          },
+          "isShared": {
+            "type": "boolean",
+            "description": "Whether this job is shared with the caller rather than owned by their organization."
           }
         }
       },
@@ -10681,108 +10321,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QueryPublicJobDefinitionsEndpoint_Output"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "QuerySharedJobsEndpoint_Output": {
-        "required": [
-          "jobId",
-          "name",
-          "jobDefinitionId",
-          "audienceId",
-          "revisionNumber",
-          "pipelineId",
-          "state",
-          "ownerMail",
-          "organizationId",
-          "createdAt"
-        ],
-        "type": "object",
-        "properties": {
-          "jobId": {
-            "type": "string",
-            "description": "The id of the job."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the job."
-          },
-          "jobDefinitionId": {
-            "type": "string",
-            "description": "The id of the job definition."
-          },
-          "audienceId": {
-            "type": "string",
-            "description": "The id of the audience associated with the job."
-          },
-          "revisionNumber": {
-            "type": "integer",
-            "description": "The revision number of the job.",
-            "format": "int32"
-          },
-          "pipelineId": {
-            "type": "string",
-            "description": "The id of the pipeline executing the job."
-          },
-          "state": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AudienceJobState"
-              }
-            ],
-            "description": "The current state of the job."
-          },
-          "ownerMail": {
-            "type": "string",
-            "description": "The email of the job's owner."
-          },
-          "organizationId": {
-            "type": "string",
-            "description": "The id of the organization that owns the job."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "The timestamp when the job was created.",
-            "format": "date-time"
-          },
-          "progress": {
-            "type": "number",
-            "description": "Labeling completion as a ratio in the range 0–1, or null when no progress has\n been reported yet (completion sets it to 1). Sortable via ?sort=progress.",
-            "format": "double",
-            "nullable": true
-          }
-        }
-      },
-      "QuerySharedJobsEndpoint_PagedResultOfOutput": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QuerySharedJobsEndpoint_Output"
             }
           },
           "totalPages": {
