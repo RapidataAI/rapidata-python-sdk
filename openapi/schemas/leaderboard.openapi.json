@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.08.24.1550-dec4604"
+    "version": "2026.08.25.1525-d42d531"
   },
   "servers": [
     {
@@ -3970,7 +3970,7 @@
           "HuggingFaceSync"
         ],
         "summary": "Returns the HuggingFace sync status of the benchmark.",
-        "description": "All fields are null when the benchmark has never been synced.",
+        "description": "The repo and outcome fields are null when the benchmark has never been synced;\n isUpToDate and pendingRunCount are always set.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -15847,6 +15847,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "failure_category",
+            "in": "query",
+            "description": "Filter by failure_category.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "participant_id",
             "in": "query",
             "description": "Filter by participant_id.",
@@ -16185,7 +16234,7 @@
           "SampleGeneration"
         ],
         "summary": "Re-queues failed items of a sample generation so they run again.",
-        "description": "When no item ids are supplied, every failed item of the generation is retried. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.",
+        "description": "When no item ids are supplied, every failed item of the generation is retried. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.\n Supplying failure categories narrows the retry to items that failed for those reasons, which\n is how a retry avoids re-running items whose failure cannot be fixed by running them again;\n combining it with item ids intersects the two.",
         "parameters": [
           {
             "name": "sampleGenerationId",
@@ -16198,7 +16247,7 @@
           }
         ],
         "requestBody": {
-          "description": "Optional payload restricting the retry to specific item ids.",
+          "description": "Optional payload restricting the retry to specific item ids, failure\n categories, or both.",
           "content": {
             "application/json": {
               "schema": {
@@ -17084,7 +17133,9 @@
       },
       "GetBenchmarkHuggingFaceSyncEndpoint_Output": {
         "required": [
-          "status"
+          "status",
+          "isUpToDate",
+          "pendingRunCount"
         ],
         "type": "object",
         "properties": {
@@ -17095,6 +17146,15 @@
               }
             ],
             "description": "Current lifecycle status (NeverSynced when the benchmark has never been synced)."
+          },
+          "isUpToDate": {
+            "type": "boolean",
+            "description": "Whether the HuggingFace dataset covers every completed run of the benchmark — a\n successful sync exists and no completed run is pending export. Always false when the\n benchmark has never been synced."
+          },
+          "pendingRunCount": {
+            "type": "integer",
+            "description": "Number of completed runs not yet exported to the HuggingFace dataset. Runs carried by an\n in-progress sync stay pending until that sync succeeds.",
+            "format": "int32"
           },
           "outcome": {
             "type": "string",
@@ -18576,6 +18636,7 @@
           "totalCount",
           "completedCount",
           "failedCount",
+          "failureBreakdown",
           "ownerId",
           "ownerMail",
           "organizationId",
@@ -18618,6 +18679,17 @@
             "type": "integer",
             "description": "The number of items that have failed.",
             "format": "int32"
+          },
+          "failureBreakdown": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetSampleGenerationEndpoint_Output_FailureCount"
+                }
+              }
+            ],
+            "description": "How the failed items split across failure categories. Only categories with at least\n one item appear, so a generation without failures yields an empty list."
           },
           "participantIdFilter": {
             "allOf": [
@@ -18685,6 +18757,22 @@
             "type": "string",
             "description": "When the generation was created.",
             "format": "date-time"
+          }
+        }
+      },
+      "GetSampleGenerationEndpoint_Output_FailureCount": {
+        "required": [
+          "category",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/SampleGenerationItemFailureCategory"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -18769,6 +18857,16 @@
           "failureReason": {
             "type": "string",
             "description": "Failure reason if the item is in a failed state.",
+            "nullable": true
+          },
+          "failureCategory": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationItemFailureCategory"
+              }
+            ],
+            "description": "Which kind of failure the reason describes, or null when the item has not\n failed. Items that failed before categorisation existed report null as well.",
             "nullable": true
           },
           "sampleIds": {
@@ -22343,6 +22441,18 @@
               }
             ],
             "description": "The specific item ids to retry. When omitted or empty, every failed item of the\n generation is retried."
+          },
+          "failureCategories": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleGenerationItemFailureCategory"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The failure categories to retry. When omitted or empty, every failed item qualifies.\n Combined with item ids the two intersect."
           }
         }
       },
@@ -22378,6 +22488,19 @@
           "Completed",
           "Failed",
           "Paused"
+        ]
+      },
+      "SampleGenerationItemFailureCategory": {
+        "enum": [
+          "RateLimited",
+          "ProviderCapacity",
+          "Timeout",
+          "Internal",
+          "ContentPolicy",
+          "InvalidConfiguration",
+          "ModelNotFound",
+          "Authentication",
+          "Unknown"
         ]
       },
       "SampleGenerationItemStatus": {
