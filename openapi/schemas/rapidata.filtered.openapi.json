@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.25.1525-d42d531"
+    "version": "2026.08.26.1217-ad53633"
   },
   "servers": [
     {
@@ -9950,6 +9950,75 @@
         ]
       }
     },
+    "/benchmark/{benchmarkId}/runs/custom": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates one run per leaderboard of the benchmark, each evaluating the same explicit list of\n matchup configurations.",
+        "description": "Answers 202 with one entry per created run and the seed they all share, so every leaderboard\n evaluates identical image pairs; a seed is generated when none is supplied. Hidden\n leaderboards and leaderboards excluded from the benchmark overall are left out. See\n POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated\n and resolved.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark whose leaderboards should run the matchups.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The run name and the matchup configurations to evaluate.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkCustomRunsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkCustomRunsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark": {
       "post": {
         "tags": [
@@ -19782,6 +19851,75 @@
         ]
       }
     },
+    "/leaderboard/{leaderboardId}/runs/custom": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Creates a run that evaluates an explicit list of matchup configurations, each with its own\n response count.",
+        "description": "Answers 202 once the configurations are validated and the run is queued; it then starts\n behind whatever else is queued on the leaderboard, and its matchups are resolved at that\n point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is\n verified before the 202, but a configuration that resolves to no matchups is only found at\n start and is skipped; the run fails when all of them do. At most 2000 configurations,\n 1000000 responses and 10000 referenced ids per request.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "The id of the leaderboard to run the matchups on.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The run name and the matchup configurations to evaluate.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomRunEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCustomRunEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/leaderboard": {
       "post": {
         "tags": [
@@ -23962,6 +24100,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SubmitParticipantEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/participants/submit": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Submits several participants of one benchmark together, so they are evaluated as one batch.",
+        "description": "A batch is compared symmetrically — every participant against every other and against the\n benchmark's already-submitted field — where the same participants submitted one by one would\n be compared in submission order. All participants must belong to the same benchmark, be\n ready for evaluation, and appear at most once; at most 100 per request.",
+        "requestBody": {
+          "description": "The participants to submit.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitParticipantsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantsEndpoint_Output"
                 }
               }
             }
@@ -48457,6 +48653,76 @@
           }
         }
       },
+      "CreateBenchmarkCustomRunsEndpoint_Input": {
+        "required": [
+          "name",
+          "matchups"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The display name given to every created run."
+          },
+          "matchups": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MatchupConfig"
+                }
+              }
+            ],
+            "description": "The matchup configurations to evaluate, 1 to 2000 of them."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection, applied to every created run. Omit to\n have one generated, which still keeps the runs aligned with each other.",
+            "format": "int64",
+            "nullable": true
+          }
+        }
+      },
+      "CreateBenchmarkCustomRunsEndpoint_Output": {
+        "required": [
+          "runs",
+          "seed"
+        ],
+        "type": "object",
+        "properties": {
+          "runs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateBenchmarkCustomRunsEndpoint_Output_Run"
+                }
+              }
+            ],
+            "description": "The created runs, one per leaderboard."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "The seed every created run shares.",
+            "format": "int64"
+          }
+        }
+      },
+      "CreateBenchmarkCustomRunsEndpoint_Output_Run": {
+        "required": [
+          "leaderboardId",
+          "runId"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboardId": {
+            "type": "string"
+          },
+          "runId": {
+            "type": "string"
+          }
+        }
+      },
       "CreateBenchmarkEndpoint_Input": {
         "required": [
           "name"
@@ -48563,6 +48829,48 @@
           "datasetId": {
             "type": "string",
             "description": "The id of the participant's dataset."
+          }
+        }
+      },
+      "CreateCustomRunEndpoint_Input": {
+        "required": [
+          "name",
+          "matchups"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The display name of the run."
+          },
+          "matchups": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MatchupConfig"
+                }
+              }
+            ],
+            "description": "The matchup configurations to evaluate, 1 to 2000 of them."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection. Use the same value across\n leaderboards of a benchmark to have them evaluate the same image pairs. Omit for random\n selection.",
+            "format": "int64",
+            "nullable": true
+          }
+        }
+      },
+      "CreateCustomRunEndpoint_Output": {
+        "required": [
+          "runId"
+        ],
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "description": "The id of the queued run."
           }
         }
       },
@@ -51516,6 +51824,46 @@
           }
         }
       },
+      "MatchupConfig": {
+        "required": [
+          "responses"
+        ],
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "promptIdentifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "sampleIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "responses": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "MatchupZone": {
         "enum": [
           "AClearlyWins",
@@ -54136,6 +54484,44 @@
           "invalidDatapoints": {
             "type": "integer",
             "description": "The number of invalid datapoints collected by the participant.",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitParticipantsEndpoint_Input": {
+        "required": [
+          "participantIds"
+        ],
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The ids of the participants to submit, 1 to 100 of one benchmark."
+          }
+        }
+      },
+      "SubmitParticipantsEndpoint_Output": {
+        "required": [
+          "validDatapoints",
+          "invalidDatapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "validDatapoints": {
+            "type": "integer",
+            "description": "The number of valid datapoints collected by the participants.",
+            "format": "int32"
+          },
+          "invalidDatapoints": {
+            "type": "integer",
+            "description": "The number of invalid datapoints collected by the participants.",
             "format": "int32"
           }
         }
