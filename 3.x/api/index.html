@@ -1453,10 +1453,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#order-related-classes" class="md-nav__link">
+  <a href="#job-related-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Order related classes
+        Job related classes
       
     </span>
   </a>
@@ -1496,20 +1496,30 @@
 
 <pre class="mermaid"><code>classDiagram
     class RapidataClient {
-        +RapidataOrderManager order
-        +RapidataValidationManager validation
+        +RapidataJobManager job
+        +RapidataAudienceManager audience
+        +ValidationSetManager validation
+        +RapidataFlowManager flow
+        +RapidataBillingManager billing
     }
 
-    class RapidataOrderManager {
+    class RapidataJobManager {
         +RapidataFilters filter
         +RapidataSettings settings
         +RapidataSelections selections
-        +create_****_order()
-        +get_order_by_id()
-        +find_orders()
+        +create_****_job_definition()
+        +get_job_definition_by_id()
+        +get_job_by_id()
+        +find_jobs()
     }
 
-    class RapidataValidationManager {
+    class RapidataAudienceManager {
+        +create_audience()
+        +get_audience_by_id()
+        +assign_job()
+    }
+
+    class ValidationSetManager {
         +RapidsManager rapid
         +create_****_set()
         +get_validation_set_by_id()
@@ -1549,28 +1559,30 @@
         +****_rapid()
     }
 
-    RapidataClient --* RapidataOrderManager
-    RapidataClient --* RapidataValidationManager
-    RapidataOrderManager --* RapidataFilters
-    RapidataOrderManager --* RapidataSettings
-    RapidataOrderManager --* RapidataSelections
-    RapidataValidationManager --* RapidsManager
+    RapidataClient --* RapidataJobManager
+    RapidataClient --* RapidataAudienceManager
+    RapidataClient --* ValidationSetManager
+    RapidataJobManager --* RapidataFilters
+    RapidataJobManager --* RapidataSettings
+    RapidataJobManager --* RapidataSelections
+    ValidationSetManager --* RapidsManager
 
     link RapidataClient "../reference/rapidata/rapidata_client/rapidata_client/" ""
-    link RapidataOrderManager "../reference/rapidata/rapidata_client/order/rapidata_order_manager/" ""
-    link RapidataValidationManager "../reference/rapidata/rapidata_client/validation/validation_set_manager/" ""
+    link RapidataJobManager "../reference/rapidata/rapidata_client/job/rapidata_job_manager/" ""
+    link ValidationSetManager "../reference/rapidata/rapidata_client/validation/validation_set_manager/" ""
     link RapidataFilters "../reference/rapidata/rapidata_client/filter/rapidata_filters/" ""
     link RapidataSettings "../reference/rapidata/rapidata_client/settings/rapidata_settings/" ""
     link RapidataSelections "../reference/rapidata/rapidata_client/selection/rapidata_selections/" ""
     link RapidsManager "../reference/rapidata/rapidata_client/validation/rapids/rapids_manager/" ""
 </code></pre>
 <h1 id="rapidata-api">Rapidata API<a class="headerlink" href="#rapidata-api" title="Permanent link">#</a></h1>
-<p>The Rapidata API builds on the <a href="../reference/rapidata/rapidata_client/rapidata_client/">RapidataClient</a> class. This class is the entry point for all operations. The RapidataClient class has two main properties, order and validation, which are used to manage orders and validation sets respectively.</p>
-<h3 id="order-related-classes">Order related classes<a class="headerlink" href="#order-related-classes" title="Permanent link">#</a></h3>
-<p><a href="../reference/rapidata/rapidata_client/order/rapidata_order_manager/">RapidataOrderManger</a> - accessible through the RapidataClient(rapi) under rapi.order</p>
-<p><a href="../reference/rapidata/rapidata_client/filter/rapidata_filters/">RapidataFilters</a> - accessible through the RapidataClient(rapi) under rapi.order</p>
-<p><a href="../reference/rapidata/rapidata_client/settings/rapidata_settings/">RapidataSettings</a> - accessible through the RapidataClient(rapi) under rapi.order</p>
-<p><a href="../reference/rapidata/rapidata_client/selection/rapidata_selections/">RapidataSelections</a> - accessible through the RapidataClient(rapi) under rapi.order</p>
+<p>The Rapidata API builds on the <a href="../reference/rapidata/rapidata_client/rapidata_client/">RapidataClient</a> class. This class is the entry point for all operations. You collect labels by creating a <strong>job definition</strong> with <code>job</code>, then assigning it to an <strong>audience</strong> — the job runs against that audience's annotators and produces results.</p>
+<h3 id="job-related-classes">Job related classes<a class="headerlink" href="#job-related-classes" title="Permanent link">#</a></h3>
+<p><a href="../reference/rapidata/rapidata_client/job/rapidata_job_manager/">RapidataJobManager</a> - accessible through the RapidataClient(rapi) under rapi.job. Creates job definitions and looks up jobs.</p>
+<p><a href="../reference/rapidata/rapidata_client/audience/rapidata_audience_manager/">RapidataAudienceManager</a> - accessible through the RapidataClient(rapi) under rapi.audience. Manages annotator audiences and assigns job definitions to them.</p>
+<p><a href="../reference/rapidata/rapidata_client/filter/rapidata_filters/">RapidataFilters</a> - accessible through the RapidataClient(rapi) under rapi.job</p>
+<p><a href="../reference/rapidata/rapidata_client/settings/rapidata_settings/">RapidataSettings</a> - accessible through the RapidataClient(rapi) under rapi.job</p>
+<p><a href="../reference/rapidata/rapidata_client/selection/rapidata_selections/">RapidataSelections</a> - accessible through the RapidataClient(rapi) under rapi.job</p>
 <h3 id="validation-related-classes">Validation related classes<a class="headerlink" href="#validation-related-classes" title="Permanent link">#</a></h3>
 <p><a href="../reference/rapidata/rapidata_client/validation/validation_set_manager/">RapidataValidationManger</a> - accessible through the RapidataClient(rapi) under rapi.validation</p>
 <p><a href="../reference/rapidata/rapidata_client/validation/rapids/rapids_manager/">RapidsManager</a> - accessible through the RapidataClient(rapi) under rapi.validation.rapid. Used to create specific rapids to be added to a validation set.</p>

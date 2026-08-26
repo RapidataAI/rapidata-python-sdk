@@ -38,3 +38,18 @@ All amounts are in US dollars, rounded to the cent.
     Billing is settled per **organization**, so these figures cover everything your organization spent in the period — not only the jobs this client created. Costs accrue while jobs run, so the values are a snapshot: fetch the period again for an up-to-date figure.
 
 A period only opens once there is something to bill. If your organization has never run a billable job, `get_current_billing_period()` raises a `RapidataError` with status `404` — see [Error Handling](error_handling.md).
+
+## Reading the Outstanding Balance
+
+While the current period tells you what is accruing *now*, `get_outstanding_balance()` tells you what is already **due** — unpaid invoices plus ended periods that have settled but are not yet invoiced.
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+owed = client.billing.get_outstanding_balance()
+print(f"Total owed: ${owed}")
+```
+
+The figure is in US dollars, rounded to the cent, and is already net of any vouchers and discounts. It does **not** include the current, still-accruing period — nothing is due until a period ends and settles. Like the current period, this is settled per **organization**.

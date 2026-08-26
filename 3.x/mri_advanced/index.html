@@ -1697,6 +1697,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#voter-demographics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voter Demographics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Voter Demographics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#voter-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voter composition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standings-per-demographic-segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standings per demographic segment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-standings-and-matrices-by-demographics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering standings and matrices by demographics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#winloss-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2042,6 +2092,56 @@
     <span class="md-ellipsis">
       
         Deleting Participants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voter-demographics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voter Demographics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Voter Demographics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#voter-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voter composition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standings-per-demographic-segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standings per demographic segment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-standings-and-matrices-by-demographics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering standings and matrices by demographics
       
     </span>
   </a>
@@ -2401,23 +2501,87 @@ under changing rules is hard to interpret. To re-scope, create a new leaderboard
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">participants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">participant</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </span></code></pre></div>
+<h2 id="voter-demographics">Voter Demographics<a class="headerlink" href="#voter-demographics" title="Permanent link">#</a></h2>
+<p>Every vote on a benchmark carries the voter's demographics, so you can see <em>who</em>
+evaluated your models and how different groups ranked them. Both methods live on
+the benchmark and return a pandas DataFrame, like <code>get_overall_standings</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>ageBucket</code>, <code>gender</code> and <code>occupation</code> are <strong>estimated</strong> (inferred from
+behaviour), not self-declared. <code>country</code> and <code>language</code> are observed. Each
+dimension includes an <code>"unknown"</code> bucket for votes whose attribute could not
+be determined.</p>
+</div>
+<h3 id="voter-composition">Voter composition<a class="headerlink" href="#voter-composition" title="Permanent link">#</a></h3>
+<p><code>get_demographics</code> returns one row per <code>(dimension, value)</code> with the raw vote
+count and its share of the dimension (shares within a dimension sum to 1). The
+<code>dimension</code> column holds <code>BenchmarkDemographicDimension</code> values (<code>AgeBucket</code>,
+<code>Gender</code>, <code>Occupation</code>, <code>Country</code>, <code>Language</code>):</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">BenchmarkDemographicDimension</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">demographics</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">get_demographics</span><span class="p">()</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># columns: dimension, value, votes, share</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="n">countries</span> <span class="o">=</span> <span class="n">demographics</span><span class="p">[</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="n">demographics</span><span class="p">[</span><span class="s2">"dimension"</span><span class="p">]</span> <span class="o">==</span> <span class="n">BenchmarkDemographicDimension</span><span class="o">.</span><span class="n">COUNTRY</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="p">]</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">countries</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="standings-per-demographic-segment">Standings per demographic segment<a class="headerlink" href="#standings-per-demographic-segment" title="Permanent link">#</a></h3>
+<p><code>get_standings_breakdown</code> returns one row per <code>(segment, model)</code> — how each
+demographic segment of voters ranks the models, with that segment's vote count.
+Useful for spotting where a model is ranked differently by different groups. For
+the overall standings across all voters, use <code>get_overall_standings</code>. The
+dimension is a <code>BenchmarkDemographicDimension</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">BenchmarkDemographicDimension</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">breakdown</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">get_standings_breakdown</span><span class="p">(</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    <span class="n">dimension</span><span class="o">=</span><span class="n">BenchmarkDemographicDimension</span><span class="o">.</span><span class="n">AGEBUCKET</span><span class="p">,</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="p">)</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1"># columns: segment, segment_votes, name, wins, total_matches, score</span>
+</span></code></pre></div>
+<p>Segments are <strong>raw vote counts</strong>.</p>
+<h3 id="filtering-standings-and-matrices-by-demographics">Filtering standings and matrices by demographics<a class="headerlink" href="#filtering-standings-and-matrices-by-demographics" title="Permanent link">#</a></h3>
+<p>The demographic dimensions are also filters. <code>get_overall_standings</code>,
+<code>get_win_loss_matrix</code>, <code>get_demographics</code> and <code>get_standings_breakdown</code> on the
+benchmark — and <code>get_standings</code> / <code>get_win_loss_matrix</code> on a leaderboard — all
+accept <code>country</code>, <code>language</code>, <code>gender</code>, <code>age_bucket</code>, <code>occupation</code> and <code>run_id</code>
+(on top of <code>tags</code> / <code>leaderboard_ids</code>). This computes the result from only the
+votes cast by matching voters, e.g. the standings among young women:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">BenchmarkDemographicDimension</span><span class="p">,</span> <span class="n">Gender</span><span class="p">,</span> <span class="n">AgeGroup</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">standings</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">get_overall_standings</span><span class="p">(</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>    <span class="n">gender</span><span class="o">=</span><span class="p">[</span><span class="n">Gender</span><span class="o">.</span><span class="n">FEMALE</span><span class="p">],</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>    <span class="n">age_bucket</span><span class="o">=</span><span class="p">[</span><span class="n">AgeGroup</span><span class="o">.</span><span class="n">BETWEEN_18_29</span><span class="p">],</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>    <span class="n">country</span><span class="o">=</span><span class="p">[</span><span class="s2">"US"</span><span class="p">,</span> <span class="s2">"GB"</span><span class="p">],</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="p">)</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1"># and any of the other read methods, e.g.</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="n">breakdown</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">get_standings_breakdown</span><span class="p">(</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>    <span class="n">dimension</span><span class="o">=</span><span class="n">BenchmarkDemographicDimension</span><span class="o">.</span><span class="n">COUNTRY</span><span class="p">,</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"landscape"</span><span class="p">],</span>
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>    <span class="n">gender</span><span class="o">=</span><span class="p">[</span><span class="n">Gender</span><span class="o">.</span><span class="n">FEMALE</span><span class="p">],</span>
+</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><code>gender</code> and <code>age_bucket</code> take the SDK's <code>Gender</code> / <code>AgeGroup</code> enums; <code>country</code>,
+<code>language</code> and <code>occupation</code> take plain values.</p>
 <h2 id="winloss-matrix">Win/Loss Matrix<a class="headerlink" href="#winloss-matrix" title="Permanent link">#</a></h2>
 <p><code>get_standings</code> collapses every matchup into one Elo score per model. When you want
 the head-to-head breakdown instead, use <code>get_win_loss_matrix</code>. It returns a square
 pandas DataFrame with participant names on both axes, where cell <code>[i, j]</code> is how
 often the row model <code>i</code> beat the column model <code>j</code>. Reading a single row tells you
 how one model fared against each opponent; the diagonal is always 0.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Per-leaderboard: matchups within one leaderboard</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">()</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Benchmark-wide: aggregated across all leaderboards</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">()</span>
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1">#            ModelA  ModelB  ModelC</span>
-</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="c1">#   ModelA        0      12       9</span>
-</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="c1">#   ModelB        4       0       7</span>
-</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="c1">#   ModelC        6       8       0</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Per-leaderboard: matchups within one leaderboard</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">()</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Benchmark-wide: aggregated across all leaderboards</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">()</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="c1">#            ModelA  ModelB  ModelC</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1">#   ModelA        0      12       9</span>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1">#   ModelB        4       0       7</span>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="c1">#   ModelC        6       8       0</span>
 </span></code></pre></div>
 <p>Both methods accept <code>tags</code> to restrict the count to matchups with specific prompt
 tags. The benchmark-level method additionally accepts <code>participant_ids</code> and
@@ -2425,28 +2589,28 @@ tags. The benchmark-level method additionally accepts <code>participant_ids</cod
 <p>By default the cells are raw win counts. Pass <code>use_weighted_scoring=True</code> to weight
 each matchup by the responding annotators' reliability (<code>userScore</code>) instead — the
 cells then hold weighted sums (floats) rather than integer counts.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">(</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"landscape"</span><span class="p">],</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="n">use_weighted_scoring</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">matrix</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">get_win_loss_matrix</span><span class="p">(</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"landscape"</span><span class="p">],</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>    <span class="n">use_weighted_scoring</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="accessing-the-underlying-jobs">Accessing the Underlying Jobs<a class="headerlink" href="#accessing-the-underlying-jobs" title="Permanent link">#</a></h2>
 <p>The standings and win/loss matrix are aggregates. If you need the raw responses
 behind them, use the leaderboard's <code>jobs</code> property: every model evaluation on a
 leaderboard runs as a job, and this returns all of them, most recent first.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">leaderboards</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span> <span class="c1"># list[RapidataJob], newest first</span>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span><span class="si">}</span><span class="s2"> evaluations have run for this leaderboard"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">leaderboards</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span> <span class="c1"># list[RapidataJob], newest first</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span><span class="si">}</span><span class="s2"> evaluations have run for this leaderboard"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Each item is a full <code>RapidataJob</code>, so you can pull the detailed comparison
 results, check status, or open a job in the dashboard:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"Completed"</span><span class="p">:</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>        <span class="k">continue</span>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># RapidataResults — the individual matchups</span>
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>    <span class="c1"># or work with the raw dict directly</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>    <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"Completed"</span><span class="p">:</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>        <span class="k">continue</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span> <span class="c1"># RapidataResults — the individual matchups</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>    <span class="c1"># or work with the raw dict directly</span>
 </span></code></pre></div>
 <p>Runs that don't yet have an associated job (for example, an evaluation still
 being set up) are skipped, so the list only contains jobs you can act on.</p>
