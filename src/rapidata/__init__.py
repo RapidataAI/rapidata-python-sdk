@@ -20,6 +20,7 @@ from .rapidata_client import (
     RapidataValidationSet,
     Box,
     RapidataResults,
+    BenchmarkDemographicDimension,
     DemographicSelection,
     LabelingSelection,
     EffortSelection,
