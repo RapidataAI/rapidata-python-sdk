@@ -54,6 +54,10 @@ if TYPE_CHECKING:
 # A batch-wide failure would otherwise print one full error block per sample.
 _MAX_REPORTED_FAILURES = 5
 
+# The submit endpoint accepts at most 100 participant ids per request and
+# rejects anything larger outright, so submissions are chunked to this size.
+_SUBMIT_BATCH_SIZE = 100
+
 
 class RapidataBenchmark:
     """
@@ -947,16 +951,31 @@ class RapidataBenchmark:
         """Submits all participants that are in `CREATED` state.
 
         This is a convenience method to submit all unsubmitted participants at once.
+
+        Unlike submitting each participant individually, a batch is evaluated
+        symmetrically as one run: every participant is compared against every
+        other and against the benchmark's already-submitted field.
         """
         from rapidata.api_client.models.participant_status import ParticipantStatus
+        from rapidata.api_client.models.submit_participants_endpoint_input import (
+            SubmitParticipantsEndpointInput,
+        )
 
         with tracer.start_as_current_span("RapidataBenchmark.run"):
             created = [
                 p for p in self.participants if p.status == ParticipantStatus.CREATED
             ]
             logger.info(f"Submitting {len(created)} participants in CREATED state")
-            for participant in created:
-                participant.run()
+
+            for start in range(0, len(created), _SUBMIT_BATCH_SIZE):
+                batch = created[start : start + _SUBMIT_BATCH_SIZE]
+                self._openapi_service.leaderboard.participant_api.participants_submit_post(
+                    submit_participants_endpoint_input=SubmitParticipantsEndpointInput(
+                        participantIds=[p.id for p in batch]
+                    )
+                )
+                for participant in batch:
+                    participant._status = ParticipantStatus.SUBMITTED
 
             # Clear cache so next access re-fetches
             self.__participants = []

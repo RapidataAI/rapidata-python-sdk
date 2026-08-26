@@ -321,8 +321,10 @@ participant.run()
 # Or add multiple models and submit them all at once
 benchmark.add_model(name="ModelB", media=["https://example.com/img2.png"], identifiers=["scene_1"])
 benchmark.add_model(name="ModelC", media=["https://example.com/img3.png"], identifiers=["scene_1"])
-benchmark.run()  # Submits all participants in CREATED state
+benchmark.run()  # Submits all CREATED participants in a single batch request
 ```
+
+Submitting in one batch evaluates the participants symmetrically as a single run — each model compared against every other and against the benchmark's already-submitted field — rather than as separate per-participant runs.
 
 ### Inspecting a Participant's Elo
 
