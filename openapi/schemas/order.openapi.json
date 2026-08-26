@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.08.24.1550-dec4604"
+    "version": "2026.08.25.1525-d42d531"
   },
   "servers": [
     {
@@ -361,7 +361,7 @@
           "Job"
         ],
         "summary": "Grants a customer viewer or editor access to a job by their email.",
-        "description": "The email must belong to an existing account; an unknown email returns 400 Bad Request.\n Granting editor access implies viewing. Re-sharing at the same level is idempotent.",
+        "description": "Granting editor access implies viewing. Re-sharing at the same level is idempotent.\n An email with no matching account is accepted and grants nothing; the response does not\n distinguish it from a successful share, so callers cannot probe which emails have accounts.",
         "parameters": [
           {
             "name": "jobId",
@@ -979,6 +979,107 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/shares/organizations": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Returns each organization a job is shared with, together with its access level.",
+        "description": "The name is resolved for display and is empty if the organization can no longer be resolved.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetJobOrganizationSharesEndpoint_Output"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Grants every member of an organization viewer or editor access to a job.",
+        "description": "The grant follows organization membership, so members who join later inherit the access.\n Granting editor access implies viewing. Re-sharing at the same level is idempotent.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job to share.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The organization to share with and the access level to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareJobWithOrganizationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -3218,6 +3319,56 @@
             "name": "jobId",
             "in": "path",
             "description": "The ID of the job to retry.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/shares/organizations/{organizationId}": {
+      "delete": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Removes an organization's viewer and editor access to a job.",
+        "description": "Idempotent: revoking a share that does not exist succeeds with no effect. Members who also\n hold a direct customer share keep that access.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization whose access is revoked.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6105,6 +6256,32 @@
           }
         },
         "description": "The estimated cost of a job definition."
+      },
+      "GetJobOrganizationSharesEndpoint_Output": {
+        "required": [
+          "organizationId",
+          "name",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the job is shared with."
+          },
+          "name": {
+            "type": "string",
+            "description": "The organization's name; empty when it could not be resolved."
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobShareLevel"
+              }
+            ],
+            "description": "The access level the organization holds."
+          }
+        }
       },
       "GetJobProgressEndpoint_Output": {
         "required": [
@@ -10412,6 +10589,27 @@
           "ClassificationTimedOut",
           null
         ]
+      },
+      "ShareJobWithOrganizationEndpoint_Input": {
+        "required": [
+          "organizationId",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization to share the job with."
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobShareLevel"
+              }
+            ],
+            "description": "The access level to grant."
+          }
+        }
       },
       "SortDirection": {
         "enum": [
