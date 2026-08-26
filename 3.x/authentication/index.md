@@ -57,7 +57,7 @@ curl -X POST https://auth.rapidata.ai/connect/token \
 
 # → {"access_token": "...", "token_type": "Bearer", "expires_in": 3600}
 
-curl https://api.rapidata.ai/order/openapi/v1.json \
+curl https://api.rapidata.ai/jobs \
   -H "Authorization: Bearer ACCESS_TOKEN"
 ```
 

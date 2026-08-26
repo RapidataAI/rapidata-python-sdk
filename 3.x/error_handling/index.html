@@ -1908,7 +1908,7 @@
 <li><code>dataset</code> — the dataset that was being uploaded to. <code>retry()</code> reuses it.</li>
 <li><code>failed_uploads</code> / <code>detailed_failures</code> / <code>failures_by_reason</code> — which datapoints failed and why (see below).</li>
 <li><code>retry()</code> — re-upload the failed datapoints into <code>dataset</code> and finish creating the definition. Returns the <code>RapidataJobDefinition</code>.</li>
-<li><code>job_definition</code> — <code>None</code> for job creation (nothing was persisted). Populated only when tolerating failures on a legacy order.</li>
+<li><code>job_definition</code> — <code>None</code> for job-definition creation (nothing was persisted). Populated when the exception comes from updating an existing definition (e.g. <code>update_dataset</code>), where the definition already exists.</li>
 </ul>
 <h3 id="understanding-failure-information">Understanding Failure Information<a class="headerlink" href="#understanding-failure-information" title="Permanent link">#</a></h3>
 <p>The exception provides two ways to inspect failures, depending on your needs:</p>
