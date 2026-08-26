@@ -3,11 +3,13 @@ This Project is a Python SDK for the Rapidata API.
 It is built around the RapidataClient class which is the main entry point for interacting with the Rapidata API.
 
 As a customer you can use the RapidataClient class to access the following:
-- OrderCreation
-- ValidationSetCreation
-- AudienceCreation
 - JobDefinitionCreation
+- AudienceCreation (including filtered audiences via `.filter()` for country/language/demographic targeting)
+- ValidationSetCreation
+- FlowCreation
 - BenchmarkCreation / MRI Creation
+
+Orders were removed from the SDK entirely (v3.21.0) — do not add, document, or reference order creation.
 
 The whole authentication and backend communication is handled by the OpenAPIService class. It works in combination with the AUTO GENERATED API CLIENT that is used to make the actual API calls.
 

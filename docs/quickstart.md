@@ -75,6 +75,21 @@ audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
 !!! note
     The global and curated audiences get you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
+#### Targeting countries, languages, or demographics
+
+To restrict any audience — including the global one — to specific countries, languages, age groups, genders, or device types, derive a filtered audience with `.filter(...)`. No new recruiting or qualification is needed:
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+audience = client.audience.get_audience_by_id("global").filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+```
+
+The result can be used anywhere a regular audience is accepted, e.g. `audience.assign_job(...)` in Step 3. See [Filtered Audiences](audiences.md#filtered-audiences) for all supported filters and how to combine them.
+
 ### Step 2: Create a Job Definition
 
 A job definition configures what you want labeled:

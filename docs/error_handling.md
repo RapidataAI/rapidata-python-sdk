@@ -48,7 +48,7 @@ The exception exposes these to help you understand and recover from failures:
 - `dataset` — the dataset that was being uploaded to. `retry()` reuses it.
 - `failed_uploads` / `detailed_failures` / `failures_by_reason` — which datapoints failed and why (see below).
 - `retry()` — re-upload the failed datapoints into `dataset` and finish creating the definition. Returns the `RapidataJobDefinition`.
-- `job_definition` — `None` for job creation (nothing was persisted). Populated only when tolerating failures on a legacy order.
+- `job_definition` — `None` for job-definition creation (nothing was persisted). Populated when the exception comes from updating an existing definition (e.g. `update_dataset`), where the definition already exists.
 
 ### Understanding Failure Information
 

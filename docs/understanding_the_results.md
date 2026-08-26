@@ -103,7 +103,7 @@ Here's an example of the results you might receive when running a COMPARE task (
     - `createdAt`: The timestamp indicating when the results overview was generated, in UTC time.
     - `version`: The version of the aggregator system that produced the results.
     - `type`: The type of task that was run (e.g. `Compare`, `Classify`).
-    - `name`: The name given to the job or order.
+    - `name`: The name given to the job.
     - `instruction`: The instruction that was shown to the labelers.
 
 2. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
