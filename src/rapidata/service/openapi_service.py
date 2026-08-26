@@ -19,12 +19,11 @@ if TYPE_CHECKING:
     from rapidata.service.services.validation_service import ValidationService
     from rapidata.service.services.dataset_service import DatasetService
     from rapidata.service.services.campaign_service import CampaignService
-    from rapidata.service.services.pipeline_service import PipelineService
-    from rapidata.service.services.workflow_service import WorkflowService
     from rapidata.service.services.leaderboard_service import LeaderboardService
     from rapidata.service.services.rapid_service import RapidService
     from rapidata.service.services.signal_service import SignalService
     from rapidata.service.services.translation_service import TranslationService
+    from rapidata.service.services.payment_service import PaymentService
 
 
 class OpenAPIService:
@@ -75,12 +74,11 @@ class OpenAPIService:
         self._validation: ValidationService | None = None
         self._dataset: DatasetService | None = None
         self._campaign: CampaignService | None = None
-        self._pipeline: PipelineService | None = None
-        self._workflow: WorkflowService | None = None
         self._leaderboard: LeaderboardService | None = None
         self._rapid: RapidService | None = None
         self._signal: SignalService | None = None
         self._translation: TranslationService | None = None
+        self._payment: PaymentService | None = None
 
         if token or token_file:
             if token is None:
@@ -196,20 +194,6 @@ class OpenAPIService:
         return self._campaign
 
     @property
-    def pipeline(self) -> PipelineService:
-        if self._pipeline is None:
-            from rapidata.service.services.pipeline_service import PipelineService
-            self._pipeline = PipelineService(self.api_client)
-        return self._pipeline
-
-    @property
-    def workflow(self) -> WorkflowService:
-        if self._workflow is None:
-            from rapidata.service.services.workflow_service import WorkflowService
-            self._workflow = WorkflowService(self.api_client)
-        return self._workflow
-
-    @property
     def leaderboard(self) -> LeaderboardService:
         if self._leaderboard is None:
             from rapidata.service.services.leaderboard_service import LeaderboardService
@@ -236,6 +220,13 @@ class OpenAPIService:
             from rapidata.service.services.translation_service import TranslationService
             self._translation = TranslationService(self.api_client)
         return self._translation
+
+    @property
+    def payment(self) -> PaymentService:
+        if self._payment is None:
+            from rapidata.service.services.payment_service import PaymentService
+            self._payment = PaymentService(self.api_client)
+        return self._payment
 
     def _get_rapidata_package_version(self):
         """

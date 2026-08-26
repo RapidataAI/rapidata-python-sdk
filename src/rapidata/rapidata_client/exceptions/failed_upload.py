@@ -21,8 +21,9 @@ class FailedUpload(Generic[T]):
         timestamp: Optional timestamp when the failure occurred.
         exception: Optional original exception for richer error context.
         trace_id: Optional backend trace ID, when the failure originated from a
-            RapidataError whose response included a traceId. Used to correlate
-            an SDK-side failure with the backend trace that produced it.
+            RapidataError whose response carried one — either as a `traceId`
+            body member or an `x-trace-id` header. Used to correlate an
+            SDK-side failure with the backend trace that produced it.
         stage: Optional ingestion stage that failed, for remote-URL assets
             (e.g. "download", "content_type", "timeout", "size", "internal").
             Only "internal" indicates a Rapidata-side fault; every other stage
@@ -75,11 +76,8 @@ class FailedUpload(Generic[T]):
 
         if isinstance(exception, RapidataError):
             error_message = exception.get_reason()
+            trace_id = exception.trace_id
             if isinstance(exception.details, dict):
-                raw_trace_id = exception.details.get("traceId")
-                if isinstance(raw_trace_id, str) and raw_trace_id:
-                    trace_id = raw_trace_id
-
                 # stage / upstreamHttpStatus are ProblemDetails extension
                 # members the asset service adds for remote-URL ingestion
                 # failures; they serialize flat alongside title / traceId.

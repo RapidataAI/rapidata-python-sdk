@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "v1"
+    "version": "2026.08.25.1525-d42d531"
   },
   "servers": [
     {
@@ -211,6 +211,7 @@
           "Audience"
         ],
         "summary": "Returns the audience with the specified id.",
+        "description": "Accepts the id of a filtered audience too. In that case the response describes the\n underlying base audience, with filter set to the filter applied on top of it.",
         "parameters": [
           {
             "name": "audienceId",
@@ -1466,7 +1467,7 @@
           "Audience"
         ],
         "summary": "Rebuilds the distilling campaign for the specified audience.",
-        "description": "Recalculates campaign filters and selections based on the audience's current settings\n (demographic filters, exit conditions, etc.).",
+        "description": "Recalculates campaign filters, selections and the boosting profile based on the\n audience's current settings (demographic filters, exit conditions, boost thresholds).",
         "parameters": [
           {
             "name": "audienceId",
@@ -2565,6 +2566,7 @@
       "GetAudienceByIdEndpoint_Output": {
         "required": [
           "id",
+          "baseAudienceId",
           "name",
           "status",
           "qualifiedUserCount",
@@ -2572,6 +2574,7 @@
           "createdAt",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "isPublic",
           "isDistilling",
           "distillingCampaignId",
@@ -2584,6 +2587,18 @@
           "id": {
             "type": "string",
             "description": "The unique identifier of the audience."
+          },
+          "baseAudienceId": {
+            "type": "string",
+            "description": "The audience that backs this entry. Equals id for a regular audience; for a\n filtered audience it points to the audience the filter is applied on top of."
+          },
+          "filter": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAudienceFilter"
+              }
+            ],
+            "description": "The filter applied on top of the base audience. Null for a regular audience — a\n non-null value is the sole signal that this is a filtered view. Every other field\n describes the base audience, since a filtered view inherits its configuration and has\n no user counts of its own."
           },
           "name": {
             "type": "string",
@@ -2639,8 +2654,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "isPublic": {
             "type": "boolean",
@@ -3893,6 +3907,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IGraduationRuleAcceptedFreeTextRule"
+          },
+          {
             "$ref": "#/components/schemas/IGraduationRuleScoreThresholdRule"
           },
           {
@@ -3902,8 +3919,37 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AcceptedFreeText": "#/components/schemas/IGraduationRuleAcceptedFreeTextRule",
             "ScoreThreshold": "#/components/schemas/IGraduationRuleScoreThresholdRule",
             "TaskAccuracy": "#/components/schemas/IGraduationRuleTaskAccuracyRule"
+          }
+        }
+      },
+      "IGraduationRuleAcceptedFreeTextRule": {
+        "required": [
+          "minAcceptedResponses",
+          "minAcceptedRatio",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AcceptedFreeText"
+            ],
+            "type": "string"
+          },
+          "minAcceptedResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minAcceptedRatio": {
+            "type": "number",
+            "format": "double"
+          },
+          "demotionRatio": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -4376,6 +4422,7 @@
           "filters",
           "createdAt",
           "ownerMail",
+          "organizationId",
           "isPublic",
           "isDistilling",
           "graduationRule"
@@ -4435,8 +4482,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "isPublic": {
             "type": "boolean",
@@ -4821,6 +4867,10 @@
             ],
             "description": "The truth for the example.",
             "nullable": true
+          },
+          "instructionText": {
+            "type": "string",
+            "description": "The instruction shown to the user — the criteria for a compare example, the target\n for a locate, line or scrub example, or the title for a classify or transcription\n example. The example's answer options are left unchanged."
           },
           "explanation": {
             "type": "string",

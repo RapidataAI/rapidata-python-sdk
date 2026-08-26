@@ -398,6 +398,74 @@ body {
 
 
 /* ==========================================================================
+   Preview gallery (grid of small phones, one per job type)
+   ========================================================================== */
+
+.preview-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.25rem 1.5rem;
+    /* Two phones plus the gap. The page hides its table of contents, so without
+       a cap the columns stretch into the freed space and the phones drift apart. */
+    max-width: 700px;
+    margin: 2rem auto;
+}
+
+.preview-gallery__card > h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* The "See the code" link - centred under the phone, like the refresh control. */
+.preview-gallery__card > p:last-child {
+    margin: 0.4rem 0 0;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.preview-gallery .phone-preview {
+    width: 320px;
+    height: 600px;
+    max-width: 100%;
+    margin: 0 auto;
+    border-width: 10px;
+    border-radius: 32px;
+}
+
+.preview-gallery .phone-preview__iframe {
+    border-radius: 22px;
+}
+
+.preview-gallery .phone-preview__notch {
+    width: 110px;
+    height: 6px;
+}
+
+.preview-gallery .phone-preview__btn--left-top {
+    left: -13px;
+    top: 106px;
+    height: 38px;
+}
+
+.preview-gallery .phone-preview__btn--left-bot {
+    left: -13px;
+    top: 152px;
+    height: 38px;
+}
+
+.preview-gallery .phone-preview__btn--right {
+    right: -13px;
+    top: 122px;
+    height: 54px;
+}
+
+.preview-gallery .preview-controls {
+    margin: 0.6rem 0 0;
+}
+
+
+/* ==========================================================================
    AI Agent copy button
    ========================================================================== */
 

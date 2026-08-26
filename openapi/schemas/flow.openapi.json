@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "v1"
+    "version": "2026.08.25.1525-d42d531"
   },
   "servers": [
     {
@@ -1268,12 +1268,14 @@
             "nullable": true
           },
           "pidBatchMode": {
-            "allOf": [
+            "type": "string",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/PidBatchMode"
               }
             ],
-            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total."
+            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to Total.",
+            "nullable": true
           },
           "drainDurationSeconds": {
             "type": "integer",
@@ -1320,7 +1322,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 60 seconds and 1 hour; defaults to 1 hour when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour; defaults to 4 minutes when omitted.",
             "format": "int32",
             "nullable": true
           },
@@ -2002,6 +2004,7 @@
           "featureFlags",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt",
           "_t"
         ],
@@ -2186,8 +2189,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -2651,6 +2653,7 @@
           "type",
           "ownerId",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -2682,8 +2685,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",

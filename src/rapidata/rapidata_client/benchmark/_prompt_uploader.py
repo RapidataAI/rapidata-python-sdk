@@ -8,6 +8,7 @@ from opentelemetry import context as otel_context
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
+from rapidata.rapidata_client.benchmark.prompt_metadata import Origin, Tag
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 if TYPE_CHECKING:
@@ -16,12 +17,18 @@ if TYPE_CHECKING:
 
 @dataclass
 class BenchmarkPrompt:
-    """A single prompt to register on a benchmark."""
+    """A single prompt to register on a benchmark.
+
+    ``tags`` are always structured :class:`Tag` objects here; the high-level
+    API wraps any bare strings into ``Tag(value, category=None)`` before
+    constructing a ``BenchmarkPrompt``.
+    """
 
     identifier: str
     prompt: str | None = None
     prompt_asset: str | None = None
-    tags: list[str] = field(default_factory=list)
+    tags: list[Tag] = field(default_factory=list)
+    origin: Origin | None = None
 
 
 class BenchmarkPromptUploader:
@@ -46,6 +53,11 @@ class BenchmarkPromptUploader:
         )
         from rapidata.api_client.models.i_asset_input import IAssetInput
 
+        # Aliased: the generated wire models share their names with the
+        # user-facing Tag/Origin imported at module scope.
+        from rapidata.api_client.models.tag import Tag as ApiTag
+        from rapidata.api_client.models.origin import Origin as ApiOrigin
+
         self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self._benchmark_id,
             create_prompt_for_benchmark_endpoint_input=CreatePromptForBenchmarkEndpointInput(
@@ -61,7 +73,15 @@ class BenchmarkPromptUploader:
                     if prompt.prompt_asset is not None
                     else None
                 ),
-                tags=prompt.tags,
+                tags=[
+                    ApiTag(value=tag.value, category=tag.category)
+                    for tag in prompt.tags
+                ],
+                origin=(
+                    ApiOrigin(source=prompt.origin.source)
+                    if prompt.origin is not None
+                    else None
+                ),
             ),
         )
 
@@ -81,9 +101,9 @@ class BenchmarkPromptUploader:
                 self.upload(prompt)
             except Exception as e:
                 failures[prompt.identifier] = e
-                logger.error(
-                    "Failed to upload prompt %s: %s", prompt.identifier, str(e)
-                )
+                # The post-batch summary below reports every failed identifier, so an
+                # error per prompt only duplicates it once a whole batch goes bad.
+                logger.info("Failed to upload prompt %s: %s", prompt.identifier, str(e))
             finally:
                 otel_context.detach(token)
 

@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, Sequence
 
 from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.config._qr_preview import (
-    print_campaign_preview_qr_for_pipeline,
     print_job_definition_preview_link,
 )
 from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
@@ -197,10 +196,6 @@ class JobDefinitionCreationMachine:
             openapi_service=self._openapi_service,
         )
 
-        print_campaign_preview_qr_for_pipeline(
-            openapi_service=self._openapi_service,
-            pipeline_id=response.pipeline_id,
-        )
         print_job_definition_preview_link(
             environment=self._openapi_service.environment,
             job_definition_id=self.job_definition.id,

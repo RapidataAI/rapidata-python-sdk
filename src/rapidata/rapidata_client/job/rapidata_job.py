@@ -31,6 +31,9 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.get_job_by_id_endpoint_output import (
         GetJobByIdEndpointOutput,
     )
+    from rapidata.api_client.models.get_job_progress_endpoint_output import (
+        GetJobProgressEndpointOutput,
+    )
     from rapidata.rapidata_client.results.rapidata_results import RapidataResults
     from rapidata.rapidata_client.job.progress import JobProgress
     from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
@@ -302,14 +305,12 @@ class RapidataJob:
             from rapidata.rapidata_client.job.progress import JobProgress
 
             job = self._fetch_job()
-            workflow_progress = self._get_workflow_progress()
+            job_progress = self._get_job_progress()
 
             return JobProgress(
                 state=job.state.value,
                 completion_percentage=(
-                    float(workflow_progress.completion_percentage)
-                    if workflow_progress
-                    else 0.0
+                    float(job_progress.completion_percentage) if job_progress else 0.0
                 ),
                 recruiting=self._get_recruiting_metrics(),
             )
@@ -427,7 +428,6 @@ class RapidataJob:
 
         self._raise_if_audience_cannot_produce_responses()
 
-        # Get progress from pipeline if available
         with tqdm(
             total=100,
             desc="Processing job",
@@ -449,9 +449,9 @@ class RapidataJob:
                 if job.state in self._BLOCKING_STATUSES:
                     self._raise_for_blocking_status(job)
 
-                # Try to get progress from workflow
+                # Try to get the job's labelling progress
                 try:
-                    progress = self._get_workflow_progress()
+                    progress = self._get_job_progress()
                     current_percentage = (
                         progress.completion_percentage if progress else 0
                     )
@@ -464,30 +464,16 @@ class RapidataJob:
 
                 sleep(refresh_rate)
 
-    def _get_workflow_progress(self):
-        """Gets the workflow progress (internal use only)."""
-        from rapidata.api_client.models.get_workflow_progress_result import (
-            GetWorkflowProgressResult,
-        )
-        from rapidata.api_client.models.workflow_artifact_model import (
-            WorkflowArtifactModel,
-        )
-        from rapidata.api_client.models.campaign_artifact_model import (
-            CampaignArtifactModel,
-        )
-        from typing import cast
+    def _get_job_progress(self) -> GetJobProgressEndpointOutput | None:
+        """Gets the job's labelling progress (internal use only).
 
+        Returns ``None`` when the job has no labelling task yet (the endpoint
+        answers 404 in that case), so callers can treat it as 0% so far.
+        """
         try:
             with suppress_rapidata_error_logging():
-                pipeline = self._openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_get(
-                    self.pipeline_id
-                )
-                workflow_id = cast(
-                    WorkflowArtifactModel,
-                    pipeline.artifacts["workflow-artifact"].actual_instance,
-                ).workflow_id
-                return self._openapi_service.workflow.workflow_api.workflow_workflow_id_progress_get(
-                    workflow_id
+                return self._openapi_service.order.job_api.job_job_id_progress_get(
+                    self.id
                 )
         except Exception:
             return None

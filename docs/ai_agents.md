@@ -62,15 +62,41 @@ Other agents follow their own conventions — Cursor rules, Copilot instructions
 
 ## Keeping the skill up to date
 
-The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. Pull the latest version so your agent stays in sync.
+The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. A skill that lags behind the SDK will describe methods that have changed, so either let Claude Code update it for you or pull it yourself.
 
-**Claude Code**:
+### Automatic — Claude Code
+
+Claude Code refreshes marketplaces and updates their installed plugins in the background shortly after a session starts. This is off by default for marketplaces outside Anthropic's own, so switch it on once:
+
+`/plugin` → **Marketplaces** → `rapidata-sdk-marketplace` → **Enable auto-update**
+
+To set it for everyone on a project, commit it to `.claude/settings.json` — the same block works in your personal `~/.claude/settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "rapidata-sdk-marketplace": {
+      "source": { "source": "github", "repo": "RapidataAI/skills" },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "rapidata-sdk-plugin@rapidata-sdk-marketplace": true
+  }
+}
+```
+
+When an update lands mid-session, Claude Code asks you to run `/reload-plugins`. Otherwise it takes effect on your next launch.
+
+### Manual
+
+Claude Code:
 
 ```bash
 claude plugin marketplace update
 ```
 
-**Everything else**:
+Everything else — the `skills` CLI updates only when you ask it to:
 
 ```bash
 npx skills update rapidata

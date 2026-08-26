@@ -19,7 +19,6 @@ from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
 from rapidata.rapidata_client.audience.rapidata_audience_manager import (
     RapidataAudienceManager,
 )
-from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
 )
@@ -39,6 +38,9 @@ from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
 from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
 from rapidata.rapidata_client.signal.rapidata_signal_manager import (
     RapidataSignalManager,
+)
+from rapidata.rapidata_client.billing.rapidata_billing_manager import (
+    RapidataBillingManager,
 )
 from rapidata.rapidata_client.api.rapidata_api_client import (
     optional_api_call,
@@ -65,14 +67,14 @@ _OTLP_COLLECTOR_ENVIRONMENTS = frozenset({"rapidata.ai", "rabbitdata.ch"})
 
 
 class RapidataClient:
-    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
+    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create jobs, audiences, and validation sets."""
 
     def __init__(
         self,
         client_id: str | None = None,
         client_secret: str | None = None,
         environment: str | None = None,
-        oauth_scope: str = "openid roles email api",
+        oauth_scope: str = "openid email api",
         cert_path: str | None = None,
         token: dict | None = None,
         token_file: str | None = None,
@@ -114,8 +116,6 @@ class RapidataClient:
             leeway (int, optional): How many seconds before its actual expiry a token is treated as expired — i.e. how early it is refreshed (or re-read from ``token_file``). Defaults to 60 seconds.
 
         Attributes:
-            order (RapidataOrderManager): The RapidataOrderManager instance.
-                Deprecated: use ``job`` together with ``audience`` instead.
             validation (ValidationSetManager): The ValidationSetManager instance.
             flow (RapidataFlowManager): The RapidataFlowManager instance.
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
@@ -125,6 +125,9 @@ class RapidataClient:
                 recurring audience-job schedules (signals) and observing their runs.
             context (ContextManager): The ContextManager instance for shortening
                 datapoint contexts against a question.
+            billing (RapidataBillingManager): The RapidataBillingManager instance for
+                reading the current billing period, its outstanding cost and the
+                remaining credits.
         """
         tracer.set_session_id(
             uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
@@ -168,9 +171,6 @@ class RapidataClient:
 
             self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)
 
-            logger.debug("Initializing RapidataOrderManager")
-            self.order = RapidataOrderManager(openapi_service=self._openapi_service)
-
             logger.debug("Initializing ValidationSetManager")
             self.validation = ValidationSetManager(
                 openapi_service=self._openapi_service
@@ -200,6 +200,9 @@ class RapidataClient:
 
             logger.debug("Initializing ContextManager")
             self.context = ContextManager(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing RapidataBillingManager")
+            self.billing = RapidataBillingManager(openapi_service=self._openapi_service)
 
         self._check_beta_features()  # can't be in the trace for some reason
 

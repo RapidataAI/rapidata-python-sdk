@@ -172,11 +172,37 @@ jobs:
           dist/*.whl
           dist/*.tar.gz
 
+    # A repository_dispatch needs Contents:write on the *target* repo, so a single
+    # token has to cover every repo the release notifies. The GitHub App grants that
+    # per run; a repo-scoped PAT silently covers only the repos it was cut for.
+    - name: Create cross-repo dispatch token
+      id: dispatch_token
+      if: steps.release_type.outputs.type == 'stable'
+      uses: actions/create-github-app-token@v3
+      with:
+        app-id: ${{ vars.RAPIDATA_OPENAPI_GENERATOR_APP_ID }}
+        private-key: ${{ secrets.RAPIDATA_OPENAPI_GENERATOR_PRIVATE_KEY }}
+        owner: RapidataAI
+        repositories: "skills,rapidata-mcp"
+        permission-contents: write
+
     - name: Trigger skills plugin version sync
       if: steps.release_type.outputs.type == 'stable'
       uses: peter-evans/repository-dispatch@v3
       with:
-        token: ${{ secrets.SKILLS_REPO_PAT }}
-        repository: rapidataAI/skills
+        token: ${{ steps.dispatch_token.outputs.token }}
+        repository: RapidataAI/skills
         event-type: sdk-release
         client-payload: '{"version": "${{ steps.update_version.outputs.new_version }}"}'
+
+    # The hosted MCP server wraps this SDK but resolves it at image build time, so
+    # without a rebuild it keeps serving whatever version was current when that repo
+    # last changed. Hand it the version just published so it pins exactly this release.
+    - name: Trigger rapidata-mcp image rebuild
+      if: steps.release_type.outputs.type == 'stable'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ steps.dispatch_token.outputs.token }}
+        repository: RapidataAI/rapidata-mcp
+        event-type: sdk-released
+        client-payload: '{"sdk_version": "${{ steps.update_version.outputs.new_version }}"}'

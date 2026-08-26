@@ -50,25 +50,51 @@ benchmark = client.mri.create_new_benchmark(
 
 Tags provide metadata for filtering and organizing benchmark results without showing them to evaluators. These tags can also be set and used in the frontend. To view the frontend, you can use the `view` method of the benchmark or leaderboard.
 
+Pass tags as plain strings — one list per prompt:
+
 ```python
-# Tags for filtering leaderboard results
 tags = [
-    ["landscape", "outdoor", "beach"],
-    ["landscape", "outdoor", "mountain"],
-    ["outdoor", "city"],
-    ["indoor", "vehicle"]
+    ["beach", "outdoor"],
+    ["mountain", "outdoor"],
+    ["city"],
+    ["vehicle", "indoor"],
 ]
 
 benchmark = client.mri.create_new_benchmark(
     name="Tagged Benchmark",
     identifiers=["scene_1", "scene_2", "scene_3", "scene_4"],
     prompts=["A sunny beach", "A mountain landscape", "A city skyline", "A car in a garage"],
-    tags=tags
+    tags=tags,
 )
 
-# Filter leaderboard results by tags
-standings = leaderboard.get_standings(tags=["landscape", "outdoor"])
+# Filter leaderboard results by tag value
+standings = leaderboard.get_standings(tags=["outdoor"])
 ```
+
+#### Grouping tags by category
+
+To group related tags, swap any string for a `Tag` with an optional `category`. Strings and `Tag`s can be mixed freely in the same list — strings become tags with no category. You can also record where a prompt came from with an `origin`.
+
+```python
+from rapidata import Tag
+
+benchmark = client.mri.create_new_benchmark(
+    name="Tagged Benchmark",
+    identifiers=["scene_1", "scene_2"],
+    prompts=["A sunny beach", "A car in a garage"],
+    tags=[
+        [Tag("beach", category="scene"), "outdoor"],
+        [Tag("vehicle", category="object"), "indoor"],
+    ],
+    origins=["coco", "coco"],
+)
+```
+
+!!! note
+    Categories are additive — existing scripts that pass `list[list[str]]` keep
+    working unchanged. Read tags back with the values-only `benchmark.tags`
+    (`list[list[str]]`), or `benchmark.structured_tags` (`list[list[Tag]]`) to see
+    categories, and prompt origins with `benchmark.origins`.
 
 ### Adding prompts and assets after benchmark creation
 
@@ -80,8 +106,16 @@ benchmark.add_prompts(
     identifiers=["new_style"],
     prompts=["Generate artwork in this new style"],
     prompt_assets=["https://assets.rapidata.ai/new_style_ref.jpg"],
-    tags=[["abstract", "modern"]]
+    tags=[["abstract", "modern"]],
 )
+```
+
+### Editing a prompt's tags and origin
+
+Update the tags and/or origin of an already-registered prompt. Only the fields you pass are changed; omit one to leave it as-is.
+
+```python
+benchmark.update_prompt("new_style", tags=["abstract", "surreal"], origin="wikiart")
 ```
 
 ## Leaderboard Configuration
@@ -98,6 +132,34 @@ leaderboard = benchmark.create_leaderboard(
     show_prompt=True,
     show_prompt_asset=True
 )
+```
+
+### Vote Aggregation
+
+Each matchup — one comparison of two models on one prompt — collects several
+responses. By default the matchup's winner is the side the majority of those
+responses picked, with ties split 0.5/0.5.
+
+Pass `vote_aggregation=VoteAggregation.ALL_VOTES` to count every individual
+response as its own matchup instead:
+
+```python
+from rapidata import VoteAggregation
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism",
+    instruction="Which image is more realistic?",
+    vote_aggregation=VoteAggregation.ALL_VOTES,
+)
+```
+
+Standings are derived from the raw responses on every read, so switching the
+aggregation on an existing leaderboard also changes how its already-collected
+responses are counted — no re-evaluation needed.
+
+```python
+print(leaderboard.vote_aggregation)  # VoteAggregation.ALL_VOTES
+leaderboard.update(vote_aggregation=VoteAggregation.MAJORITY_VOTE)
 ```
 
 ### Level of Detail (response budget)
@@ -143,25 +205,80 @@ leaderboard_precise = benchmark.create_leaderboard(
 )
 ```
 
-You can also read or change the budget on an existing leaderboard through the
-`level_of_detail` property, which likewise accepts a named level or a custom
-integer. Changes apply to future evaluations; standings that have already been
-computed are not recomputed.
+You can read the budget on an existing leaderboard through the `level_of_detail`
+property and change it with `update()`, which likewise accepts a named level or a
+custom integer. Changes apply to future evaluations; standings that have already
+been computed are not recomputed.
 
 ```python
-print(leaderboard.level_of_detail)   # e.g. "low"
-leaderboard.level_of_detail = "high" # named level
-leaderboard.level_of_detail = 5000   # custom budget
+print(leaderboard.level_of_detail)              # e.g. "low"
+leaderboard.update(level_of_detail="high")      # named level
+leaderboard.update(level_of_detail=5000)        # custom budget
 ```
 
 A custom budget reads back as `"custom"`; use the `response_budget` property to
 get the exact number.
 
 ```python
-leaderboard.level_of_detail = 5000
+leaderboard.update(level_of_detail=5000)
 print(leaderboard.level_of_detail)   # "custom"
 print(leaderboard.response_budget)   # 5000
 ```
+
+### Changing a leaderboard's configuration
+
+`update()` is the single entry point for every mutable leaderboard setting. Only
+the arguments you pass are changed; anything you omit keeps its stored value, and
+all of them go out in one request.
+
+```python
+leaderboard.update(
+    name="Realism v2",
+    level_of_detail="high",
+    min_responses_per_matchup=5,
+    vote_aggregation=VoteAggregation.MAJORITY_VOTE,
+)
+```
+
+### Restricting which prompts a leaderboard uses
+
+A leaderboard normally builds matchups from every prompt in its benchmark. Pass
+`included_tags` and/or `excluded_tags` at creation to narrow that down to a slice
+of the [tagged](#tagging-system) prompts — useful for running a focused
+leaderboard (say, outdoor scenes only) against a broad benchmark.
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (outdoor)",
+    instruction="Which image is more realistic?",
+    included_tags=["outdoor"],   # only prompts tagged "outdoor"
+    excluded_tags=["nsfw"],      # never these, even if also tagged "outdoor"
+)
+```
+
+A prompt is used when it carries at least one `included_tags` value **and** no
+`excluded_tags` value. `excluded_tags` always wins. An empty or omitted
+`included_tags` means no restriction; a non-empty one drops prompts that have no
+tags at all. Matching is on the tag value — a tag's category is irrelevant.
+
+The rules are applied when a run starts rather than snapshotted at creation, so
+re-tagging a prompt changes which future runs pick it up. They only affect what
+gets **collected**; votes already recorded stay in the standings.
+
+!!! note
+    This is a different thing from `get_standings(tags=...)`. These arguments decide
+    which prompts get matchups collected for them, while `get_standings(tags=...)`
+    filters the standings you read back out of what was already collected.
+
+Both are set at creation and read back as read-only properties:
+
+```python
+print(leaderboard.included_tags)  # ["outdoor"]
+print(leaderboard.excluded_tags)  # ["nsfw"]
+```
+
+They cannot be changed afterwards — a leaderboard whose history was collected
+under changing rules is hard to interpret. To re-scope, create a new leaderboard.
 
 ### Prompt and Asset Display
 

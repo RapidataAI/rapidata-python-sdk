@@ -4,23 +4,121 @@
 import io
 import json
 import logging
+import random
 import re
+import threading
 import time
 from typing import Dict, Optional
 
 import httpx
 from authlib.integrations.httpx_client import OAuth2Client
-from httpx import Timeout, ConnectError, Limits, RemoteProtocolError, ConnectTimeout, ReadTimeout
+from httpx import (
+    USE_CLIENT_DEFAULT,
+    ConnectError,
+    Limits,
+    ReadError,
+    RemoteProtocolError,
+    Timeout,
+    TimeoutException,
+    WriteError,
+)
 
 from rapidata.api_client.exceptions import ApiException, ApiValueError
 
 _logger = logging.getLogger("rapidata.api_client")
 _TRANSIENT_RETRY_MAX_ATTEMPTS = 3
 _TRANSIENT_RETRY_BASE_DELAY = 0.5
+_TRANSIENT_RETRY_MAX_DELAY = 30.0
 # 429 = rate limit, 502/503/504 = transient upstream / gateway errors.
-# All five are safe to retry with exponential backoff.
+# All four are safe to retry with exponential backoff.
 _RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 _RETRY_AFTER_MAX_SECONDS = 60.0
+
+# httpx disables timeouts entirely when one is passed explicitly as `None`, so every
+# request must resolve to a real Timeout or to USE_CLIENT_DEFAULT. Without this a
+# stalled upload holds its worker thread open indefinitely instead of failing fast
+# enough for the retry below to reach a healthy connection.
+_DEFAULT_TIMEOUT = Timeout(connect=15.0, read=120.0, write=120.0, pool=60.0)
+
+# ReadError and WriteError are the NetworkError siblings of ConnectError: a local
+# firewall or TLS-inspecting proxy aborting a live request surfaces as one of those
+# rather than as a timeout. Retrying them carries the same caveat already accepted
+# for ReadTimeout — the server may have received the request.
+_RETRYABLE_TRANSPORT_ERRORS = (
+    ReadError,
+    WriteError,
+    RemoteProtocolError,
+    TimeoutException,
+)
+
+# One summary line per interval instead of one line per retried request.
+_RETRY_SUMMARY_INTERVAL = 30.0
+
+
+def _backoff_delay(attempt: int) -> float:
+    """Exponential backoff with equal jitter, in seconds.
+
+    A saturated uplink fails many concurrent requests at once; without the
+    jitter they all retry in lockstep and recreate the congestion that caused
+    the failure.
+    """
+    ceiling = min(_TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt), _TRANSIENT_RETRY_MAX_DELAY)
+    half = ceiling / 2
+    return half + random.uniform(0, half)
+
+
+class _RetryNoiseThrottle:
+    """Collapses per-attempt retry logs into a periodic summary.
+
+    A saturated or filtered uplink fails hundreds of concurrent requests at once.
+    Logging every attempt at WARNING buries the failures that never recovered
+    under thousands of lines about ones that did, so attempts are counted here
+    and reported at most once per interval.
+    """
+
+    def __init__(self, interval: float = _RETRY_SUMMARY_INTERVAL) -> None:
+        self._interval = interval
+        self._lock = threading.Lock()
+        self._counts: Dict[str, int] = {}
+        self._next_report = 0.0
+
+    def record(self, reason: str) -> None:
+        """Count one retried request, emitting a summary when the interval is up."""
+        with self._lock:
+            self._counts[reason] = self._counts.get(reason, 0) + 1
+            now = time.monotonic()
+            if now < self._next_report:
+                return
+
+            is_first = self._next_report == 0.0
+            self._next_report = now + self._interval
+            total = sum(self._counts.values())
+            breakdown = ", ".join(
+                f"{reason} x{count}"
+                for reason, count in sorted(
+                    self._counts.items(), key=lambda item: -item[1]
+                )
+            )
+            self._counts.clear()
+
+        if is_first:
+            _logger.warning(
+                "Transient network error (%s); retrying automatically. Further retries "
+                "are summarised every %.0fs — only unrecoverable failures are logged as "
+                "errors. Enable DEBUG logging to see each attempt.",
+                breakdown,
+                self._interval,
+            )
+        else:
+            _logger.warning(
+                "Retried %d request(s) after transient errors in the last %.0fs (%s).",
+                total,
+                self._interval,
+                breakdown,
+            )
+
+
+_retry_noise = _RetryNoiseThrottle()
 
 
 class RESTResponse(io.IOBase):
@@ -219,12 +317,13 @@ class RESTClientObject:
                 # (common for 429). Fall back to exponential backoff.
                 delay = self._retry_after_from_response(r)
                 if delay is None:
-                    delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
-                _logger.warning(
+                    delay = _backoff_delay(attempt)
+                _logger.debug(
                     "Server error on %s %s (attempt %d/%d): %d. Retrying in %.1fs...",
                     method, url, attempt + 1, _TRANSIENT_RETRY_MAX_ATTEMPTS + 1,
                     r.status_code, delay,
                 )
+                _retry_noise.record(f"HTTP {r.status_code}")
                 time.sleep(delay)
                 continue
 
@@ -315,15 +414,19 @@ class RESTClientObject:
 
     @staticmethod
     def _build_timeout(_request_timeout):
-        """Build a Timeout object from the request timeout parameter."""
+        """Build a Timeout object from the request timeout parameter.
+
+        Falls back to USE_CLIENT_DEFAULT rather than None, because httpx reads an
+        explicit None as "wait forever" instead of "use the client's default".
+        """
         if not _request_timeout:
-            return None
+            return USE_CLIENT_DEFAULT
         if isinstance(_request_timeout, (int, float)):
             return Timeout(timeout=_request_timeout)
         if isinstance(_request_timeout, tuple) and len(_request_timeout) == 2:
             connect_timeout, read_timeout = _request_timeout
             return Timeout(timeout=connect_timeout, read=read_timeout)
-        return None
+        return USE_CLIENT_DEFAULT
 
     def _handle_http_error(self, error, method, url, attempt):
         """Handle HTTP errors, retrying transient failures with exponential backoff.
@@ -338,12 +441,13 @@ class RESTClientObject:
             )
 
         if self._is_retryable_error(error) and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS:
-            delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
-            _logger.warning(
+            delay = _backoff_delay(attempt)
+            _logger.debug(
                 "Transient network error on %s %s (attempt %d/%d): %s. Retrying in %.1fs...",
                 method, url, attempt + 1, _TRANSIENT_RETRY_MAX_ATTEMPTS + 1,
                 type(error).__name__, delay,
             )
+            _retry_noise.record(type(error).__name__)
             time.sleep(delay)
             return
 
@@ -361,6 +465,7 @@ class RESTClientObject:
                 else self.configuration.verify_ssl
             ),
             "limits": limits,
+            "timeout": _DEFAULT_TIMEOUT,
         }
 
         if self.configuration.proxy:
@@ -387,7 +492,7 @@ class RESTClientObject:
             if RESTClientObject._is_certificate_validation_error(error):
                 return False
             return True
-        return isinstance(error, (RemoteProtocolError, ConnectTimeout, ReadTimeout))
+        return isinstance(error, _RETRYABLE_TRANSPORT_ERRORS)
 
     @staticmethod
     def _is_certificate_validation_error(error: ConnectError) -> bool:

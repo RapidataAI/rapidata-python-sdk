@@ -164,17 +164,9 @@ datapoints=["image1.jpg", "image2.jpg"],
 contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 ```
 
-**Length limit:** A context may be at most 400 characters; the backend rejects longer ones. If a context exceeds the limit, a warning is logged at creation time. Enable automatic shortening (see below) to have over-long contexts trimmed for you.
-
-#### Automatic shortening
-
-Set `rapidata_config.upload.autoShortenContext = True` to have any context longer than the 400-character limit automatically shortened — tuned to the `instruction` so only the part relevant to the question is kept — before upload. When left at its default (`False`), an over-long context is left unchanged and a warning is logged explaining the backend would reject it.
+**Length limit:** A context may be at most 400 characters. A longer one is always shortened before upload — tuned to the `instruction` so only the part relevant to the question is kept — because the backend would otherwise reject it. This cannot be turned off, and a warning is logged reporting how many contexts were shortened, so a rewritten context never goes unnoticed. Shortening runs in concurrent batches with a progress bar; the per-context before/after lengths are logged at info level.
 
 ```python
-from rapidata import rapidata_config
-
-rapidata_config.upload.autoShortenContext = True
-
 job_definition = client.job.create_classification_job_definition(
     name="Outfit check",
     instruction="Does the main character wear the right clothing?",
@@ -182,6 +174,16 @@ job_definition = client.job.create_classification_job_definition(
     datapoints=["scene.jpg"],
     contexts=["<a very long, detailed beach-scene description ...>"],
 )
+```
+
+#### Shortening every context
+
+A context tuned to the question focuses the labeler even when it already fits the limit. Enable `contextShortening` to have *every* context shortened, not just the over-long ones:
+
+```python
+from rapidata import rapidata_config
+
+rapidata_config.upload.contextShortening = True
 ```
 
 You can also shorten contexts directly via the client, without creating a job definition:
@@ -436,7 +438,9 @@ job_definition = client.job.create_free_text_job_definition(
 |-----------|------|-------------|
 | `comparison_budget_per_ranking` | `int` | Number of pairwise matchups collected per ranking (per inner list of `datapoints`) |
 | `responses_per_comparison` | `int` | Number of responses collected per matchup (default `1`) — replaces `responses_per_datapoint` |
-| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints |
+| `random_comparisons_ratio` | `float` | Ratio of random matchups to total matchups (default `0.5`); the rest are close matchups between similarly-rated datapoints. Only applies to rankings with more than 10 datapoints |
+
+Rankings with more than 10 datapoints pick matchups adaptively (Elo-style) within the comparison budget. Rankings with 10 or fewer datapoints compare every unique pair instead, spreading the budget evenly across the pairs — the total is rounded down to a multiple of the number of pairs, and every pair is compared at least once even if the budget is smaller than the number of pairs.
 
 ```python
 job_definition = client.job.create_ranking_job_definition(

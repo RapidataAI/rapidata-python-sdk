@@ -79,7 +79,7 @@ class RapidataJobManager:
 
         self._warn_unsupported_settings(workflow, settings)
 
-        self.__context_manager._enforce_context_length(
+        self.__context_manager._apply_context_shortening(
             datapoints=datapoints,
             question=workflow._get_instruction(),
         )
@@ -337,11 +337,15 @@ class RapidataJobManager:
             name (str): The name of the job.
             instruction (str): The instruction for the ranking. Will be shown with each matchup.
             datapoints (list[list[str]]): The outer list is determines the independent rankings, the inner list is the datapoints for each ranking.
-            comparison_budget_per_ranking (int): The number of comparisons that will be collected per ranking (outer list of datapoints).
+            comparison_budget_per_ranking (int): The number of comparisons that will be collected per ranking (outer list of datapoints).\n
+                Rankings with more than 10 datapoints are matched adaptively (Elo-style) within this budget.
+                Rankings with 10 or fewer datapoints compare every unique pair, spreading the budget evenly across the pairs —
+                the total is rounded down to a multiple of the number of pairs, and is at least one comparison per pair.
             responses_per_comparison (int, optional): The number of responses that will be collected per comparison. Defaults to 1.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            random_comparisons_ratio (float, optional): The ratio of random comparisons to the total number of comparisons. Defaults to 0.5.
+            random_comparisons_ratio (float, optional): The ratio of random comparisons to the total number of comparisons. Defaults to 0.5.\n
+                Only applies to rankings with more than 10 datapoints; smaller rankings compare every unique pair.
             contexts (list[str], optional): The list of contexts for the ranking. Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
@@ -390,16 +394,19 @@ class RapidataJobManager:
                         )
                     )
 
+            workflow = MultiRankingWorkflow(
+                instruction=instruction,
+                comparison_budget_per_ranking=comparison_budget_per_ranking,
+                random_comparisons_ratio=random_comparisons_ratio,
+                max_group_size=max(len(group) for group in datapoints),
+                responses_per_comparison=responses_per_comparison,
+            )
+
             return self._create_general_job_definition(
                 name=name,
-                workflow=MultiRankingWorkflow(
-                    instruction=instruction,
-                    comparison_budget_per_ranking=comparison_budget_per_ranking,
-                    random_comparisons_ratio=random_comparisons_ratio,
-                    max_group_size=max(len(group) for group in datapoints),
-                ),
+                workflow=workflow,
                 datapoints=datapoints_instances,
-                responses_per_datapoint=responses_per_comparison,
+                responses_per_datapoint=workflow.responses_per_datapoint,
                 settings=settings,
                 failure_tolerance=failure_tolerance,
             )

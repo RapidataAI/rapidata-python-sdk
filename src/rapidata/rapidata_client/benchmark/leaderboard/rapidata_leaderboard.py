@@ -14,6 +14,12 @@ from rapidata.rapidata_client.benchmark._vote_filters import (
     demographic_filters,
     in_filter,
 )
+from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
+    VoteAggregation,
+)
+from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+    AudienceAudienceIdJobsGetJobIdParameter,
+)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_endpoint_input import (
     UpdateLeaderboardEndpointInput,
@@ -38,6 +44,9 @@ class RapidataLeaderboard:
         show_prompt: Whether to show the prompt to the users.
         id: The ID of the leaderboard.
         openapi_service: The OpenAPIService instance for API interaction.
+        included_tags: The prompt tag values the leaderboard restricts its matchups to.
+        excluded_tags: The prompt tag values the leaderboard skips when building matchups.
+        vote_aggregation: How the responses on a single matchup are aggregated into that matchup's result. None resolves it on first read.
     """
 
     def __init__(
@@ -52,6 +61,9 @@ class RapidataLeaderboard:
         benchmark_id: str,
         id: str,
         openapi_service: OpenAPIService,
+        included_tags: list[str] | None = None,
+        excluded_tags: list[str] | None = None,
+        vote_aggregation: VoteAggregation | None = None,
     ):
         self.__openapi_service = openapi_service
         self.__name = name
@@ -62,6 +74,9 @@ class RapidataLeaderboard:
         self.__response_budget = response_budget
         self.__min_responses_per_matchup = min_responses_per_matchup
         self.__benchmark_id = benchmark_id
+        self.__included_tags = list(included_tags) if included_tags else []
+        self.__excluded_tags = list(excluded_tags) if excluded_tags else []
+        self.__vote_aggregation = vote_aggregation
         self.id = id
         self.__leaderboard_page = f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.__benchmark_id}/leaderboard/{self.id}"
 
@@ -92,20 +107,6 @@ class RapidataLeaderboard:
         """
         return DetailMapper.get_level_of_detail(self.__response_budget)
 
-    @level_of_detail.setter
-    def level_of_detail(self, level_of_detail: LevelOfDetail | int):
-        """
-        Sets the level of detail (response budget) of the leaderboard.
-
-        Accepts one of the named levels or a positive integer for a custom response
-        budget. Takes effect for future evaluations; already-computed standings are
-        not recomputed.
-        """
-        with tracer.start_as_current_span("RapidataLeaderboard.level_of_detail.setter"):
-            logger.debug(f"Setting level of detail to {level_of_detail}")
-            self.__response_budget = DetailMapper.resolve_budget(level_of_detail)
-            self._update_config()
-
     @property
     def min_responses_per_matchup(self) -> int:
         """
@@ -113,25 +114,110 @@ class RapidataLeaderboard:
         """
         return self.__min_responses_per_matchup
 
-    @min_responses_per_matchup.setter
-    def min_responses_per_matchup(self, min_responses: int):
+    @property
+    def vote_aggregation(self) -> VoteAggregation:
         """
-        Sets the minimum number of responses required to be considered for the leaderboard.
+        How the responses on a single matchup are aggregated into that matchup's result.
+
+        :attr:`VoteAggregation.MAJORITY_VOTE` collapses each matchup to one win for the
+        side the majority of responses picked (ties split 0.5/0.5), so every matchup
+        carries the same weight regardless of how many responses it collected.
+        :attr:`VoteAggregation.ALL_VOTES` instead counts every individual response as
+        its own matchup.
         """
-        with tracer.start_as_current_span(
-            "RapidataLeaderboard.min_responses_per_matchup.setter"
-        ):
-            if not isinstance(min_responses, int):
-                raise ValueError("Min responses per matchup must be an integer")
+        # The benchmark's leaderboard listing does not carry the aggregation, so
+        # leaderboards read from it fetch it once, on demand.
+        if self.__vote_aggregation is None:
+            with tracer.start_as_current_span("RapidataLeaderboard.vote_aggregation"):
+                result = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_get(
+                    leaderboard_id=self.id
+                )
+                self.__vote_aggregation = VoteAggregation._from_backend_model(
+                    result.vote_aggregation
+                )
 
-            if min_responses < 3:
-                raise ValueError("Min responses per matchup must be at least 3")
+        return self.__vote_aggregation
 
-            logger.debug(
-                f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
+    def update(
+        self,
+        name: str | None = None,
+        level_of_detail: LevelOfDetail | int | None = None,
+        min_responses_per_matchup: int | None = None,
+        vote_aggregation: VoteAggregation | None = None,
+    ) -> None:
+        """
+        Updates the leaderboard's configuration.
+
+        Only the arguments you pass are changed; anything omitted keeps its stored
+        value.
+
+        Args:
+            name: The new name of the leaderboard. (not shown to the users)
+            level_of_detail: The new response budget — either one of the named levels ('debug', 'low', 'medium', 'high', 'very high') or a positive integer for a custom budget. Takes effect for future evaluations; already-computed standings are not recomputed.
+            min_responses_per_matchup: The new minimum number of responses collected per matchup. Must be at least 3.
+            vote_aggregation: How the responses on a single matchup are aggregated into that matchup's result. Standings are derived from the raw responses on every read, so this also changes how already-collected responses are counted — no re-evaluation needed.
+        """
+        with tracer.start_as_current_span("RapidataLeaderboard.update"):
+            if name is not None and (not isinstance(name, str) or len(name) < 1):
+                raise ValueError("Name must be a string of at least 1 character")
+
+            response_budget = (
+                DetailMapper.resolve_budget(level_of_detail)
+                if level_of_detail is not None
+                else None
             )
-            self.__min_responses_per_matchup = min_responses
-            self._update_config()
+
+            if min_responses_per_matchup is not None:
+                # bool is an int subclass — reject it so `True` isn't read as 1.
+                if isinstance(min_responses_per_matchup, bool) or not isinstance(
+                    min_responses_per_matchup, int
+                ):
+                    raise ValueError("Min responses per matchup must be an integer")
+
+                if min_responses_per_matchup < 3:
+                    raise ValueError("Min responses per matchup must be at least 3")
+
+            if vote_aggregation is not None and not isinstance(
+                vote_aggregation, VoteAggregation
+            ):
+                raise ValueError(
+                    "Vote aggregation must be one of: "
+                    + ", ".join(
+                        f"VoteAggregation.{member.name}" for member in VoteAggregation
+                    )
+                )
+
+            logger.info(
+                "Updating leaderboard %s with name %s, response_budget %s, min_responses_per_matchup %s, vote_aggregation %s",
+                self.id,
+                name,
+                response_budget,
+                min_responses_per_matchup,
+                vote_aggregation.name if vote_aggregation is not None else None,
+            )
+
+            self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_patch(
+                leaderboard_id=self.id,
+                update_leaderboard_endpoint_input=UpdateLeaderboardEndpointInput(
+                    name=name,
+                    responseBudget=response_budget,
+                    minResponses=min_responses_per_matchup,
+                    voteAggregation=(
+                        vote_aggregation._to_backend_model()
+                        if vote_aggregation is not None
+                        else None
+                    ),
+                ),
+            )
+
+            if name is not None:
+                self.__name = name
+            if response_budget is not None:
+                self.__response_budget = response_budget
+            if min_responses_per_matchup is not None:
+                self.__min_responses_per_matchup = min_responses_per_matchup
+            if vote_aggregation is not None:
+                self.__vote_aggregation = vote_aggregation
 
     @property
     def show_prompt_asset(self) -> bool:
@@ -162,25 +248,36 @@ class RapidataLeaderboard:
         return self.__instruction
 
     @property
+    def included_tags(self) -> list[str]:
+        """
+        The prompt tag values this leaderboard restricts its matchups to.
+
+        Only benchmark prompts carrying at least one of these tags are used to build
+        matchups; an empty list (the default) means no restriction. Fixed at creation —
+        to re-scope a leaderboard, create a new one.
+
+        Not to be confused with the ``tags`` argument of :meth:`get_standings`, which
+        filters the standings you read back rather than what gets collected.
+        """
+        return list(self.__included_tags)
+
+    @property
+    def excluded_tags(self) -> list[str]:
+        """
+        The prompt tag values this leaderboard skips when building matchups.
+
+        A prompt carrying any of these tags is never used, even if it also carries one
+        of :attr:`included_tags`. Fixed at creation — to re-scope a leaderboard, create
+        a new one.
+        """
+        return list(self.__excluded_tags)
+
+    @property
     def name(self) -> str:
         """
         Returns the name of the leaderboard.
         """
         return self.__name
-
-    @name.setter
-    def name(self, name: str):
-        """
-        Sets the name of the leaderboard.
-        """
-        with tracer.start_as_current_span("RapidataLeaderboard.name.setter"):
-            if not isinstance(name, str):
-                raise ValueError("Name must be a string")
-            if len(name) < 1:
-                raise ValueError("Name must be at least 1 character long")
-
-            self.__name = name
-            self._update_config()
 
     @property
     def jobs(self) -> list[RapidataJob]:
@@ -376,22 +473,6 @@ class RapidataLeaderboard:
                 Fore.RED
                 + f"Please open this URL in your browser: '{encoded_url}'"
                 + Fore.RESET
-            )
-
-    def _custom_config(self, response_budget: int, min_responses_per_matchup: int):
-        self.__response_budget = response_budget
-        self.__min_responses_per_matchup = min_responses_per_matchup
-        self._update_config()
-
-    def _update_config(self):
-        with tracer.start_as_current_span("RapidataLeaderboard._update_config"):
-            self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_patch(
-                leaderboard_id=self.id,
-                update_leaderboard_endpoint_input=UpdateLeaderboardEndpointInput(
-                    name=self.__name,
-                    responseBudget=self.__response_budget,
-                    minResponses=self.__min_responses_per_matchup,
-                ),
             )
 
     def __str__(self) -> str:

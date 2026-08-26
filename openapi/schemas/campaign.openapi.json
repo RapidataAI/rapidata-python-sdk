@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "v1"
+    "version": "2026.08.25.1525-d42d531"
   },
   "servers": [
     {
@@ -63,6 +63,47 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}/activate": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Activates the specified campaign.",
+        "description": "Only campaigns in the Created, Preview, or Analysis state can be activated; any other\n state returns 400. A program campaign has no top-level routing id and is therefore not\n picked up by the target-group-driven auto-activation, so this endpoint is how it is moved\n into the serving set.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "The identifier of the campaign to activate.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -250,6 +291,7 @@
           "Campaign"
         ],
         "summary": "Retrieves the details of a specific campaign.",
+        "description": "The response is discriminated by campaign kind: a program campaign includes its stream\n program, a routed campaign includes its selections.",
         "parameters": [
           {
             "name": "campaignId",
@@ -267,7 +309,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCampaignByIdEndpoint_Output"
+                  "$ref": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetails"
                 }
               }
             }
@@ -1325,7 +1367,7 @@
           "OwnerTierOverride"
         ],
         "summary": "Creates an owner-tier override.",
-        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "description": "At least one of the override values must be set.",
         "requestBody": {
           "description": "The override to create.",
           "content": {
@@ -1448,7 +1490,7 @@
           "OwnerTierOverride"
         ],
         "summary": "Replaces an owner-tier override.",
-        "description": "The pattern must be an exact email (user@domain.com) or a wildcard domain\n (*@domain.com), and at least one of the override values must be set.",
+        "description": "At least one of the override values must be set.",
         "parameters": [
           {
             "name": "ownerTierOverrideId",
@@ -1461,7 +1503,7 @@
           }
         ],
         "requestBody": {
-          "description": "The new pattern and override values.",
+          "description": "The new target organization and override values.",
           "content": {
             "application/json": {
               "schema": {
@@ -1474,6 +1516,54 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/campaign/owner-tier/organizations/{organizationId}": {
+      "get": {
+        "tags": [
+          "OwnerTierOverride"
+        ],
+        "summary": "Returns the priority and global boost level an organization's campaigns are created with.",
+        "description": "priority and globalBoostLevel are the effective values, whether they come from an\n override or from the configured defaults; the two *Override fields are null when the\n default applies.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to read the tier of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrganizationOwnerTierEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -1636,13 +1726,13 @@
       },
       "CreateOwnerTierOverrideEndpoint_Input": {
         "required": [
-          "pattern"
+          "organizationId"
         ],
         "type": "object",
         "properties": {
-          "pattern": {
+          "organizationId": {
             "type": "string",
-            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com). Exact matches win over wildcard matches."
+            "description": "The id of the organization this override applies to."
           },
           "priorityOverride": {
             "type": "integer",
@@ -2022,7 +2112,186 @@
           }
         }
       },
-      "GetCampaignByIdEndpoint_Output": {
+      "GetCampaignByIdEndpoint_ICampaignDetails": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_RoutedCampaignDetails"
+          },
+          {
+            "$ref": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_ProgramCampaignDetails"
+          }
+        ],
+        "description": "A campaign's details, identified by a discriminator. Implementations describe the\n type-specific configuration: a routed campaign's selections or a program campaign's\n stream program.",
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "RoutedCampaign": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_RoutedCampaignDetails",
+            "ProgramCampaign": "#/components/schemas/GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_ProgramCampaignDetails"
+          }
+        }
+      },
+      "GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_ProgramCampaignDetails": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "priority",
+          "boostingProfile",
+          "boostingControlMode",
+          "hasBooster",
+          "boostLevel",
+          "stickyConfig",
+          "filters",
+          "featureFlags",
+          "ownerMail",
+          "organizationId",
+          "createdAt",
+          "version",
+          "rootNodeId",
+          "nodes",
+          "maxRapids",
+          "maxDurationSeconds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProgramCampaign"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the campaign."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CampaignStatus"
+              }
+            ],
+            "description": "The current status of the campaign."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority level of the campaign.",
+            "format": "int32"
+          },
+          "boostingProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingProfile"
+              }
+            ],
+            "description": "The boosting profile configuration."
+          },
+          "boostingControlMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoostingControlMode"
+              }
+            ],
+            "description": "The boosting control mode."
+          },
+          "hasBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign has a booster."
+          },
+          "boostLevel": {
+            "type": "integer",
+            "description": "The campaign's effective boost level (0-10). 0 when no boost is active.\n Lets clients render and edit the level without unpacking the boosting profile.",
+            "format": "int32"
+          },
+          "requiresBooster": {
+            "type": "boolean",
+            "description": "Whether the campaign requires a booster.",
+            "deprecated": true
+          },
+          "stickyConfig": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StickyConfig"
+              }
+            ],
+            "description": "The sticky behavior configuration."
+          },
+          "filters": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ICampaignFilter"
+                }
+              }
+            ],
+            "description": "The targeting filters for this campaign."
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The feature flags configured for this campaign."
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the campaign owner."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the campaign."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the campaign was created.",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "description": "The program's current version, for optimistic concurrency on save.",
+            "format": "int32"
+          },
+          "rootNodeId": {
+            "type": "string",
+            "description": "The node the program's evaluation enters at."
+          },
+          "nodes": {
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/IProgramNode"
+                }
+              }
+            ],
+            "description": "The program's decision graph, keyed by node id."
+          },
+          "maxRapids": {
+            "type": "integer",
+            "description": "The session ends after this many counted responses.",
+            "format": "int32"
+          },
+          "maxDurationSeconds": {
+            "type": "integer",
+            "description": "The session ends after this many seconds.",
+            "format": "int32"
+          }
+        },
+        "description": "A program campaign: its sessions stream their rapids, driven by a stream program."
+      },
+      "GetCampaignByIdEndpoint_ICampaignDetailsGetCampaignByIdEndpoint_RoutedCampaignDetails": {
         "required": [
           "id",
           "name",
@@ -2037,10 +2306,17 @@
           "selections",
           "featureFlags",
           "ownerMail",
-          "createdAt"
+          "organizationId",
+          "createdAt",
+          "_t"
         ],
-        "type": "object",
         "properties": {
+          "_t": {
+            "enum": [
+              "RoutedCampaign"
+            ],
+            "type": "string"
+          },
           "id": {
             "type": "string",
             "description": "The unique identifier of the campaign."
@@ -2139,15 +2415,15 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the campaign."
           },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the campaign was created.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "A routed campaign: its rapids are served from a fixed selection list."
       },
       "GetCampaignCacheEndpoint_CampaignEntry": {
         "required": [
@@ -2250,6 +2526,42 @@
           }
         }
       },
+      "GetOrganizationOwnerTierEndpoint_Output": {
+        "required": [
+          "organizationId",
+          "priority",
+          "globalBoostLevel"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the tier applies to."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority the organization's campaigns are created with.",
+            "format": "int32"
+          },
+          "globalBoostLevel": {
+            "type": "integer",
+            "description": "The global boost level the organization's campaigns are created with.",
+            "format": "int32"
+          },
+          "priorityOverride": {
+            "type": "integer",
+            "description": "The priority from the matching override, or null when the default applies.",
+            "format": "int32",
+            "nullable": true
+          },
+          "boostOverride": {
+            "type": "integer",
+            "description": "The boost level from the matching override, or null when the default applies.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "GetUserScoreCacheEndpoint_Output": {
         "required": [
           "count",
@@ -2307,6 +2619,9 @@
             "$ref": "#/components/schemas/ICampaignFilterDeviceFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterDspFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
           },
           {
@@ -2339,6 +2654,7 @@
             "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
             "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
             "DeviceFilter": "#/components/schemas/ICampaignFilterDeviceFilter",
+            "DspFilter": "#/components/schemas/ICampaignFilterDspFilter",
             "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
             "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
             "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
@@ -2516,6 +2832,26 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/DeviceType"
+            }
+          }
+        }
+      },
+      "ICampaignFilterDspFilter": {
+        "required": [
+          "dspNames",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DspFilter"
+            ],
+            "type": "string"
+          },
+          "dspNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }
@@ -3446,6 +3782,7 @@
           "boostLevel",
           "boostingControlMode",
           "ownerMail",
+          "organizationId",
           "createdAt"
         ],
         "type": "object",
@@ -3499,8 +3836,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity.",
-            "nullable": true
+            "description": "The id of the organization that owns the entity."
           },
           "createdAt": {
             "type": "string",
@@ -3602,7 +3938,7 @@
       "QueryOwnerTierOverridesEndpoint_Output": {
         "required": [
           "id",
-          "pattern",
+          "organizationId",
           "ownerMail",
           "createdAt"
         ],
@@ -3612,9 +3948,9 @@
             "type": "string",
             "description": "The id of the override."
           },
-          "pattern": {
+          "organizationId": {
             "type": "string",
-            "description": "The owner-email pattern the override applies to."
+            "description": "The id of the organization the override applies to."
           },
           "priorityOverride": {
             "type": "integer",
@@ -3794,13 +4130,13 @@
       },
       "UpdateOwnerTierOverrideEndpoint_Input": {
         "required": [
-          "pattern"
+          "organizationId"
         ],
         "type": "object",
         "properties": {
-          "pattern": {
+          "organizationId": {
             "type": "string",
-            "description": "The owner-email pattern this override applies to: an exact email (user@domain.com)\n or a wildcard domain (*@domain.com)."
+            "description": "The id of the organization this override applies to."
           },
           "priorityOverride": {
             "type": "integer",

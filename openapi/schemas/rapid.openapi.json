@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "v1"
+    "version": "2026.08.25.1525-d42d531"
   },
   "servers": [
     {
@@ -1117,7 +1117,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/rapid/compare-ab-summary/{correlationId}/recalculate": {
@@ -2145,10 +2146,13 @@
           "userId",
           "country",
           "language",
+          "age",
+          "gender",
+          "occupation",
+          "demographicInformation",
           "result",
           "userScore",
-          "userScores",
-          "demographicInformation"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -2164,6 +2168,24 @@
           "language": {
             "type": "string"
           },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
           },
@@ -2176,12 +2198,6 @@
             "additionalProperties": {
               "type": "number",
               "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
             }
           }
         }
@@ -2304,10 +2320,13 @@
           "id",
           "userId",
           "country",
+          "age",
+          "gender",
+          "occupation",
+          "demographicInformation",
           "result",
           "userScore",
-          "userScores",
-          "demographicInformation"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -2319,6 +2338,24 @@
           },
           "country": {
             "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
           },
           "result": {
             "$ref": "#/components/schemas/IRapidResult"
@@ -2332,12 +2369,6 @@
             "additionalProperties": {
               "type": "number",
               "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
             }
           }
         }

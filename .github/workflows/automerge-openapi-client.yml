@@ -1,0 +1,125 @@
+name: Auto-merge OpenAPI Client PR
+
+# The OpenAPI client PR is bot-generated (openapi-generation-main -> main) and
+# is *supposed* to touch only generated code, so once pyright is green there is
+# nothing left for a human to review.
+#
+# This runs on a daily schedule rather than on every pyright completion: the
+# backend dispatches a regeneration many times a day, and merging each one
+# immediately produced a dozen+ commits a day on main. Letting the PR accumulate
+# and merging once a day collapses that into a single commit without changing
+# what lands.
+#
+# The branch name alone is NOT a sufficient trust anchor: anyone with write
+# access (a human, a Poseidon vessel) can push to openapi-generation-main, and a
+# hand-written edit there can turn pyright green and slip past a name-only gate,
+# reaching main with no review. So before merging we re-verify the PR is
+# genuinely generator-only (see the guard steps below).
+on:
+  schedule:
+    # 06:00 UTC — the accumulated specs land before the working day starts.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: automerge-openapi-client
+  cancel-in-progress: false
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ vars.RAPIDATA_OPENAPI_GENERATOR_APP_ID }}
+          private-key: ${{ secrets.RAPIDATA_OPENAPI_GENERATOR_PRIVATE_KEY }}
+
+      - name: Merge the OpenAPI client PR
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          # The identity the generator commits under — see the committer/author
+          # in update-openapi-client.yml. Every commit on an auto-mergeable PR
+          # must match this.
+          GENERATOR_COMMIT_EMAIL: login@rapidata.ai
+          # The type-check that used to trigger this workflow; now we look up its
+          # conclusion for the PR head ourselves.
+          PYRIGHT_WORKFLOW: pyright-type-checking.yml
+        run: |
+          set -euo pipefail
+
+          pr=$(gh pr list --repo "$GITHUB_REPOSITORY" \
+            --head openapi-generation-main --base main \
+            --state open --json number --jq '.[0].number')
+          if [ -z "$pr" ]; then
+            echo "No open OpenAPI client PR (openapi-generation-main -> main); nothing to merge."
+            exit 0
+          fi
+
+          # Pyright being green is necessary but not sufficient. Auto-merge is
+          # only safe on a PR that contains *nothing a human would need to
+          # review* — i.e. only the generator's own commits, touching only the
+          # generated paths. Anything else falls back to a human.
+          block() {
+            echo "::warning::Not auto-merging PR #$pr: $1"
+            gh pr comment "$pr" --repo "$GITHUB_REPOSITORY" --body \
+              "🚫 **Auto-merge skipped** — $1.
+
+          This PR is no longer generator-only, so it needs a human to review and merge it (the pyright check passing is not enough on its own)."
+            exit 0
+          }
+
+          # REST rather than `gh pr view --json`: reading the head repo over
+          # GraphQL needs read:org, which the app token does not carry.
+          pr_json=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$pr")
+          head_sha=$(jq -r '.head.sha' <<<"$pr_json")
+          head_repo=$(jq -r '.head.repo.full_name' <<<"$pr_json")
+          is_draft=$(jq -r '.draft' <<<"$pr_json")
+
+          if [ "$head_repo" != "$GITHUB_REPOSITORY" ]; then
+            block "its head branch lives in a fork ($head_repo)"
+          fi
+          if [ "$is_draft" = "true" ]; then
+            echo "PR #$pr is a draft; leaving it alone."
+            exit 0
+          fi
+
+          # Guard 0: pyright is green for exactly this head commit. A run that is
+          # still queued/in-progress just means the PR is not ready yet — the next
+          # scheduled run will pick it up.
+          conclusion=$(gh api \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/$PYRIGHT_WORKFLOW/runs?head_sha=$head_sha&event=pull_request&per_page=1" \
+            --jq '.workflow_runs[0].conclusion // "missing"')
+          if [ "$conclusion" != "success" ]; then
+            echo "Pyright for $head_sha is '$conclusion', not success; not merging PR #$pr."
+            exit 0
+          fi
+
+          # Guard 1: every commit is authored by the generator identity. A push
+          # from a human or a Poseidon vessel shows up here as a foreign author,
+          # even though the PR author stays the generator app.
+          foreign_authors=$(gh pr view "$pr" --repo "$GITHUB_REPOSITORY" \
+            --json commits \
+            --jq ".commits[].authors[].email | select(. != \"$GENERATOR_COMMIT_EMAIL\")" \
+            | sort -u || true)
+          if [ -n "$foreign_authors" ]; then
+            block "it contains commits not authored by the generator ($(echo "$foreign_authors" | paste -sd, -))"
+          fi
+
+          # Guard 2: only generated paths changed. These are exactly the paths the
+          # generator writes (see add-paths in update-openapi-client.yml); a diff
+          # outside them means hand-written code was touched.
+          unexpected=$(gh pr view "$pr" --repo "$GITHUB_REPOSITORY" \
+            --json files --jq '.files[].path' \
+            | grep -vE '^(openapi/schemas/|src/rapidata/api_client/|src/rapidata/api_client_README\.md$)' \
+            || true)
+          if [ -n "$unexpected" ]; then
+            block "it changes files outside the generated paths ($(echo "$unexpected" | paste -sd, -))"
+          fi
+
+          echo "pyright passed and PR #$pr is generator-only; merging."
+          gh pr merge "$pr" --repo "$GITHUB_REPOSITORY" --squash --delete-branch

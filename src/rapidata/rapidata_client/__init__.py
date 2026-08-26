@@ -6,7 +6,6 @@ from .audience import (
     RapidataFilteredAudience,
     RecruitingMetrics,
 )
-from .order import RapidataOrderManager, RapidataOrder
 from .job import (
     RapidataJob,
     RapidataJobDefinition,
@@ -15,6 +14,7 @@ from .job import (
     JobProgress,
 )
 from .signal import RapidataSignal, RapidataSignalManager
+from .billing import BillingPeriod, RapidataBillingManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
 from rapidata.api_client.models.benchmark_demographic_dimension import (
@@ -30,6 +30,9 @@ from .selection import (
     RapidataRetrievalMode,
     EffortSelection,
 )
+from .benchmark.prompt_metadata import Origin, Tag
+from .benchmark.leaderboard.vote_aggregation import VoteAggregation
+from .benchmark.participant.sample_upload import SampleUpload
 from .datapoints import Datapoint
 from .context import ContextManager
 from .datapoints.metadata import (

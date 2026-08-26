@@ -19,6 +19,27 @@ from opentelemetry.sdk.trace.id_generator import RandomIdGenerator
 # Thread-local storage for controlling error logging
 _thread_local = threading.local()
 
+# Header the backend echoes the trace id on. Responses generated before a
+# handler runs — a Kestrel request-timeout 408, an LB-generated error — have
+# no problem+json body, so this header is the only place the id survives.
+_TRACE_ID_HEADER = "x-trace-id"
+
+
+def _trace_id_from_headers(headers: Any) -> Optional[str]:
+    """Read the trace id from response headers, case-insensitively."""
+    if not headers:
+        return None
+    try:
+        items = headers.items()
+    except AttributeError:
+        return None
+
+    for name, value in items:
+        if isinstance(name, str) and name.lower() == _TRACE_ID_HEADER:
+            return value if isinstance(value, str) and value else None
+    return None
+
+
 # Module-level state recording whether the installed SDK is outdated.
 # Populated by RapidataClient._check_version and read when formatting
 # API errors so the user sees the outdated-version hint even if they
@@ -234,6 +255,7 @@ class RapidataApiClient(ApiClient):
                 message=message,
                 original_exception=e,
                 details=details,
+                trace_id=_trace_id_from_headers(getattr(e, "headers", None)),
             )
 
             # Only log error if not suppressed

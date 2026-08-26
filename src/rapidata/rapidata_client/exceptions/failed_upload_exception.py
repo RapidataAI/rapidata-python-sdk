@@ -13,22 +13,19 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.job._job_creation_state_machine import (
         JobDefinitionCreationMachine,
     )
-    from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 
 class FailedUploadException(Exception):
-    """Custom error class for Failed Uploads to the Rapidata order."""
+    """Custom error class for failed datapoint uploads during job-definition creation."""
 
     def __init__(
         self,
         dataset: RapidataDataset,
         failed_uploads: list[FailedUpload[Datapoint]],
-        order: Optional[RapidataOrder] = None,
         job_definition: Optional[RapidataJobDefinition] = None,
         machine: Optional[JobDefinitionCreationMachine] = None,
     ):
         self.dataset = dataset
-        self.order = order
         self.job_definition = job_definition
         self._failed_uploads = failed_uploads
         self._machine = machine
@@ -59,8 +56,8 @@ class FailedUploadException(Exception):
 
     @property
     def machine(self) -> Optional[JobDefinitionCreationMachine]:
-        """The creation state machine backing ``retry()``, when this failure
-        came from job-definition creation (``None`` for order uploads)."""
+        """The creation state machine backing ``retry()`` for job-definition
+        creation."""
         return self._machine
 
     @property
@@ -177,8 +174,6 @@ class FailedUploadException(Exception):
                 "dataset (no new dataset is created) by catching this exception and calling: "
                 "\n\tjob_definition = exception.retry()"
             )
-        if self.order:
-            failed_upload_message += f"\n\nTo run the order without the failed datapoints, call: \n\trapidata_client.order.get_order_by_id('{self.order.id}').run()"
         if self.job_definition:
             failed_upload_message += f"\n\nTo run the job definition without the failed datapoints, call: \n\taudience.assign_job(rapidata_client.job.get_job_definition_by_id('{self.job_definition.id}'))"
 

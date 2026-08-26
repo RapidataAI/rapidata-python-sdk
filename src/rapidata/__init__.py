@@ -1,4 +1,4 @@
-__version__ = "3.17.2"
+__version__ = "3.21.1"
 
 from .rapidata_client import (
     RapidataClient,
@@ -7,8 +7,6 @@ from .rapidata_client import (
     RapidataAudienceManager,
     RapidataFilteredAudience,
     RecruitingMetrics,
-    RapidataOrderManager,
-    RapidataOrder,
     RapidataJob,
     RapidataJobDefinition,
     RapidataJobManager,
@@ -16,6 +14,8 @@ from .rapidata_client import (
     JobProgress,
     RapidataSignal,
     RapidataSignalManager,
+    BillingPeriod,
+    RapidataBillingManager,
     ValidationSetManager,
     RapidataValidationSet,
     Box,
@@ -50,7 +50,7 @@ from .rapidata_client import (
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
-# --- GENERATED SETTINGS IMPORTS END ---
+    # --- GENERATED SETTINGS IMPORTS END ---
     CountryFilter,
     LanguageFilter,
     NotFilter,
@@ -65,10 +65,14 @@ from .rapidata_client import (
     Gender,
     DeviceFilter,
     DeviceType,
+    Tag,
+    Origin,
+    VoteAggregation,
     Datapoint,
     ContextManager,
     FailedUploadException,
     FailedUpload,
+    SampleUpload,
     rapidata_config,
     logger,
     managed_print,
