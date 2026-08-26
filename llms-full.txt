@@ -243,6 +243,21 @@ audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
 !!! note
     The global and curated audiences get you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
+#### Targeting countries, languages, or demographics
+
+To restrict any audience — including the global one — to specific countries, languages, age groups, genders, or device types, derive a filtered audience with `.filter(...)`. No new recruiting or qualification is needed:
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+audience = client.audience.get_audience_by_id("global").filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+```
+
+The result can be used anywhere a regular audience is accepted, e.g. `audience.assign_job(...)` in Step 3. See [Filtered Audiences](audiences.md#filtered-audiences) for all supported filters and how to combine them.
+
 ### Step 2: Create a Job Definition
 
 A job definition configures what you want labeled:
@@ -422,7 +437,7 @@ curl -X POST https://auth.rapidata.ai/connect/token \
 
 # → {"access_token": "...", "token_type": "Bearer", "expires_in": 3600}
 
-curl https://api.rapidata.ai/order/openapi/v1.json \
+curl https://api.rapidata.ai/jobs \
   -H "Authorization: Bearer ACCESS_TOKEN"
 ```
 
@@ -1499,7 +1514,7 @@ Here's an example of the results you might receive when running a COMPARE task (
     - `createdAt`: The timestamp indicating when the results overview was generated, in UTC time.
     - `version`: The version of the aggregator system that produced the results.
     - `type`: The type of task that was run (e.g. `Compare`, `Classify`).
-    - `name`: The name given to the job or order.
+    - `name`: The name given to the job.
     - `instruction`: The instruction that was shown to the labelers.
 
 2. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
@@ -1647,7 +1662,7 @@ The exception exposes these to help you understand and recover from failures:
 - `dataset` — the dataset that was being uploaded to. `retry()` reuses it.
 - `failed_uploads` / `detailed_failures` / `failures_by_reason` — which datapoints failed and why (see below).
 - `retry()` — re-upload the failed datapoints into `dataset` and finish creating the definition. Returns the `RapidataJobDefinition`.
-- `job_definition` — `None` for job creation (nothing was persisted). Populated only when tolerating failures on a legacy order.
+- `job_definition` — `None` for job-definition creation (nothing was persisted). Populated when the exception comes from updating an existing definition (e.g. `update_dataset`), where the definition already exists.
 
 ### Understanding Failure Information
 
