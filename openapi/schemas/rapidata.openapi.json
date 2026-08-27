@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.27.1146-f9f86db"
+    "version": "2026.08.27.1636-329b1c3"
   },
   "servers": [
     {
@@ -17812,7 +17812,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (sigma by default) ranks the matchups themselves — sigma being how far apart the two\n images' records over all of their comparisons on the prompt sit, in standard errors of their\n logit gap — where the prompt-ratings query ranks prompts by their most decisive matchup. Filters\n use that query's field set, applied to the votes a matchup is tallied from, plus\n WinnerParticipantId and LooserParticipantId, which select matchups by which side\n won the whole matchup; those two are only accepted as top-level and leaves, and a tied\n matchup matches neither. Matchups of leaderboards excluded from the benchmark overall are never\n returned.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. Each side carries its theta — the pooled per-image\n record sigma is derived from. extremeness and the winning side are always read off the\n raw counts, and sigma/theta are always weighted by annotator reliability;\n useWeightedScoring changes only each side's wins.",
+        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (sigma by default) ranks the matchups themselves — sigma being how far apart the two\n images' records over all of their comparisons on the prompt sit, in standard errors of their\n logit gap — where the prompt-ratings query ranks prompts by their most decisive matchup. Filters\n use that query's field set, applied to the votes a matchup is tallied from, plus four fields\n that select matchups by their outcome once tallied: WinnerParticipantId and\n LooserParticipantId pick the side that won the whole matchup (a tied matchup matches\n neither), while Responses and Extremeness take range comparisons and select on\n how much evidence the matchup carries. The four are only accepted as top-level and\n leaves. Matchups of leaderboards excluded from the benchmark overall are never returned.\n Responses and Extremeness together express the fair-coin sign test on the\n split: extremeness[gte]=1.96 with responses[gte]=5 keeps the matchups a coin\n flip would reproduce less than 5% of the time. The response floor is not redundant — the most\n lopsided three-response outcome is a 3–0 sweep at p = 0.125, and a 4–0 clears 1.96 standard\n deviations at p = 0.0625.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. Each side carries its theta — the pooled per-image\n record sigma is derived from. extremeness and the winning side are always read off the\n raw counts, and sigma/theta are always weighted by annotator reliability;\n useWeightedScoring changes only each side's wins.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -18472,6 +18472,104 @@
             "name": "looser_participant_id",
             "in": "query",
             "description": "Filter by looser_participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "responses",
+            "in": "query",
+            "description": "Filter by responses.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "extremeness",
+            "in": "query",
+            "description": "Filter by extremeness.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -27711,7 +27809,7 @@
           "SampleGeneration"
         ],
         "summary": "Re-queues failed items of a sample generation so they run again.",
-        "description": "When no item ids are supplied, every failed item of the generation is retried. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.\n Supplying failure categories narrows the retry to items that failed for those reasons, which\n is how a retry avoids re-running items whose failure cannot be fixed by running them again;\n combining it with item ids intersects the two.",
+        "description": "When no item ids are supplied, every failed item of the generation qualifies. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.\n When no failure categories are supplied, the retry covers only the items whose failure a\n re-run can plausibly fix, so items rejected for the request itself — an unknown model,\n refused credentials, a content-policy or configuration rejection — are left alone rather than\n re-run to collect the same rejection. Naming those categories explicitly retries them anyway;\n combining categories with item ids intersects the two.",
         "parameters": [
           {
             "name": "sampleGenerationId",
@@ -50753,7 +50851,8 @@
           "customerId",
           "email",
           "role",
-          "status"
+          "status",
+          "isActiveOrganizationForMember"
         ],
         "type": "object",
         "properties": {
@@ -50770,6 +50869,9 @@
           },
           "status": {
             "$ref": "#/components/schemas/MembershipStatus"
+          },
+          "isActiveOrganizationForMember": {
+            "type": "boolean"
           }
         }
       },
@@ -56935,7 +57037,7 @@
                 "nullable": true
               }
             ],
-            "description": "The specific item ids to retry. When omitted or empty, every failed item of the\n generation is retried."
+            "description": "The specific item ids to retry. When omitted or empty, every failed item of the\n generation qualifies."
           },
           "failureCategories": {
             "allOf": [
@@ -56947,7 +57049,7 @@
                 "nullable": true
               }
             ],
-            "description": "The failure categories to retry. When omitted or empty, every failed item qualifies.\n Combined with item ids the two intersect."
+            "description": "The failure categories to retry. When omitted or empty, only the categories a re-run can\n plausibly fix qualify. Combined with item ids the two intersect."
           }
         }
       },
