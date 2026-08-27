@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.26.1217-ad53633"
+    "version": "2026.08.27.0844-2209919"
   },
   "servers": [
     {
@@ -736,67 +736,6 @@
         ]
       }
     },
-    "/audience/{audienceId}/owner": {
-      "patch": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Changes the owner of the specified audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "description": "The unique identifier of the audience.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The new owner information.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeAudienceOwnerEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access"
-            ]
-          }
-        ]
-      }
-    },
     "/audience": {
       "post": {
         "tags": [
@@ -1121,6 +1060,248 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/{audienceId}/shares/organizations": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Returns each organization an audience is shared with, together with its access level.",
+        "description": "Individual customers the audience is shared with are listed by\n GET /audience/{audienceId}/shares instead. For a filtered audience the shares of its\n base audience are returned.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAudienceOrganizationSharesEndpoint_Output"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Grants every member of an organization viewer or editor access to an audience.",
+        "description": "The grant follows organization membership, so members who join later inherit the access.\n Granting editor access implies viewing, and lets members manage the audience — including\n starting recruiting, which spends the owner's budget. Re-sharing at the same level is\n idempotent.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience to share.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The organization to share with and the access level to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareAudienceWithOrganizationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/{audienceId}/shares": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Returns each customer an audience is shared with, together with their access level.",
+        "description": "The email is resolved for display and may be null if the account can no longer be resolved.\n Organizations the audience is shared with are listed by\n GET /audience/{audienceId}/shares/organizations instead. For a filtered audience the\n shares of its base audience are returned.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAudienceSharesEndpoint_Output"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Grants a customer viewer or editor access to an audience by their email.",
+        "description": "Granting editor access implies viewing, and lets the recipient manage the audience —\n including starting recruiting and rebuilding the distilling campaign, which spend the\n owner's budget. Re-sharing at the same level is idempotent.\n An email with no matching account is accepted and grants nothing; the response does not\n distinguish it from a successful share, so callers cannot probe which emails have accounts.\n Sharing a filtered audience records the share against its base audience, which covers the\n base and every filtered audience derived from it.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience to share.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The email to share with and the access level to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareAudienceWithCustomerEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -1967,8 +2148,17 @@
         "tags": [
           "Audience"
         ],
-        "summary": "Queries all audiences visible to the caller.",
+        "summary": "Queries the audiences visible to the caller: owned, shared with them, or both.",
+        "description": "Owned includes every public audience. Rows the caller reaches through a share are flagged\n with isShared, which is independent of isPublic — a row can be both.",
         "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "description": "Which audiences to return: owned by the caller's organization, shared with the caller, or both.",
+            "schema": {
+              "$ref": "#/components/schemas/AudienceScope"
+            }
+          },
           {
             "name": "page",
             "in": "query",
@@ -2521,6 +2711,127 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/{audienceId}/shares/organizations/{organizationId}": {
+      "delete": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Removes an organization's viewer and editor access to an audience.",
+        "description": "Idempotent: revoking a share that does not exist succeeds with no effect. Takes effect\n immediately. Members who also hold a direct customer share keep that access.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization whose access is revoked.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/{audienceId}/shares/{customerId}": {
+      "delete": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Removes a customer's viewer and editor access to an audience.",
+        "description": "Idempotent: revoking a share that does not exist succeeds with no effect. Takes effect\n immediately. Access the customer holds through an organization share is not affected.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer whose access is revoked.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -40330,6 +40641,20 @@
           "SpendLimited"
         ]
       },
+      "AudienceScope": {
+        "enum": [
+          "Owned",
+          "Shared",
+          "All"
+        ],
+        "description": "Which audiences a query over audiences should return, relative to the caller."
+      },
+      "AudienceShareLevel": {
+        "enum": [
+          "Viewer",
+          "Editor"
+        ]
+      },
       "AudienceStateRecalculationPhase": {
         "enum": [
           "RecalculatingUsers",
@@ -40361,24 +40686,6 @@
           "Distilling",
           "Global"
         ]
-      },
-      "ChangeAudienceOwnerEndpoint_Input": {
-        "required": [
-          "ownerId",
-          "ownerMail"
-        ],
-        "type": "object",
-        "properties": {
-          "ownerId": {
-            "type": "string",
-            "description": "The unique identifier of the new owner.",
-            "format": "uuid"
-          },
-          "ownerMail": {
-            "type": "string",
-            "description": "The email address of the new owner."
-          }
-        }
       },
       "CreateAudienceEndpoint_Input": {
         "required": [
@@ -40983,6 +41290,55 @@
             "type": "string",
             "description": "When the sync was created.",
             "format": "date-time"
+          }
+        }
+      },
+      "GetAudienceOrganizationSharesEndpoint_Output": {
+        "required": [
+          "organizationId",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the audience is shared with."
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceShareLevel"
+              }
+            ],
+            "description": "The access level the organization holds."
+          }
+        }
+      },
+      "GetAudienceSharesEndpoint_Output": {
+        "required": [
+          "customerId",
+          "email",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The id of the customer the audience is shared with.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The customer's email, or null when it could not be resolved.",
+            "nullable": true
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceShareLevel"
+              }
+            ],
+            "description": "The access level the customer holds."
           }
         }
       },
@@ -42535,7 +42891,8 @@
           "organizationId",
           "isPublic",
           "isDistilling",
-          "graduationRule"
+          "graduationRule",
+          "isShared"
         ],
         "type": "object",
         "properties": {
@@ -42631,6 +42988,10 @@
             "type": "integer",
             "description": "The number of dropped users.",
             "format": "int64"
+          },
+          "isShared": {
+            "type": "boolean",
+            "description": "Whether this audience is shared with the caller rather than owned by their organization.\n Independent of IsPublic — an audience can be both."
           }
         }
       },
@@ -42814,6 +43175,48 @@
           "Shuffled",
           "Sequential"
         ]
+      },
+      "ShareAudienceWithCustomerEndpoint_Input": {
+        "required": [
+          "email",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email of the account to share the audience with."
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceShareLevel"
+              }
+            ],
+            "description": "The access level to grant."
+          }
+        }
+      },
+      "ShareAudienceWithOrganizationEndpoint_Input": {
+        "required": [
+          "organizationId",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization to share the audience with."
+          },
+          "level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AudienceShareLevel"
+              }
+            ],
+            "description": "The access level to grant."
+          }
+        }
       },
       "StartAudienceInactivitySyncEndpoint_Output": {
         "required": [
