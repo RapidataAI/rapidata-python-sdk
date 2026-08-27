@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.08.27.0844-2209919"
+    "version": "2026.08.27.1146-f9f86db"
   },
   "servers": [
     {
@@ -1498,6 +1498,54 @@
         }
       }
     },
+    "/organizations/invitations/{invitationId}/accept": {
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Accepts the invitation identified by invitationId and sets the joined\n organization as the caller's active one.",
+        "description": "Responds with 409 when the invitation is expired, already used, or was issued to a different\n email than the calling customer's.",
+        "parameters": [
+          {
+            "name": "invitationId",
+            "in": "path",
+            "description": "The id of the invitation to accept.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptOrgInvitationByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/organizations/accept-invitation": {
       "post": {
         "tags": [
@@ -1614,7 +1662,7 @@
           "Organization"
         ],
         "summary": "Creates an organization and makes the calling customer its owner.",
-        "description": "The calling customer becomes the organization's owner. Responds with 400 when the slug is\n already taken.",
+        "description": "The calling customer becomes the organization's owner.",
         "requestBody": {
           "description": "The organization to create.",
           "content": {
@@ -1688,9 +1736,7 @@
               "items": {
                 "enum": [
                   "name",
-                  "-name",
-                  "slug",
-                  "-slug"
+                  "-name"
                 ],
                 "type": "string"
               }
@@ -1698,9 +1744,9 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "name",
+            "name": "id",
             "in": "query",
-            "description": "Filter by name.",
+            "description": "Filter by id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -1747,9 +1793,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "slug",
+            "name": "name",
             "in": "query",
-            "description": "Filter by slug.",
+            "description": "Filter by name.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -1889,7 +1935,7 @@
           "Organization"
         ],
         "summary": "Updates the given organization's provided fields.",
-        "description": "Only the fields present in the body are changed. Responds with 400 when the slug is already\n taken by another organization.",
+        "description": "Only the fields present in the body are changed.",
         "parameters": [
           {
             "name": "organizationId",
@@ -2039,6 +2085,42 @@
         }
       }
     },
+    "/organizations/invitations": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Returns the pending, not-yet-expired invitations issued to the caller's email address.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListMyOrgInvitationsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/organizations/{organizationId}/members": {
       "get": {
         "tags": [
@@ -2121,8 +2203,6 @@
                 "enum": [
                   "name",
                   "-name",
-                  "slug",
-                  "-slug",
                   "member_count",
                   "-member_count"
                 ],
@@ -2132,9 +2212,9 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "name",
+            "name": "id",
             "in": "query",
-            "description": "Filter by name.",
+            "description": "Filter by id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -2181,9 +2261,9 @@
             "x-parameter-group": "filters"
           },
           {
-            "name": "slug",
+            "name": "name",
             "in": "query",
-            "description": "Filter by slug.",
+            "description": "Filter by name.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -2252,6 +2332,47 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/organizations/invitations/{invitationId}/reject": {
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Declines the invitation identified by invitationId. No membership is\n created.",
+        "description": "Responds with 409 when the invitation is not pending or was issued to a different email than\n the calling customer's.",
+        "parameters": [
+          {
+            "name": "invitationId",
+            "in": "path",
+            "description": "The id of the invitation to reject.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -2650,6 +2771,23 @@
   },
   "components": {
     "schemas": {
+      "AcceptOrgInvitationByIdEndpoint_Output": {
+        "required": [
+          "organizationId",
+          "membershipId"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The organization the customer joined."
+          },
+          "membershipId": {
+            "type": "string",
+            "description": "The id of the created membership."
+          }
+        }
+      },
       "AcceptOrgInvitationEndpoint_Input": {
         "required": [
           "token"
@@ -2878,13 +3016,20 @@
             "type": "string",
             "description": "An optional display name for the client.",
             "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The organization to authorize the client for. Defaults to the caller's active organization.",
+            "nullable": true
           }
         }
       },
       "CreateClientEndpoint_Output": {
         "required": [
           "clientId",
-          "clientSecret"
+          "clientSecret",
+          "organizationId",
+          "organizationName"
         ],
         "type": "object",
         "properties": {
@@ -2895,23 +3040,26 @@
           "clientSecret": {
             "type": "string",
             "description": "The secret of the created client."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the client is authorized for."
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The name of the organization the client is authorized for."
           }
         }
       },
       "CreateOrganizationEndpoint_Input": {
         "required": [
-          "name",
-          "slug"
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
             "description": "The human-readable name of the organization."
-          },
-          "slug": {
-            "type": "string",
-            "description": "A URL-safe unique identifier for the organization."
           },
           "primaryDomain": {
             "type": "string",
@@ -3239,7 +3387,6 @@
         "required": [
           "id",
           "name",
-          "slug",
           "primaryDomain"
         ],
         "type": "object",
@@ -3251,10 +3398,6 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the organization."
-          },
-          "slug": {
-            "type": "string",
-            "description": "The URL-safe unique identifier of the organization."
           },
           "primaryDomain": {
             "type": "string",
@@ -3579,6 +3722,63 @@
           }
         }
       },
+      "ListMyOrgInvitationsEndpoint_Output": {
+        "required": [
+          "invitations"
+        ],
+        "type": "object",
+        "properties": {
+          "invitations": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ListMyOrgInvitationsEndpoint_Output_Invitation"
+                }
+              }
+            ],
+            "description": "The caller's pending invitations."
+          }
+        }
+      },
+      "ListMyOrgInvitationsEndpoint_Output_Invitation": {
+        "required": [
+          "invitationId",
+          "organizationId",
+          "organizationName",
+          "role",
+          "invitedByEmail",
+          "createdAt",
+          "expiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "invitationId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/OrgRole"
+          },
+          "invitedByEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "ListOrgInvitationsEndpoint_Output": {
         "required": [
           "invitations"
@@ -3689,7 +3889,6 @@
         "required": [
           "id",
           "name",
-          "slug",
           "memberCount"
         ],
         "type": "object",
@@ -3701,10 +3900,6 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the organization."
-          },
-          "slug": {
-            "type": "string",
-            "description": "The URL-safe unique identifier of the organization."
           },
           "memberCount": {
             "type": "integer",
@@ -3750,6 +3945,8 @@
         "required": [
           "clientId",
           "displayName",
+          "organizationId",
+          "organizationName",
           "createdAt"
         ],
         "type": "object",
@@ -3762,6 +3959,16 @@
           "displayName": {
             "type": "string",
             "description": "The optional display name of the client.",
+            "nullable": true
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization the client is authorized for.",
+            "nullable": true
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The name of the organization the client is authorized for.",
             "nullable": true
           },
           "createdAt": {
@@ -3873,7 +4080,6 @@
         "required": [
           "id",
           "name",
-          "slug",
           "role"
         ],
         "type": "object",
@@ -3885,10 +4091,6 @@
           "name": {
             "type": "string",
             "description": "The human-readable name of the organization."
-          },
-          "slug": {
-            "type": "string",
-            "description": "The URL-safe unique identifier of the organization."
           },
           "role": {
             "allOf": [
@@ -4125,10 +4327,6 @@
           "name": {
             "type": "string",
             "description": "The new human-readable name, if changing it."
-          },
-          "slug": {
-            "type": "string",
-            "description": "The new URL-safe unique identifier, if changing it."
           }
         }
       },
