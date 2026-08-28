@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.27.1636-329b1c3"
+    "version": "2026.08.28.1543-4def679"
   },
   "servers": [
     {
@@ -9369,6 +9369,55 @@
       }
     },
     "/organizations/{organizationId}": {
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Deletes the organization and everything it owns across the platform.",
+        "description": "This cannot be undone. Every member loses access immediately and each service removes the\n organization's data; invoices already raised are kept. Responds with 409 when the\n organization still has an open invoice or a billing reconciliation in progress — settle those\n first.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      },
       "get": {
         "tags": [
           "Organization"
@@ -16911,7 +16960,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (sigma by default) ranks the matchups themselves — sigma being how far apart the two\n images' records over all of their comparisons on the prompt sit, in standard errors of their\n logit gap — where the prompt-ratings query ranks prompts by their most decisive matchup. Filters\n use that query's field set, applied to the votes a matchup is tallied from, plus four fields\n that select matchups by their outcome once tallied: WinnerParticipantId and\n LooserParticipantId pick the side that won the whole matchup (a tied matchup matches\n neither), while Responses and Extremeness take range comparisons and select on\n how much evidence the matchup carries. The four are only accepted as top-level and\n leaves. Matchups of leaderboards excluded from the benchmark overall are never returned.\n Responses and Extremeness together express the fair-coin sign test on the\n split: extremeness[gte]=1.96 with responses[gte]=5 keeps the matchups a coin\n flip would reproduce less than 5% of the time. The response floor is not redundant — the most\n lopsided three-response outcome is a 3–0 sweep at p = 0.125, and a 4–0 clears 1.96 standard\n deviations at p = 0.0625.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. Each side carries its theta — the pooled per-image\n record sigma is derived from. extremeness and the winning side are always read off the\n raw counts, and sigma/theta are always weighted by annotator reliability;\n useWeightedScoring changes only each side's wins.",
+        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (sigma by default) ranks the matchups themselves — sigma being how far apart the two\n images' records over all of their comparisons on the prompt sit, in standard errors of their\n logit gap — where the prompt-ratings query ranks prompts by their most decisive matchup. Filters\n use that query's field set, applied to the votes a matchup is tallied from, plus four fields\n that select matchups by their outcome once tallied: WinnerParticipantId and\n LooserParticipantId pick the side that won the whole matchup (a tied matchup matches\n neither), while Responses and Extremeness take range comparisons and select on\n how much evidence the matchup carries. The four are only accepted as top-level and\n leaves. Matchups of leaderboards excluded from the benchmark overall are never returned.\n Responses and Extremeness together express the fair-coin sign test on the\n split: extremeness[gte]=1.96 with responses[gte]=5 keeps the matchups a coin\n flip would reproduce less than 5% of the time. The response floor is not redundant — the most\n lopsided three-response outcome is a 3–0 sweep at p = 0.125, and a 4–0 clears 1.96 standard\n deviations at p = 0.0625.\n WinnerSigma answers a different question: not how decisive this matchup's own split is,\n but whether the two images' pooled records agree with it. It is sigma signed from the\n winning side, so winner_sigma[gt]=0 keeps the matchups the records confirm and\n winner_sigma[lt]=0 keeps the upsets. Ordering by sigma cannot separate the two —\n a wide gap in either direction ranks the same — which is what sorting by -winner_sigma\n fixes.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. Each side carries its theta — the pooled per-image\n record sigma is derived from. extremeness and the winning side are always read off the\n raw counts, and sigma/theta are always weighted by annotator reliability;\n useWeightedScoring changes only each side's wins.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -16967,6 +17016,8 @@
                 "enum": [
                   "sigma",
                   "-sigma",
+                  "winner_sigma",
+                  "-winner_sigma",
                   "extremeness",
                   "-extremeness",
                   "responses",
@@ -17669,6 +17720,55 @@
             "name": "extremeness",
             "in": "query",
             "description": "Filter by extremeness.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "winner_sigma",
+            "in": "query",
+            "description": "Filter by winner_sigma.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -37022,6 +37122,357 @@
         ]
       }
     },
+    "/rapid/{rapidId}/reports": {
+      "get": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Queries the reports users submitted for a rapid, including the issue they picked and the message they wrote.",
+        "description": "The captured dump is not part of the listing — use GET /rapid/report/{reportId} to retrieve it\n for a report whose hasDump is true.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The ID of the rapid to query reports for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "issue",
+                  "-issue",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "reporter_id",
+            "in": "query",
+            "description": "Filter by reporter_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "issue",
+            "in": "query",
+            "description": "Filter by issue.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "message",
+            "in": "query",
+            "description": "Filter by message.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "description": "Filter by source.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryReportsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
     "/rapid/{rapidId}/report": {
       "post": {
         "tags": [
@@ -53758,6 +54209,7 @@
           "sides",
           "responses",
           "sigma",
+          "winnerSigma",
           "extremeness",
           "latestVotedAt"
         ],
@@ -53789,6 +54241,10 @@
             "format": "int64"
           },
           "sigma": {
+            "type": "number",
+            "format": "double"
+          },
+          "winnerSigma": {
             "type": "number",
             "format": "double"
           },
@@ -65390,6 +65846,96 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QueryFlaggedRapidsEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryReportsEndpoint_Output": {
+        "required": [
+          "id",
+          "reporterId",
+          "reportingSessionId",
+          "issue",
+          "hasDump",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the report."
+          },
+          "reporterId": {
+            "type": "string",
+            "description": "The ID of the user who submitted the report."
+          },
+          "reportingSessionId": {
+            "type": "string",
+            "description": "The session ID the report was submitted from."
+          },
+          "issue": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidIssue"
+              }
+            ],
+            "description": "The issue the user reported."
+          },
+          "message": {
+            "type": "string",
+            "description": "The message the user wrote, in the language they wrote it, or null when they did not write one.",
+            "nullable": true
+          },
+          "englishMessage": {
+            "type": "string",
+            "description": "The English translation of message. Null when no message was written, when the\n translation failed, or for reports submitted before translations were stored.",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "description": "Where the report originated from, or null when unknown.",
+            "nullable": true
+          },
+          "hasDump": {
+            "type": "boolean",
+            "description": "Whether a dump was captured alongside the report."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the report was submitted.",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryReportsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryReportsEndpoint_Output"
             }
           },
           "totalPages": {
