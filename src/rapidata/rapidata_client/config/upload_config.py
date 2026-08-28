@@ -12,7 +12,7 @@ from rapidata.rapidata_client.config._env_utils import apply_env_overrides
 
 class CompressionConfig(BaseModel):
     """
-    Per-upload override for the asset service's image-compression behaviour.
+    Per-upload override for the asset service's compression behaviour.
 
     Any field left as ``None`` falls back to the value the asset service has
     configured globally. Set ``enabled`` to ``True`` (or ``False``) to force the
@@ -20,16 +20,19 @@ class CompressionConfig(BaseModel):
     expected in the 1..100 range and ``max_dimension`` must be at least 1; both
     are validated server-side.
 
-    Currently applies to single-asset uploads (file paths and individual URLs
-    via the ``/asset/file`` and ``/asset/url`` endpoints). Batched URL uploads
-    via the orchestrator's ``/asset/batch-upload`` path will gain the same
-    override in a follow-up once the SDK's OpenAPI client is regenerated to
-    include the ``compression`` field on the batch input model.
+    ``enabled`` governs both image and video compression: ``enabled=False``
+    preserves the original image *and* the original video (resolution and
+    bitrate), which is the way to guarantee an uploaded 1080p clip reaches
+    annotators untouched. ``quality`` and ``max_dimension`` only affect images;
+    videos have no equivalent knob.
+
+    Applies to single-asset uploads (``/asset/file`` and ``/asset/url``) and to
+    batched URL uploads via the orchestrator's ``/asset/batch-upload`` path.
 
     Attributes:
-        enabled (bool | None): Force compression on or off. ``None`` to defer to the server default.
-        quality (int | None): WebP quality (1..100) to use when compression runs.
-        max_dimension (int | None): Maximum width or height in pixels when compression runs.
+        enabled (bool | None): Force compression on or off for both images and videos. ``None`` to defer to the server default.
+        quality (int | None): WebP quality (1..100) to use when image compression runs. Images only.
+        max_dimension (int | None): Maximum width or height in pixels when image compression runs. Images only.
     """
 
     model_config = ConfigDict(validate_assignment=True)

@@ -16,6 +16,7 @@ from rapidata.api_client.models.batch_upload_url_status import BatchUploadUrlSta
 from rapidata.api_client.models.create_batch_upload_endpoint_input import (
     CreateBatchUploadEndpointInput,
 )
+from rapidata.api_client.models.compression_override import CompressionOverride
 
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
@@ -76,6 +77,11 @@ class BatchAssetUploader:
         # by correlation ID instead of passing all batch IDs as query params
         correlation_id = str(uuid.uuid4())
 
+        # Snapshot the compression override once so every batch in this run is
+        # submitted with the same setting, matching the compression-aware cache
+        # key get_url_cache_key already produces.
+        compression_override = self._compression_override()
+
         # Split into batches
         batches = self._split_into_batches(urls)
 
@@ -103,7 +109,9 @@ class BatchAssetUploader:
                         try:
                             result = self.openapi_service.asset.batch_upload_api.asset_batch_upload_post(
                                 create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
-                                    urls=batch, correlationId=correlation_id
+                                    urls=batch,
+                                    correlationId=correlation_id,
+                                    compression=compression_override,
                                 )
                             )
                             batch_id = result.batch_upload_id
@@ -162,6 +170,23 @@ class BatchAssetUploader:
             # Cleanup: abort batches if interrupted
             if self._interrupted:
                 self._abort_batches(batch_ids, batch_ids_lock)
+
+    @staticmethod
+    def _compression_override() -> CompressionOverride | None:
+        """Build the batch-request compression override from the current config.
+
+        Returns ``None`` when nothing is overridden so the request shape is
+        unchanged. ``enabled=False`` skips both image and video compression
+        server-side, keeping the batch's original media.
+        """
+        compression = rapidata_config.upload.compression
+        if compression is None or not compression.is_set():
+            return None
+        return CompressionOverride(
+            enabled=compression.enabled,
+            quality=compression.quality,
+            maxDimension=compression.max_dimension,
+        )
 
     def _split_into_batches(self, urls: list[str]) -> list[list[str]]:
         """Split URLs into batches of configured size."""
