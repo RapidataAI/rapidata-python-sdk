@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.08.27.1636-329b1c3"
+    "version": "2026.08.28.1543-4def679"
   },
   "servers": [
     {
@@ -1885,6 +1885,45 @@
       }
     },
     "/organizations/{organizationId}": {
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Deletes the organization and everything it owns across the platform.",
+        "description": "This cannot be undone. Every member loses access immediately and each service removes the\n organization's data; invoices already raised are kept. Responds with 409 when the\n organization still has an open invoice or a billing reconciliation in progress — settle those\n first.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
       "get": {
         "tags": [
           "Organization"
