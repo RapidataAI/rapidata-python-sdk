@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.30.0010-f40a2bb"
+    "version": "2026.08.31.1452-45db4f0"
   },
   "servers": [
     {
@@ -8135,6 +8135,58 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "/customers/{customerId}": {
+      "delete": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Deletes the account: it can no longer sign in, stops receiving email, and leaves every\n organization it belongs to.",
+        "description": "This cannot be undone. An organization the account is the only member of is deleted with it,\n along with everything it owns; invoices already raised are kept. Responds with 409 when the\n account is the last owner of an organization that has other members — transfer ownership\n first — or when such an organization still has an open invoice or a billing reconciliation in\n progress. Issuing it again for an account that is already deleted succeeds and changes\n nothing further. The same address and the same external login can be used to register a new\n account afterwards; none of the old account's data comes back with it.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer to delete.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -16960,7 +17012,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it, so a pair compared on several leaderboards\n comes back once per leaderboard and the boards' verdicts on it can be read side by side.\n Ordering (sigma by default) ranks the matchups themselves — sigma being how far apart the two\n images' records over all of their comparisons on the prompt sit, in standard errors of their\n logit gap — where the prompt-ratings query ranks prompts by their most decisive matchup. Filters\n use that query's field set, applied to the votes a matchup is tallied from, plus four fields\n that select matchups by their outcome once tallied: WinnerParticipantId and\n LooserParticipantId pick the side that won the whole matchup (a tied matchup matches\n neither), while Responses and Extremeness take range comparisons and select on\n how much evidence the matchup carries. The four are only accepted as top-level and\n leaves. Matchups of leaderboards excluded from the benchmark overall are never returned.\n Responses and Extremeness together express the fair-coin sign test on the\n split: extremeness[gte]=1.96 with responses[gte]=5 keeps the matchups a coin\n flip would reproduce less than 5% of the time. The response floor is not redundant — the most\n lopsided three-response outcome is a 3–0 sweep at p = 0.125, and a 4–0 clears 1.96 standard\n deviations at p = 0.0625.\n WinnerSigma answers a different question: not how decisive this matchup's own split is,\n but whether the two images' pooled records agree with it. It is sigma signed from the\n winning side, so winner_sigma[gt]=0 keeps the matchups the records confirm and\n winner_sigma[lt]=0 keeps the upsets. Ordering by sigma cannot separate the two —\n a wide gap in either direction ranks the same — which is what sorting by -winner_sigma\n fixes.\n sides holds exactly two images, the one that took more responses first, and their\n responses sum to the matchup's. Each side carries its theta — the pooled per-image\n record sigma is derived from. extremeness and the winning side are always read off the\n raw counts, and sigma/theta are always weighted by annotator reliability;\n useWeightedScoring changes only each side's wins.",
+        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -16983,7 +17035,7 @@
           {
             "name": "groupBy",
             "in": "query",
-            "description": "What a compared image stands for. Per image, every matchup is returned. Per participant, a\n matchup between two images of one participant is a self-matchup and leaves the page.",
+            "description": "What a compared image stands for; per participant, self-matchups leave the page.",
             "schema": {
               "$ref": "#/components/schemas/RatingGrouping"
             }
@@ -18491,7 +18543,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's prompt ratings — a page of prompts, each with its ranked entries and the\n pairwise win matrix over them.",
-        "description": "Filters apply to the underlying votes and use the same field set as the standings query. Ordering\n (extremeness by default) selects which prompts a page fits; a rating is an entry's standing against\n the other entries on its prompt, so a participant filter narrows the entries but does not refit. A\n prompt with no matching votes yields no entries.\n groupBy decides what competes. Per image, every image is its own entry and a participant\n with several images on a prompt appears several times. Per participant, its images become one\n entry rated from their pooled wins over other participants; comparisons between two of its own\n images are excluded from the rating, from both matrices, and from responseCount. Grouping\n changes only how prompts are scored, never which prompts the page holds.\n matrix.wins and matrix.votes are square and aligned to entries by position:\n row i, column j holds entry i's count against entry j. Read the axes\n off entries — the matrix carries no labels of its own.",
+        "description": "Filters apply to the underlying votes with the standings query's field set. A rating is an\n entry's standing against the other entries on its prompt, so a participant filter narrows the\n entries but does not refit, and a prompt with no matching votes yields no entries.\n groupBy decides what competes: per participant, a participant's images become one entry\n rated from their pooled wins, and comparisons between its own images are excluded from the\n rating, both matrices, and responseCount. Grouping never changes which prompts the page\n holds.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -20587,7 +20639,7 @@
         ],
         "summary": "Creates a new leaderboard.",
         "requestBody": {
-          "description": "The current HTTP context, used for user claims.",
+          "description": "The payload describing the leaderboard to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -49814,7 +49866,7 @@
           },
           "seed": {
             "type": "integer",
-            "description": "Optional seed for deterministic matchup selection. Use the same value across leaderboards\n of a benchmark to have them boosted on the same image pairs. Omit for random selection.",
+            "description": "Optional seed for deterministic matchup selection. Reuse it across a benchmark's leaderboards to align them on the same\n image pairs; omit for random selection.",
             "format": "int64",
             "nullable": true
           }
@@ -49919,24 +49971,24 @@
           },
           "description": {
             "type": "string",
-            "description": "Optional plain-text credit for the people or sources behind the benchmark. Limited to\n 2000 characters. Leave unset for no description.",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark. Limited to 2000 characters; leave unset for\n none.",
             "nullable": true
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Leave unset to fall back to DefaultInitialBoostLevel. Admins\n may set any value the validator allows (0-10); non-admins are restricted to\n 0..BenchmarkEntity.DefaultInitialBoostLevel — anything outside that range returns\n 403 Forbidden via IsAllowedToSetInitialBoostLevel.",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark. Leave unset to fall back to DefaultInitialBoostLevel.",
             "format": "int32",
             "nullable": true
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark. Defaults to 0 when unset.",
+            "description": "Additive offset applied to displayed scores on the benchmark's overall scoreboard; defaults to 0.",
             "format": "double",
             "nullable": true
           },
           "scoreScale": {
             "type": "number",
-            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark. Defaults to 1.0 when\n unset; must be strictly positive.",
+            "description": "Multiplicative factor applied to displayed scores on the benchmark's overall scoreboard,\n relative to the Bradley-Terry center. Defaults to 1.0; must be strictly positive.",
             "format": "double",
             "nullable": true
           }
@@ -50040,7 +50092,7 @@
           },
           "seed": {
             "type": "integer",
-            "description": "Optional seed for deterministic matchup selection. Use the same value across\n leaderboards of a benchmark to have them evaluate the same image pairs. Omit for random\n selection.",
+            "description": "Optional seed for deterministic matchup selection. Reuse it across a benchmark's leaderboards to align them on the same\n image pairs; omit for random selection.",
             "format": "int64",
             "nullable": true
           }
@@ -50078,7 +50130,7 @@
           },
           "benchmarkDescription": {
             "type": "string",
-            "description": "Optional plain-text credit for the people or sources behind the benchmark, applied to\n the new benchmark created via BenchmarkName. Limited to 2000 characters.\n Ignored when an existing BenchmarkId is provided. Leave unset for no\n description.",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark created via BenchmarkName.\n Limited to 2000 characters; ignored when BenchmarkId is set.",
             "nullable": true
           },
           "name": {
@@ -50120,31 +50172,31 @@
           },
           "priority": {
             "type": "integer",
-            "description": "Optional priority override applied to every run's job. Admin-only.\n When unset, runs use the default leaderboard priority.",
+            "description": "Optional priority override applied to every run's job; unset uses the default.",
             "format": "int32"
           },
           "weight": {
             "type": "number",
-            "description": "Multiplier applied to every match result of this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards. Defaults to 1.0 when\n unset; unbounded (negative and zero values are accepted).",
+            "description": "Multiplier applied to this leaderboard's match results when they contribute to the parent\n benchmark's overall / combined scoreboards. Defaults to 1.0; unbounded.",
             "format": "double"
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard. Defaults to 0 when unset.",
+            "description": "Additive offset applied to displayed scores on this leaderboard's scoreboard; defaults to 0.",
             "format": "double"
           },
           "scoreScale": {
             "type": "number",
-            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard. Defaults to 1.0 when\n unset; must be strictly positive.",
+            "description": "Multiplicative factor applied to displayed scores on this leaderboard's scoreboard, relative to the Bradley-Terry\n center. Defaults to 1.0; must be strictly positive.",
             "format": "double"
           },
           "isHidden": {
             "type": "boolean",
-            "description": "Whether the leaderboard should be created hidden. Admin-only."
+            "description": "Whether the leaderboard should be created hidden."
           },
           "isExcludedFromOverall": {
             "type": "boolean",
-            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard.\n When set, the leaderboard becomes an owner-only private experiment: its results do not\n contribute to the overall and it is visible only to its owner and admins. Defaults to\n false when unset."
+            "description": "Whether this leaderboard is excluded from its benchmark's overall / combined scoreboard, making it a private experiment\n of the owning organization. Defaults to false."
           },
           "voteAggregation": {
             "allOf": [
@@ -50152,7 +50204,7 @@
                 "$ref": "#/components/schemas/VoteAggregation"
               }
             ],
-            "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Defaults to AllVotes when unset."
+            "description": "How votes on a matchup aggregate into the stored result: AllVotes counts every vote as a matchup,\n MajorityVote collapses each to a single majority win (ties split 0.5/0.5). Defaults to AllVotes."
           },
           "includedTags": {
             "allOf": [
@@ -50163,7 +50215,7 @@
                 }
               }
             ],
-            "description": "Prompt tag values to restrict the leaderboard's matchups to. Only prompts carrying at\n least one of these tags are used; an empty list means no restriction."
+            "description": "Prompt tag values to restrict matchups to; only prompts carrying at least one are used. Empty means no restriction."
           },
           "excludedTags": {
             "allOf": [
@@ -50174,7 +50226,7 @@
                 }
               }
             ],
-            "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags: a prompt carrying an excluded tag is skipped even when one of its\n other tags is included."
+            "description": "Prompt tag values the leaderboard never creates matchups for; takes precedence over includedTags, even when\n another tag is included."
           },
           "featureFlags": {
             "allOf": [
@@ -50190,7 +50242,7 @@
           },
           "skipInitialRun": {
             "type": "boolean",
-            "description": "Set to true to skip the initial standings run. A newly added model is still\n compared against the whole existing field and boost runs still work — there is just no\n run collecting the first responses. On the benchmark's first leaderboard, participants\n that already have result images are submitted into the field so those paths have a field\n to work with; on a benchmark that already has a leaderboard they are in it already and\n are left untouched. Defaults to false, which queues the run as before."
+            "description": "Set to true to skip the initial standings run. New participants are still compared against the whole existing\n field and boost runs still work; there is just no run collecting the first responses. Defaults to false."
           }
         }
       },
@@ -50539,7 +50591,7 @@
           },
           "description": {
             "type": "string",
-            "description": "Optional plain-text credit for the people or sources behind the benchmark. Null when no\n description was supplied.",
+            "description": "Optional plain-text credit for the people or sources behind the benchmark; null when none was supplied.",
             "nullable": true
           },
           "isPublic": {
@@ -50557,39 +50609,39 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer owning the benchmark. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The benchmark's owner; null unless the caller is platform staff or in the owning organization.",
             "format": "uuid",
             "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer owning the benchmark. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's mail; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's organization; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "The initial boost level applied to the campaign of every run created from this\n benchmark. Null means the benchmark default is used.",
+            "description": "Initial boost level applied to every run's campaign; null uses the benchmark default.",
             "format": "int32",
             "nullable": true
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark.",
+            "description": "Additive offset applied to displayed scores on the benchmark's overall scoreboard.",
             "format": "double"
           },
           "scoreScale": {
             "type": "number",
-            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark.",
+            "description": "Multiplicative factor applied to displayed scores on the benchmark's overall scoreboard,\n relative to the Bradley-Terry center.",
             "format": "double"
           },
           "lastUpdatedAt": {
             "type": "string",
-            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "description": "When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its\n overall; null when none ever received votes.",
             "format": "date-time",
             "nullable": true
           }
@@ -50699,7 +50751,7 @@
           },
           "isUpToDate": {
             "type": "boolean",
-            "description": "Whether the HuggingFace dataset covers every completed run of the benchmark — a\n successful sync exists and no completed run is pending export. Always false when the\n benchmark has never been synced."
+            "description": "Whether the dataset covers every completed run of the benchmark — a successful sync exists and no completed run is\n pending export. Always false when never synced."
           },
           "pendingRunCount": {
             "type": "integer",
@@ -51114,7 +51166,7 @@
           },
           "totalResponses": {
             "type": "integer",
-            "description": "Total raw human responses (votes) behind Global under the current filter —\n the actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "description": "Total raw human votes behind Global under the current filter — not the per-participant\n TotalMatches, which counts binarized matchups (a comparison's several votes collapse into one).",
             "format": "int64"
           },
           "segments": {
@@ -51616,7 +51668,7 @@
           },
           "priority": {
             "type": "integer",
-            "description": "Priority override applied to every run's job. Null when no override is set; runs then\n fall back to the default leaderboard priority.",
+            "description": "Priority override applied to every run's job; null falls back to the default priority.",
             "format": "int32",
             "nullable": true
           },
@@ -51633,22 +51685,22 @@
           },
           "weight": {
             "type": "number",
-            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "description": "Multiplier applied to this leaderboard's match results when they contribute to the parent\n benchmark's overall / combined scoreboards.",
             "format": "double"
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "description": "Additive offset applied to displayed scores on this leaderboard's scoreboard.",
             "format": "double"
           },
           "scoreScale": {
             "type": "number",
-            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "description": "Multiplicative factor applied to displayed scores on this leaderboard's scoreboard, relative to the Bradley-Terry\n center.",
             "format": "double"
           },
           "isHidden": {
             "type": "boolean",
-            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+            "description": "Whether the leaderboard is hidden from standard listings."
           },
           "isExcludedFromOverall": {
             "type": "boolean",
@@ -51686,7 +51738,7 @@
           },
           "lastUpdatedAt": {
             "type": "string",
-            "description": "When votes were last recorded for the leaderboard. Null when no run has ever delivered\n votes to it.",
+            "description": "When votes were last recorded for the leaderboard; null when none ever were.",
             "format": "date-time",
             "nullable": true
           }
@@ -52149,18 +52201,18 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The sample's owner; null unless the caller is platform staff or in the owning organization.",
             "format": "uuid",
             "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's mail; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's organization; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           }
         }
@@ -52471,7 +52523,7 @@
                 }
               }
             ],
-            "description": "Up to three samples of the same participant preceding the current sample,\n ordered ascending by identifier. Empty when the current sample is the first\n of its participant."
+            "description": "Up to three preceding samples of the same participant; empty when none exist."
           },
           "next": {
             "allOf": [
@@ -52482,7 +52534,7 @@
                 }
               }
             ],
-            "description": "Up to three samples of the same participant following the current sample,\n ordered ascending by identifier. Empty when the current sample is the last\n of its participant."
+            "description": "Up to three following samples of the same participant; empty when none exist."
           },
           "related": {
             "allOf": [
@@ -52493,7 +52545,7 @@
                 }
               }
             ],
-            "description": "Samples of other participants in the same benchmark that share the current\n sample's identifier, ordered by participant name and capped at the requested\n related limit."
+            "description": "Samples of other participants sharing the identifier, capped at the requested limit."
           }
         }
       },
@@ -52636,18 +52688,18 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The sample's owner; null unless the caller is platform staff or in the owning organization.",
             "format": "uuid",
             "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's mail; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's organization; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           }
         }
@@ -52822,18 +52874,18 @@
           },
           "ownerId": {
             "type": "string",
-            "description": "The id of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The sample's owner; null unless the caller is platform staff or in the owning organization.",
             "format": "uuid",
             "nullable": true
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer that owns the sample. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's mail; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's organization; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           }
         }
@@ -53138,7 +53190,7 @@
           },
           "lastUpdatedAt": {
             "type": "string",
-            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "description": "When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its\n overall; null when none ever received votes.",
             "format": "date-time",
             "nullable": true
           }
@@ -53417,7 +53469,7 @@
           },
           "totalResponses": {
             "type": "integer",
-            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "description": "Total raw human votes behind these standings under the current filter — not the per-participant TotalMatches,\n which counts binarized matchups (a comparison's several votes collapse into one).",
             "format": "int64"
           }
         },
@@ -53521,7 +53573,7 @@
           },
           "totalResponses": {
             "type": "integer",
-            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "description": "Total raw human votes behind these standings under the current filter — not the per-participant TotalMatches,\n which counts binarized matchups (a comparison's several votes collapse into one).",
             "format": "int64"
           }
         },
@@ -53776,22 +53828,22 @@
           },
           "weight": {
             "type": "number",
-            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "description": "Multiplier applied to this leaderboard's match results when they contribute to the parent\n benchmark's overall / combined scoreboards.",
             "format": "double"
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "description": "Additive offset applied to displayed scores on this leaderboard's scoreboard.",
             "format": "double"
           },
           "scoreScale": {
             "type": "number",
-            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "description": "Multiplicative factor applied to displayed scores on this leaderboard's scoreboard, relative to the Bradley-Terry\n center.",
             "format": "double"
           },
           "isHidden": {
             "type": "boolean",
-            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+            "description": "Whether the leaderboard is hidden from standard listings."
           },
           "isExcludedFromOverall": {
             "type": "boolean",
@@ -53821,7 +53873,7 @@
           },
           "lastUpdatedAt": {
             "type": "string",
-            "description": "When votes were last recorded for the leaderboard. Null when no run has ever delivered\n votes to it.",
+            "description": "When votes were last recorded for the leaderboard; null when none ever were.",
             "format": "date-time",
             "nullable": true
           }
@@ -53940,22 +53992,22 @@
           },
           "weight": {
             "type": "number",
-            "description": "Multiplier applied to every match result from this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards.",
+            "description": "Multiplier applied to this leaderboard's match results when they contribute to the parent\n benchmark's overall / combined scoreboards.",
             "format": "double"
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "description": "Additive offset applied to displayed scores on this leaderboard's scoreboard.",
             "format": "double"
           },
           "scoreScale": {
             "type": "number",
-            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard.",
+            "description": "Multiplicative factor applied to displayed scores on this leaderboard's scoreboard, relative to the Bradley-Terry\n center.",
             "format": "double"
           },
           "isHidden": {
             "type": "boolean",
-            "description": "Whether the leaderboard is hidden in listings and reads for non-admins."
+            "description": "Whether the leaderboard is hidden from standard listings."
           },
           "isExcludedFromOverall": {
             "type": "boolean",
@@ -53993,7 +54045,7 @@
           },
           "lastUpdatedAt": {
             "type": "string",
-            "description": "When votes were last recorded for the leaderboard. Null when no run has ever delivered\n votes to it.",
+            "description": "When votes were last recorded for the leaderboard; null when none ever were.",
             "format": "date-time",
             "nullable": true
           }
@@ -54081,7 +54133,7 @@
           },
           "lastUpdatedAt": {
             "type": "string",
-            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "description": "When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its\n overall; null when none ever received votes.",
             "format": "date-time",
             "nullable": true
           }
@@ -54863,17 +54915,17 @@
           },
           "ownerMail": {
             "type": "string",
-            "description": "The mail of the customer owning the benchmark. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's mail; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           },
           "organizationId": {
             "type": "string",
-            "description": "The id of the organization that owns the entity. Null unless the caller is platform staff or a member of the owning organization.",
+            "description": "The owner's organization; null unless the caller is platform staff or in the owning organization.",
             "nullable": true
           },
           "lastUpdatedAt": {
             "type": "string",
-            "description": "When the benchmark's rankings last changed: the latest vote recording across the\n leaderboards contributing to its overall. Null when none of them ever received votes.",
+            "description": "When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its\n overall; null when none ever received votes.",
             "format": "date-time",
             "nullable": true
           }
@@ -55073,7 +55125,7 @@
           },
           "totalResponses": {
             "type": "integer",
-            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "description": "Total raw human votes behind these standings under the current filter — not the per-participant TotalMatches,\n which counts binarized matchups (a comparison's several votes collapse into one).",
             "format": "int64"
           }
         },
@@ -55181,7 +55233,7 @@
           },
           "totalResponses": {
             "type": "integer",
-            "description": "Total raw human responses (votes) behind these standings under the current filter — the\n actual response count, not the per-participant TotalMatches (which counts\n binarized matchups, so a comparison's several votes collapse into one).",
+            "description": "Total raw human votes behind these standings under the current filter — not the per-participant TotalMatches,\n which counts binarized matchups (a comparison's several votes collapse into one).",
             "format": "int64"
           }
         },
@@ -55412,7 +55464,7 @@
           },
           "seed": {
             "type": "integer",
-            "description": "Optional seed for deterministic matchup selection. Use the same value across leaderboards\n of a benchmark to have them boosted on the same image pairs. Omit for random selection.",
+            "description": "Optional seed for deterministic matchup selection. Reuse it across a benchmark's leaderboards to align them on the same\n image pairs; omit for random selection.",
             "format": "int64",
             "nullable": true
           }
@@ -55767,25 +55819,25 @@
           },
           "description": {
             "type": "string",
-            "description": "Optional plain-text credit for the people or sources behind the benchmark. Limited to\n 2000 characters. Send null to clear it; omit to leave it unchanged."
+            "description": "Optional plain-text credit for the people or sources behind the benchmark. Limited to 2000 characters; send null\n to clear it, omit to leave it unchanged."
           },
           "isPublic": {
             "type": "boolean",
-            "description": "Whether the benchmark should be public (only admins can change this)."
+            "description": "Whether the benchmark should be public."
           },
           "isPublished": {
             "type": "boolean",
-            "description": "Whether the benchmark should be surfaced in the public benchmark repository (only\n admins can change this)."
+            "description": "Whether the benchmark should be surfaced in the public benchmark repository."
           },
           "initialBoostLevel": {
             "type": "integer",
-            "description": "Initial boost level applied to the campaign of every run created from this benchmark.\n Admins may set any value the validator allows (0-10) or null to clear the\n override; non-admins are restricted to\n 0..DefaultInitialBoostLevel and may not clear\n it. Both restrictions are enforced by\n IsAllowedToSetInitialBoostLevel with a 403 on\n violation.",
+            "description": "Initial boost level applied to the campaign of every run created from this benchmark. Pass null to clear the\n override and fall back to the benchmark default.",
             "format": "int32",
             "nullable": true
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on the overall scoreboard of this\n benchmark.",
+            "description": "Additive offset applied to displayed scores on the benchmark's overall scoreboard.",
             "format": "double"
           },
           "scoreScale": {
@@ -55826,32 +55878,32 @@
           },
           "priority": {
             "type": "integer",
-            "description": "Priority override applied to every run's job. Admin-only. Pass null to clear\n the override and fall back to the default leaderboard priority.",
+            "description": "Priority override applied to every run's job. Pass null to clear the override and fall back to the default\n priority.",
             "format": "int32",
             "nullable": true
           },
           "weight": {
             "type": "number",
-            "description": "Multiplier applied to every match result of this leaderboard when it contributes to\n the parent benchmark's overall / combined scoreboards. Unbounded; negative and zero\n values are accepted.",
+            "description": "Multiplier applied to this leaderboard's match results when they contribute to the parent\n benchmark's overall / combined scoreboards; unbounded.",
             "format": "double"
           },
           "scoreShift": {
             "type": "number",
-            "description": "Additive offset applied to displayed scores on this leaderboard's per-leaderboard\n scoreboard.",
+            "description": "Additive offset applied to displayed scores on this leaderboard's scoreboard.",
             "format": "double"
           },
           "scoreScale": {
             "type": "number",
-            "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on this leaderboard's per-leaderboard scoreboard. Must be strictly positive.",
+            "description": "Multiplicative factor applied to displayed scores on this leaderboard's scoreboard, relative to the Bradley-Terry\n center; must be strictly positive.",
             "format": "double"
           },
           "isHidden": {
             "type": "boolean",
-            "description": "Whether the leaderboard is hidden from non-admins in listings and reads. Admin-only."
+            "description": "Whether the leaderboard is hidden from standard listings."
           },
           "isExcludedFromOverall": {
             "type": "boolean",
-            "description": "Whether the leaderboard is excluded from its benchmark's overall / combined scoreboard.\n When set, the leaderboard becomes an owner-only private experiment: its results do not\n contribute to the overall and it is visible only to its owner and admins."
+            "description": "Whether this leaderboard is excluded from its benchmark's overall / combined scoreboard, making it a private experiment\n of the owning organization."
           },
           "voteAggregation": {
             "allOf": [
@@ -55859,7 +55911,7 @@
                 "$ref": "#/components/schemas/VoteAggregation"
               }
             ],
-            "description": "How individual votes on a matchup are aggregated into the stored result. AllVotes\n counts every vote as a matchup; MajorityVote collapses each matchup to a single\n win for the majority side (ties split 0.5/0.5). Only affects future runs."
+            "description": "How votes on a matchup aggregate into the stored result: AllVotes counts every vote as a matchup,\n MajorityVote collapses each to a single majority win (ties split 0.5/0.5). Only affects future runs."
           },
           "includedTags": {
             "allOf": [
@@ -55870,7 +55922,7 @@
                 }
               }
             ],
-            "description": "Prompt tag values to restrict the leaderboard's matchups to. Only prompts carrying at\n least one of these tags are used; an empty list means no restriction."
+            "description": "Prompt tag values to restrict matchups to; only prompts carrying at least one are used. Empty means no restriction."
           },
           "excludedTags": {
             "allOf": [
@@ -55881,7 +55933,7 @@
                 }
               }
             ],
-            "description": "Prompt tag values the leaderboard never creates matchups for. Takes precedence over\n includedTags: a prompt carrying an excluded tag is skipped even when one of its\n other tags is included."
+            "description": "Prompt tag values the leaderboard never creates matchups for; takes precedence over includedTags, even when\n another tag is included."
           }
         }
       },
