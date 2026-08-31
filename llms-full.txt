@@ -2463,7 +2463,7 @@ logger.info("This will be shown") # (2)!
 | `cacheShards` | `int` | `32` | Number of disk-cache shards for concurrent access (immutable). Each shard holds open file handles — see [Too many open files](#too-many-open-files) |
 | `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
 | `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
-| `compression` | `CompressionConfig \| None` | `None` | Per-upload image-compression settings; see [Compression override](#compression-override) below. |
+| `compression` | `CompressionConfig \| None` | `None` | Per-upload compression settings; `enabled=False` preserves the original image and video. See [Compression override](#compression-override) below. |
 | `contextShortening` | `bool` | `False` | Shorten every datapoint context for the job instruction before upload. Contexts longer than the 400-character backend limit are always shortened regardless of this setting, with a warning. See [contexts](job_definition_parameters.md#contexts). |
 | `checkForExplicitContent` | `bool \| None` | `None` | Opt in/out of the server-side explicit-content check on job assignment. `None` uses the account default; `True` forces it on; `False` requests skipping it (honored only if the account is permitted, otherwise the check still runs and a warning is logged). |
 
@@ -2479,9 +2479,13 @@ rapidata_config.upload.compression = CompressionConfig(
     quality=70,
     max_dimension=1024,
 )
+
+# Or preserve originals untouched — e.g. to guarantee a benchmark set keeps full
+# resolution. enabled=False skips both image and video compression.
+rapidata_config.upload.compression = CompressionConfig(enabled=False)
 ```
 
-Any field left as `None` falls back to the server-side default. Currently applies to single-asset uploads (`/asset/file` and `/asset/url`); batched URL uploads will pick the override up in a follow-up after the OpenAPI client regenerates.
+`enabled` governs both image and video compression, so `enabled=False` preserves the original image *and* the original video (resolution and bitrate). `quality` and `max_dimension` only affect images. Any field left as `None` falls back to the server-side default. The override applies to single-asset uploads (`/asset/file` and `/asset/url`) and to batched URL uploads (`/asset/batch-upload`).
 
 #### Too many open files
 
@@ -4050,8 +4054,10 @@ participant.run()
 # Or add multiple models and submit them all at once
 benchmark.add_model(name="ModelB", media=["https://example.com/img2.png"], identifiers=["scene_1"])
 benchmark.add_model(name="ModelC", media=["https://example.com/img3.png"], identifiers=["scene_1"])
-benchmark.run()  # Submits all participants in CREATED state
+benchmark.run()  # Submits all CREATED participants in a single batch request
 ```
+
+Submitting in one batch evaluates the participants symmetrically as a single run — each model compared against every other and against the benchmark's already-submitted field — rather than as separate per-participant runs.
 
 ### Inspecting a Participant's Elo
 
