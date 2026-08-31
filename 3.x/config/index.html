@@ -1941,7 +1941,7 @@
 <td><code>compression</code></td>
 <td><code>CompressionConfig \| None</code></td>
 <td><code>None</code></td>
-<td>Per-upload image-compression settings; see <a href="#compression-override">Compression override</a> below.</td>
+<td>Per-upload compression settings; <code>enabled=False</code> preserves the original image and video. See <a href="#compression-override">Compression override</a> below.</td>
 </tr>
 <tr>
 <td><code>contextShortening</code></td>
@@ -1967,8 +1967,12 @@
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">quality</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">max_dimension</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Or preserve originals untouched — e.g. to guarantee a benchmark set keeps full</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># resolution. enabled=False skips both image and video compression.</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">rapidata_config</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">CompressionConfig</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Any field left as <code>None</code> falls back to the server-side default. Currently applies to single-asset uploads (<code>/asset/file</code> and <code>/asset/url</code>); batched URL uploads will pick the override up in a follow-up after the OpenAPI client regenerates.</p>
+<p><code>enabled</code> governs both image and video compression, so <code>enabled=False</code> preserves the original image <em>and</em> the original video (resolution and bitrate). <code>quality</code> and <code>max_dimension</code> only affect images. Any field left as <code>None</code> falls back to the server-side default. The override applies to single-asset uploads (<code>/asset/file</code> and <code>/asset/url</code>) and to batched URL uploads (<code>/asset/batch-upload</code>).</p>
 <h4 id="too-many-open-files">Too many open files<a class="headerlink" href="#too-many-open-files" title="Permanent link">#</a></h4>
 <p>Uploading local files opens file descriptors — for the on-disk upload cache (one set of handles per <code>cacheShards</code>), the worker pool (<code>maxWorkers</code>), and the HTTP connections. On systems with a low <code>ulimit -n</code> (1024 is common), a large or highly concurrent upload can exhaust the limit and fail with <code>OSError: [Errno 24] Too many open files</code>.</p>
 <p>Ways to resolve it:</p>
