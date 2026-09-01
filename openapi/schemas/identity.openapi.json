@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.08.30.0010-f40a2bb"
+    "version": "2026.08.31.1452-45db4f0"
   },
   "servers": [
     {
@@ -811,6 +811,48 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/customers/{customerId}": {
+      "delete": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Deletes the account: it can no longer sign in, stops receiving email, and leaves every\n organization it belongs to.",
+        "description": "This cannot be undone. An organization the account is the only member of is deleted with it,\n along with everything it owns; invoices already raised are kept. Responds with 409 when the\n account is the last owner of an organization that has other members — transfer ownership\n first — or when such an organization still has an open invoice or a billing reconciliation in\n progress. Issuing it again for an account that is already deleted succeeds and changes\n nothing further. The same address and the same external login can be used to register a new\n account afterwards; none of the old account's data comes back with it.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer to delete.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
